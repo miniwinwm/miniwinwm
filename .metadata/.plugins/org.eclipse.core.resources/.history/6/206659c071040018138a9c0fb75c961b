@@ -1,0 +1,70 @@
+/***************
+*** INCLUDES ***
+***************/
+
+#include "hal/hal_touch.h"
+#include "stm32f429i_discovery_ioe.h"
+
+/****************
+*** CONSTANTS ***
+****************/
+
+/************
+*** TYPES ***
+************/
+
+/***********************
+*** GLOBAL VARIABLES ***
+***********************/
+
+/*************************
+*** EXTERNAL VARIABLES ***
+**************************/
+
+/**********************
+*** LOCAL VARIABLES ***
+**********************/
+
+/********************************
+*** LOCAL FUNCTION PROTOTYPES ***
+********************************/
+
+/**********************
+*** LOCAL FUNCTIONS ***
+**********************/
+
+/***********************
+*** GLOBAL FUNCTIONS ***
+***********************/
+
+void mw_hal_touch_init(void)
+{
+	IOE_Config();
+}
+
+mw_hal_touch_state_t mw_hal_touch_get_state()
+{
+	if (IOE_TP_GetTouchState())
+	{
+		return MW_HAL_TOUCH_STATE_DOWN;
+	}
+
+	return MW_HAL_TOUCH_STATE_UP;
+}
+
+bool mw_hal_touch_get_point(uint16_t* x, uint16_t* y)
+{
+	TP_STATE* TP_State;
+
+	if (IOE_TP_IsFifoEmpty())
+	{
+		return false;
+	}
+
+	TP_State = IOE_TP_GetState();
+
+	*x = TP_State->X;
+	*y = TP_State->Y;
+
+	return true;
+}

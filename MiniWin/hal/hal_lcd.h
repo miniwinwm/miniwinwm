@@ -1,0 +1,178 @@
+/*
+
+MIT License
+
+Copyright (c) John Blaiklock 2018 miniwin Embedded Window Manager
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+*/
+
+#ifndef _HAL_LCD_H
+#define _HAL_LCD_H
+
+#ifdef __cplusplus
+ extern "C" {
+#endif
+
+/***************
+*** INCLUDES ***
+***************/
+
+#include <stdint.h>
+
+/****************
+*** CONSTANTS ***
+****************/
+
+#define MW_HAL_LCD_WIDTH			240     /**< LCD screen width in pixels */
+#define MW_HAL_LCD_HEIGHT			320     /**< LCD screen height in pixels */
+
+/**
+ * Pre-defined named colours, colour bit layout is rrrr rggg gggb bbbb
+ */
+#define MW_HAL_LCD_BLACK 			0x0000
+#define MW_HAL_LCD_YELLOW 			0xffe0
+#define MW_HAL_LCD_RED 				0xf800
+#define MW_HAL_LCD_GREEN 			0x07e0
+#define MW_HAL_LCD_BLUE 			0x001f
+#define MW_HAL_LCD_WHITE 			0xffff
+#define MW_HAL_LCD_PINK 			0xf80e
+#define MW_HAL_LCD_PURPLE 			0xf83f
+#define	MW_HAL_LCD_GREY15			0x1082
+#define	MW_HAL_LCD_GREY14			0x2104
+#define	MW_HAL_LCD_GREY13			0x3186
+#define	MW_HAL_LCD_GREY12			0x4208
+#define	MW_HAL_LCD_GREY11			0x528a
+#define	MW_HAL_LCD_GREY10			0x630c
+#define	MW_HAL_LCD_GREY9			0x738e
+#define	MW_HAL_LCD_GREY8			0x8410
+#define	MW_HAL_LCD_GREY7			0x9492
+#define	MW_HAL_LCD_GREY6			0xa514
+#define	MW_HAL_LCD_GREY5			0xb596
+#define	MW_HAL_LCD_GREY4			0xc618
+#define	MW_HAL_LCD_GREY3			0xd69a
+#define	MW_HAL_LCD_GREY2			0xe71c
+#define	MW_HAL_LCD_GREY1			0xf79e
+#define MW_HAL_LCD_ORANGE 			0xfb80
+#define MW_HAL_LCD_LIGHT_BLUE		0x779d
+#define MW_HAL_LCD_CYAN				0x07ff
+#define MW_HAL_LCD_DARK_CYAN		0x0492
+#define MW_HAL_LCD_LIGHT_ORANGE		0xfe20
+#define MW_HAL_LCD_BRICK_RED		0xb104
+
+/************
+*** TYPES ***
+************/
+
+typedef uint16_t mw_hal_lcd_colour_t;      /**< set to appropriate int type that can hold the screen's colour depth */
+
+/***************************
+*** FUNCTIONS PROTOTYPES ***
+***************************/
+
+/**
+ * Initialize all LCD hardware
+ */
+void mw_hal_lcd_init(void);
+
+/**
+ * Plot a single pixel. Points off screen are not clipped.
+ *
+ * @param x X position of pixel
+ * @param y Y position of pixel
+ * @param colour The colour of the pixel to plot
+ */
+void mw_hal_lcd_pixel(int16_t x, int16_t y, mw_hal_lcd_colour_t colour);
+
+/**
+ * Plot a filled rectangle. Position and size values are not clipped to the screen.
+ *
+ * @param start_x X position of left edge of rectangle
+ * @param start_y Y position of top of rectangle
+ * @param width Width of rectangle, pixels plotted are from start_x to (start_x + width) - 1
+ * @param height Height of rectangle, pixels plotted are from start_y to (start_y + height) - 1
+ * @param colour The colour of the pixel to plot
+ */
+void mw_hal_lcd_filled_rectangle(int16_t start_x,
+		int16_t start_y,
+		uint16_t width,
+		uint16_t height,
+		mw_hal_lcd_colour_t colour);
+
+/**
+ * Plot a bitmap of single colour depth using fg_colour for values 1 in the bitmap and bg_colour for
+ * values 0 in the bitmap. The bitmap is clipped to the supplied clip rect.
+ * 
+ * @param image_start_x The coordinate of the left edge of position to plot image
+ * @param image_start_y The coordinate of the top edge of position to plot image
+ * @param bitmap_width The width of the image in the bitmap data
+ * @param bitmap_height The height of the image in the bitmap data
+ * @param clip_start_x The coordinate of the left edge of the clip rect
+ * @param clip_start_y The coordinate of the top edge of the clip rect
+ * @param clip_width The width of the clip rect
+ * @param clip_height The height of the clip rect
+ * @param fg_colour Colour to plot pixels with value 1 in data
+ * @param bg_colour Colour to plot pixels with value 0 in data
+ * @param image_data The image data, 8 pixels per byte
+ * @note As pixels appear in 8 bits per byte data may contain pixels in the last byte of each row that will
+ *       not be plotted.
+ * @note The image is not clipped to the screen, only to the clip rect; the clip rect must already provide screen clipping.
+ */
+void mw_hal_lcd_monochrome_bitmap_clip(int16_t image_start_x,
+		int16_t image_start_y,
+		uint16_t bitmap_width,
+		uint16_t bitmap_height,
+		int16_t clip_start_x,
+		int16_t clip_start_y,
+		uint16_t clip_width,
+		uint16_t clip_height,
+		mw_hal_lcd_colour_t fg_colour,
+		mw_hal_lcd_colour_t bg_colour,
+		const uint8_t *image_data);
+
+/**
+ * Plot a bitmap of screen colour depth. The bitmap is clipped to the supplied clip rect.
+ *
+ * @param image_start_x The coordinate of the left edge of position to plot image
+ * @param image_start_y The coordinate of the top edge of position to plot image
+ * @param image_data_width_pixels The width of the image in the bitmap data
+ * @param image_data_height_pixels The height of the image in the bitmap data
+ * @param clip_start_x The left edge of the clip rect
+ * @param clip_start_y The top edge of the clip rect
+ * @param clip_width The width of the clip rect
+ * @param clip_height The height of the clip rect
+ * @param data the image data, in colour_t units for each pixel
+ * @note The image is not clipped to the screen, only to the clip rect; the clip rect must already provide screen clipping.
+ */
+void mw_hal_lcd_colour_bitmap_clip(int16_t image_start_x,
+		int16_t image_start_y,
+		uint16_t image_data_width_pixels,
+		uint16_t image_data_height_pixels,
+		int16_t clip_start_x,
+		int16_t clip_start_y,
+		uint16_t clip_width,
+		uint16_t clip_height,
+		const mw_hal_lcd_colour_t *data);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif

@@ -1,0 +1,46 @@
+21:44:37 **** Rebuild of configuration Debug for project MiniWinSimple_Windows ****
+Info: Internal Builder is used for build
+gcc -IC:\Users\John\Desktop\workspace\MiniWin -O0 -g3 -Wall -c -fmessage-length=0 -o MiniWin\hal\hal_init.o ..\..\..\MiniWin\hal\hal_init.c 
+gcc -IC:\Users\John\Desktop\workspace\MiniWin -O0 -g3 -Wall -c -fmessage-length=0 -o MiniWin\ui\ui_int_number_chooser.o ..\..\..\MiniWin\ui\ui_int_number_chooser.c 
+gcc -IC:\Users\John\Desktop\workspace\MiniWin -O0 -g3 -Wall -c -fmessage-length=0 -o MiniWin\bitmaps\backspace_key.o ..\..\..\MiniWin\bitmaps\backspace_key.c 
+gcc -IC:\Users\John\Desktop\workspace\MiniWin -O0 -g3 -Wall -c -fmessage-length=0 -o MiniWin\miniwin_settings.o ..\..\..\MiniWin\miniwin_settings.c 
+gcc -IC:\Users\John\Desktop\workspace\MiniWin -O0 -g3 -Wall -c -fmessage-length=0 -o MiniWin\bitmaps\maximise_icon.o ..\..\..\MiniWin\bitmaps\maximise_icon.c 
+gcc -IC:\Users\John\Desktop\workspace\MiniWin -O0 -g3 -Wall -c -fmessage-length=0 -o MiniWin\hal\windows\hal_timer.o ..\..\..\MiniWin\hal\windows\hal_timer.c 
+gcc -IC:\Users\John\Desktop\workspace\MiniWin -O0 -g3 -Wall -c -fmessage-length=0 -o MiniWin\gl\gl.o ..\..\..\MiniWin\gl\gl.c 
+gcc -IC:\Users\John\Desktop\workspace\MiniWin -O0 -g3 -Wall -c -fmessage-length=0 -o MiniWin\hal\windows\hal_lcd.o ..\..\..\MiniWin\hal\windows\hal_lcd.c 
+gcc -IC:\Users\John\Desktop\workspace\MiniWin -O0 -g3 -Wall -c -fmessage-length=0 -o MiniWin\ui\ui_keyboard.o ..\..\..\MiniWin\ui\ui_keyboard.c 
+gcc -IC:\Users\John\Desktop\workspace\MiniWin -O0 -g3 -Wall -c -fmessage-length=0 -o MiniWin\ui\ui_label.o ..\..\..\MiniWin\ui\ui_label.c 
+gcc -IC:\Users\John\Desktop\workspace\MiniWin -O0 -g3 -Wall -c -fmessage-length=0 -o MiniWin\hal\windows\hal_touch.o ..\..\..\MiniWin\hal\windows\hal_touch.c 
+gcc -IC:\Users\John\Desktop\workspace\MiniWin -O0 -g3 -Wall -c -fmessage-length=0 -o MiniWin\miniwin_touch.o ..\..\..\MiniWin\miniwin_touch.c 
+gcc -IC:\Users\John\Desktop\workspace\MiniWin -O0 -g3 -Wall -c -fmessage-length=0 -o MiniWin\ui\ui_common.o ..\..\..\MiniWin\ui\ui_common.c 
+gcc -IC:\Users\John\Desktop\workspace\MiniWin -O0 -g3 -Wall -c -fmessage-length=0 -o MiniWin\ui\ui_check_box.o ..\..\..\MiniWin\ui\ui_check_box.c 
+gcc -IC:\Users\John\Desktop\workspace\MiniWin -O0 -g3 -Wall -c -fmessage-length=0 -o MiniWin\bitmaps\let_key.o ..\..\..\MiniWin\bitmaps\let_key.c 
+gcc -IC:\Users\John\Desktop\workspace\MiniWin -O0 -g3 -Wall -c -fmessage-length=0 -o MiniWin\calibrate.o ..\..\..\MiniWin\calibrate.c 
+gcc -IC:\Users\John\Desktop\workspace\MiniWin -O0 -g3 -Wall -c -fmessage-length=0 -o MiniWin\bitmaps\sym_key.o ..\..\..\MiniWin\bitmaps\sym_key.c 
+gcc -IC:\Users\John\Desktop\workspace\MiniWin -O0 -g3 -Wall -c -fmessage-length=0 -o MiniWin\ui\ui_progress_bar.o ..\..\..\MiniWin\ui\ui_progress_bar.c 
+gcc -IC:\Users\John\Desktop\workspace\MiniWin -O0 -g3 -Wall -c -fmessage-length=0 -o MiniWin\bitmaps\shift_key.o ..\..\..\MiniWin\bitmaps\shift_key.c 
+gcc -IC:\Users\John\Desktop\workspace\MiniWin -O0 -g3 -Wall -c -fmessage-length=0 -o MiniWin\hal\windows\hal_delay.o ..\..\..\MiniWin\hal\windows\hal_delay.c 
+gcc -IC:\Users\John\Desktop\workspace\MiniWin -O0 -g3 -Wall -c -fmessage-length=0 -o MiniWin\bitmaps\minimise_icon.o ..\..\..\MiniWin\bitmaps\minimise_icon.c 
+gcc -IC:\Users\John\Desktop\workspace\MiniWin -O0 -g3 -Wall -c -fmessage-length=0 -o MiniWin\bitmaps\ok_key.o ..\..\..\MiniWin\bitmaps\ok_key.c 
+gcc -IC:\Users\John\Desktop\workspace\MiniWin -O0 -g3 -Wall -c -fmessage-length=0 -o common\window_simple.o ..\..\common\window_simple.c 
+gcc -IC:\Users\John\Desktop\workspace\MiniWin -O0 -g3 -Wall -c -fmessage-length=0 -o MiniWin\bitmaps\close_icon.o ..\..\..\MiniWin\bitmaps\close_icon.c 
+gcc -IC:\Users\John\Desktop\workspace\MiniWin -O0 -g3 -Wall -c -fmessage-length=0 -o MiniWin\ui\ui_scroll_bar_vert.o ..\..\..\MiniWin\ui\ui_scroll_bar_vert.c 
+gcc -IC:\Users\John\Desktop\workspace\MiniWin -O0 -g3 -Wall -c -fmessage-length=0 -o MiniWin\ui\ui_button.o ..\..\..\MiniWin\ui\ui_button.c 
+gcc -IC:\Users\John\Desktop\workspace\MiniWin -O0 -g3 -Wall -c -fmessage-length=0 -o MiniWin\miniwin.o ..\..\..\MiniWin\miniwin.c 
+gcc -IC:\Users\John\Desktop\workspace\MiniWin -O0 -g3 -Wall -c -fmessage-length=0 -o MiniWin\miniwin_utilities.o ..\..\..\MiniWin\miniwin_utilities.c 
+gcc -IC:\Users\John\Desktop\workspace\MiniWin -O0 -g3 -Wall -c -fmessage-length=0 -o MiniWin\bitmaps\cancel_key.o ..\..\..\MiniWin\bitmaps\cancel_key.c 
+gcc -IC:\Users\John\Desktop\workspace\MiniWin -O0 -g3 -Wall -c -fmessage-length=0 -o MiniWin\gl\gl_fonts.o ..\..\..\MiniWin\gl\gl_fonts.c 
+gcc -IC:\Users\John\Desktop\workspace\MiniWin -O0 -g3 -Wall -c -fmessage-length=0 -o common\miniwin_user.o ..\..\common\miniwin_user.c 
+gcc -IC:\Users\John\Desktop\workspace\MiniWin -O0 -g3 -Wall -c -fmessage-length=0 -o MiniWin\miniwin_message_queue.o ..\..\..\MiniWin\miniwin_message_queue.c 
+gcc -IC:\Users\John\Desktop\workspace\MiniWin -O0 -g3 -Wall -c -fmessage-length=0 -o MiniWin\hal\windows\hal_non_vol.o ..\..\..\MiniWin\hal\windows\hal_non_vol.c 
+gcc -IC:\Users\John\Desktop\workspace\MiniWin -O0 -g3 -Wall -c -fmessage-length=0 -o MiniWin\bitmaps\num_key.o ..\..\..\MiniWin\bitmaps\num_key.c 
+gcc -IC:\Users\John\Desktop\workspace\MiniWin -O0 -g3 -Wall -c -fmessage-length=0 -o MiniWin\miniwin_debug.o ..\..\..\MiniWin\miniwin_debug.c 
+gcc -IC:\Users\John\Desktop\workspace\MiniWin -O0 -g3 -Wall -c -fmessage-length=0 -o MiniWin\ui\ui_scroll_bar_horiz.o ..\..\..\MiniWin\ui\ui_scroll_bar_horiz.c 
+gcc -IC:\Users\John\Desktop\workspace\MiniWin -O0 -g3 -Wall -c -fmessage-length=0 -o common\main.o ..\..\common\main.c 
+gcc -IC:\Users\John\Desktop\workspace\MiniWin -O0 -g3 -Wall -c -fmessage-length=0 -o MiniWin\ui\ui_radio_button.o ..\..\..\MiniWin\ui\ui_radio_button.c 
+gcc -IC:\Users\John\Desktop\workspace\MiniWin -O0 -g3 -Wall -c -fmessage-length=0 -o MiniWin\ui\ui_list_box.o ..\..\..\MiniWin\ui\ui_list_box.c 
+gcc -IC:\Users\John\Desktop\workspace\MiniWin -O0 -g3 -Wall -c -fmessage-length=0 -o MiniWin\bitmaps\resize_icon.o ..\..\..\MiniWin\bitmaps\resize_icon.c 
+gcc -o MiniWinSimple_Windows.exe MiniWin\bitmaps\backspace_key.o MiniWin\bitmaps\cancel_key.o MiniWin\bitmaps\close_icon.o MiniWin\bitmaps\let_key.o MiniWin\bitmaps\maximise_icon.o MiniWin\bitmaps\minimise_icon.o MiniWin\bitmaps\num_key.o MiniWin\bitmaps\ok_key.o MiniWin\bitmaps\resize_icon.o MiniWin\bitmaps\shift_key.o MiniWin\bitmaps\sym_key.o MiniWin\calibrate.o MiniWin\gl\gl.o MiniWin\gl\gl_fonts.o MiniWin\hal\hal_init.o MiniWin\hal\windows\hal_delay.o MiniWin\hal\windows\hal_lcd.o MiniWin\hal\windows\hal_non_vol.o MiniWin\hal\windows\hal_timer.o MiniWin\hal\windows\hal_touch.o MiniWin\miniwin.o MiniWin\miniwin_debug.o MiniWin\miniwin_message_queue.o MiniWin\miniwin_settings.o MiniWin\miniwin_touch.o MiniWin\miniwin_utilities.o MiniWin\ui\ui_button.o MiniWin\ui\ui_check_box.o MiniWin\ui\ui_common.o MiniWin\ui\ui_int_number_chooser.o MiniWin\ui\ui_keyboard.o MiniWin\ui\ui_label.o MiniWin\ui\ui_list_box.o MiniWin\ui\ui_progress_bar.o MiniWin\ui\ui_radio_button.o MiniWin\ui\ui_scroll_bar_horiz.o MiniWin\ui\ui_scroll_bar_vert.o common\main.o common\miniwin_user.o common\window_simple.o -lgdi32 
+
+21:44:49 Build Finished (took 12s.71ms)
+
