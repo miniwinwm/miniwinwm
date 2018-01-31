@@ -1,8 +1,0 @@
-19:56:52 **** Rebuild of configuration Debug for project BMPConvMono ****
-Info: Internal Builder is used for build
-g++ -IC:\Users\John\Desktop\workspace\EasyBMP -O0 -g3 -Wall -c -fmessage-length=0 -o src\BMPConvMono.o ..\src\BMPConvMono.cpp 
-g++ -IC:\Users\John\Desktop\workspace\EasyBMP -O0 -g3 -Wall -c -fmessage-length=0 -o src\EasyBMP\EasyBMP.o ..\..\EasyBMP\EasyBMP.cpp 
-g++ -static -o BMPConvMono.exe src\BMPConvMono.o src\EasyBMP\EasyBMP.o 
-
-19:57:02 Build Finished (took 9s.605ms)
-
