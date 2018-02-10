@@ -89,6 +89,8 @@ void mw_ui_keyboard_paint_function(uint8_t control_ref, const mw_gl_draw_info_t 
 	mw_ui_keyboard_data_t *this_keyboard = (mw_ui_keyboard_data_t*)mw_all_controls[control_ref].extra_data;
 	uint8_t row;
 	uint8_t column;
+	mw_hal_lcd_colour_t highlighted_colour;
+	mw_hal_lcd_colour_t lowlighted_colour;
 
 	/* draw the keys */
 	mw_gl_set_fill(MW_GL_FILL);
@@ -130,11 +132,56 @@ void mw_ui_keyboard_paint_function(uint8_t control_ref, const mw_gl_draw_info_t 
 					MW_UI_KEYBOARD_KEY_SIZE,
 					MW_UI_KEYBOARD_KEY_SIZE);
 
+			/* draw 3d effect */
+			if (this_keyboard->is_key_pressed &&
+					row == this_keyboard->key_pressed_row &&
+					column == this_keyboard->key_pressed_column)
+			{
+				highlighted_colour = MW_HAL_LCD_BLACK;
+				lowlighted_colour = MW_HAL_LCD_GREY2;
+			}
+			else
+			{
+				highlighted_colour = MW_HAL_LCD_WHITE;
+				lowlighted_colour = MW_HAL_LCD_GREY7;
+			}
+			mw_gl_set_fg_colour(highlighted_colour);
+			mw_gl_vline(draw_info,
+					column * MW_UI_KEYBOARD_KEY_SIZE + 1,
+					(row + 1) * MW_UI_KEYBOARD_KEY_SIZE + 1,
+					(row + 2) * MW_UI_KEYBOARD_KEY_SIZE - 2);
+			mw_gl_hline(draw_info,
+					column * MW_UI_KEYBOARD_KEY_SIZE + 1,
+					(column + 1) * MW_UI_KEYBOARD_KEY_SIZE - 2,
+					(row + 1) * MW_UI_KEYBOARD_KEY_SIZE + 1);
+			mw_gl_set_fg_colour(lowlighted_colour);
+			mw_gl_vline(draw_info,
+					(column + 1) * MW_UI_KEYBOARD_KEY_SIZE - 2,
+					(row + 1) * MW_UI_KEYBOARD_KEY_SIZE + 1,
+					(row + 2) * MW_UI_KEYBOARD_KEY_SIZE - 2);
+			mw_gl_hline(draw_info,
+					column * MW_UI_KEYBOARD_KEY_SIZE + 1,
+					(column + 1) * MW_UI_KEYBOARD_KEY_SIZE - 2,
+					(row + 2) * MW_UI_KEYBOARD_KEY_SIZE - 2);
+
 			/* draw key character */
-			mw_gl_character(draw_info,
-					column * MW_UI_KEYBOARD_KEY_SIZE + MW_UI_KEYBOARD_KEY_TEXT_OFFSET,
-					(row + 1) * MW_UI_KEYBOARD_KEY_SIZE + MW_UI_KEYBOARD_KEY_TEXT_OFFSET,
-					keyboards[this_keyboard->keyboard_display][row][column]);
+			mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
+			if (this_keyboard->is_key_pressed &&
+					row == this_keyboard->key_pressed_row &&
+					column == this_keyboard->key_pressed_column)
+			{
+				mw_gl_character(draw_info,
+						column * MW_UI_KEYBOARD_KEY_SIZE + MW_UI_KEYBOARD_KEY_TEXT_OFFSET + 1,
+						(row + 1) * MW_UI_KEYBOARD_KEY_SIZE + MW_UI_KEYBOARD_KEY_TEXT_OFFSET + 1,
+						keyboards[this_keyboard->keyboard_display][row][column]);
+			}
+			else
+			{
+				mw_gl_character(draw_info,
+						column * MW_UI_KEYBOARD_KEY_SIZE + MW_UI_KEYBOARD_KEY_TEXT_OFFSET,
+						(row + 1) * MW_UI_KEYBOARD_KEY_SIZE + MW_UI_KEYBOARD_KEY_TEXT_OFFSET,
+						keyboards[this_keyboard->keyboard_display][row][column]);
+			}
 		}
 
 		/* draw keys on all keyboards */
@@ -216,13 +263,34 @@ void mw_ui_keyboard_paint_function(uint8_t control_ref, const mw_gl_draw_info_t 
 					MW_UI_KEYBOARD_KEY_BITMAP_SIZE,
 					mw_bitmaps_num_key);
 		}
-
-		/* draw the box the text is displayed in */
-		mw_gl_set_solid_fill_colour(MW_CONTROL_UP_COLOUR);
-		mw_gl_rectangle(draw_info, 0, 0, MW_UI_KEYBOARD_WIDTH, MW_UI_KEYBOARD_KEY_SIZE);
 	}
 
+	/* draw the box the text is displayed in */
+	mw_gl_set_solid_fill_colour(MW_CONTROL_UP_COLOUR);
+	mw_gl_rectangle(draw_info, 0, 0, MW_UI_KEYBOARD_WIDTH, MW_UI_KEYBOARD_KEY_SIZE);
+
+	/* draw 3d effect */
+	mw_gl_set_fg_colour(MW_HAL_LCD_WHITE);
+	mw_gl_vline(draw_info,
+			1,
+			1,
+			MW_UI_KEYBOARD_KEY_SIZE - 2);
+	mw_gl_hline(draw_info,
+			1,
+			MW_UI_KEYBOARD_WIDTH - 2,
+			1);
+	mw_gl_set_fg_colour(MW_HAL_LCD_GREY7);
+	mw_gl_vline(draw_info,
+			MW_UI_KEYBOARD_WIDTH - 2,
+			1,
+			MW_UI_KEYBOARD_KEY_SIZE - 2);
+	mw_gl_hline(draw_info,
+			1,
+			MW_UI_KEYBOARD_WIDTH - 2,
+			MW_UI_KEYBOARD_KEY_SIZE - 2);
+
 	/* draw text */
+	mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 	mw_gl_string(draw_info, 3, 4, this_keyboard->entry_buffer);
 
 	/* draw cursor */

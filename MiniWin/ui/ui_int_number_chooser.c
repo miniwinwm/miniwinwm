@@ -80,6 +80,8 @@ void mw_ui_int_number_chooser_paint_function(uint8_t control_ref, const mw_gl_dr
 	uint8_t i;
 	char c;
 	uint16_t cursor_x_coordinate;
+	mw_hal_lcd_colour_t highlighted_colour;
+	mw_hal_lcd_colour_t lowlighted_colour;
 
 	/* draw the keys */
 	mw_gl_set_fill(MW_GL_FILL);
@@ -116,6 +118,37 @@ void mw_ui_int_number_chooser_paint_function(uint8_t control_ref, const mw_gl_dr
 				MW_UI_INT_NUMBER_CHOOSER_KEY_SIZE,
 				MW_UI_INT_NUMBER_CHOOSER_KEY_SIZE);
 
+		/* draw 3d effect */
+		if (this_int_number_chooser->is_key_pressed && i == this_int_number_chooser->key_pressed_number)
+		{
+			highlighted_colour = MW_HAL_LCD_BLACK;
+			lowlighted_colour = MW_HAL_LCD_GREY2;
+		}
+		else
+		{
+			highlighted_colour = MW_HAL_LCD_WHITE;
+			lowlighted_colour = MW_HAL_LCD_GREY7;
+		}
+		mw_gl_set_fg_colour(highlighted_colour);
+		mw_gl_vline(draw_info,
+				i * MW_UI_INT_NUMBER_CHOOSER_KEY_SIZE + 1,
+				MW_UI_INT_NUMBER_CHOOSER_KEY_SIZE + 1,
+				2 * MW_UI_INT_NUMBER_CHOOSER_KEY_SIZE - 2);
+		mw_gl_hline(draw_info,
+				i * MW_UI_INT_NUMBER_CHOOSER_KEY_SIZE + 1,
+				(i + 1) * MW_UI_INT_NUMBER_CHOOSER_KEY_SIZE - 2,
+				MW_UI_INT_NUMBER_CHOOSER_KEY_SIZE + 1);
+		mw_gl_set_fg_colour(lowlighted_colour);
+		mw_gl_vline(draw_info,
+				(i + 1) * MW_UI_INT_NUMBER_CHOOSER_KEY_SIZE - 2,
+				MW_UI_INT_NUMBER_CHOOSER_KEY_SIZE + 1,
+				2 * MW_UI_INT_NUMBER_CHOOSER_KEY_SIZE - 2);
+		mw_gl_hline(draw_info,
+				i * MW_UI_INT_NUMBER_CHOOSER_KEY_SIZE + 1,
+				(i + 1) * MW_UI_INT_NUMBER_CHOOSER_KEY_SIZE - 2,
+				2 * MW_UI_INT_NUMBER_CHOOSER_KEY_SIZE - 2);
+
+		mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 		if (i < 10)
 		{
 			/* set key text character for numbers */
@@ -136,10 +169,20 @@ void mw_ui_int_number_chooser_paint_function(uint8_t control_ref, const mw_gl_dr
 		}
 		
 		/* draw key text character */
-		mw_gl_character(draw_info,
-				i * MW_UI_INT_NUMBER_CHOOSER_KEY_SIZE + MW_UI_INT_NUMBER_CHOOSER_KEY_TEXT_OFFSET,
-				MW_UI_INT_NUMBER_CHOOSER_KEY_SIZE + MW_UI_INT_NUMBER_CHOOSER_KEY_TEXT_OFFSET,
-				c);
+		if (this_int_number_chooser->is_key_pressed && i == this_int_number_chooser->key_pressed_number)
+		{
+			mw_gl_character(draw_info,
+					i * MW_UI_INT_NUMBER_CHOOSER_KEY_SIZE + MW_UI_INT_NUMBER_CHOOSER_KEY_TEXT_OFFSET + 1,
+					MW_UI_INT_NUMBER_CHOOSER_KEY_SIZE + MW_UI_INT_NUMBER_CHOOSER_KEY_TEXT_OFFSET + 1,
+					c);
+		}
+		else
+		{
+			mw_gl_character(draw_info,
+					i * MW_UI_INT_NUMBER_CHOOSER_KEY_SIZE + MW_UI_INT_NUMBER_CHOOSER_KEY_TEXT_OFFSET,
+					MW_UI_INT_NUMBER_CHOOSER_KEY_SIZE + MW_UI_INT_NUMBER_CHOOSER_KEY_TEXT_OFFSET,
+					c);
+		}
 	}
 
 	mw_gl_monochrome_bitmap(draw_info,
@@ -167,9 +210,30 @@ void mw_ui_int_number_chooser_paint_function(uint8_t control_ref, const mw_gl_dr
 	mw_gl_set_solid_fill_colour(MW_CONTROL_UP_COLOUR);
 	mw_gl_rectangle(draw_info, 0, 0, MW_UI_INT_NUMBER_CHOOSER_WIDTH, MW_UI_INT_NUMBER_CHOOSER_KEY_SIZE);
 
+	/* draw 3d effect */
+	mw_gl_set_fg_colour(MW_HAL_LCD_WHITE);
+	mw_gl_vline(draw_info,
+			1,
+			1,
+			MW_UI_INT_NUMBER_CHOOSER_KEY_SIZE - 2);
+	mw_gl_hline(draw_info,
+			1,
+			MW_UI_INT_NUMBER_CHOOSER_WIDTH - 2,
+			1);
+	mw_gl_set_fg_colour(MW_HAL_LCD_GREY7);
+	mw_gl_vline(draw_info,
+			MW_UI_INT_NUMBER_CHOOSER_WIDTH - 2,
+			1,
+			MW_UI_INT_NUMBER_CHOOSER_KEY_SIZE - 2);
+	mw_gl_hline(draw_info,
+			1,
+			MW_UI_INT_NUMBER_CHOOSER_WIDTH - 2,
+			MW_UI_INT_NUMBER_CHOOSER_KEY_SIZE - 2);
+
 	cursor_x_coordinate = 2 + this_int_number_chooser->cursor_position * MW_GL_STANDARD_CHARACTER_WIDTH;
 
 	/* draw the number */
+	mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 	if (this_int_number_chooser->is_negative && strcmp(this_int_number_chooser->number_buffer, "0") !=0)
 	{
 		/* draw negative sign and number */

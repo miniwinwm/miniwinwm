@@ -43,7 +43,7 @@ SOFTWARE.
 *** CONSTANTS ***
 ****************/
 
-static const char *menu_bar_labels[] = {"Cat", "Dog", "Gnu"};
+static const char *menu_bar_labels[] = {"Cat", "Dog", "\xa2\xa3\xa4"};
 #define MENU_BAR_1_ITEMS_COUNT				(sizeof(menu_bar_labels)/sizeof(char *))
 static const char *radio_button_labels[] = {"Elk", "Ant", "Hog"};
 #define RADIO_BUTTON_1_ITEMS_COUNT			(sizeof(radio_button_labels)/sizeof(char *))
@@ -265,7 +265,7 @@ void mw_user_init(void)
 			MW_WINDOW_MESSAGE);
 
 	/* create a new vertical scroll bar */
-	scroll_bar_vert_2_id = mw_ui_scroll_bar_vert_add_new(75 + MW_UI_LIST_BOX_WIDTH,
+	scroll_bar_vert_2_id = mw_ui_scroll_bar_vert_add_new(75 + MW_UI_LIST_BOX_WIDTH - 1,
 			25,
 			MW_UI_LIST_BOX_ROW_HEIGHT * 3,
 			window_test_id,

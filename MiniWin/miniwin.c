@@ -772,8 +772,17 @@ static void draw_minimised_icons(void)
 					draw_info.clip_rect.height = horizontal_edges[horizontal_edge_counter + 1] - horizontal_edges[horizontal_edge_counter];
 					draw_info.clip_rect.width = vertical_edges[vertical_edge_counter + 1] - vertical_edges[vertical_edge_counter];
 
+					mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 					mw_gl_rectangle(&draw_info, 0, 0, MW_DESKTOP_ICON_WIDTH, MW_DESKTOP_ICON_HEIGHT);
-					mw_gl_string(&draw_info, 2, 4, mw_all_windows[i].title);
+					mw_gl_string(&draw_info, 4, 6, mw_all_windows[i].title);
+
+					/* draw 3d effect */
+					mw_gl_set_fg_colour(MW_HAL_LCD_WHITE);
+					mw_gl_vline(&draw_info, 1, 1, MW_DESKTOP_ICON_HEIGHT - 2);
+					mw_gl_hline(&draw_info, 1, MW_DESKTOP_ICON_WIDTH - 2, 1);
+					mw_gl_set_fg_colour(MW_HAL_LCD_GREY7);
+					mw_gl_vline(&draw_info, MW_DESKTOP_ICON_WIDTH - 2, 2, MW_DESKTOP_ICON_HEIGHT - 2);
+					mw_gl_hline(&draw_info, 2, MW_DESKTOP_ICON_WIDTH - 2, MW_DESKTOP_ICON_HEIGHT - 2);
 				}
 			}
 		}
@@ -1334,10 +1343,17 @@ static void draw_horizontal_window_scroll_bar(const mw_gl_draw_info_t *draw_info
 	MW_ASSERT(window_ref < MW_MAX_WINDOW_COUNT);
 
 	mw_gl_set_fill(MW_GL_FILL);
-	mw_gl_set_border(MW_GL_BORDER_OFF);
+	mw_gl_set_border(MW_GL_BORDER_ON);
 	mw_gl_clear_pattern();
-	mw_gl_set_solid_fill_colour(MW_SCROLL_BAR_BAR_COLOUR);
-
+	mw_gl_set_solid_fill_colour(MW_CONTROL_UP_COLOUR);
+	if (mw_all_windows[window_ref].window_flags & MW_WINDOWS_HORIZ_SCROLL_BAR_ENABLED)
+	{
+		mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
+	}
+	else
+	{
+		mw_gl_set_fg_colour(MW_CONTROL_DISABLED_COLOUR);
+	}
 	mw_gl_rectangle(draw_info,
 			mw_all_windows[window_ref].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0,
 			mw_all_windows[window_ref].window_rect.height -
@@ -1347,25 +1363,17 @@ static void draw_horizontal_window_scroll_bar(const mw_gl_draw_info_t *draw_info
 			MW_SCROLL_BAR_NARROW_DIMESION);
 
 	/* there is always space to draw slider */
-	if (mw_all_windows[window_ref].window_flags & MW_WINDOWS_HORIZ_SCROLL_BAR_ENABLED)
-	{
-		mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
-		mw_gl_set_solid_fill_colour(MW_HAL_LCD_WHITE);
-	}
-	else
-	{
-		mw_gl_set_fg_colour(MW_CONTROL_DISABLED_COLOUR);
-		mw_gl_set_solid_fill_colour(MW_CONTROL_UP_COLOUR);
-	}
+	mw_gl_set_solid_fill_colour(MW_CONTROL_DOWN_COLOUR);
 
 	scroll_bar_horiz_slider_left = (mw_all_windows[window_ref].client_rect.width - MW_SCROLL_BAR_SLIDER_SIZE) *
-			mw_all_windows[window_ref].horiz_scroll_pos / UINT8_MAX;
+		mw_all_windows[window_ref].horiz_scroll_pos / UINT8_MAX;
 
 	scroll_bar_horiz_slider_left += (mw_all_windows[window_ref].client_rect.x -
-			mw_all_windows[window_ref].window_rect.x);
+		mw_all_windows[window_ref].window_rect.x);
 
 	mw_gl_set_border(MW_GL_BORDER_ON);
 	mw_gl_set_line(MW_GL_SOLID_LINE);
+	mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 	mw_gl_rectangle(draw_info,
 			scroll_bar_horiz_slider_left,
 			mw_all_windows[window_ref].window_rect.height -
@@ -1373,6 +1381,41 @@ static void draw_horizontal_window_scroll_bar(const mw_gl_draw_info_t *draw_info
 				MW_SCROLL_BAR_NARROW_DIMESION,
 			MW_SCROLL_BAR_SLIDER_SIZE,
 			MW_SCROLL_BAR_NARROW_DIMESION);
+
+	/* draw 3D effect */
+	mw_gl_set_fg_colour(MW_HAL_LCD_WHITE);
+	mw_gl_vline(draw_info,
+			scroll_bar_horiz_slider_left + 1,
+			2 +
+				mw_all_windows[window_ref].window_rect.height -
+				(mw_all_windows[window_ref].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0) -
+				MW_SCROLL_BAR_NARROW_DIMESION,
+			mw_all_windows[window_ref].window_rect.height -
+				2 -
+				(mw_all_windows[window_ref].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0));
+	mw_gl_hline(draw_info,
+			scroll_bar_horiz_slider_left + 1,
+			scroll_bar_horiz_slider_left + MW_SCROLL_BAR_SLIDER_SIZE - 2,
+			1 +
+				mw_all_windows[window_ref].window_rect.height -
+				(mw_all_windows[window_ref].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0) -
+				MW_SCROLL_BAR_NARROW_DIMESION);
+	mw_gl_set_fg_colour(MW_HAL_LCD_GREY7);
+	mw_gl_vline(draw_info,
+			scroll_bar_horiz_slider_left + MW_SCROLL_BAR_SLIDER_SIZE - 2,
+			2 +
+				mw_all_windows[window_ref].window_rect.height -
+				(mw_all_windows[window_ref].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0) -
+				MW_SCROLL_BAR_NARROW_DIMESION,
+			mw_all_windows[window_ref].window_rect.height -
+				3 -
+				(mw_all_windows[window_ref].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0));
+	mw_gl_hline(draw_info,
+			scroll_bar_horiz_slider_left + 2,
+			scroll_bar_horiz_slider_left + MW_SCROLL_BAR_SLIDER_SIZE - 2,
+			mw_all_windows[window_ref].window_rect.height -
+				2 -
+				(mw_all_windows[window_ref].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0));
 }
 
 /**
@@ -1389,9 +1432,17 @@ static void draw_vertical_window_scroll_bar(const mw_gl_draw_info_t *draw_info, 
 	MW_ASSERT(window_ref < MW_MAX_WINDOW_COUNT);
 
 	mw_gl_set_fill(MW_GL_FILL);
-	mw_gl_set_border(MW_GL_BORDER_OFF);
+	mw_gl_set_border(MW_GL_BORDER_ON);
 	mw_gl_clear_pattern();
-	mw_gl_set_solid_fill_colour(MW_SCROLL_BAR_BAR_COLOUR);
+	mw_gl_set_solid_fill_colour(MW_CONTROL_UP_COLOUR);
+	if (mw_all_windows[window_ref].window_flags & MW_WINDOWS_HORIZ_SCROLL_BAR_ENABLED)
+	{
+		mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
+	}
+	else
+	{
+		mw_gl_set_fg_colour(MW_CONTROL_DISABLED_COLOUR);
+	}
 
 	mw_gl_rectangle(draw_info,
 			(mw_all_windows[window_ref].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0) +
@@ -1401,16 +1452,7 @@ static void draw_vertical_window_scroll_bar(const mw_gl_draw_info_t *draw_info, 
 			mw_all_windows[window_ref].client_rect.height);
 
 	/* there is always space to draw slider */
-	if (mw_all_windows[window_ref].window_flags & MW_WINDOWS_HORIZ_SCROLL_BAR_ENABLED)
-	{
-		mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
-		mw_gl_set_solid_fill_colour(MW_HAL_LCD_WHITE);
-	}
-	else
-	{
-		mw_gl_set_fg_colour(MW_CONTROL_DISABLED_COLOUR);
-		mw_gl_set_solid_fill_colour(MW_CONTROL_UP_COLOUR);
-	}
+	mw_gl_set_solid_fill_colour(MW_CONTROL_DOWN_COLOUR);
 
 	scroll_bar_horiz_slider_top = (mw_all_windows[window_ref].client_rect.height - MW_SCROLL_BAR_SLIDER_SIZE) *
 			mw_all_windows[window_ref].vert_scroll_pos / UINT8_MAX;
@@ -1424,8 +1466,45 @@ static void draw_vertical_window_scroll_bar(const mw_gl_draw_info_t *draw_info, 
 				(mw_all_windows[window_ref].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0) -
 				MW_SCROLL_BAR_NARROW_DIMESION,
 			scroll_bar_horiz_slider_top,
-			MW_SCROLL_BAR_SLIDER_SIZE,
-			MW_SCROLL_BAR_NARROW_DIMESION);
+			MW_SCROLL_BAR_NARROW_DIMESION,
+			MW_SCROLL_BAR_SLIDER_SIZE);
+
+	/* draw 3D effect */
+	mw_gl_set_fg_colour(MW_HAL_LCD_WHITE);
+	mw_gl_vline(draw_info,
+			2 +
+				mw_all_windows[window_ref].window_rect.width -
+				(mw_all_windows[window_ref].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0) -
+				MW_SCROLL_BAR_NARROW_DIMESION,
+			1 + scroll_bar_horiz_slider_top,
+			scroll_bar_horiz_slider_top + MW_SCROLL_BAR_NARROW_DIMESION - 2);
+	mw_gl_hline(draw_info,
+			2 +
+				mw_all_windows[window_ref].window_rect.width -
+				(mw_all_windows[window_ref].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0) -
+				MW_SCROLL_BAR_NARROW_DIMESION,
+			mw_all_windows[window_ref].window_rect.width -
+				(mw_all_windows[window_ref].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0) -
+				2,
+			scroll_bar_horiz_slider_top + 1);
+	mw_gl_set_fg_colour(MW_HAL_LCD_GREY7);
+	mw_gl_vline(draw_info,
+			MW_SCROLL_BAR_NARROW_DIMESION +
+				mw_all_windows[window_ref].window_rect.width -
+				(mw_all_windows[window_ref].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0) -
+				MW_SCROLL_BAR_NARROW_DIMESION -
+				2,
+				2 + scroll_bar_horiz_slider_top,
+				scroll_bar_horiz_slider_top + MW_SCROLL_BAR_NARROW_DIMESION - 2);
+	mw_gl_hline(draw_info,
+			2 +
+				mw_all_windows[window_ref].window_rect.width -
+				(mw_all_windows[window_ref].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0) -
+				MW_SCROLL_BAR_NARROW_DIMESION,
+			mw_all_windows[window_ref].window_rect.width -
+				(mw_all_windows[window_ref].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0) -
+				2,
+			scroll_bar_horiz_slider_top + MW_SCROLL_BAR_SLIDER_SIZE - 2);
 }
 
 /**

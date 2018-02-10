@@ -80,7 +80,7 @@ void mw_hal_lcd_init(void)
 	GetWindowRect(hwnd, &rect);
 	MoveWindow(hwnd, rect.left, rect.top, 270, 380, TRUE);
 	SetConsoleCursorInfo(handle, &cinfo);
-	SetConsoleTitle("MinWin for Windows");
+	SetConsoleTitle("MiniWin for Windows");
 }
 
 void mw_hal_lcd_pixel(int16_t x, int16_t y, mw_hal_lcd_colour_t colour)

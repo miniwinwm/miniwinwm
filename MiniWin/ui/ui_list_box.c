@@ -75,13 +75,22 @@ void mw_ui_list_box_paint_function(uint8_t control_ref, const mw_gl_draw_info_t 
     /* draw the background rectangle */
 	mw_gl_set_fill(MW_GL_FILL);
 	mw_gl_set_solid_fill_colour(MW_CONTROL_UP_COLOUR);
-	mw_gl_set_border(MW_GL_BORDER_OFF);
+	mw_gl_set_line(MW_GL_SOLID_LINE);
+	mw_gl_set_border(MW_GL_BORDER_ON);
+	mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 	mw_gl_clear_pattern();
 	mw_gl_rectangle(draw_info,
 			0,
 			0,
 			mw_all_controls[control_ref].control_rect.width,
 			mw_all_controls[control_ref].control_rect.height);
+
+	mw_gl_set_fg_colour(MW_HAL_LCD_WHITE);
+	mw_gl_vline(draw_info, 1, 1, mw_all_controls[control_ref].control_rect.height - 2);
+	mw_gl_hline(draw_info, 1, mw_all_controls[control_ref].control_rect.width - 2, 1);
+	mw_gl_set_fg_colour(MW_HAL_LCD_GREY7);
+	mw_gl_vline(draw_info, mw_all_controls[control_ref].control_rect.width - 2, 1, mw_all_controls[control_ref].control_rect.height - 2);
+	mw_gl_hline(draw_info, 1, mw_all_controls[control_ref].control_rect.width - 2, mw_all_controls[control_ref].control_rect.height - 2);
 
     /* set up text transparency */
 	mw_gl_set_bg_transparency(MW_GL_BG_TRANSPARENT);
@@ -92,11 +101,31 @@ void mw_ui_list_box_paint_function(uint8_t control_ref, const mw_gl_draw_info_t 
 		if(this_list_box->line_is_selected && this_list_box->selection == i)
 		{
 			mw_gl_set_solid_fill_colour(MW_CONTROL_DOWN_COLOUR);
+			mw_gl_set_border(MW_GL_BORDER_OFF);
 			mw_gl_rectangle(draw_info,
-					0,
-					MW_UI_LIST_BOX_ROW_HEIGHT * i,
-					mw_all_controls[control_ref].control_rect.width,
-					MW_UI_LIST_BOX_ROW_HEIGHT);
+					2,
+					MW_UI_LIST_BOX_ROW_HEIGHT * i + 1,
+					mw_all_controls[control_ref].control_rect.width - 4,
+					MW_UI_LIST_BOX_ROW_HEIGHT - 2);
+			mw_gl_set_line(MW_GL_SOLID_LINE);
+			mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
+			mw_gl_vline(draw_info,
+					1,
+					MW_UI_LIST_BOX_ROW_HEIGHT * i + 1,
+					MW_UI_LIST_BOX_ROW_HEIGHT * (i + 1) - 1);
+			mw_gl_hline(draw_info,
+					1,
+					mw_all_controls[control_ref].control_rect.width - 2,
+					MW_UI_LIST_BOX_ROW_HEIGHT * i + 1);
+			mw_gl_set_fg_colour(MW_HAL_LCD_GREY2);
+			mw_gl_vline(draw_info,
+					mw_all_controls[control_ref].control_rect.width - 3,
+					MW_UI_LIST_BOX_ROW_HEIGHT * i + 1,
+					MW_UI_LIST_BOX_ROW_HEIGHT * i + MW_UI_LIST_BOX_ROW_HEIGHT - 1);
+			mw_gl_hline(draw_info,
+					1,
+					mw_all_controls[control_ref].control_rect.width - 3,
+					MW_UI_LIST_BOX_ROW_HEIGHT * (i + 1) - 1);
 		}
 
 		/* set up text colour on enabled state - from control and individual items bitfield */
@@ -111,18 +140,32 @@ void mw_ui_list_box_paint_function(uint8_t control_ref, const mw_gl_draw_info_t 
 		}
 
 		/* draw the item label text */
-		mw_gl_string(draw_info,
-				MW_GL_STANDARD_CHARACTER_WIDTH,
-				MW_UI_LIST_BOX_ROW_HEIGHT * i + MW_UI_LIST_BOX_LABEL_Y_OFFSET,
-				this_list_box->list_box_labels[i]);
+		if(this_list_box->line_is_selected && this_list_box->selection == i)
+		{
+			mw_gl_string(draw_info,
+					MW_GL_STANDARD_CHARACTER_WIDTH + 1,
+					MW_UI_LIST_BOX_ROW_HEIGHT * i + MW_UI_LIST_BOX_LABEL_Y_OFFSET + 1,
+					this_list_box->list_box_labels[i]);
+		}
+		else
+		{
+			mw_gl_string(draw_info,
+					MW_GL_STANDARD_CHARACTER_WIDTH,
+					MW_UI_LIST_BOX_ROW_HEIGHT * i + MW_UI_LIST_BOX_LABEL_Y_OFFSET,
+					this_list_box->list_box_labels[i]);
+		}
 
 		/* draw feint separator between items */
 		mw_gl_set_fg_colour(MW_CONTROL_SEPARATOR_COLOUR);
 		mw_gl_set_line(MW_GL_DOT_LINE);
+
+		if (i > 0)
+		{
 		mw_gl_hline(draw_info,
-				0,
-				mw_all_controls[control_ref].control_rect.width,
+				2,
+				mw_all_controls[control_ref].control_rect.width - 4,
 				MW_UI_LIST_BOX_ROW_HEIGHT * i);
+		}
 	}
 }
 

@@ -82,7 +82,7 @@ void mw_ui_scroll_bar_vert_paint_function(uint8_t control_ref, const mw_gl_draw_
 		mw_gl_set_border(MW_GL_BORDER_ON);
 		mw_gl_set_line(MW_GL_SOLID_LINE);
 		mw_gl_clear_pattern();
-		mw_gl_set_solid_fill_colour(MW_SCROLL_BAR_BAR_COLOUR);
+		mw_gl_set_solid_fill_colour(MW_CONTROL_UP_COLOUR);
 		if (mw_all_controls[control_ref].control_flags & MW_CONTROL_FLAG_IS_ENABLED)
 		{
 			mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
@@ -100,21 +100,33 @@ void mw_ui_scroll_bar_vert_paint_function(uint8_t control_ref, const mw_gl_draw_
 		scroll_bar_vert_slider_top = (mw_all_controls[control_ref].control_rect.height - MW_SCROLL_BAR_SLIDER_SIZE) *
 				this_scroll_bar_vert->scroll_position / UINT8_MAX;
 
-		if (mw_all_controls[control_ref].control_flags & MW_CONTROL_FLAG_IS_ENABLED)
-		{
-			mw_gl_set_solid_fill_colour(MW_HAL_LCD_WHITE);
-		}
-		else
-		{
-			mw_gl_set_solid_fill_colour(MW_CONTROL_UP_COLOUR);
-		}
-		mw_gl_set_border(MW_GL_BORDER_ON);
-		mw_gl_set_line(MW_GL_SOLID_LINE);
+		mw_gl_set_solid_fill_colour(MW_CONTROL_DOWN_COLOUR);
+		mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 		mw_gl_rectangle(draw_info,
 				1,
 				scroll_bar_vert_slider_top + 1,
 				MW_SCROLL_BAR_NARROW_DIMESION - 2,
 				MW_SCROLL_BAR_SLIDER_SIZE - 2);
+
+		/* draw 3d effect */
+		mw_gl_set_fg_colour(MW_HAL_LCD_WHITE);
+		mw_gl_vline(draw_info,
+				2,
+				scroll_bar_vert_slider_top + 2,
+				scroll_bar_vert_slider_top + MW_SCROLL_BAR_SLIDER_SIZE - 3);
+		mw_gl_hline(draw_info,
+				2,
+				MW_SCROLL_BAR_NARROW_DIMESION - 4,
+				scroll_bar_vert_slider_top + 2);
+		mw_gl_set_fg_colour(MW_HAL_LCD_GREY7);
+		mw_gl_vline(draw_info,
+				MW_SCROLL_BAR_NARROW_DIMESION - 3,
+				scroll_bar_vert_slider_top + 2,
+				scroll_bar_vert_slider_top + MW_SCROLL_BAR_SLIDER_SIZE - 4);
+		mw_gl_hline(draw_info,
+				3,
+				MW_SCROLL_BAR_NARROW_DIMESION - 3,
+				scroll_bar_vert_slider_top + MW_SCROLL_BAR_SLIDER_SIZE - 3);
 	}
 }
 

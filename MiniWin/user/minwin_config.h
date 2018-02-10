@@ -65,9 +65,8 @@ SOFTWARE.
 #define MW_TITLE_TEXT_COLOUR_MODAL			MW_HAL_LCD_BLACK    /**< Title bar text colour of window that's modal */
 #define MW_CONTROL_UP_COLOUR				MW_HAL_LCD_GREY2    /**< Animated controls up colour */
 #define MW_CONTROL_SEPARATOR_COLOUR			MW_HAL_LCD_GREY3	/**< Separator between control items colour */
-#define MW_CONTROL_DOWN_COLOUR				MW_HAL_LCD_GREY5    /**< Animated controls down colour */
+#define MW_CONTROL_DOWN_COLOUR				MW_HAL_LCD_GREY4    /**< Animated controls down colour */
 #define MW_CONTROL_DISABLED_COLOUR			MW_HAL_LCD_GREY5	/**< Colour to draw a control that is disabled */
-#define MW_SCROLL_BAR_BAR_COLOUR			MW_HAL_LCD_LIGHT_BLUE	/**< Scroll bar bar colour */
 
 /* Timings */
 #define MW_CONTROL_DOWN_TIME				4               	/**< Time for animated controls down time in system ticks */

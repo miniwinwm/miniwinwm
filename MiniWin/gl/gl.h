@@ -290,7 +290,7 @@ void mw_gl_rectangle(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y, i
  * @param draw_info Reference frame origin coordinates and clip region rect
  * @param x Coordinate of the left edge of the rectangle containing the character
  * @param y Coordinate of the top edge of the rectangle containing the character
- * @param c The ASCII character
+ * @param c The ISO8859-15 character
  */
 void mw_gl_character(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y, char c);
 
@@ -300,7 +300,7 @@ void mw_gl_character(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y, c
  * @param draw_info Reference frame origin coordinates and clip region rect
  * @param x Coordinate of the left edge of the rectangle containing the first character
  * @param y Coordinate of the top edge of the rectangle containing the first character
- * @param s Pointer to the null terminated string containing ASCII characters
+ * @param s Pointer to the null terminated string containing ISO8859-1 characters
  */
 void mw_gl_string(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y, const char *s);
 
@@ -310,7 +310,7 @@ void mw_gl_string(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y, cons
  * @param draw_info Reference frame origin coordinates and clip region rect
  * @param x Coordinate of the top of the rotated character, i.e. the character will be drawn from this point left
  * @param y Coordinate of the left edge of the character, i.e. the character will be drawn from this point down
- * @param c the ASCII character
+ * @param c the ISO8859-15 character
  */
 void mw_gl_character_vert(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y, char c);
 
@@ -320,7 +320,7 @@ void mw_gl_character_vert(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t
  * @param draw_info Reference frame origin coordinates and clip region rect
  * @param x Coordinate of the top of the rotated characters, i.e. the characters will be drawn from this point left
  * @param y Coordinate of the left edge of the first character, i.e. the characters will be drawn from this point down
- * @param s Pointer to the null terminated string containing ASCII characters
+ * @param s Pointer to the null terminated string containing ISO8859-15 characters
  */
 void mw_gl_string_vert(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y, const char *s);
 
@@ -330,7 +330,7 @@ void mw_gl_string_vert(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y,
  * @param draw_info Reference frame origin coordinates and clip region rect
  * @param x Coordinate of the left edge of the rectangle containing the first character
  * @param y Coordinate of the top edge of the rectangle containing the first character
- * @param s Pointer to the null terminated string containing ASCII characters
+ * @param s Pointer to the null terminated string containing ISO8859-15 characters
  */
 void mw_gl_large_string(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y, const char *s);
 
@@ -340,7 +340,7 @@ void mw_gl_large_string(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y
  * @param draw_info Reference frame origin coordinates and clip region rect
  * @param x Coordinate of the top of the rotated characters, i.e. the characters will be drawn from this point left
  * @param y Coordinate of the left edge of the first character, i.e. the characters will be drawn from this point down
- * @param s Pointer to the null terminated string containing ASCII characters
+ * @param s Pointer to the null terminated string containing ISO8859-15 characters
  */
 void mw_gl_large_string_vert(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y, const char *s);
 

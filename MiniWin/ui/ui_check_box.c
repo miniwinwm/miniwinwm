@@ -47,6 +47,7 @@ SOFTWARE.
 *** EXTERNAL VARIABLES ***
 **************************/
 
+extern const uint8_t mw_bitmaps_tick[];
 extern mw_control_t mw_all_controls[MW_MAX_CONTROL_COUNT];
 
 /**********************
@@ -78,21 +79,7 @@ void mw_ui_check_box_paint_function(uint8_t control_ref, const mw_gl_draw_info_t
 	{
 		mw_gl_set_fg_colour(MW_CONTROL_DISABLED_COLOUR);
 	}
-    
-    /* draw the box */
-	mw_gl_set_fill(MW_GL_FILL);
-	mw_gl_set_line(MW_GL_SOLID_LINE);
-	mw_gl_set_border(MW_GL_BORDER_ON);
-	mw_gl_clear_pattern();
-	mw_gl_set_solid_fill_colour(MW_HAL_LCD_WHITE);
-	mw_gl_rectangle(draw_info, 0, 0, MW_UI_CHECK_BOX_HEIGHT, MW_UI_CHECK_BOX_HEIGHT);
-    
-    /* draw the X if needed */
-	if (this_check_box->checked)
-	{
-		mw_gl_line(draw_info, 1, 1, MW_UI_CHECK_BOX_HEIGHT - 2, MW_UI_CHECK_BOX_HEIGHT - 2);
-		mw_gl_line(draw_info, MW_UI_CHECK_BOX_HEIGHT - 2, 1, 1, MW_UI_CHECK_BOX_HEIGHT - 2);
-	}
+
     
     /* draw the label text */
 	mw_gl_set_bg_transparency(MW_GL_BG_TRANSPARENT);
@@ -100,6 +87,30 @@ void mw_ui_check_box_paint_function(uint8_t control_ref, const mw_gl_draw_info_t
 			MW_UI_CHECK_BOX_LABEL_X_OFFSET,
 			MW_UI_CHECK_BOX_LABEL_Y_OFFSET,
 			this_check_box->label);
+
+    /* draw the box */
+	mw_gl_set_fill(MW_GL_FILL);
+	mw_gl_set_line(MW_GL_SOLID_LINE);
+	mw_gl_set_border(MW_GL_BORDER_ON);
+	mw_gl_clear_pattern();
+	mw_gl_set_solid_fill_colour(MW_CONTROL_UP_COLOUR);
+	mw_gl_rectangle(draw_info, 0, 0, MW_UI_CHECK_BOX_HEIGHT, MW_UI_CHECK_BOX_HEIGHT);
+
+	/* draw 3d effect */
+	mw_gl_set_fg_colour(MW_HAL_LCD_WHITE);
+	mw_gl_vline(draw_info, 1, 1, MW_UI_CHECK_BOX_HEIGHT - 2);
+	mw_gl_hline(draw_info, 1, MW_UI_CHECK_BOX_HEIGHT - 2, 1);
+	mw_gl_set_fg_colour(MW_HAL_LCD_GREY7);
+	mw_gl_vline(draw_info, MW_UI_CHECK_BOX_HEIGHT - 2, 1, MW_UI_CHECK_BOX_HEIGHT - 2);
+	mw_gl_hline(draw_info, 1, MW_UI_CHECK_BOX_HEIGHT - 2, MW_UI_CHECK_BOX_HEIGHT - 2);
+
+    /* draw the tick if needed */
+	if (this_check_box->checked)
+	{
+		mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
+		mw_gl_set_bg_transparency(MW_GL_BG_TRANSPARENT);
+		mw_gl_monochrome_bitmap(draw_info, 1, 1, 12, 12, mw_bitmaps_tick);
+	}
 }
 
 void mw_ui_check_box_message_function(const mw_message_t *message)

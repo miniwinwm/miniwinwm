@@ -89,6 +89,11 @@ bool mw_hal_touch_get_point(uint16_t* x, uint16_t* y)
 
 	TP_State = IOE_TP_GetState();
 
+	if (!TP_State->TouchDetected)
+	{
+		return false;
+	}
+
 	*x = TP_State->X;
 	*y = TP_State->Y;
 

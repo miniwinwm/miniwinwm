@@ -57,7 +57,8 @@ SOFTWARE.
 
 extern const uint16_t mw_fonts_large_positions[];   	/**< positions of start of character data of proportional fonts */
 extern const uint8_t mw_fonts_large_pro[];      		/**< 16 high proportional font, widths vary */
-extern const uint8_t mw_fonts_5x9[]; 					/**< 5x9 fixed width font */
+extern const uint8_t mw_fonts_ascii_5x9[]; 					/**< 5x9 fixed width font */
+extern const uint8_t mw_fonts_iso8859_15_5x9[];				/**< 5x9 fixed width font ISO8859 part 15 extension */
 
 /**********************
 *** LOCAL VARIABLES ***
@@ -1119,6 +1120,10 @@ void mw_gl_character(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y, c
 	uint16_t bitmap_start_byte;
 	uint8_t mask;
 	uint8_t byte;
+	unsigned char uc;
+	const uint8_t *font_bitmap_array;
+
+	uc = (unsigned char)c;
 
 	if (!draw_info)
 	{
@@ -1134,9 +1139,9 @@ void mw_gl_character(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y, c
 		return;
 	}
 
-	if (c < ' ' || c > '~')
+	if (uc < ' ' || (uc > '~' && uc < 0xa0))
 	{
-		c = '*';
+		uc = '*';
 	}
 
 	if (gc.bg_transparent == MW_GL_BG_NOT_TRANSPARENT)
@@ -1144,18 +1149,28 @@ void mw_gl_character(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y, c
 		filled_rectangle(draw_info, x, y, MW_GL_STANDARD_CHARACTER_WIDTH, MW_GL_STANDARD_CHARACTER_HEIGHT, gc.bg_colour);
 	}
 
-	bitmap_start_position = (c - ' ') * MW_GL_STANDARD_CHARACTER_WIDTH;
+	if (uc < '~')
+	{
+		bitmap_start_position = (uc - ' ') * MW_GL_STANDARD_CHARACTER_WIDTH;
+		font_bitmap_array = mw_fonts_ascii_5x9;
+	}
+	else
+	{
+		bitmap_start_position = (uc - 0xa0) * MW_GL_STANDARD_CHARACTER_WIDTH;
+		font_bitmap_array = mw_fonts_iso8859_15_5x9;
+	}
+
 	for (char_y = 0; char_y < MW_GL_STANDARD_CHARACTER_HEIGHT - 1; char_y++)
 	{
 		bitmap_start_byte = (char_y * 72) + (bitmap_start_position / 8);
 		mask = 0x80 >> (bitmap_start_position % 8);
-		byte = mw_fonts_5x9[bitmap_start_byte];
+		byte = font_bitmap_array[bitmap_start_byte];
 
 		for (char_x = 0; char_x < MW_GL_STANDARD_CHARACTER_WIDTH - 1; char_x++)
 		{
 			if (!(byte & mask))
 			{
-	   			mw_gl_fg_pixel(draw_info, x + char_x, y + char_y);
+				mw_gl_fg_pixel(draw_info, x + char_x, y + char_y);
 			}
 
 			mask >>= 1;
@@ -1163,7 +1178,7 @@ void mw_gl_character(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y, c
 			{
 				mask = 0x80;
 				bitmap_start_byte++;
-				byte = mw_fonts_5x9[bitmap_start_byte];
+				byte = font_bitmap_array[bitmap_start_byte];
 			}
 		}
 	}
@@ -1180,7 +1195,7 @@ void mw_gl_string(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y, cons
 		return;
 	}
 
-	length = strlen(s);
+	length = strlen((char *)s);
 	for (c = 0; c < length; c++)
 	{
 		mw_gl_character(draw_info, x + c * MW_GL_STANDARD_CHARACTER_WIDTH, y, s[c]);
@@ -1195,6 +1210,10 @@ void mw_gl_character_vert(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t
 	uint16_t bitmap_start_byte;
 	uint8_t mask;
 	uint8_t byte;
+	unsigned char uc;
+	const uint8_t *font_bitmap_array;
+
+	uc = (unsigned char)c;
 
 	if (!draw_info)
 	{
@@ -1210,9 +1229,9 @@ void mw_gl_character_vert(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t
 		return;
 	}
 
-	if (c < ' ' || c > '~')
+	if (uc < ' ' || (uc > '~' && uc < 0xa0))
 	{
-		c = '*';
+		uc = '*';
 	}
 
 	if (gc.bg_transparent == MW_GL_BG_NOT_TRANSPARENT)
@@ -1221,12 +1240,21 @@ void mw_gl_character_vert(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t
 				MW_GL_STANDARD_CHARACTER_HEIGHT, MW_GL_STANDARD_CHARACTER_WIDTH, gc.bg_colour);
 	}
 
-	bitmap_start_position = (c - ' ') * MW_GL_STANDARD_CHARACTER_WIDTH;
+	if (uc < '~')
+	{
+		bitmap_start_position = (uc - ' ') * MW_GL_STANDARD_CHARACTER_WIDTH;
+		font_bitmap_array = mw_fonts_ascii_5x9;
+	}
+	else
+	{
+		bitmap_start_position = (uc - 0xa0) * MW_GL_STANDARD_CHARACTER_WIDTH;
+		font_bitmap_array = mw_fonts_iso8859_15_5x9;
+	}
 	for (char_y = 0; char_y < MW_GL_STANDARD_CHARACTER_HEIGHT - 1; char_y++)
 	{
 		bitmap_start_byte = (char_y * 72) + (bitmap_start_position / 8);
 		mask = 0x80 >> (bitmap_start_position % 8);
-		byte = mw_fonts_5x9[bitmap_start_byte];
+		byte = font_bitmap_array[bitmap_start_byte];
 
 		for (char_x = 0; char_x < MW_GL_STANDARD_CHARACTER_WIDTH - 1; char_x++)
 		{
@@ -1240,55 +1268,10 @@ void mw_gl_character_vert(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t
 			{
 				mask = 0x80;
 				bitmap_start_byte++;
-				byte = mw_fonts_5x9[bitmap_start_byte];
+				byte = font_bitmap_array[bitmap_start_byte];
 			}
 		}
 	}
-#if 0
-	int16_t char_x;
-	int16_t char_y;
-	uint8_t column_byte;
-	uint8_t mask;
-
-	if (!draw_info)
-	{
-		MW_ASSERT(false);
-		return;
-	}
-
-	if (x - MW_GL_STANDARD_CHARACTER_HEIGHT >= draw_info->clip_rect.x + draw_info->clip_rect.width ||
-			y >= draw_info->clip_rect.y + draw_info->clip_rect.height ||
-			x < draw_info->clip_rect.x ||
-			y + MW_GL_STANDARD_CHARACTER_WIDTH <= draw_info->clip_rect.y)
-	{
-		return;
-	}
-
-	if (c < ' ' || c > '~')
-	{
-		c = '*';
-	}
-
-	if (gc.bg_transparent == MW_GL_BG_NOT_TRANSPARENT)
-	{
-		filled_rectangle(draw_info, x - MW_GL_STANDARD_CHARACTER_HEIGHT, y,
-				MW_GL_STANDARD_CHARACTER_HEIGHT, MW_GL_STANDARD_CHARACTER_WIDTH, gc.bg_colour);
-	}
-
-	for (char_x = 0; char_x < 5; char_x++)
-	{
-		mask = 0x01;
-	   	column_byte = mw_fonts_ascii_5x7[c - ' '][char_x];
-	   	for (char_y = 8; char_y > 0; char_y--)
-	    {
-	   		if (column_byte&mask)
-	   		{
-	   			mw_gl_fg_pixel(draw_info, x + char_y - MW_GL_STANDARD_CHARACTER_HEIGHT, y + char_x);
-	   		}
-	   		mask <<= 1;
-	   	}
-	}
-#endif
 }
 
 void mw_gl_string_vert(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y, const char *s)
@@ -1302,7 +1285,7 @@ void mw_gl_string_vert(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y,
 		return;
 	}
 
-	length = strlen(s);
+	length = strlen((char *)s);
 	for (c = 0; c < length; c++)
 	{
 		mw_gl_character_vert(draw_info, x, y + c * MW_GL_STANDARD_CHARACTER_WIDTH, s[c]);
@@ -1311,7 +1294,7 @@ void mw_gl_string_vert(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y,
 
 void mw_gl_large_string(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y, const char *s)
 {
-	uint8_t length = strlen(s);
+	uint8_t length = strlen((char *)s);
 	uint8_t mask;
 	uint16_t start_pos_in_bitmap;
 	uint16_t end_pos_in_bitmap;
@@ -1387,7 +1370,7 @@ void mw_gl_large_string(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y
 
 void mw_gl_large_string_vert(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y, const char *s)
 {
-	uint8_t length = strlen(s);
+	uint8_t length = strlen((char *)s);
 	uint8_t mask;
 	uint16_t start_pos_in_bitmap, end_pos_in_bitmap;
 	int16_t char_x;
@@ -1473,7 +1456,7 @@ uint16_t mw_gl_large_string_width(const char *s)
 		return 0;
 	}
 
-	for (i = 0; i < strlen(s); i++)
+	for (i = 0; i < strlen((char *)s); i++)
 	{
 		width += mw_fonts_large_positions[s[i] - ' ' + 1] - mw_fonts_large_positions[s[i] - ' '];
 	}

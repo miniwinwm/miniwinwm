@@ -88,13 +88,39 @@ void mw_ui_radio_button_paint_function(uint8_t control_ref, const mw_gl_draw_inf
 			mw_gl_set_fg_colour(MW_CONTROL_DISABLED_COLOUR);
 		}
 
+        /* draw the label text */
+		mw_gl_string(draw_info,
+				MW_UI_RADIO_BUTTON_LABEL_X_OFFSET,
+				MW_UI_RADIO_BUTTON_LABEL_Y_OFFSET + i * MW_UI_RADIO_BUTTON_HEIGHT,
+				this_radio_radio_button->radio_button_labels[i]);
+
         /* draw the empty box */
-		mw_gl_set_solid_fill_colour(MW_HAL_LCD_WHITE);
+		mw_gl_set_solid_fill_colour(MW_CONTROL_UP_COLOUR);
 		mw_gl_rectangle(draw_info,
 				0,
 				i * MW_UI_RADIO_BUTTON_HEIGHT,
 				MW_UI_RADIO_BUTTON_BOX_SIZE,
 				MW_UI_RADIO_BUTTON_BOX_SIZE);
+
+		/* draw 3d effect */
+		mw_gl_set_fg_colour(MW_HAL_LCD_WHITE);
+		mw_gl_vline(draw_info,
+				1,
+				1 + i * MW_UI_RADIO_BUTTON_HEIGHT,
+				i * MW_UI_RADIO_BUTTON_HEIGHT + MW_UI_RADIO_BUTTON_BOX_SIZE - 2);
+		mw_gl_hline(draw_info,
+				1,
+				MW_UI_RADIO_BUTTON_BOX_SIZE - 2,
+				1 + i * MW_UI_RADIO_BUTTON_HEIGHT);
+		mw_gl_set_fg_colour(MW_HAL_LCD_GREY7);
+		mw_gl_vline(draw_info,
+				MW_UI_RADIO_BUTTON_BOX_SIZE - 2,
+				1 + i * MW_UI_RADIO_BUTTON_HEIGHT,
+				 i * MW_UI_RADIO_BUTTON_HEIGHT + MW_UI_RADIO_BUTTON_BOX_SIZE - 2);
+		mw_gl_hline(draw_info,
+				1,
+				MW_UI_RADIO_BUTTON_BOX_SIZE - 2,
+				i * MW_UI_RADIO_BUTTON_HEIGHT + MW_UI_RADIO_BUTTON_BOX_SIZE - 2);
         
         /* check if this radio_button is selected */
 		if (i == this_radio_radio_button->selected_radio_button)
@@ -116,12 +142,6 @@ void mw_ui_radio_button_paint_function(uint8_t control_ref, const mw_gl_draw_inf
 					MW_UI_RADIO_BUTTON_BOX_SIZE - 6,
 					MW_UI_RADIO_BUTTON_BOX_SIZE - 6);
 		}
-
-        /* draw the label text */
-		mw_gl_string(draw_info,
-				MW_UI_RADIO_BUTTON_LABEL_X_OFFSET,
-				MW_UI_RADIO_BUTTON_LABEL_Y_OFFSET + i * MW_UI_RADIO_BUTTON_HEIGHT,
-				this_radio_radio_button->radio_button_labels[i]);
 	}
 }
 

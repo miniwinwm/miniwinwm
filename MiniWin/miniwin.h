@@ -66,7 +66,7 @@ SOFTWARE.
 #define MW_ALL_ITEMS_ENABLED					0xffff								/**< All items in a control that can have individual items enabled are enabled */
 #define MW_ALL_ITEMS_DISABLED					0									/**< All items in a control that can have individual items enabled are disabled */
 #define MW_SCROLL_BAR_NARROW_DIMESION			12									/**< Width of vertical scroll bar, height of horizontal */
-#define MW_SCROLL_BAR_SLIDER_SIZE				12									/**< Length of scroll bar slider */
+#define MW_SCROLL_BAR_SLIDER_SIZE				MW_SCROLL_BAR_NARROW_DIMESION       /**< Length of scroll bar slider */
 #define MW_MENU_BAR_HEIGHT						14									/**< Menu bar height */
 #define MW_MENU_BAR_LABEL_Y_OFFSET				3               					/**< Gap between top edge of menu bar and text */
 
@@ -231,7 +231,7 @@ typedef struct
     uint8_t vert_scroll_pos;			/**< Current scroll position of a vertical scroll bar scaled to 0-255 */
     uint8_t menu_bar_items_count;		/**< Number of items in above array */
     uint8_t menu_bar_selected_item;		/**< The most recently selected menu bar item */
-    char title[MW_MAX_TITLE_SIZE + 1];  /**< The window's title in the title bar */	
+    char title[MW_MAX_TITLE_SIZE + 1];  /**< The window's title in the title bar */
 } mw_window_t;
 
 /**

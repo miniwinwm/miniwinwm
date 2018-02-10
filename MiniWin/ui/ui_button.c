@@ -71,6 +71,8 @@ extern volatile uint32_t mw_tick_counter;
 void mw_ui_button_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *draw_info)
 {
 	mw_ui_button_data_t *this_button = (mw_ui_button_data_t*)mw_all_controls[control_ref].extra_data;
+	mw_hal_lcd_colour_t highlighted_colour;
+	mw_hal_lcd_colour_t lowlighted_colour;
 
     /* set the button box fill colour depending on enabled state */    
 	if (this_button->button_down)
@@ -94,6 +96,24 @@ void mw_ui_button_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *d
 			mw_all_controls[control_ref].control_rect.width,
 			mw_all_controls[control_ref].control_rect.height);
 
+	if (this_button->button_down)
+	{
+		highlighted_colour = MW_HAL_LCD_BLACK;
+		lowlighted_colour = MW_HAL_LCD_GREY2;
+	}
+	else
+	{
+		highlighted_colour = MW_HAL_LCD_WHITE;
+		lowlighted_colour = MW_HAL_LCD_GREY7;
+	}
+
+	mw_gl_set_fg_colour(highlighted_colour);
+	mw_gl_vline(draw_info, 1, 1, mw_all_controls[control_ref].control_rect.height - 2);
+	mw_gl_hline(draw_info, 1, mw_all_controls[control_ref].control_rect.width - 2, 1);
+	mw_gl_set_fg_colour(lowlighted_colour);
+	mw_gl_vline(draw_info, mw_all_controls[control_ref].control_rect.width - 2, 1, mw_all_controls[control_ref].control_rect.height - 2);
+	mw_gl_hline(draw_info, 1, mw_all_controls[control_ref].control_rect.width - 2, mw_all_controls[control_ref].control_rect.height - 2);
+
     /* set text colour according to enabled state */
 	mw_gl_set_bg_transparency(MW_GL_BG_TRANSPARENT);
 	if (mw_all_controls[control_ref].control_flags & MW_CONTROL_FLAG_IS_ENABLED)
@@ -104,7 +124,15 @@ void mw_ui_button_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *d
 	{
 		mw_gl_set_fg_colour(MW_CONTROL_DISABLED_COLOUR);
 	}
-	mw_gl_string(draw_info, 10, 4, this_button->button_label);
+
+	if (this_button->button_down)
+	{
+		mw_gl_string(draw_info, 11, 4, this_button->button_label);
+	}
+	else
+	{
+		mw_gl_string(draw_info, 9, 3, this_button->button_label);
+	}
 }
 
 void mw_ui_button_message_function(const mw_message_t *message)
