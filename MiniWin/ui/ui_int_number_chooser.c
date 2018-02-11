@@ -38,7 +38,7 @@ SOFTWARE.
 *** CONSTANTS ***
 ****************/
 
-static const mw_util_rect_t input_text_rect = {0, 0, MW_UI_INT_NUMBER_CHOOSER_WIDTH, MW_UI_INT_NUMBER_CHOOSER_KEY_SIZE};
+//static const mw_util_rect_t input_text_rect = {0, 0, MW_UI_INT_NUMBER_CHOOSER_WIDTH, MW_UI_INT_NUMBER_CHOOSER_KEY_SIZE};
 
 /************
 *** TYPES ***
@@ -61,6 +61,8 @@ extern const uint8_t mw_bitmaps_cancel_key[];
 /**********************
 *** LOCAL VARIABLES ***
 **********************/
+
+static mw_util_rect_t invalid_rect;
 
 /********************************
 *** LOCAL FUNCTION PROTOTYPES ***
@@ -305,15 +307,27 @@ void mw_ui_int_number_chooser_message_function(const mw_message_t *message)
 			/* set key pressed to false */
 			this_int_number_chooser->is_key_pressed = false;
 
-			/* repaint complete control */
-			mw_paint_control(message->recipient_id);
+			/* repaint pressed key area only */
+			invalid_rect.x = this_int_number_chooser->key_pressed_number * MW_UI_INT_NUMBER_CHOOSER_KEY_SIZE;
+			invalid_rect.y = MW_UI_INT_NUMBER_CHOOSER_KEY_SIZE;
+			invalid_rect.width = MW_UI_INT_NUMBER_CHOOSER_KEY_SIZE;
+			invalid_rect.height = MW_UI_INT_NUMBER_CHOOSER_KEY_SIZE;
+			mw_paint_control_rect(message->recipient_id, &invalid_rect);
 		}
 		else
 		{
 			this_int_number_chooser->draw_cursor = !this_int_number_chooser->draw_cursor;
 
-			/* repaint text entry area only */
-			mw_paint_control_rect(message->recipient_id, &input_text_rect);
+			/* repaint cursor area only */
+			invalid_rect.x = 2 + this_int_number_chooser->cursor_position * MW_GL_STANDARD_CHARACTER_WIDTH;
+			if (this_int_number_chooser->is_negative)
+			{
+				invalid_rect.x += MW_GL_STANDARD_CHARACTER_WIDTH;
+			}
+			invalid_rect.y = 2;
+			invalid_rect.width = 1;
+			invalid_rect.height = MW_GL_STANDARD_CHARACTER_HEIGHT + 4;
+			mw_paint_control_rect(message->recipient_id, &invalid_rect);
 		}
 
 		/* reset timer for cursor */
@@ -435,6 +449,10 @@ void mw_ui_int_number_chooser_message_function(const mw_message_t *message)
 			else
 			{
 				this_int_number_chooser->cursor_position = (message->message_data >> 16) / MW_GL_STANDARD_CHARACTER_WIDTH;
+				if (this_int_number_chooser->is_negative)
+				{
+					(this_int_number_chooser->cursor_position)--;
+				}
 				if (this_int_number_chooser->cursor_position > strlen(this_int_number_chooser->number_buffer))
 				{
 					this_int_number_chooser->cursor_position = strlen(this_int_number_chooser->number_buffer);
