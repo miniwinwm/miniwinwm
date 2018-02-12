@@ -38,7 +38,7 @@ SOFTWARE.
 *** CONSTANTS ***
 ****************/
 
-//static const mw_util_rect_t input_text_rect = {0, 0, MW_UI_INT_NUMBER_CHOOSER_WIDTH, MW_UI_INT_NUMBER_CHOOSER_KEY_SIZE};
+static const mw_util_rect_t input_text_rect = {0, 0, MW_UI_INT_NUMBER_CHOOSER_WIDTH, MW_UI_INT_NUMBER_CHOOSER_KEY_SIZE};
 
 /************
 *** TYPES ***
@@ -445,6 +445,13 @@ void mw_ui_int_number_chooser_message_function(const mw_message_t *message)
 				default:
 					break;
 				}
+
+				/* repaint pressed key area only */
+				invalid_rect.x = this_int_number_chooser->key_pressed_number * MW_UI_INT_NUMBER_CHOOSER_KEY_SIZE;
+				invalid_rect.y = MW_UI_INT_NUMBER_CHOOSER_KEY_SIZE;
+				invalid_rect.width = MW_UI_INT_NUMBER_CHOOSER_KEY_SIZE;
+				invalid_rect.height = MW_UI_INT_NUMBER_CHOOSER_KEY_SIZE;
+				mw_paint_control_rect(message->recipient_id, &invalid_rect);
 			}
 			else
 			{
@@ -458,7 +465,9 @@ void mw_ui_int_number_chooser_message_function(const mw_message_t *message)
 					this_int_number_chooser->cursor_position = strlen(this_int_number_chooser->number_buffer);
 				}
 			}
-			mw_paint_control(message->recipient_id);
+
+			/* repaint text entry area only */
+			mw_paint_control_rect(message->recipient_id, &input_text_rect);
 		}
 		break;
 

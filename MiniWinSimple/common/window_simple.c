@@ -31,11 +31,11 @@ SOFTWARE.
 
 typedef struct
 {
-	uint16_t circle_x;			// x coordinate of where to draw circle
-	uint16_t circle_y;			// y coordinate of where to draw circle
-	bool draw_circle;			// if to draw circle
-	uint8_t timer_id;			// timer id for button animation
-	char transfer_buffer[10];	// buffer to send data to label
+	uint16_t circle_x;			/**< x coordinate of where to draw circle */
+	uint16_t circle_y;			/**< y coordinate of where to draw circle */
+	bool draw_circle;			/**< if to draw circle */
+	uint8_t timer_id;			/**< timer id for button animation */
+	char transfer_buffer[10];	/**< buffer to send data to label */
 } window_simple_data_t;
 
 static window_simple_data_t window_simple_data;

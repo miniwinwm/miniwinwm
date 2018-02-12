@@ -60,7 +60,7 @@ SOFTWARE.
 typedef struct
 {
  	/* User modifiable fields */  
-    bool is_only_positive;    		/**< only a positive number can be entered */
+    bool is_only_positive;    					/**< only a positive number can be entered */
 	
 	 /* Non-user modifiable fields */ 
   	char number_buffer[MW_UI_INT_NUMBER_CHOOSER_MAX_CHARS + 1];	/**< buffer holding number as text but not negative sign */

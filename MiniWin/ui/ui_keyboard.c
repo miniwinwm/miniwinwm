@@ -72,6 +72,8 @@ extern const uint8_t mw_bitmaps_let_key[];
 *** LOCAL VARIABLES ***
 **********************/
 
+static mw_util_rect_t invalid_rect;
+
 /********************************
 *** LOCAL FUNCTION PROTOTYPES ***
 ********************************/
@@ -349,15 +351,23 @@ void mw_ui_keyboard_message_function(const mw_message_t *message)
 			/* set key pressed to false */
 			this_keyboard->is_key_pressed = false;
 
-			/* repaint complete control */
-			mw_paint_control(message->recipient_id);
+			/* repaint pressed key area only */
+			invalid_rect.x = this_keyboard->key_pressed_column * MW_UI_KEYBOARD_KEY_SIZE;
+			invalid_rect.y = (this_keyboard->key_pressed_row + 1) * MW_UI_KEYBOARD_KEY_SIZE;
+			invalid_rect.width = MW_UI_KEYBOARD_KEY_SIZE;
+			invalid_rect.height = MW_UI_KEYBOARD_KEY_SIZE;
+			mw_paint_control_rect(message->recipient_id, &invalid_rect);
 		}
 		else
 		{
 			this_keyboard->draw_cursor = !this_keyboard->draw_cursor;
 
-			/* repaint text entry area only */
-			mw_paint_control_rect(message->recipient_id, &input_text_rect);
+			/* repaint cursor area only */
+			invalid_rect.x = 2 + this_keyboard->cursor_position * MW_GL_STANDARD_CHARACTER_WIDTH;
+			invalid_rect.y = 2;
+			invalid_rect.width = 1;
+			invalid_rect.height = MW_GL_STANDARD_CHARACTER_HEIGHT + 4;
+			mw_paint_control_rect(message->recipient_id, &invalid_rect);
 		}
 
 		/* reset timer for cursor */
@@ -467,7 +477,13 @@ void mw_ui_keyboard_message_function(const mw_message_t *message)
 						this_keyboard->cursor_position++;
 					}
 				}
-				mw_paint_control(message->recipient_id);
+
+				/* repaint pressed key area only */
+				invalid_rect.x = this_keyboard->key_pressed_column * MW_UI_KEYBOARD_KEY_SIZE;
+				invalid_rect.y = (this_keyboard->key_pressed_row + 1) * MW_UI_KEYBOARD_KEY_SIZE;
+				invalid_rect.width = MW_UI_KEYBOARD_KEY_SIZE;
+				invalid_rect.height = MW_UI_KEYBOARD_KEY_SIZE;
+				mw_paint_control_rect(message->recipient_id, &invalid_rect);
 			}
 			else
 			{
@@ -477,6 +493,9 @@ void mw_ui_keyboard_message_function(const mw_message_t *message)
 					this_keyboard->cursor_position = strlen(this_keyboard->entry_buffer);
 				}
 			}
+
+			/* repaint text entry area only */
+			mw_paint_control_rect(message->recipient_id, &input_text_rect);
 		}
 		break;
 
