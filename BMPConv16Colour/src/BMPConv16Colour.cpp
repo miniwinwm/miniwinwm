@@ -109,7 +109,7 @@ int main( int argc, char* argv[] )
  fs << "/* Bitmap width: " << width << " */" << endl;
  fs << "/* Bitmap height: " << height << " */" << endl;
  fs << endl;
- fs << "const colour_t array[] = {" << endl;
+ fs << "const mw_hal_lcd_colour_t array[] = {" << endl;
  
  for (int h=0; h < height; h++)
  { 

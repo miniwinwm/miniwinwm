@@ -145,7 +145,7 @@ void mw_ui_button_message_function(const mw_message_t *message)
 	{
 	case MW_CONTROL_CREATED_MESSAGE:
 		/* initialise the control */			
-		((mw_ui_button_data_t*)mw_all_controls[message->recipient_id].extra_data)->button_down = false;
+		this_button->button_down = false;
 		break;
 
 	case MW_WINDOW_TIMER_MESSAGE:

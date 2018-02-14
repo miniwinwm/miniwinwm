@@ -43,27 +43,25 @@ SOFTWARE.
 
 typedef struct
 {
-	uint16_t circle_x;			/**< x coordinate of where to draw circle */
-	uint16_t circle_y;			/**< y coordinate of where to draw circle */
-	bool draw_circle;			/**< if to draw circle */
-	uint8_t timer_id;			/**< timer id for button animation */
-	char transfer_buffer[10];	/**< buffer to send data to label */
-} window_simple_data_t;
+	bool touch_down;
+
+} window_help_data_t;
 
 
 /*************************
 *** EXTERNAL VARIABLES ***
 **************************/
 
-extern uint8_t button_id;
-extern uint8_t label_id;
 extern mw_window_t mw_all_windows[MW_MAX_WINDOW_COUNT];
+extern const mw_hal_lcd_colour_t help[];
+extern const mw_hal_lcd_colour_t help_down[];
+extern volatile uint32_t mw_tick_counter;
 
 /**********************
 *** LOCAL VARIABLES ***
 **********************/
 
-static window_simple_data_t window_simple_data;
+static window_help_data_t window_help_data;
 
 /********************************
 *** LOCAL FUNCTION PROTOTYPES ***
@@ -77,49 +75,45 @@ static window_simple_data_t window_simple_data;
 *** GLOBAL FUNCTIONS ***
 ***********************/
 
-void window_simple_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_info)
+void window_help_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_info)
 {
-	mw_gl_set_fill(MW_GL_FILL);
-	mw_gl_set_solid_fill_colour(MW_HAL_LCD_WHITE);
-	mw_gl_set_border(MW_GL_BORDER_OFF);
-	mw_gl_clear_pattern();
-	mw_gl_rectangle(draw_info,
-			0,
-			0,
-			mw_all_windows[window_ref].client_rect.width,
-			mw_all_windows[window_ref].client_rect.height);
-
-	mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
-	if(window_simple_data.draw_circle)
+	if (window_help_data.touch_down)
 	{
-		mw_gl_set_solid_fill_colour(MW_HAL_LCD_YELLOW);
-		mw_gl_set_line(MW_GL_SOLID_LINE);
-		mw_gl_set_border(MW_GL_BORDER_ON);
-		mw_gl_circle(draw_info, window_simple_data.circle_x, window_simple_data.circle_y, 25);
+		mw_gl_colour_bitmap(draw_info,
+			0,
+			0,
+			104,
+			104,
+			help_down);
+	}
+	else
+	{
+		mw_gl_colour_bitmap(draw_info,
+			0,
+			0,
+			104,
+			104,
+			help);
 	}
 }
 
-void window_simple_message_function(const mw_message_t *message)
+void window_help_message_function(const mw_message_t *message)
 {
 	switch (message->message_id)
 	{
 	case MW_WINDOW_CREATED_MESSAGE:
-		window_simple_data.draw_circle = false;
+		window_help_data.touch_down = false;
 		break;
 
 	case MW_TOUCH_DOWN_MESSAGE:
-		window_simple_data.circle_x = message->message_data >> 16;
-		window_simple_data.circle_y = message->message_data;
-		window_simple_data.draw_circle = true;
+		window_help_data.touch_down = true;
+		mw_set_timer(mw_tick_counter + MW_CONTROL_DOWN_TIME, message->recipient_id, MW_WINDOW_MESSAGE);
 		mw_paint_window_client(message->recipient_id);
 		break;
 
-	case MW_BUTTON_PRESSED_MESSAGE:
-		if (message->sender_id == button_id)
-		{
-			mw_ui_common_post_pointer_to_control(label_id, "HELLO WORLD");
-			mw_paint_control(label_id);
-		}
+	case MW_WINDOW_TIMER_MESSAGE:
+		window_help_data.touch_down = false;
+		mw_paint_window_client(message->recipient_id);
 		break;
 
 	default:
