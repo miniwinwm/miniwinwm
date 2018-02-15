@@ -2478,7 +2478,8 @@ static window_redimensioning_state_t process_touch_event(void)
 
 		/* bring touched window to front which will give it focus */
 		mw_bring_window_to_front(window_to_receive_message);
-		mw_paint_all();		// todo only paint all if there are any overlapped windows
+		mw_paint_window_frame(window_to_receive_message, MW_WINDOW_FRAME_COMPONENT_ALL);		// todo only paint window if there are any overlapped windows
+		mw_paint_window_client(window_to_receive_message);
 
 		/* check if the touch event should now be passed on to the window */
 		if (!(mw_all_windows[window_to_receive_message].window_flags & MW_WINDOW_FLAG_TOUCH_FOCUS_AND_EVENT))

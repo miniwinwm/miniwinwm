@@ -25,10 +25,6 @@
 								<option defaultValue="gnu.c.optimization.level.none" id="gnu.c.compiler.mingw.exe.debug.option.optimization.level.650052504" name="Optimization Level" superClass="gnu.c.compiler.mingw.exe.debug.option.optimization.level" useByScannerDiscovery="false" value="gnu.c.optimization.level.none" valueType="enumerated"/>
 								<option id="gnu.c.compiler.mingw.exe.debug.option.debugging.level.520533668" name="Debug Level" superClass="gnu.c.compiler.mingw.exe.debug.option.debugging.level" useByScannerDiscovery="false" value="gnu.c.debugging.level.max" valueType="enumerated"/>
 								<option id="gnu.c.compiler.option.include.paths.387577204" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MiniWinFixedWindows_Windows/MiniWin/hal}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MiniWinFixedWindows_Windows/MiniWin/gl}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MiniWinFixedWindows_Windows/MiniWin/ui}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MiniWinFixedWindows_Windows/MiniWin/user}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MiniWinFixedWindows_Windows/MiniWin}&quot;"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.856965970" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
