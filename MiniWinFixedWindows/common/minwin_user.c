@@ -111,7 +111,7 @@ void mw_user_init(void)
 			window_date_message_function,
 			NULL,
 			0,
-			MW_WINDOW_FLAG_IS_VISIBLE);
+			MW_WINDOW_FLAG_IS_VISIBLE | MW_WINDOW_FLAG_TOUCH_FOCUS_AND_EVENT);
 
 	mw_util_set_rect(&r, 125, 1, 104, 104);
 	window_time_id = mw_add_window(&r,
@@ -120,7 +120,7 @@ void mw_user_init(void)
 			window_time_message_function,
 			NULL,
 			0,
-			MW_WINDOW_FLAG_IS_VISIBLE);
+			MW_WINDOW_FLAG_IS_VISIBLE | MW_WINDOW_FLAG_TOUCH_FOCUS_AND_EVENT);
 
 	mw_util_set_rect(&r, 10, 107, 104, 104);
 	window_temp_id = mw_add_window(&r,
@@ -129,7 +129,7 @@ void mw_user_init(void)
 			window_temp_message_function,
 			NULL,
 			0,
-			MW_WINDOW_FLAG_IS_VISIBLE);
+			MW_WINDOW_FLAG_IS_VISIBLE | MW_WINDOW_FLAG_TOUCH_FOCUS_AND_EVENT);
 
 	mw_util_set_rect(&r, 125, 107, 104, 104);
 	window_settings_id = mw_add_window(&r,
@@ -138,7 +138,7 @@ void mw_user_init(void)
 			window_settings_message_function,
 			NULL,
 			0,
-			MW_WINDOW_FLAG_IS_VISIBLE);
+			MW_WINDOW_FLAG_IS_VISIBLE | MW_WINDOW_FLAG_TOUCH_FOCUS_AND_EVENT);
 
 	mw_util_set_rect(&r, 10, 213, 104, 104);
 	window_file_id = mw_add_window(&r,
@@ -147,7 +147,7 @@ void mw_user_init(void)
 			window_file_message_function,
 			NULL,
 			0,
-			MW_WINDOW_FLAG_IS_VISIBLE);
+			MW_WINDOW_FLAG_IS_VISIBLE | MW_WINDOW_FLAG_TOUCH_FOCUS_AND_EVENT);
 
 	mw_util_set_rect(&r, 125, 213, 104, 104);
 	window_help_id = mw_add_window(&r,
@@ -156,6 +156,6 @@ void mw_user_init(void)
 			window_help_message_function,
 			NULL,
 			0,
-			MW_WINDOW_FLAG_IS_VISIBLE);
+			MW_WINDOW_FLAG_IS_VISIBLE | MW_WINDOW_FLAG_TOUCH_FOCUS_AND_EVENT);
 	mw_paint_all();
 }

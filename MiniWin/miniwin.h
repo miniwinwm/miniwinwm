@@ -87,6 +87,7 @@ SOFTWARE.
 #define MW_WINDOW_MENU_BAR_ITEM_IS_SELECTED		0x0800 	/**< Indicates that a menu bar, if existing, has an item selected */
 #define MW_WINDOWS_VERT_SCROLL_BAR_ENABLED		0x1000	/**< Indicates that a vertical scroll bar, if existing, is enabled */
 #define MW_WINDOWS_HORIZ_SCROLL_BAR_ENABLED		0x2000	/**< Indicates that a horizontal scroll bar, if existing, is enabled */
+#define MW_WINDOW_FLAG_TOUCH_FOCUS_AND_EVENT	0x4000	/**< Indicates that a touch in a non-focused window gives it focus and generates a touch down event */
 
 /**
  * Control option and state flags

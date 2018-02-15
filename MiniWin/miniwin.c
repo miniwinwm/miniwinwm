@@ -2467,17 +2467,26 @@ static window_redimensioning_state_t process_touch_event(void)
 	}
 
 	/* check if the window the touch was in does not have focus */
-	if (window_with_focus != window_to_receive_message)
+	if (window_to_receive_message != window_with_focus)
 	{
 		/* it doesn't but only give touched window focus if there's not a modal window showing */
-		if (!mw_is_any_window_modal())
+		if (mw_is_any_window_modal())
 		{
-			/* bring touched window to front which will give it focus */
-			mw_bring_window_to_front(window_to_receive_message);
-			mw_paint_all();
+			/* there's a modal window showing so ignore this touch event */
+			return window_redimensioning_state;
 		}
 
-		return window_redimensioning_state;
+
+		/* bring touched window to front which will give it focus */
+		mw_bring_window_to_front(window_to_receive_message);
+		mw_paint_all();
+
+		/* check if the touch event should now be passed on to the window */
+		if (!(mw_all_windows[window_to_receive_message].window_flags & MW_WINDOW_FLAG_TOUCH_FOCUS_AND_EVENT))
+		{
+			/* it shouldn't so this touch event has now been consumed */
+			return window_redimensioning_state;
+		}
 	}
 
 	/* check for touch on border */
