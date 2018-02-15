@@ -2,7 +2,7 @@
 *** INCLUDES ***
 ***************/
 
-#include "hal_lcd.h"
+#include "hal/hal_lcd.h"
 
 /****************
 *** CONSTANTS ***

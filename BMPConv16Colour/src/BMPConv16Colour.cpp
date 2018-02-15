@@ -100,7 +100,7 @@ int main( int argc, char* argv[] )
  fs << "*** INCLUDES ***" << endl;
  fs << "***************/" << endl;
  fs << endl;
- fs << "#include \"hal_lcd.h\"" << endl;
+ fs << "#include \"hal/hal_lcd.h\"" << endl;
  fs << endl;
  fs << "/****************" << endl;
  fs << "*** CONSTANTS ***" << endl;
