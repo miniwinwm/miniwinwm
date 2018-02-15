@@ -31,6 +31,11 @@ SOFTWARE.
 #include <miniwin.h>
 #include <string.h>
 #include "window_help.h"
+#include "window_file.h"
+#include "window_time.h"
+#include "window_date.h"
+#include "window_settings.h"
+#include "window_temp.h"
 #include "ui/ui_common.h"
 
 /****************
@@ -49,6 +54,11 @@ SOFTWARE.
 
 
 uint8_t window_help_id;
+uint8_t window_file_id;
+uint8_t window_date_id;
+uint8_t window_time_id;
+uint8_t window_settings_id;
+uint8_t window_temp_id;
 
 /* controls */
 
@@ -94,7 +104,52 @@ void mw_user_init(void)
 {
 	mw_util_rect_t r;
 
-	mw_util_set_rect(&r, 10, 10, 104, 104);
+	mw_util_set_rect(&r, 10, 1, 104, 104);
+	window_date_id = mw_add_window(&r,
+			"",
+			window_date_paint_function,
+			window_date_message_function,
+			NULL,
+			0,
+			MW_WINDOW_FLAG_IS_VISIBLE);
+
+	mw_util_set_rect(&r, 125, 1, 104, 104);
+	window_time_id = mw_add_window(&r,
+			"",
+			window_time_paint_function,
+			window_time_message_function,
+			NULL,
+			0,
+			MW_WINDOW_FLAG_IS_VISIBLE);
+
+	mw_util_set_rect(&r, 10, 107, 104, 104);
+	window_temp_id = mw_add_window(&r,
+			"",
+			window_temp_paint_function,
+			window_temp_message_function,
+			NULL,
+			0,
+			MW_WINDOW_FLAG_IS_VISIBLE);
+
+	mw_util_set_rect(&r, 125, 107, 104, 104);
+	window_settings_id = mw_add_window(&r,
+			"",
+			window_settings_paint_function,
+			window_settings_message_function,
+			NULL,
+			0,
+			MW_WINDOW_FLAG_IS_VISIBLE);
+
+	mw_util_set_rect(&r, 10, 213, 104, 104);
+	window_file_id = mw_add_window(&r,
+			"",
+			window_file_paint_function,
+			window_file_message_function,
+			NULL,
+			0,
+			MW_WINDOW_FLAG_IS_VISIBLE);
+
+	mw_util_set_rect(&r, 125, 213, 104, 104);
 	window_help_id = mw_add_window(&r,
 			"",
 			window_help_paint_function,
@@ -102,6 +157,5 @@ void mw_user_init(void)
 			NULL,
 			0,
 			MW_WINDOW_FLAG_IS_VISIBLE);
-
 	mw_paint_all();
 }
