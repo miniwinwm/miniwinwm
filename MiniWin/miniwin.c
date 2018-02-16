@@ -173,6 +173,7 @@ static void find_rect_window_intersections(const mw_util_rect_t *r, uint16_t *ho
 static uint8_t find_highest_z_order_at_point(int16_t x, int16_t y);
 static uint8_t find_number_of_displayed_windows();
 static bool find_if_rect_is_completely_on_screen(const mw_util_rect_t *rect);
+static bool find_if_window_is_overlapped(uint8_t window_ref);
 
 /* window frame draw functions */
 static void draw_title_bar(uint8_t window_ref, const mw_gl_draw_info_t *draw_info);
@@ -1119,6 +1120,38 @@ static uint8_t find_number_of_displayed_windows()
 }
 
 /**
+ * Find if a window is overlapped by any other
+ *
+ * @param window_ref The window to check
+ * @return true or false
+ */
+static bool find_if_window_is_overlapped(uint8_t window_ref)
+{
+	uint8_t i;
+
+	MW_ASSERT(window_ref < MW_MAX_WINDOW_COUNT);
+
+	/* iterate through all windows */
+	for (i = 0; i < MW_MAX_WINDOW_COUNT;i++)
+	{
+		if (!(mw_all_windows[window_ref].window_flags & MW_WINDOW_FLAG_IS_USED) ||
+				(!(mw_all_windows[window_ref].window_flags & MW_WINDOW_FLAG_IS_VISIBLE)) ||
+				(mw_all_windows[window_ref].window_flags & MW_WINDOW_FLAG_IS_MINIMISED) ||
+				mw_all_windows[i].z_order < mw_all_windows[window_ref].z_order)
+		{
+			continue;
+		}
+
+		if (mw_util_do_rects_coincide(&mw_all_windows[i].window_rect, &mw_all_windows[window_ref].window_rect))
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
+/**
  * FInd if a specified rect is completely on the screen
  *
  * @param rect The rect to check
@@ -1580,7 +1613,6 @@ static void do_paint_window_frame(uint8_t window_ref, uint8_t components)
 	}
 	else
 	{
-
 		find_rect_window_intersections(&mw_all_windows[window_ref].window_rect, &horiz_edges_count, &vert_edges_count);
 
 		/* iterate through horizontal edges, i.e. row at a time */
@@ -2316,6 +2348,7 @@ static window_redimensioning_state_t process_touch_event(void)
 	uint8_t touch_message;
 	touch_event_t touch_event = TOUCH_EVENT_NONE;
 	mw_hal_touch_state_t touch_state;
+	bool is_window_overlapped;
 
 	/* check if it's time to process another touch event yet */
 	if (mw_tick_counter - last_process_time < MW_TOUCH_INTERVAL_TICKS)
@@ -2476,10 +2509,23 @@ static window_redimensioning_state_t process_touch_event(void)
 			return window_redimensioning_state;
 		}
 
+		/* paint frame of window losing focus */
+		mw_paint_window_frame(window_with_focus, MW_WINDOW_FRAME_COMPONENT_ALL);
+
+		/* find if this window is overlapped now before giving it focus which brings it to the front */
+		is_window_overlapped = find_if_window_is_overlapped(window_to_receive_message);
+
 		/* bring touched window to front which will give it focus */
 		mw_bring_window_to_front(window_to_receive_message);
-		mw_paint_window_frame(window_to_receive_message, MW_WINDOW_FRAME_COMPONENT_ALL);		// todo only paint window if there are any overlapped windows
-		mw_paint_window_client(window_to_receive_message);
+
+		/* paint frame of window gaining focus */
+		mw_paint_window_frame(window_to_receive_message, MW_WINDOW_FRAME_COMPONENT_ALL);
+
+		/* paint client of window gaining focus if it was overlapped by any other window */
+		if (is_window_overlapped)
+		{
+			mw_paint_window_client(window_to_receive_message);
+		}
 
 		/* check if the touch event should now be passed on to the window */
 		if (!(mw_all_windows[window_to_receive_message].window_flags & MW_WINDOW_FLAG_TOUCH_FOCUS_AND_EVENT))
