@@ -73,21 +73,21 @@ SOFTWARE.
  /**
  * Window option and state flags
  */
-#define MW_WINDOW_FLAG_HAS_BORDER				0x0001	/**< Indicates that a window is to be drawn with a border */
-#define MW_WINDOW_FLAG_HAS_TITLE_BAR			0x0002	/**< Indicates that a window is to be drawn with a title bar */
-#define MW_WINDOW_FLAG_CAN_BE_CLOSED			0x0004	/**< Indicates that a window can be closed */
-#define MW_WINDOW_FLAG_IS_VISIBLE				0x0008	/**< Indicates that a window is visible */
-#define MW_WINDOW_FLAG_IS_MINIMISED				0x0010	/**< Indicates that a window is minimised */
-#define MW_WINDOW_FLAG_IS_USED					0x0020	/**< Indicates that a window is used */
-#define MW_WINDOW_IS_MODAL						0x0040	/**< Indicates that a window is currently modal */
-#define MW_WINDOW_HAS_VERT_SCROLL_BAR			0x0080  /**< Indicates that a window has a vertical scroll bar */
-#define MW_WINDOW_HAS_HORIZ_SCROLL_BAR			0x0100  /**< Indicates that a window has a horizontal scroll bar */
-#define MW_WINDOW_HAS_MENU_BAR					0x0200  /**< Indicates that a window has a menu bar */
-#define MW_WINDOW_MENU_BAR_ENABLED				0x0400	/**< Indicates that a menu bar, if existing, is enabled */
-#define MW_WINDOW_MENU_BAR_ITEM_IS_SELECTED		0x0800 	/**< Indicates that a menu bar, if existing, has an item selected */
-#define MW_WINDOWS_VERT_SCROLL_BAR_ENABLED		0x1000	/**< Indicates that a vertical scroll bar, if existing, is enabled */
-#define MW_WINDOWS_HORIZ_SCROLL_BAR_ENABLED		0x2000	/**< Indicates that a horizontal scroll bar, if existing, is enabled */
-#define MW_WINDOW_FLAG_TOUCH_FOCUS_AND_EVENT	0x4000	/**< Indicates that a touch in a non-focused window gives it focus and generates a touch down event */
+#define MW_WINDOW_FLAG_HAS_BORDER				0x00000001	/**< Indicates that a window is to be drawn with a border */
+#define MW_WINDOW_FLAG_HAS_TITLE_BAR			0x00000002	/**< Indicates that a window is to be drawn with a title bar */
+#define MW_WINDOW_FLAG_CAN_BE_CLOSED			0x00000004	/**< Indicates that a window can be closed */
+#define MW_WINDOW_FLAG_IS_VISIBLE				0x00000008	/**< Indicates that a window is visible */
+#define MW_WINDOW_FLAG_IS_MINIMISED				0x00000010	/**< Indicates that a window is minimised */
+#define MW_WINDOW_FLAG_IS_USED					0x00000020	/**< Indicates that a window is used */
+#define MW_WINDOW_IS_MODAL						0x00000040	/**< Indicates that a window is currently modal */
+#define MW_WINDOW_HAS_VERT_SCROLL_BAR			0x00000080  /**< Indicates that a window has a vertical scroll bar */
+#define MW_WINDOW_HAS_HORIZ_SCROLL_BAR			0x00000100  /**< Indicates that a window has a horizontal scroll bar */
+#define MW_WINDOW_HAS_MENU_BAR					0x00000200  /**< Indicates that a window has a menu bar */
+#define MW_WINDOW_MENU_BAR_ENABLED				0x00000400	/**< Indicates that a menu bar, if existing, is enabled */
+#define MW_WINDOW_MENU_BAR_ITEM_IS_SELECTED		0x00000800 	/**< Indicates that a menu bar, if existing, has an item selected */
+#define MW_WINDOWS_VERT_SCROLL_BAR_ENABLED		0x00001000	/**< Indicates that a vertical scroll bar, if existing, is enabled */
+#define MW_WINDOWS_HORIZ_SCROLL_BAR_ENABLED		0x00002000	/**< Indicates that a horizontal scroll bar, if existing, is enabled */
+#define MW_WINDOW_TOUCH_FOCUS_AND_EVENT			0x00004000	/**< Indicates that a touch in a non-focused window gives it focus and generates a touch down event */
 
 /**
  * Control option and state flags
@@ -223,11 +223,11 @@ typedef struct
     char **menu_bar_items;				/**< Pointer to array of menu bar entry labels */
     mw_paint_func_p paint_func;         /**< Pointer to window paint function */
     mw_message_func_p message_func;     /**< Pointer to window message handler function */	
-	uint16_t menu_bar_item_enables;		/**< Bitfield of individual enable flags for menu bar items */
-    uint16_t window_flags;				/**< All the flags defining a window's description and state */	
-	uint8_t z_order;                    /**< Z order of the window, higher value drawn on top of lower values */
+    uint32_t window_flags;				/**< All the flags defining a window's description and state */
 	mw_util_rect_t window_rect;         /**< Rect containing coordinates of window including title bar and border if present */
 	mw_util_rect_t client_rect;         /**< Rect containing coordinates of window's client area */
+	uint16_t menu_bar_item_enables;		/**< Bitfield of individual enable flags for menu bar items */
+	uint8_t z_order;                    /**< Z order of the window, higher value drawn on top of lower values */
     uint8_t	horiz_scroll_pos; 			/**< Current scroll position of a horizontal scroll bar scaled to 0-255 */
     uint8_t vert_scroll_pos;			/**< Current scroll position of a vertical scroll bar scaled to 0-255 */
     uint8_t menu_bar_items_count;		/**< Number of items in above array */
@@ -304,7 +304,7 @@ uint8_t mw_add_window(mw_util_rect_t *rect,
 		mw_message_func_p message_func,
 		char **menu_bar_items,
 		uint8_t menu_bar_items_count,
-		uint16_t window_flags);
+		uint32_t window_flags);
 
 /**
  *  Bring a window to the front giving it the highest Z order of all windows.

@@ -38,8 +38,6 @@ SOFTWARE.
 *** CONSTANTS ***
 ****************/
 
-#define LCD_HW_ACCELERATION
-
 /************
 *** TYPES ***
 ************/
@@ -64,10 +62,6 @@ static void write_command(uint8_t register_address, uint16_t data);
 static void set_register_address(uint8_t data);
 static void write_data(uint16_t data);
 
-#ifdef LCD_HW_ACCELERATION
-void set_window(uint8_t x1, uint16_t y1, uint8_t x2, uint16_t y2);
-#endif
-
 /**********************
 *** LOCAL FUNCTIONS ***
 **********************/
@@ -83,66 +77,6 @@ static void write_command(uint8_t register_address, uint16_t data)
 	set_register_address(register_address);
 	write_data(data);
 }
-
-#ifdef LCD_HW_ACCELERATION
-
-/**
- * Set the plotting window in the lcd controller; all subsequent pixel writes will be within this window 
- *
- * @param x1 Left edge of window
- * @param y1 Top edge of window
- * @param x2 Right edge of window
- * @param y2 Bottom edge of window
- */
-void set_window(uint8_t x1, uint16_t y1, uint8_t x2, uint16_t y2)
-{
-	write_command(0x44, (x2 << 8) + x1);
-	write_command(0x45, y1);
-	write_command(0x46, y2);
-	write_command(0x4e, x1);
-	write_command(0x4f, y1);
-
-	set_register_address(0x22);
-}
-
-/**
- * Write an address onto the data bus to the lcd, this has RS line low
- *
- * @data The 16 bit data value to write
- */
-static void set_register_address(uint8_t data)
-{
-	/* RS = 0 */
-    GPIOD->BSRRH = GPIO_Pin_11;
-
-    /* write data */
-	GPIOE->ODR = data;
-
-	/* WR = 0 */
-	GPIOD->BSRRH = GPIO_Pin_5;
-	/* WR = 1 */
-	GPIOD->BSRRL = GPIO_Pin_5;
-}
-
-/**
- * Write data onto the data bus to the lcd, this has RS line high
- *
- * @data The 16 bit data value to write
- */
-static void write_data(uint16_t data)
-{
-    /* RS = 1 */
-    GPIOD->BSRRL = GPIO_Pin_11;
-
-    /* write data */
-	GPIOE->ODR = data;
-
-	/* WR = 0 */
-	GPIOD->BSRRH = GPIO_Pin_5;
-	/* WR = 1 */
-	GPIOD->BSRRL = GPIO_Pin_5;
-}
-#else
 
 /**
  * Write an address onto the data bus to the lcd, this has RS line low
@@ -181,7 +115,6 @@ static void write_data(uint16_t data)
 	/* WR = 1 */
     GPIO_SetBits(GPIOD, GPIO_Pin_5 );
 }
-#endif
 
 /***********************
 *** GLOBAL FUNCTIONS ***
@@ -265,239 +198,6 @@ void mw_hal_lcd_init(void)
     mw_hal_lcd_filled_rectangle(0, 0, MW_HAL_LCD_WIDTH, MW_HAL_LCD_HEIGHT, MW_HAL_LCD_WHITE);
 }
 
-#ifdef LCD_HW_ACCELERATION
-void mw_hal_lcd_pixel(int16_t x, int16_t y, mw_hal_lcd_colour_t colour)
-{
-	/* RS = 0 */
-    GPIOD->BSRRH = GPIO_Pin_11;
-    /* write data */
-	GPIOE->ODR = 0x4e;
-	/* WR = 0 */
-	GPIOD->BSRRH = GPIO_Pin_5;
-	/* WR = 1 */
-	GPIOD->BSRRL = GPIO_Pin_5;
-	write_data(x);
-    /* RS = 1 */
-    GPIOD->BSRRL = GPIO_Pin_11;
-    /* write data */
-	GPIOE->ODR = x;
-	/* WR = 0 */
-	GPIOD->BSRRH = GPIO_Pin_5;
-	/* WR = 1 */
-	GPIOD->BSRRL = GPIO_Pin_5;
-
-	/* RS = 0 */
-    GPIOD->BSRRH = GPIO_Pin_11;
-    /* write data */
-	GPIOE->ODR = 0x4f;
-	/* WR = 0 */
-	GPIOD->BSRRH = GPIO_Pin_5;
-	/* WR = 1 */
-	GPIOD->BSRRL = GPIO_Pin_5;
-    /* RS = 1 */
-    GPIOD->BSRRL = GPIO_Pin_11;
-    /* write data */
-	GPIOE->ODR = y;
-	/* WR = 0 */
-	GPIOD->BSRRH = GPIO_Pin_5;
-	/* WR = 1 */
-	GPIOD->BSRRL = GPIO_Pin_5;
-
-	/* RS = 0 */
-    GPIOD->BSRRH = GPIO_Pin_11;
-    /* write data */
-	GPIOE->ODR = 0x22;
-	/* WR = 0 */
-	GPIOD->BSRRH = GPIO_Pin_5;
-	/* WR = 1 */
-	GPIOD->BSRRL = GPIO_Pin_5;
-    /* RS = 1 */
-    GPIOD->BSRRL = GPIO_Pin_11;
-    /* write data */
-	GPIOE->ODR = colour;
-	/* WR = 0 */
-	GPIOD->BSRRH = GPIO_Pin_5;
-	/* WR = 1 */
-	GPIOD->BSRRL = GPIO_Pin_5;
-}
-
-void mw_hal_lcd_filled_rectangle(int16_t start_x,
-		int16_t start_y,
-		uint16_t width,
-		uint16_t height,
-		mw_hal_lcd_colour_t colour)
-{
-	int16_t end_x;
-	int16_t end_y;
-	int32_t n;
-	int32_t pixels;
-
-	end_x = start_x + width - 1;
-	end_y = start_y + height - 1;
-
-#ifndef NDEBUG
-	/* check the coordinates used to set hardware window */
-	if (start_x < 0 || start_y < 0 || end_x >= MW_HAL_LCD_WIDTH || end_y >= MW_HAL_LCD_HEIGHT)
-	{
-		/* oops! */
-		while (true);
-	}
-#endif
-
-	/* set window in lcd hardware */
-	set_window(start_x, start_y, end_x, end_y);
-
-	/* write the colour of the rectangle once */
-	write_data(colour);
-
-	/* clock in all the pixels */
-	pixels = width * height;
-	for (n = 0; n < pixels; n++)
-	{
-		/* WR = 0 */
-		GPIOD->BSRRH = GPIO_Pin_5;
-		/* WR = 1 */
-		GPIOD->BSRRL = GPIO_Pin_5;
-	}
-}
-
-void mw_hal_lcd_colour_bitmap_clip(int16_t image_start_x,
-		int16_t image_start_y,
-		uint16_t image_data_width_pixels,
-		uint16_t image_data_height_pixels,
-		int16_t clip_start_x,
-		int16_t clip_start_y,
-		uint16_t clip_width,
-		uint16_t clip_height,
-		const mw_hal_lcd_colour_t *data)
-{
-	uint16_t x;
-	uint16_t y;
-	mw_hal_lcd_colour_t pixel_colour;
-	uint16_t image_end_x;
-	uint16_t image_end_y;
-	uint16_t start_pixel_in_bitmap_row;
-	uint16_t start_pixel_in_bitmap_column;
-	int16_t window_left;
-	int16_t window_top;
-	int16_t window_right;
-	int16_t window_bottom;
-	uint16_t pixel_counter_x;
-	uint16_t pixel_counter_y;
-
-	image_end_x = image_start_x + image_data_width_pixels - 1;
-	image_end_y = image_start_y + image_data_height_pixels - 1;
-
-	/* check if bitmap can be plotted with no clipping */
-	if (image_start_x >= clip_start_x &&
-			image_end_x < clip_start_x + clip_width &&
-			image_start_y >= clip_start_y &&
-			image_end_y < clip_start_y + clip_height)
-	{
-		/* clipping not needed so set window for whole bitmap and clock in data */
-		set_window(image_start_x, image_start_y, image_end_x, image_end_y);
-
-	    /* RS = 1 */
-		GPIOD->BSRRL = GPIO_Pin_11;
-
-		for (y = 0; y < image_data_height_pixels; y++)
-		{
-			for (x = 0; x < image_data_width_pixels; x++)
-			{
-			    /* write data */
-				GPIOE->ODR = data[y * image_data_width_pixels + x];
-				/* WR = 0 */
-				GPIOD->BSRRH = GPIO_Pin_5;
-				/* WR = 1 */
-				GPIOD->BSRRL = GPIO_Pin_5;
-			}
-		}
-
-		return;
-	}
-
-	/* clipping is needed, first find hardware window edges */
-
-	/* left edge */
-	if (clip_start_x > image_start_x)
-	{
-		start_pixel_in_bitmap_row = clip_start_x - image_start_x;
-		window_left = clip_start_x;
-	}
-	else
-	{
-		start_pixel_in_bitmap_row = 0;
-		window_left = image_start_x;
-	}
-
-	/* right edge */
-	if (clip_start_x + clip_width > image_start_x + image_data_width_pixels)
-	{
-		window_right = image_start_x + image_data_width_pixels - 1;
-	}
-	else
-	{
-		window_right = clip_start_x + clip_width - 1;
-	}
-
-	/* top edge */
-	if (clip_start_y > image_start_y)
-	{
-		start_pixel_in_bitmap_column = clip_start_y - image_start_y;
-		window_top = clip_start_y;
-	}
-	else
-	{
-		start_pixel_in_bitmap_column = 0;
-		window_top = image_start_y;
-	}
-
-	/* bottom edge */
-	if (clip_start_y + clip_height > image_start_y + image_data_height_pixels)
-	{
-		window_bottom = image_start_y + image_data_height_pixels - 1;
-	}
-	else
-	{
-		window_bottom = clip_start_y + clip_height - 1;
-	}
-
-#ifndef NDEBUG
-	/* check the coordinates used to set hardware window */
-	if (window_left < 0 || window_top < 0 || window_right >= MW_HAL_LCD_WIDTH || window_bottom >= MW_HAL_LCD_HEIGHT)
-	{
-		/* oops! */
-		while (true);
-	}
-#endif
-
-	/* set window in lcd hardware */
-	set_window(window_left, window_top, window_right, window_bottom);
-
-    /* RS = 1 */
-	GPIOD->BSRRL = GPIO_Pin_11;
-
-	/* extract each pixel from bit map, set colour and then clock it in */
-	pixel_counter_y = 0;
-	for (y = window_top; y <= window_bottom; y++)
-	{
-		pixel_counter_x = 0;
-		for (x = window_left; x <= window_right; x++)
-		{
-			pixel_colour = *(data + ((start_pixel_in_bitmap_column + pixel_counter_y) * image_data_width_pixels) + pixel_counter_x + start_pixel_in_bitmap_row);
-			pixel_counter_x++;
-
-		    /* write data */
-			GPIOE->ODR = pixel_colour;
-			/* WR = 0 */
-			GPIOD->BSRRH = GPIO_Pin_5;
-			/* WR = 1 */
-			GPIOD->BSRRL = GPIO_Pin_5;
-		}
-		pixel_counter_y++;
-	}
-}
-#else
 void mw_hal_lcd_pixel(int16_t x, int16_t y, mw_hal_lcd_colour_t colour)
 {
 	write_command(0x4e, x);
@@ -559,9 +259,7 @@ void mw_hal_lcd_colour_bitmap_clip(int16_t image_start_x,
 
 	}
 }
-#endif
 
-// todo optimise this
 void mw_hal_lcd_monochrome_bitmap_clip(int16_t image_start_x,
 		int16_t image_start_y,
 		uint16_t bitmap_width,

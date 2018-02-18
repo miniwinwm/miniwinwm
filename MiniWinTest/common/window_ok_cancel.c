@@ -96,6 +96,7 @@ void window_ok_cancel_message_function(const mw_message_t *message)
 		/* a button has been pressed */
 		if (message->sender_id == button_cancel_id)
 		{
+			/* set window invisible */
 			mw_set_window_visible(message->recipient_id, false);
 
 			/* and not modal */

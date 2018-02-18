@@ -110,9 +110,9 @@ void mw_hal_lcd_colour_bitmap_clip(int16_t image_start_x,
 	uint16_t y;
 	mw_hal_lcd_colour_t pixel_colour;
 
-	for (y = 0; y < image_data_height_pixels - 1; y++)
+	for (y = 0; y < image_data_height_pixels; y++)
 	{
-		for (x = 0; x < image_data_width_pixels - 1; x++)
+		for (x = 0; x < image_data_width_pixels; x++)
 		{
 			pixel_colour = *(data + (y * image_data_width_pixels) + x);
 			if (x + image_start_x >= clip_start_x &&

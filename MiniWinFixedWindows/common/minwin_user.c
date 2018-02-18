@@ -37,6 +37,7 @@ SOFTWARE.
 #include "window_settings.h"
 #include "window_temp.h"
 #include "ui/ui_common.h"
+#include "window_temp_graph.h"
 
 /****************
 *** CONSTANTS ***
@@ -52,19 +53,21 @@ SOFTWARE.
 
 /* windows */
 
-
 uint8_t window_help_id;
 uint8_t window_file_id;
 uint8_t window_date_id;
 uint8_t window_time_id;
 uint8_t window_settings_id;
 uint8_t window_temp_id;
+uint8_t window_temp_graph_id;
 
 /* controls */
 
+uint8_t button_ok_id;
 
 /* controls extra data */
 
+mw_ui_button_data_t button_ok_data;
 
 /*************************
 *** EXTERNAL VARIABLES ***
@@ -111,7 +114,7 @@ void mw_user_init(void)
 			window_date_message_function,
 			NULL,
 			0,
-			MW_WINDOW_FLAG_IS_VISIBLE | MW_WINDOW_FLAG_TOUCH_FOCUS_AND_EVENT);
+			MW_WINDOW_FLAG_IS_VISIBLE | MW_WINDOW_TOUCH_FOCUS_AND_EVENT);
 
 	mw_util_set_rect(&r, 125, 1, 104, 104);
 	window_time_id = mw_add_window(&r,
@@ -120,7 +123,7 @@ void mw_user_init(void)
 			window_time_message_function,
 			NULL,
 			0,
-			MW_WINDOW_FLAG_IS_VISIBLE | MW_WINDOW_FLAG_TOUCH_FOCUS_AND_EVENT);
+			MW_WINDOW_FLAG_IS_VISIBLE | MW_WINDOW_TOUCH_FOCUS_AND_EVENT);
 
 	mw_util_set_rect(&r, 10, 107, 104, 104);
 	window_temp_id = mw_add_window(&r,
@@ -129,7 +132,7 @@ void mw_user_init(void)
 			window_temp_message_function,
 			NULL,
 			0,
-			MW_WINDOW_FLAG_IS_VISIBLE | MW_WINDOW_FLAG_TOUCH_FOCUS_AND_EVENT);
+			MW_WINDOW_FLAG_IS_VISIBLE | MW_WINDOW_TOUCH_FOCUS_AND_EVENT);
 
 	mw_util_set_rect(&r, 125, 107, 104, 104);
 	window_settings_id = mw_add_window(&r,
@@ -138,7 +141,7 @@ void mw_user_init(void)
 			window_settings_message_function,
 			NULL,
 			0,
-			MW_WINDOW_FLAG_IS_VISIBLE | MW_WINDOW_FLAG_TOUCH_FOCUS_AND_EVENT);
+			MW_WINDOW_FLAG_IS_VISIBLE | MW_WINDOW_TOUCH_FOCUS_AND_EVENT);
 
 	mw_util_set_rect(&r, 10, 213, 104, 104);
 	window_file_id = mw_add_window(&r,
@@ -147,7 +150,7 @@ void mw_user_init(void)
 			window_file_message_function,
 			NULL,
 			0,
-			MW_WINDOW_FLAG_IS_VISIBLE | MW_WINDOW_FLAG_TOUCH_FOCUS_AND_EVENT);
+			MW_WINDOW_FLAG_IS_VISIBLE | MW_WINDOW_TOUCH_FOCUS_AND_EVENT);
 
 	mw_util_set_rect(&r, 125, 213, 104, 104);
 	window_help_id = mw_add_window(&r,
@@ -156,6 +159,23 @@ void mw_user_init(void)
 			window_help_message_function,
 			NULL,
 			0,
-			MW_WINDOW_FLAG_IS_VISIBLE | MW_WINDOW_FLAG_TOUCH_FOCUS_AND_EVENT);
+			MW_WINDOW_FLAG_IS_VISIBLE | MW_WINDOW_TOUCH_FOCUS_AND_EVENT);
+
+	mw_util_set_rect(&r, 0, 0, 240, 320);
+	window_temp_graph_id = mw_add_window(&r,
+			"",
+			window_temp_graph_paint_function,
+			window_temp_graph_message_function,
+			NULL,
+			0,
+			0);
+
+	mw_util_safe_strcpy(button_ok_data.button_label, MW_UI_BUTTON_LABEL_MAX_CHARS, "BACK");
+	button_ok_id = mw_ui_button_add_new(95,
+			300,
+			window_temp_graph_id,
+			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
+			&button_ok_data);
+
 	mw_paint_all();
 }

@@ -2336,7 +2336,6 @@ static window_redimensioning_state_t process_touch_event(void)
 	static int16_t touch_x_old;
 	static int16_t touch_y_old;
 	static uint32_t last_process_time = 0;
-
 	int16_t touch_x;
 	int16_t touch_y;
 	int16_t difference_x = 0;
@@ -2528,7 +2527,7 @@ static window_redimensioning_state_t process_touch_event(void)
 		}
 
 		/* check if the touch event should now be passed on to the window */
-		if (!(mw_all_windows[window_to_receive_message].window_flags & MW_WINDOW_FLAG_TOUCH_FOCUS_AND_EVENT))
+		if (!(mw_all_windows[window_to_receive_message].window_flags & MW_WINDOW_TOUCH_FOCUS_AND_EVENT))
 		{
 			/* it shouldn't so this touch event has now been consumed */
 			return window_redimensioning_state;
@@ -2718,6 +2717,7 @@ static window_redimensioning_state_t process_touch_event(void)
 						}
 						break;
 					}
+
 					/* increment the running total of the position of the text labels */
 					next_menu_item_text_left_pos += (strlen(mw_all_windows[window_to_receive_message].menu_bar_items[i]) + 2) * MW_GL_STANDARD_CHARACTER_WIDTH;
 				}
@@ -3083,7 +3083,7 @@ uint8_t mw_add_window(mw_util_rect_t *rect,
 		mw_message_func_p message_func,
 		char **menu_bar_items,
 		uint8_t menu_bar_items_count,
-		uint16_t window_flags)
+		uint32_t window_flags)
 {
 	uint8_t new_window_id;
 
