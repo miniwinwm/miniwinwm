@@ -48,6 +48,7 @@ SOFTWARE.
 **************************/
 
 extern const uint8_t mw_bitmaps_tick[];
+extern const uint8_t mw_bitmaps_tick_large[];
 extern mw_control_t mw_all_controls[MW_MAX_CONTROL_COUNT];
 
 /**********************
@@ -68,6 +69,7 @@ extern mw_control_t mw_all_controls[MW_MAX_CONTROL_COUNT];
 
 void mw_ui_check_box_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *draw_info)
 {
+	uint16_t height;
 	mw_ui_check_box_data_t *this_check_box = (mw_ui_check_box_data_t*)mw_all_controls[control_ref].extra_data;
 
     /* set the box outline, text and X colour depending on enabled state */   
@@ -80,13 +82,27 @@ void mw_ui_check_box_paint_function(uint8_t control_ref, const mw_gl_draw_info_t
 		mw_gl_set_fg_colour(MW_CONTROL_DISABLED_COLOUR);
 	}
 
-    
-    /* draw the label text */
 	mw_gl_set_bg_transparency(MW_GL_BG_TRANSPARENT);
-	mw_gl_string(draw_info,
-			MW_UI_CHECK_BOX_LABEL_X_OFFSET,
-			MW_UI_CHECK_BOX_LABEL_Y_OFFSET,
-			this_check_box->label);
+    if (mw_all_controls[control_ref].control_flags & MW_CONTROL_FLAGS_LARGE_SIZE)
+    {
+    	height = MW_UI_CHECK_BOX_LARGE_HEIGHT;
+
+    	/* draw the label text */
+    	mw_gl_large_string(draw_info,
+    			MW_UI_CHECK_BOX_LARGE_LABEL_X_OFFSET,
+    			MW_UI_CHECK_BOX_LARGE_LABEL_Y_OFFSET,
+    			this_check_box->label);
+    }
+    else
+    {
+    	height = MW_UI_CHECK_BOX_HEIGHT;
+
+    	/* draw the label text */
+    	mw_gl_string(draw_info,
+    			MW_UI_CHECK_BOX_LABEL_X_OFFSET,
+    			MW_UI_CHECK_BOX_LABEL_Y_OFFSET,
+    			this_check_box->label);
+    }
 
     /* draw the box */
 	mw_gl_set_fill(MW_GL_FILL);
@@ -94,22 +110,30 @@ void mw_ui_check_box_paint_function(uint8_t control_ref, const mw_gl_draw_info_t
 	mw_gl_set_border(MW_GL_BORDER_ON);
 	mw_gl_clear_pattern();
 	mw_gl_set_solid_fill_colour(MW_CONTROL_UP_COLOUR);
-	mw_gl_rectangle(draw_info, 0, 0, MW_UI_CHECK_BOX_HEIGHT, MW_UI_CHECK_BOX_HEIGHT);
+	mw_gl_rectangle(draw_info, 0, 0, height, height);
 
 	/* draw 3d effect */
 	mw_gl_set_fg_colour(MW_HAL_LCD_WHITE);
-	mw_gl_vline(draw_info, 1, 1, MW_UI_CHECK_BOX_HEIGHT - 2);
-	mw_gl_hline(draw_info, 1, MW_UI_CHECK_BOX_HEIGHT - 2, 1);
+	mw_gl_vline(draw_info, 1, 1, height - 2);
+	mw_gl_hline(draw_info, 1, height - 2, 1);
 	mw_gl_set_fg_colour(MW_HAL_LCD_GREY7);
-	mw_gl_vline(draw_info, MW_UI_CHECK_BOX_HEIGHT - 2, 1, MW_UI_CHECK_BOX_HEIGHT - 2);
-	mw_gl_hline(draw_info, 1, MW_UI_CHECK_BOX_HEIGHT - 2, MW_UI_CHECK_BOX_HEIGHT - 2);
+	mw_gl_vline(draw_info, height - 2, 1, height - 2);
+	mw_gl_hline(draw_info, 1, height - 2, height - 2);
 
     /* draw the tick if needed */
 	if (this_check_box->checked)
 	{
 		mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 		mw_gl_set_bg_transparency(MW_GL_BG_TRANSPARENT);
-		mw_gl_monochrome_bitmap(draw_info, 1, 1, 12, 12, mw_bitmaps_tick);
+
+	    if (mw_all_controls[control_ref].control_flags & MW_CONTROL_FLAGS_LARGE_SIZE)
+	    {
+	    	mw_gl_monochrome_bitmap(draw_info, 2, 2, 24, 24, mw_bitmaps_tick_large);
+	    }
+	    else
+	    {
+	    	mw_gl_monochrome_bitmap(draw_info, 1, 1, 12, 12, mw_bitmaps_tick);
+	    }
 	}
 }
 
@@ -158,7 +182,14 @@ uint8_t mw_ui_check_box_add_new(uint16_t x,
 {
 	mw_util_rect_t r;
 
-	mw_util_set_rect(&r, x, y, MW_UI_CHECK_BOX_WIDTH, MW_UI_CHECK_BOX_HEIGHT);
+	if (flags & MW_CONTROL_FLAGS_LARGE_SIZE)
+	{
+		mw_util_set_rect(&r, x, y, MW_UI_CHECK_BOX_LARGE_WIDTH, MW_UI_CHECK_BOX_LARGE_HEIGHT);
+	}
+	else
+	{
+		mw_util_set_rect(&r, x, y, MW_UI_CHECK_BOX_WIDTH, MW_UI_CHECK_BOX_HEIGHT);
+	}
 
 	return mw_add_control(&r,
 			parent,

@@ -46,7 +46,7 @@ SOFTWARE.
  */
  
  /* Memory allocation */
-#define MW_MAX_WINDOW_COUNT 				8               	/**< Maximum number of allowed windows; root window always takes 1 space */
+#define MW_MAX_WINDOW_COUNT 				14               	/**< Maximum number of allowed windows; root window always takes 1 space */
 #define MW_MAX_CONTROL_COUNT				14              	/**< Total maximum number of allowed controls in all windows */
 #define MW_MAX_TIMER_COUNT					8               	/**< Maximum number of timers */
 #define MW_MESSAGE_QUEUE_SIZE				50              	/**< Maximum number of messages in message queue */

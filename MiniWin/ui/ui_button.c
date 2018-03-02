@@ -73,6 +73,8 @@ void mw_ui_button_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *d
 	mw_ui_button_data_t *this_button = (mw_ui_button_data_t*)mw_all_controls[control_ref].extra_data;
 	mw_hal_lcd_colour_t highlighted_colour;
 	mw_hal_lcd_colour_t lowlighted_colour;
+	uint16_t text_width;
+	uint16_t text_x;
 
     /* set the button box fill colour depending on enabled state */    
 	if (this_button->button_down)
@@ -125,13 +127,37 @@ void mw_ui_button_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *d
 		mw_gl_set_fg_colour(MW_CONTROL_DISABLED_COLOUR);
 	}
 
-	if (this_button->button_down)
+	if (mw_all_controls[control_ref].control_flags & MW_CONTROL_FLAGS_LARGE_SIZE)
 	{
-		mw_gl_string(draw_info, 11, 4, this_button->button_label);
+		text_width = mw_gl_large_string_width(this_button->button_label);
 	}
 	else
 	{
-		mw_gl_string(draw_info, 9, 3, this_button->button_label);
+		text_width = strlen(this_button->button_label) * MW_GL_STANDARD_CHARACTER_WIDTH;
+	}
+	text_x = (mw_all_controls[control_ref].control_rect.width - text_width) / 2;
+
+	if (this_button->button_down)
+	{
+		if (mw_all_controls[control_ref].control_flags & MW_CONTROL_FLAGS_LARGE_SIZE)
+		{
+	 		mw_gl_large_string(draw_info, text_x + 2, 11, this_button->button_label);
+		}
+		else
+		{
+			mw_gl_string(draw_info, text_x + 2, 4, this_button->button_label);
+		}
+	}
+	else
+	{
+		if (mw_all_controls[control_ref].control_flags & MW_CONTROL_FLAGS_LARGE_SIZE)
+		{
+			mw_gl_large_string(draw_info, text_x, 9, this_button->button_label);
+		}
+		else
+		{
+			mw_gl_string(draw_info, text_x, 3, this_button->button_label);
+		}
 	}
 }
 
@@ -182,7 +208,14 @@ uint8_t mw_ui_button_add_new(uint16_t x,
 {
 	mw_util_rect_t r;
 
-	mw_util_set_rect(&r, x, y, MW_UI_BUTTON_WIDTH, MW_UI_BUTTON_HEIGHT);
+	if (flags & MW_CONTROL_FLAGS_LARGE_SIZE)
+	{
+		mw_util_set_rect(&r, x, y, MW_UI_BUTTON_LARGE_WIDTH, MW_UI_BUTTON_LARGE_HEIGHT);
+	}
+	else
+	{
+		mw_util_set_rect(&r, x, y, MW_UI_BUTTON_WIDTH, MW_UI_BUTTON_HEIGHT);
+	}
 
 	return mw_add_control(&r,
 			parent,

@@ -24,8 +24,8 @@ SOFTWARE.
 
 */
 
-#ifndef _UI_BUTTON_H
-#define _UI_BUTTON_H
+#ifndef UI_BUTTON_H
+#define UI_BUTTON_H
 
 #ifdef __cplusplus
  extern "C" {
@@ -42,8 +42,12 @@ SOFTWARE.
 ****************/
 
 #define MW_UI_BUTTON_LABEL_MAX_CHARS	10
+
 #define MW_UI_BUTTON_WIDTH				50
 #define MW_UI_BUTTON_HEIGHT				15
+
+#define MW_UI_BUTTON_LARGE_WIDTH		100
+#define MW_UI_BUTTON_LARGE_HEIGHT		30
 
 /************
 *** TYPES ***

@@ -95,6 +95,7 @@ SOFTWARE.
 #define MW_CONTROL_FLAG_IS_VISIBLE				0x0001	/**< Indicates that a control is visible */
 #define MW_CONTROL_FLAG_IS_ENABLED				0x0002	/**< Indicates that a control is enabled */
 #define MW_CONTROL_FLAG_IS_USED					0x0004 	/**< Indicates that a control is used */
+#define MW_CONTROL_FLAGS_LARGE_SIZE				0x0008	/**< Indicates that a control is to be drawn large size */
 
 /**
  * Bitfields representing window frame components required to be redrawm

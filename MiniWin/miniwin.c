@@ -3566,7 +3566,7 @@ void mw_remove_window(uint8_t window_ref)
 	}
 
 	/* cancel all outstanding timers for this window */
-	for (i = 0; i < MW_MAX_WINDOW_COUNT; i++)
+	for (i = 0; i < MW_MAX_TIMER_COUNT; i++)
 	{
 		if (mw_all_timers[i].next_fire_time > 0 &&
 				mw_all_timers[i].recipient_type == MW_WINDOW_MESSAGE &&
