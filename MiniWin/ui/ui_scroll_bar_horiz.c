@@ -72,10 +72,23 @@ void mw_ui_scroll_bar_horiz_paint_function(uint8_t control_ref, const mw_gl_draw
 {
 	mw_ui_scroll_bar_horiz_data_t *this_scroll_bar_horiz = (mw_ui_scroll_bar_horiz_data_t*)mw_all_controls[control_ref].extra_data;
 	uint16_t scroll_bar_horiz_slider_left;
+	uint16_t narrow_dimension;
+	uint16_t slider_size;
+
+	if (mw_all_controls[control_ref].control_flags & MW_CONTROL_FLAGS_LARGE_SIZE)
+	{
+		narrow_dimension = MW_SCROLL_BAR_LARGE_NARROW_DIMESION;
+		slider_size = MW_SCROLL_BAR_LARGE_SLIDER_SIZE;
+	}
+	else
+	{
+		narrow_dimension = MW_SCROLL_BAR_NARROW_DIMESION;
+		slider_size = MW_SCROLL_BAR_SLIDER_SIZE;
+	}
 
 	/* check if there's enough parent client rect height to draw the bar */
-	if (mw_all_windows[mw_all_controls[control_ref].parent].client_rect.height > MW_SCROLL_BAR_NARROW_DIMESION &&
-			mw_all_windows[mw_all_controls[control_ref].parent].client_rect.width > MW_SCROLL_BAR_SLIDER_SIZE)
+	if (mw_all_windows[mw_all_controls[control_ref].parent].client_rect.height > narrow_dimension &&
+			mw_all_windows[mw_all_controls[control_ref].parent].client_rect.width > slider_size)
 	{
 		/* draw the bar */
 		mw_gl_set_fill(MW_GL_FILL);
@@ -95,9 +108,9 @@ void mw_ui_scroll_bar_horiz_paint_function(uint8_t control_ref, const mw_gl_draw
 				0,
 				0,
 				mw_all_controls[control_ref].control_rect.width,
-				MW_SCROLL_BAR_NARROW_DIMESION);
+				narrow_dimension);
 
-		scroll_bar_horiz_slider_left = (mw_all_controls[control_ref].control_rect.width - MW_SCROLL_BAR_SLIDER_SIZE) *
+		scroll_bar_horiz_slider_left = (mw_all_controls[control_ref].control_rect.width - slider_size) *
 				this_scroll_bar_horiz->scroll_position / UINT8_MAX;
 
 		mw_gl_set_solid_fill_colour(MW_CONTROL_DOWN_COLOUR);
@@ -105,28 +118,28 @@ void mw_ui_scroll_bar_horiz_paint_function(uint8_t control_ref, const mw_gl_draw
 		mw_gl_rectangle(draw_info,
 				scroll_bar_horiz_slider_left + 1,
 				1,
-				MW_SCROLL_BAR_SLIDER_SIZE - 2,
-				MW_SCROLL_BAR_NARROW_DIMESION - 2);
+				slider_size - 2,
+				narrow_dimension - 2);
 
 		/* draw 3d effect */
 		mw_gl_set_fg_colour(MW_HAL_LCD_WHITE);
 		mw_gl_vline(draw_info,
 				scroll_bar_horiz_slider_left + 2,
 				2,
-				MW_SCROLL_BAR_SLIDER_SIZE - 3);
+				slider_size - 3);
 		mw_gl_hline(draw_info,
 				scroll_bar_horiz_slider_left + 2,
-				scroll_bar_horiz_slider_left + MW_SCROLL_BAR_SLIDER_SIZE - 4,
+				scroll_bar_horiz_slider_left + slider_size - 4,
 				2);
 		mw_gl_set_fg_colour(MW_HAL_LCD_GREY7);
 		mw_gl_vline(draw_info,
-				scroll_bar_horiz_slider_left + MW_SCROLL_BAR_SLIDER_SIZE - 3,
+				scroll_bar_horiz_slider_left + slider_size - 3,
 				2,
-				MW_SCROLL_BAR_SLIDER_SIZE - 4);
+				slider_size - 4);
 		mw_gl_hline(draw_info,
 				scroll_bar_horiz_slider_left + 3,
-				scroll_bar_horiz_slider_left + MW_SCROLL_BAR_SLIDER_SIZE - 3,
-				MW_SCROLL_BAR_NARROW_DIMESION - 3);
+				scroll_bar_horiz_slider_left + slider_size - 3,
+				narrow_dimension - 3);
 	}
 }
 
@@ -191,7 +204,14 @@ uint8_t mw_ui_scroll_bar_horiz_add_new(uint16_t x,
 {
 	mw_util_rect_t r;
 
-	mw_util_set_rect(&r, x, y, width, MW_SCROLL_BAR_NARROW_DIMESION);
+	if (flags & MW_CONTROL_FLAGS_LARGE_SIZE)
+	{
+		mw_util_set_rect(&r, x, y, width, MW_SCROLL_BAR_LARGE_NARROW_DIMESION);
+	}
+	else
+	{
+		mw_util_set_rect(&r, x, y, width, MW_SCROLL_BAR_NARROW_DIMESION);
+	}
 
 	return mw_add_control(&r,
 			parent,

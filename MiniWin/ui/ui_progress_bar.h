@@ -89,6 +89,7 @@ void mw_ui_progress_bar_message_function(const mw_message_t *message);
  * @param parent The containing window of this control
  * @param flags General control flags controlling the control
  * @param progress_bar_instance_data Instance structure containing progress bar specific data items
+ * @note no account taken of the MW_CONTROL_FLAGS_LARGE_SIZE flag as user sets required size of this control
  */
 uint8_t mw_ui_progress_bar_add_new(uint16_t x,
 		uint16_t y,

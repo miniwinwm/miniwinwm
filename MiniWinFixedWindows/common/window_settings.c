@@ -42,9 +42,13 @@ SOFTWARE.
 *** TYPES ***
 ************/
 
+/**
+ * Window data structure
+ */
 typedef struct
 {
-} window_settings_data_t;
+	uint8_t lines_to_scroll;		/**< number of lines list box is scrolled */
+} settings_data_t;
 
 
 /*************************
@@ -52,15 +56,19 @@ typedef struct
 **************************/
 
 extern uint8_t button_id;
+extern uint8_t list_box_id;
+extern uint8_t label_id;
+extern uint8_t arrow_up_id;
+extern uint8_t arrow_down_id;
+extern mw_ui_list_box_data_t list_box_data;
+extern char *list_box_labels[];
 extern mw_window_t mw_all_windows[MW_MAX_WINDOW_COUNT];
 
 /**********************
 *** LOCAL VARIABLES ***
 **********************/
 
-/* no data in this structure yet so not used
-static window_settings_data_t window_temp_data;
-*/
+static settings_data_t settings_data;
 
 /********************************
 *** LOCAL FUNCTION PROTOTYPES ***
@@ -76,11 +84,8 @@ static window_settings_data_t window_temp_data;
 
 void window_settings_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_info)
 {
-
-
-	/* white background */
 	mw_gl_set_fill(MW_GL_FILL);
-	mw_gl_set_solid_fill_colour(MW_HAL_LCD_WHITE);
+	mw_gl_set_solid_fill_colour(MW_CONTROL_UP_COLOUR);
 	mw_gl_set_border(MW_GL_BORDER_OFF);
 	mw_gl_clear_pattern();
 	mw_gl_rectangle(draw_info,
@@ -89,14 +94,27 @@ void window_settings_paint_function(uint8_t window_ref, const mw_gl_draw_info_t 
 			mw_all_windows[window_ref].client_rect.width,
 			mw_all_windows[window_ref].client_rect.height);
 
-
+	/* blue title bar */
+	mw_gl_set_solid_fill_colour(MW_HAL_LCD_BLUE);
+	mw_gl_rectangle(draw_info,
+			0,
+			0,
+			mw_all_windows[window_ref].client_rect.width,
+			18);
+	mw_gl_set_fg_colour(MW_HAL_LCD_WHITE);
+	mw_gl_large_string(draw_info, 2, 2, "Logging Settings");
 }
 
 void window_settings_message_function(const mw_message_t *message)
 {
+	uint8_t list_box_item_chosen;
+
 	switch (message->message_id)
 	{
 	case MW_WINDOW_CREATED_MESSAGE:
+		settings_data.lines_to_scroll = 0;
+		mw_set_control_enabled(arrow_up_id, false);
+		mw_set_control_enabled(arrow_down_id, true);
 		break;
 
 	case MW_BUTTON_PRESSED_MESSAGE:
@@ -105,6 +123,60 @@ void window_settings_message_function(const mw_message_t *message)
 
 		/* a window has changed visibility so repaint all */
 		mw_paint_all();
+		break;
+
+	case MW_LIST_BOX_ITEM_PRESSED_MESSAGE:
+		/* list box item pressed */
+		list_box_item_chosen = message->message_data;
+		mw_ui_common_post_pointer_to_control(label_id, list_box_labels[list_box_item_chosen]);
+		mw_paint_control(label_id);
+		break;
+
+	case MW_ARROW_PRESSED_MESSAGE:
+		/* an arrow has been pressed */
+		if (message->message_data == MW_UI_ARROW_UP && settings_data.lines_to_scroll > 0)
+		{
+			/* up arrow, scroll list box up is ok to do so */
+			settings_data.lines_to_scroll--;
+
+			if (settings_data.lines_to_scroll == 0)
+			{
+				mw_set_control_enabled(arrow_up_id, false);
+				mw_paint_control(arrow_up_id);
+			}
+
+			mw_set_control_enabled(arrow_down_id, true);
+			mw_paint_control(arrow_down_id);
+
+			mw_post_message(MW_TRANSFER_DATA_1_MESSAGE,
+					0,
+					list_box_id,
+					settings_data.lines_to_scroll,
+					MW_CONTROL_MESSAGE);
+			mw_paint_control(list_box_id);
+		}
+		else if (message->message_data == MW_UI_ARROW_DOWN &&
+					settings_data.lines_to_scroll < (list_box_data.number_of_items - list_box_data.number_of_lines))
+		{
+			/* down arrow, scroll list box down is ok to do so */
+			settings_data.lines_to_scroll++;
+
+			if (settings_data.lines_to_scroll == list_box_data.number_of_items - list_box_data.number_of_lines)
+			{
+				mw_set_control_enabled(arrow_down_id, false);
+				mw_paint_control(arrow_down_id);
+			}
+
+			mw_set_control_enabled(arrow_up_id, true);
+			mw_paint_control(arrow_up_id);
+
+			mw_post_message(MW_TRANSFER_DATA_1_MESSAGE,
+					0,
+					list_box_id,
+					settings_data.lines_to_scroll,
+					MW_CONTROL_MESSAGE);
+			mw_paint_control(list_box_id);
+		}
 		break;
 
 	default:

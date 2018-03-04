@@ -24,8 +24,8 @@ SOFTWARE.
 
 */
 
-#ifndef _UI_SCROLL_BAR_VERT_H
-#define _UI_SCROLL_BAR_VERT_H
+#ifndef UI_SCROLL_BAR_VERT_H
+#define UI_SCROLL_BAR_VERT_H
 
 #ifdef __cplusplus
  extern "C" {

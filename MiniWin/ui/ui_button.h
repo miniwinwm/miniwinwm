@@ -58,10 +58,10 @@ SOFTWARE.
  */
 typedef struct
 {
-  /* User modifiable fields */
+	/* User modifiable fields */
 	char button_label[MW_UI_BUTTON_LABEL_MAX_CHARS + 1];	/**< text of label shown to right of button */
   
-  /* Non-user modifiable fields */
+	/* Non-user modifiable fields */
 	bool button_down;										/**< set when the button is down */
 } mw_ui_button_data_t;
 

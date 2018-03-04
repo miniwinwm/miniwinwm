@@ -55,6 +55,7 @@ typedef enum
 	TOUCH_EVENT_DOWN,       						/**< a touch down event has occurred */
 	TOUCH_EVENT_UP,         						/**< a touch up event has occurred */
 	TOUCH_EVENT_DRAG,								/**< a drag event has occurred */
+	TOUCH_EVENT_HOLD_DOWN,							/**< a hold down event has occurred */
 	TOUCH_EVENT_NONE        						/**< no touch event outstanding */
 } touch_event_t;
 
@@ -911,9 +912,10 @@ static uint8_t find_control_point_is_in(uint8_t window_ref, int16_t point_x, int
 			continue;
 		}
 
-		/* check next control's rect and visibility */
+		/* check next control's rect, enabled and visibility */
 		if (mw_util_is_point_in_rect(&mw_all_controls[i].control_rect, point_x, point_y) &&
-				(mw_all_controls[i].control_flags & MW_CONTROL_FLAG_IS_VISIBLE))
+				(mw_all_controls[i].control_flags & MW_CONTROL_FLAG_IS_VISIBLE) &&
+				(mw_all_controls[i].control_flags & MW_CONTROL_FLAG_IS_ENABLED))
 		{
 			/* a control has been identified that this touch message occurred in */
 			control_found = i;
@@ -2396,6 +2398,11 @@ static window_redimensioning_state_t process_touch_event(void)
 			touch_x_old = touch_x;
 			touch_y_old = touch_y;
 		}
+		else
+		{
+			/* hold down event happened */
+			touch_event = TOUCH_EVENT_HOLD_DOWN;
+		}
 	}
 
 	/* check for any outstanding touch event */
@@ -2413,6 +2420,11 @@ static window_redimensioning_state_t process_touch_event(void)
 
 		/* need to send a touch down message as there has been a touch down event */
 		touch_message = MW_TOUCH_DOWN_MESSAGE;
+	}
+	else if (touch_event == TOUCH_EVENT_HOLD_DOWN)
+	{
+		/* need to send a touch hold down message as there has been a touch hold down event */
+		touch_message = MW_TOUCH_HOLD_DOWN_MESSAGE;
 	}
 	else if (touch_event == TOUCH_EVENT_UP)
 	{
@@ -2736,6 +2748,7 @@ static window_redimensioning_state_t process_touch_event(void)
 		/* touch occurred in a control so send touch message to that control */
 		client_x = touch_x - mw_all_controls[control_to_receive_message].control_rect.x;
 		client_y = touch_y - mw_all_controls[control_to_receive_message].control_rect.y;
+
 		mw_post_message(touch_message,
 				MW_UNUSED_MESSAGE_PARAMETER,
 				control_to_receive_message,

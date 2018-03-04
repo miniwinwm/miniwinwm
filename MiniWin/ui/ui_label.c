@@ -94,7 +94,14 @@ void mw_ui_label_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *dr
     
     /* draw the label text */
 	mw_gl_set_bg_transparency(MW_GL_BG_TRANSPARENT);    
-	mw_gl_string(draw_info, MW_UI_LABEL_X_OFFSET, 1, this_label->label);
+	if (mw_all_controls[control_ref].control_flags & MW_CONTROL_FLAGS_LARGE_SIZE)
+	{
+		mw_gl_large_string(draw_info, MW_UI_LABEL_LARGE_X_OFFSET, 1, this_label->label);
+	}
+	else
+	{
+		mw_gl_string(draw_info, MW_UI_LABEL_LARGE_X_OFFSET, 1, this_label->label);
+	}
 }
 
 void mw_ui_label_message_function(const mw_message_t *message)
@@ -131,7 +138,14 @@ uint8_t mw_ui_label_add_new(uint16_t x,
 {
 	mw_util_rect_t r;
 
-	mw_util_set_rect(&r, x, y, width, MW_UI_LABEL_HEIGHT);
+	if (flags & MW_CONTROL_FLAGS_LARGE_SIZE)
+	{
+		mw_util_set_rect(&r, x, y, width, MW_UI_LABEL_LARGE_HEIGHT);
+	}
+	else
+	{
+		mw_util_set_rect(&r, x, y, width, MW_UI_LABEL_HEIGHT);
+	}
 
 	return mw_add_control(&r,
 			parent,

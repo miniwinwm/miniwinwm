@@ -46,14 +46,13 @@ SOFTWARE.
  */
 typedef struct
 {
-	uint16_t circle_x;								/**< X coordinate of user touch point which is where to draw circle */
-	uint16_t circle_y;								/**< Y coordinate of user touch point which is where to draw circle */
-	bool draw_circle;								/**< If the screen has been touched and need to draw the circle */
-	uint8_t timer_id;								/**< Timer driving progress bar */
-	uint8_t i;										/**< Value shown in label and progress bar progress */
-	char transfer_buffer[10];						/**< Buffer to transfer data to label */
-	char **scrolling_listbox_labels_base;			/**< Scrolling list box base pointer of entry labels */
-	uint8_t scrolling_listbox_labels_count;			/**< Number of entries in scrolling list box */
+	uint16_t circle_x;				/**< X coordinate of user touch point which is where to draw circle */
+	uint16_t circle_y;				/**< Y coordinate of user touch point which is where to draw circle */
+	bool draw_circle;				/**< If the screen has been touched and need to draw the circle */
+	uint8_t timer_id;				/**< Timer driving progress bar */
+	uint8_t i;						/**< Value shown in label and progress bar progress */
+	char transfer_buffer[10];		/**< Buffer to transfer data to label */
+	uint8_t lines_to_scroll;		/**< number of lines list box is scrolled */
 } window_test_data_t;
 
 /***********************
@@ -121,21 +120,15 @@ void window_test_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *dra
 
 void window_test_message_function(const mw_message_t *message)
 {
-	uint8_t lines_to_scroll;
-
 	MW_ASSERT(message);
 
 	switch (message->message_id)
 	{
 	case MW_WINDOW_CREATED_MESSAGE:
+		window_test_data.lines_to_scroll = 0;
 		window_test_data.draw_circle = false;
 		window_test_data.i = 0;
 		window_test_data.timer_id = mw_set_timer(mw_tick_counter + MW_TICKS_PER_SECOND, message->recipient_id, MW_WINDOW_MESSAGE);
-		window_test_data.scrolling_listbox_labels_base = list_box_3_data.list_box_labels;
-		break;
-
-	case MW_TRANSFER_DATA_1_MESSAGE:
-		window_test_data.scrolling_listbox_labels_count = message->message_data;
 		break;
 
 	case MW_TOUCH_DOWN_MESSAGE:
@@ -222,10 +215,14 @@ void window_test_message_function(const mw_message_t *message)
 
 	case MW_CONTROL_VERT_SCROLL_BAR_SCROLLED_MESSAGE:
 		/* vertical scroll bar scrolled */
-		lines_to_scroll= (scroll_bar_vert_2_data.scroll_position *
-				(window_test_data.scrolling_listbox_labels_count - list_box_3_data.number_of_lines)) /
+		window_test_data.lines_to_scroll = (scroll_bar_vert_2_data.scroll_position *
+				(list_box_3_data.number_of_items - list_box_3_data.number_of_lines)) /
 				UINT8_MAX;
-		list_box_3_data.list_box_labels = window_test_data.scrolling_listbox_labels_base + lines_to_scroll;
+		mw_post_message(MW_TRANSFER_DATA_1_MESSAGE,
+				0,
+				list_box_3_id,
+				window_test_data.lines_to_scroll,
+				MW_CONTROL_MESSAGE);
 		mw_paint_control(list_box_3_id);
 		break;
 

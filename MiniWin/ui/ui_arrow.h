@@ -24,8 +24,8 @@ SOFTWARE.
 
 */
 
-#ifndef UI_RADIO_BUTTON_H
-#define UI_RADIO_BUTTON_H
+#ifndef UI_ARROW_H
+#define UI_ARROW_H
 
 #ifdef __cplusplus
  extern "C" {
@@ -41,36 +41,39 @@ SOFTWARE.
 *** CONSTANTS ***
 ****************/
 
-#define MW_UI_RADIO_BUTTON_LABEL_CHARACTERS		10
+/* common control settings */
 
-#define MW_UI_RADIO_BUTTON_BOX_SIZE				15
-#define MW_UI_RADIO_BUTTON_HEIGHT				(MW_UI_RADIO_BUTTON_BOX_SIZE + 3)
-#define MW_UI_RADIO_BUTTON_LABEL_X_OFFSET		(MW_UI_RADIO_BUTTON_BOX_SIZE + 3)
-#define MW_UI_RADIO_BUTTON_LABEL_Y_OFFSET		4
-#define MW_UI_RADIO_BUTTON_WIDTH				98
+/* standard control size settings */
+#define MW_UI_ARROW_SIZE		15
 
-#define MW_UI_RADIO_BUTTON_LARGE_BOX_SIZE		30
-#define MW_UI_RADIO_BUTTON_LARGE_HEIGHT			(MW_UI_RADIO_BUTTON_LARGE_BOX_SIZE + 7)
-#define MW_UI_RADIO_BUTTON_LARGE_LABEL_X_OFFSET	(MW_UI_RADIO_BUTTON_LARGE_BOX_SIZE + 7)
-#define MW_UI_RADIO_BUTTON_LARGE_LABEL_Y_OFFSET	8
-#define MW_UI_RADIO_BUTTON_LARGE_WIDTH			196
+/* large control size settings */
+#define MW_UI_ARROW_LARGE_SIZE	30
 
 /************
 *** TYPES ***
 ************/
 
+ typedef enum
+ {
+	 MW_UI_ARROW_UP = 0,
+	 MW_UI_ARROW_RIGHT = 90,
+	 MW_UI_ARROW_DOWN = 180,
+	 MW_UI_ARROW_LEFT = 270
+ } mw_ui_arrow_direction_t;
+
 /**
- * Extra data structure for radio_button ui component
+ * Extra data structure for button ui component
  */
 typedef struct
 {
-  /* User modifiable fields */
-	uint8_t number_of_items;			/**< number of radio_buttons in the group */  
-	char **radio_button_labels;			/**< array of strings of labels shown to the right of each radio_button */
-
-  /* Non-user modifiable fields */  
-	uint8_t selected_radio_button;		/**< the currently selected radio_button */
-} mw_ui_radio_button_data_t;
+	/* User modifiable fields */
+	mw_ui_arrow_direction_t mw_ui_arrow_direction;			/**< direction of arrow */
+  
+	/* Non-user modifiable fields */
+	bool arrow_down;										/**< set when the arrow is down */
+	uint8_t arrow_timer;									/**< used for animation and holding down */
+	uint32_t touch_down_time;								/**< time in ticks the arrow was first pressed down */
+} mw_ui_arrow_data_t;
 
 /***************************
 *** FUNCTIONS PROTOTYPES ***
@@ -83,7 +86,7 @@ typedef struct
  * @param draw_info Draw info structure describing offset and clip region
  * @note Do not call this directly from user code
  */
-void mw_ui_radio_button_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *draw_info);
+void mw_ui_arrow_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *draw_info);
 
 /**
  * Control message handler called by the window manager.
@@ -91,22 +94,22 @@ void mw_ui_radio_button_paint_function(uint8_t control_ref, const mw_gl_draw_inf
  * @param message The message to be processed
  * @note Do not call this directly from user code
  */
-void mw_ui_radio_button_message_function(const mw_message_t *message);
+void mw_ui_arrow_message_function(const mw_message_t *message);
 
 /**
- * Add a radio button control to a window
+ * Add a button control to a window
  *
  * @param x The x coordinate of the control relative to parent window client area
  * @param y The y coordinate of the control relative to parent window client area
  * @param parent The containing window of this control
  * @param flags General control flags controlling the control
- * @param radio_button_instance_data Instance structure containing radio button specific data items
+ * @param button_instance_data Instance structure containing button specific data items
  */
-uint8_t mw_ui_radio_button_add_new(uint16_t x,
+uint8_t mw_ui_arrow_add_new(uint16_t x,
 		uint16_t y,
 		uint8_t parent,
 		uint32_t flags,
-		mw_ui_radio_button_data_t *radio_button_instance_data);
+		mw_ui_arrow_data_t *button_instance_data);
 
 #ifdef __cplusplus
 }

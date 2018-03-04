@@ -69,12 +69,26 @@ void mw_ui_radio_button_paint_function(uint8_t control_ref, const mw_gl_draw_inf
 {
 	uint8_t i;
 	mw_ui_radio_button_data_t *this_radio_radio_button = (mw_ui_radio_button_data_t*)mw_all_controls[control_ref].extra_data;
+	uint16_t height;
+	uint16_t box_size;
 
 	mw_gl_set_fill(MW_GL_FILL);
 	mw_gl_set_line(MW_GL_SOLID_LINE);
 	mw_gl_set_border(MW_GL_BORDER_ON);
 	mw_gl_clear_pattern();
 	mw_gl_set_bg_transparency(MW_GL_BG_TRANSPARENT);
+
+	/* set size dependent values */
+	if (mw_all_controls[control_ref].control_flags & MW_CONTROL_FLAGS_LARGE_SIZE)
+	{
+		height = MW_UI_RADIO_BUTTON_LARGE_HEIGHT;
+		box_size = MW_UI_RADIO_BUTTON_LARGE_BOX_SIZE;
+	}
+	else
+	{
+		height = MW_UI_RADIO_BUTTON_HEIGHT;
+		box_size = MW_UI_RADIO_BUTTON_BOX_SIZE;
+	}
 
 	for (i = 0; i < this_radio_radio_button->number_of_items; i++)
 	{
@@ -88,39 +102,51 @@ void mw_ui_radio_button_paint_function(uint8_t control_ref, const mw_gl_draw_inf
 			mw_gl_set_fg_colour(MW_CONTROL_DISABLED_COLOUR);
 		}
 
-        /* draw the label text */
-		mw_gl_string(draw_info,
-				MW_UI_RADIO_BUTTON_LABEL_X_OFFSET,
-				MW_UI_RADIO_BUTTON_LABEL_Y_OFFSET + i * MW_UI_RADIO_BUTTON_HEIGHT,
-				this_radio_radio_button->radio_button_labels[i]);
+		/* check size this control is being drawn at and draw appropriate text*/
+		if (mw_all_controls[control_ref].control_flags & MW_CONTROL_FLAGS_LARGE_SIZE)
+		{
+			/* draw the label text */
+			mw_gl_large_string(draw_info,
+					MW_UI_RADIO_BUTTON_LARGE_LABEL_X_OFFSET,
+					MW_UI_RADIO_BUTTON_LARGE_LABEL_Y_OFFSET + i * MW_UI_RADIO_BUTTON_LARGE_HEIGHT,
+					this_radio_radio_button->radio_button_labels[i]);
+		}
+		else
+		{
+			/* draw the label text */
+			mw_gl_string(draw_info,
+					MW_UI_RADIO_BUTTON_LABEL_X_OFFSET,
+					MW_UI_RADIO_BUTTON_LABEL_Y_OFFSET + i * MW_UI_RADIO_BUTTON_HEIGHT,
+					this_radio_radio_button->radio_button_labels[i]);
+		}
 
         /* draw the empty box */
 		mw_gl_set_solid_fill_colour(MW_CONTROL_UP_COLOUR);
 		mw_gl_rectangle(draw_info,
 				0,
-				i * MW_UI_RADIO_BUTTON_HEIGHT,
-				MW_UI_RADIO_BUTTON_BOX_SIZE,
-				MW_UI_RADIO_BUTTON_BOX_SIZE);
+				i * height,
+				box_size,
+				box_size);
 
 		/* draw 3d effect */
 		mw_gl_set_fg_colour(MW_HAL_LCD_WHITE);
 		mw_gl_vline(draw_info,
 				1,
-				1 + i * MW_UI_RADIO_BUTTON_HEIGHT,
-				i * MW_UI_RADIO_BUTTON_HEIGHT + MW_UI_RADIO_BUTTON_BOX_SIZE - 2);
+				1 + i * height,
+				i * height + box_size - 2);
 		mw_gl_hline(draw_info,
 				1,
-				MW_UI_RADIO_BUTTON_BOX_SIZE - 2,
-				1 + i * MW_UI_RADIO_BUTTON_HEIGHT);
+				box_size - 2,
+				1 + i * height);
 		mw_gl_set_fg_colour(MW_HAL_LCD_GREY7);
 		mw_gl_vline(draw_info,
-				MW_UI_RADIO_BUTTON_BOX_SIZE - 2,
-				1 + i * MW_UI_RADIO_BUTTON_HEIGHT,
-				 i * MW_UI_RADIO_BUTTON_HEIGHT + MW_UI_RADIO_BUTTON_BOX_SIZE - 2);
+				box_size - 2,
+				1 + i * height,
+				 i * height + box_size - 2);
 		mw_gl_hline(draw_info,
 				1,
-				MW_UI_RADIO_BUTTON_BOX_SIZE - 2,
-				i * MW_UI_RADIO_BUTTON_HEIGHT + MW_UI_RADIO_BUTTON_BOX_SIZE - 2);
+				box_size - 2,
+				i * height + box_size - 2);
         
         /* check if this radio_button is selected */
 		if (i == this_radio_radio_button->selected_radio_button)
@@ -138,9 +164,9 @@ void mw_ui_radio_button_paint_function(uint8_t control_ref, const mw_gl_draw_inf
             /* draw the fill box */
 			mw_gl_rectangle(draw_info,
 					3,
-					i * MW_UI_RADIO_BUTTON_HEIGHT + 3,
-					MW_UI_RADIO_BUTTON_BOX_SIZE - 6,
-					MW_UI_RADIO_BUTTON_BOX_SIZE - 6);
+					i * height + 3,
+					box_size - 6,
+					box_size - 6);
 		}
 	}
 }
@@ -148,8 +174,19 @@ void mw_ui_radio_button_paint_function(uint8_t control_ref, const mw_gl_draw_inf
 void mw_ui_radio_button_message_function(const mw_message_t *message)
 {
 	mw_ui_radio_button_data_t *this_radio_radio_button = (mw_ui_radio_button_data_t*)mw_all_controls[message->recipient_id].extra_data;
+	uint16_t height;
 
 	MW_ASSERT(message);
+
+	/* set size dependent values */
+	if (mw_all_controls[message->recipient_id].control_flags & MW_CONTROL_FLAGS_LARGE_SIZE)
+	{
+		height = MW_UI_RADIO_BUTTON_LARGE_HEIGHT;
+	}
+	else
+	{
+		height = MW_UI_RADIO_BUTTON_HEIGHT;
+	}
 
 	switch (message->message_id)
 	{
@@ -171,7 +208,7 @@ void mw_ui_radio_button_message_function(const mw_message_t *message)
 		if (mw_all_controls[message->recipient_id].control_flags & MW_CONTROL_FLAG_IS_ENABLED)
 		{
 			/* find which button was touched */
-			this_radio_radio_button->selected_radio_button = (message->message_data & 0xffff) / MW_UI_RADIO_BUTTON_HEIGHT;
+			this_radio_radio_button->selected_radio_button = (message->message_data & 0xffff) / height;
 			
 			/* send control response message */
 			mw_post_message(MW_RADIO_BUTTON_ITEM_SELECTED_MESSAGE,
@@ -201,7 +238,14 @@ uint8_t mw_ui_radio_button_add_new(uint16_t x,
 		return MW_MAX_CONTROL_COUNT;
 	}
 
-	mw_util_set_rect(&r, x, y, MW_UI_RADIO_BUTTON_WIDTH, MW_UI_RADIO_BUTTON_HEIGHT * radio_button_instance_data->number_of_items);
+	if (flags & MW_CONTROL_FLAGS_LARGE_SIZE)
+	{
+		mw_util_set_rect(&r, x, y, MW_UI_RADIO_BUTTON_LARGE_WIDTH, MW_UI_RADIO_BUTTON_LARGE_HEIGHT * radio_button_instance_data->number_of_items);
+	}
+	else
+	{
+		mw_util_set_rect(&r, x, y, MW_UI_RADIO_BUTTON_WIDTH, MW_UI_RADIO_BUTTON_HEIGHT * radio_button_instance_data->number_of_items);
+	}
 
 	return mw_add_control(&r,
 			parent,

@@ -67,6 +67,8 @@ SOFTWARE.
 #define MW_ALL_ITEMS_DISABLED					0									/**< All items in a control that can have individual items enabled are disabled */
 #define MW_SCROLL_BAR_NARROW_DIMESION			12									/**< Width of vertical scroll bar, height of horizontal */
 #define MW_SCROLL_BAR_SLIDER_SIZE				MW_SCROLL_BAR_NARROW_DIMESION       /**< Length of scroll bar slider */
+#define MW_SCROLL_BAR_LARGE_NARROW_DIMESION		24									/**< Width of large vertical scroll bar, height of large horizontal */
+#define MW_SCROLL_BAR_LARGE_SLIDER_SIZE			MW_SCROLL_BAR_LARGE_NARROW_DIMESION /**< Length of large scroll bar slider */
 #define MW_MENU_BAR_HEIGHT						14									/**< Menu bar height */
 #define MW_MENU_BAR_LABEL_Y_OFFSET				3               					/**< Gap between top edge of menu bar and text */
 
@@ -126,6 +128,7 @@ typedef enum
 	MW_CONTROL_CREATED_MESSAGE,						/**< Message send to control as soon as it is created and before it is painted */
 	MW_CONTROL_REMOVED_MESSAGE,			       		/**< Message sent to control just before it is removed */
 	MW_TOUCH_DOWN_MESSAGE,					       	/**< Message sent to a window or control when it receives a touch down event */
+	MW_TOUCH_HOLD_DOWN_MESSAGE,					    /**< Message sent to a window or control when it receives a touch hold down event */
 	MW_TOUCH_UP_MESSAGE,					       	/**< Message sent to a window or control when it receives a touch up event */
 	MW_TOUCH_DRAG_MESSAGE,							/**< Message sent to a window or control when it receives a drag event */
 	MW_WINDOW_TIMER_MESSAGE,				       	/**< Message sent to a window or control when a timer has expired */
@@ -152,6 +155,7 @@ typedef enum
 	MW_KEYBOARD_CANCEL_MESSAGE,						/**< Cancel Response message from a keyboard */
 	MW_CONTROL_VERT_SCROLL_BAR_SCROLLED_MESSAGE,	/**< Response message from a vertical control scroll bar that it has been scrolled */
 	MW_CONTROL_HORIZ_SCROLL_BAR_SCROLLED_MESSAGE,	/**< Response message from a horizontal control scroll bar that it has been scrolled */
+	MW_ARROW_PRESSED_MESSAGE,						/**< Response message from a arrow that it has been pressed */
 		
 	/* Messages that can be posted from user code or user code called utility functions */
 	MW_WINDOW_PAINT_ALL_MESSAGE,			       	/**< System message to paint everything */

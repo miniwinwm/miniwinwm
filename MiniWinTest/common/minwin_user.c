@@ -197,6 +197,7 @@ void mw_user_init(void)
 
 	/* create a new list box control and add it to the ui test window, y position to be directly under the menu bar, control invisible for now */
 	list_box_1_data.number_of_lines = LIST_BOX_1_ITEMS_COUNT;
+	list_box_1_data.number_of_items = LIST_BOX_1_ITEMS_COUNT;
 	list_box_1_data.list_box_labels = (char **)list_box_1_labels;
 	list_box_1_data.line_enables = mw_util_change_bit(MW_ALL_ITEMS_ENABLED, 1, false);
 	list_box_1_id = mw_ui_list_box_add_new(0,
@@ -249,6 +250,7 @@ void mw_user_init(void)
 
 	/* create a new list box control and add it to the ui test window */
 	list_box_3_data.number_of_lines = 3;
+	list_box_3_data.number_of_items = LIST_BOX_3_ITEMS_COUNT;
 	list_box_3_data.list_box_labels = (char **)list_box_3_labels;
 	list_box_3_data.line_enables = MW_ALL_ITEMS_ENABLED;
 	list_box_3_id = mw_ui_list_box_add_new(75,
@@ -256,13 +258,6 @@ void mw_user_init(void)
 			window_test_id,
 			MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_IS_VISIBLE,
 			&list_box_3_data);
-
-	/* post the number of items in the scrolling list box to the owning window */
-	mw_post_message(MW_TRANSFER_DATA_1_MESSAGE,
-			MW_UNUSED_MESSAGE_PARAMETER,
-			window_test_id,
-			LIST_BOX_3_ITEMS_COUNT,
-			MW_WINDOW_MESSAGE);
 
 	/* create a new vertical scroll bar */
 	scroll_bar_vert_2_id = mw_ui_scroll_bar_vert_add_new(75 + MW_UI_LIST_BOX_WIDTH - 1,
@@ -359,6 +354,7 @@ void mw_user_init(void)
 
 	/* create a new list box control and add it to the paint rect window */
 	list_box_2_data.number_of_lines = LIST_BOX_2_ITEMS_COUNT;
+	list_box_2_data.number_of_items = LIST_BOX_2_ITEMS_COUNT;
 	list_box_2_data.list_box_labels = (char **)list_box_2_labels;
 	list_box_2_data.line_enables = MW_ALL_ITEMS_ENABLED;
 	list_box_2_id = mw_ui_list_box_add_new(100,

@@ -39,8 +39,6 @@ SOFTWARE.
 #define SHAPE_POINTS 		(sizeof(shape_x_const) / sizeof(int16_t))
 static const int16_t shape_x_const[] = {0, -5, 0, 5};
 static const int16_t shape_y_const[] = {-10, 10, 5, 10};
-static int16_t shape_x[SHAPE_POINTS];
-static int16_t shape_y[SHAPE_POINTS];
 
 /* width = 18
    height = 16 */
@@ -93,6 +91,8 @@ extern volatile uint32_t mw_tick_counter;
 **********************/
 
 static window_gl_data_t window_GL_data;
+static int16_t shape_x[SHAPE_POINTS];
+static int16_t shape_y[SHAPE_POINTS];
 
 /********************************
 *** LOCAL FUNCTION PROTOTYPES ***

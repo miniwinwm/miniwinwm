@@ -24,8 +24,8 @@ SOFTWARE.
 
 */
 
-#ifndef _UI_LIST_BOX_H
-#define _UI_LIST_BOX_H
+#ifndef UI_LIST_BOX_H
+#define UI_LIST_BOX_H
 
 #ifdef __cplusplus
  extern "C" {
@@ -42,10 +42,16 @@ SOFTWARE.
 ****************/
 
 #define MW_UI_LIST_BOX_LABEL_CHARACTERS		    10
+
 #define MW_UI_LIST_BOX_ROW_HEIGHT				14
 #define MW_UI_LIST_BOX_LABEL_Y_OFFSET			3
-#define MW_UI_LIST_BOX_LABEL_X_OFFSET 			MW_GL_STANDARD_CHARACTER_WIDTH
-#define MW_UI_LIST_BOX_WIDTH				    (MW_UI_LIST_BOX_LABEL_X_OFFSET + (MW_UI_LIST_BOX_LABEL_CHARACTERS * MW_GL_STANDARD_CHARACTER_WIDTH))
+#define MW_UI_LIST_BOX_LABEL_X_OFFSET 			8
+#define MW_UI_LIST_BOX_WIDTH				    68
+
+#define MW_UI_LIST_BOX_LARGE_ROW_HEIGHT			28
+#define MW_UI_LIST_BOX_LARGE_LABEL_Y_OFFSET		6
+#define MW_UI_LIST_BOX_LARGE_LABEL_X_OFFSET 	8
+#define MW_UI_LIST_BOX_LARGE_WIDTH				138
 
 /************
 *** TYPES ***
@@ -57,13 +63,16 @@ SOFTWARE.
 typedef struct
 {
   /* User modifiable fields */   
-	uint8_t number_of_lines;				/**< number of lines in the list box */
+	uint8_t number_of_lines;				/**< number of lines displayed in the list box */
+	uint8_t number_of_items;				/**< number of items in the list box */
 	char **list_box_labels;					/**< array of strings of labels shown to the right of each line */
 	uint16_t line_enables;					/**< bit field of which lines are enabled/disabled; lsb is top line, 1 is enabled */
-  
+
   /* Non-user modifiable fields */   
 	uint8_t selection;						/**< the currently selected line */
 	bool line_is_selected;					/**< a line is currently selected */
+	uint16_t touch_down_y_position;			/**< the last down down position */
+	uint8_t lines_to_scroll;				/**< the number of entries down to shart showing entries */
 } mw_ui_list_box_data_t;
 
 /***************************

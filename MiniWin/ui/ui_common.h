@@ -24,8 +24,8 @@ SOFTWARE.
 
 */
 
-#ifndef _UI_COMMON_H
-#define _UI_COMMON_H
+#ifndef UI_COMMON_H
+#define UI_COMMON_H
 
 #ifdef __cplusplus
  extern "C" {
@@ -46,6 +46,7 @@ SOFTWARE.
 #include "ui/ui_int_number_chooser.h"
 #include "ui/ui_progress_bar.h"
 #include "ui/ui_keyboard.h"
+#include "ui/ui_arrow.h"
 
 /****************
 *** CONSTANTS ***
