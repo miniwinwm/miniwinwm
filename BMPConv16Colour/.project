@@ -26,9 +26,9 @@
 	</natures>
 	<linkedResources>
 		<link>
-			<name>src/EasyBMP</name>
+			<name>EasyBMP</name>
 			<type>2</type>
-			<location>C:/Users/John/Desktop/workspace/EasyBMP</location>
+			<locationURI>$%7BPARENT-1-PROJECT_LOC%7D/EasyBMP</locationURI>
 		</link>
 	</linkedResources>
 </projectDescription>

@@ -47,8 +47,9 @@
 									<listOptionValue builtIn="false" value="HSE_VALUE=8000000"/>
 									<listOptionValue builtIn="false" value="USE_STM32F429I_DISCO"/>
 								</option>
-								<option id="com.atollic.truestudio.gcc.directories.select.937987991" name="Include path" superClass="com.atollic.truestudio.gcc.directories.select" valueType="includePath">
+								<option id="com.atollic.truestudio.gcc.directories.select.937987991" name="Include path" superClass="com.atollic.truestudio.gcc.directories.select" useByScannerDiscovery="false" valueType="includePath">
 									<listOptionValue builtIn="false" value="../src"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/MiniWin/hal/stm32f429/STM32F429I-Discovery}&quot;"/>
 									<listOptionValue builtIn="false" value="../Libraries/CMSIS/Include"/>
 									<listOptionValue builtIn="false" value="../Libraries/Device/ST/STM32F4xx/Include"/>
 									<listOptionValue builtIn="false" value="../Libraries/STM32F4xx_StdPeriph_Driver/inc"/>
@@ -113,33 +114,6 @@
 							</tool>
 							<tool id="com.atollic.truestudio.ar.base.782690871" name="Archiver" superClass="com.atollic.truestudio.ar.base"/>
 							<tool id="com.atollic.truestudio.exe.debug.toolchain.secoutput.764688162" name="Other" superClass="com.atollic.truestudio.exe.debug.toolchain.secoutput"/>
-						</toolChain>
-					</folderInfo>
-					<folderInfo id="com.atollic.truestudio.exe.debug.783602979.2107503726" name="/" resourcePath="MiniWin">
-						<toolChain id="com.atollic.truestudio.exe.debug.toolchain.1229049587" name="Atollic ARM Tools" superClass="com.atollic.truestudio.exe.debug.toolchain" unusedChildren="">
-							<option id="com.atollic.truestudio.general.runtimelib.1717929424.2096339953" name="Runtime Library" superClass="com.atollic.truestudio.general.runtimelib.1717929424"/>
-							<option id="com.atollic.truestudio.toolchain_options.mcu.187903739.1198474334" name="Microcontroller" superClass="com.atollic.truestudio.toolchain_options.mcu.187903739"/>
-							<option id="com.atollic.truestudio.toolchain_options.vendor.1362439663.1540866107" name="Vendor name" superClass="com.atollic.truestudio.toolchain_options.vendor.1362439663"/>
-							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="com.atollic.truestudio.exe.debug.toolchain.platform" isAbstract="false" name="Debug platform" osList="all" superClass="com.atollic.truestudio.exe.debug.toolchain.platform"/>
-							<tool id="com.atollic.truestudio.exe.debug.toolchain.as.1317031124" name="Assembler" superClass="com.atollic.truestudio.exe.debug.toolchain.as.395630156">
-								<inputType id="com.atollic.truestudio.as.input.1017343288" name="Input" superClass="com.atollic.truestudio.as.input"/>
-							</tool>
-							<tool id="com.atollic.truestudio.exe.debug.toolchain.gcc.506449352" name="C Compiler" superClass="com.atollic.truestudio.exe.debug.toolchain.gcc.862546769">
-								<option id="com.atollic.truestudio.gcc.directories.select.254529442" name="Include path" superClass="com.atollic.truestudio.gcc.directories.select" valueType="includePath">
-									<listOptionValue builtIn="false" value="../src"/>
-									<listOptionValue builtIn="false" value="../Libraries/CMSIS/Include"/>
-									<listOptionValue builtIn="false" value="../Libraries/Device/ST/STM32F4xx/Include"/>
-									<listOptionValue builtIn="false" value="../Libraries/STM32F4xx_StdPeriph_Driver/inc"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MiniWinFixedWindows_STM32F429/MiniWin}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MiniWinFixedWindows_STM32F429/MiniWin/hal/stm32f429/STM32F429I-Discovery}&quot;"/>
-								</option>
-								<inputType id="com.atollic.truestudio.gcc.input.894854428" superClass="com.atollic.truestudio.gcc.input"/>
-							</tool>
-							<tool id="com.atollic.truestudio.exe.debug.toolchain.ld.1046031825" name="C Linker" superClass="com.atollic.truestudio.exe.debug.toolchain.ld.615887923"/>
-							<tool id="com.atollic.truestudio.exe.debug.toolchain.gpp.463766875" name="C++ Compiler" superClass="com.atollic.truestudio.exe.debug.toolchain.gpp.1804275324"/>
-							<tool id="com.atollic.truestudio.exe.debug.toolchain.ldcc.1806682636" name="C++ Linker" superClass="com.atollic.truestudio.exe.debug.toolchain.ldcc.30755206"/>
-							<tool id="com.atollic.truestudio.ar.base.1990130357" name="Archiver" superClass="com.atollic.truestudio.ar.base.782690871"/>
-							<tool id="com.atollic.truestudio.exe.debug.toolchain.secoutput.1520282170" name="Other" superClass="com.atollic.truestudio.exe.debug.toolchain.secoutput.764688162"/>
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>

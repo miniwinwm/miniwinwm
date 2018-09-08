@@ -27,12 +27,12 @@
 		<link>
 			<name>MiniWin</name>
 			<type>2</type>
-			<location>C:/Users/John/Desktop/workspace/MiniWin</location>
+			<locationURI>$%7BPARENT-2-PROJECT_LOC%7D/MiniWin</locationURI>
 		</link>
 		<link>
 			<name>common</name>
 			<type>2</type>
-			<location>C:/Users/John/Desktop/workspace/MiniWinSimple/common</location>
+			<locationURI>$%7BPARENT-1-PROJECT_LOC%7D/common</locationURI>
 		</link>
 	</linkedResources>
 </projectDescription>
