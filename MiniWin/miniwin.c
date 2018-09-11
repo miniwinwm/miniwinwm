@@ -3242,6 +3242,13 @@ void mw_set_window_visible(uint8_t window_ref, bool visible)
 		mw_all_windows[window_ref].window_flags &= ~MW_WINDOW_FLAG_IS_VISIBLE;
 	}
 
+	/* send message to window that visibility has changed */
+	mw_post_message(MW_WINDOW_VISIBILITY_CHANGED,
+			MW_UNUSED_MESSAGE_PARAMETER,
+			window_ref,
+			visible,
+			MW_WINDOW_MESSAGE);
+
 	/* update focus */
 	set_focus();
 }

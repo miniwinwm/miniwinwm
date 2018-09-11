@@ -55,13 +55,12 @@ typedef struct
 *** EXTERNAL VARIABLES ***
 **************************/
 
-extern uint8_t button_id;
-extern uint8_t list_box_id;
-extern uint8_t label_id;
-extern uint8_t arrow_up_id;
-extern uint8_t arrow_down_id;
-extern mw_ui_list_box_data_t list_box_data;
-extern char *list_box_labels[];
+extern uint8_t list_box_settings_id;
+extern uint8_t label_settings_id;
+extern uint8_t arrow_settings_up;
+extern uint8_t arrow_settings_down;
+extern mw_ui_list_box_data_t list_box_settings_data;
+extern mw_ui_list_box_entry list_box_settings_entries[];
 extern mw_window_t mw_all_windows[MW_MAX_WINDOW_COUNT];
 
 /**********************
@@ -113,8 +112,8 @@ void window_settings_message_function(const mw_message_t *message)
 	{
 	case MW_WINDOW_CREATED_MESSAGE:
 		settings_data.lines_to_scroll = 0;
-		mw_set_control_enabled(arrow_up_id, false);
-		mw_set_control_enabled(arrow_down_id, true);
+		mw_set_control_enabled(arrow_settings_up, false);
+		mw_set_control_enabled(arrow_settings_down, true);
 		break;
 
 	case MW_BUTTON_PRESSED_MESSAGE:
@@ -128,8 +127,8 @@ void window_settings_message_function(const mw_message_t *message)
 	case MW_LIST_BOX_ITEM_PRESSED_MESSAGE:
 		/* list box item pressed */
 		list_box_item_chosen = message->message_data;
-		mw_ui_common_post_pointer_to_control(label_id, list_box_labels[list_box_item_chosen]);
-		mw_paint_control(label_id);
+		mw_ui_common_post_pointer_to_control(label_settings_id, list_box_settings_entries[list_box_item_chosen].label);
+		mw_paint_control(label_settings_id);
 		break;
 
 	case MW_ARROW_PRESSED_MESSAGE:
@@ -141,41 +140,41 @@ void window_settings_message_function(const mw_message_t *message)
 
 			if (settings_data.lines_to_scroll == 0)
 			{
-				mw_set_control_enabled(arrow_up_id, false);
-				mw_paint_control(arrow_up_id);
+				mw_set_control_enabled(arrow_settings_up, false);
+				mw_paint_control(arrow_settings_up);
 			}
 
-			mw_set_control_enabled(arrow_down_id, true);
-			mw_paint_control(arrow_down_id);
+			mw_set_control_enabled(arrow_settings_down, true);
+			mw_paint_control(arrow_settings_down);
 
 			mw_post_message(MW_TRANSFER_DATA_1_MESSAGE,
 					0,
-					list_box_id,
+					list_box_settings_id,
 					settings_data.lines_to_scroll,
 					MW_CONTROL_MESSAGE);
-			mw_paint_control(list_box_id);
+			mw_paint_control(list_box_settings_id);
 		}
 		else if (message->message_data == MW_UI_ARROW_DOWN &&
-					settings_data.lines_to_scroll < (list_box_data.number_of_items - list_box_data.number_of_lines))
+					settings_data.lines_to_scroll < (list_box_settings_data.number_of_items - list_box_settings_data.number_of_lines))
 		{
 			/* down arrow, scroll list box down is ok to do so */
 			settings_data.lines_to_scroll++;
 
-			if (settings_data.lines_to_scroll == list_box_data.number_of_items - list_box_data.number_of_lines)
+			if (settings_data.lines_to_scroll == list_box_settings_data.number_of_items - list_box_settings_data.number_of_lines)
 			{
-				mw_set_control_enabled(arrow_down_id, false);
-				mw_paint_control(arrow_down_id);
+				mw_set_control_enabled(arrow_settings_down, false);
+				mw_paint_control(arrow_settings_down);
 			}
 
-			mw_set_control_enabled(arrow_up_id, true);
-			mw_paint_control(arrow_up_id);
+			mw_set_control_enabled(arrow_settings_up, true);
+			mw_paint_control(arrow_settings_up);
 
 			mw_post_message(MW_TRANSFER_DATA_1_MESSAGE,
 					0,
-					list_box_id,
+					list_box_settings_id,
 					settings_data.lines_to_scroll,
 					MW_CONTROL_MESSAGE);
-			mw_paint_control(list_box_id);
+			mw_paint_control(list_box_settings_id);
 		}
 		break;
 

@@ -56,6 +56,7 @@ extern mw_window_t mw_all_windows[MW_MAX_WINDOW_COUNT];
 extern const mw_hal_lcd_colour_t file_bitmap[];
 extern const mw_hal_lcd_colour_t file_down_bitmap[];
 extern volatile uint32_t mw_tick_counter;
+extern uint8_t window_file_id;
 
 /**********************
 *** LOCAL VARIABLES ***
@@ -112,11 +113,27 @@ void window_file_icon_message_function(const mw_message_t *message)
 		break;
 
 	case MW_WINDOW_TIMER_MESSAGE:
-		window_file_icon_data.touch_down = false;
-		mw_paint_window_client(message->recipient_id);
+		if (window_file_icon_data.touch_down)
+		{
+			/* repaint the window up for a moment before switching to the new window, this is not necessary but makes the ui feel better */
+			window_file_icon_data.touch_down = false;
+			mw_paint_window_client(message->recipient_id);
+			mw_set_timer(mw_tick_counter + MW_CONTROL_DOWN_TIME * 2, message->recipient_id, MW_WINDOW_MESSAGE);
+		}
+		else
+		{
+			/* set window window_settings_id visible */
+			mw_set_window_visible(window_file_id, true);
+
+			/* a window has changed visibility so repaint it */
+			mw_paint_window_frame(window_file_id, MW_WINDOW_FRAME_COMPONENT_ALL);
+			mw_paint_window_client(window_file_id);
+		}
 		break;
 
 	default:
 		break;
 	}
+
+
 }

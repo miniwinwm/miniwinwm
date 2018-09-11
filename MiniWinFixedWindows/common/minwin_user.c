@@ -40,6 +40,14 @@ SOFTWARE.
 #include "window_time_icon.h"
 #include "window_temp.h"
 #include "window_settings.h"
+#include "window_file.h"
+
+/*************************
+*** EXTERNAL VARIABLES ***
+**************************/
+
+extern const uint8_t mw_bitmaps_file_icon_large[];
+extern const uint8_t mw_bitmaps_folder_icon_large[];
 
 /****************
 *** CONSTANTS ***
@@ -47,8 +55,34 @@ SOFTWARE.
 
 static const char *radio_button_labels[] = {"12 Hour", "24 Hour"};
 #define RADIO_BUTTON_ITEMS_COUNT			(sizeof(radio_button_labels)/sizeof(char *))
-const char *list_box_labels[] = {"2 Minutes", "5 Minutes", "15 Minutes", "30 Minutes", "1 Hour", "2 Hours", "4 Hours", "6 Hours", "12 Hours"};
-#define LIST_BOX_ITEMS_COUNT				(sizeof(list_box_labels)/sizeof(char *))
+const mw_ui_list_box_entry list_box_settings_entries[] = {
+		{"2 Minutes", NULL},
+		{"5 Minutes",  NULL},
+		{"15 Minutes",  NULL},
+		{"30 Minutes",  NULL},
+		{"1 Hour",  NULL},
+		{"2 Hours",  NULL},
+		{"4 Hours",  NULL},
+		{"6 Hours",  NULL},
+		{"12 Hours", NULL}};
+#define LIST_BOX_SETTINGS_ITEMS_COUNT		(sizeof(list_box_settings_entries)/sizeof(mw_ui_list_box_entry))
+const mw_ui_list_box_entry list_box_file_entries_root[] = {
+		{"Images", mw_bitmaps_folder_icon_large},
+		{"Documents",  mw_bitmaps_folder_icon_large},
+		{"License.txt",  mw_bitmaps_file_icon_large},
+		{"Readme.txt",  mw_bitmaps_file_icon_large}};
+const uint8_t list_box_file_entries_root_count = (sizeof(list_box_file_entries_root)/sizeof(mw_ui_list_box_entry));
+const mw_ui_list_box_entry list_box_file_entries_images[] = {
+		{"..", mw_bitmaps_folder_icon_large},
+		{"image1.jpg",  mw_bitmaps_file_icon_large},
+		{"image2.jpg",  mw_bitmaps_file_icon_large}};
+const uint8_t list_box_file_entries_images_count = (sizeof(list_box_file_entries_images)/sizeof(mw_ui_list_box_entry));
+const mw_ui_list_box_entry list_box_file_entries_docs[] = {
+		{"..", mw_bitmaps_folder_icon_large},
+		{"doc1.doc",  mw_bitmaps_file_icon_large},
+		{"doc2.doc",  mw_bitmaps_file_icon_large},
+		{"doc3.doc",  mw_bitmaps_file_icon_large}};
+const uint8_t list_box_file_entries_docs_count = (sizeof(list_box_file_entries_docs)/sizeof(mw_ui_list_box_entry));
 
 /************
 *** TYPES ***
@@ -62,38 +96,45 @@ const char *list_box_labels[] = {"2 Minutes", "5 Minutes", "15 Minutes", "30 Min
 
 uint8_t window_help_icon_id;
 uint8_t window_file_icon_id;
+uint8_t window_file_id;
 uint8_t window_date_icon_id;
 uint8_t window_time_icon_id;
 uint8_t window_settings_icon_id;
+uint8_t window_settings_id;
 uint8_t window_temp_icon_id;
 uint8_t window_temp_id;
-uint8_t window_settings_id;
 
 /* controls */
 
 uint8_t button_temp_back_id;
 uint8_t button_settings_ok_id;
 uint8_t check_box_settings_id;
-uint8_t radio_button_id;
-uint8_t list_box_id;
-uint8_t label_id;
-uint8_t arrow_up_id;
-uint8_t arrow_down_id;
+uint8_t radio_button_settings_id;
+uint8_t list_box_settings_id;
+uint8_t label_settings_id;
+uint8_t arrow_settings_up;
+uint8_t arrow_settings_down;
+uint8_t list_box_file_id;
+uint8_t arrow_file_up_id;
+uint8_t arrow_file_down_id;
+uint8_t label_file_id;
+uint8_t button_file_ok_id;
 
 /* controls extra data */
 
 mw_ui_button_data_t button_temp_back_data;
 mw_ui_button_data_t button_settings_ok_data;
 mw_ui_check_box_data_t check_box_settings_ok_data;
-mw_ui_radio_button_data_t radio_button_data;
-mw_ui_label_data_t label_data;
-mw_ui_list_box_data_t list_box_data;
-mw_ui_arrow_data_t arrow_up_data;
-mw_ui_arrow_data_t arrow_down_data;
-
-/*************************
-*** EXTERNAL VARIABLES ***
-**************************/
+mw_ui_radio_button_data_t radio_button_settings_data;
+mw_ui_label_data_t label_settings_data;
+mw_ui_list_box_data_t list_box_settings_data;
+mw_ui_arrow_data_t arrow_up_settings_data;
+mw_ui_arrow_data_t arrow_down_settings_data;
+mw_ui_list_box_data_t list_box_file_data;
+mw_ui_arrow_data_t arrow_up_file_data;
+mw_ui_arrow_data_t arrow_down_file_data;
+mw_ui_label_data_t label_file_data;
+mw_ui_button_data_t button_file_ok_data;
 
 /**********************
 *** LOCAL VARIABLES ***
@@ -234,47 +275,99 @@ void mw_user_init(void)
 			&check_box_settings_ok_data);
 
 	/* create settings window radio buttons */
-	radio_button_data.number_of_items = RADIO_BUTTON_ITEMS_COUNT;
-	radio_button_data.radio_button_labels = (char **)radio_button_labels;
-	radio_button_id = mw_ui_radio_button_add_new(20,
+	radio_button_settings_data.number_of_items = RADIO_BUTTON_ITEMS_COUNT;
+	radio_button_settings_data.radio_button_labels = (char **)radio_button_labels;
+	radio_button_settings_id = mw_ui_radio_button_add_new(20,
 			70,
 			window_settings_id,
 			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAGS_LARGE_SIZE,
-			&radio_button_data);
+			&radio_button_settings_data);
 
 	/* create settings window label */
-	mw_util_safe_strcpy(label_data.label, MW_UI_LABEL_MAX_CHARS, "Period: Not set");
-	label_id = mw_ui_label_add_new(20,
+	mw_util_safe_strcpy(label_settings_data.label, MW_UI_LABEL_MAX_CHARS, "Period: Not set");
+	label_settings_id = mw_ui_label_add_new(20,
 			160,
 			110,
 			window_settings_id,
 			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAGS_LARGE_SIZE,
-			&label_data);
+			&label_settings_data);
 
-	/* create a new list box that is associated with the vertical scroll bar so can scroll */
-	list_box_data.number_of_lines = 3;
-	list_box_data.number_of_items = LIST_BOX_ITEMS_COUNT;
-	list_box_data.list_box_labels = (char **)list_box_labels;
-	list_box_data.line_enables = MW_ALL_ITEMS_ENABLED;
-	list_box_id = mw_ui_list_box_add_new(20,
+	/* create a list box */
+	list_box_settings_data.number_of_lines = 3;
+	list_box_settings_data.number_of_items = LIST_BOX_SETTINGS_ITEMS_COUNT;
+	list_box_settings_data.list_box_entries = list_box_settings_entries;
+	list_box_settings_data.line_enables = MW_ALL_ITEMS_ENABLED;
+	list_box_settings_id = mw_ui_list_box_add_new(20,
 			180,
 			window_settings_id,
 			MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_IS_VISIBLE  | MW_CONTROL_FLAGS_LARGE_SIZE,
-			&list_box_data);
+			&list_box_settings_data);
 
-	arrow_up_data.mw_ui_arrow_direction = MW_UI_ARROW_UP;
-	arrow_up_id = mw_ui_arrow_add_new(180,
+	arrow_up_settings_data.mw_ui_arrow_direction = MW_UI_ARROW_UP;
+	arrow_settings_up = mw_ui_arrow_add_new(180,
 			180,
 			window_settings_id,
 			MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAGS_LARGE_SIZE,
-			&arrow_up_data);
+			&arrow_up_settings_data);
 
-	arrow_down_data.mw_ui_arrow_direction = MW_UI_ARROW_DOWN;
-	arrow_down_id = mw_ui_arrow_add_new(180,
+	arrow_down_settings_data.mw_ui_arrow_direction = MW_UI_ARROW_DOWN;
+	arrow_settings_down = mw_ui_arrow_add_new(180,
 			232,
 			window_settings_id,
 			MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAGS_LARGE_SIZE,
-			&arrow_down_data);
+			&arrow_down_settings_data);
+
+	/* create file window */
+	mw_util_set_rect(&r, 0, 0, 240, 320);
+	window_file_id = mw_add_window(&r,
+			"",
+			window_file_paint_function,
+			window_file_message_function,
+			NULL,
+			0,
+			0);
+
+	/* create file window ok button */
+	mw_util_safe_strcpy(button_file_ok_data.button_label, MW_UI_BUTTON_LABEL_MAX_CHARS, "OK");
+	button_file_ok_id = mw_ui_button_add_new(70,
+			285,
+			window_file_id,
+			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAGS_LARGE_SIZE,
+			&button_file_ok_data);
+
+	/* create file window label */
+	mw_util_safe_strcpy(label_file_data.label, MW_UI_LABEL_MAX_CHARS, "File: Not set");
+	label_file_id = mw_ui_label_add_new(20,
+			160,
+			110,
+			window_file_id,
+			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAGS_LARGE_SIZE,
+			&label_file_data);
+
+	/* create a list box for directory listing */
+	list_box_file_data.number_of_lines = 3;
+	list_box_file_data.number_of_items = list_box_file_entries_root_count;
+	list_box_file_data.list_box_entries = list_box_file_entries_root;
+	list_box_file_data.line_enables = MW_ALL_ITEMS_ENABLED;
+	list_box_file_id = mw_ui_list_box_add_new(20,
+			180,
+			window_file_id,
+			MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_IS_VISIBLE  | MW_CONTROL_FLAGS_LARGE_SIZE,
+			&list_box_file_data);
+
+	arrow_up_file_data.mw_ui_arrow_direction = MW_UI_ARROW_UP;
+	arrow_file_up_id = mw_ui_arrow_add_new(180,
+			180,
+			window_file_id,
+			MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAGS_LARGE_SIZE,
+			&arrow_up_file_data);
+
+	arrow_down_file_data.mw_ui_arrow_direction = MW_UI_ARROW_DOWN;
+	arrow_file_down_id = mw_ui_arrow_add_new(180,
+			232,
+			window_file_id,
+			MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAGS_LARGE_SIZE,
+			&arrow_down_file_data);
 
 	mw_paint_all();
 }

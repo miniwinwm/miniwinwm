@@ -41,38 +41,44 @@ SOFTWARE.
 *** CONSTANTS ***
 ****************/
 
-#define MW_UI_LIST_BOX_LABEL_CHARACTERS		    10
-
 #define MW_UI_LIST_BOX_ROW_HEIGHT				14
 #define MW_UI_LIST_BOX_LABEL_Y_OFFSET			3
 #define MW_UI_LIST_BOX_LABEL_X_OFFSET 			8
 #define MW_UI_LIST_BOX_WIDTH				    68
+#define MW_UI_LIST_BOX_ICON_SIZE				8
 
 #define MW_UI_LIST_BOX_LARGE_ROW_HEIGHT			28
 #define MW_UI_LIST_BOX_LARGE_LABEL_Y_OFFSET		6
 #define MW_UI_LIST_BOX_LARGE_LABEL_X_OFFSET 	8
 #define MW_UI_LIST_BOX_LARGE_WIDTH				138
+#define MW_UI_LIST_BOX_LARGE_ICON_SIZE			16
 
 /************
 *** TYPES ***
 ************/
+
+ typedef struct
+ {
+	 char *label;
+	 const uint8_t *icon;
+ } mw_ui_list_box_entry;
 
 /**
  * Extra data structure for list box ui component
  */
 typedef struct
 {
-  /* User modifiable fields */   
+	/* User modifiable fields */
 	uint8_t number_of_lines;				/**< number of lines displayed in the list box */
 	uint8_t number_of_items;				/**< number of items in the list box */
-	char **list_box_labels;					/**< array of strings of labels shown to the right of each line */
+	const mw_ui_list_box_entry *list_box_entries;	/**< array of list box entries containing labels & icon pointers */
 	uint16_t line_enables;					/**< bit field of which lines are enabled/disabled; lsb is top line, 1 is enabled */
 
-  /* Non-user modifiable fields */   
+	/* Non-user modifiable fields */
 	uint8_t selection;						/**< the currently selected line */
 	bool line_is_selected;					/**< a line is currently selected */
 	uint16_t touch_down_y_position;			/**< the last down down position */
-	uint8_t lines_to_scroll;				/**< the number of entries down to shart showing entries */
+	uint8_t lines_to_scroll;				/**< the number of entries down to start showing entries */
 } mw_ui_list_box_data_t;
 
 /***************************

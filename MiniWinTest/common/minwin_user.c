@@ -47,12 +47,27 @@ static const char *menu_bar_labels[] = {"Cat", "Dog", "\xa2\xa3\xa4"};
 #define MENU_BAR_1_ITEMS_COUNT				(sizeof(menu_bar_labels)/sizeof(char *))
 static const char *radio_button_labels[] = {"Elk", "Ant", "Hog"};
 #define RADIO_BUTTON_1_ITEMS_COUNT			(sizeof(radio_button_labels)/sizeof(char *))
-static const char *list_box_1_labels[] = {"Aardvark", "Heffalump", "Dingbat"};
-#define LIST_BOX_1_ITEMS_COUNT				(sizeof(list_box_1_labels)/sizeof(char *))
-static const char *list_box_2_labels[] = {"Line", "Square", "Cube"};
-#define LIST_BOX_2_ITEMS_COUNT				(sizeof(list_box_2_labels)/sizeof(char *))
-static const char *list_box_3_labels[] = {"List", "Button", "Menu", "Label", "Scroll", "Window", "Control", "Icon", "Root"};
-#define LIST_BOX_3_ITEMS_COUNT				(sizeof(list_box_3_labels)/sizeof(char *))
+static const mw_ui_list_box_entry list_box_1_labels[] = {
+		{"Aardvark", NULL},
+		{"Heffalump", NULL},
+		{"Dingbat", NULL}};
+#define LIST_BOX_1_ITEMS_COUNT				(sizeof(list_box_1_labels)/sizeof(mw_ui_list_box_entry))
+static const mw_ui_list_box_entry list_box_2_labels[] = {
+		{"Line", NULL},
+		{"Square", NULL},
+		{"Cube", NULL}};
+#define LIST_BOX_2_ITEMS_COUNT				(sizeof(list_box_2_labels)/sizeof(mw_ui_list_box_entry))
+static const mw_ui_list_box_entry list_box_3_labels[] = {
+		{"List", NULL},
+		{"Button", NULL},
+		{"Menu", NULL},
+		{"Label", NULL},
+		{"Scroll", NULL},
+		{"Window", NULL},
+		{"Control", NULL},
+		{"Icon", NULL},
+		{"Root", NULL}};
+#define LIST_BOX_3_ITEMS_COUNT				(sizeof(list_box_3_labels)/sizeof(mw_ui_list_box_entry))
 
 /************
 *** TYPES ***
@@ -198,7 +213,7 @@ void mw_user_init(void)
 	/* create a new list box control and add it to the ui test window, y position to be directly under the menu bar, control invisible for now */
 	list_box_1_data.number_of_lines = LIST_BOX_1_ITEMS_COUNT;
 	list_box_1_data.number_of_items = LIST_BOX_1_ITEMS_COUNT;
-	list_box_1_data.list_box_labels = (char **)list_box_1_labels;
+	list_box_1_data.list_box_entries = list_box_1_labels;
 	list_box_1_data.line_enables = mw_util_change_bit(MW_ALL_ITEMS_ENABLED, 1, false);
 	list_box_1_id = mw_ui_list_box_add_new(0,
 			0,
@@ -251,7 +266,7 @@ void mw_user_init(void)
 	/* create a new list box control and add it to the ui test window */
 	list_box_3_data.number_of_lines = 3;
 	list_box_3_data.number_of_items = LIST_BOX_3_ITEMS_COUNT;
-	list_box_3_data.list_box_labels = (char **)list_box_3_labels;
+	list_box_3_data.list_box_entries = list_box_3_labels;
 	list_box_3_data.line_enables = MW_ALL_ITEMS_ENABLED;
 	list_box_3_id = mw_ui_list_box_add_new(75,
 			25,
@@ -355,7 +370,7 @@ void mw_user_init(void)
 	/* create a new list box control and add it to the paint rect window */
 	list_box_2_data.number_of_lines = LIST_BOX_2_ITEMS_COUNT;
 	list_box_2_data.number_of_items = LIST_BOX_2_ITEMS_COUNT;
-	list_box_2_data.list_box_labels = (char **)list_box_2_labels;
+	list_box_2_data.list_box_entries = list_box_2_labels;
 	list_box_2_data.line_enables = MW_ALL_ITEMS_ENABLED;
 	list_box_2_id = mw_ui_list_box_add_new(100,
 			10,

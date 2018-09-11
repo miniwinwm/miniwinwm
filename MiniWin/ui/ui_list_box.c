@@ -72,14 +72,18 @@ void mw_ui_list_box_paint_function(uint8_t control_ref, const mw_gl_draw_info_t 
 	uint8_t i;
 	mw_ui_list_box_data_t *this_list_box = (mw_ui_list_box_data_t*)mw_all_controls[control_ref].extra_data;
 	uint16_t row_height;
+	uint16_t icon_x_offset;
+	uint16_t text_x_offset;
 
 	if (mw_all_controls[control_ref].control_flags & MW_CONTROL_FLAGS_LARGE_SIZE)
 	{
 		row_height = MW_UI_LIST_BOX_LARGE_ROW_HEIGHT;
+		icon_x_offset = MW_UI_LIST_BOX_LARGE_LABEL_X_OFFSET - 4;
 	}
 	else
 	{
 		row_height = MW_UI_LIST_BOX_ROW_HEIGHT;
+		icon_x_offset = MW_UI_LIST_BOX_LABEL_X_OFFSET;
 	}
 
     /* draw the background rectangle */
@@ -149,39 +153,106 @@ void mw_ui_list_box_paint_function(uint8_t control_ref, const mw_gl_draw_info_t 
 			mw_gl_set_fg_colour(MW_CONTROL_DISABLED_COLOUR);
 		}
 
-		/* draw the item label text */
+		/* draw the item label text and icon */
 		if (mw_all_controls[control_ref].control_flags & MW_CONTROL_FLAGS_LARGE_SIZE)
 		{
-			if(this_list_box->line_is_selected && this_list_box->selection == i)
+			/* large text and icon */
+			/* check if there is an icon on this row */
+			if (this_list_box->list_box_entries[i + this_list_box->lines_to_scroll].icon != NULL)
+			{
+				/* there's an icon so update text offset */
+				text_x_offset = MW_UI_LIST_BOX_LARGE_LABEL_X_OFFSET + MW_UI_LIST_BOX_LARGE_ICON_SIZE;
+
+				/* draw icon */
+				mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
+				if(this_list_box->line_is_selected && (this_list_box->selection - this_list_box->lines_to_scroll) == i)
+				{
+					mw_gl_monochrome_bitmap(draw_info,
+							icon_x_offset + 2,
+							row_height * i + MW_UI_LIST_BOX_LARGE_LABEL_Y_OFFSET,
+							MW_UI_LIST_BOX_LARGE_ICON_SIZE,
+							MW_UI_LIST_BOX_LARGE_ICON_SIZE,
+							this_list_box->list_box_entries[i + this_list_box->lines_to_scroll].icon);
+				}
+				else
+				{
+					mw_gl_monochrome_bitmap(draw_info,
+							icon_x_offset,
+							row_height * i + MW_UI_LIST_BOX_LARGE_LABEL_Y_OFFSET - 2,
+							MW_UI_LIST_BOX_LARGE_ICON_SIZE,
+							MW_UI_LIST_BOX_LARGE_ICON_SIZE,
+							this_list_box->list_box_entries[i + this_list_box->lines_to_scroll].icon);
+				}
+			}
+			else
+			{
+				/* there's not an icon */
+				text_x_offset = MW_UI_LIST_BOX_LARGE_LABEL_X_OFFSET;
+			}
+
+			if(this_list_box->line_is_selected && (this_list_box->selection - this_list_box->lines_to_scroll) == i)
 			{
 				mw_gl_large_string(draw_info,
-						MW_UI_LIST_BOX_LARGE_LABEL_X_OFFSET + 2,
+						text_x_offset + 2,
 						row_height * i + MW_UI_LIST_BOX_LARGE_LABEL_Y_OFFSET + 2,
-						this_list_box->list_box_labels[i + this_list_box->lines_to_scroll]);
+						this_list_box->list_box_entries[i + this_list_box->lines_to_scroll].label);
 			}
 			else
 			{
 				mw_gl_large_string(draw_info,
-						MW_UI_LIST_BOX_LARGE_LABEL_X_OFFSET,
+						text_x_offset,
 						row_height * i + MW_UI_LIST_BOX_LARGE_LABEL_Y_OFFSET,
-						this_list_box->list_box_labels[i + this_list_box->lines_to_scroll]);
+						this_list_box->list_box_entries[i + this_list_box->lines_to_scroll].label);
 			}
 		}
 		else
 		{
-			if(this_list_box->line_is_selected && this_list_box->selection == i)
+			/* small text and icon */
+			/* check if there is an icon on this row */
+			if (this_list_box->list_box_entries[i + this_list_box->lines_to_scroll].icon != NULL)
+			{
+				/* there's an icon so update text offset */
+				text_x_offset = MW_UI_LIST_BOX_LABEL_X_OFFSET * 2 + MW_UI_LIST_BOX_ICON_SIZE;
+
+				/* draw icon */
+				mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
+				if(this_list_box->line_is_selected && (this_list_box->selection - this_list_box->lines_to_scroll) == i)
+				{
+					mw_gl_monochrome_bitmap(draw_info,
+							icon_x_offset + 1,
+							row_height * i + MW_UI_LIST_BOX_LABEL_Y_OFFSET,
+							MW_UI_LIST_BOX_ICON_SIZE,
+							MW_UI_LIST_BOX_ICON_SIZE,
+							this_list_box->list_box_entries[i + this_list_box->lines_to_scroll].icon);				}
+				else
+				{
+					mw_gl_monochrome_bitmap(draw_info,
+							icon_x_offset,
+							row_height * i + MW_UI_LIST_BOX_LABEL_Y_OFFSET - 1,
+							MW_UI_LIST_BOX_ICON_SIZE,
+							MW_UI_LIST_BOX_ICON_SIZE,
+							this_list_box->list_box_entries[i + this_list_box->lines_to_scroll].icon);
+				}
+			}
+			else
+			{
+				/* there's not an icon */
+				text_x_offset = MW_UI_LIST_BOX_LABEL_X_OFFSET;
+			}
+
+			if(this_list_box->line_is_selected && (this_list_box->selection - this_list_box->lines_to_scroll) == i)
 			{
 				mw_gl_string(draw_info,
-						MW_UI_LIST_BOX_LABEL_X_OFFSET + 1,
+						text_x_offset + 1,
 						row_height * i + MW_UI_LIST_BOX_LABEL_Y_OFFSET + 1,
-						this_list_box->list_box_labels[i + this_list_box->lines_to_scroll]);
+						this_list_box->list_box_entries[i + this_list_box->lines_to_scroll].label);
 			}
 			else
 			{
 				mw_gl_string(draw_info,
-						MW_UI_LIST_BOX_LABEL_X_OFFSET,
+						text_x_offset,
 						row_height * i + MW_UI_LIST_BOX_LABEL_Y_OFFSET,
-						this_list_box->list_box_labels[i + this_list_box->lines_to_scroll]);
+						this_list_box->list_box_entries[i + this_list_box->lines_to_scroll].label);
 			}
 		}
 

@@ -140,6 +140,7 @@ typedef enum
 	MW_WINDOW_MOVED,								/**< Message to a window when it has been moved */
 	MW_WINDOW_MINIMISED,							/**< Message to a window when it has been minimised */
 	MW_WINDOW_RESTORED,								/**< Message to a window when it has been restored */
+	MW_WINDOW_VISIBILITY_CHANGED,					/**< Message to a window when its visibility has changed */
 	MW_WINDOW_VERT_SCROLL_BAR_SCROLLED_MESSAGE,		/**< Message to a window when a window vertical scroll bar has been scrolled */
 	MW_WINDOW_HORIZ_SCROLL_BAR_SCROLLED_MESSAGE,	/**< Message to a window when a window horizontal scroll bar has been scrolled */
 	MW_MENU_BAR_ITEM_PRESSED_MESSAGE,				/**< Response message from a menu bar that an item has been pressed */
@@ -156,6 +157,7 @@ typedef enum
 	MW_CONTROL_VERT_SCROLL_BAR_SCROLLED_MESSAGE,	/**< Response message from a vertical control scroll bar that it has been scrolled */
 	MW_CONTROL_HORIZ_SCROLL_BAR_SCROLLED_MESSAGE,	/**< Response message from a horizontal control scroll bar that it has been scrolled */
 	MW_ARROW_PRESSED_MESSAGE,						/**< Response message from a arrow that it has been pressed */
+	MW_FOLDER_ITEM_PRESSED_MESSAGE,					/**< Response message from a folder when an item has been pressed */
 		
 	/* Messages that can be posted from user code or user code called utility functions */
 	MW_WINDOW_PAINT_ALL_MESSAGE,			       	/**< System message to paint everything */
