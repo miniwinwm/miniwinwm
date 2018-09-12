@@ -115,11 +115,6 @@
 							<tool id="com.atollic.truestudio.exe.debug.toolchain.secoutput.2070959571" name="Other" superClass="com.atollic.truestudio.exe.debug.toolchain.secoutput"/>
 						</toolChain>
 					</folderInfo>
-					<fileInfo id="com.atollic.truestudio.exe.debug.2147054002.118707677" name="minwin_user.c" rcbsApplicability="disable" resourcePath="MiniWin/user/minwin_user.c" toolsToInvoke="com.atollic.truestudio.exe.debug.toolchain.gcc.1238860197.554784195">
-						<tool id="com.atollic.truestudio.exe.debug.toolchain.gcc.1238860197.554784195" name="C Compiler" superClass="com.atollic.truestudio.exe.debug.toolchain.gcc.1238860197">
-							<inputType id="com.atollic.truestudio.gcc.input.619143057" superClass="com.atollic.truestudio.gcc.input"/>
-						</tool>
-					</fileInfo>
 					<sourceEntries>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Libraries"/>
 						<entry excluding="user/minwin_user.c|hal/windows|hal/stm32f407" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="MiniWin"/>
