@@ -31,6 +31,8 @@ SOFTWARE.
 #include <miniwin_debug.h>
 #include <miniwin_utilities.h>
 #include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
 
 /****************
 *** CONSTANTS ***
@@ -146,6 +148,11 @@ char *mw_util_safe_strcpy(char *dest, size_t size, const char *src)
     return dest;
 }
 
+char *mw_util_safe_strcat(char *dest, size_t size, const char *src)
+{
+	return strncat(dest, src, size - strlen(dest) - 1);
+}
+
 uint16_t mw_util_change_bit(uint16_t word, uint8_t bit, bool state)
 {
 	uint16_t mask;
@@ -202,4 +209,30 @@ int mw_util_compare_int16_t(const void *a, const void *b)
 	}
   
 	return 1;
+}
+
+const char *mw_util_get_file_name_ext(const char *file_name)
+{
+    const char *dot = strrchr(file_name, '.');
+
+    if (!dot || dot == file_name)
+    {
+    	return "";
+    }
+
+    return dot + 1;
+}
+
+int32_t mw_util_strcicmp(char const *a, char const *b)
+{
+	int32_t d;
+
+    for (;; a++, b++)
+    {
+        d = (int32_t)(tolower((unsigned char)*a) - tolower((unsigned char)*b));
+        if (d != 0 || !*a)
+        {
+            return d;
+        }
+    }
 }

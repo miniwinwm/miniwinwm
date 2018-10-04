@@ -1,16 +1,14 @@
 /**
   ******************************************************************************
-  * @file    Project/STM32F4xx_StdPeriph_Template/stm32f4xx_it.c 
+  * @file    FatFs/FatFs_USBDisk/Src/stm32f4xx_it.c 
   * @author  MCD Application Team
-  * @version V1.1.0
-  * @date    18-January-2013
   * @brief   Main Interrupt Service Routines.
   *          This file provides template for all exceptions handler and 
   *          peripherals interrupt service routine.
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; COPYRIGHT 2013 STMicroelectronics</center></h2>
+  * <h2><center>&copy; COPYRIGHT(c) 2017 STMicroelectronics</center></h2>
   *
   * Licensed under MCD-ST Liberty SW License Agreement V2, (the "License");
   * You may not use this file except in compliance with the License.
@@ -29,15 +27,15 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f4xx_it.h"
-
-/** @addtogroup Template_Project
-  * @{
-  */
-
+#include "stm32f4xx.h"
+#include "hal/hal_timer.h"
+    
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
+extern HCD_HandleTypeDef hhcd;
+extern TIM_HandleTypeDef Tim3Handle;
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
 
@@ -46,7 +44,7 @@
 /******************************************************************************/
 
 /**
-  * @brief   This function handles NMI exception.
+  * @brief  This function handles NMI exception.
   * @param  None
   * @retval None
   */
@@ -140,28 +138,40 @@ void PendSV_Handler(void)
   */
 void SysTick_Handler(void)
 {
-/*  TimingDelay_Decrement(); */
+  HAL_IncTick();
 }
 
 /******************************************************************************/
 /*                 STM32F4xx Peripherals Interrupt Handlers                   */
 /*  Add here the Interrupt Handler for the used peripheral(s) (PPP), for the  */
 /*  available peripheral interrupt handler's name please refer to the startup */
-/*  file (startup_stm32f40xx.s/startup_stm32f427x.s).                         */
+/*  file (startup_stm32f4xx.s).                                               */
 /******************************************************************************/
-
 /**
-  * @brief  This function handles PPP interrupt request.
+  * @brief  TIM3_IRQHandler
+  *          This function handles timer 3 interrupt request.
+  *          requests.
   * @param  None
   * @retval None
   */
-/*void PPP_IRQHandler(void)
+void TIM3_IRQHandler(void)
 {
-}*/
+	HAL_TIM_IRQHandler(&Tim3Handle);
+}
 
 /**
-  * @}
-  */ 
-
+  * @brief  HAL_TIM_PeriodElapsedCallback
+  *          This function is the timer expired callback.
+  *          requests.
+  * @param  None
+  * @retval None
+  */
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+	if (htim->Instance == TIM3)
+	{
+		mw_hal_timer_fired();
+	}
+}
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

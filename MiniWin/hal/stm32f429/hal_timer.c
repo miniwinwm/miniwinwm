@@ -29,7 +29,7 @@ SOFTWARE.
 ***************/
 
 #include <miniwin.h>
-#include "stm32f4xx_conf.h"
+#include "stm32f4xx_hal.h"
 
 /****************
 *** CONSTANTS ***
@@ -44,6 +44,7 @@ SOFTWARE.
 ***********************/
 
 volatile uint32_t mw_tick_counter;
+TIM_HandleTypeDef Tim3Handle;
 
 /*************************
 *** EXTERNAL VARIABLES ***
@@ -67,33 +68,23 @@ volatile uint32_t mw_tick_counter;
 
 void mw_hal_timer_init(void)
 {
-	TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;
-	NVIC_InitTypeDef NVIC_InitStructure;
+	uint16_t uwPrescalerValue =  (uint32_t) ((SystemCoreClock /2) / 10000) - 1;
 
-	/* init TIM2 to 20Hz */
-	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);
-	TIM_TimeBaseStructure.TIM_Period = 42000;
-	TIM_TimeBaseStructure.TIM_Prescaler = 100;
-	TIM_TimeBaseStructure.TIM_ClockDivision = TIM_CKD_DIV1;
-	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
-	TIM_TimeBaseInit(TIM2, &TIM_TimeBaseStructure);
-	TIM_ITConfig(TIM2, TIM_IT_Update, ENABLE);
-	TIM_Cmd(TIM2, ENABLE);
+	__HAL_RCC_TIM3_CLK_ENABLE();
 
-	/* init timer interrupt */
-	NVIC_InitStructure.NVIC_IRQChannel = TIM2_IRQn;
-	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0x01;
-	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0x01;
-	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-	NVIC_Init(&NVIC_InitStructure);
+	Tim3Handle.Instance = TIM3;
+	Tim3Handle.Init.Period = 500 - 1;
+	Tim3Handle.Init.Prescaler = uwPrescalerValue;
+	Tim3Handle.Init.ClockDivision = 0;
+	Tim3Handle.Init.CounterMode = TIM_COUNTERMODE_UP;
+	HAL_TIM_Base_Init(&Tim3Handle);
+
+	HAL_NVIC_SetPriority(TIM3_IRQn, 0, 1);
+	HAL_NVIC_EnableIRQ(TIM3_IRQn);
+	HAL_TIM_Base_Start_IT(&Tim3Handle);
 }
 
-/**
- * Timer interrupt service routine
- */
-void TIM2_IRQHandler(void)
+void mw_hal_timer_fired(void)
 {
 	mw_tick_counter++;
-
-	TIM_ClearITPendingBit(TIM2, TIM_IT_Update);
 }

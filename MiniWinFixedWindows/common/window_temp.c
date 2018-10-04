@@ -60,7 +60,6 @@ typedef struct
 **************************/
 
 extern uint8_t button_id;
-extern mw_window_t mw_all_windows[MW_MAX_WINDOW_COUNT];
 
 /**********************
 *** LOCAL VARIABLES ***
@@ -97,30 +96,30 @@ void window_temp_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *dra
 	mw_gl_rectangle(draw_info,
 			0,
 			0,
-			mw_all_windows[window_ref].client_rect.width,
-			mw_all_windows[window_ref].client_rect.height);
+			mw_get_window_client_rect(window_ref).width,
+			mw_get_window_client_rect(window_ref).height);
 
 	/* grey borders */
 	mw_gl_set_solid_fill_colour(MW_HAL_LCD_GREY2);
 	mw_gl_rectangle(draw_info,
 			0,
 			18,
-			mw_all_windows[window_ref].client_rect.width,
+			mw_get_window_client_rect(window_ref).width,
 			5);
 	mw_gl_rectangle(draw_info,
 			0,
 			18,
 			5,
-			mw_all_windows[window_ref].client_rect.height - 18);
+			mw_get_window_client_rect(window_ref).height - 18);
 	mw_gl_rectangle(draw_info,
-			mw_all_windows[window_ref].client_rect.width - 5,
+			mw_get_window_client_rect(window_ref).width - 5,
 			18,
 			5,
-			mw_all_windows[window_ref].client_rect.height - 18);
+			mw_get_window_client_rect(window_ref).height - 18);
 	mw_gl_rectangle(draw_info,
 			5,
-			mw_all_windows[window_ref].client_rect.height - 40,
-			mw_all_windows[window_ref].client_rect.width - 10,
+			mw_get_window_client_rect(window_ref).height - 40,
+			mw_get_window_client_rect(window_ref).width - 10,
 			40);
 
 	/* blue title bar */
@@ -128,7 +127,7 @@ void window_temp_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *dra
 	mw_gl_rectangle(draw_info,
 			0,
 			0,
-			mw_all_windows[window_ref].client_rect.width,
+			mw_get_window_client_rect(window_ref).width,
 			18);
 	mw_gl_set_fg_colour(MW_HAL_LCD_WHITE);
 	mw_gl_large_string(draw_info, 2, 2, "Temperature Log");

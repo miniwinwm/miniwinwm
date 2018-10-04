@@ -71,6 +71,7 @@ typedef struct
     /* Non-user modifiable fields */ 
 	char entry_buffer[MW_UI_KEYBOARD_MAX_CHARS + 1];	/**< buffer to hold the entered text */
 	bool is_key_pressed;						/**< if a key is currently pressed */
+	bool swap_keyboard;							/**< if the keyboard needs swapping on next key up timer event */
 	uint8_t	key_pressed_row;					/**< the currently pressed key */
 	uint8_t	key_pressed_column;					/**< the currently pressed key */
 	keyboard_display_t keyboard_display;		/**< the keyboard to display */

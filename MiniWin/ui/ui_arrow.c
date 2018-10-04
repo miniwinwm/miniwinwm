@@ -56,7 +56,6 @@ static const int16_t shape_large_y_const[] = {8, -7, 8};
 *** EXTERNAL VARIABLES ***
 **************************/
 
-extern mw_control_t mw_all_controls[MW_MAX_CONTROL_COUNT];
 extern volatile uint32_t mw_tick_counter;
 
 /**********************
@@ -80,7 +79,7 @@ static int16_t shape_y[ARROW_POINTS];
 
 void mw_ui_arrow_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *draw_info)
 {
-	mw_ui_arrow_data_t *this_arrow = (mw_ui_arrow_data_t*)mw_all_controls[control_ref].extra_data;
+	mw_ui_arrow_data_t *this_arrow = (mw_ui_arrow_data_t*)mw_get_control_instance_data(control_ref);
 	uint16_t arrow_size;
 	uint16_t arrow_offset;
 	mw_hal_lcd_colour_t highlighted_colour;
@@ -105,8 +104,8 @@ void mw_ui_arrow_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *dr
 	mw_gl_rectangle(draw_info,
 			0,
 			0,
-			mw_all_controls[control_ref].control_rect.width,
-			mw_all_controls[control_ref].control_rect.height);
+			mw_get_control_rect(control_ref).width,
+			mw_get_control_rect(control_ref).height);
 
 	if (this_arrow->arrow_down)
 	{
@@ -120,13 +119,13 @@ void mw_ui_arrow_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *dr
 	}
 
 	mw_gl_set_fg_colour(highlighted_colour);
-	mw_gl_vline(draw_info, 1, 1, mw_all_controls[control_ref].control_rect.height - 2);
-	mw_gl_hline(draw_info, 1, mw_all_controls[control_ref].control_rect.width - 2, 1);
+	mw_gl_vline(draw_info, 1, 1, mw_get_control_rect(control_ref).height - 2);
+	mw_gl_hline(draw_info, 1, mw_get_control_rect(control_ref).width - 2, 1);
 	mw_gl_set_fg_colour(lowlighted_colour);
-	mw_gl_vline(draw_info, mw_all_controls[control_ref].control_rect.width - 2, 1, mw_all_controls[control_ref].control_rect.height - 2);
-	mw_gl_hline(draw_info, 1, mw_all_controls[control_ref].control_rect.width - 2, mw_all_controls[control_ref].control_rect.height - 2);
+	mw_gl_vline(draw_info, mw_get_control_rect(control_ref).width - 2, 1, mw_get_control_rect(control_ref).height - 2);
+	mw_gl_hline(draw_info, 1, mw_get_control_rect(control_ref).width - 2, mw_get_control_rect(control_ref).height - 2);
 
-	if (mw_all_controls[control_ref].control_flags & MW_CONTROL_FLAGS_LARGE_SIZE)
+	if (mw_get_control_flags(control_ref) & MW_CONTROL_FLAGS_LARGE_SIZE)
 	{
 		memcpy(shape_x, shape_large_x_const, sizeof(shape_x));
 		memcpy(shape_y, shape_large_y_const, sizeof(shape_y));
@@ -149,7 +148,7 @@ void mw_ui_arrow_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *dr
 		arrow_offset = arrow_size / 2;
 	}
 
-	if (mw_all_controls[control_ref].control_flags & MW_CONTROL_FLAG_IS_ENABLED)
+	if (mw_get_control_flags(control_ref) & MW_CONTROL_FLAG_IS_ENABLED)
 	{
 		mw_gl_set_solid_fill_colour(MW_HAL_LCD_BLACK);
 	}
@@ -172,7 +171,7 @@ void mw_ui_arrow_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *dr
 
 void mw_ui_arrow_message_function(const mw_message_t *message)
 {
-	mw_ui_arrow_data_t *this_arrow = (mw_ui_arrow_data_t*)mw_all_controls[message->recipient_id].extra_data;
+	mw_ui_arrow_data_t *this_arrow = (mw_ui_arrow_data_t*)mw_get_control_instance_data(message->recipient_id);
 
 	MW_ASSERT(message);
 
@@ -188,7 +187,7 @@ void mw_ui_arrow_message_function(const mw_message_t *message)
 		this_arrow->arrow_down = false;
 		mw_post_message(MW_ARROW_PRESSED_MESSAGE,
 				message->recipient_id,
-				mw_all_controls[message->recipient_id].parent,
+				mw_get_control_parent_window(message->recipient_id),
 				this_arrow->mw_ui_arrow_direction,
 				MW_WINDOW_MESSAGE);
 		mw_paint_control(message->recipient_id);
@@ -202,7 +201,7 @@ void mw_ui_arrow_message_function(const mw_message_t *message)
 		{
 			mw_post_message(MW_ARROW_PRESSED_MESSAGE,
 					message->recipient_id,
-					mw_all_controls[message->recipient_id].parent,
+					mw_get_control_parent_window(message->recipient_id),
 					this_arrow->mw_ui_arrow_direction,
 					MW_WINDOW_MESSAGE);
 		}
@@ -210,7 +209,7 @@ void mw_ui_arrow_message_function(const mw_message_t *message)
 
 	case MW_TOUCH_DOWN_MESSAGE:
 		/* handle a touch down event within this control */	
-		if (mw_all_controls[message->recipient_id].control_flags & MW_CONTROL_FLAG_IS_ENABLED)
+		if (mw_get_control_flags(message->recipient_id) & MW_CONTROL_FLAG_IS_ENABLED)
 		{
 			this_arrow->arrow_timer = mw_set_timer(mw_tick_counter + MW_CONTROL_DOWN_TIME, message->recipient_id, MW_CONTROL_MESSAGE);
 			this_arrow->arrow_down = true;

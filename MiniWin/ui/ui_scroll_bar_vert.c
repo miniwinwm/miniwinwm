@@ -49,9 +49,6 @@ SOFTWARE.
 *** EXTERNAL VARIABLES ***
 **************************/
 
-extern mw_control_t mw_all_controls[MW_MAX_CONTROL_COUNT];
-extern mw_window_t mw_all_windows[MW_MAX_WINDOW_COUNT];
-
 /**********************
 *** LOCAL VARIABLES ***
 **********************/
@@ -70,12 +67,12 @@ extern mw_window_t mw_all_windows[MW_MAX_WINDOW_COUNT];
 
 void mw_ui_scroll_bar_vert_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *draw_info)
 {
-	mw_ui_scroll_bar_vert_data_t *this_scroll_bar_vert = (mw_ui_scroll_bar_vert_data_t*)mw_all_controls[control_ref].extra_data;
+	mw_ui_scroll_bar_vert_data_t *this_scroll_bar_vert = (mw_ui_scroll_bar_vert_data_t*)mw_get_control_instance_data(control_ref);
 	uint16_t scroll_bar_vert_slider_top;
 	uint16_t narrow_dimension;
 	uint16_t slider_size;
 
-	if (mw_all_controls[control_ref].control_flags & MW_CONTROL_FLAGS_LARGE_SIZE)
+	if (mw_get_control_flags(control_ref) & MW_CONTROL_FLAGS_LARGE_SIZE)
 	{
 		narrow_dimension = MW_SCROLL_BAR_LARGE_NARROW_DIMESION;
 		slider_size = MW_SCROLL_BAR_LARGE_SLIDER_SIZE;
@@ -87,8 +84,8 @@ void mw_ui_scroll_bar_vert_paint_function(uint8_t control_ref, const mw_gl_draw_
 	}
 
 	/* check if there's enough parent client rect width to draw the bar */
-	if (mw_all_windows[mw_all_controls[control_ref].parent].client_rect.width > narrow_dimension &&
-			mw_all_windows[mw_all_controls[control_ref].parent].client_rect.height > slider_size)
+	if (mw_get_window_client_rect(mw_get_control_parent_window(control_ref)).width > narrow_dimension &&
+			mw_get_window_client_rect(mw_get_control_parent_window(control_ref)).height > slider_size)
 	{
 		/* draw the bar */
 		mw_gl_set_fill(MW_GL_FILL);
@@ -96,7 +93,7 @@ void mw_ui_scroll_bar_vert_paint_function(uint8_t control_ref, const mw_gl_draw_
 		mw_gl_set_line(MW_GL_SOLID_LINE);
 		mw_gl_clear_pattern();
 		mw_gl_set_solid_fill_colour(MW_CONTROL_UP_COLOUR);
-		if (mw_all_controls[control_ref].control_flags & MW_CONTROL_FLAG_IS_ENABLED)
+		if (mw_get_control_flags(control_ref) & MW_CONTROL_FLAG_IS_ENABLED)
 		{
 			mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 		}
@@ -108,9 +105,9 @@ void mw_ui_scroll_bar_vert_paint_function(uint8_t control_ref, const mw_gl_draw_
 				0,
 				0,
 				narrow_dimension,
-				mw_all_controls[control_ref].control_rect.height);
+				mw_get_control_rect(control_ref).height);
 
-		scroll_bar_vert_slider_top = (mw_all_controls[control_ref].control_rect.height - slider_size) *
+		scroll_bar_vert_slider_top = (mw_get_control_rect(control_ref).height - slider_size) *
 				this_scroll_bar_vert->scroll_position / UINT8_MAX;
 
 		mw_gl_set_solid_fill_colour(MW_CONTROL_DOWN_COLOUR);
@@ -145,7 +142,7 @@ void mw_ui_scroll_bar_vert_paint_function(uint8_t control_ref, const mw_gl_draw_
 
 void mw_ui_scroll_bar_vert_message_function(const mw_message_t *message)
 {
-	mw_ui_scroll_bar_vert_data_t *this_scroll_bar_vert = (mw_ui_scroll_bar_vert_data_t*)mw_all_controls[message->recipient_id].extra_data;
+	mw_ui_scroll_bar_vert_data_t *this_scroll_bar_vert = (mw_ui_scroll_bar_vert_data_t*)mw_get_control_instance_data(message->recipient_id);
 	int16_t touch_y;
 	uint8_t new_scroll_position;
 
@@ -166,14 +163,14 @@ void mw_ui_scroll_bar_vert_message_function(const mw_message_t *message)
 	case MW_TOUCH_DOWN_MESSAGE:
 	case MW_TOUCH_DRAG_MESSAGE:
 		/* respond to a down or drag event by recalculating the new slider position from the touch coordinate */
-		if (mw_all_controls[message->recipient_id].control_flags & MW_CONTROL_FLAG_IS_ENABLED)
+		if (mw_get_control_flags(message->recipient_id) & MW_CONTROL_FLAG_IS_ENABLED)
 		{
 			touch_y = (int16_t)(message->message_data & 0xffff);
 
 			/* scale touch point to middle 90% of scroll bar length */
-			touch_y = mw_ui_common_scale_scroll_bar_touch_point(mw_all_controls[message->recipient_id].control_rect.height, touch_y);
+			touch_y = mw_ui_common_scale_scroll_bar_touch_point(mw_get_control_rect(message->recipient_id).height, touch_y);
 
-			new_scroll_position = (uint8_t)(UINT8_MAX * touch_y / (uint32_t)mw_all_controls[message->recipient_id].control_rect.height);
+			new_scroll_position = (uint8_t)(UINT8_MAX * touch_y / (uint32_t)mw_get_control_rect(message->recipient_id).height);
 			if (new_scroll_position != this_scroll_bar_vert->scroll_position)
 			{
 				/* only repaint if the scroll slider position has changed */
@@ -182,7 +179,7 @@ void mw_ui_scroll_bar_vert_message_function(const mw_message_t *message)
 
 				mw_post_message(MW_CONTROL_VERT_SCROLL_BAR_SCROLLED_MESSAGE,
 						message->recipient_id,
-						mw_all_controls[message->recipient_id].parent,
+						mw_get_control_parent_window(message->recipient_id),
 						this_scroll_bar_vert->scroll_position,
 						MW_WINDOW_MESSAGE);
 			}

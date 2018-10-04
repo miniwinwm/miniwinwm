@@ -29,7 +29,9 @@ SOFTWARE.
 ***************/
 
 #include "hal/hal_touch.h"
-#include "stm32f429i_discovery_ioe.h"
+#include "stm32f4xx_hal.h"
+#include "stm32f429i_discovery_ts.h"
+#include "stm32f429i_discovery_lcd.h"
 
 /****************
 *** CONSTANTS ***
@@ -65,12 +67,16 @@ SOFTWARE.
 
 void mw_hal_touch_init(void)
 {
-	IOE_Config();
+	BSP_TS_Init(BSP_LCD_GetXSize(), BSP_LCD_GetYSize());
 }
 
 mw_hal_touch_state_t mw_hal_touch_get_state()
 {
-	if (IOE_TP_GetTouchState())
+	TS_StateTypeDef touch_state;
+
+	BSP_TS_GetState(&touch_state);
+
+	if (touch_state.TouchDetected)
 	{
 		return MW_HAL_TOUCH_STATE_DOWN;
 	}
@@ -80,22 +86,22 @@ mw_hal_touch_state_t mw_hal_touch_get_state()
 
 bool mw_hal_touch_get_point(uint16_t* x, uint16_t* y)
 {
-	TP_STATE* TP_State;
+	TS_StateTypeDef touch_state;
 
-	if (IOE_TP_IsFifoEmpty())
+	if (BSP_TS_IsFifoEmpty())
 	{
 		return false;
 	}
 
-	TP_State = IOE_TP_GetState();
+	BSP_TS_GetState(&touch_state);
 
-	if (!TP_State->TouchDetected)
+	if (!touch_state.TouchDetected)
 	{
 		return false;
 	}
 
-	*x = TP_State->X;
-	*y = TP_State->Y;
+	*x = touch_state.X;
+	*y = touch_state.Y;
 
 	return true;
 }

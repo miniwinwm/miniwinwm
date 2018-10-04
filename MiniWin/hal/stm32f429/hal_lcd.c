@@ -21,7 +21,6 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
 */
 
 /***************
@@ -29,12 +28,14 @@ SOFTWARE.
 ***************/
 
 #include "hal/hal_lcd.h"
-#include "stm32f429i_discovery.h"
 #include "stm32f429i_discovery_lcd.h"
 
 /****************
 *** CONSTANTS ***
 ****************/
+
+#define LCD_FRAME_BUFFER_LAYER0                  (LCD_FRAME_BUFFER+0x130000)
+#define LCD_FRAME_BUFFER_LAYER1                  LCD_FRAME_BUFFER
 
 /************
 *** TYPES ***
@@ -66,24 +67,27 @@ SOFTWARE.
 
 void mw_hal_lcd_init(void)
 {
-	LCD_Init();
+    BSP_LCD_Init();
 
-	/* LCD Layer initiatization */
-	LCD_LayerInit();
+    /* Layer2 Init */
+    BSP_LCD_LayerDefaultInit(1, LCD_FRAME_BUFFER_LAYER1);
+    BSP_LCD_SelectLayer(1);
+    BSP_LCD_SetLayerVisible(1, DISABLE);
 
-	/* Enable the LTDC */
-	LTDC_Cmd(ENABLE);
+    /* Layer1 Init */
+    BSP_LCD_LayerDefaultInit(0, LCD_FRAME_BUFFER_LAYER0);
+    BSP_LCD_SelectLayer(0);
+    BSP_LCD_Clear(LCD_COLOR_WHITE);
+    BSP_LCD_SetLayerVisible(0, ENABLE);
 
-	/* Set LCD foreground layer */
-	LCD_SetLayer(LCD_FOREGROUND_LAYER);
+    BSP_LCD_DisplayOn();
 
     mw_hal_lcd_filled_rectangle(0, 0, MW_HAL_LCD_WIDTH, MW_HAL_LCD_HEIGHT, MW_HAL_LCD_WHITE);
 }
 
 void mw_hal_lcd_pixel(int16_t x, int16_t y, mw_hal_lcd_colour_t colour)
 {
-	LCD_SetTextColor(colour);
-	LCD_DrawLine(x, y, 1, LCD_DIR_HORIZONTAL);
+	BSP_LCD_DrawPixel(x, y, colour);
 }
 
 void mw_hal_lcd_filled_rectangle(int16_t start_x,
@@ -92,8 +96,7 @@ void mw_hal_lcd_filled_rectangle(int16_t start_x,
 		uint16_t height,
 		mw_hal_lcd_colour_t colour)
 {
-	LCD_SetTextColor(colour);
-	LCD_DrawFullRect(start_x, start_y, width, height);
+	BSP_LCD_FillRect(start_x, start_y, width, height, colour);
 }
 
 void mw_hal_lcd_colour_bitmap_clip(int16_t image_start_x,
@@ -104,26 +107,46 @@ void mw_hal_lcd_colour_bitmap_clip(int16_t image_start_x,
 		int16_t clip_start_y,
 		uint16_t clip_width,
 		uint16_t clip_height,
-		const mw_hal_lcd_colour_t *data)
+		const uint8_t *data)
 {
 	uint16_t x;
 	uint16_t y;
 	mw_hal_lcd_colour_t pixel_colour;
+	const uint8_t *pixel_address;
+
+	/* check if pixels in data buffer are all to be drawn and if so use bitmap draw routine */
+	if (image_start_x >= clip_start_x &&
+			image_start_y >= clip_start_y &&
+			image_start_x + image_data_width_pixels < clip_start_x + clip_width &&
+			image_start_y + image_data_height_pixels < clip_start_y + clip_height)
+	{
+		BSP_LCD_DrawBitmap24(image_start_x,
+				image_start_y,
+				image_data_width_pixels,
+				image_data_height_pixels,
+				data);
+		return;
+	}
 
 	for (y = 0; y < image_data_height_pixels; y++)
 	{
 		for (x = 0; x < image_data_width_pixels; x++)
 		{
-			pixel_colour = *(data + (y * image_data_width_pixels) + x);
 			if (x + image_start_x >= clip_start_x &&
 					x + image_start_x < clip_start_x + clip_width &&
 					y + image_start_y >= clip_start_y &&
 					y + image_start_y < clip_start_y + clip_height)
 			{
-				mw_hal_lcd_pixel(x + image_start_x, y + image_start_y, pixel_colour);
+				pixel_address = (data + (y * image_data_width_pixels * 3) + x * 3);
+				pixel_colour = (uint32_t)*pixel_address;
+				pixel_address++;
+				pixel_colour += ((uint32_t)(*pixel_address)) << 8;
+				pixel_address++;
+				pixel_colour += ((uint32_t)(*pixel_address)) << 16;
+
+				BSP_LCD_DrawPixel(x + image_start_x, y + image_start_y, pixel_colour);
 			}
 		}
-
 	}
 }
 

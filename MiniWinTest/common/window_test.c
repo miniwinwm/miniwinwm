@@ -32,6 +32,7 @@ SOFTWARE.
 #include <string.h>
 #include <stdio.h>
 #include "ui/ui_common.h"
+#include "dialogs/dialog_common.h"
 
 /****************
 *** CONSTANTS ***
@@ -63,8 +64,6 @@ typedef struct
 *** EXTERNAL VARIABLES ***
 **************************/
 
-extern mw_window_t mw_all_windows[MW_MAX_WINDOW_COUNT];
-extern mw_control_t mw_all_controls[MW_MAX_CONTROL_COUNT];
 extern volatile uint32_t mw_tick_counter;
 extern uint8_t window_ok_cancel_id;
 extern uint8_t label_1_id;
@@ -106,8 +105,8 @@ void window_test_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *dra
 	mw_gl_rectangle(draw_info,
 			0,
 			0,
-			mw_all_windows[window_ref].client_rect.width,
-			mw_all_windows[window_ref].client_rect.height);
+			mw_get_window_client_rect(window_ref).width,
+			mw_get_window_client_rect(window_ref).height);
 	mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 	if(window_test_data.draw_circle)
 	{
@@ -137,7 +136,7 @@ void window_test_message_function(const mw_message_t *message)
 		window_test_data.draw_circle = true;
 
 		/* remove pop up list box if visible */
-		if (mw_all_controls[list_box_1_id].control_flags & MW_CONTROL_FLAG_IS_VISIBLE)
+		if (mw_get_control_flags(list_box_1_id) & MW_CONTROL_FLAG_IS_VISIBLE)
 		{
 			mw_set_control_visible(list_box_1_id, false);
 			mw_set_menu_bar_enabled_state(message->recipient_id, true);
@@ -160,6 +159,11 @@ void window_test_message_function(const mw_message_t *message)
 			mw_paint_control(list_box_1_id);
 			mw_paint_window_frame(message->recipient_id, MW_WINDOW_FRAME_COMPONENT_MENU_BAR);
 		}
+		else if (message->message_data == 2)
+		{
+			wm_set_window_title(message->recipient_id, "Changed");
+			mw_paint_window_frame(message->recipient_id, MW_WINDOW_FRAME_COMPONENT_TITLE_BAR);
+		}
 		break;
 
 	case MW_CHECKBOX_STATE_CHANGE_MESSAGE:
@@ -168,15 +172,16 @@ void window_test_message_function(const mw_message_t *message)
 		{
 			if (message->message_data)
 			{
-			    /* set window window_ok_cancel_id visible */
-				mw_set_window_visible(window_ok_cancel_id, true);
-
-				/* and modal */
-				mw_set_window_modal(window_ok_cancel_id, true);
-
-			    /* a window has changed visibility so repaint it */
-				mw_paint_window_frame(window_ok_cancel_id, MW_WINDOW_FRAME_COMPONENT_ALL);
-				mw_paint_window_client(window_ok_cancel_id);
+				/* create a pop up 2 button dialog */
+				mw_create_window_dialog_two_button(20,
+						50,
+						150,
+						"Title",
+						"This is a message",
+						"Ok",
+						"Cancel",
+						false,
+						message->recipient_id);
 			}
 		}
 		break;

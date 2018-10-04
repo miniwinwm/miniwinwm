@@ -157,8 +157,13 @@ typedef enum
 	MW_CONTROL_VERT_SCROLL_BAR_SCROLLED_MESSAGE,	/**< Response message from a vertical control scroll bar that it has been scrolled */
 	MW_CONTROL_HORIZ_SCROLL_BAR_SCROLLED_MESSAGE,	/**< Response message from a horizontal control scroll bar that it has been scrolled */
 	MW_ARROW_PRESSED_MESSAGE,						/**< Response message from a arrow that it has been pressed */
-	MW_FOLDER_ITEM_PRESSED_MESSAGE,					/**< Response message from a folder when an item has been pressed */
-		
+
+	/* Messages posted by standard dialogs */
+	MW_DIALOG_ONE_BUTTON_DISMISSED_MESSAGE,			/**< One button dialog has been dismissed */
+	MW_DIALOG_TWO_BUTTONS_DISMISSED_MESSAGE,		/**< Two button dialog has been dismissed */
+	MW_DIALOG_TIME_CHOOSER_DISMISSED_MESSAGE,		/**< Time chooser dialog has been dismissed by ok button*/
+	MW_DIALOG_DATE_CHOOSER_DISMISSED_MESSAGE,		/**< Date chooser dialog has been dismissed by ok button*/
+
 	/* Messages that can be posted from user code or user code called utility functions */
 	MW_WINDOW_PAINT_ALL_MESSAGE,			       	/**< System message to paint everything */
 	MW_WINDOW_FRAME_PAINT_MESSAGE,				    /**< System message to get a window's frame painted */
@@ -175,7 +180,12 @@ typedef enum
 	MW_TRANSFER_DATA_2_PTR_MESSAGE,					/**< Message to a window or control that the data message parameter contains a pointer to data; the window or control must know the format */
 	MW_TRANSFER_DATA_3_PTR_MESSAGE,					/**< Message to a window or control that the data message parameter contains a pointer to data; the window or control must know the format */
 	MW_TRANSFER_DATA_4_PTR_MESSAGE,					/**< Message to a window or control that the data message parameter contains a pointer to data; the window or control must know the format */
-	MW_TRANSFER_DATA_5_PTR_MESSAGE					/**< Message to a window or control that the data message parameter contains a pointer to data; the window or control must know the format */
+	MW_TRANSFER_DATA_5_PTR_MESSAGE,					/**< Message to a window or control that the data message parameter contains a pointer to data; the window or control must know the format */
+	MW_USER_1_MESSAGE,								/**< Message to a window for any user-defined purpose */
+	MW_USER_2_MESSAGE,								/**< Message to a window for any user-defined purpose */
+	MW_USER_3_MESSAGE,								/**< Message to a window for any user-defined purpose */
+	MW_USER_4_MESSAGE,								/**< Message to a window for any user-defined purpose */
+	MW_USER_5_MESSAGE								/**< Message to a window for any user-defined purpose */
 } mw_message_id_t;
 
 /**
@@ -231,6 +241,7 @@ typedef struct
     mw_paint_func_p paint_func;         /**< Pointer to window paint function */
     mw_message_func_p message_func;     /**< Pointer to window message handler function */	
     uint32_t window_flags;				/**< All the flags defining a window's description and state */
+	void *instance_data;				/**< Optional void pointer to window specific data structure containing extra window instance specific data */
 	mw_util_rect_t window_rect;         /**< Rect containing coordinates of window including title bar and border if present */
 	mw_util_rect_t client_rect;         /**< Rect containing coordinates of window's client area */
 	uint16_t menu_bar_item_enables;		/**< Bitfield of individual enable flags for menu bar items */
@@ -249,7 +260,7 @@ typedef struct
 {
     mw_paint_func_p paint_func;         /**< Pointer to control paint function */
     mw_message_func_p message_func;     /**< Pointer to control message handler function */
-	void *extra_data;					/**< Void pointer to control specific data structure containing extra control specific configuration data */
+	void *instance_data;				/**< Void pointer to control specific data structure containing extra control specific configuration data per instance */
 	uint16_t control_flags;				/**< All the flags defining a control's description and state */
 	mw_util_rect_t control_rect;        /**< Rect containing coordinates of control's area */
     uint8_t parent;                     /**< This control's parent window */
@@ -294,6 +305,13 @@ void mw_user_root_message_function(const mw_message_t *message);
 void mw_init();
 
 /**
+ * Find if there are any free window slots in array of windows
+ *
+ * @return true if there are else false
+ */
+bool mw_find_if_any_window_slots_free(void);
+
+/**
  * Add a new window. Returns new window reference number or MAX_WINDOW_COUNT if there is an error.
  *
  * @param rect The rect of the window's total area, including border and title bar
@@ -303,6 +321,7 @@ void mw_init();
  * @param menu_bar_items Pointer to array holding menu bar item text labels
  * @param menu_bar_items_count Number of entries in above array
  * @param window_flags The new window's description and state flags
+ * @param instance_data Optional pointer to any extra window data that is instance specific, can be NULL if no instance data
  * @return The new window id if created or MAX_WINDOW_COUNT if it could not be created
  */
 uint8_t mw_add_window(mw_util_rect_t *rect,
@@ -311,7 +330,8 @@ uint8_t mw_add_window(mw_util_rect_t *rect,
 		mw_message_func_p message_func,
 		char **menu_bar_items,
 		uint8_t menu_bar_items_count,
-		uint32_t window_flags);
+		uint32_t window_flags,
+		void *instance_data);
 
 /**
  *  Bring a window to the front giving it the highest Z order of all windows.
@@ -456,6 +476,37 @@ void mw_paint_window_client_rect(uint8_t window_ref, const mw_util_rect_t *rect)
 void mw_remove_window(uint8_t window_ref);
 
 /**
+ * Get a window's client area rect
+ *
+ * @param window_ref The window to get the rect for
+ * @return The returned rect
+ */
+mw_util_rect_t mw_get_window_client_rect(uint8_t window_ref);
+
+/**
+ * Get a window's instance_data data pointer
+ *
+ * @param window_ref The window to get the instance data pointer for
+ * @return The returned instance_data data pointer
+ */
+void *mw_get_window_instance_data(uint8_t window_ref);
+
+/**
+ * Find if there are any free control slots in array of controls
+ *
+ * @return true if there are else false
+ */
+bool mw_find_if_any_control_slots_free(void);
+
+/**
+ * Set the window's title bar text
+ *
+ * @param window_ref the window to set the title bar text for
+ * @param title_text the new title bar text
+ */
+void wm_set_window_title(uint8_t window_ref, char *title_text);
+
+/**
  * Add a new control to a window. Returns new control reference number or MAX_WINDOW_COUNT if there is an error.
  *
  * @param rect The rect of the control's area
@@ -463,7 +514,7 @@ void mw_remove_window(uint8_t window_ref);
  * @param paint_func Pointer to paint function
  * @param message_func Pointer to message handling function
  * @param control_flags Flags describing the control and its state
- * @param extra_data void Pointer to control specific data structure containing extra control specific configuration data
+ * @param instance_data void Pointer to control specific data structure containing extra control specific configuration data for this instance
  * @return The new control id if created or MAX_CONTROL_COUNT if it could not be created
  */
 uint8_t mw_add_control(mw_util_rect_t *rect,
@@ -471,7 +522,7 @@ uint8_t mw_add_control(mw_util_rect_t *rect,
 		mw_paint_func_p paint_func,
 		mw_message_func_p message_func,
 		uint16_t control_flags,
-		void *extra_data);
+		void *instance_data);
 
 /**
  * Set a control visible if it is used
@@ -513,6 +564,45 @@ void mw_paint_control_rect(uint8_t control_ref, const mw_util_rect_t *rect);
 void mw_remove_control(uint8_t control_ref);
 
 /**
+ * Get a control's rect
+ *
+ * @param control_ref The control to get the rect for
+ * @return The returned rect
+ */
+mw_util_rect_t mw_get_control_rect(uint8_t control_ref);
+
+/**
+ * Get a control's parent window ref
+ *
+ * @param control_ref The control to get the parent for
+ * @return The returned parent's window id
+ */
+uint8_t mw_get_control_parent_window(uint8_t control_ref);
+
+/**
+ * Get a control's instance_data data pointer
+ *
+ * @param control_ref The control to get the instance data pointer for
+ * @return The returned instance_data data pointer
+ */
+void *mw_get_control_instance_data(uint8_t control_ref);
+
+/**
+ * Get a control's flags bitfield
+ *
+ * @param control_ref The control to get the flags bitfield for
+ * @return The returned flags bitfield
+ */
+uint16_t mw_get_control_flags(uint8_t control_ref);
+
+/**
+ * Find if there are any free control slots in array of controls
+ *
+ * @return true if there are else false
+ */
+bool mw_find_if_any_control_slots_free(void);
+
+/**
  * Set a timer if there is space for it in the array of timers.
  *
  * @param fire_time The time in window manager ticks for the timer to timeout; this is an absolute time, not relative
@@ -531,6 +621,9 @@ void mw_cancel_timer(uint8_t timer_id);
 
 /**
  * Package up the filling in and sending of a windows message.
+ *
+ * The message is added to the window manager message queue and will be processed by the recipient
+ * asynchronously.
  *
  * @param message_id The message id of the message to create
  * @param sender_id The message id of the sender
@@ -558,6 +651,7 @@ void mw_paint_all();
  * @param show True to show message, false to stop showing it
  */
 void mw_show_busy(bool show);
+
 
 #ifdef __cplusplus
 }

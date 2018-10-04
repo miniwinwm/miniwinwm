@@ -49,7 +49,6 @@ SOFTWARE.
 *** EXTERNAL VARIABLES ***
 **************************/
 
-extern mw_control_t mw_all_controls[MW_MAX_CONTROL_COUNT];
 extern volatile uint32_t mw_tick_counter;
 
 /**********************
@@ -70,7 +69,7 @@ extern volatile uint32_t mw_tick_counter;
 
 void mw_ui_button_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *draw_info)
 {
-	mw_ui_button_data_t *this_button = (mw_ui_button_data_t*)mw_all_controls[control_ref].extra_data;
+	mw_ui_button_data_t *this_button = (mw_ui_button_data_t*)mw_get_control_instance_data(control_ref);
 	mw_hal_lcd_colour_t highlighted_colour;
 	mw_hal_lcd_colour_t lowlighted_colour;
 	uint16_t text_width;
@@ -95,8 +94,8 @@ void mw_ui_button_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *d
 	mw_gl_rectangle(draw_info,
 			0,
 			0,
-			mw_all_controls[control_ref].control_rect.width,
-			mw_all_controls[control_ref].control_rect.height);
+			mw_get_control_rect(control_ref).width,
+			mw_get_control_rect(control_ref).height);
 
 	if (this_button->button_down)
 	{
@@ -110,15 +109,15 @@ void mw_ui_button_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *d
 	}
 
 	mw_gl_set_fg_colour(highlighted_colour);
-	mw_gl_vline(draw_info, 1, 1, mw_all_controls[control_ref].control_rect.height - 2);
-	mw_gl_hline(draw_info, 1, mw_all_controls[control_ref].control_rect.width - 2, 1);
+	mw_gl_vline(draw_info, 1, 1, mw_get_control_rect(control_ref).height - 2);
+	mw_gl_hline(draw_info, 1, mw_get_control_rect(control_ref).width - 2, 1);
 	mw_gl_set_fg_colour(lowlighted_colour);
-	mw_gl_vline(draw_info, mw_all_controls[control_ref].control_rect.width - 2, 1, mw_all_controls[control_ref].control_rect.height - 2);
-	mw_gl_hline(draw_info, 1, mw_all_controls[control_ref].control_rect.width - 2, mw_all_controls[control_ref].control_rect.height - 2);
+	mw_gl_vline(draw_info, mw_get_control_rect(control_ref).width - 2, 1, mw_get_control_rect(control_ref).height - 2);
+	mw_gl_hline(draw_info, 1, mw_get_control_rect(control_ref).width - 2, mw_get_control_rect(control_ref).height - 2);
 
     /* set text colour according to enabled state */
 	mw_gl_set_bg_transparency(MW_GL_BG_TRANSPARENT);
-	if (mw_all_controls[control_ref].control_flags & MW_CONTROL_FLAG_IS_ENABLED)
+	if (mw_get_control_flags(control_ref) & MW_CONTROL_FLAG_IS_ENABLED)
 	{
 		mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 	}
@@ -127,7 +126,7 @@ void mw_ui_button_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *d
 		mw_gl_set_fg_colour(MW_CONTROL_DISABLED_COLOUR);
 	}
 
-	if (mw_all_controls[control_ref].control_flags & MW_CONTROL_FLAGS_LARGE_SIZE)
+	if (mw_get_control_flags(control_ref) & MW_CONTROL_FLAGS_LARGE_SIZE)
 	{
 		text_width = mw_gl_large_string_width(this_button->button_label);
 	}
@@ -135,11 +134,11 @@ void mw_ui_button_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *d
 	{
 		text_width = strlen(this_button->button_label) * MW_GL_STANDARD_CHARACTER_WIDTH;
 	}
-	text_x = (mw_all_controls[control_ref].control_rect.width - text_width) / 2;
+	text_x = (mw_get_control_rect(control_ref).width - text_width) / 2;
 
 	if (this_button->button_down)
 	{
-		if (mw_all_controls[control_ref].control_flags & MW_CONTROL_FLAGS_LARGE_SIZE)
+		if (mw_get_control_flags(control_ref) & MW_CONTROL_FLAGS_LARGE_SIZE)
 		{
 	 		mw_gl_large_string(draw_info, text_x + 2, 11, this_button->button_label);
 		}
@@ -150,7 +149,7 @@ void mw_ui_button_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *d
 	}
 	else
 	{
-		if (mw_all_controls[control_ref].control_flags & MW_CONTROL_FLAGS_LARGE_SIZE)
+		if (mw_get_control_flags(control_ref) & MW_CONTROL_FLAGS_LARGE_SIZE)
 		{
 			mw_gl_large_string(draw_info, text_x, 9, this_button->button_label);
 		}
@@ -163,7 +162,7 @@ void mw_ui_button_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *d
 
 void mw_ui_button_message_function(const mw_message_t *message)
 {
-	mw_ui_button_data_t *this_button = (mw_ui_button_data_t*)mw_all_controls[message->recipient_id].extra_data;
+	mw_ui_button_data_t *this_button = (mw_ui_button_data_t*)mw_get_control_instance_data(message->recipient_id);
 
 	MW_ASSERT(message);
 
@@ -179,7 +178,7 @@ void mw_ui_button_message_function(const mw_message_t *message)
 		this_button->button_down = false;
 		mw_post_message(MW_BUTTON_PRESSED_MESSAGE,
 				message->recipient_id,
-				mw_all_controls[message->recipient_id].parent,
+				mw_get_control_parent_window(message->recipient_id),
 				MW_UNUSED_MESSAGE_PARAMETER,
 				MW_WINDOW_MESSAGE);
 		mw_paint_control(message->recipient_id);
@@ -187,7 +186,7 @@ void mw_ui_button_message_function(const mw_message_t *message)
 
 	case MW_TOUCH_DOWN_MESSAGE:
 		/* handle a touch down event within this control */	
-		if (mw_all_controls[message->recipient_id].control_flags & MW_CONTROL_FLAG_IS_ENABLED)
+		if (mw_get_control_flags(message->recipient_id) & MW_CONTROL_FLAG_IS_ENABLED)
 		{
 			mw_set_timer(mw_tick_counter + MW_CONTROL_DOWN_TIME, message->recipient_id, MW_CONTROL_MESSAGE);
 			this_button->button_down = true;

@@ -45,6 +45,7 @@ static const char keyboards[4][3][11] = {
 };
 
 static const mw_util_rect_t input_text_rect = {0, 0, MW_UI_KEYBOARD_WIDTH, MW_UI_KEYBOARD_KEY_SIZE};
+static const mw_util_rect_t all_keys_rect = {0, MW_UI_KEYBOARD_KEY_SIZE, MW_UI_KEYBOARD_WIDTH, 3 * MW_UI_KEYBOARD_KEY_SIZE};
 
 /************
 *** TYPES ***
@@ -58,7 +59,6 @@ static const mw_util_rect_t input_text_rect = {0, 0, MW_UI_KEYBOARD_WIDTH, MW_UI
 *** EXTERNAL VARIABLES ***
 **************************/
 
-extern mw_control_t mw_all_controls[MW_MAX_CONTROL_COUNT];
 extern volatile uint32_t mw_tick_counter;
 extern const uint8_t mw_bitmaps_backspace_key[];
 extern const uint8_t mw_bitmaps_ok_key[];
@@ -88,7 +88,7 @@ static mw_util_rect_t invalid_rect;
 
 void mw_ui_keyboard_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *draw_info)
 {
-	mw_ui_keyboard_data_t *this_keyboard = (mw_ui_keyboard_data_t*)mw_all_controls[control_ref].extra_data;
+	mw_ui_keyboard_data_t *this_keyboard = (mw_ui_keyboard_data_t*)mw_get_control_instance_data(control_ref);
 	uint8_t row;
 	uint8_t column;
 	mw_hal_lcd_colour_t highlighted_colour;
@@ -118,7 +118,7 @@ void mw_ui_keyboard_paint_function(uint8_t control_ref, const mw_gl_draw_info_t 
 			}
 
 			/* set colour of text according to control enabled state */
-			if (mw_all_controls[control_ref].control_flags & MW_CONTROL_FLAG_IS_ENABLED)
+			if (mw_get_control_flags(control_ref) & MW_CONTROL_FLAG_IS_ENABLED)
 			{
 				mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 			}
@@ -308,7 +308,7 @@ void mw_ui_keyboard_paint_function(uint8_t control_ref, const mw_gl_draw_info_t 
 
 void mw_ui_keyboard_message_function(const mw_message_t *message)
 {
-	mw_ui_keyboard_data_t *this_keyboard = (mw_ui_keyboard_data_t*)mw_all_controls[message->recipient_id].extra_data;
+	mw_ui_keyboard_data_t *this_keyboard = (mw_ui_keyboard_data_t*)mw_get_control_instance_data(message->recipient_id);
 	char c;
 
 	MW_ASSERT(message);
@@ -316,11 +316,12 @@ void mw_ui_keyboard_message_function(const mw_message_t *message)
 	switch (message->message_id)
 	{
 	case MW_CONTROL_CREATED_MESSAGE:
-		/* initialise the control */		
+		/* initialise the control */
 		this_keyboard->is_key_pressed = false;
 		this_keyboard->entry_buffer[0] = '\0';
 		this_keyboard->keyboard_display = KEYBOARD_UPPER_CHARS;
 		this_keyboard->draw_cursor = false;
+		this_keyboard->swap_keyboard = false;
 		this_keyboard->cursor_position = 0;
 		break;
 
@@ -351,18 +352,25 @@ void mw_ui_keyboard_message_function(const mw_message_t *message)
 			/* set key pressed to false */
 			this_keyboard->is_key_pressed = false;
 
-			/* repaint pressed key area only */
-			invalid_rect.x = this_keyboard->key_pressed_column * MW_UI_KEYBOARD_KEY_SIZE;
-			invalid_rect.y = (this_keyboard->key_pressed_row + 1) * MW_UI_KEYBOARD_KEY_SIZE;
-			invalid_rect.width = MW_UI_KEYBOARD_KEY_SIZE;
-			invalid_rect.height = MW_UI_KEYBOARD_KEY_SIZE;
-			mw_paint_control_rect(message->recipient_id, &invalid_rect);
+			if (this_keyboard->swap_keyboard)
+			{
+				this_keyboard->swap_keyboard = false;
+				mw_paint_control_rect(message->recipient_id, &all_keys_rect);
+			}
+			else
+			{
+				/* repaint pressed key area only */
+				invalid_rect.x = this_keyboard->key_pressed_column * MW_UI_KEYBOARD_KEY_SIZE;
+				invalid_rect.y = (this_keyboard->key_pressed_row + 1) * MW_UI_KEYBOARD_KEY_SIZE;
+				invalid_rect.width = MW_UI_KEYBOARD_KEY_SIZE;
+				invalid_rect.height = MW_UI_KEYBOARD_KEY_SIZE;
+				mw_paint_control_rect(message->recipient_id, &invalid_rect);
+			}
 		}
 		else
 		{
-			this_keyboard->draw_cursor = !this_keyboard->draw_cursor;
-
 			/* repaint cursor area only */
+			this_keyboard->draw_cursor = !this_keyboard->draw_cursor;
 			invalid_rect.x = 2 + this_keyboard->cursor_position * MW_GL_STANDARD_CHARACTER_WIDTH;
 			invalid_rect.y = 2;
 			invalid_rect.width = 1;
@@ -378,123 +386,131 @@ void mw_ui_keyboard_message_function(const mw_message_t *message)
 
 	case MW_TOUCH_DOWN_MESSAGE:
 		/* handle a touch down event within this control */
-		if (mw_all_controls[message->recipient_id].control_flags & MW_CONTROL_FLAG_IS_ENABLED)
+		if (!(mw_get_control_flags(message->recipient_id) & MW_CONTROL_FLAG_IS_ENABLED))
 		{
-		    /* check if the y coordinate of the touch point is in the row of keys */
-			if ((message->message_data & 0xffff) > MW_UI_KEYBOARD_KEY_SIZE)
+			break;
+		}
+
+		/* check if the y coordinate of the touch point is in the row of keys */
+		if ((message->message_data & 0xffff) > MW_UI_KEYBOARD_KEY_SIZE)
+		{
+			/* set up for key up redraw after timer expired */
+			mw_cancel_timer(this_keyboard->timer_id);
+			this_keyboard->timer_id = mw_set_timer(mw_tick_counter + MW_CONTROL_DOWN_TIME, message->recipient_id, MW_CONTROL_MESSAGE);
+			this_keyboard->is_key_pressed = true;
+
+			/* get the key pressed from the touch coordinates */
+			this_keyboard->key_pressed_row = ((message->message_data & 0xffff) / MW_UI_KEYBOARD_KEY_SIZE) - 1;
+			this_keyboard->key_pressed_column = (message->message_data >> 16) / MW_UI_KEYBOARD_KEY_SIZE;
+
+			/* check for shift key pressed */
+			if (this_keyboard->key_pressed_row == 2
+					&& this_keyboard->key_pressed_column == 0 &&
+					(this_keyboard->keyboard_display == KEYBOARD_UPPER_CHARS ||
+					 this_keyboard->keyboard_display == KEYBOARD_LOWER_CHARS))
 			{
-				/* set up for key up redraw after timer expired */
-				mw_cancel_timer(this_keyboard->timer_id);
-				this_keyboard->timer_id = mw_set_timer(mw_tick_counter + MW_CONTROL_DOWN_TIME, message->recipient_id, MW_CONTROL_MESSAGE);
-				this_keyboard->is_key_pressed = true;
-				
-				/* get the key pressed from the touch coordinates */
-				this_keyboard->key_pressed_row = ((message->message_data & 0xffff) / MW_UI_KEYBOARD_KEY_SIZE) - 1;
-				this_keyboard->key_pressed_column = (message->message_data >> 16) / MW_UI_KEYBOARD_KEY_SIZE;
-
-				/* check for shift key pressed */
-				if (this_keyboard->key_pressed_row == 2
-						&& this_keyboard->key_pressed_column == 0 &&
-						(this_keyboard->keyboard_display == KEYBOARD_UPPER_CHARS ||
-						 this_keyboard->keyboard_display == KEYBOARD_LOWER_CHARS))
+				if (this_keyboard->keyboard_display == KEYBOARD_UPPER_CHARS)
 				{
-					if (this_keyboard->keyboard_display == KEYBOARD_UPPER_CHARS)
-					{
-						this_keyboard->keyboard_display = KEYBOARD_LOWER_CHARS;
-					}
-					else
-					{
-						this_keyboard->keyboard_display = KEYBOARD_UPPER_CHARS;
-					}
+					this_keyboard->keyboard_display = KEYBOARD_LOWER_CHARS;
 				}
-				/* check for upper keypad change key pressed */
-				else if (this_keyboard->key_pressed_row == 0 && this_keyboard->key_pressed_column == 10)
-				{
-					if (this_keyboard->keyboard_display == KEYBOARD_LOWER_CHARS ||
-							this_keyboard->keyboard_display == KEYBOARD_UPPER_CHARS)
-					{
-						this_keyboard->keyboard_display = KEYBOARD_NUMBERS;
-					}
-					else
-					{
-						this_keyboard->keyboard_display = KEYBOARD_UPPER_CHARS;
-					}
-				}
-				/* check for lower keypad change key pressed */
-				else if (this_keyboard->key_pressed_row == 1 && this_keyboard->key_pressed_column == 10)
-				{
-					if (this_keyboard->keyboard_display == KEYBOARD_LOWER_CHARS ||
-							this_keyboard->keyboard_display == KEYBOARD_UPPER_CHARS ||
-							this_keyboard->keyboard_display == KEYBOARD_NUMBERS)
-					{
-						this_keyboard->keyboard_display = KEYBOARD_SYMBOLS;
-					}
-					else if (this_keyboard->keyboard_display == KEYBOARD_SYMBOLS)
-					{
-						this_keyboard->keyboard_display = KEYBOARD_NUMBERS;
-					}
-				}
-				/* check for backspace */
-				else if (this_keyboard->key_pressed_row == 1 && this_keyboard->key_pressed_column == 9)
-				{
-					if (this_keyboard->cursor_position > 0)
-					{
-						memmove(&this_keyboard->entry_buffer[this_keyboard->cursor_position - 1],
-								&this_keyboard->entry_buffer[this_keyboard->cursor_position],
-								strlen(this_keyboard->entry_buffer) - this_keyboard->cursor_position + 1);
-
-						this_keyboard->cursor_position--;
-					}
-				}
-				/* check for cancel */
-				else if (this_keyboard->key_pressed_row == 2 && this_keyboard->key_pressed_column == 9)
-				{
-					mw_post_message(MW_KEYBOARD_CANCEL_MESSAGE,
-							message->recipient_id,
-							mw_all_controls[message->recipient_id].parent,
-							MW_UNUSED_MESSAGE_PARAMETER,
-							MW_WINDOW_MESSAGE);
-				}
-				/* check for ok */
-				else if (this_keyboard->key_pressed_row == 2 && this_keyboard->key_pressed_column == 10)
-				{
-					mw_post_message(MW_KEYBOARD_OK_MESSAGE,
-							message->recipient_id,
-							mw_all_controls[message->recipient_id].parent,
-							MW_UNUSED_MESSAGE_PARAMETER,
-							MW_WINDOW_MESSAGE);
-				}
-				/* else get the character that has been pressed */
 				else
 				{
-					if (strlen(this_keyboard->entry_buffer) < MW_UI_KEYBOARD_MAX_CHARS)
-					{
-						c = keyboards[this_keyboard->keyboard_display][this_keyboard->key_pressed_row][this_keyboard->key_pressed_column];
-						memmove(&this_keyboard->entry_buffer[this_keyboard->cursor_position + 1],
-								&this_keyboard->entry_buffer[this_keyboard->cursor_position],
-								strlen(this_keyboard->entry_buffer) - this_keyboard->cursor_position + 1);
-						this_keyboard->entry_buffer[this_keyboard->cursor_position] = c;
-						this_keyboard->cursor_position++;
-					}
+					this_keyboard->keyboard_display = KEYBOARD_UPPER_CHARS;
 				}
-
-				/* repaint pressed key area only */
-				invalid_rect.x = this_keyboard->key_pressed_column * MW_UI_KEYBOARD_KEY_SIZE;
-				invalid_rect.y = (this_keyboard->key_pressed_row + 1) * MW_UI_KEYBOARD_KEY_SIZE;
-				invalid_rect.width = MW_UI_KEYBOARD_KEY_SIZE;
-				invalid_rect.height = MW_UI_KEYBOARD_KEY_SIZE;
-				mw_paint_control_rect(message->recipient_id, &invalid_rect);
+				this_keyboard->swap_keyboard = true;
 			}
+			/* check for upper keypad change key pressed */
+			else if (this_keyboard->key_pressed_row == 0 && this_keyboard->key_pressed_column == 10)
+			{
+				if (this_keyboard->keyboard_display == KEYBOARD_LOWER_CHARS ||
+						this_keyboard->keyboard_display == KEYBOARD_UPPER_CHARS)
+				{
+					this_keyboard->keyboard_display = KEYBOARD_NUMBERS;
+				}
+				else
+				{
+					this_keyboard->keyboard_display = KEYBOARD_UPPER_CHARS;
+				}
+				this_keyboard->swap_keyboard = true;
+			}
+			/* check for lower keypad change key pressed */
+			else if (this_keyboard->key_pressed_row == 1 && this_keyboard->key_pressed_column == 10)
+			{
+				if (this_keyboard->keyboard_display == KEYBOARD_LOWER_CHARS ||
+						this_keyboard->keyboard_display == KEYBOARD_UPPER_CHARS ||
+						this_keyboard->keyboard_display == KEYBOARD_NUMBERS)
+				{
+					this_keyboard->keyboard_display = KEYBOARD_SYMBOLS;
+				}
+				else if (this_keyboard->keyboard_display == KEYBOARD_SYMBOLS)
+				{
+					this_keyboard->keyboard_display = KEYBOARD_NUMBERS;
+				}
+				this_keyboard->swap_keyboard = true;
+			}
+			/* check for backspace */
+			else if (this_keyboard->key_pressed_row == 1 && this_keyboard->key_pressed_column == 9)
+			{
+				if (this_keyboard->cursor_position > 0)
+				{
+					memmove(&this_keyboard->entry_buffer[this_keyboard->cursor_position - 1],
+							&this_keyboard->entry_buffer[this_keyboard->cursor_position],
+							strlen(this_keyboard->entry_buffer) - this_keyboard->cursor_position + 1);
+
+					this_keyboard->cursor_position--;
+				}
+			}
+			/* check for cancel */
+			else if (this_keyboard->key_pressed_row == 2 && this_keyboard->key_pressed_column == 9)
+			{
+				mw_post_message(MW_KEYBOARD_CANCEL_MESSAGE,
+						message->recipient_id,
+						mw_get_control_parent_window(message->recipient_id),
+						MW_UNUSED_MESSAGE_PARAMETER,
+						MW_WINDOW_MESSAGE);
+			}
+			/* check for ok */
+			else if (this_keyboard->key_pressed_row == 2 && this_keyboard->key_pressed_column == 10)
+			{
+				mw_post_message(MW_KEYBOARD_OK_MESSAGE,
+						message->recipient_id,
+						mw_get_control_parent_window(message->recipient_id),
+						MW_UNUSED_MESSAGE_PARAMETER,
+						MW_WINDOW_MESSAGE);
+			}
+			/* else get the character that has been pressed */
 			else
 			{
-				this_keyboard->cursor_position = (message->message_data >> 16) / MW_GL_STANDARD_CHARACTER_WIDTH;
-				if (this_keyboard->cursor_position > strlen(this_keyboard->entry_buffer))
+				if (strlen(this_keyboard->entry_buffer) < MW_UI_KEYBOARD_MAX_CHARS)
 				{
-					this_keyboard->cursor_position = strlen(this_keyboard->entry_buffer);
+					c = keyboards[this_keyboard->keyboard_display][this_keyboard->key_pressed_row][this_keyboard->key_pressed_column];
+					memmove(&this_keyboard->entry_buffer[this_keyboard->cursor_position + 1],
+							&this_keyboard->entry_buffer[this_keyboard->cursor_position],
+							strlen(this_keyboard->entry_buffer) - this_keyboard->cursor_position + 1);
+					this_keyboard->entry_buffer[this_keyboard->cursor_position] = c;
+					this_keyboard->cursor_position++;
 				}
 			}
 
-			/* repaint text entry area only */
+			/* repaint pressed key area only */
+			invalid_rect.x = this_keyboard->key_pressed_column * MW_UI_KEYBOARD_KEY_SIZE;
+			invalid_rect.y = (this_keyboard->key_pressed_row + 1) * MW_UI_KEYBOARD_KEY_SIZE;
+			invalid_rect.width = MW_UI_KEYBOARD_KEY_SIZE;
+			invalid_rect.height = MW_UI_KEYBOARD_KEY_SIZE;
+			mw_paint_control_rect(message->recipient_id, &invalid_rect);
+		}
+		else
+		{
+			this_keyboard->cursor_position = (message->message_data >> 16) / MW_GL_STANDARD_CHARACTER_WIDTH;
+			if (this_keyboard->cursor_position > strlen(this_keyboard->entry_buffer))
+			{
+				this_keyboard->cursor_position = strlen(this_keyboard->entry_buffer);
+			}
+		}
+
+		/* repaint text entry area only */
+		if (!this_keyboard->swap_keyboard)
+		{
 			mw_paint_control_rect(message->recipient_id, &input_text_rect);
 		}
 		break;

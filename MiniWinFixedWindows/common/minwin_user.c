@@ -31,7 +31,6 @@ SOFTWARE.
 #include <miniwin.h>
 #include <string.h>
 #include "ui/ui_common.h"
-
 #include "window_date_icon.h"
 #include "window_file_icon.h"
 #include "window_help_icon.h"
@@ -178,7 +177,8 @@ void mw_user_init(void)
 			window_date_icon_message_function,
 			NULL,
 			0,
-			MW_WINDOW_FLAG_IS_VISIBLE | MW_WINDOW_TOUCH_FOCUS_AND_EVENT);
+			MW_WINDOW_FLAG_IS_VISIBLE | MW_WINDOW_TOUCH_FOCUS_AND_EVENT,
+			NULL);
 
 	/* create time icon window with no title bar or border */
 	mw_util_set_rect(&r, 125, 1, 104, 104);
@@ -188,7 +188,8 @@ void mw_user_init(void)
 			window_time_icon_message_function,
 			NULL,
 			0,
-			MW_WINDOW_FLAG_IS_VISIBLE | MW_WINDOW_TOUCH_FOCUS_AND_EVENT);
+			MW_WINDOW_FLAG_IS_VISIBLE | MW_WINDOW_TOUCH_FOCUS_AND_EVENT,
+			NULL);
 
 	/* create temperature icon window with no title bar or border */
 	mw_util_set_rect(&r, 10, 107, 104, 104);
@@ -198,7 +199,8 @@ void mw_user_init(void)
 			window_temp_icon_message_function,
 			NULL,
 			0,
-			MW_WINDOW_FLAG_IS_VISIBLE | MW_WINDOW_TOUCH_FOCUS_AND_EVENT);
+			MW_WINDOW_FLAG_IS_VISIBLE | MW_WINDOW_TOUCH_FOCUS_AND_EVENT,
+			NULL);
 
 	/* create settings icon window with no title bar or border */
 	mw_util_set_rect(&r, 125, 107, 104, 104);
@@ -208,7 +210,8 @@ void mw_user_init(void)
 			window_settings_icon_message_function,
 			NULL,
 			0,
-			MW_WINDOW_FLAG_IS_VISIBLE | MW_WINDOW_TOUCH_FOCUS_AND_EVENT);
+			MW_WINDOW_FLAG_IS_VISIBLE | MW_WINDOW_TOUCH_FOCUS_AND_EVENT,
+			NULL);
 
 	/* create file icon window with no title bar or border */
 	mw_util_set_rect(&r, 10, 213, 104, 104);
@@ -218,7 +221,8 @@ void mw_user_init(void)
 			window_file_icon_message_function,
 			NULL,
 			0,
-			MW_WINDOW_FLAG_IS_VISIBLE | MW_WINDOW_TOUCH_FOCUS_AND_EVENT);
+			MW_WINDOW_FLAG_IS_VISIBLE | MW_WINDOW_TOUCH_FOCUS_AND_EVENT,
+			NULL);
 
 	/* create help icon window with no title bar or border */
 	mw_util_set_rect(&r, 125, 213, 104, 104);
@@ -228,7 +232,8 @@ void mw_user_init(void)
 			window_help_icon_message_function,
 			NULL,
 			0,
-			MW_WINDOW_FLAG_IS_VISIBLE | MW_WINDOW_TOUCH_FOCUS_AND_EVENT);
+			MW_WINDOW_FLAG_IS_VISIBLE | MW_WINDOW_TOUCH_FOCUS_AND_EVENT,
+			NULL);
 
 	/* create temperature graphs window */
 	mw_util_set_rect(&r, 0, 0, 240, 320);
@@ -238,7 +243,8 @@ void mw_user_init(void)
 			window_temp_message_function,
 			NULL,
 			0,
-			0);
+			0,
+			NULL);
 
 	/* create temperature graph window back button */
 	mw_util_safe_strcpy(button_temp_back_data.button_label, MW_UI_BUTTON_LABEL_MAX_CHARS, "BACK");
@@ -256,7 +262,8 @@ void mw_user_init(void)
 			window_settings_message_function,
 			NULL,
 			0,
-			0);
+			0,
+			NULL);
 
 	/* create settings window ok button */
 	mw_util_safe_strcpy(button_settings_ok_data.button_label, MW_UI_BUTTON_LABEL_MAX_CHARS, "OK");
@@ -299,6 +306,7 @@ void mw_user_init(void)
 	list_box_settings_data.line_enables = MW_ALL_ITEMS_ENABLED;
 	list_box_settings_id = mw_ui_list_box_add_new(20,
 			180,
+			138,
 			window_settings_id,
 			MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_IS_VISIBLE  | MW_CONTROL_FLAGS_LARGE_SIZE,
 			&list_box_settings_data);
@@ -325,7 +333,8 @@ void mw_user_init(void)
 			window_file_message_function,
 			NULL,
 			0,
-			0);
+			0,
+			NULL);
 
 	/* create file window ok button */
 	mw_util_safe_strcpy(button_file_ok_data.button_label, MW_UI_BUTTON_LABEL_MAX_CHARS, "OK");
@@ -351,6 +360,7 @@ void mw_user_init(void)
 	list_box_file_data.line_enables = MW_ALL_ITEMS_ENABLED;
 	list_box_file_id = mw_ui_list_box_add_new(20,
 			180,
+			138,
 			window_file_id,
 			MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_IS_VISIBLE  | MW_CONTROL_FLAGS_LARGE_SIZE,
 			&list_box_file_data);

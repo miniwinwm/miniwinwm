@@ -47,8 +47,6 @@ SOFTWARE.
 *** EXTERNAL VARIABLES ***
 **************************/
 
-extern mw_control_t mw_all_controls[MW_MAX_CONTROL_COUNT];
-
 /**********************
 *** LOCAL VARIABLES ***
 **********************/
@@ -68,7 +66,7 @@ extern mw_control_t mw_all_controls[MW_MAX_CONTROL_COUNT];
 void mw_ui_radio_button_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *draw_info)
 {
 	uint8_t i;
-	mw_ui_radio_button_data_t *this_radio_radio_button = (mw_ui_radio_button_data_t*)mw_all_controls[control_ref].extra_data;
+	mw_ui_radio_button_data_t *this_radio_radio_button = (mw_ui_radio_button_data_t*)mw_get_control_instance_data(control_ref);
 	uint16_t height;
 	uint16_t box_size;
 
@@ -79,7 +77,7 @@ void mw_ui_radio_button_paint_function(uint8_t control_ref, const mw_gl_draw_inf
 	mw_gl_set_bg_transparency(MW_GL_BG_TRANSPARENT);
 
 	/* set size dependent values */
-	if (mw_all_controls[control_ref].control_flags & MW_CONTROL_FLAGS_LARGE_SIZE)
+	if (mw_get_control_flags(control_ref) & MW_CONTROL_FLAGS_LARGE_SIZE)
 	{
 		height = MW_UI_RADIO_BUTTON_LARGE_HEIGHT;
 		box_size = MW_UI_RADIO_BUTTON_LARGE_BOX_SIZE;
@@ -93,7 +91,7 @@ void mw_ui_radio_button_paint_function(uint8_t control_ref, const mw_gl_draw_inf
 	for (i = 0; i < this_radio_radio_button->number_of_items; i++)
 	{
         /* set the box outline and text colour depending on enabled state */
-		if (mw_all_controls[control_ref].control_flags & MW_CONTROL_FLAG_IS_ENABLED)
+		if (mw_get_control_flags(control_ref) & MW_CONTROL_FLAG_IS_ENABLED)
 		{
 			mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 		}
@@ -103,7 +101,7 @@ void mw_ui_radio_button_paint_function(uint8_t control_ref, const mw_gl_draw_inf
 		}
 
 		/* check size this control is being drawn at and draw appropriate text*/
-		if (mw_all_controls[control_ref].control_flags & MW_CONTROL_FLAGS_LARGE_SIZE)
+		if (mw_get_control_flags(control_ref) & MW_CONTROL_FLAGS_LARGE_SIZE)
 		{
 			/* draw the label text */
 			mw_gl_large_string(draw_info,
@@ -152,7 +150,7 @@ void mw_ui_radio_button_paint_function(uint8_t control_ref, const mw_gl_draw_inf
 		if (i == this_radio_radio_button->selected_radio_button)
 		{
             /* it is so set the box fill colour according to enabled state */
-			if (mw_all_controls[control_ref].control_flags & MW_CONTROL_FLAG_IS_ENABLED)
+			if (mw_get_control_flags(control_ref) & MW_CONTROL_FLAG_IS_ENABLED)
 			{
 				mw_gl_set_solid_fill_colour(MW_HAL_LCD_BLACK);
 			}
@@ -173,13 +171,13 @@ void mw_ui_radio_button_paint_function(uint8_t control_ref, const mw_gl_draw_inf
 
 void mw_ui_radio_button_message_function(const mw_message_t *message)
 {
-	mw_ui_radio_button_data_t *this_radio_radio_button = (mw_ui_radio_button_data_t*)mw_all_controls[message->recipient_id].extra_data;
+	mw_ui_radio_button_data_t *this_radio_radio_button = (mw_ui_radio_button_data_t*)mw_get_control_instance_data(message->recipient_id);
 	uint16_t height;
 
 	MW_ASSERT(message);
 
 	/* set size dependent values */
-	if (mw_all_controls[message->recipient_id].control_flags & MW_CONTROL_FLAGS_LARGE_SIZE)
+	if (mw_get_control_flags(message->recipient_id) & MW_CONTROL_FLAGS_LARGE_SIZE)
 	{
 		height = MW_UI_RADIO_BUTTON_LARGE_HEIGHT;
 	}
@@ -205,7 +203,7 @@ void mw_ui_radio_button_message_function(const mw_message_t *message)
 
 	case MW_TOUCH_DOWN_MESSAGE:
 		/* handle a touch down event within this control */		
-		if (mw_all_controls[message->recipient_id].control_flags & MW_CONTROL_FLAG_IS_ENABLED)
+		if (mw_get_control_flags(message->recipient_id) & MW_CONTROL_FLAG_IS_ENABLED)
 		{
 			/* find which button was touched */
 			this_radio_radio_button->selected_radio_button = (message->message_data & 0xffff) / height;
@@ -213,7 +211,7 @@ void mw_ui_radio_button_message_function(const mw_message_t *message)
 			/* send control response message */
 			mw_post_message(MW_RADIO_BUTTON_ITEM_SELECTED_MESSAGE,
 					message->recipient_id,
-					mw_all_controls[message->recipient_id].parent,
+					mw_get_control_parent_window(message->recipient_id),
 					this_radio_radio_button->selected_radio_button,
 					MW_WINDOW_MESSAGE);
 			mw_paint_control(message->recipient_id);

@@ -24,8 +24,8 @@ SOFTWARE.
 
 */
 
-#ifndef UI_COMMON_H
-#define UI_COMMON_H
+#ifndef _UI_COMMON_H
+#define _UI_COMMON_H
 
 #ifdef __cplusplus
  extern "C" {

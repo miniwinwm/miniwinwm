@@ -1149,7 +1149,7 @@ void mw_gl_character(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y, c
 		filled_rectangle(draw_info, x, y, MW_GL_STANDARD_CHARACTER_WIDTH, MW_GL_STANDARD_CHARACTER_HEIGHT, gc.bg_colour);
 	}
 
-	if (uc < '~')
+	if (uc <= '~')
 	{
 		bitmap_start_position = (uc - ' ') * MW_GL_STANDARD_CHARACTER_WIDTH;
 		font_bitmap_array = mw_fonts_ascii_5x9;
@@ -1240,7 +1240,7 @@ void mw_gl_character_vert(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t
 				MW_GL_STANDARD_CHARACTER_HEIGHT, MW_GL_STANDARD_CHARACTER_WIDTH, gc.bg_colour);
 	}
 
-	if (uc < '~')
+	if (uc <= '~')
 	{
 		bitmap_start_position = (uc - ' ') * MW_GL_STANDARD_CHARACTER_WIDTH;
 		font_bitmap_array = mw_fonts_ascii_5x9;
@@ -1817,7 +1817,7 @@ void mw_gl_colour_bitmap(const mw_gl_draw_info_t *draw_info,
 		int16_t start_y,
 		uint16_t image_data_width_pixels,
 		uint16_t image_data_height_pixels,
-		const mw_hal_lcd_colour_t *image_data)
+		const uint8_t *image_data)
 {
 	if (!draw_info || !image_data)
 	{
@@ -1825,14 +1825,16 @@ void mw_gl_colour_bitmap(const mw_gl_draw_info_t *draw_info,
 		return;
 	}
 
-	/* check for starting point being off window */
-	if (start_x > draw_info->clip_rect.width || start_y > draw_info->clip_rect.height)
+	/* check for left edge being to right of clip rect or top edge being below clip rect*/
+	if (start_x > draw_info->clip_rect.x + draw_info->clip_rect.width ||
+			start_y > draw_info->clip_rect.y + draw_info->clip_rect.height)
 	{
 		return;
 	}
 
-	/* check for being completely off window */
-	if (start_x + image_data_width_pixels - 1 < 0 || start_y + image_data_height_pixels - 1 < 0)
+	/* check for right edge being to left of clip rect or bottom edge being above rect */
+	if (start_x + image_data_width_pixels - 1 < draw_info->clip_rect.x ||
+			start_y + image_data_height_pixels - 1 < draw_info->clip_rect.y)
 	{
 		return;
 	}

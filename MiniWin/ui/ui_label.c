@@ -48,8 +48,6 @@ SOFTWARE.
 *** EXTERNAL VARIABLES ***
 **************************/
 
-extern mw_control_t mw_all_controls[MW_MAX_CONTROL_COUNT];
-
 /**********************
 *** LOCAL VARIABLES ***
 **********************/
@@ -68,7 +66,7 @@ extern mw_control_t mw_all_controls[MW_MAX_CONTROL_COUNT];
 
 void mw_ui_label_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *draw_info)
 {
-	mw_ui_label_data_t *this_label = (mw_ui_label_data_t*)mw_all_controls[control_ref].extra_data;
+	mw_ui_label_data_t *this_label = (mw_ui_label_data_t*)mw_get_control_instance_data(control_ref);
 
     /* draw the background */
 	mw_gl_set_solid_fill_colour(MW_CONTROL_UP_COLOUR);
@@ -79,11 +77,11 @@ void mw_ui_label_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *dr
 	mw_gl_rectangle(draw_info,
 			0,
 			0,
-			mw_all_controls[control_ref].control_rect.width,
-			mw_all_controls[control_ref].control_rect.height);
+			mw_get_control_rect(control_ref).width,
+			mw_get_control_rect(control_ref).height);
 
     /* set label text colour according to enabled state */
-	if (mw_all_controls[control_ref].control_flags & MW_CONTROL_FLAG_IS_ENABLED)
+	if (mw_get_control_flags(control_ref) & MW_CONTROL_FLAG_IS_ENABLED)
 	{
 		mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 	}
@@ -94,7 +92,7 @@ void mw_ui_label_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *dr
     
     /* draw the label text */
 	mw_gl_set_bg_transparency(MW_GL_BG_TRANSPARENT);    
-	if (mw_all_controls[control_ref].control_flags & MW_CONTROL_FLAGS_LARGE_SIZE)
+	if (mw_get_control_flags(control_ref) & MW_CONTROL_FLAGS_LARGE_SIZE)
 	{
 		mw_gl_large_string(draw_info, MW_UI_LABEL_LARGE_X_OFFSET, 1, this_label->label);
 	}
@@ -106,7 +104,7 @@ void mw_ui_label_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *dr
 
 void mw_ui_label_message_function(const mw_message_t *message)
 {
-	mw_ui_label_data_t *this_label = (mw_ui_label_data_t*)mw_all_controls[message->recipient_id].extra_data;
+	mw_ui_label_data_t *this_label = (mw_ui_label_data_t*)mw_get_control_instance_data(message->recipient_id);
 
 	MW_ASSERT(message);
 

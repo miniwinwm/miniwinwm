@@ -58,8 +58,6 @@ typedef struct
 *** EXTERNAL VARIABLES ***
 **************************/
 
-extern mw_window_t mw_all_windows[MW_MAX_WINDOW_COUNT];
-
 /**********************
 *** LOCAL VARIABLES ***
 **********************/
@@ -92,8 +90,8 @@ void window_drag_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *dra
 	mw_gl_rectangle(draw_info,
 			0,
 			0,
-			mw_all_windows[window_ref].client_rect.width,
-			mw_all_windows[window_ref].client_rect.height);
+			mw_get_window_client_rect(window_ref).width,
+			mw_get_window_client_rect(window_ref).height);
 
 	if (window_drag_data.next_point == 0)
 	{

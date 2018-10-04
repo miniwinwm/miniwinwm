@@ -29,14 +29,14 @@ SOFTWARE.
 ***************/
 
 #include <string.h>
-#include "stm32f4xx.h"
+#include "stm32f4xx_hal.h"
 
 /****************
 *** CONSTANTS ***
 ****************/
 
-#define CONFIG_SECTOR 				FLASH_Sector_15
-#define CONFIG_ADDRESS				0x0810C000
+#define CONFIG_SECTOR 				FLASH_SECTOR_1
+#define CONFIG_ADDRESS				((uint32_t)0x08004000)
 
 /************
 *** TYPES ***
@@ -78,22 +78,28 @@ void mw_hal_non_vol_load(uint8_t *data, uint16_t length)
 void mw_hal_non_vol_save(uint8_t *data, uint16_t length)
 {
 	uint32_t words = (length / sizeof(uint32_t)) + ((length % sizeof(uint32_t)) ? 1 : 0);
-	uint32_t index;
-	uint32_t address = CONFIG_ADDRESS;
 	uint32_t *data2 = (uint32_t *)data;
+	uint32_t address;
+	uint32_t index;
+	uint32_t sector_error;
+	FLASH_EraseInitTypeDef erase_init_struct;
 
-	FLASH_Unlock();
+	HAL_FLASH_Unlock();
 
-	FLASH_ClearFlag(FLASH_FLAG_EOP | FLASH_FLAG_OPERR | FLASH_FLAG_WRPERR |
-	                  FLASH_FLAG_PGAERR | FLASH_FLAG_PGPERR|FLASH_FLAG_PGSERR);
+	/* erase sector */
+	erase_init_struct.TypeErase = FLASH_TYPEERASE_SECTORS;
+	erase_init_struct.VoltageRange = FLASH_VOLTAGE_RANGE_3;
+	erase_init_struct.Sector = CONFIG_SECTOR;
+	erase_init_struct.NbSectors = 1;
+	HAL_FLASHEx_Erase(&erase_init_struct, &sector_error);
 
-	FLASH_EraseSector(CONFIG_SECTOR, VoltageRange_3);
-
+	/* write settings */
+	address = CONFIG_ADDRESS;
 	for (index = 0; index < words; index++)
 	{
-		FLASH_ProgramWord(address, data2[index]);
+		HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD, address, data2[index]);
 		address += sizeof(uint32_t);
 	}
 
-	FLASH_Lock();
+	HAL_FLASH_Lock();
 }

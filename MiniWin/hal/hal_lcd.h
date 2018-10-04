@@ -47,41 +47,41 @@ SOFTWARE.
 /**
  * Pre-defined named colours, colour bit layout is rrrr rggg gggb bbbb
  */
-#define MW_HAL_LCD_BLACK 			0x0000
-#define MW_HAL_LCD_YELLOW 			0xffe0
-#define MW_HAL_LCD_RED 				0xf800
-#define MW_HAL_LCD_GREEN 			0x07e0
-#define MW_HAL_LCD_BLUE 			0x001f
-#define MW_HAL_LCD_WHITE 			0xffff
-#define MW_HAL_LCD_PINK 			0xf80e
-#define MW_HAL_LCD_PURPLE 			0xf83f
-#define	MW_HAL_LCD_GREY15			0x1082
-#define	MW_HAL_LCD_GREY14			0x2104
-#define	MW_HAL_LCD_GREY13			0x3186
-#define	MW_HAL_LCD_GREY12			0x4208
-#define	MW_HAL_LCD_GREY11			0x528a
-#define	MW_HAL_LCD_GREY10			0x630c
-#define	MW_HAL_LCD_GREY9			0x738e
-#define	MW_HAL_LCD_GREY8			0x8410
-#define	MW_HAL_LCD_GREY7			0x9492
-#define	MW_HAL_LCD_GREY6			0xa514
-#define	MW_HAL_LCD_GREY5			0xb596
-#define	MW_HAL_LCD_GREY4			0xc618
-#define	MW_HAL_LCD_GREY3			0xd69a
-#define	MW_HAL_LCD_GREY2			0xe71c
-#define	MW_HAL_LCD_GREY1			0xf79e
-#define MW_HAL_LCD_ORANGE 			0xfb80
-#define MW_HAL_LCD_LIGHT_BLUE		0x779d
-#define MW_HAL_LCD_CYAN				0x07ff
-#define MW_HAL_LCD_DARK_CYAN		0x0492
-#define MW_HAL_LCD_LIGHT_ORANGE		0xfe20
-#define MW_HAL_LCD_BRICK_RED		0xb104
+#define MW_HAL_LCD_BLACK 			0x000000
+#define MW_HAL_LCD_YELLOW 			0xffff00
+#define MW_HAL_LCD_RED 				0xff0000
+#define MW_HAL_LCD_GREEN 			0x00ff00
+#define MW_HAL_LCD_BLUE 			0x0000ff
+#define MW_HAL_LCD_WHITE 			0xffffff
+#define MW_HAL_LCD_PINK 			0xff3399
+#define MW_HAL_LCD_PURPLE 			0x990099
+#define	MW_HAL_LCD_GREY15			0x404040
+#define	MW_HAL_LCD_GREY14			0x4d4d4d
+#define	MW_HAL_LCD_GREY13			0x595959
+#define	MW_HAL_LCD_GREY12			0x666666
+#define	MW_HAL_LCD_GREY11			0x737373
+#define	MW_HAL_LCD_GREY10			0x808080
+#define	MW_HAL_LCD_GREY9			0x8c8c8c
+#define	MW_HAL_LCD_GREY8			0x999999
+#define	MW_HAL_LCD_GREY7			0xa6a6a6
+#define	MW_HAL_LCD_GREY6			0xb3b3b3
+#define	MW_HAL_LCD_GREY5			0xbfbfbf
+#define	MW_HAL_LCD_GREY4			0xcccccc
+#define	MW_HAL_LCD_GREY3			0xd9d9d9
+#define	MW_HAL_LCD_GREY2			0xe6e6e6
+#define	MW_HAL_LCD_GREY1			0xf2f2f2
+#define MW_HAL_LCD_ORANGE 			0xff6600
+#define MW_HAL_LCD_LIGHT_BLUE		0x66ccff
+#define MW_HAL_LCD_CYAN				0x00ffff
+#define MW_HAL_LCD_DARK_CYAN		0x00b3b3
+#define MW_HAL_LCD_LIGHT_ORANGE		0xffcc00
+#define MW_HAL_LCD_BRICK_RED		0xcc0000
 
 /************
 *** TYPES ***
 ************/
 
-typedef uint16_t mw_hal_lcd_colour_t;      /**< set to appropriate int type that can hold the screen's colour depth */
+typedef uint32_t mw_hal_lcd_colour_t;      		/**< int type that can hold the display driver's colour depth */
 
 /***************************
 *** FUNCTIONS PROTOTYPES ***
@@ -158,7 +158,7 @@ void mw_hal_lcd_monochrome_bitmap_clip(int16_t image_start_x,
  * @param clip_start_y The top edge of the clip rect
  * @param clip_width The width of the clip rect
  * @param clip_height The height of the clip rect
- * @param data the image data, in colour_t units for each pixel
+ * @param data the image data
  * @note The image is not clipped to the screen, only to the clip rect; the clip rect must already provide screen clipping.
  */
 void mw_hal_lcd_colour_bitmap_clip(int16_t image_start_x,
@@ -169,7 +169,7 @@ void mw_hal_lcd_colour_bitmap_clip(int16_t image_start_x,
 		int16_t clip_start_y,
 		uint16_t clip_width,
 		uint16_t clip_height,
-		const mw_hal_lcd_colour_t *data);
+		const uint8_t *data);
 
 #ifdef __cplusplus
 }

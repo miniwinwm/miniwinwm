@@ -78,7 +78,7 @@ void mw_hal_lcd_init(void)
 	handle = GetStdHandle(STD_OUTPUT_HANDLE);
 
 	GetWindowRect(hwnd, &rect);
-	MoveWindow(hwnd, rect.left, rect.top, 270, 380, TRUE);
+	MoveWindow(hwnd, rect.left, rect.top, 280, 380, TRUE);
 	SetConsoleCursorInfo(handle, &cinfo);
 	SetConsoleTitle("MiniWin for Windows");
 }
@@ -86,10 +86,11 @@ void mw_hal_lcd_init(void)
 void mw_hal_lcd_pixel(int16_t x, int16_t y, mw_hal_lcd_colour_t colour)
 {
 	hdc = GetDC(hwnd);
+	uint8_t r = (colour & 0xff0000) >> 16;
+	uint8_t g = (colour & 0xff00) >> 8;
+	uint8_t b = colour & 0xff;
 
-	SetPixel(hdc,x, y, RGB(((colour & 0xf800) >> 8),
-			((colour & 0x07e0)>> 3),
-			((colour & 0x001f)<<3)));
+	SetPixel(hdc, x, y, RGB(r, g, b));
 
 	ReleaseDC(hwnd, hdc);
 }
@@ -102,12 +103,13 @@ void mw_hal_lcd_filled_rectangle(int16_t start_x,
 {
 	HBRUSH brush;
 	RECT rect;
+	uint8_t r = (colour & 0xff0000) >> 16;
+	uint8_t g = (colour & 0xff00) >> 8;
+	uint8_t b = colour & 0xff;
 
 	hdc = GetDC(hwnd);
 
-	brush = CreateSolidBrush(RGB(((colour & 0xf800) >> 8),
-    		((colour & 0x07e0)>> 3),
-			((colour & 0x001f)<<3)));
+	brush = CreateSolidBrush(RGB(r, g, b));
 	rect.left = start_x;
 	rect.top = start_y;
 	rect.right = start_x + width;
@@ -126,7 +128,7 @@ void mw_hal_lcd_colour_bitmap_clip(int16_t image_start_x,
 		int16_t clip_start_y,
 		uint16_t clip_width,
 		uint16_t clip_height,
-		const mw_hal_lcd_colour_t *data)
+		const uint8_t *data)
 {
 	uint16_t x;
 	uint16_t y;
@@ -136,12 +138,14 @@ void mw_hal_lcd_colour_bitmap_clip(int16_t image_start_x,
 	{
 		for (x = 0; x < image_data_width_pixels; x++)
 		{
-			pixel_colour = *(data + (y * image_data_width_pixels) + x);
 			if (x + image_start_x >= clip_start_x &&
 					x + image_start_x < clip_start_x + clip_width &&
 					y + image_start_y >= clip_start_y &&
 					y + image_start_y < clip_start_y + clip_height)
 			{
+				pixel_colour = *(data + (x + y * image_data_width_pixels) * 3);
+				pixel_colour |= *(1 + data + (x + y * image_data_width_pixels) * 3) << 8;
+				pixel_colour |= *(2 + data + (x + y * image_data_width_pixels) * 3) << 16;
 				mw_hal_lcd_pixel(x + image_start_x, y + image_start_y, pixel_colour);
 			}
 		}

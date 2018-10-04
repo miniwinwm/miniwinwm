@@ -48,7 +48,6 @@ SOFTWARE.
 *** EXTERNAL VARIABLES ***
 **************************/
 
-extern mw_control_t mw_all_controls[MW_MAX_CONTROL_COUNT];
 extern volatile uint32_t mw_tick_counter;
 
 /**********************
@@ -70,12 +69,12 @@ extern volatile uint32_t mw_tick_counter;
 void mw_ui_list_box_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *draw_info)
 {
 	uint8_t i;
-	mw_ui_list_box_data_t *this_list_box = (mw_ui_list_box_data_t*)mw_all_controls[control_ref].extra_data;
+	mw_ui_list_box_data_t *this_list_box = (mw_ui_list_box_data_t*)mw_get_control_instance_data(control_ref);
 	uint16_t row_height;
 	uint16_t icon_x_offset;
 	uint16_t text_x_offset;
 
-	if (mw_all_controls[control_ref].control_flags & MW_CONTROL_FLAGS_LARGE_SIZE)
+	if (mw_get_control_flags(control_ref) & MW_CONTROL_FLAGS_LARGE_SIZE)
 	{
 		row_height = MW_UI_LIST_BOX_LARGE_ROW_HEIGHT;
 		icon_x_offset = MW_UI_LIST_BOX_LARGE_LABEL_X_OFFSET - 4;
@@ -96,21 +95,38 @@ void mw_ui_list_box_paint_function(uint8_t control_ref, const mw_gl_draw_info_t 
 	mw_gl_rectangle(draw_info,
 			0,
 			0,
-			mw_all_controls[control_ref].control_rect.width,
-			mw_all_controls[control_ref].control_rect.height);
+			mw_get_control_rect(control_ref).width,
+			mw_get_control_rect(control_ref).height);
 
 	mw_gl_set_fg_colour(MW_HAL_LCD_WHITE);
-	mw_gl_vline(draw_info, 1, 1, mw_all_controls[control_ref].control_rect.height - 2);
-	mw_gl_hline(draw_info, 1, mw_all_controls[control_ref].control_rect.width - 2, 1);
+	mw_gl_vline(draw_info, 1, 1, mw_get_control_rect(control_ref).height - 2);
+	mw_gl_hline(draw_info, 1, mw_get_control_rect(control_ref).width - 2, 1);
 	mw_gl_set_fg_colour(MW_HAL_LCD_GREY7);
-	mw_gl_vline(draw_info, mw_all_controls[control_ref].control_rect.width - 2, 1, mw_all_controls[control_ref].control_rect.height - 2);
-	mw_gl_hline(draw_info, 1, mw_all_controls[control_ref].control_rect.width - 2, mw_all_controls[control_ref].control_rect.height - 2);
+	mw_gl_vline(draw_info, mw_get_control_rect(control_ref).width - 2, 1, mw_get_control_rect(control_ref).height - 2);
+	mw_gl_hline(draw_info, 1, mw_get_control_rect(control_ref).width - 2, mw_get_control_rect(control_ref).height - 2);
 
     /* set up text transparency */
 	mw_gl_set_bg_transparency(MW_GL_BG_TRANSPARENT);
 	
 	for(i = 0; i < this_list_box->number_of_lines; i++)
 	{
+		/* draw feint separator between items */
+		mw_gl_set_fg_colour(MW_CONTROL_SEPARATOR_COLOUR);
+		mw_gl_set_line(MW_GL_DOT_LINE);
+
+		if (i > 0)
+		{
+			mw_gl_hline(draw_info,
+				2,
+				mw_get_control_rect(control_ref).width - 4,
+				row_height * i);
+		}
+
+		if (i >= this_list_box->number_of_items)
+		{
+			continue;
+		}
+
 	    /* if this item is selected draw the background in control down colour */
 		if(this_list_box->line_is_selected && (this_list_box->selection - this_list_box->lines_to_scroll) == i)
 		{
@@ -119,7 +135,7 @@ void mw_ui_list_box_paint_function(uint8_t control_ref, const mw_gl_draw_info_t 
 			mw_gl_rectangle(draw_info,
 					2,
 					row_height * i + 1,
-					mw_all_controls[control_ref].control_rect.width - 4,
+					mw_get_control_rect(control_ref).width - 4,
 					row_height - 2);
 			mw_gl_set_line(MW_GL_SOLID_LINE);
 			mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
@@ -129,21 +145,21 @@ void mw_ui_list_box_paint_function(uint8_t control_ref, const mw_gl_draw_info_t 
 					row_height * (i + 1) - 1);
 			mw_gl_hline(draw_info,
 					1,
-					mw_all_controls[control_ref].control_rect.width - 2,
+					mw_get_control_rect(control_ref).width - 2,
 					row_height * i + 1);
 			mw_gl_set_fg_colour(MW_HAL_LCD_GREY2);
 			mw_gl_vline(draw_info,
-					mw_all_controls[control_ref].control_rect.width - 3,
+					mw_get_control_rect(control_ref).width - 3,
 					row_height * i + 1,
 					row_height * i + row_height - 1);
 			mw_gl_hline(draw_info,
 					1,
-					mw_all_controls[control_ref].control_rect.width - 3,
+					mw_get_control_rect(control_ref).width - 3,
 					row_height * (i + 1) - 1);
 		}
 
 		/* set up text colour on enabled state - from control and individual items bitfield */
-		if (mw_all_controls[control_ref].control_flags & MW_CONTROL_FLAG_IS_ENABLED &&
+		if (mw_get_control_flags(control_ref) & MW_CONTROL_FLAG_IS_ENABLED &&
 	    		mw_util_get_bit(this_list_box->line_enables, i))
 		{
 			mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
@@ -154,7 +170,7 @@ void mw_ui_list_box_paint_function(uint8_t control_ref, const mw_gl_draw_info_t 
 		}
 
 		/* draw the item label text and icon */
-		if (mw_all_controls[control_ref].control_flags & MW_CONTROL_FLAGS_LARGE_SIZE)
+		if (mw_get_control_flags(control_ref) & MW_CONTROL_FLAGS_LARGE_SIZE)
 		{
 			/* large text and icon */
 			/* check if there is an icon on this row */
@@ -255,30 +271,18 @@ void mw_ui_list_box_paint_function(uint8_t control_ref, const mw_gl_draw_info_t 
 						this_list_box->list_box_entries[i + this_list_box->lines_to_scroll].label);
 			}
 		}
-
-		/* draw feint separator between items */
-		mw_gl_set_fg_colour(MW_CONTROL_SEPARATOR_COLOUR);
-		mw_gl_set_line(MW_GL_DOT_LINE);
-
-		if (i > 0)
-		{
-		mw_gl_hline(draw_info,
-				2,
-				mw_all_controls[control_ref].control_rect.width - 4,
-				row_height * i);
-		}
 	}
 }
 
 void mw_ui_list_box_message_function(const mw_message_t *message)
 {
 	uint16_t touch_y;
-	mw_ui_list_box_data_t *this_list_box = (mw_ui_list_box_data_t*)mw_all_controls[message->recipient_id].extra_data;
+	mw_ui_list_box_data_t *this_list_box = (mw_ui_list_box_data_t*)mw_get_control_instance_data(message->recipient_id);
 	uint16_t row_height;
 
 	MW_ASSERT(message);
 
-	if (mw_all_controls[message->recipient_id].control_flags & MW_CONTROL_FLAGS_LARGE_SIZE)
+	if (mw_get_control_flags(message->recipient_id) & MW_CONTROL_FLAGS_LARGE_SIZE)
 	{
 		row_height = MW_UI_LIST_BOX_LARGE_ROW_HEIGHT;
 	}
@@ -304,7 +308,7 @@ void mw_ui_list_box_message_function(const mw_message_t *message)
 		this_list_box->line_is_selected = false;
 		mw_post_message(MW_LIST_BOX_ITEM_PRESSED_MESSAGE,
 				message->recipient_id,
-				mw_all_controls[message->recipient_id].parent,
+				mw_get_control_parent_window(message->recipient_id),
 				this_list_box->selection,
 				MW_WINDOW_MESSAGE);
 		mw_paint_control(message->recipient_id);
@@ -314,9 +318,11 @@ void mw_ui_list_box_message_function(const mw_message_t *message)
 		/* handle a touch down event within this control */		
 		touch_y = message->message_data;
 		
-		/* check if the control is enabled and this particular line is enabled */
-		if ((mw_all_controls[message->recipient_id].control_flags & MW_CONTROL_FLAG_IS_ENABLED) &&
-				mw_util_get_bit(this_list_box->line_enables, touch_y / row_height))
+		/* check if the control is enabled and this particular line is enabled and
+		 * there's an entry on this line */
+		if ((mw_get_control_flags(message->recipient_id) & MW_CONTROL_FLAG_IS_ENABLED) &&
+				mw_util_get_bit(this_list_box->line_enables, touch_y / row_height) &&
+				(touch_y / row_height) < this_list_box->number_of_items)
 		{
 			this_list_box->line_is_selected = true;
 			this_list_box->selection = touch_y / row_height + this_list_box->lines_to_scroll;
@@ -332,6 +338,7 @@ void mw_ui_list_box_message_function(const mw_message_t *message)
 
 uint8_t mw_ui_list_box_add_new(uint16_t x,
 		uint16_t y,
+		uint16_t width,
 		uint8_t parent,
 		uint32_t flags,
 		mw_ui_list_box_data_t *list_box_instance_data)
@@ -345,18 +352,30 @@ uint8_t mw_ui_list_box_add_new(uint16_t x,
 
 	if (flags & MW_CONTROL_FLAGS_LARGE_SIZE)
 	{
+		/* check for a sensible width */
+		if (width < MW_UI_LIST_BOX_LARGE_MIN_WIDTH)
+		{
+			return MW_MAX_CONTROL_COUNT;
+		}
+
 		mw_util_set_rect(&r,
 				x,
 				y,
-				MW_UI_LIST_BOX_LARGE_WIDTH,
+				width,
 				MW_UI_LIST_BOX_LARGE_ROW_HEIGHT * list_box_instance_data->number_of_lines);
 	}
 	else
 	{
+		/* check for a sensible width */
+		if (width < MW_UI_LIST_BOX_MIN_WIDTH)
+		{
+			return MW_MAX_CONTROL_COUNT;
+		}
+
 		mw_util_set_rect(&r,
 				x,
 				y,
-				MW_UI_LIST_BOX_WIDTH,
+				width,
 				MW_UI_LIST_BOX_ROW_HEIGHT * list_box_instance_data->number_of_lines);
 	}
 

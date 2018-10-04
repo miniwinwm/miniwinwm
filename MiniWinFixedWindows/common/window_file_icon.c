@@ -52,9 +52,8 @@ typedef struct
 *** EXTERNAL VARIABLES ***
 **************************/
 
-extern mw_window_t mw_all_windows[MW_MAX_WINDOW_COUNT];
-extern const mw_hal_lcd_colour_t file_bitmap[];
-extern const mw_hal_lcd_colour_t file_down_bitmap[];
+extern const uint8_t file_bitmap[];
+extern const uint8_t file_down_bitmap[];
 extern volatile uint32_t mw_tick_counter;
 extern uint8_t window_file_id;
 
@@ -134,6 +133,4 @@ void window_file_icon_message_function(const mw_message_t *message)
 	default:
 		break;
 	}
-
-
 }

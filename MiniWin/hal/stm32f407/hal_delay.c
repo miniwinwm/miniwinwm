@@ -67,20 +67,17 @@ SOFTWARE.
 
 void mw_hal_delay_init(void)
 {
-	TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;
+	TIM_HandleTypeDef Tim2Handle;
 
-	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3, ENABLE);
+	__HAL_RCC_TIM2_CLK_ENABLE();
 
-	/* time base configuration */
-	TIM_TimeBaseStructInit(&TIM_TimeBaseStructure);
-	TIM_TimeBaseStructure.TIM_Prescaler = TIMERCLOCK_SPEED_MHZ - 1;
-	TIM_TimeBaseStructure.TIM_Period = UINT16_MAX;
-	TIM_TimeBaseStructure.TIM_ClockDivision = TIM_CKD_DIV1;
-	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
-	TIM_TimeBaseInit(TIM3, &TIM_TimeBaseStructure);
-
-	/* enable counter */
-	TIM_Cmd(TIM3, ENABLE);
+	Tim2Handle.Instance = TIM2;
+	Tim2Handle.Init.Period = UINT16_MAX;
+	Tim2Handle.Init.Prescaler = TIMERCLOCK_SPEED_MHZ - 1;
+	Tim2Handle.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+	Tim2Handle.Init.CounterMode = TIM_COUNTERMODE_UP;
+	HAL_TIM_Base_Init(&Tim2Handle);
+	HAL_TIM_Base_Start(&Tim2Handle);
 }
 
 void mw_hal_delay_ms(uint16_t ms)
@@ -95,6 +92,6 @@ void mw_hal_delay_ms(uint16_t ms)
 
 void mw_hal_delay_us(uint32_t us)
 {
-	TIM3->CNT = 0;
-	while(TIM3->CNT <= us);
+	TIM2->CNT = 0;
+	while(TIM2->CNT <= us);
 }

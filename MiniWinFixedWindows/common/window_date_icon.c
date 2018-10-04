@@ -44,17 +44,14 @@ SOFTWARE.
 typedef struct
 {
 	bool touch_down;
-
 } window_date_icon_data_t;
-
 
 /*************************
 *** EXTERNAL VARIABLES ***
 **************************/
 
-extern mw_window_t mw_all_windows[MW_MAX_WINDOW_COUNT];
-extern const mw_hal_lcd_colour_t date_bitmap[];
-extern const mw_hal_lcd_colour_t date_down_bitmap[];
+extern const uint8_t date_bitmap[];
+extern const uint8_t date_down_bitmap[];
 extern volatile uint32_t mw_tick_counter;
 
 /**********************

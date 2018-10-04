@@ -112,6 +112,16 @@ bool mw_util_does_rect_a_obscure_rect_b(const mw_util_rect_t *a, const mw_util_r
 char *mw_util_safe_strcpy(char *dest, size_t size, const char *src);
 
 /**
+ * Perform a safer string cat than strcat.
+ *
+ * @param dest Pointer to existing string to be added to
+ * @param size The size of the existing string buffer
+ * @param src Pointer to string to add
+ * @return Pointer to s1 with the concatenated string
+ */
+char *mw_util_safe_strcat(char *dest, size_t size, const char *src);
+
+/**
  * Change a bit in a supplied 16 bit word and return the changed word
  *
  * @param word The word to change the bit in
@@ -138,6 +148,23 @@ bool mw_util_get_bit(uint16_t word, uint8_t bit);
  * @return -1 if a < b, 0 if a == b, 1 if a > b
  */
 int mw_util_compare_int16_t(const void *a, const void *b);
+
+/**
+ * Finds the file name extension following a . in a file name.
+ * @param file_name the full file name
+ * @return the extension excluding the ., or an empty string if no . found, or the full file name if it begins with a .
+ * @note never returns null
+ */
+const char *mw_util_get_file_name_ext(const char *file_name);
+
+/**
+ * Case insensitive string compare
+ *
+ * @param a first string to compare
+ * @param b second string to compare
+ * @return < 0 if a less than b, > 0 if a greater than b or 0 if a and b equal (apart from case)
+ */
+int32_t mw_util_strcicmp(char const *a, char const *b);
 
 #ifdef __cplusplus
 }

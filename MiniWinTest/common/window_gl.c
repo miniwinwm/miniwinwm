@@ -71,7 +71,7 @@ static const uint8_t snail[]={
 typedef struct
 {
 	uint8_t next_test;				/**< Next test to run */
-	uint8_t timer_id;					/**< Timer driving tests */
+	uint8_t timer_id;				/**< Timer driving tests */
 } window_gl_data_t;
 
 /***********************
@@ -82,8 +82,7 @@ typedef struct
 *** EXTERNAL VARIABLES ***
 **************************/
 
-extern mw_window_t mw_all_windows[MW_MAX_WINDOW_COUNT];
-extern const mw_hal_lcd_colour_t kitten[];
+extern const uint8_t kitten[];
 extern volatile uint32_t mw_tick_counter;
 
 /**********************
@@ -120,8 +119,8 @@ void window_gl_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_
 	mw_gl_rectangle(draw_info,
 			0,
 			0,
-			mw_all_windows[window_ref].client_rect.width,
-			mw_all_windows[window_ref].client_rect.height);
+			mw_get_window_client_rect(window_ref).width,
+			mw_get_window_client_rect(window_ref).height);
 
 	switch (window_GL_data.next_test)
 	{
@@ -130,14 +129,14 @@ void window_gl_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_
 		mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 		mw_gl_set_bg_colour(MW_HAL_LCD_PINK);
 		mw_gl_set_line(MW_GL_SOLID_LINE);
-		mw_gl_hline(draw_info, 0, mw_all_windows[window_ref].client_rect.width, 1);
-		mw_gl_hline(draw_info, 0, mw_all_windows[window_ref].client_rect.width * 2, 3);
-		mw_gl_hline(draw_info, 0, mw_all_windows[window_ref].client_rect.width, mw_all_windows[window_ref].client_rect.height - 2);
+		mw_gl_hline(draw_info, 0, mw_get_window_client_rect(window_ref).width, 1);
+		mw_gl_hline(draw_info, 0, mw_get_window_client_rect(window_ref).width * 2, 3);
+		mw_gl_hline(draw_info, 0, mw_get_window_client_rect(window_ref).width, mw_get_window_client_rect(window_ref).height - 2);
 		mw_gl_set_line(MW_GL_LARGE_DASH_LINE);
 		mw_gl_set_bg_transparency(MW_GL_BG_NOT_TRANSPARENT);
-		mw_gl_hline(draw_info, 0, mw_all_windows[window_ref].client_rect.width, 10);
+		mw_gl_hline(draw_info, 0, mw_get_window_client_rect(window_ref).width, 10);
 		mw_gl_set_bg_transparency(MW_GL_BG_TRANSPARENT);
-		mw_gl_hline(draw_info, 0, mw_all_windows[window_ref].client_rect.width, 20);
+		mw_gl_hline(draw_info, 0, mw_get_window_client_rect(window_ref).width, 20);
 		break;
 
 	case 2:
@@ -145,14 +144,14 @@ void window_gl_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_
 		mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 		mw_gl_set_bg_colour(MW_HAL_LCD_PINK);
 		mw_gl_set_line(MW_GL_SOLID_LINE);
-		mw_gl_vline(draw_info, 1, 0, mw_all_windows[window_ref].client_rect.height);
-		mw_gl_vline(draw_info, 3, 0, mw_all_windows[window_ref].client_rect.height * 2);
-		mw_gl_vline(draw_info, mw_all_windows[window_ref].client_rect.width - 2, 0, mw_all_windows[window_ref].client_rect.height - 2);
+		mw_gl_vline(draw_info, 1, 0, mw_get_window_client_rect(window_ref).height);
+		mw_gl_vline(draw_info, 3, 0, mw_get_window_client_rect(window_ref).height * 2);
+		mw_gl_vline(draw_info, mw_get_window_client_rect(window_ref).width - 2, 0, mw_get_window_client_rect(window_ref).height - 2);
 		mw_gl_set_line(MW_GL_LARGE_DASH_LINE);
 		mw_gl_set_bg_transparency(MW_GL_BG_NOT_TRANSPARENT);
-		mw_gl_vline(draw_info, 10, 0, mw_all_windows[window_ref].client_rect.height);
+		mw_gl_vline(draw_info, 10, 0, mw_get_window_client_rect(window_ref).height);
 		mw_gl_set_bg_transparency(MW_GL_BG_TRANSPARENT);
-		mw_gl_vline(draw_info, 20, 0, mw_all_windows[window_ref].client_rect.height);
+		mw_gl_vline(draw_info, 20, 0, mw_get_window_client_rect(window_ref).height);
 		break;
 
 	case 3:
@@ -177,8 +176,8 @@ void window_gl_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_
 		mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 		mw_gl_set_line(MW_GL_SOLID_LINE);
 		mw_gl_line(draw_info, 10, 10, 100, 100);
-		mw_gl_line(draw_info, 10, 20, mw_all_windows[window_ref].client_rect.width * 2, 110);
-		mw_gl_line(draw_info, 10, 30, 100, mw_all_windows[window_ref].client_rect.height * 2);
+		mw_gl_line(draw_info, 10, 20, mw_get_window_client_rect(window_ref).width * 2, 110);
+		mw_gl_line(draw_info, 10, 30, 100, mw_get_window_client_rect(window_ref).height * 2);
 		break;
 
 	case 5:
@@ -189,15 +188,15 @@ void window_gl_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_
 		mw_gl_line(draw_info,
 				0,
 				0,
-				mw_all_windows[window_ref].client_rect.width,
-				mw_all_windows[window_ref].client_rect.height);
+				mw_get_window_client_rect(window_ref).width,
+				mw_get_window_client_rect(window_ref).height);
 		mw_gl_set_line(MW_GL_LARGE_DASH_LINE);
 		mw_gl_set_bg_transparency(MW_GL_BG_NOT_TRANSPARENT);
 		mw_gl_line(draw_info,
-				mw_all_windows[window_ref].client_rect.width,
+				mw_get_window_client_rect(window_ref).width,
 				0,
 				0,
-				mw_all_windows[window_ref].client_rect.height);
+				mw_get_window_client_rect(window_ref).height);
 		break;
 
 	case 6:
@@ -208,10 +207,10 @@ void window_gl_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_
 		mw_gl_set_solid_fill_colour(MW_HAL_LCD_GREEN);
 		mw_gl_set_fill(MW_GL_NO_FILL);
 		mw_gl_rectangle(draw_info, 50, 50, 100, 80);
-		mw_gl_hline(draw_info, 0, mw_all_windows[window_ref].client_rect.width, 50);
-		mw_gl_hline(draw_info, 0, mw_all_windows[window_ref].client_rect.width, 129);
-		mw_gl_vline(draw_info, 50, 0, mw_all_windows[window_ref].client_rect.height);
-		mw_gl_vline(draw_info, 149, 0, mw_all_windows[window_ref].client_rect.height);
+		mw_gl_hline(draw_info, 0, mw_get_window_client_rect(window_ref).width, 50);
+		mw_gl_hline(draw_info, 0, mw_get_window_client_rect(window_ref).width, 129);
+		mw_gl_vline(draw_info, 50, 0, mw_get_window_client_rect(window_ref).height);
+		mw_gl_vline(draw_info, 149, 0, mw_get_window_client_rect(window_ref).height);
 		break;
 
 	case 7:
@@ -233,10 +232,10 @@ void window_gl_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_
 		mw_gl_rectangle(draw_info, 50, 50, 100, 80);
 		mw_gl_set_line(MW_GL_SOLID_LINE);
 		mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
-		mw_gl_hline(draw_info, 0, mw_all_windows[window_ref].client_rect.width, 50);
-		mw_gl_hline(draw_info, 0, mw_all_windows[window_ref].client_rect.width, 129);
-		mw_gl_vline(draw_info, 50, 0, mw_all_windows[window_ref].client_rect.height);
-		mw_gl_vline(draw_info, 149, 0, mw_all_windows[window_ref].client_rect.height);
+		mw_gl_hline(draw_info, 0, mw_get_window_client_rect(window_ref).width, 50);
+		mw_gl_hline(draw_info, 0, mw_get_window_client_rect(window_ref).width, 129);
+		mw_gl_vline(draw_info, 50, 0, mw_get_window_client_rect(window_ref).height);
+		mw_gl_vline(draw_info, 149, 0, mw_get_window_client_rect(window_ref).height);
 		break;
 
 	case 9:
@@ -248,10 +247,10 @@ void window_gl_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_
 		mw_gl_clear_pattern();
 		mw_gl_set_solid_fill_colour(MW_HAL_LCD_YELLOW);
 		mw_gl_rectangle(draw_info, 50, 50, 100, 80);
-		mw_gl_hline(draw_info, 0, mw_all_windows[window_ref].client_rect.width, 50);
-		mw_gl_hline(draw_info, 0, mw_all_windows[window_ref].client_rect.width, 129);
-		mw_gl_vline(draw_info, 50, 0, mw_all_windows[window_ref].client_rect.height);
-		mw_gl_vline(draw_info, 149, 0, mw_all_windows[window_ref].client_rect.height);
+		mw_gl_hline(draw_info, 0, mw_get_window_client_rect(window_ref).width, 50);
+		mw_gl_hline(draw_info, 0, mw_get_window_client_rect(window_ref).width, 129);
+		mw_gl_vline(draw_info, 50, 0, mw_get_window_client_rect(window_ref).height);
+		mw_gl_vline(draw_info, 149, 0, mw_get_window_client_rect(window_ref).height);
 		break;
 
 	case 10:
@@ -264,10 +263,10 @@ void window_gl_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_
 		mw_gl_rectangle(draw_info, 50, 50, 100, 80);
 		mw_gl_set_line(MW_GL_SOLID_LINE);
 		mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
-		mw_gl_hline(draw_info, 0, mw_all_windows[window_ref].client_rect.width, 50);
-		mw_gl_hline(draw_info, 0, mw_all_windows[window_ref].client_rect.width, 129);
-		mw_gl_vline(draw_info, 50, 0, mw_all_windows[window_ref].client_rect.height);
-		mw_gl_vline(draw_info, 149, 0, mw_all_windows[window_ref].client_rect.height);
+		mw_gl_hline(draw_info, 0, mw_get_window_client_rect(window_ref).width, 50);
+		mw_gl_hline(draw_info, 0, mw_get_window_client_rect(window_ref).width, 129);
+		mw_gl_vline(draw_info, 50, 0, mw_get_window_client_rect(window_ref).height);
+		mw_gl_vline(draw_info, 149, 0, mw_get_window_client_rect(window_ref).height);
 		break;
 
 	case 11:
@@ -279,10 +278,10 @@ void window_gl_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_
 		mw_gl_set_fg_colour(MW_HAL_LCD_BLUE);
 		mw_gl_set_bg_colour(MW_HAL_LCD_GREEN);
 		mw_gl_rectangle(draw_info, 50, 50, 100, 80);
-		mw_gl_hline(draw_info, 0, mw_all_windows[window_ref].client_rect.width, 50);
-		mw_gl_hline(draw_info, 0, mw_all_windows[window_ref].client_rect.width, 129);
-		mw_gl_vline(draw_info, 50, 0, mw_all_windows[window_ref].client_rect.height);
-		mw_gl_vline(draw_info, 149, 0, mw_all_windows[window_ref].client_rect.height);
+		mw_gl_hline(draw_info, 0, mw_get_window_client_rect(window_ref).width, 50);
+		mw_gl_hline(draw_info, 0, mw_get_window_client_rect(window_ref).width, 129);
+		mw_gl_vline(draw_info, 50, 0, mw_get_window_client_rect(window_ref).height);
+		mw_gl_vline(draw_info, 149, 0, mw_get_window_client_rect(window_ref).height);
 		break;
 
 	case 12:
@@ -302,7 +301,7 @@ void window_gl_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_
 		mw_gl_set_fg_colour(MW_HAL_LCD_GREEN);
 		mw_gl_set_bg_colour(MW_HAL_LCD_BLACK);
 		mw_gl_string(draw_info, 100, 50, "Fred and Berty");
-		mw_gl_string(draw_info, mw_all_windows[window_ref].client_rect.width - 40, 100, "Fred and Berty");
+		mw_gl_string(draw_info, mw_get_window_client_rect(window_ref).width - 40, 100, "Fred and Berty");
 		break;
 
 	case 14:
@@ -311,7 +310,7 @@ void window_gl_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_
 		mw_gl_set_fg_colour(MW_HAL_LCD_GREEN);
 		mw_gl_set_bg_colour(MW_HAL_LCD_BLACK);
 		mw_gl_string(draw_info, 100, 50, "Fred and Berty");
-		mw_gl_string(draw_info, mw_all_windows[window_ref].client_rect.width - 40, 100, "Fred and Berty");
+		mw_gl_string(draw_info, mw_get_window_client_rect(window_ref).width - 40, 100, "Fred and Berty");
 		break;
 
 	case 15:
@@ -323,7 +322,7 @@ void window_gl_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_
 		mw_gl_string_vert(draw_info, 100, 50, "Fred and Berty");
 		mw_gl_vline(draw_info, 100, 20, 70);
 		mw_gl_hline(draw_info, 10, 120, 50);
-		mw_gl_string_vert(draw_info, 100, mw_all_windows[window_ref].client_rect.height - 20, "Fred and Berty");
+		mw_gl_string_vert(draw_info, 100, mw_get_window_client_rect(window_ref).height - 20, "Fred and Berty");
 		break;
 
 	case 16:
@@ -332,7 +331,7 @@ void window_gl_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_
 		mw_gl_set_fg_colour(MW_HAL_LCD_GREEN);
 		mw_gl_set_bg_colour(MW_HAL_LCD_BLACK);
 		mw_gl_string_vert(draw_info, 100, 50, "Fred and Berty");
-		mw_gl_string_vert(draw_info, 100, mw_all_windows[window_ref].client_rect.height - 20, "Fred and Berty");
+		mw_gl_string_vert(draw_info, 100, mw_get_window_client_rect(window_ref).height - 20, "Fred and Berty");
 		break;
 
 	case 17:
@@ -350,8 +349,8 @@ void window_gl_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_
 		mw_gl_set_bg_transparency(MW_GL_BG_NOT_TRANSPARENT);
 		mw_gl_set_fg_colour(MW_HAL_LCD_YELLOW);
 		mw_gl_set_bg_colour(MW_HAL_LCD_BLACK);
-		mw_gl_monochrome_bitmap(draw_info, mw_all_windows[window_ref].client_rect.width - 10, 1, 18, 16, snail);
-		mw_gl_monochrome_bitmap(draw_info, 10, mw_all_windows[window_ref].client_rect.height - 10, 18, 16, snail);
+		mw_gl_monochrome_bitmap(draw_info, mw_get_window_client_rect(window_ref).width - 10, 1, 18, 16, snail);
+		mw_gl_monochrome_bitmap(draw_info, 10, mw_get_window_client_rect(window_ref).height - 10, 18, 16, snail);
 		break;
 
 	case 19:
@@ -377,10 +376,10 @@ void window_gl_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_
 		mw_gl_set_fill(MW_GL_FILL);
 		mw_gl_clear_pattern();
 		mw_gl_circle(draw_info, 100, 100, 50);
-		mw_gl_hline(draw_info, 0, mw_all_windows[window_ref].client_rect.width, 50);
-		mw_gl_hline(draw_info, 0, mw_all_windows[window_ref].client_rect.width, 150);
-		mw_gl_vline(draw_info, 50, 0, mw_all_windows[window_ref].client_rect.height);
-		mw_gl_vline(draw_info, 150, 0, mw_all_windows[window_ref].client_rect.height);
+		mw_gl_hline(draw_info, 0, mw_get_window_client_rect(window_ref).width, 50);
+		mw_gl_hline(draw_info, 0, mw_get_window_client_rect(window_ref).width, 150);
+		mw_gl_vline(draw_info, 50, 0, mw_get_window_client_rect(window_ref).height);
+		mw_gl_vline(draw_info, 150, 0, mw_get_window_client_rect(window_ref).height);
 		break;
 
 	case 21:
@@ -403,10 +402,10 @@ void window_gl_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_
 		mw_gl_circle(draw_info, 100, 100, 50);
 		mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 		mw_gl_set_line(MW_GL_SOLID_LINE);
-		mw_gl_hline(draw_info, 0, mw_all_windows[window_ref].client_rect.width, 50);
-		mw_gl_hline(draw_info, 0, mw_all_windows[window_ref].client_rect.width, 150);
-		mw_gl_vline(draw_info, 50, 0, mw_all_windows[window_ref].client_rect.height);
-		mw_gl_vline(draw_info, 150, 0, mw_all_windows[window_ref].client_rect.height);
+		mw_gl_hline(draw_info, 0, mw_get_window_client_rect(window_ref).width, 50);
+		mw_gl_hline(draw_info, 0, mw_get_window_client_rect(window_ref).width, 150);
+		mw_gl_vline(draw_info, 50, 0, mw_get_window_client_rect(window_ref).height);
+		mw_gl_vline(draw_info, 150, 0, mw_get_window_client_rect(window_ref).height);
 		break;
 
 	case 23:
@@ -416,7 +415,7 @@ void window_gl_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_
 		mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 		mw_gl_clear_pattern();
 		mw_gl_set_solid_fill_colour(MW_HAL_LCD_GREEN);
-		mw_gl_circle(draw_info, mw_all_windows[window_ref].client_rect.width - 20, mw_all_windows[window_ref].client_rect.height - 20, 50);
+		mw_gl_circle(draw_info, mw_get_window_client_rect(window_ref).width - 20, mw_get_window_client_rect(window_ref).height - 20, 50);
 		break;
 
 	case 24:
@@ -428,10 +427,10 @@ void window_gl_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_
 		mw_gl_set_bg_transparency(MW_GL_BG_NOT_TRANSPARENT);
 		mw_gl_circle(draw_info, 100, 100, 50);
 		mw_gl_set_line(MW_GL_SOLID_LINE);
-		mw_gl_hline(draw_info, 0, mw_all_windows[window_ref].client_rect.width, 50);
-		mw_gl_hline(draw_info, 0, mw_all_windows[window_ref].client_rect.width, 150);
-		mw_gl_vline(draw_info, 50, 0, mw_all_windows[window_ref].client_rect.height);
-		mw_gl_vline(draw_info, 150, 0, mw_all_windows[window_ref].client_rect.height);
+		mw_gl_hline(draw_info, 0, mw_get_window_client_rect(window_ref).width, 50);
+		mw_gl_hline(draw_info, 0, mw_get_window_client_rect(window_ref).width, 150);
+		mw_gl_vline(draw_info, 50, 0, mw_get_window_client_rect(window_ref).height);
+		mw_gl_vline(draw_info, 150, 0, mw_get_window_client_rect(window_ref).height);
 		break;
 
 	case 25:
@@ -443,10 +442,10 @@ void window_gl_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_
 		mw_gl_set_bg_transparency(MW_GL_BG_NOT_TRANSPARENT);
 		mw_gl_set_bg_colour(MW_HAL_LCD_PINK);
 		mw_gl_circle(draw_info, 100, 100, 50);
-		mw_gl_hline(draw_info, 0, mw_all_windows[window_ref].client_rect.width, 50);
-		mw_gl_hline(draw_info, 0, mw_all_windows[window_ref].client_rect.width, 150);
-		mw_gl_vline(draw_info, 50, 0, mw_all_windows[window_ref].client_rect.height);
-		mw_gl_vline(draw_info, 150, 0, mw_all_windows[window_ref].client_rect.height);
+		mw_gl_hline(draw_info, 0, mw_get_window_client_rect(window_ref).width, 50);
+		mw_gl_hline(draw_info, 0, mw_get_window_client_rect(window_ref).width, 150);
+		mw_gl_vline(draw_info, 50, 0, mw_get_window_client_rect(window_ref).height);
+		mw_gl_vline(draw_info, 150, 0, mw_get_window_client_rect(window_ref).height);
 		break;
 
 	case 26:
@@ -454,10 +453,10 @@ void window_gl_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_
 		mw_gl_set_line(MW_GL_SOLID_LINE);
 		mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 		mw_gl_arc(draw_info, 100, 100, 50, 10, 350);
-		mw_gl_hline(draw_info, 0, mw_all_windows[window_ref].client_rect.width, 50);
-		mw_gl_hline(draw_info, 0, mw_all_windows[window_ref].client_rect.width, 150);
-		mw_gl_vline(draw_info, 50, 0, mw_all_windows[window_ref].client_rect.height);
-		mw_gl_vline(draw_info, 150, 0, mw_all_windows[window_ref].client_rect.height);
+		mw_gl_hline(draw_info, 0, mw_get_window_client_rect(window_ref).width, 50);
+		mw_gl_hline(draw_info, 0, mw_get_window_client_rect(window_ref).width, 150);
+		mw_gl_vline(draw_info, 50, 0, mw_get_window_client_rect(window_ref).height);
+		mw_gl_vline(draw_info, 150, 0, mw_get_window_client_rect(window_ref).height);
 		break;
 
 	case 27:
@@ -468,10 +467,10 @@ void window_gl_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_
 		mw_gl_set_bg_colour(MW_HAL_LCD_YELLOW);
 		mw_gl_arc(draw_info, 100, 100, 50, 10, 350);
 		mw_gl_set_line(MW_GL_SOLID_LINE);
-		mw_gl_hline(draw_info, 0, mw_all_windows[window_ref].client_rect.width, 50);
-		mw_gl_hline(draw_info, 0, mw_all_windows[window_ref].client_rect.width, 150);
-		mw_gl_vline(draw_info, 50, 0, mw_all_windows[window_ref].client_rect.height);
-		mw_gl_vline(draw_info, 150, 0, mw_all_windows[window_ref].client_rect.height);
+		mw_gl_hline(draw_info, 0, mw_get_window_client_rect(window_ref).width, 50);
+		mw_gl_hline(draw_info, 0, mw_get_window_client_rect(window_ref).width, 150);
+		mw_gl_vline(draw_info, 50, 0, mw_get_window_client_rect(window_ref).height);
+		mw_gl_vline(draw_info, 150, 0, mw_get_window_client_rect(window_ref).height);
 		break;
 
 	case 28:
@@ -515,10 +514,10 @@ void window_gl_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_
 		mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 		mw_gl_set_fill(MW_GL_NO_FILL);
 		mw_gl_segment(draw_info, 100, 100, 50, 120, 90);
-		mw_gl_hline(draw_info, 0, mw_all_windows[window_ref].client_rect.width, 50);
-		mw_gl_hline(draw_info, 0, mw_all_windows[window_ref].client_rect.width, 150);
-		mw_gl_vline(draw_info, 50, 0, mw_all_windows[window_ref].client_rect.height);
-		mw_gl_vline(draw_info, 150, 0, mw_all_windows[window_ref].client_rect.height);
+		mw_gl_hline(draw_info, 0, mw_get_window_client_rect(window_ref).width, 50);
+		mw_gl_hline(draw_info, 0, mw_get_window_client_rect(window_ref).width, 150);
+		mw_gl_vline(draw_info, 50, 0, mw_get_window_client_rect(window_ref).height);
+		mw_gl_vline(draw_info, 150, 0, mw_get_window_client_rect(window_ref).height);
 		break;
 
 	case 34:
@@ -540,10 +539,10 @@ void window_gl_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_
 		mw_gl_segment(draw_info, 100, 100, 50, 120, 90);
 		mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 		mw_gl_set_line(MW_GL_SOLID_LINE);
-		mw_gl_hline(draw_info, 0, mw_all_windows[window_ref].client_rect.width, 50);
-		mw_gl_hline(draw_info, 0, mw_all_windows[window_ref].client_rect.width, 150);
-		mw_gl_vline(draw_info, 50, 0, mw_all_windows[window_ref].client_rect.height);
-		mw_gl_vline(draw_info, 150, 0, mw_all_windows[window_ref].client_rect.height);
+		mw_gl_hline(draw_info, 0, mw_get_window_client_rect(window_ref).width, 50);
+		mw_gl_hline(draw_info, 0, mw_get_window_client_rect(window_ref).width, 150);
+		mw_gl_vline(draw_info, 50, 0, mw_get_window_client_rect(window_ref).height);
+		mw_gl_vline(draw_info, 150, 0, mw_get_window_client_rect(window_ref).height);
 		break;
 
 	case 36:
@@ -555,10 +554,10 @@ void window_gl_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_
 		mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 		mw_gl_set_line(MW_GL_SOLID_LINE);
 		mw_gl_segment(draw_info, 100, 100, 50, 120, 90);
-		mw_gl_hline(draw_info, 0, mw_all_windows[window_ref].client_rect.width, 50);
-		mw_gl_hline(draw_info, 0, mw_all_windows[window_ref].client_rect.width, 150);
-		mw_gl_vline(draw_info, 50, 0, mw_all_windows[window_ref].client_rect.height);
-		mw_gl_vline(draw_info, 150, 0, mw_all_windows[window_ref].client_rect.height);
+		mw_gl_hline(draw_info, 0, mw_get_window_client_rect(window_ref).width, 50);
+		mw_gl_hline(draw_info, 0, mw_get_window_client_rect(window_ref).width, 150);
+		mw_gl_vline(draw_info, 50, 0, mw_get_window_client_rect(window_ref).height);
+		mw_gl_vline(draw_info, 150, 0, mw_get_window_client_rect(window_ref).height);
 		break;
 
 	case 37:
@@ -571,10 +570,10 @@ void window_gl_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_
 		mw_gl_set_bg_colour(MW_HAL_LCD_PINK);
 		mw_gl_segment(draw_info, 100, 100, 50, 120, 90);
 		mw_gl_set_line(MW_GL_SOLID_LINE);
-		mw_gl_hline(draw_info, 0, mw_all_windows[window_ref].client_rect.width, 50);
-		mw_gl_hline(draw_info, 0, mw_all_windows[window_ref].client_rect.width, 150);
-		mw_gl_vline(draw_info, 50, 0, mw_all_windows[window_ref].client_rect.height);
-		mw_gl_vline(draw_info, 150, 0, mw_all_windows[window_ref].client_rect.height);
+		mw_gl_hline(draw_info, 0, mw_get_window_client_rect(window_ref).width, 50);
+		mw_gl_hline(draw_info, 0, mw_get_window_client_rect(window_ref).width, 150);
+		mw_gl_vline(draw_info, 50, 0, mw_get_window_client_rect(window_ref).height);
+		mw_gl_vline(draw_info, 150, 0, mw_get_window_client_rect(window_ref).height);
 		break;
 
 	case 38:
@@ -587,10 +586,10 @@ void window_gl_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_
 		mw_gl_set_bg_colour(MW_HAL_LCD_GREEN);
 		mw_gl_set_line(MW_GL_SOLID_LINE);
 		mw_gl_segment(draw_info, 100, 100, 50, 120, 90);
-		mw_gl_hline(draw_info, 0, mw_all_windows[window_ref].client_rect.width, 50);
-		mw_gl_hline(draw_info, 0, mw_all_windows[window_ref].client_rect.width, 150);
-		mw_gl_vline(draw_info, 50, 0, mw_all_windows[window_ref].client_rect.height);
-		mw_gl_vline(draw_info, 150, 0, mw_all_windows[window_ref].client_rect.height);
+		mw_gl_hline(draw_info, 0, mw_get_window_client_rect(window_ref).width, 50);
+		mw_gl_hline(draw_info, 0, mw_get_window_client_rect(window_ref).width, 150);
+		mw_gl_vline(draw_info, 50, 0, mw_get_window_client_rect(window_ref).height);
+		mw_gl_vline(draw_info, 150, 0, mw_get_window_client_rect(window_ref).height);
 		break;
 
 	case 39:
@@ -599,10 +598,10 @@ void window_gl_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_
 		mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 		mw_gl_set_fill(MW_GL_NO_FILL);
 		mw_gl_rounded_rectangle(draw_info, 50, 50, 100, 80, 20);
-		mw_gl_hline(draw_info, 0, mw_all_windows[window_ref].client_rect.width, 50);
-		mw_gl_hline(draw_info, 0, mw_all_windows[window_ref].client_rect.width, 129);
-		mw_gl_vline(draw_info, 50, 0, mw_all_windows[window_ref].client_rect.height);
-		mw_gl_vline(draw_info, 149, 0, mw_all_windows[window_ref].client_rect.height);
+		mw_gl_hline(draw_info, 0, mw_get_window_client_rect(window_ref).width, 50);
+		mw_gl_hline(draw_info, 0, mw_get_window_client_rect(window_ref).width, 129);
+		mw_gl_vline(draw_info, 50, 0, mw_get_window_client_rect(window_ref).height);
+		mw_gl_vline(draw_info, 149, 0, mw_get_window_client_rect(window_ref).height);
 		break;
 
 	case 40:
@@ -775,8 +774,8 @@ void window_gl_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_
 		mw_gl_colour_bitmap(draw_info,
 				10,
 				10,
-				197,
-				158,
+				150,
+				137,
 				kitten);
 		break;
 

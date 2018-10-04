@@ -52,7 +52,6 @@ static const mw_util_rect_t input_text_rect = {0, 0, MW_UI_INT_NUMBER_CHOOSER_WI
 *** EXTERNAL VARIABLES ***
 **************************/
 
-extern mw_control_t mw_all_controls[MW_MAX_CONTROL_COUNT];
 extern volatile uint32_t mw_tick_counter;
 extern const uint8_t mw_bitmaps_backspace_key[];
 extern const uint8_t mw_bitmaps_ok_key[];
@@ -78,7 +77,7 @@ static mw_util_rect_t invalid_rect;
 
 void mw_ui_int_number_chooser_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *draw_info)
 {
-	mw_ui_int_number_chooser_data_t *this_int_number_chooser = (mw_ui_int_number_chooser_data_t*)mw_all_controls[control_ref].extra_data;
+	mw_ui_int_number_chooser_data_t *this_int_number_chooser = (mw_ui_int_number_chooser_data_t*)mw_get_control_instance_data(control_ref);
 	uint8_t i;
 	char c;
 	uint16_t cursor_x_coordinate;
@@ -104,7 +103,7 @@ void mw_ui_int_number_chooser_paint_function(uint8_t control_ref, const mw_gl_dr
 		}
 
 		/* set colour of text according to control enabled state */
-		if (mw_all_controls[control_ref].control_flags & MW_CONTROL_FLAG_IS_ENABLED)
+		if (mw_get_control_flags(control_ref) & MW_CONTROL_FLAG_IS_ENABLED)
 		{
 			mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 		}
@@ -262,7 +261,7 @@ void mw_ui_int_number_chooser_paint_function(uint8_t control_ref, const mw_gl_dr
 
 void mw_ui_int_number_chooser_message_function(const mw_message_t *message)
 {
-	mw_ui_int_number_chooser_data_t *this_int_number_chooser = (mw_ui_int_number_chooser_data_t*)mw_all_controls[message->recipient_id].extra_data;
+	mw_ui_int_number_chooser_data_t *this_int_number_chooser = (mw_ui_int_number_chooser_data_t*)mw_get_control_instance_data(message->recipient_id);
 	uint32_t chosen_number;
 
 	MW_ASSERT(message);
@@ -338,7 +337,7 @@ void mw_ui_int_number_chooser_message_function(const mw_message_t *message)
 
 	case MW_TOUCH_DOWN_MESSAGE:
 		/* handle a touch down event within this control */
-		if (mw_all_controls[message->recipient_id].control_flags & MW_CONTROL_FLAG_IS_ENABLED)
+		if (mw_get_control_flags(message->recipient_id) & MW_CONTROL_FLAG_IS_ENABLED)
 		{
 		    /* check if the y coordinate of the touch point is in the row of keys */
 			if ((message->message_data & 0xffff) > MW_UI_INT_NUMBER_CHOOSER_KEY_SIZE)
@@ -418,7 +417,7 @@ void mw_ui_int_number_chooser_message_function(const mw_message_t *message)
 					/* post cancel control response message */
 					mw_post_message(MW_INT_NUMBER_CHOOSER_CANCEL_MESSAGE,
 						message->recipient_id,
-						mw_all_controls[message->recipient_id].parent,
+						mw_get_control_parent_window(message->recipient_id),
 						MW_UNUSED_MESSAGE_PARAMETER,
 						MW_WINDOW_MESSAGE);
 					break;
@@ -437,7 +436,7 @@ void mw_ui_int_number_chooser_message_function(const mw_message_t *message)
 					/* post ok control response message */
 					mw_post_message(MW_INT_NUMBER_CHOOSER_OK_MESSAGE,
 						message->recipient_id,
-						mw_all_controls[message->recipient_id].parent,
+						mw_get_control_parent_window(message->recipient_id),
 						(uint32_t)chosen_number,
 						MW_WINDOW_MESSAGE);
 					break;

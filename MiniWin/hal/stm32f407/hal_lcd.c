@@ -29,10 +29,9 @@ SOFTWARE.
 ***************/
 
 #include <stdbool.h>
-#include "stm32f4xx_gpio.h"
-#include "stm32f4xx_conf.h"
 #include "hal/hal_lcd.h"
 #include "hal/hal_delay.h"
+#include "stm32f4xx_hal.h"
 
 /****************
 *** CONSTANTS ***
@@ -86,15 +85,15 @@ static void write_command(uint8_t register_address, uint16_t data)
 static void set_register_address(uint8_t data)
 {
 	/* RS = 0 */
-    GPIO_ResetBits(GPIOD, GPIO_Pin_11 );
+    HAL_GPIO_WritePin(GPIOD, GPIO_PIN_11, GPIO_PIN_RESET );
 
     /* write data */
-    GPIO_Write(GPIOE, data);
+    GPIOE->ODR = data;
 
 	/* WR = 0 */
-    GPIO_ResetBits(GPIOD, GPIO_Pin_5 );
+    HAL_GPIO_WritePin(GPIOD, GPIO_PIN_5, GPIO_PIN_RESET );
 	/* WR = 1 */
-    GPIO_SetBits(GPIOD, GPIO_Pin_5 );
+    HAL_GPIO_WritePin(GPIOD, GPIO_PIN_5, GPIO_PIN_SET );
 }
 
 /**
@@ -105,15 +104,15 @@ static void set_register_address(uint8_t data)
 static void write_data(uint16_t data)
 {
     /* RS = 1 */
-    GPIO_SetBits(GPIOD, GPIO_Pin_11 );
+    HAL_GPIO_WritePin(GPIOD, GPIO_PIN_11, GPIO_PIN_SET );
 
     /* write data */
-	GPIO_Write(GPIOE, data);
+    GPIOE->ODR = data;
 
 	/* WR = 0 */
-    GPIO_ResetBits(GPIOD, GPIO_Pin_5 );
+	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_5, GPIO_PIN_RESET );
 	/* WR = 1 */
-    GPIO_SetBits(GPIOD, GPIO_Pin_5 );
+	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_5, GPIO_PIN_SET );
 }
 
 /***********************
@@ -122,37 +121,35 @@ static void write_data(uint16_t data)
 
 void mw_hal_lcd_init(void)
 {
-	/* init the i/o */
-	GPIO_InitTypeDef GPIO_InitStructure;
+	GPIO_InitTypeDef GPIO_InitStruct;
+	__HAL_RCC_GPIOD_CLK_ENABLE();
+	__HAL_RCC_GPIOE_CLK_ENABLE();
 
-	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOD | RCC_AHB1Periph_GPIOE, ENABLE);
+	GPIO_InitStruct.Pin = GPIO_PIN_All;
+	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+	GPIO_InitStruct.Speed = GPIO_SPEED_HIGH;
+	GPIO_InitStruct.Pull = GPIO_NOPULL;
+	HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
 
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_All;
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
-	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
-	GPIO_Init(GPIOE, &GPIO_InitStructure);
-
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_1  | GPIO_Pin_4  | GPIO_Pin_5  | GPIO_Pin_7 | GPIO_Pin_11;
-	GPIO_Init(GPIOD, &GPIO_InitStructure);
+	GPIO_InitStruct.Pin = GPIO_PIN_1  | GPIO_PIN_4  | GPIO_PIN_5  | GPIO_PIN_7 | GPIO_PIN_11;
+	HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 
     /* reset the display */
-    GPIO_SetBits(GPIOD, GPIO_Pin_1 );
+	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_1, GPIO_PIN_SET);
     mw_hal_delay_ms(5);
-	GPIO_ResetBits(GPIOD, GPIO_Pin_1);
+    HAL_GPIO_WritePin(GPIOD, GPIO_PIN_1, GPIO_PIN_RESET);
     mw_hal_delay_ms(30);
-    GPIO_SetBits(GPIOD, GPIO_Pin_1 );
+    HAL_GPIO_WritePin(GPIOD, GPIO_PIN_1, GPIO_PIN_SET);
     mw_hal_delay_ms(20);
 
 	/* RD = 1 */
-    GPIO_SetBits(GPIOD, GPIO_Pin_4 );
+    HAL_GPIO_WritePin(GPIOD, GPIO_PIN_4, GPIO_PIN_SET);
 
 	/* WR = 1 */
-    GPIO_SetBits(GPIOD, GPIO_Pin_5 );
+    HAL_GPIO_WritePin(GPIOD, GPIO_PIN_5, GPIO_PIN_SET);
 
 	/* CS = 1 */
-    GPIO_ResetBits(GPIOD, GPIO_Pin_7 );
+    HAL_GPIO_WritePin(GPIOD, GPIO_PIN_7, GPIO_PIN_RESET);
 
     write_command(0x00,0x0001);		/* oscillator on/off */
     write_command(0x03,0xA8A4);		/* power control 1 */
@@ -202,7 +199,9 @@ void mw_hal_lcd_pixel(int16_t x, int16_t y, mw_hal_lcd_colour_t colour)
 {
 	write_command(0x4e, x);
 	write_command(0x4f, y);
-	write_command(0x22, colour);
+	write_command(0x22, ((colour & 0xf80000) >> 8) |
+			((colour & 0xfc00) >> 5) |
+			((colour & 0xf8) >> 3));
 }
 
 void mw_hal_lcd_filled_rectangle(int16_t start_x,
@@ -237,22 +236,24 @@ void mw_hal_lcd_colour_bitmap_clip(int16_t image_start_x,
 		int16_t clip_start_y,
 		uint16_t clip_width,
 		uint16_t clip_height,
-		const mw_hal_lcd_colour_t *data)
+		const uint8_t *data)
 {
 	uint16_t x;
 	uint16_t y;
 	mw_hal_lcd_colour_t pixel_colour;
 
-	for (y = 0; y < image_data_height_pixels - 1; y++)
+	for (y = 0; y < image_data_height_pixels; y++)
 	{
-		for (x = 0; x < image_data_width_pixels - 1; x++)
+		for (x = 0; x < image_data_width_pixels; x++)
 		{
-			pixel_colour = *(data + (y * image_data_width_pixels) + x);
 			if (x + image_start_x >= clip_start_x &&
 					x + image_start_x < clip_start_x + clip_width &&
 					y + image_start_y >= clip_start_y &&
 					y + image_start_y < clip_start_y + clip_height)
 			{
+				pixel_colour = *(data + (x + y * image_data_width_pixels) * 3);
+				pixel_colour |= *(1 + data + (x + y * image_data_width_pixels) * 3) << 8;
+				pixel_colour |= *(2 + data + (x + y * image_data_width_pixels) * 3) << 16;
 				mw_hal_lcd_pixel(x + image_start_x, y + image_start_y, pixel_colour);
 			}
 		}

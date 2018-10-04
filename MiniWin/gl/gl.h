@@ -56,6 +56,7 @@ SOFTWARE.
 #define MW_GL_STANDARD_CHARACTER_HEIGHT 	10                  /**< Height of standard character plus inter-line space */
 #define MW_GL_STANDARD_CHARACTER_WIDTH 		6                   /**< Width of standard character plus inter-character space */ 
 #define MW_GL_LARGE_CHARACTER_HEIGHT		16                  /**< Height of large character plus inter-line space */
+#define MW_GL_BITMAP_BYTES_PER_PIXEL		3					/**< Bitmaps expected in 24 bit colour depth */
 
 /************
 *** TYPES ***
@@ -464,14 +465,14 @@ void mw_gl_monochrome_bitmap(const mw_gl_draw_info_t *draw_info,
  * @param start_y Y coordinate of where to plot the top edge of the bitmap
  * @param image_data_width_pixels Width of the bitmap in pixels in the supplied data
  * @param image_data_height_pixels Height of the bitmap in pixels in the supplied data
- * @param image_data Pointer to data containing the bitmap data in colour_t format
+ * @param image_data Pointer to data containing the bitmap data
  */
 void mw_gl_colour_bitmap(const mw_gl_draw_info_t *draw_info,
 		int16_t start_x,
 		int16_t start_y,
 		uint16_t image_data_width_pixels,
 		uint16_t image_data_height_pixels,
-		const mw_hal_lcd_colour_t *image_data);
+		const uint8_t *image_data);
 
 #ifdef __cplusplus
 }

@@ -32,7 +32,6 @@ SOFTWARE.
 #include <string.h>
 #include "window_drag.h"
 #include "window_gl.h"
-#include "window_ok_cancel.h"
 #include "window_scroll.h"
 #include "window_test.h"
 #include "window_yield.h"
@@ -81,7 +80,6 @@ static const mw_ui_list_box_entry list_box_3_labels[] = {
 uint8_t window_test_id;
 uint8_t window_gl_id;
 uint8_t window_drag_id;
-uint8_t window_ok_cancel_id;
 uint8_t window_scroll_id;
 uint8_t window_yield_id;
 uint8_t window_paint_rect_id;
@@ -89,8 +87,6 @@ uint8_t window_paint_rect_id;
 /* controls */
 uint8_t check_box_1_id;
 uint8_t radio_button_1_id;
-uint8_t button_ok_id;
-uint8_t button_cancel_id;
 uint8_t scroll_bar_vert_1_id;
 uint8_t scroll_bar_vert_2_id;
 uint8_t scroll_bar_horiz_1_id;
@@ -103,8 +99,6 @@ uint8_t list_box_2_id;
 uint8_t list_box_3_id;
 
 /* controls extra data */
-mw_ui_button_data_t button_ok_data;
-mw_ui_button_data_t button_cancel_data;
 mw_ui_check_box_data_t check_box_1_data;
 mw_ui_radio_button_data_t radio_button_1_data;
 mw_ui_list_box_data_t list_box_1_data;
@@ -165,7 +159,8 @@ void mw_user_init(void)
 			NULL,
 			0,
 			MW_WINDOW_FLAG_HAS_BORDER | MW_WINDOW_FLAG_HAS_TITLE_BAR |
-				MW_WINDOW_FLAG_CAN_BE_CLOSED | MW_WINDOW_FLAG_IS_VISIBLE);
+				MW_WINDOW_FLAG_CAN_BE_CLOSED | MW_WINDOW_FLAG_IS_VISIBLE,
+			NULL);
 
 	/* process waiting messages to reduce queue contents */
 	while (mw_process_message());
@@ -179,7 +174,8 @@ void mw_user_init(void)
 			(char **)menu_bar_labels,
 			MENU_BAR_1_ITEMS_COUNT,
 			MW_WINDOW_FLAG_HAS_BORDER | MW_WINDOW_FLAG_HAS_TITLE_BAR | MW_WINDOW_FLAG_IS_VISIBLE |
-				MW_WINDOW_HAS_MENU_BAR | MW_WINDOW_MENU_BAR_ENABLED);
+				MW_WINDOW_HAS_MENU_BAR | MW_WINDOW_MENU_BAR_ENABLED,
+			NULL);
 
 	mw_set_menu_bar_items_enabled_state(window_test_id, mw_util_change_bit(MW_ALL_ITEMS_ENABLED, 0, false));
 
@@ -217,6 +213,7 @@ void mw_user_init(void)
 	list_box_1_data.line_enables = mw_util_change_bit(MW_ALL_ITEMS_ENABLED, 1, false);
 	list_box_1_id = mw_ui_list_box_add_new(0,
 			0,
+			68,
 			window_test_id,
 			MW_CONTROL_FLAG_IS_ENABLED,
 			&list_box_1_data);
@@ -270,12 +267,13 @@ void mw_user_init(void)
 	list_box_3_data.line_enables = MW_ALL_ITEMS_ENABLED;
 	list_box_3_id = mw_ui_list_box_add_new(75,
 			25,
+			68,
 			window_test_id,
 			MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_IS_VISIBLE,
 			&list_box_3_data);
 
 	/* create a new vertical scroll bar */
-	scroll_bar_vert_2_id = mw_ui_scroll_bar_vert_add_new(75 + MW_UI_LIST_BOX_WIDTH - 1,
+	scroll_bar_vert_2_id = mw_ui_scroll_bar_vert_add_new(142,
 			25,
 			MW_UI_LIST_BOX_ROW_HEIGHT * 3,
 			window_test_id,
@@ -294,36 +292,11 @@ void mw_user_init(void)
 			NULL,
 			0,
 			MW_WINDOW_FLAG_HAS_BORDER | MW_WINDOW_FLAG_HAS_TITLE_BAR |
-				MW_WINDOW_FLAG_CAN_BE_CLOSED | MW_WINDOW_FLAG_IS_VISIBLE);
+				MW_WINDOW_FLAG_CAN_BE_CLOSED | MW_WINDOW_FLAG_IS_VISIBLE,
+			NULL);
 
 	/* process waiting messages to reduce queue contents */
 	while (mw_process_message());
-
-	/* create the new ok/cancel window, create it as invisible */
-	mw_util_set_rect(&r, 20, 30, 150, 50);
-	window_ok_cancel_id = mw_add_window(&r,
-			"Ok Cancel 4",
-			window_ok_cancel_paint_function,
-			window_ok_cancel_message_function,
-			NULL,
-			0,
-			MW_WINDOW_FLAG_HAS_BORDER | MW_WINDOW_FLAG_HAS_TITLE_BAR);
-
-	/* create a first new button control and add it to the ok/cancel window */
-	mw_util_safe_strcpy(button_ok_data.button_label, MW_UI_BUTTON_LABEL_MAX_CHARS, "OK");
-	button_ok_id = mw_ui_button_add_new(10,
-			10,
-			window_ok_cancel_id,
-			MW_CONTROL_FLAG_IS_VISIBLE,
-			&button_ok_data);
-
-	/* create a second new button control and add it to the ok/cancel window */
-	mw_util_safe_strcpy(button_cancel_data.button_label, MW_UI_BUTTON_LABEL_MAX_CHARS, "CANCEL");
-	button_cancel_id = mw_ui_button_add_new(80,
-			10,
-			window_ok_cancel_id,
-			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
-			&button_cancel_data);
 
 	/* process waiting messages to reduce queue contents */
 	while (mw_process_message());
@@ -339,7 +312,8 @@ void mw_user_init(void)
 				MW_WINDOW_FLAG_CAN_BE_CLOSED | MW_WINDOW_FLAG_IS_VISIBLE |
 				MW_WINDOW_HAS_VERT_SCROLL_BAR | MW_WINDOW_HAS_HORIZ_SCROLL_BAR |
 				MW_WINDOWS_VERT_SCROLL_BAR_ENABLED | MW_WINDOWS_HORIZ_SCROLL_BAR_ENABLED |
-				MW_WINDOW_FLAG_IS_MINIMISED);
+				MW_WINDOW_FLAG_IS_MINIMISED,
+			NULL);
 
 	while (mw_process_message());
 
@@ -352,7 +326,8 @@ void mw_user_init(void)
 			0,
 			MW_WINDOW_FLAG_HAS_BORDER | MW_WINDOW_FLAG_HAS_TITLE_BAR |
 				MW_WINDOW_FLAG_CAN_BE_CLOSED | MW_WINDOW_FLAG_IS_VISIBLE |
-				MW_WINDOW_FLAG_IS_MINIMISED);
+				MW_WINDOW_FLAG_IS_MINIMISED,
+			NULL);
 
 	/* process waiting messages to reduce queue contents */
 	while (mw_process_message());
@@ -365,7 +340,8 @@ void mw_user_init(void)
 			NULL,
 			0,
 			MW_WINDOW_FLAG_HAS_BORDER | MW_WINDOW_FLAG_HAS_TITLE_BAR |
-				MW_WINDOW_FLAG_CAN_BE_CLOSED | MW_WINDOW_FLAG_IS_VISIBLE);
+				MW_WINDOW_FLAG_CAN_BE_CLOSED | MW_WINDOW_FLAG_IS_VISIBLE,
+			NULL);
 
 	/* create a new list box control and add it to the paint rect window */
 	list_box_2_data.number_of_lines = LIST_BOX_2_ITEMS_COUNT;
@@ -374,6 +350,7 @@ void mw_user_init(void)
 	list_box_2_data.line_enables = MW_ALL_ITEMS_ENABLED;
 	list_box_2_id = mw_ui_list_box_add_new(100,
 			10,
+			68,
 			window_paint_rect_id,
 			MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_IS_VISIBLE,
 			&list_box_2_data);

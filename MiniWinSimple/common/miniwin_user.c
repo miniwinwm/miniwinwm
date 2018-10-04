@@ -44,9 +44,14 @@ SOFTWARE.
 *** GLOBAL VARIABLES ***
 ***********************/
 
+/* window */
 uint8_t window_simple_id;
+
+/* control */
 uint8_t button_id;
 uint8_t label_id;
+
+/* controls extra data */
 mw_ui_label_data_t label_data;
 mw_ui_button_data_t button_data;
 
@@ -96,12 +101,13 @@ void mw_user_init(void)
 			NULL,
 			0,
 			MW_WINDOW_FLAG_HAS_BORDER | MW_WINDOW_FLAG_HAS_TITLE_BAR |
-				MW_WINDOW_FLAG_CAN_BE_CLOSED | MW_WINDOW_FLAG_IS_VISIBLE);
+				MW_WINDOW_FLAG_CAN_BE_CLOSED | MW_WINDOW_FLAG_IS_VISIBLE,
+			NULL);
 
 	mw_util_safe_strcpy(label_data.label, MW_UI_LABEL_MAX_CHARS, "Not yet set");
 	label_id = mw_ui_label_add_new(100,
 			5,
-			2 * MW_UI_LABEL_X_OFFSET + 11 * MW_GL_STANDARD_CHARACTER_WIDTH,
+			2 * MW_UI_LABEL_X_OFFSET + 12 * MW_GL_STANDARD_CHARACTER_WIDTH,
 			window_simple_id,
 			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
 			&label_data);
@@ -115,4 +121,3 @@ void mw_user_init(void)
 
 	mw_paint_all();
 }
-

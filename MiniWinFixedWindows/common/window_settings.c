@@ -61,7 +61,6 @@ extern uint8_t arrow_settings_up;
 extern uint8_t arrow_settings_down;
 extern mw_ui_list_box_data_t list_box_settings_data;
 extern mw_ui_list_box_entry list_box_settings_entries[];
-extern mw_window_t mw_all_windows[MW_MAX_WINDOW_COUNT];
 
 /**********************
 *** LOCAL VARIABLES ***
@@ -90,15 +89,15 @@ void window_settings_paint_function(uint8_t window_ref, const mw_gl_draw_info_t 
 	mw_gl_rectangle(draw_info,
 			0,
 			0,
-			mw_all_windows[window_ref].client_rect.width,
-			mw_all_windows[window_ref].client_rect.height);
+			mw_get_window_client_rect(window_ref).width,
+			mw_get_window_client_rect(window_ref).height);
 
 	/* blue title bar */
 	mw_gl_set_solid_fill_colour(MW_HAL_LCD_BLUE);
 	mw_gl_rectangle(draw_info,
 			0,
 			0,
-			mw_all_windows[window_ref].client_rect.width,
+			mw_get_window_client_rect(window_ref).width,
 			18);
 	mw_gl_set_fg_colour(MW_HAL_LCD_WHITE);
 	mw_gl_large_string(draw_info, 2, 2, "Logging Settings");

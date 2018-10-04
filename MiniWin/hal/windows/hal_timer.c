@@ -30,6 +30,7 @@ SOFTWARE.
 
 #include <windows.h>
 #include <stdint.h>
+#include "hal/hal_timer.h"
 
 /****************
 *** CONSTANTS ***
@@ -69,9 +70,14 @@ DWORD WINAPI tf(void* data)
 {
 	while(1)
 	{
-		mw_tick_counter++;
 		Sleep(50);
+		mw_hal_timer_fired();
 	}
+}
+
+void mw_hal_timer_fired(void)
+{
+	mw_tick_counter++;
 }
 
 

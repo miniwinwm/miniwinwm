@@ -102,10 +102,6 @@ typedef struct
 *** GLOBAL VARIABLES ***
 ***********************/
 
-mw_window_t mw_all_windows[MW_MAX_WINDOW_COUNT];    /**< Array of structures describing all the windows */
-mw_control_t mw_all_controls[MW_MAX_CONTROL_COUNT]; /**< Array of structures describing all the controls */
-window_timer_t mw_all_timers[MW_MAX_TIMER_COUNT];   /**< Array of structures describing containing information on all the timers */
-
 /*************************
 *** EXTERNAL VARIABLES ***
 **************************/
@@ -120,10 +116,14 @@ extern volatile uint32_t mw_tick_counter;
 *** LOCAL VARIABLES ***
 **********************/
 
+static mw_window_t mw_all_windows[MW_MAX_WINDOW_COUNT];    	/**< Array of structures describing all the windows */
+static mw_control_t mw_all_controls[MW_MAX_CONTROL_COUNT]; 	/**< Array of structures describing all the controls */
+static window_timer_t mw_all_timers[MW_MAX_TIMER_COUNT];   	/**< Array of structures describing containing information on all the timers */
 static uint8_t window_with_focus = MW_ROOT_WINDOW_ID;		/**< The window at the front with focus receiving touch events within its rect */
 static int16_t vertical_edges[(MW_MAX_WINDOW_COUNT) * 2];	/**< Scratch area to store array of vertical window edges, used in various places, for window analysis when repainting */
 static int16_t horizontal_edges[(MW_MAX_WINDOW_COUNT) * 2]; /**< Scratch area to store array of horizontal window edges, used in various places, for window analysis when repainting */
-static system_timer_t system_timer;
+static system_timer_t system_timer;							/**< a timer used by the window manager for its own asynchronous events */
+static bool in_client_window_paint_function;				/**< set true when calling a client window paint function, false after exiting the client window paint function */
 
 /********************************
 *** LOCAL FUNCTION PROTOTYPES ***
@@ -138,7 +138,8 @@ static void set_window_details(const mw_util_rect_t *rect,
 		mw_message_func_p message_function,
 		char **menu_bar_items,
 		uint8_t menu_bar_items_count,
-		uint16_t window_flags);
+		uint16_t window_flags,
+		void *instance_data);
 static bool check_window_dimensions(uint16_t new_width,
 		uint16_t new_height,
 		uint16_t flags);
@@ -152,7 +153,7 @@ static void set_control_details(const mw_util_rect_t *rect,
 		mw_message_func_p message_func,
 		uint8_t parent,
 		uint16_t control_flags,
-		void *extra_data);
+		void *instance_data);
 
 /* root window functions */
 static void root_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_info);
@@ -244,6 +245,7 @@ static uint8_t find_empty_window_slot()
  * @param menu_bar_items Pointer to array holding menu bar item text labels
  * @param menu_bar_items_count Number of entries in above array
  * @param window_flags Flags describing the window and its state
+ * @param instance_data Optional pointer to any extra window data that is instance specific, can be NULL if no instance data
 */
 static void set_window_details(const mw_util_rect_t *rect,
 		char* title,
@@ -252,7 +254,8 @@ static void set_window_details(const mw_util_rect_t *rect,
 		mw_message_func_p message_func,
 		char **menu_bar_items,
 		uint8_t menu_bar_items_count,
-		uint16_t window_flags)
+		uint16_t window_flags,
+		void *instance_data)
 {
 	/* check pointers */
 	MW_ASSERT(rect);
@@ -278,6 +281,7 @@ static void set_window_details(const mw_util_rect_t *rect,
 	mw_all_windows[window_ref].window_flags &= ~MW_WINDOW_MENU_BAR_ITEM_IS_SELECTED;
 	mw_all_windows[window_ref].horiz_scroll_pos = 0;
 	mw_all_windows[window_ref].vert_scroll_pos = 0;
+	mw_all_windows[window_ref].instance_data = instance_data;
 
 	/* calculate client area location and size from the chosen features */
 	calculate_new_window_size_details(window_ref, rect);
@@ -477,7 +481,7 @@ static uint8_t find_empty_control_slot()
  * @param message_function Pointer to message handling function
  * @param parent The window reference of the control's parent window
  * @param control_flags Flags describing the control and its state
- * @param extra_data Void ointer to control specific data structure containing extra control specific configuration data
+ * @param instance_data Void pointer to control specific data structure containing extra control specific configuration data for this instance
  */
 static void set_control_details(const mw_util_rect_t *rect,
 		mw_paint_func_p paint_func,
@@ -485,21 +489,21 @@ static void set_control_details(const mw_util_rect_t *rect,
 		mw_message_func_p message_func,
 		uint8_t parent,
 		uint16_t control_flags,
-		void *extra_data)
+		void *instance_data)
 {
 	/* check pointers */
 	MW_ASSERT(rect);
 	MW_ASSERT(paint_func);
 	MW_ASSERT(message_func);
 	MW_ASSERT(control_ref < MW_MAX_CONTROL_COUNT);
-	MW_ASSERT(extra_data);
+	MW_ASSERT(instance_data);
 
 	/* copy in all details to this control's structs in the array of all controls */
 	mw_all_controls[control_ref].control_flags = control_flags | MW_CONTROL_FLAG_IS_USED;
 	mw_all_controls[control_ref].paint_func = paint_func;
 	mw_all_controls[control_ref].message_func = message_func;
 	mw_all_controls[control_ref].parent = parent;
-	mw_all_controls[control_ref].extra_data = extra_data;
+	mw_all_controls[control_ref].instance_data = instance_data;
 
 	/* now make rect's x,y relative to screen rather than window */
 	mw_all_controls[control_ref].control_rect.x = rect->x + mw_all_windows[parent].client_rect.x;
@@ -514,6 +518,7 @@ static void set_control_details(const mw_util_rect_t *rect,
  * Root paint function. Calls user root window paint function then performs any system root window paint tasks
  *
  * @param window_ref Always ROOT_WINDOW_ID for root window
+ * @param draw_info Draw info structure describing offset and clip region
  */
 static void root_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_info)
 {
@@ -526,9 +531,8 @@ static void root_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *dra
 /**
  * Handle a message passed to the root window; if not consumed here pass on to user root window message handler
  *
- * @param window_ref Always ROOT_WINDOW_ID for root window
- * @param message_id The id of the message passed to the handler
- * @param data The data passed to the handler
+ * @param message The message to be processed
+ *
  */
 static void root_message_function(const mw_message_t *message)
 {
@@ -2027,7 +2031,14 @@ static void do_paint_window_client2(uint8_t window_ref, const mw_util_rect_t *in
 	client_draw_info.origin_x = mw_all_windows[window_ref].client_rect.x;
 	client_draw_info.origin_y = mw_all_windows[window_ref].client_rect.y;
 
+	/* set flag indicating in a client window paint function */
+	in_client_window_paint_function = true;
+
+	/* call client window paint function */
 	mw_all_windows[window_ref].paint_func(window_ref, &client_draw_info);
+
+	/* reset flag indicating in a client window paint function */
+	in_client_window_paint_function = false;
 }
 
 /**
@@ -3068,7 +3079,8 @@ void mw_init()
 			root_message_function,
 			NULL,
 			0,
-			MW_WINDOW_FLAG_IS_VISIBLE | MW_WINDOW_FLAG_IS_USED);
+			MW_WINDOW_FLAG_IS_VISIBLE | MW_WINDOW_FLAG_IS_USED,
+			NULL);
 
 	/* set root window z order at the bottom */
 	mw_all_windows[MW_ROOT_WINDOW_ID].z_order = MW_ROOT_Z_ORDER;
@@ -3086,8 +3098,16 @@ void mw_init()
 			MW_UNUSED_MESSAGE_PARAMETER,
 			MW_WINDOW_MESSAGE);
 
+	/* initialise client window painting flag */
+	in_client_window_paint_function = false;
+
 	/* call the user init function to get all the user windows and controls created */
 	mw_user_init();
+}
+
+bool mw_find_if_any_window_slots_free(void)
+{
+	return (find_empty_window_slot() != MW_MAX_WINDOW_COUNT);
 }
 
 uint8_t mw_add_window(mw_util_rect_t *rect,
@@ -3096,12 +3116,20 @@ uint8_t mw_add_window(mw_util_rect_t *rect,
 		mw_message_func_p message_func,
 		char **menu_bar_items,
 		uint8_t menu_bar_items_count,
-		uint32_t window_flags)
+		uint32_t window_flags,
+		void *instance_data)
 {
 	uint8_t new_window_id;
 
 	/* check compulsory parameters */
 	if (rect == NULL || paint_func == NULL || message_func == NULL || title == NULL)
+	{
+		MW_ASSERT(false);
+		return MW_MAX_WINDOW_COUNT;
+	}
+
+	/* check for being called from within a client window paint function */
+	if (in_client_window_paint_function)
 	{
 		MW_ASSERT(false);
 		return MW_MAX_WINDOW_COUNT;
@@ -3147,7 +3175,8 @@ uint8_t mw_add_window(mw_util_rect_t *rect,
    			message_func,
 			menu_bar_items,
 			menu_bar_items_count,
-   			window_flags);
+   			window_flags,
+			instance_data);
 
    	/* bring this window to the front */
    	mw_bring_window_to_front(new_window_id);
@@ -3236,11 +3265,13 @@ void mw_set_window_visible(uint8_t window_ref, bool visible)
 	if (visible)
 	{
 		mw_all_windows[window_ref].window_flags |= MW_WINDOW_FLAG_IS_VISIBLE;
+		mw_bring_window_to_front(window_ref);
 	}
 	else
 	{
 		mw_all_windows[window_ref].window_flags &= ~MW_WINDOW_FLAG_IS_VISIBLE;
 	}
+	rationalize_z_orders();
 
 	/* send message to window that visibility has changed */
 	mw_post_message(MW_WINDOW_VISIBILITY_CHANGED,
@@ -3565,7 +3596,6 @@ void mw_remove_window(uint8_t window_ref)
 	/* check window_ref is in range */
 	if (window_ref >= MW_MAX_WINDOW_COUNT)
 	{
-		MW_ASSERT(false);
 		return;
 	}
 
@@ -3612,17 +3642,64 @@ void mw_remove_window(uint8_t window_ref)
 	rationalize_z_orders();
 }
 
+mw_util_rect_t mw_get_window_client_rect(uint8_t window_ref)
+{
+	mw_util_rect_t default_rect = {0, 0, 0, 0};
+
+	if (window_ref >= MW_MAX_WINDOW_COUNT)
+	{
+		MW_ASSERT(false);
+		return default_rect;
+	}
+
+	return mw_all_windows[window_ref].client_rect;
+}
+
+void *mw_get_window_instance_data(uint8_t window_ref)
+{
+	if (window_ref >= MW_MAX_WINDOW_COUNT)
+	{
+		MW_ASSERT(false);
+		return NULL;
+	}
+
+	return mw_all_windows[window_ref].instance_data;
+}
+
+bool mw_find_if_any_control_slots_free(void)
+{
+	return (find_empty_control_slot() != MW_MAX_CONTROL_COUNT);
+}
+
+void wm_set_window_title(uint8_t window_ref, char *title_text)
+{
+	if (window_ref >= MW_MAX_WINDOW_COUNT)
+	{
+		MW_ASSERT(false);
+		return;
+	}
+
+	mw_util_safe_strcpy(mw_all_windows[window_ref].title, MW_MAX_TITLE_SIZE, title_text);
+}
+
 uint8_t mw_add_control(mw_util_rect_t *rect,
 		uint8_t parent,
 		mw_paint_func_p paint_func,
 		mw_message_func_p message_func,
 		uint16_t control_flags,
-		void *extra_data)
+		void *instance_data)
 {
 	uint8_t new_control_id;
 
 	/* check for null parameters */
-	if (rect == NULL || extra_data == NULL || paint_func == NULL || message_func == NULL)
+	if (rect == NULL || instance_data == NULL || paint_func == NULL || message_func == NULL)
+	{
+		MW_ASSERT(false);
+		return MW_MAX_CONTROL_COUNT;
+	}
+
+	/* check for being called from within a client window paint function */
+	if (in_client_window_paint_function)
 	{
 		MW_ASSERT(false);
 		return MW_MAX_CONTROL_COUNT;
@@ -3658,7 +3735,7 @@ uint8_t mw_add_control(mw_util_rect_t *rect,
    			message_func,
    			parent,
    			control_flags,
-   			extra_data);
+			instance_data);
 
 	/* send control created message to this control's message function */
    	mw_post_message(MW_CONTROL_CREATED_MESSAGE,
@@ -3799,7 +3876,6 @@ void mw_remove_control(uint8_t control_ref)
 	/* check that the control id is in range */
 	if (control_ref >= MW_MAX_CONTROL_COUNT)
 	{
-		MW_ASSERT(false);
 		return;
 	}
 
@@ -3825,6 +3901,52 @@ void mw_remove_control(uint8_t control_ref)
 
 	/* remove this control by marking it as unused */
    	mw_all_controls[control_ref].control_flags &= ~MW_CONTROL_FLAG_IS_USED;
+}
+
+mw_util_rect_t mw_get_control_rect(uint8_t control_ref)
+{
+	mw_util_rect_t default_rect = {0, 0, 0, 0};
+
+	if (control_ref >= MW_MAX_CONTROL_COUNT)
+	{
+		MW_ASSERT(false);
+		return default_rect;
+	}
+
+	return mw_all_controls[control_ref].control_rect;
+}
+
+uint8_t mw_get_control_parent_window(uint8_t control_ref)
+{
+	if (control_ref >= MW_MAX_CONTROL_COUNT)
+	{
+		MW_ASSERT(false);
+		return 0;
+	}
+
+	return mw_all_controls[control_ref].parent;
+}
+
+void *mw_get_control_instance_data(uint8_t control_ref)
+{
+	if (control_ref >= MW_MAX_CONTROL_COUNT)
+	{
+		MW_ASSERT(false);
+		return NULL;
+	}
+
+	return mw_all_controls[control_ref].instance_data;
+}
+
+uint16_t mw_get_control_flags(uint8_t control_ref)
+{
+	if (control_ref >= MW_MAX_CONTROL_COUNT)
+	{
+		MW_ASSERT(false);
+		return 0;
+	}
+
+	return mw_all_controls[control_ref].control_flags;
 }
 
 uint8_t mw_set_timer(uint32_t fire_time, uint8_t recipient_id, mw_message_recipient_type_t recipient_type)

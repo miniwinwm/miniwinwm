@@ -48,8 +48,6 @@ SOFTWARE.
 *** EXTERNAL VARIABLES ***
 **************************/
 
-extern mw_control_t mw_all_controls[MW_MAX_CONTROL_COUNT];
-
 /**********************
 *** LOCAL VARIABLES ***
 **********************/
@@ -68,7 +66,7 @@ extern mw_control_t mw_all_controls[MW_MAX_CONTROL_COUNT];
 
 void mw_ui_progress_bar_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *draw_info)
 {
-	mw_ui_progress_bar_data_t *this_progress_bar = (mw_ui_progress_bar_data_t*)mw_all_controls[control_ref].extra_data;
+	mw_ui_progress_bar_data_t *this_progress_bar = (mw_ui_progress_bar_data_t*)mw_get_control_instance_data(control_ref);
 
     /* draw the background */
 	mw_gl_set_solid_fill_colour(MW_CONTROL_UP_COLOUR);
@@ -81,8 +79,8 @@ void mw_ui_progress_bar_paint_function(uint8_t control_ref, const mw_gl_draw_inf
 	mw_gl_rectangle(draw_info,
 			0,
 			0,
-			mw_all_controls[control_ref].control_rect.width,
-			mw_all_controls[control_ref].control_rect.height);
+			mw_get_control_rect(control_ref).width,
+			mw_get_control_rect(control_ref).height);
 
 	if (this_progress_bar->progress_percent > 100)
 	{
@@ -90,14 +88,14 @@ void mw_ui_progress_bar_paint_function(uint8_t control_ref, const mw_gl_draw_inf
 	}
 
 	mw_gl_set_fg_colour(MW_HAL_LCD_WHITE);
-	mw_gl_vline(draw_info, 1, 1, mw_all_controls[control_ref].control_rect.height - 2);
-	mw_gl_hline(draw_info, 1, mw_all_controls[control_ref].control_rect.width - 2, 1);
+	mw_gl_vline(draw_info, 1, 1, mw_get_control_rect(control_ref).height - 2);
+	mw_gl_hline(draw_info, 1, mw_get_control_rect(control_ref).width - 2, 1);
 	mw_gl_set_fg_colour(MW_HAL_LCD_GREY7);
-	mw_gl_vline(draw_info, mw_all_controls[control_ref].control_rect.width - 2, 1, mw_all_controls[control_ref].control_rect.height - 2);
-	mw_gl_hline(draw_info, 1, mw_all_controls[control_ref].control_rect.width - 2, mw_all_controls[control_ref].control_rect.height - 2);
+	mw_gl_vline(draw_info, mw_get_control_rect(control_ref).width - 2, 1, mw_get_control_rect(control_ref).height - 2);
+	mw_gl_hline(draw_info, 1, mw_get_control_rect(control_ref).width - 2, mw_get_control_rect(control_ref).height - 2);
 
     /* set progress_bar progress fill colour according to enabled state */
-	if (mw_all_controls[control_ref].control_flags & MW_CONTROL_FLAG_IS_ENABLED)
+	if (mw_get_control_flags(control_ref) & MW_CONTROL_FLAG_IS_ENABLED)
 	{
 		mw_gl_set_solid_fill_colour(MW_PROGRESS_BAR_COLOUR);
 	}
@@ -111,13 +109,13 @@ void mw_ui_progress_bar_paint_function(uint8_t control_ref, const mw_gl_draw_inf
 	mw_gl_rectangle(draw_info,
 			2,
 			2,
-			((mw_all_controls[control_ref].control_rect.width - 4) * this_progress_bar->progress_percent) / 100,
-			mw_all_controls[control_ref].control_rect.height - 4);
+			((mw_get_control_rect(control_ref).width - 4) * this_progress_bar->progress_percent) / 100,
+			mw_get_control_rect(control_ref).height - 4);
 }
 
 void mw_ui_progress_bar_message_function(const mw_message_t *message)
 {
-	mw_ui_progress_bar_data_t *this_progress_bar = (mw_ui_progress_bar_data_t*)mw_all_controls[message->recipient_id].extra_data;
+	mw_ui_progress_bar_data_t *this_progress_bar = (mw_ui_progress_bar_data_t*)mw_get_control_instance_data(message->recipient_id);
 
 	MW_ASSERT(message);
 

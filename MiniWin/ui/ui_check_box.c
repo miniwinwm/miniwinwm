@@ -49,7 +49,6 @@ SOFTWARE.
 
 extern const uint8_t mw_bitmaps_tick[];
 extern const uint8_t mw_bitmaps_tick_large[];
-extern mw_control_t mw_all_controls[MW_MAX_CONTROL_COUNT];
 
 /**********************
 *** LOCAL VARIABLES ***
@@ -70,10 +69,10 @@ extern mw_control_t mw_all_controls[MW_MAX_CONTROL_COUNT];
 void mw_ui_check_box_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *draw_info)
 {
 	uint16_t height;
-	mw_ui_check_box_data_t *this_check_box = (mw_ui_check_box_data_t*)mw_all_controls[control_ref].extra_data;
+	mw_ui_check_box_data_t *this_check_box = (mw_ui_check_box_data_t*)mw_get_control_instance_data(control_ref);
 
     /* set the box outline, text and X colour depending on enabled state */   
-    if (mw_all_controls[control_ref].control_flags & MW_CONTROL_FLAG_IS_ENABLED)
+    if (mw_get_control_flags(control_ref) & MW_CONTROL_FLAG_IS_ENABLED)
 	{
 		mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 	}
@@ -83,7 +82,7 @@ void mw_ui_check_box_paint_function(uint8_t control_ref, const mw_gl_draw_info_t
 	}
 
 	mw_gl_set_bg_transparency(MW_GL_BG_TRANSPARENT);
-    if (mw_all_controls[control_ref].control_flags & MW_CONTROL_FLAGS_LARGE_SIZE)
+    if (mw_get_control_flags(control_ref) & MW_CONTROL_FLAGS_LARGE_SIZE)
     {
     	height = MW_UI_CHECK_BOX_LARGE_HEIGHT;
 
@@ -126,7 +125,7 @@ void mw_ui_check_box_paint_function(uint8_t control_ref, const mw_gl_draw_info_t
 		mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 		mw_gl_set_bg_transparency(MW_GL_BG_TRANSPARENT);
 
-	    if (mw_all_controls[control_ref].control_flags & MW_CONTROL_FLAGS_LARGE_SIZE)
+	    if (mw_get_control_flags(control_ref) & MW_CONTROL_FLAGS_LARGE_SIZE)
 	    {
 	    	mw_gl_monochrome_bitmap(draw_info, 2, 2, 24, 24, mw_bitmaps_tick_large);
 	    }
@@ -139,7 +138,7 @@ void mw_ui_check_box_paint_function(uint8_t control_ref, const mw_gl_draw_info_t
 
 void mw_ui_check_box_message_function(const mw_message_t *message)
 {
-	mw_ui_check_box_data_t *this_check_box = (mw_ui_check_box_data_t*)mw_all_controls[message->recipient_id].extra_data;
+	mw_ui_check_box_data_t *this_check_box = (mw_ui_check_box_data_t*)mw_get_control_instance_data(message->recipient_id);
 
 	MW_ASSERT(message);
 
@@ -157,13 +156,13 @@ void mw_ui_check_box_message_function(const mw_message_t *message)
 
 	case MW_TOUCH_DOWN_MESSAGE:
 		/* handle a touch down event within this control */		
-		if (mw_all_controls[message->recipient_id].control_flags & MW_CONTROL_FLAG_IS_ENABLED)
+		if (mw_get_control_flags(message->recipient_id) & MW_CONTROL_FLAG_IS_ENABLED)
 		{
 			this_check_box->checked = !this_check_box->checked;
 			mw_paint_control(message->recipient_id);
 			mw_post_message(MW_CHECKBOX_STATE_CHANGE_MESSAGE,
 					message->recipient_id,
-					mw_all_controls[message->recipient_id].parent,
+					mw_get_control_parent_window(message->recipient_id),
 					this_check_box->checked,
 					MW_WINDOW_MESSAGE);
 		}

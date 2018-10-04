@@ -45,7 +45,6 @@ SOFTWARE.
 /**
  * Window data structure
  */
-
 typedef enum
 {
 	ROOT_DIRECTORY,							/**< root directory on show */
@@ -76,7 +75,6 @@ extern mw_ui_list_box_entry list_box_file_entries_docs[];
 extern const uint8_t list_box_file_entries_root_count;
 extern const uint8_t list_box_file_entries_images_count;
 extern const uint8_t list_box_file_entries_docs_count;
-extern mw_window_t mw_all_windows[MW_MAX_WINDOW_COUNT];
 
 /**********************
 *** LOCAL VARIABLES ***
@@ -105,15 +103,15 @@ void window_file_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *dra
 	mw_gl_rectangle(draw_info,
 			0,
 			0,
-			mw_all_windows[window_ref].client_rect.width,
-			mw_all_windows[window_ref].client_rect.height);
+			mw_get_window_client_rect(window_ref).width,
+			mw_get_window_client_rect(window_ref).height);
 
 	/* blue title bar */
 	mw_gl_set_solid_fill_colour(MW_HAL_LCD_BLUE);
 	mw_gl_rectangle(draw_info,
 			0,
 			0,
-			mw_all_windows[window_ref].client_rect.width,
+			mw_get_window_client_rect(window_ref).width,
 			18);
 	mw_gl_set_fg_colour(MW_HAL_LCD_WHITE);
 	mw_gl_large_string(draw_info, 2, 2, "File Chooser");
@@ -132,6 +130,7 @@ void window_file_message_function(const mw_message_t *message)
 	case MW_WINDOW_VISIBILITY_CHANGED:
 		if (message->message_data)
 		{
+			/* visibility gained */
 			mw_ui_common_post_pointer_to_control(label_file_id, "");
 			mw_paint_control(label_file_id);
 

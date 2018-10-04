@@ -44,14 +44,16 @@ SOFTWARE.
 #define MW_UI_LIST_BOX_ROW_HEIGHT				14
 #define MW_UI_LIST_BOX_LABEL_Y_OFFSET			3
 #define MW_UI_LIST_BOX_LABEL_X_OFFSET 			8
-#define MW_UI_LIST_BOX_WIDTH				    68
+#define MW_UI_LIST_BOX_MIN_WIDTH			    12
 #define MW_UI_LIST_BOX_ICON_SIZE				8
 
 #define MW_UI_LIST_BOX_LARGE_ROW_HEIGHT			28
 #define MW_UI_LIST_BOX_LARGE_LABEL_Y_OFFSET		6
 #define MW_UI_LIST_BOX_LARGE_LABEL_X_OFFSET 	8
-#define MW_UI_LIST_BOX_LARGE_WIDTH				138
+#define MW_UI_LIST_BOX_LARGE_MIN_WIDTH			24
 #define MW_UI_LIST_BOX_LARGE_ICON_SIZE			16
+
+#define MW_UI_LIST_BOX_MAX_ENTRIES				16
 
 /************
 *** TYPES ***
@@ -107,12 +109,14 @@ void mw_ui_list_box_message_function(const mw_message_t *message);
  *
  * @param x The x coordinate of the control relative to parent window client area
  * @param y The y coordinate of the control relative to parent window client area
+ * @param width the width of the list box
  * @param parent The containing window of this control
  * @param flags General control flags controlling the control
  * @param list_box_instance_data Instance structure containing list box specific data items
  */
 uint8_t mw_ui_list_box_add_new(uint16_t x,
 		uint16_t y,
+		uint16_t width,
 		uint8_t parent,
 		uint32_t flags,
 		mw_ui_list_box_data_t *list_box_instance_data);

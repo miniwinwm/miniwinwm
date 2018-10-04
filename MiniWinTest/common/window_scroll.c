@@ -62,8 +62,6 @@ typedef struct
 *** EXTERNAL VARIABLES ***
 **************************/
 
-extern mw_window_t mw_all_windows[MW_MAX_WINDOW_COUNT];
-
 /**********************
 *** LOCAL VARIABLES ***
 **********************/
@@ -100,7 +98,7 @@ void window_scroll_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *d
 	for (line = 0; line < LINES; line++)
 	{
 		line_y = line * MW_GL_STANDARD_CHARACTER_HEIGHT;
-		scroll_offset_y = ((DATA_HEIGHT - mw_all_windows[window_ref].client_rect.height) * window_scroll_data.scroll_y) /
+		scroll_offset_y = ((DATA_HEIGHT - mw_get_window_client_rect(window_ref).height) * window_scroll_data.scroll_y) /
 				UINT8_MAX;
 
 		/* ignore text above client area */
@@ -110,7 +108,7 @@ void window_scroll_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *d
 		}
 
 		/* ignore text below client area */
-		if (line_y - scroll_offset_y > mw_all_windows[window_ref].client_rect.height)
+		if (line_y - scroll_offset_y > mw_get_window_client_rect(window_ref).height)
 		{
 			break;
 		}
@@ -118,7 +116,7 @@ void window_scroll_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *d
 		for (column = 3; column < COLUMNS; column++)
 		{
 			column_x = column * MW_GL_STANDARD_CHARACTER_WIDTH;
-			scroll_offset_x = ((DATA_WIDTH - mw_all_windows[window_ref].client_rect.width) * window_scroll_data.scroll_x) /
+			scroll_offset_x = ((DATA_WIDTH - mw_get_window_client_rect(window_ref).width) * window_scroll_data.scroll_x) /
 					UINT8_MAX;
 
 			/* ignore text left of client area */
@@ -128,7 +126,7 @@ void window_scroll_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *d
 			}
 
 			/* ignore text right of client area */
-			if (column_x - scroll_offset_x > mw_all_windows[window_ref].client_rect.width)
+			if (column_x - scroll_offset_x > mw_get_window_client_rect(window_ref).width)
 			{
 				break;
 			}

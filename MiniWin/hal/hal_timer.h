@@ -52,6 +52,11 @@ SOFTWARE.
  */
 void mw_hal_timer_init(void);
 
+/**
+ * Function called when 20ms timer has fired
+ */
+void mw_hal_timer_fired(void);
+
 #ifdef __cplusplus
 }
 #endif
