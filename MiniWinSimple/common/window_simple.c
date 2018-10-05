@@ -28,11 +28,11 @@ SOFTWARE.
 *** INCLUDES ***
 ***************/
 
-#include <stdint.h>
-#include <stdbool.h>
+//#include <stdint.h>
+//#include <stdbool.h>
 #include "miniwin.h"
 #include "ui/ui_common.h"
-#include <dialogs/dialog_common.h>
+#include "dialogs/dialog_common.h"
 
 /****************
 *** CONSTANTS ***
