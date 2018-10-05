@@ -70,6 +70,7 @@ int main(void)
 
 	while(true)
 	{
+    	app_main_loop_process();
 		mw_process_message();
 	}
 }
