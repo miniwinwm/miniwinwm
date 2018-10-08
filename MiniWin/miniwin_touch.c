@@ -102,8 +102,8 @@ mw_hal_touch_state_t mw_touch_get_display_touch(uint16_t* x, uint16_t* y)
 	uint16_t raw_x;
 	uint16_t raw_y;
 
-	MW_ASSERT(x);
-	MW_ASSERT(y);
+	MW_ASSERT(x, "Null pointer argument");
+	MW_ASSERT(y, "Null pointer argument");
 
 	/* read touch point and check if valid */
 	if (!mw_hal_touch_get_point(&raw_x, &raw_y))
@@ -131,7 +131,7 @@ void mw_touch_calibrate(MATRIX *matrix)
 	uint16_t x;
 	uint16_t y;
 
-	MW_ASSERT(matrix);
+	MW_ASSERT(matrix, "Null pointer argument");
 
     /* first point */
 	draw_cross(display_points[0].x, display_points[0].y, TOUCH_CROSS_SIZE);

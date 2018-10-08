@@ -280,7 +280,7 @@ void mw_ui_list_box_message_function(const mw_message_t *message)
 	mw_ui_list_box_data_t *this_list_box = (mw_ui_list_box_data_t*)mw_get_control_instance_data(message->recipient_id);
 	uint16_t row_height;
 
-	MW_ASSERT(message);
+	MW_ASSERT(message, "Null pointer argument");
 
 	if (mw_get_control_flags(message->recipient_id) & MW_CONTROL_FLAGS_LARGE_SIZE)
 	{

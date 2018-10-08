@@ -146,7 +146,7 @@ void mw_ui_scroll_bar_vert_message_function(const mw_message_t *message)
 	int16_t touch_y;
 	uint8_t new_scroll_position;
 
-	MW_ASSERT(message);
+	MW_ASSERT(message, "Null pointer argument");
 
 	switch (message->message_id)
 	{

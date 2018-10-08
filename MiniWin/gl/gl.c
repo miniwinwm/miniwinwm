@@ -93,10 +93,10 @@ static void filled_segment(const mw_gl_draw_info_t *draw_info, int16_t x, int16_
  */
 static void pixel(const mw_gl_draw_info_t *draw_info, int16_t client_x, int16_t client_y, mw_hal_lcd_colour_t colour)
 {
-	MW_ASSERT(draw_info);
-
 	int16_t display_x;
 	int16_t display_y;
+
+	MW_ASSERT(draw_info, "Null pointer argument");
 
 	if (client_x >= draw_info->clip_rect.x + draw_info->clip_rect.width)
 	{
@@ -139,8 +139,9 @@ static void pixel(const mw_gl_draw_info_t *draw_info, int16_t client_x, int16_t 
  */
 static void filled_rectangle(const mw_gl_draw_info_t *draw_info, int16_t client_x, int16_t client_y, int16_t width, int16_t height, mw_hal_lcd_colour_t colour)
 {
-	MW_ASSERT(draw_info);
 	int16_t overlap;
+
+	MW_ASSERT(draw_info, "Null pointer argument");
 
 	if (draw_info->clip_rect.width == 0 || draw_info->clip_rect.height == 0)
 	{
@@ -250,10 +251,10 @@ static void filled_poly(const mw_gl_draw_info_t *draw_info, uint8_t poly_corners
 	uint16_t y_max = -32768;
 	uint16_t x;
 
-	MW_ASSERT(draw_info);
-	MW_ASSERT(poly_x);
-	MW_ASSERT(poly_y);
-	MW_ASSERT(poly_corners <= MW_GL_MAX_POLY_CORNERS);
+	MW_ASSERT(draw_info, "Null pointer argument");
+	MW_ASSERT(poly_x, "Null pointer argument");
+	MW_ASSERT(poly_y, "Null pointer argument");
+	MW_ASSERT(poly_corners <= MW_GL_MAX_POLY_CORNERS, "Too many points in polygon shape");
 
 	/* find y range of shape */
 	for (i = 0; i < poly_corners; i++)
@@ -361,7 +362,7 @@ static void arc_bres(const mw_gl_draw_info_t *draw_info, int16_t centre_x, int16
 	int16_t y_point = radius;
 	int16_t decision = 1 - radius;
 
-	MW_ASSERT(draw_info);
+	MW_ASSERT(draw_info, "Null pointer argument");
 
 	/* plot top, bottom, left and right */
 	arc_point(draw_info, centre_x, centre_y, centre_x, centre_y + radius, start_angle, end_angle);
@@ -408,7 +409,7 @@ static void arc_bres(const mw_gl_draw_info_t *draw_info, int16_t centre_x, int16
  */
 static void arc_point(const mw_gl_draw_info_t *draw_info, int16_t centre_x, int16_t centre_y, int16_t x, int16_t y, int16_t start_angle, int16_t end_angle)
 {
-	MW_ASSERT(draw_info);
+	MW_ASSERT(draw_info, "Null pointer argument");
 
 	/* calculate the angle the current point makes with the circle centre */
 	int16_t angle = (int16_t)(DEGREES_IN_RAD  *(atan2(centre_y - y, centre_x - x))) -90;
@@ -438,7 +439,7 @@ static void filled_circle(const mw_gl_draw_info_t *draw_info, int16_t centre_x, 
 	int16_t decision = 1 - radius;
 	int16_t y;
 
-	MW_ASSERT(draw_info);
+	MW_ASSERT(draw_info, "Null pointer argument");
 
 	/* plot centre line */
 	if (gc.pattern_set)
@@ -511,7 +512,7 @@ static void circle_bres(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y
 	int16_t y_point = radius;
 	int16_t decision = 1 - radius;
 
-	MW_ASSERT(draw_info);
+	MW_ASSERT(draw_info, "Null pointer argument");
 
 	/* plot top, bottom, left and right */
 	mw_gl_fg_pixel(draw_info, x, y + radius);
@@ -565,7 +566,7 @@ static void filled_segment(const mw_gl_draw_info_t *draw_info, int16_t x, int16_
 	int16_t triangle_corners_x[3];
 	int16_t triangle_corners_y[3];
 
-	MW_ASSERT(draw_info);
+	MW_ASSERT(draw_info, "Null pointer argument");
 
 	triangle_corners_x[0] = x;
 	triangle_corners_y[0] = y;
@@ -675,7 +676,7 @@ void mw_gl_solid_fill_pixel(const mw_gl_draw_info_t *draw_info, int16_t x, int16
 
 	if (!draw_info)
 	{
-		MW_ASSERT(false);
+		MW_ASSERT(false, "Null pointer argument");
 		return;
 	}
 
@@ -708,7 +709,7 @@ void mw_gl_fg_pixel(const mw_gl_draw_info_t *draw_info, int16_t client_x, int16_
 {
 	if (!draw_info)
 	{
-		MW_ASSERT(false);
+		MW_ASSERT(false, "Null pointer argument");
 		return;
 	}
 
@@ -719,7 +720,7 @@ void mw_gl_bg_pixel(const mw_gl_draw_info_t *draw_info, int16_t client_x, int16_
 {
 	if (!draw_info)
 	{
-		MW_ASSERT(false);
+		MW_ASSERT(false, "Null pointer argument");
 		return;
 	}
 
@@ -737,7 +738,7 @@ void mw_gl_hline(const mw_gl_draw_info_t *draw_info, int16_t x_start, int16_t x_
 
 	if (!draw_info)
 	{
-		MW_ASSERT(false);
+		MW_ASSERT(false, "Null pointer argument");
 		return;
 	}
 
@@ -791,7 +792,7 @@ void mw_gl_vline(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y_start,
 
 	if (!draw_info)
 	{
-		MW_ASSERT(false);
+		MW_ASSERT(false, "Null pointer argument");
 		return;
 	}
 
@@ -852,7 +853,7 @@ void mw_gl_line(const mw_gl_draw_info_t *draw_info, int16_t p1x, int16_t p1y, in
 
 	if (!draw_info)
 	{
-		MW_ASSERT(false);
+		MW_ASSERT(false, "Null pointer argument");
 		return;
 	}
 
@@ -1050,7 +1051,7 @@ void mw_gl_rectangle(const mw_gl_draw_info_t *draw_info, int16_t x_start, int16_
 
 	if (!draw_info)
 	{
-		MW_ASSERT(false);
+		MW_ASSERT(false, "Null pointer argument");
 		return;
 	}
 
@@ -1127,7 +1128,7 @@ void mw_gl_character(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y, c
 
 	if (!draw_info)
 	{
-		MW_ASSERT(false);
+		MW_ASSERT(false, "Null pointer argument");
 		return;
 	}
 
@@ -1191,7 +1192,7 @@ void mw_gl_string(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y, cons
 
 	if (!draw_info || !s)
 	{
-		MW_ASSERT(false);
+		MW_ASSERT(false, "Null pointer argument");
 		return;
 	}
 
@@ -1217,7 +1218,7 @@ void mw_gl_character_vert(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t
 
 	if (!draw_info)
 	{
-		MW_ASSERT(false);
+		MW_ASSERT(false, "Null pointer argument");
 		return;
 	}
 
@@ -1281,7 +1282,7 @@ void mw_gl_string_vert(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y,
 
 	if (!draw_info || !s)
 	{
-		MW_ASSERT(false);
+		MW_ASSERT(false, "Null pointer argument");
 		return;
 	}
 
@@ -1309,7 +1310,7 @@ void mw_gl_large_string(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y
 
 	if (!draw_info || !s)
 	{
-		MW_ASSERT(false);
+		MW_ASSERT(false, "Null pointer argument");
 		return;
 	}
 
@@ -1384,7 +1385,7 @@ void mw_gl_large_string_vert(const mw_gl_draw_info_t *draw_info, int16_t x, int1
 
 	if (!draw_info || !s)
 	{
-		MW_ASSERT(false);
+		MW_ASSERT(false, "Null pointer argument");
 		return;
 	}
 
@@ -1452,7 +1453,7 @@ uint16_t mw_gl_large_string_width(const char *s)
 
 	if (!s)
 	{
-		MW_ASSERT(false);
+		MW_ASSERT(false, "Null pointer argument");
 		return 0;
 	}
 
@@ -1472,7 +1473,7 @@ uint16_t mw_gl_largest_string_width(const char **s, uint16_t count)
 
 	if (!s || !*s)
 	{
-		MW_ASSERT(false);
+		MW_ASSERT(false, "Null pointer argument");
 		return 0;
 	}
 
@@ -1494,7 +1495,7 @@ void mw_gl_circle(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y, int1
 
 	if (!draw_info)
 	{
-		MW_ASSERT(false);
+		MW_ASSERT(false, "Null pointer argument");
 		return;
 	}
 
@@ -1527,7 +1528,7 @@ void mw_gl_poly(const mw_gl_draw_info_t *draw_info, uint8_t poly_corners, const 
 
 	if (!draw_info || !poly_x || !poly_y)
 	{
-		MW_ASSERT(false);
+		MW_ASSERT(false, "Null pointer argument");
 		return;
 	}
 
@@ -1558,7 +1559,7 @@ void mw_gl_rotate_shape(uint8_t poly_corners, int16_t *poly_x, int16_t *poly_y, 
 
 	if (!poly_x || !poly_y)
 	{
-		MW_ASSERT(false);
+		MW_ASSERT(false, "Null pointer argument");
 		return;
 	}
 
@@ -1577,7 +1578,7 @@ void mw_gl_scale_shape(uint8_t poly_corners, int16_t *poly_x, int16_t *poly_y, i
 
 	if (!poly_x || !poly_y)
 	{
-		MW_ASSERT(false);
+		MW_ASSERT(false, "Null pointer argument");
 		return;
 	}
 
@@ -1600,7 +1601,7 @@ void mw_gl_arc(const mw_gl_draw_info_t *draw_info, int16_t centre_x, int16_t cen
 
 	if (!draw_info)
 	{
-		MW_ASSERT(false);
+		MW_ASSERT(false, "Null pointer argument");
 		return;
 	}
 
@@ -1653,7 +1654,7 @@ void mw_gl_rounded_rectangle(const mw_gl_draw_info_t *draw_info, int16_t x, int1
 
 	if (!draw_info)
 	{
-		MW_ASSERT(false);
+		MW_ASSERT(false, "Null pointer argument");
 		return;
 	}
 
@@ -1700,7 +1701,7 @@ void mw_gl_segment(const mw_gl_draw_info_t *draw_info, int16_t centre_x, int16_t
 
 	if (!draw_info)
 	{
-		MW_ASSERT(false);
+		MW_ASSERT(false, "Null pointer argument");
 		return;
 	}
 
@@ -1740,7 +1741,7 @@ void mw_gl_monochrome_bitmap(const mw_gl_draw_info_t *draw_info,
 {
 	if (!draw_info || !image_data)
 	{
-		MW_ASSERT(false);
+		MW_ASSERT(false, "Null pointer argument");
 		return;
 	}
 
@@ -1821,7 +1822,7 @@ void mw_gl_colour_bitmap(const mw_gl_draw_info_t *draw_info,
 {
 	if (!draw_info || !image_data)
 	{
-		MW_ASSERT(false);
+		MW_ASSERT(false, "Null pointer argument");
 		return;
 	}
 

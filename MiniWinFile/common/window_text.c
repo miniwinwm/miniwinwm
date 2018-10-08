@@ -69,6 +69,8 @@ extern uint8_t window_file_id;
 
 void window_text_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_info)
 {
+	MW_ASSERT(draw_info, "Null pointer parameter");
+
 	uint32_t file_size;
 	uint16_t x_pos;
 	uint16_t y_pos;
@@ -95,7 +97,7 @@ void window_text_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *dra
 	text_window_data = (text_window_data_t *)mw_get_window_instance_data(window_ref);
 	if (text_window_data == NULL)
 	{
-		MW_ASSERT(false);
+		MW_ASSERT(false, "Couldn't find window instance data");
 		return;
 	}
 
@@ -132,7 +134,7 @@ void window_text_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *dra
 
 void window_text_message_function(const mw_message_t *message)
 {
-	MW_ASSERT(message);
+	MW_ASSERT(message, "Null pointer argument");
 
 	switch (message->message_id)
 	{

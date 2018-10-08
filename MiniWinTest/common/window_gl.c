@@ -35,7 +35,7 @@ SOFTWARE.
 *** CONSTANTS ***
 ****************/
 
-#define GL_TEST_TIME	 	14
+#define GL_TEST_TIME	 	14			/**< Time between tests in system ticks */
 #define SHAPE_POINTS 		(sizeof(shape_x_const) / sizeof(int16_t))
 static const int16_t shape_x_const[] = {0, -5, 0, 5};
 static const int16_t shape_y_const[] = {-10, 10, 5, 10};
@@ -111,6 +111,8 @@ void window_gl_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_
 	uint16_t y;
 	const uint16_t pattern[16]={0xffff, 0x83c1, 0x83c1, 0x83c1, 0x83c1, 0x83c1, 0xffff, 0xffff,
 			0xffff, 0xffff, 0x83c1, 0x83c1, 0x83c1, 0x83c1, 0x83c1, 0xffff};
+
+	MW_ASSERT(draw_info, "Null pointer parameter");
 
 	mw_gl_set_fill(MW_GL_FILL);
 	mw_gl_set_solid_fill_colour(MW_HAL_LCD_WHITE);
@@ -788,7 +790,7 @@ void window_gl_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_
 
 void window_gl_message_function(const mw_message_t *message)
 {
-	MW_ASSERT(message);
+	MW_ASSERT(message, "Null pointer argument");
 
 	switch (message->message_id)
 	{

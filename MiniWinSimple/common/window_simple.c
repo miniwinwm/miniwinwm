@@ -45,7 +45,6 @@ typedef struct
 	uint16_t circle_x;			/**< x coordinate of where to draw circle */
 	uint16_t circle_y;			/**< y coordinate of where to draw circle */
 	bool draw_circle;			/**< if to draw circle */
-	char transfer_buffer[10];	/**< buffer to send data to label */
 } window_simple_data_t;
 
 /*************************
@@ -75,6 +74,8 @@ static window_simple_data_t window_simple_data;
 
 void window_simple_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_info)
 {
+	MW_ASSERT(draw_info, "Null pointer parameter");
+
 	mw_gl_set_fill(MW_GL_FILL);
 	mw_gl_set_solid_fill_colour(MW_HAL_LCD_WHITE);
 	mw_gl_set_border(MW_GL_BORDER_OFF);
@@ -97,6 +98,8 @@ void window_simple_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *d
 
 void window_simple_message_function(const mw_message_t *message)
 {
+	MW_ASSERT(message, "Null pointer parameter");
+
 	switch (message->message_id)
 	{
 	case MW_WINDOW_CREATED_MESSAGE:

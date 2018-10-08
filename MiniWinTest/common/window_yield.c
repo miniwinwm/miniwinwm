@@ -85,6 +85,8 @@ void window_yield_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *dr
 {
 	uint8_t i;
 
+	MW_ASSERT(draw_info, "Null pointer parameter");
+
 	mw_gl_set_fill(MW_GL_FILL);
 	mw_gl_set_solid_fill_colour(MW_HAL_LCD_WHITE);
 	mw_gl_set_border(MW_GL_BORDER_OFF);
@@ -111,7 +113,7 @@ void window_yield_message_function(const mw_message_t *message)
 {
 	uint8_t i;
 
-	MW_ASSERT(message);
+	MW_ASSERT(message, "Null pointer argument");
 
 	switch (message->message_id)
 	{

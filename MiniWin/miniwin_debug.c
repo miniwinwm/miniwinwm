@@ -68,10 +68,15 @@ SOFTWARE.
 
 #ifndef NDEBUG
 
-void mw_debug_print_assert(const char *function_name, int32_t line_number)
+void mw_debug_print_assert(bool expression, const char *function_name, int32_t line_number, char *message)
 {
     const mw_gl_draw_info_t draw_info = {0, 0, {0, 0, MW_HAL_LCD_WIDTH, MW_HAL_LCD_HEIGHT}};
     char number_buffer[15];
+
+    if (expression)
+    {
+    	return;
+    }
 
 	mw_hal_lcd_filled_rectangle(0,
 		0,
@@ -86,6 +91,7 @@ void mw_debug_print_assert(const char *function_name, int32_t line_number)
 	mw_gl_string(&draw_info, 0, MW_GL_STANDARD_CHARACTER_HEIGHT, function_name);
 	sprintf(number_buffer, "line: %d", (int)line_number);
 	mw_gl_string(&draw_info, 0, 2 * MW_GL_STANDARD_CHARACTER_HEIGHT, number_buffer);
+	mw_gl_string(&draw_info, 0, 3 * MW_GL_STANDARD_CHARACTER_HEIGHT, message);
 
 	while(true);
 }

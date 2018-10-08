@@ -36,6 +36,7 @@ SOFTWARE.
 ***************/
 
 #include <stdint.h>
+#include <stdbool.h>
 
 /****************
 *** CONSTANTS ***
@@ -44,7 +45,7 @@ SOFTWARE.
 #ifdef NDEBUG
 #define MW_ASSERT(test)
 #else
-#define MW_ASSERT(test) ((test) ? (void)0 : mw_debug_print_assert(__func__, __LINE__))
+#define MW_ASSERT(expression, message) mw_debug_print_assert(expression,__func__, __LINE__, message)
 #endif
 
 /************
@@ -60,8 +61,9 @@ SOFTWARE.
  * 
  * @param function_name The name of the function the assertion failed in
  * @param line_number The line number in the file the assertion failed on
+ * @param message General purpose text to be displayed on assert failure
  */
-void mw_debug_print_assert(const char *function_name, int32_t line_number);
+void mw_debug_print_assert(bool expression, const char *function_name, int32_t line_number, char *message);
 
 #ifdef __cplusplus
 }

@@ -91,6 +91,8 @@ void window_image_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *dr
 	uint32_t pixel;
 	image_window_data_t *image_window_data;
 
+	MW_ASSERT(draw_info, "Null pointer parameter");
+
 	mw_gl_set_fill(MW_GL_FILL);
 	mw_gl_set_solid_fill_colour(MW_HAL_LCD_GREY12);
 	mw_gl_set_border(MW_GL_BORDER_OFF);
@@ -105,7 +107,7 @@ void window_image_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *dr
 	image_window_data = (image_window_data_t *)mw_get_window_instance_data(window_ref);
 	if (image_window_data == NULL)
 	{
-		MW_ASSERT(false);
+		MW_ASSERT(false, "Couldn't find window instance data");
 		return;
 	}
 
@@ -209,7 +211,7 @@ void window_image_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *dr
 
 void window_image_message_function(const mw_message_t *message)
 {
-	MW_ASSERT(message);
+	MW_ASSERT(message, "Null pointer argument");
 
 	switch (message->message_id)
 	{

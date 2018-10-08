@@ -311,7 +311,7 @@ void mw_ui_keyboard_message_function(const mw_message_t *message)
 	mw_ui_keyboard_data_t *this_keyboard = (mw_ui_keyboard_data_t*)mw_get_control_instance_data(message->recipient_id);
 	char c;
 
-	MW_ASSERT(message);
+	MW_ASSERT(message, "Null pointer argument");
 
 	switch (message->message_id)
 	{
@@ -334,7 +334,7 @@ void mw_ui_keyboard_message_function(const mw_message_t *message)
 		}
 		else
 		{
-			MW_ASSERT(false);
+			MW_ASSERT(false, "Null pointer argument");
 		}
 		break;
 

@@ -99,9 +99,9 @@ uint8_t mw_create_window_dialog_two_button(uint16_t x,
 	uint16_t window_client_width;
 
 	/* check pointer parameters */
-	if (title == NULL || message == NULL || button_1_label == NULL || button_2_label == NULL)
+	if (!title || !message || !button_1_label || !button_2_label)
 	{
-		MW_ASSERT(false);
+		MW_ASSERT(false, "Null pointer argument");
 		return MW_MAX_WINDOW_COUNT;
 	}
 
@@ -255,7 +255,7 @@ void mw_dialog_two_button_paint_function(uint8_t window_ref, const mw_gl_draw_in
 
 void mw_dialog_two_button_message_function(const mw_message_t *message)
 {
-	MW_ASSERT(message);
+	MW_ASSERT(message, "Null pointer argument");
 
 	switch (message->message_id)
 	{

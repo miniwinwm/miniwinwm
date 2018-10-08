@@ -91,6 +91,8 @@ void window_scroll_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *d
 	uint8_t c;
 	char buf[4];
 
+	MW_ASSERT(draw_info, "Null pointer parameter");
+
 	mw_gl_set_fg_colour(MW_HAL_LCD_YELLOW);
 	mw_gl_set_bg_colour(MW_HAL_LCD_BLACK);
 	mw_gl_set_bg_transparency(MW_GL_BG_NOT_TRANSPARENT);
@@ -153,7 +155,7 @@ void window_scroll_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *d
 
 void window_scroll_message_function(const mw_message_t *message)
 {
-	MW_ASSERT(message);
+	MW_ASSERT(message, "Null pointer argument");
 
 	switch (message->message_id)
 	{

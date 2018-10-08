@@ -350,7 +350,7 @@ void mw_dialog_time_chooser_paint_function(uint8_t window_ref, const mw_gl_draw_
 
 void mw_dialog_time_chooser_message_function(const mw_message_t *message)
 {
-	MW_ASSERT(message);
+	MW_ASSERT(message, "Null pointer argument");
 
 	switch (message->message_id)
 	{
@@ -385,7 +385,7 @@ void mw_dialog_time_chooser_message_function(const mw_message_t *message)
 		}
 		else
 		{
-			MW_ASSERT(false);
+			MW_ASSERT(false, "Unknown control id");
 		}
 
 		/* enable or disable arrow controls as required */
@@ -418,7 +418,7 @@ void mw_dialog_time_chooser_message_function(const mw_message_t *message)
 		}
 		else
 		{
-			MW_ASSERT(false);
+			MW_ASSERT(false, "Unknown control id");
 		}
 
 		/* remove the controls */

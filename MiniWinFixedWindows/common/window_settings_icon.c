@@ -77,6 +77,8 @@ static window_settings_icon_data_t window_settings_icon_data;
 
 void window_settings_icon_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_info)
 {
+	MW_ASSERT(draw_info, "Null pointer parameter");
+
 	if (window_settings_icon_data.touch_down)
 	{
 		mw_gl_colour_bitmap(draw_info,
@@ -99,6 +101,8 @@ void window_settings_icon_paint_function(uint8_t window_ref, const mw_gl_draw_in
 
 void window_settings_icon_message_function(const mw_message_t *message)
 {
+	MW_ASSERT(message, "Null pointer parameter");
+
 	switch (message->message_id)
 	{
 	case MW_WINDOW_CREATED_MESSAGE:

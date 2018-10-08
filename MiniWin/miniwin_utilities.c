@@ -68,24 +68,23 @@ SOFTWARE.
 
 void mw_util_set_rect(mw_util_rect_t *r, int16_t x, int16_t y, uint16_t width, uint16_t height)
 {
-	if (r != NULL)
+	if (!r)
 	{
-		r->x = x;
-		r->y = y;
-		r->width = width;
-		r->height = height;
+		MW_ASSERT(false, "Null pointer argument");
+		return;
 	}
-	else
-	{
-		MW_ASSERT(false);
-	}
+
+	r->x = x;
+	r->y = y;
+	r->width = width;
+	r->height = height;
 }
 
 bool mw_util_is_point_in_rect(const mw_util_rect_t *r, int16_t x, int16_t y)
 {
-	if (r == NULL)
+	if (!r)
 	{
-		MW_ASSERT(false);
+		MW_ASSERT(false, "Null pointer argument");
 		return false;
 	}
 
@@ -101,6 +100,7 @@ bool mw_util_do_rects_coincide(const mw_util_rect_t *a, const mw_util_rect_t *b)
 {
 	if (!a || !b)
 	{
+		MW_ASSERT(false, "Null pointer argument");
 		return false;
 	}
 
@@ -109,9 +109,9 @@ bool mw_util_do_rects_coincide(const mw_util_rect_t *a, const mw_util_rect_t *b)
 
 bool mw_util_does_rect_a_obscure_rect_b(const mw_util_rect_t *a, const mw_util_rect_t *b)
 {
-	if (a == NULL || b == NULL)
+	if (!a || !b)
 	{
-		MW_ASSERT(false);
+		MW_ASSERT(false, "Null pointer argument");
 		return false;
 	}
 
@@ -132,7 +132,7 @@ char *mw_util_safe_strcpy(char *dest, size_t size, const char *src)
 
     if (dest == NULL || src == NULL)
     {
-    	MW_ASSERT(false);
+    	MW_ASSERT(false, "Null pointer argument");
     	return 0;
     }
 
@@ -195,7 +195,7 @@ int mw_util_compare_int16_t(const void *a, const void *b)
 {
 	if (a == NULL || b == NULL)
 	{
-		MW_ASSERT(false);
+		MW_ASSERT(false, "Null pointer argument");
 		return 0;
 	}
 

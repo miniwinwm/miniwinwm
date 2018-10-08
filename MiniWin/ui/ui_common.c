@@ -68,7 +68,7 @@ void mw_ui_common_post_number_to_control(uint8_t control_id, uint32_t number)
 {
 	if (control_id >= MW_MAX_CONTROL_COUNT)
 	{
-		MW_ASSERT(false);
+		MW_ASSERT(false, "Invalid control id");
 		return;
 	}
 
@@ -81,9 +81,15 @@ void mw_ui_common_post_number_to_control(uint8_t control_id, uint32_t number)
 
 void mw_ui_common_post_pointer_to_control(uint8_t control_id, void *pointer)
 {
-	if (control_id >= MW_MAX_CONTROL_COUNT || !pointer)
+	if (!pointer)
 	{
-		MW_ASSERT(false);
+		MW_ASSERT(false, "Null pointer argument");
+		return;
+	}
+
+	if (control_id >= MW_MAX_CONTROL_COUNT)
+	{
+		if (control_id >= MW_MAX_CONTROL_COUNT)
 		return;
 	}
 

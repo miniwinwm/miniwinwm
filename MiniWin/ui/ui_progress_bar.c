@@ -117,7 +117,7 @@ void mw_ui_progress_bar_message_function(const mw_message_t *message)
 {
 	mw_ui_progress_bar_data_t *this_progress_bar = (mw_ui_progress_bar_data_t*)mw_get_control_instance_data(message->recipient_id);
 
-	MW_ASSERT(message);
+	MW_ASSERT(message, "Null pointer argument");
 
 	switch (message->message_id)
 	{
@@ -143,7 +143,7 @@ uint8_t mw_ui_progress_bar_add_new(uint16_t x,
 
 	if (height < 3 || width < 3)
 	{
-		MW_ASSERT(false);
+		MW_ASSERT(false, "Height too small");
 		return MW_MAX_CONTROL_COUNT;
 	}
 

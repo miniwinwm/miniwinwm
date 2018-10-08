@@ -106,7 +106,7 @@ void mw_ui_label_message_function(const mw_message_t *message)
 {
 	mw_ui_label_data_t *this_label = (mw_ui_label_data_t*)mw_get_control_instance_data(message->recipient_id);
 
-	MW_ASSERT(message);
+	MW_ASSERT(message, "Null pointer argument");
 
 	switch (message->message_id)
 	{
@@ -118,7 +118,7 @@ void mw_ui_label_message_function(const mw_message_t *message)
 		}
 		else
 		{
-			MW_ASSERT(false);
+			MW_ASSERT(false, "Null pointer argument");
 		}
 		break;
 

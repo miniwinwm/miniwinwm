@@ -173,7 +173,7 @@ void mw_ui_arrow_message_function(const mw_message_t *message)
 {
 	mw_ui_arrow_data_t *this_arrow = (mw_ui_arrow_data_t*)mw_get_control_instance_data(message->recipient_id);
 
-	MW_ASSERT(message);
+	MW_ASSERT(message, "Null pointer argument");
 
 	switch (message->message_id)
 	{

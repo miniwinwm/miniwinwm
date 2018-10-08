@@ -88,6 +88,8 @@ void window_temp_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *dra
 	uint16_t y;
 	char buf[3];
 
+	MW_ASSERT(draw_info, "Null pointer parameter");
+
 	/* white background */
 	mw_gl_set_fill(MW_GL_FILL);
 	mw_gl_set_solid_fill_colour(MW_HAL_LCD_WHITE);
@@ -306,6 +308,8 @@ void window_temp_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *dra
 
 void window_temp_message_function(const mw_message_t *message)
 {
+	MW_ASSERT(message, "Null pointer parameter");
+
 	switch (message->message_id)
 	{
 	case MW_WINDOW_CREATED_MESSAGE:

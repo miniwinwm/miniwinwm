@@ -250,6 +250,8 @@ static bool add_image_window(char *path, char *file_name)
 
 void window_file_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_info)
 {
+	MW_ASSERT(draw_info, "Null pointer parameter");
+
 	mw_gl_set_fill(MW_GL_FILL);
 	mw_gl_set_solid_fill_colour(MW_HAL_LCD_WHITE);
 	mw_gl_set_border(MW_GL_BORDER_OFF);
@@ -263,6 +265,8 @@ void window_file_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *dra
 
 void window_file_message_function(const mw_message_t *message)
 {
+	MW_ASSERT(message, "Null pointer parameter");
+
 	switch (message->message_id)
 	{
 	case MW_WINDOW_CREATED_MESSAGE:

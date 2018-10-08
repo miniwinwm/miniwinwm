@@ -174,7 +174,7 @@ void mw_ui_radio_button_message_function(const mw_message_t *message)
 	mw_ui_radio_button_data_t *this_radio_radio_button = (mw_ui_radio_button_data_t*)mw_get_control_instance_data(message->recipient_id);
 	uint16_t height;
 
-	MW_ASSERT(message);
+	MW_ASSERT(message, "Null pointer argument");
 
 	/* set size dependent values */
 	if (mw_get_control_flags(message->recipient_id) & MW_CONTROL_FLAGS_LARGE_SIZE)

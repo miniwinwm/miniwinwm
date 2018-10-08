@@ -264,7 +264,7 @@ void mw_ui_int_number_chooser_message_function(const mw_message_t *message)
 	mw_ui_int_number_chooser_data_t *this_int_number_chooser = (mw_ui_int_number_chooser_data_t*)mw_get_control_instance_data(message->recipient_id);
 	uint32_t chosen_number;
 
-	MW_ASSERT(message);
+	MW_ASSERT(message, "Null pointer argument");
 
 	switch (message->message_id)
 	{

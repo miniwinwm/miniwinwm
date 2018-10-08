@@ -258,16 +258,16 @@ static void set_window_details(const mw_util_rect_t *rect,
 		void *instance_data)
 {
 	/* check pointers */
-	MW_ASSERT(rect);
-	MW_ASSERT(title);
-	MW_ASSERT(paint_func);
-	MW_ASSERT(message_func);
-	MW_ASSERT(window_ref < MW_MAX_WINDOW_COUNT);
+	MW_ASSERT(rect, "Null pointer argument");
+	MW_ASSERT(title, "Null pointer argument");
+	MW_ASSERT(paint_func, "Null pointer argument");
+	MW_ASSERT(message_func, "Null pointer argument");
+	MW_ASSERT(window_ref < MW_MAX_WINDOW_COUNT, "Illegal window id");
 	if (window_flags & MW_WINDOW_HAS_MENU_BAR)
 	{
-		MW_ASSERT(menu_bar_items);
-		MW_ASSERT(*menu_bar_items);
-		MW_ASSERT(menu_bar_items_count > 0);
+		MW_ASSERT(menu_bar_items, "Null pointer argument");
+		MW_ASSERT(*menu_bar_items, "Null pointer argument");
+		MW_ASSERT(menu_bar_items_count > 0, "No menu bar items");
 	}
 
 	/* copy in all details to this window's struct in the array of all windows */
@@ -390,8 +390,8 @@ static void calculate_new_window_size_details(uint8_t window_ref, const mw_util_
 {
 	uint8_t border_width;
 
-	MW_ASSERT(rect);
-	MW_ASSERT(window_ref < MW_MAX_WINDOW_COUNT);
+	MW_ASSERT(rect, "Null pointer argument");
+	MW_ASSERT(window_ref < MW_MAX_WINDOW_COUNT, "Illegal window id");
 
 	/* set the window rect from that passed in first */
 	memcpy(&(mw_all_windows[window_ref].window_rect), rect, sizeof(mw_util_rect_t));
@@ -492,11 +492,11 @@ static void set_control_details(const mw_util_rect_t *rect,
 		void *instance_data)
 {
 	/* check pointers */
-	MW_ASSERT(rect);
-	MW_ASSERT(paint_func);
-	MW_ASSERT(message_func);
-	MW_ASSERT(control_ref < MW_MAX_CONTROL_COUNT);
-	MW_ASSERT(instance_data);
+	MW_ASSERT(rect, "Null pointer argument");
+	MW_ASSERT(paint_func, "Null pointer argument");
+	MW_ASSERT(message_func, "Null pointer argument");
+	MW_ASSERT(control_ref < MW_MAX_CONTROL_COUNT, "Illegal control id");
+	MW_ASSERT(instance_data, "Null pointer argument");
 
 	/* copy in all details to this control's structs in the array of all controls */
 	mw_all_controls[control_ref].control_flags = control_flags | MW_CONTROL_FLAG_IS_USED;
@@ -522,7 +522,7 @@ static void set_control_details(const mw_util_rect_t *rect,
  */
 static void root_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_info)
 {
-	MW_ASSERT(window_ref == MW_ROOT_WINDOW_ID);
+	MW_ASSERT(window_ref == MW_ROOT_WINDOW_ID, "Expected root window id");
 
 	/* call user root window paint */
 	mw_user_root_paint_function(draw_info);
@@ -538,7 +538,7 @@ static void root_message_function(const mw_message_t *message)
 {
 	bool consumed = false;
 
-	MW_ASSERT(message);
+	MW_ASSERT(message, "Null pointer argument");
 
 	/* check if the messages sent to the root window is to be consumed by the system */
 	switch (message->message_id)
@@ -602,8 +602,8 @@ static uint8_t find_icon_number_for_window(uint8_t window_ref)
  */
 static void find_minimsed_icon_location(uint8_t icon_number, int16_t *x, int16_t *y)
 {
-	MW_ASSERT(x);
-	MW_ASSERT(y);
+	MW_ASSERT(x, "Null pointer argument");
+	MW_ASSERT(y, "Null pointer argument");
 
 	/* column position starts at left of screen and works right across screen */
 	*x = (icon_number % MW_DESKTOP_ICONS_PER_ROW) * MW_DESKTOP_ICON_WIDTH;
@@ -689,7 +689,7 @@ static void draw_min_restore_window_effect(uint8_t window_ref)
 	int16_t y;
 	uint8_t icon_number = find_icon_number_for_window(window_ref);
 
-	MW_ASSERT(window_ref < MW_MAX_WINDOW_COUNT);
+	MW_ASSERT(window_ref < MW_MAX_WINDOW_COUNT, "Illegal window id");
 
 	find_minimsed_icon_location(icon_number, &x, &y);
 
@@ -904,7 +904,7 @@ static uint8_t find_control_point_is_in(uint8_t window_ref, int16_t point_x, int
 	int16_t i;
 	uint8_t control_found = MW_MAX_CONTROL_COUNT;
 
-	MW_ASSERT(window_ref < MW_MAX_WINDOW_COUNT);
+	MW_ASSERT(window_ref < MW_MAX_WINDOW_COUNT, "Illegal window id");
 
 	/* loop through all controls */
 	for (i = MW_MAX_CONTROL_COUNT - 1; i >= 0; i--)
@@ -947,9 +947,9 @@ static void find_rect_window_intersections(const mw_util_rect_t *r, uint16_t *ho
 	bool self_top_found = false;
 	bool self_bottom_found = false;
 
-	MW_ASSERT(horiz_edges_count);
-	MW_ASSERT(vert_edges_count);
-	MW_ASSERT(r);
+	MW_ASSERT(horiz_edges_count, "Null pointer argument");
+	MW_ASSERT(vert_edges_count, "Null pointer argument");
+	MW_ASSERT(r, "Null pointer argument");
 
 	/* clear the number of edges found */
 	*horiz_edges_count = 0;
@@ -1135,7 +1135,7 @@ static bool find_if_window_is_overlapped(uint8_t window_ref)
 {
 	uint8_t i;
 
-	MW_ASSERT(window_ref < MW_MAX_WINDOW_COUNT);
+	MW_ASSERT(window_ref < MW_MAX_WINDOW_COUNT, "Illegal window id");
 
 	/* iterate through all windows */
 	for (i = 0; i < MW_MAX_WINDOW_COUNT;i++)
@@ -1179,8 +1179,8 @@ static bool find_if_rect_is_completely_on_screen(const mw_util_rect_t *rect)
  */
 static void draw_title_bar(uint8_t window_ref, const mw_gl_draw_info_t *draw_info)
 {
-	MW_ASSERT(window_ref < MW_MAX_WINDOW_COUNT);
-	MW_ASSERT(draw_info);
+	MW_ASSERT(window_ref < MW_MAX_WINDOW_COUNT, "Illegal window id");
+	MW_ASSERT(draw_info, "Null pointer argument");
 
     /* set title bar colour according to focus/modal state */
 	if (window_ref != window_with_focus)
@@ -1277,8 +1277,8 @@ static void draw_title_bar(uint8_t window_ref, const mw_gl_draw_info_t *draw_inf
  */
 static void draw_titlebar_text(uint8_t window_ref, const mw_gl_draw_info_t *draw_info)
 {
-	MW_ASSERT(window_ref < MW_MAX_WINDOW_COUNT);
-	MW_ASSERT(draw_info);
+	MW_ASSERT(window_ref < MW_MAX_WINDOW_COUNT, "Illegal window id");
+	MW_ASSERT(draw_info, "Null pointer argument");
 
 	if (window_ref != window_with_focus)
 	{
@@ -1311,8 +1311,8 @@ static void draw_menu_bar(const mw_gl_draw_info_t *draw_info, uint8_t window_ref
 	uint16_t next_pos;
 	uint8_t i;
 
-	MW_ASSERT(draw_info);
-	MW_ASSERT(window_ref < MW_MAX_WINDOW_COUNT);
+	MW_ASSERT(draw_info, "Null pointer argument");
+	MW_ASSERT(window_ref < MW_MAX_WINDOW_COUNT, "Illegal window id");
 
 	mw_gl_set_fill(MW_GL_FILL);
 	mw_gl_set_solid_fill_colour(MW_CONTROL_UP_COLOUR);
@@ -1378,8 +1378,8 @@ static void draw_horizontal_window_scroll_bar(const mw_gl_draw_info_t *draw_info
 {
 	int16_t scroll_bar_horiz_slider_left;
 
-	MW_ASSERT(draw_info);
-	MW_ASSERT(window_ref < MW_MAX_WINDOW_COUNT);
+	MW_ASSERT(draw_info, "Null pointer argument");
+	MW_ASSERT(window_ref < MW_MAX_WINDOW_COUNT, "Illegal window id");
 
 	mw_gl_set_fill(MW_GL_FILL);
 	mw_gl_set_border(MW_GL_BORDER_ON);
@@ -1467,8 +1467,8 @@ static void draw_vertical_window_scroll_bar(const mw_gl_draw_info_t *draw_info, 
 {
 	int16_t scroll_bar_horiz_slider_top;
 
-	MW_ASSERT(draw_info);
-	MW_ASSERT(window_ref < MW_MAX_WINDOW_COUNT);
+	MW_ASSERT(draw_info, "Null pointer argument");
+	MW_ASSERT(window_ref < MW_MAX_WINDOW_COUNT, "Illegal window id");
 
 	mw_gl_set_fill(MW_GL_FILL);
 	mw_gl_set_border(MW_GL_BORDER_ON);
@@ -1599,7 +1599,7 @@ static void do_paint_window_frame(uint8_t window_ref, uint8_t components)
 	mw_util_rect_t rect_current;
 	mw_util_rect_t rect_previous;
 
-	MW_ASSERT(window_ref < MW_MAX_WINDOW_COUNT);
+	MW_ASSERT(window_ref < MW_MAX_WINDOW_COUNT, "Illegal window id");
 
     /* check if this window is used, visible and not minimised; if not give up */
 	if (!(mw_all_windows[window_ref].window_flags & MW_WINDOW_FLAG_IS_USED) ||
@@ -1679,8 +1679,8 @@ static void do_paint_window_frame2(uint8_t window_ref, uint8_t components, const
 {
 	mw_gl_draw_info_t draw_info;
 
-	MW_ASSERT(window_ref < MW_MAX_WINDOW_COUNT);
-	MW_ASSERT(invalid_rect);
+	MW_ASSERT(window_ref < MW_MAX_WINDOW_COUNT, "Illegal window id");
+	MW_ASSERT(invalid_rect, "Null pointer argument");
 
 	draw_info.clip_rect.x = invalid_rect->x - mw_all_windows[window_ref].window_rect.x;
 	draw_info.clip_rect.y = invalid_rect->y - mw_all_windows[window_ref].window_rect.y;
@@ -1806,7 +1806,7 @@ static void do_paint_window_client(uint8_t window_ref)
 	mw_util_rect_t rect_current;
 	mw_util_rect_t rect_previous;
 
-	MW_ASSERT(window_ref < MW_MAX_WINDOW_COUNT);
+	MW_ASSERT(window_ref < MW_MAX_WINDOW_COUNT, "Illegal window id");
 
     /* check if this window is used, visible and not minimised; if not give up */
 	if (!(mw_all_windows[window_ref].window_flags & MW_WINDOW_FLAG_IS_USED) ||
@@ -1899,8 +1899,8 @@ static void do_paint_window_client_rect(uint8_t window_ref, const mw_util_rect_t
 	mw_util_rect_t invalid_rect_copy;
 	int16_t overlap;
 
-	MW_ASSERT(window_ref < MW_MAX_WINDOW_COUNT);
-	MW_ASSERT(invalid_rect);
+	MW_ASSERT(window_ref < MW_MAX_WINDOW_COUNT, "Illegal window id");
+	MW_ASSERT(invalid_rect, "Null pointer argument");
 
     /* check if this window is used, visible and not minimised; if not give up */
 	if (!(mw_all_windows[window_ref].window_flags & MW_WINDOW_FLAG_IS_USED) ||
@@ -2021,8 +2021,8 @@ static void do_paint_window_client2(uint8_t window_ref, const mw_util_rect_t *in
 {
 	mw_gl_draw_info_t client_draw_info;
 
-	MW_ASSERT(window_ref < MW_MAX_CONTROL_COUNT);
-	MW_ASSERT(invalid_rect);
+	MW_ASSERT(window_ref < MW_MAX_CONTROL_COUNT, "Illegal control id");
+	MW_ASSERT(invalid_rect, "Null pointer argument");
 
 	client_draw_info.clip_rect.x = invalid_rect->x - mw_all_windows[window_ref].client_rect.x;
 	client_draw_info.clip_rect.y = invalid_rect->y - mw_all_windows[window_ref].client_rect.y;
@@ -2050,7 +2050,7 @@ static void paint_all_controls_in_window(uint8_t window_ref)
 {
 	uint8_t i;
 
-	MW_ASSERT(window_ref < MW_MAX_WINDOW_COUNT);
+	MW_ASSERT(window_ref < MW_MAX_WINDOW_COUNT, "Illegal control id");
 
     /* iterate through all controls */
 	for (i = 0; i < MW_MAX_CONTROL_COUNT; i++)
@@ -2075,7 +2075,7 @@ static void paint_all_controls_in_window_rect(uint8_t window_ref, const mw_util_
 {
 	uint8_t i;
 
-	MW_ASSERT(window_ref < MW_MAX_WINDOW_COUNT);
+	MW_ASSERT(window_ref < MW_MAX_WINDOW_COUNT, "Illegal window id");
 
     /* iterate through all controls */
 	for (i = 0; i < MW_MAX_CONTROL_COUNT; i++)
@@ -2111,8 +2111,8 @@ static void do_paint_control_rect(uint8_t control_ref, const mw_util_rect_t *inv
 	mw_util_rect_t rect_previous;
 	mw_util_rect_t invalid_rect_copy;
 
-	MW_ASSERT(control_ref < MW_MAX_CONTROL_COUNT);
-	MW_ASSERT(invalid_rect);
+	MW_ASSERT(control_ref < MW_MAX_CONTROL_COUNT, "Illegal control id");
+	MW_ASSERT(invalid_rect, "Null pointer argument");
 
     /* check if this control is used, visible and not parent window not minimised; if not give up */
 	if (!(mw_all_controls[control_ref].control_flags & MW_CONTROL_FLAG_IS_VISIBLE) ||
@@ -2216,7 +2216,7 @@ static void do_paint_control(uint8_t control_ref)
 	mw_util_rect_t rect_current;
 	mw_util_rect_t rect_previous;
 
-	MW_ASSERT(control_ref < MW_MAX_CONTROL_COUNT);
+	MW_ASSERT(control_ref < MW_MAX_CONTROL_COUNT, "Illegal control id");
 
     /* check if this control is used, visible and not parent window not minimised; if not give up */
 	if (!(mw_all_controls[control_ref].control_flags & MW_CONTROL_FLAG_IS_VISIBLE) ||
@@ -2288,8 +2288,8 @@ static void do_paint_control2(uint8_t control_ref, const mw_util_rect_t *invalid
 	uint8_t parent_window_ref;
 	int16_t client_area_overspill;
 
-	MW_ASSERT(control_ref < MW_MAX_CONTROL_COUNT);
-	MW_ASSERT(invalid_rect);
+	MW_ASSERT(control_ref < MW_MAX_CONTROL_COUNT, "Illegal control id");
+	MW_ASSERT(invalid_rect, "Null pointer argument");
 
 	client_draw_info.clip_rect.x = invalid_rect->x - mw_all_controls[control_ref].control_rect.x;
 	client_draw_info.clip_rect.y = invalid_rect->y - mw_all_controls[control_ref].control_rect.y;
@@ -3009,7 +3009,7 @@ static void rationalize_z_orders(void)
  */
 static void draw_redimensioning_window_outline(uint8_t window_ref)
 {
-	MW_ASSERT(window_ref < MW_MAX_WINDOW_COUNT);
+	MW_ASSERT(window_ref < MW_MAX_WINDOW_COUNT, "Illegal window id");
 
 	mw_gl_set_fill(MW_GL_NO_FILL);
 	mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
@@ -3124,21 +3124,21 @@ uint8_t mw_add_window(mw_util_rect_t *rect,
 	/* check compulsory parameters */
 	if (rect == NULL || paint_func == NULL || message_func == NULL || title == NULL)
 	{
-		MW_ASSERT(false);
+		MW_ASSERT(false, "Null pointer argument");
 		return MW_MAX_WINDOW_COUNT;
 	}
 
 	/* check for being called from within a client window paint function */
 	if (in_client_window_paint_function)
 	{
-		MW_ASSERT(false);
+		MW_ASSERT(false, "Can't add window in paint function");
 		return MW_MAX_WINDOW_COUNT;
 	}
 
 	/* check optional parameters */
 	if ((window_flags & MW_WINDOW_HAS_MENU_BAR) && (!menu_bar_items || !*menu_bar_items || menu_bar_items_count == 0))
 	{
-		MW_ASSERT(false);
+		MW_ASSERT(false, "Non-sensical arguments");
 		return MW_MAX_WINDOW_COUNT;
 	}
 
@@ -3147,14 +3147,14 @@ uint8_t mw_add_window(mw_util_rect_t *rect,
 	if (new_window_id == MW_MAX_WINDOW_COUNT)
 	{
 		/* no empty slot */	
-		MW_ASSERT(false);
+		MW_ASSERT(false, "No space to add window");
 		return MW_MAX_WINDOW_COUNT;
 	}
 
 	/* sanity check on width compared to border thickness */
 	if (rect->width < ((window_flags & MW_WINDOW_FLAG_HAS_BORDER) ? (MW_BORDER_WIDTH * 2) + 1 : 1))
 	{
-		MW_ASSERT(false);
+		MW_ASSERT(false, "Width too small");
 		return MW_MAX_WINDOW_COUNT;
 	}
 
@@ -3163,7 +3163,7 @@ uint8_t mw_add_window(mw_util_rect_t *rect,
 			rect->height,
 			window_flags))
 	{
-		MW_ASSERT(false);
+		MW_ASSERT(false, "Window too samall");
 		return MW_MAX_WINDOW_COUNT;
 	}
 
@@ -3198,7 +3198,7 @@ void mw_bring_window_to_front(uint8_t window_ref)
 	/* check that the window id is in range */
 	if (window_ref >= MW_MAX_WINDOW_COUNT)
 	{
-		MW_ASSERT(false);
+		MW_ASSERT(false, "Illegal window id");
 		return;
 	}
 
@@ -3219,7 +3219,7 @@ void mw_send_window_to_back(uint8_t window_ref)
 	/* check that the window id is in range */
 	if (window_ref >= MW_MAX_WINDOW_COUNT)
 	{
-		MW_ASSERT(false);
+		MW_ASSERT(false, "Illegal window id");
 		return;
 	}
 
@@ -3241,7 +3241,7 @@ void mw_set_window_visible(uint8_t window_ref, bool visible)
 	/* check that the window id is in range */
 	if (window_ref >= MW_MAX_WINDOW_COUNT)
 	{
-		MW_ASSERT(false);
+		MW_ASSERT(false, "Illegal window id");
 		return;
 	}
 
@@ -3289,7 +3289,7 @@ void mw_set_window_minimised(uint8_t window_ref, bool minimised)
 	/* check that the window id is in range */
 	if (window_ref >= MW_MAX_WINDOW_COUNT)
 	{
-		MW_ASSERT(false);
+		MW_ASSERT(false, "Illegal window id");
 		return;
 	}
 
@@ -3319,7 +3319,7 @@ void mw_reposition_window(uint8_t window_ref, int16_t new_x, int16_t new_y)
 	/* check that the window id is in range */
 	if (window_ref >= MW_MAX_WINDOW_COUNT)
 	{
-		MW_ASSERT(false);
+		MW_ASSERT(false, "Illegal window id");
 		return;
 	}
 	
@@ -3365,7 +3365,7 @@ bool mw_resize_window(uint8_t window_ref, uint16_t new_width, uint16_t new_heigh
 	/* check that the window id is in range */
 	if (window_ref >= MW_MAX_WINDOW_COUNT)
 	{
-		MW_ASSERT(false);
+		MW_ASSERT(false, "Illegal window id");
 		return false;
 	}
 
@@ -3425,7 +3425,7 @@ void mw_set_window_modal(uint8_t window_ref, bool modal)
 	/* check that the window id is in range */
 	if (window_ref >= MW_MAX_WINDOW_COUNT)
 	{
-		MW_ASSERT(false);
+		MW_ASSERT(false, "Illegal window id");
 		return;
 	}
 
@@ -3467,7 +3467,7 @@ void mw_set_menu_bar_enabled_state(uint8_t window_ref, bool enabled)
 	/* check that the window id is in range */
 	if (window_ref >= MW_MAX_WINDOW_COUNT)
 	{
-		MW_ASSERT(false);
+		MW_ASSERT(false, "Illegal window id");
 		return;
 	}
 
@@ -3486,7 +3486,7 @@ void mw_set_menu_bar_items_enabled_state(uint8_t window_ref, uint16_t item_enabl
 	/* check that the window id is in range */
 	if (window_ref >= MW_MAX_WINDOW_COUNT)
 	{
-		MW_ASSERT(false);
+		MW_ASSERT(false, "Illegal window id");
 		return;
 	}
 
@@ -3498,7 +3498,7 @@ void mw_set_window_horiz_scroll_bar_enabled_state(uint8_t window_ref, bool enabl
 	/* check that the window id is in range */
 	if (window_ref >= MW_MAX_WINDOW_COUNT)
 	{
-		MW_ASSERT(false);
+		MW_ASSERT(false, "Illegal window id");
 		return;
 	}
 
@@ -3519,7 +3519,7 @@ void mw_set_window_vert_scroll_bar_enabled_state(uint8_t window_ref, bool enable
 	/* check that the window id is in range */
 	if (window_ref >= MW_MAX_WINDOW_COUNT)
 	{
-		MW_ASSERT(false);
+		MW_ASSERT(false, "Illegal window id");
 		return;
 	}
 
@@ -3540,7 +3540,7 @@ void mw_paint_window_frame(uint8_t window_ref, uint8_t components)
 	/* check that the window id is in range */
 	if (window_ref >= MW_MAX_WINDOW_COUNT)
 	{
-		MW_ASSERT(false);
+		MW_ASSERT(false, "Illegal window id");
 		return;
 	}
 	
@@ -3558,7 +3558,7 @@ void mw_paint_window_client(uint8_t window_ref)
 	/* check that the window id is in range */
 	if (window_ref >= MW_MAX_WINDOW_COUNT)
 	{
-		MW_ASSERT(false);
+		MW_ASSERT(false, "Illegal window id");
 		return;
 	}
 	
@@ -3573,10 +3573,17 @@ void mw_paint_window_client(uint8_t window_ref)
 
 void mw_paint_window_client_rect(uint8_t window_ref, const mw_util_rect_t *rect)
 {
-	/* check window_ref is in range and pointer not null */
+	/* check pointer not null */
+	if (!rect)
+	{
+		MW_ASSERT(false, "Null pointer argument");
+		return;
+	}
+
+	/* check window_ref */
 	if (window_ref >= MW_MAX_WINDOW_COUNT || !rect)
 	{
-		MW_ASSERT(false);
+		MW_ASSERT(false,"Illegal window id");
 		return;
 	}
 
@@ -3596,13 +3603,14 @@ void mw_remove_window(uint8_t window_ref)
 	/* check window_ref is in range */
 	if (window_ref >= MW_MAX_WINDOW_COUNT)
 	{
+		MW_ASSERT(false, "Illegal window id");
 		return;
 	}
 
 	/* cannot remove root window */
 	if (window_ref == MW_ROOT_WINDOW_ID)
 	{
-		MW_ASSERT(false);
+		MW_ASSERT(false, "Can't remove root window");
 		return;
 	}
 
@@ -3648,7 +3656,7 @@ mw_util_rect_t mw_get_window_client_rect(uint8_t window_ref)
 
 	if (window_ref >= MW_MAX_WINDOW_COUNT)
 	{
-		MW_ASSERT(false);
+		MW_ASSERT(false, "Illegal window id");
 		return default_rect;
 	}
 
@@ -3659,7 +3667,7 @@ void *mw_get_window_instance_data(uint8_t window_ref)
 {
 	if (window_ref >= MW_MAX_WINDOW_COUNT)
 	{
-		MW_ASSERT(false);
+		MW_ASSERT(false, "Illegal window id");
 		return NULL;
 	}
 
@@ -3675,7 +3683,7 @@ void wm_set_window_title(uint8_t window_ref, char *title_text)
 {
 	if (window_ref >= MW_MAX_WINDOW_COUNT)
 	{
-		MW_ASSERT(false);
+		MW_ASSERT(false, "Illegal window id");
 		return;
 	}
 
@@ -3694,28 +3702,28 @@ uint8_t mw_add_control(mw_util_rect_t *rect,
 	/* check for null parameters */
 	if (rect == NULL || instance_data == NULL || paint_func == NULL || message_func == NULL)
 	{
-		MW_ASSERT(false);
+		MW_ASSERT(false, "Null pointer argument");
 		return MW_MAX_CONTROL_COUNT;
 	}
 
 	/* check for being called from within a client window paint function */
 	if (in_client_window_paint_function)
 	{
-		MW_ASSERT(false);
+		MW_ASSERT(false, "Can't add control in paint function");
 		return MW_MAX_CONTROL_COUNT;
 	}
 
 	/* cannot add a control to an unused window or the root window so filter these out */
 	if (!(mw_all_windows[parent].window_flags & MW_WINDOW_FLAG_IS_USED) || parent == MW_ROOT_WINDOW_ID)
 	{
-		MW_ASSERT(false);
+		MW_ASSERT(false, "Can't add control to unused or root window");
 		return MW_MAX_CONTROL_COUNT;
 	}
 
 	/* don't allow control to start above or to left of parent window client rect */
 	if (rect->x < 0 || rect->y < 0)
 	{
-		MW_ASSERT(false);
+		MW_ASSERT(false, "Can't add control at this position");
 		return MW_MAX_CONTROL_COUNT;
 	}
 
@@ -3724,7 +3732,7 @@ uint8_t mw_add_control(mw_util_rect_t *rect,
 	if (new_control_id == MW_MAX_CONTROL_COUNT)
 	{
 		/* no empty slot */
-		MW_ASSERT(false);
+		MW_ASSERT(false, "No space for new control");
 		return MW_MAX_CONTROL_COUNT;
 	}
 
@@ -3762,7 +3770,7 @@ void mw_set_control_visible(uint8_t control_ref, bool visible)
 	/* check that the control id is in range */
 	if (control_ref >= MW_MAX_CONTROL_COUNT)
 	{
-		MW_ASSERT(false);
+		MW_ASSERT(false, "Illegal control id");
 		return;
 	}
 
@@ -3813,7 +3821,7 @@ void mw_set_control_enabled(uint8_t control_ref, bool enabled)
 	/* check that the control id is in range */
 	if (control_ref >= MW_MAX_CONTROL_COUNT)
 	{
-		MW_ASSERT(false);
+		MW_ASSERT(false, "Illegal control id");
 		return;
 	}
 
@@ -3838,7 +3846,7 @@ void mw_paint_control(uint8_t control_ref)
 	/* check that the control id is in range */
 	if (control_ref >= MW_MAX_CONTROL_COUNT)
 	{
-		MW_ASSERT(false);
+		MW_ASSERT(false, "Illegal control id");
 		return;
 	}
 	
@@ -3856,7 +3864,7 @@ void mw_paint_control_rect(uint8_t control_ref, const mw_util_rect_t *rect)
 	/* check that the control id is in range */
 	if (control_ref >= MW_MAX_CONTROL_COUNT)
 	{
-		MW_ASSERT(false);
+		MW_ASSERT(false, "Illegal control id");
 		return;
 	}
 
@@ -3909,7 +3917,7 @@ mw_util_rect_t mw_get_control_rect(uint8_t control_ref)
 
 	if (control_ref >= MW_MAX_CONTROL_COUNT)
 	{
-		MW_ASSERT(false);
+		MW_ASSERT(false, "Illegal control id");
 		return default_rect;
 	}
 
@@ -3920,7 +3928,7 @@ uint8_t mw_get_control_parent_window(uint8_t control_ref)
 {
 	if (control_ref >= MW_MAX_CONTROL_COUNT)
 	{
-		MW_ASSERT(false);
+		MW_ASSERT(false, "Illegal control id");
 		return 0;
 	}
 
@@ -3931,7 +3939,7 @@ void *mw_get_control_instance_data(uint8_t control_ref)
 {
 	if (control_ref >= MW_MAX_CONTROL_COUNT)
 	{
-		MW_ASSERT(false);
+		MW_ASSERT(false, "Illegal control id");
 		return NULL;
 	}
 
@@ -3942,7 +3950,7 @@ uint16_t mw_get_control_flags(uint8_t control_ref)
 {
 	if (control_ref >= MW_MAX_CONTROL_COUNT)
 	{
-		MW_ASSERT(false);
+		MW_ASSERT(false, "Illegal control id");
 		return 0;
 	}
 
@@ -3962,19 +3970,19 @@ uint8_t mw_set_timer(uint32_t fire_time, uint8_t recipient_id, mw_message_recipi
 	/* reject any other recipient than window or control */
 	if (recipient_type != MW_WINDOW_MESSAGE && recipient_type != MW_CONTROL_MESSAGE)
 	{
-		MW_ASSERT(false);
+		MW_ASSERT(false, "Illegal timer recopient type");
 		return MW_MAX_TIMER_COUNT;
 	}
 	
 	/* check that recipient id is in range for recipient type */
 	if (recipient_type == MW_WINDOW_MESSAGE && recipient_id > MW_MAX_WINDOW_COUNT)
 	{
-		MW_ASSERT(false);
+		MW_ASSERT(false, "Illegal recipient window id");
 		return MW_MAX_TIMER_COUNT;
 	}
 	if (recipient_type == MW_CONTROL_MESSAGE && recipient_id > MW_MAX_CONTROL_COUNT)
 	{
-		MW_ASSERT(false);
+		MW_ASSERT(false, "Illegal control recipient id");
 		return MW_MAX_TIMER_COUNT;
 	}	
 
@@ -3992,7 +4000,7 @@ uint8_t mw_set_timer(uint32_t fire_time, uint8_t recipient_id, mw_message_recipi
 	}
 
 	/* failed to find an empty timer slot */
-	MW_ASSERT(false);
+	MW_ASSERT(false, "No space to add timer");
 
 	return MW_MAX_TIMER_COUNT;
 }
@@ -4005,7 +4013,7 @@ void mw_cancel_timer(uint8_t timer_id)
 	/* sanity check on timer id */
 	if (timer_id >= MW_MAX_TIMER_COUNT)
 	{
-		MW_ASSERT(false);
+		MW_ASSERT(false, "Illegal timer id");
 		return;
 	}
 
@@ -4016,12 +4024,15 @@ void mw_cancel_timer(uint8_t timer_id)
 	for (i = 0; i < MW_MESSAGE_QUEUE_SIZE; i++)
 	{
 		message = mw_message_queue_get_ref_to_item_at_position(i);
-		MW_ASSERT(message);
+		MW_ASSERT(message, "Null message found in queue");
 
-		if (message->message_id == MW_WINDOW_TIMER_MESSAGE && message->message_data == timer_id)
+		if (message)
 		{
-			/* this leaves the message in the message queue but marks it as to be ignored when the message is processed */
-			message->message_recipient_type = MW_CANCELLED_MESSAGE;
+			if (message->message_id == MW_WINDOW_TIMER_MESSAGE && message->message_data == timer_id)
+			{
+				/* this leaves the message in the message queue but marks it as to be ignored when the message is processed */
+				message->message_recipient_type = MW_CANCELLED_MESSAGE;
+			}
 		}
 	}
 }
@@ -4033,12 +4044,12 @@ void mw_post_message(uint8_t message_id, uint8_t sender_id, uint8_t recipient_id
 	/* check recipient id for type makes sense */
 	if (recipient_type == MW_WINDOW_MESSAGE && recipient_id >= MW_MAX_WINDOW_COUNT)
 	{
-		MW_ASSERT(false);
+		MW_ASSERT(false, "Illegal window id");
 		return;
 	}
 	if (recipient_type == MW_CONTROL_MESSAGE && recipient_id >= MW_MAX_CONTROL_COUNT)
 	{
-		MW_ASSERT(false);
+		MW_ASSERT(false, "Illegal control id");
 		return;
 	}	
 
@@ -4054,8 +4065,8 @@ void mw_post_message(uint8_t message_id, uint8_t sender_id, uint8_t recipient_id
 		(new_message.message_recipient_type == MW_CONTROL_MESSAGE && (mw_all_controls[new_message.recipient_id].control_flags & MW_CONTROL_FLAG_IS_USED)) ||
 		new_message.message_recipient_type == MW_SYSTEM_MESSAGE)
 	{
-		/* add this message to the queue, asserting that there is space in the queue */
-		MW_ASSERT(mw_message_queue_insert(&new_message));
+		/* add this message to the queue */
+		mw_message_queue_insert(&new_message);
 	}
 }
 
@@ -4129,7 +4140,7 @@ bool mw_process_message(void)
 					else
 					{
 						/* bad recipient id */
-						MW_ASSERT(false);
+						MW_ASSERT(false, "Illegal timer recipient window id");
 					}
 				}
 				else if (mw_all_timers[i].recipient_type == MW_CONTROL_MESSAGE)
@@ -4150,13 +4161,13 @@ bool mw_process_message(void)
 					else
 					{
 						/* bad recipient id */
-						MW_ASSERT(false);
+						MW_ASSERT(false, "Illegal timer recipient control id");
 					}
 				}
 				else
 				{
 					/* bad recipient type */
-					MW_ASSERT(false);
+					MW_ASSERT(false, "Illegal timer recipient type");
 				}
 			}
 		}
@@ -4224,7 +4235,7 @@ bool mw_process_message(void)
 				break;
 
 			default:
-				MW_ASSERT(false);
+				MW_ASSERT(false, "Illegal system message type");
 				break;
 			}
 			break;
@@ -4234,7 +4245,7 @@ bool mw_process_message(void)
 			break;
 
 		default:
-			MW_ASSERT(false);
+			MW_ASSERT(false, "Illegal message recipient type");
 		}
 
 		return true;

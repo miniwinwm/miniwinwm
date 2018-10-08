@@ -75,14 +75,11 @@ static uint8_t max_queue_usage;                             /**< Always increasi
 
 bool mw_message_queue_insert(const mw_message_t *incoming_message)
 {
-	MW_ASSERT(incoming_message);
+	/* check pointer */
+	MW_ASSERT(incoming_message, "Null pointer argument");
 
 	/* check for space in the queue */
-	if (items_in_queue == MW_MESSAGE_QUEUE_SIZE)
-	{
-		MW_ASSERT(false);
-		return false;
-	}
+	MW_ASSERT(items_in_queue < MW_MESSAGE_QUEUE_SIZE, "Message queue full");
 
 	/* there's space so copy in the new message */
 	memcpy(&message_queue[next_write_slot], incoming_message, sizeof(mw_message_t));
@@ -107,7 +104,7 @@ bool mw_message_queue_insert(const mw_message_t *incoming_message)
 
 bool mw_message_queue_remove(mw_message_t *outgoing_message)
 {
-	MW_ASSERT(outgoing_message);
+	MW_ASSERT(outgoing_message, "Null pointer argument");
 
 	/* check if there is anything in the queue */
 	if (items_in_queue == 0)
@@ -130,7 +127,7 @@ bool mw_message_queue_remove(mw_message_t *outgoing_message)
 
 mw_message_t *mw_message_queue_get_ref_to_item_at_position(uint8_t position)
 {
-	MW_ASSERT(position < MW_MESSAGE_QUEUE_SIZE);
+	MW_ASSERT(position < MW_MESSAGE_QUEUE_SIZE, "Out of bounds message queue position");
 
 	return (&message_queue[position]);
 }
