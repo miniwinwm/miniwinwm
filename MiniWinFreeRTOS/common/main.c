@@ -148,7 +148,7 @@ static void gyro_thread(void *parameters)
 			xMessageBufferSend(gyro_z_message_buffer, (void *)&gyro_readings[GYRO_READING_Z], sizeof(float), 0);
 		}
 
-		/* pause thread for 10 milliseconds */
+		/* pause thread until next reading */
 		vTaskDelayUntil(&xLastWakeTime, 10);
 	}
 }

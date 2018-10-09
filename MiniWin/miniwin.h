@@ -275,20 +275,36 @@ typedef struct
  */
 
 /**
- * User implemented function for user initialisations. Use this to create new windows and controls
- * and paint requests after calling wm_init().
+ * This function is declared by MiniWin but is up to the user to implement.
+ * All user user interface initializations like creating windows and controls
+ * can be collected together here . A stubbed version is found in miniwin_user.c
+ * in MiniWin/user. Remove this file from the build, copy it to your
+ * application folder, and implement this function. The user never calls this
+ * function; it is called by the window manager.
+ *
+ * @note Do not call this directly from user code
  */
 void mw_user_init(void);
 
 /**
- * Paint the root window with a background pattern.
+ * This function is declared by MiniWin but is up to the user to implement. In
+ * this function the user implements the painting of the root window. A stubbed
+ * version is found in miniwin_user.c in MiniWin/user. Remove this file from the
+ * build, copy it to your application folder, and implement this function. The
+ * user never calls this function; it is called by the window manager.
  *
  * @param draw_info Draw info structure describing offset and clip region
+ * @note Do not call this directly from user code
  */
 void mw_user_root_paint_function(const mw_gl_draw_info_t *draw_info);
 
 /**
- * Handle a message passed to the root window.
+ * This function is declared by MiniWin but is up to the user to implement. The
+ * user can respond to messages sent to the root window here, for example a tap
+ * on the root window. A stubbed version is found in miniwin_user.c in
+ * MiniWin/user. Remove this file from the build, copy it to your application
+ * folder, and implement this function. The user never calls this function; it
+ * is called by the window manager.
  *
  * @param message The message to be processed
  * @note Do not call this directly from user code
@@ -300,19 +316,28 @@ void mw_user_root_message_function(const mw_message_t *message);
  */
 
 /**
- * Initialise the window manager. This creates the root window.
+ * Initialize the window manager. This initialize all the drivers, create the
+ * root window and calls wm_user_init. This function needs to be called before
+ * any messages are posted or processed. This function is usually called from
+ * your application’s main function, or MiniWin thread first call if running in
+ * a thread.
  */
 void mw_init();
 
 /**
- * Find if there are any free window slots in array of windows
+ * Memory for holding window data is allocated statically at compile time.
+ * Before adding a new window it may be useful to see if there are any slots
+ * in the array of window data structures free.
  *
  * @return true if there are else false
  */
 bool mw_find_if_any_window_slots_free(void);
 
 /**
- * Add a new window. Returns new window reference number or MAX_WINDOW_COUNT if there is an error.
+ * Add a new window. This can be called in mw_user_init for windows that exist
+ * for the lifetime of the application or later for windows which come and go.
+ * There must be space statically allocated to create the new window. Returns
+ * new window reference number or MAX_WINDOW_COUNT if there is an error.
  *
  * @param rect The rect of the window's total area, including border and title bar
  * @param title The window title as shown in title bar
@@ -323,6 +348,7 @@ bool mw_find_if_any_window_slots_free(void);
  * @param window_flags The new window's description and state flags
  * @param instance_data Optional pointer to any extra window data that is instance specific, can be NULL if no instance data
  * @return The new window id if created or MAX_WINDOW_COUNT if it could not be created
+ * @warning Do not call from within any paint function
  */
 uint8_t mw_add_window(mw_util_rect_t *rect,
 		char* title,
@@ -334,9 +360,11 @@ uint8_t mw_add_window(mw_util_rect_t *rect,
 		void *instance_data);
 
 /**
- *  Bring a window to the front giving it the highest Z order of all windows.
+ * Bring a window to the front giving it the highest Z order of all windows.
  *
  * @param window_ref Position in array of all windows of this window
+ * @note It is up to the user to issue appropriate paint messages (window frame and
+ *       client area) to get the window repainted
  */
 void mw_bring_window_to_front(uint8_t window_ref);
 
@@ -344,22 +372,30 @@ void mw_bring_window_to_front(uint8_t window_ref);
  * Send a window to the back giving it the lowest Z order of all windows.
  *
  * @param window_ref Position in array of all windows of this window
+ * @note It is up to the user to issue a paint all message to get windows repainted that
+ * 		 have beenexposed by sending this window to the back
  */
 void mw_send_window_to_back(uint8_t window_ref);
 
 /**
- *  Set a window visible if it is used.
+ *  Set a window's visibility if it is used. If set visible it is given focus and brought
+ *  to the front of other showing windows.
  *
  * @param window_ref Position in array of all windows of this window
- * @param visible True or false
+ * @param visible true or false
+ * @note It is up to the user to issue the appropriate window paint messages (paint all
+ *       if a window is made invisible or paint window frame and client area if made
+ *       visible.
  */
 void mw_set_window_visible(uint8_t window_ref, bool visible);
 
 /**
- *  Set a window minimised if it is used.
+ * Set a window minimised if it is used.
  *
  * @param window_ref Position in array of all windows of this window
- * @param minimised True or false
+ * @param minimised true or false
+ * @note It is up to the user to issue the appropriate window paint messages (paint all
+ *       if a window is mainimized or paint window frame and client area if restored
  */
 void mw_set_window_minimised(uint8_t window_ref, bool minimised);
 
@@ -369,6 +405,7 @@ void mw_set_window_minimised(uint8_t window_ref, bool minimised);
  * @param window_ref Position in array of all windows of this window
  * @param new_x The new x position of the left edge of the window
  * @param new_y The new y position of the top edge of the window
+ * @note It is up to the user to issue a paint all message
  */
 void mw_reposition_window(uint8_t window_ref, int16_t new_x, int16_t new_y);
 
@@ -379,11 +416,12 @@ void mw_reposition_window(uint8_t window_ref, int16_t new_x, int16_t new_y);
  * @param new_width The new width of the window
  * @param new_height The new height of the window
  * @return If the resize was successful
+ * @note It is up to the user to issue a paint all message
  */
 bool mw_resize_window(uint8_t window_ref, uint16_t new_width, uint16_t new_height);
 
 /**
- * Find the window with focus. This is the window with the highest Z order.
+ * Find the window with focus. This is the visible window with the highest Z order.
  *
  * @return The window ref of the window.
  */
@@ -392,23 +430,25 @@ uint8_t mw_find_window_with_focus(void);
 /**
  * Return if any user window is currently modal.
  *
- * @return True if any window is modal else false
+ * @return true if any window is modal else false
  */
 bool mw_is_any_window_modal(void);
 
 /**
  * Set the specified window system modal. This means that the window cannot be switched away from and no
- * other window accepts input. The title bar icons are removed while in modal state so tha the window cannot
+ * other window accepts input. The title bar icons are removed while in modal state so that the window cannot
  * be closed or minimised. If any window is currently modal this call is ignored. Call ignored for unused,
- * minimised or invisible windows.
+ * minimised or invisible windows. A model window has a different title bar colour set in miniwin_config.h.
  *
  * @param window_ref Position in array of all windows of this window
- * @param modal True to set modal, false to set non-modal
+ * @param modal true to set modal, false to set non-modal
+ * @note Some means of setting the window non-modal again must be implemented, usually a button in the
+ *       window. A modal window cannot be closed from a title bar icon.
  */
 void mw_set_window_modal(uint8_t window_ref, bool modal);
 
 /**
- * Set a menu bar globally enabled or disabled
+ * Set a menu bar enabled or disabled for a window
  *
  * @param window_ref The window containing the menu bar
  * @param enabled The new state
@@ -416,10 +456,11 @@ void mw_set_window_modal(uint8_t window_ref, bool modal);
 void mw_set_menu_bar_enabled_state(uint8_t window_ref, bool enabled);
 
 /**
- * Set menu bar individual items enabled or disabled
+ * Set menu bar's individual items enabled or disabled
  *
  * @param window_ref The window containing the menu bar
  * @param item_enables Bit field containing the states, msb is first menu ar item, 1 is enabled, 0 is disabled
+ * @note Maximum of 16 items in a menu bar.
  */
 void mw_set_menu_bar_items_enabled_state(uint8_t window_ref, uint16_t item_enables);
 

@@ -49,14 +49,14 @@ SOFTWARE.
  */
 typedef struct
 {
-	uint8_t button_1_id;
-	uint8_t button_2_id;
-	mw_ui_button_data_t button_1_data;
-	mw_ui_button_data_t button_2_data;
-	uint8_t window_dialog_two_button_id;
-	char *message;
-	bool large_size;
-	uint8_t response_window_id;
+	uint8_t button_1_id;					/**< Control id of left button */
+	uint8_t button_2_id;					/**< Control id of right button */
+	mw_ui_button_data_t button_1_data;		/**< Instance data of left button */
+	mw_ui_button_data_t button_2_data;		/**< Instance data of right button */
+	uint8_t window_dialog_two_button_id;	/**< Window id of dialog */
+	char *message;							/**< Text to display in dialog */
+	bool large_size;						/**< True for large size false for standard size */
+	uint8_t response_window_id;				/**< Window id to send response message to */
 } mw_dialog_two_button_data_t;
 
 /***********************

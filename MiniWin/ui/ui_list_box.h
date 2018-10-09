@@ -59,10 +59,13 @@ SOFTWARE.
 *** TYPES ***
 ************/
 
+ /**
+  * List box entry text and icon structure containing details of each row
+  */
  typedef struct
  {
-	 char *label;
-	 const uint8_t *icon;
+	 char *label;			/**< The text to show on a list box line */
+	 const uint8_t *icon;	/**< The icon to show on a list box line, or NULL if no icon */
  } mw_ui_list_box_entry;
 
 /**

@@ -27,12 +27,7 @@
 								<option id="com.atollic.truestudio.common_options.target.fpucore.1054108080" name="FPU" superClass="com.atollic.truestudio.common_options.target.fpucore" value="com.atollic.truestudio.common_options.target.fpucore.fpv4-sp-d16" valueType="enumerated"/>
 								<option id="com.atollic.truestudio.common_options.target.fpu.585258748" name="Floating point" superClass="com.atollic.truestudio.common_options.target.fpu" value="com.atollic.truestudio.common_options.target.fpu.hard" valueType="enumerated"/>
 								<option id="com.atollic.truestudio.as.symbols.defined.705784712" name="Defined symbols" superClass="com.atollic.truestudio.as.symbols.defined"/>
-								<option id="com.atollic.truestudio.as.general.incpath.1999557443" name="Include path" superClass="com.atollic.truestudio.as.general.incpath" valueType="includePath">
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/BSP/Middlewares/FreeRTOS/include}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/BSP/Middlewares/FreeRTOS/portable/GCC/ARM_CM4F}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/BSP/Middlewares/FreeRTOS/CMSIS_RTOS}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/BSP/Components/l3gd20}&quot;"/>
-								</option>
+								<option id="com.atollic.truestudio.as.general.incpath.1999557443" name="Include path" superClass="com.atollic.truestudio.as.general.incpath" valueType="includePath"/>
 								<inputType id="com.atollic.truestudio.as.input.983142988" name="Input" superClass="com.atollic.truestudio.as.input"/>
 							</tool>
 							<tool id="com.atollic.truestudio.exe.debug.toolchain.gcc.1238860197" name="C Compiler" superClass="com.atollic.truestudio.exe.debug.toolchain.gcc">
@@ -53,7 +48,6 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/BSP/CMSIS}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/BSP/Middlewares/FreeRTOS/include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/BSP/Middlewares/FreeRTOS/portable/GCC/ARM_CM4F}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/BSP/Middlewares/FreeRTOS/CMSIS_RTOS}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/BSP/Components/l3gd20}&quot;"/>
 								</option>
 								<option id="com.atollic.truestudio.common_options.target.endianess.1729945044" name="Endianess" superClass="com.atollic.truestudio.common_options.target.endianess"/>
@@ -134,20 +128,6 @@
 							<tool id="com.atollic.truestudio.exe.debug.toolchain.ldcc.1210580137" name="C++ Linker" superClass="com.atollic.truestudio.exe.debug.toolchain.ldcc.1896632458"/>
 							<tool id="com.atollic.truestudio.ar.base.676090613" name="Archiver" superClass="com.atollic.truestudio.ar.base.1641915898"/>
 							<tool id="com.atollic.truestudio.exe.debug.toolchain.secoutput.1439213652" name="Other" superClass="com.atollic.truestudio.exe.debug.toolchain.secoutput.2070959571"/>
-						</toolChain>
-					</folderInfo>
-					<folderInfo id="com.atollic.truestudio.exe.debug.2147054002.955654527" name="/" resourcePath="BSP/Middlewares/FreeRTOS/CMSIS_RTOS">
-						<toolChain id="com.atollic.truestudio.exe.debug.toolchain.1595063600" name="Atollic ARM Tools" superClass="com.atollic.truestudio.exe.debug.toolchain" unusedChildren="">
-							<option id="com.atollic.truestudio.general.runtimelib.1765791251.1409034085" name="Runtime Library" superClass="com.atollic.truestudio.general.runtimelib.1765791251"/>
-							<option id="com.atollic.truestudio.toolchain_options.mcu.1667298638.1864948860" name="Microcontroller" superClass="com.atollic.truestudio.toolchain_options.mcu.1667298638"/>
-							<option id="com.atollic.truestudio.toolchain_options.vendor.1316884526.1107928" name="Vendor name" superClass="com.atollic.truestudio.toolchain_options.vendor.1316884526"/>
-							<tool id="com.atollic.truestudio.exe.debug.toolchain.as.101980108" name="Assembler" superClass="com.atollic.truestudio.exe.debug.toolchain.as.1594145477"/>
-							<tool id="com.atollic.truestudio.exe.debug.toolchain.gcc.195068647" name="C Compiler" superClass="com.atollic.truestudio.exe.debug.toolchain.gcc.1238860197"/>
-							<tool id="com.atollic.truestudio.exe.debug.toolchain.ld.1310444594" name="C Linker" superClass="com.atollic.truestudio.exe.debug.toolchain.ld.69849188"/>
-							<tool id="com.atollic.truestudio.exe.debug.toolchain.gpp.583171030" name="C++ Compiler" superClass="com.atollic.truestudio.exe.debug.toolchain.gpp.174572582"/>
-							<tool id="com.atollic.truestudio.exe.debug.toolchain.ldcc.1180876220" name="C++ Linker" superClass="com.atollic.truestudio.exe.debug.toolchain.ldcc.1896632458"/>
-							<tool id="com.atollic.truestudio.ar.base.639371443" name="Archiver" superClass="com.atollic.truestudio.ar.base.1641915898"/>
-							<tool id="com.atollic.truestudio.exe.debug.toolchain.secoutput.487099506" name="Other" superClass="com.atollic.truestudio.exe.debug.toolchain.secoutput.2070959571"/>
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>

@@ -51,28 +51,28 @@ static const uint8_t days_in_months[] = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 
  */
 typedef struct
 {
-	uint8_t button_ok_id;
-	mw_ui_button_data_t button_ok_data;
-	uint8_t button_cancel_id;
-	mw_ui_button_data_t button_cancel_data;
-	uint8_t arrow_year_up_id;
-	mw_ui_arrow_data_t arrow_year_up_data;
-	uint8_t arrow_year_down_id;
-	mw_ui_arrow_data_t arrow_year_down_data;
-	uint8_t arrow_month_up_id;
-	mw_ui_arrow_data_t arrow_month_up_data;
-	uint8_t arrow_month_down_id;
-	mw_ui_arrow_data_t arrow_month_down_data;
-	uint8_t arrow_date_up_id;
-	mw_ui_arrow_data_t arrow_date_up_data;
-	uint8_t arrow_date_down_id;
-	mw_ui_arrow_data_t arrow_date_down_data;
-	uint8_t window_dialog_date_chooser_id;
-	uint16_t current_date_year;
-	uint8_t current_date_month;
-	uint8_t current_date_date;
-	bool large_size;
-	uint8_t response_window_id;
+	uint8_t button_ok_id;							/**< Control id of ok button */
+	mw_ui_button_data_t button_ok_data;				/**< Instance data of ok button */
+	uint8_t button_cancel_id;						/**< Control id of cancel button */
+	mw_ui_button_data_t button_cancel_data;			/**< Instance data of cancel button */
+	uint8_t arrow_year_up_id;						/**< Control id of year up button */
+	mw_ui_arrow_data_t arrow_year_up_data;			/**< Instance data of year up button */
+	uint8_t arrow_year_down_id;						/**< Control id of year down button */
+	mw_ui_arrow_data_t arrow_year_down_data;		/**< Instance data of year down button */
+	uint8_t arrow_month_up_id;						/**< Control id of month up button */
+	mw_ui_arrow_data_t arrow_month_up_data;			/**< Instance data of month up button */
+	uint8_t arrow_month_down_id;					/**< Control id of month down button */
+	mw_ui_arrow_data_t arrow_month_down_data;		/**< Instance data of month down button */
+	uint8_t arrow_date_up_id;						/**< Control id of date up button */
+	mw_ui_arrow_data_t arrow_date_up_data;			/**< Instance data of date up button */
+	uint8_t arrow_date_down_id;						/**< Control id of date down button */
+	mw_ui_arrow_data_t arrow_date_down_data;		/**< Instance data of date down button */
+	uint8_t window_dialog_date_chooser_id;			/**< Window id of dialog */
+	uint16_t current_date_year;						/**< Current year in dialog xxxx */
+	uint8_t current_date_month;						/**< Current month in dialog 1-12 */
+	uint8_t current_date_date;						/**< Current date in dialog 1-31 */
+	bool large_size;								/**< True for large size false for standard size */
+	uint8_t response_window_id;						/**< Window id to send response message to */
 } mw_dialog_date_chooser_data_t;
 
 /***********************

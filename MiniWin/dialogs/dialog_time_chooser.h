@@ -69,21 +69,18 @@ void mw_dialog_time_chooser_message_function(const mw_message_t *message);
 /**
  * Create a dynamic time chooser dialog window.
  *
- * @note There must be space in the window array for one new window and space in the control array
- *       for one new control. These resources are released when the dialog is dismissed.
- *       The dialog is created modal and is brought to the front on showing.
- *       The dialog must fit entirely on the screen or else it will not be created.
- *
- *
- * @warning Do not call this from a client window paint function. In debug mode it will cause an assert failure.
- *
  * @param x left coordinate of dialog window
  * @param y top coordinate of dialog window
  * @param start_time_hour start time hour to show when dialog is displayed
  * @param start_time_minute start time minute to show when dialog is displayed
- * @param true for large size controls/text, false for small
+ * @param large_size true for large size controls/text, false for small
  * @param response_window_id window id of the window that the response message is posted to when the dialog is dismissed
  * @return the window id of the window used for the dialog which is only valid while the dialog is showing
+ * @note There must be space in the window array for one new window and space in the control array
+ *       for one new control. These resources are released when the dialog is dismissed.
+ *       The dialog is created modal and is brought to the front on showing.
+ *       The dialog must fit entirely on the screen or else it will not be created.*
+ * @warning Do not call this from a client window paint function. In debug mode it will cause an assert failure.
  */
 uint8_t mw_create_window_dialog_time_chooser(uint16_t x,
 		uint16_t y,

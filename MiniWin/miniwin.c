@@ -3270,8 +3270,8 @@ void mw_set_window_visible(uint8_t window_ref, bool visible)
 	else
 	{
 		mw_all_windows[window_ref].window_flags &= ~MW_WINDOW_FLAG_IS_VISIBLE;
+		rationalize_z_orders();
 	}
-	rationalize_z_orders();
 
 	/* send message to window that visibility has changed */
 	mw_post_message(MW_WINDOW_VISIBILITY_CHANGED,

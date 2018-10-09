@@ -59,6 +59,7 @@ SOFTWARE.
 /**
  * Print a debug assertion fail message on the display
  * 
+ * @param expression true if the assert passed, false if the assert failed
  * @param function_name The name of the function the assertion failed in
  * @param line_number The line number in the file the assertion failed on
  * @param message General purpose text to be displayed on assert failure

@@ -50,23 +50,23 @@ static const mw_util_rect_t text_rect_large = {140, 40, 20, 95};
  */
 typedef struct
 {
-	uint8_t button_ok_id;
-	mw_ui_button_data_t button_ok_data;
-	uint8_t button_cancel_id;
-	mw_ui_button_data_t button_cancel_data;
-	uint8_t arrow_hour_up_id;
-	mw_ui_arrow_data_t arrow_hour_up_data;
-	uint8_t arrow_hour_down_id;
-	mw_ui_arrow_data_t arrow_hour_down_data;
-	uint8_t arrow_minute_up_id;
-	mw_ui_arrow_data_t arrow_minute_up_data;
-	uint8_t arrow_minute_down_id;
-	mw_ui_arrow_data_t arrow_minute_down_data;
-	uint8_t window_dialog_time_chooser_id;
-	uint8_t current_time_hours;
-	uint8_t current_time_mins;
-	bool large_size;
-	uint8_t response_window_id;
+	uint8_t button_ok_id;							/**< Control id of ok button */
+	mw_ui_button_data_t button_ok_data;				/**< Instance data of ok button */
+	uint8_t button_cancel_id;						/**< Control id of cancel button */
+	mw_ui_button_data_t button_cancel_data;			/**< Instance data of cancel button */
+	uint8_t arrow_hour_up_id;						/**< Control id of hour up button */
+	mw_ui_arrow_data_t arrow_hour_up_data;			/**< Instance data of hour up button */
+	uint8_t arrow_hour_down_id;						/**< Control id of hour down button */
+	mw_ui_arrow_data_t arrow_hour_down_data;		/**< Instance data of hour down button */
+	uint8_t arrow_minute_up_id;						/**< Control id of minute up button */
+	mw_ui_arrow_data_t arrow_minute_up_data;		/**< Instance data of minute up button */
+	uint8_t arrow_minute_down_id;					/**< Control id of minute down button */
+	mw_ui_arrow_data_t arrow_minute_down_data;		/**< Instance data of minute down button */
+	uint8_t window_dialog_time_chooser_id;			/**< Window id of dialog */
+	uint8_t current_time_hours;						/**< Current time in dialog hours */
+	uint8_t current_time_mins;						/**< Current time in dialog minutes */
+	bool large_size;								/**< True for large size false for standard size */
+	uint8_t response_window_id;						/**< Window id to send response message to */
 } mw_dialog_time_chooser_data_t;
 
 /***********************
