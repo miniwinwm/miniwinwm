@@ -181,10 +181,10 @@ float *app_get_gyro_readings(void)
 
 		/* calculate y angle */
 		gyro_angles[GYRO_READING_Y] = (float)(atan2(average_accelerations[GYRO_READING_X],
-											sqrt(average_accelerations[GYRO_READING_Y] *
-													average_accelerations[GYRO_READING_Y] +
-													average_accelerations[GYRO_READING_Z] *
-													average_accelerations[GYRO_READING_Z])));
+				sqrt(average_accelerations[GYRO_READING_Y] *
+				average_accelerations[GYRO_READING_Y] +
+				average_accelerations[GYRO_READING_Z] *
+				average_accelerations[GYRO_READING_Z])));
 
 		/* convert angles to degrees */
 		gyro_angles[GYRO_READING_X] *= (180.0f / M_PI);

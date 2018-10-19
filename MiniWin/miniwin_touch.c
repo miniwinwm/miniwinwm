@@ -85,8 +85,9 @@ static void draw_cross(uint16_t x, int16_t y, int16_t length)
 	mw_hal_lcd_filled_rectangle(x, y - length / 2, 1, length, MW_HAL_LCD_BLACK);
 	mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 	mw_gl_set_bg_transparency(MW_GL_BG_TRANSPARENT);
-	mw_gl_large_string(&draw_info_root,
-			(MW_HAL_LCD_WIDTH - mw_gl_large_string_width(MW_CALIBRATE_TEXT)) / 2,
+	mw_gl_set_font(MW_GL_TITLE_FONT);
+	mw_gl_string(&draw_info_root,
+			(MW_HAL_LCD_WIDTH - mw_gl_get_string_width_pixels(MW_CALIBRATE_TEXT)) / 2,
 			MW_HAL_LCD_HEIGHT / 2,
 			MW_CALIBRATE_TEXT);
 }

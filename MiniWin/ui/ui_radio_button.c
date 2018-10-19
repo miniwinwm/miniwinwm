@@ -75,17 +75,20 @@ void mw_ui_radio_button_paint_function(uint8_t control_ref, const mw_gl_draw_inf
 	mw_gl_set_border(MW_GL_BORDER_ON);
 	mw_gl_clear_pattern();
 	mw_gl_set_bg_transparency(MW_GL_BG_TRANSPARENT);
+	mw_gl_set_text_rotation(MW_GL_TEXT_ROTATION_0);
 
 	/* set size dependent values */
 	if (mw_get_control_flags(control_ref) & MW_CONTROL_FLAGS_LARGE_SIZE)
 	{
 		height = MW_UI_RADIO_BUTTON_LARGE_HEIGHT;
 		box_size = MW_UI_RADIO_BUTTON_LARGE_BOX_SIZE;
+		mw_gl_set_font(MW_GL_TITLE_FONT);
 	}
 	else
 	{
 		height = MW_UI_RADIO_BUTTON_HEIGHT;
 		box_size = MW_UI_RADIO_BUTTON_BOX_SIZE;
+		mw_gl_set_font(MW_GL_FONT_9);
 	}
 
 	for (i = 0; i < this_radio_radio_button->number_of_items; i++)
@@ -104,7 +107,7 @@ void mw_ui_radio_button_paint_function(uint8_t control_ref, const mw_gl_draw_inf
 		if (mw_get_control_flags(control_ref) & MW_CONTROL_FLAGS_LARGE_SIZE)
 		{
 			/* draw the label text */
-			mw_gl_large_string(draw_info,
+			mw_gl_string(draw_info,
 					MW_UI_RADIO_BUTTON_LARGE_LABEL_X_OFFSET,
 					MW_UI_RADIO_BUTTON_LARGE_LABEL_Y_OFFSET + i * MW_UI_RADIO_BUTTON_LARGE_HEIGHT,
 					this_radio_radio_button->radio_button_labels[i]);

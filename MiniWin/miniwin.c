@@ -760,6 +760,8 @@ static void draw_minimised_icons(void)
 		mw_gl_set_border(MW_GL_BORDER_ON);
 		mw_gl_set_line(MW_GL_SOLID_LINE);
 		mw_gl_set_bg_transparency(MW_GL_BG_TRANSPARENT);
+		mw_gl_set_font(MW_GL_FONT_9);
+		mw_gl_set_text_rotation(MW_GL_TEXT_ROTATION_0);
 
 		for (horizontal_edge_counter = 0; horizontal_edge_counter < horiz_edges_count - 1; horizontal_edge_counter++)
 		{
@@ -1257,7 +1259,7 @@ static void draw_title_bar(uint8_t window_ref, const mw_gl_draw_info_t *draw_inf
 				mw_bitmaps_minimise_icon);
 
 		/* only draw the title if there's space remaining */
-		if (mw_all_windows[window_ref].window_rect.width - (MW_TITLE_BAR_ICON_OFFSET * 4) - MW_TITLE_X_OFFSET > mw_gl_large_string_width(mw_all_windows[window_ref].title))
+		if (mw_all_windows[window_ref].window_rect.width - (MW_TITLE_BAR_ICON_OFFSET * 4) - MW_TITLE_X_OFFSET > mw_gl_get_string_width_pixels(mw_all_windows[window_ref].title))
 		{
 			draw_titlebar_text(window_ref, draw_info);
 		}
@@ -1297,7 +1299,9 @@ static void draw_titlebar_text(uint8_t window_ref, const mw_gl_draw_info_t *draw
 	}		
 	
 	mw_gl_set_bg_transparency(MW_GL_BG_TRANSPARENT);
-	mw_gl_large_string(draw_info, MW_TITLE_X_OFFSET, MW_TITLE_Y_OFFSET, mw_all_windows[window_ref].title);
+	mw_gl_set_text_rotation(MW_GL_TEXT_ROTATION_0);
+	mw_gl_set_font(MW_GL_TITLE_FONT);
+	mw_gl_string(draw_info, MW_TITLE_X_OFFSET, MW_TITLE_Y_OFFSET, mw_all_windows[window_ref].title);
 }
 
 /**
@@ -1324,8 +1328,10 @@ static void draw_menu_bar(const mw_gl_draw_info_t *draw_info, uint8_t window_ref
 			mw_all_windows[window_ref].client_rect.width,
 			MW_MENU_BAR_HEIGHT);
 
-    /* set up text transparency */
+    /* set up text */
 	mw_gl_set_bg_transparency(MW_GL_BG_TRANSPARENT);
+    mw_gl_set_font(MW_GL_FONT_9);
+	mw_gl_set_text_rotation(MW_GL_TEXT_ROTATION_0);
 
     /* draw each item */
 	next_pos = 0;
@@ -1340,7 +1346,7 @@ static void draw_menu_bar(const mw_gl_draw_info_t *draw_info, uint8_t window_ref
 			mw_gl_rectangle(draw_info,
 					next_pos,
 					mw_all_windows[window_ref].client_rect.y - mw_all_windows[window_ref].window_rect.y - MW_MENU_BAR_HEIGHT,
-					(strlen(mw_all_windows[window_ref].menu_bar_items[i]) + 2) * MW_GL_STANDARD_CHARACTER_WIDTH,
+					(strlen(mw_all_windows[window_ref].menu_bar_items[i]) + 2) * mw_gl_get_font_width() + 1,
 					MW_MENU_BAR_HEIGHT);
 		}
 
@@ -1357,14 +1363,14 @@ static void draw_menu_bar(const mw_gl_draw_info_t *draw_info, uint8_t window_ref
 
         /* draw the menu item text */
 		mw_gl_string(draw_info,
-				next_pos + MW_GL_STANDARD_CHARACTER_WIDTH,
+				next_pos + mw_gl_get_font_width() + 1,
 				MW_MENU_BAR_LABEL_Y_OFFSET +
 					mw_all_windows[window_ref].client_rect.y -
 					mw_all_windows[window_ref].window_rect.y -
 					MW_MENU_BAR_HEIGHT,
 				mw_all_windows[window_ref].menu_bar_items[i]);
 
-		next_pos += (strlen(mw_all_windows[window_ref].menu_bar_items[i]) + 2) * MW_GL_STANDARD_CHARACTER_WIDTH;
+		next_pos += (strlen(mw_all_windows[window_ref].menu_bar_items[i]) + 2) * (mw_gl_get_font_width() + 1);
 	}
 }
 
@@ -2719,9 +2725,10 @@ static window_redimensioning_state_t process_touch_event(void)
 
 				for (i = 0; i < mw_all_windows[window_to_receive_message].menu_bar_items_count; i++)
 				{
+					mw_gl_set_font(MW_GL_FONT_9);	/* needed for getting font width */
 					if ((touch_x - mw_all_windows[window_to_receive_message].client_rect.x) >= next_menu_item_text_left_pos &&
 							(touch_x - mw_all_windows[window_to_receive_message].client_rect.x) <
-								next_menu_item_text_left_pos + (int16_t)(strlen(mw_all_windows[window_to_receive_message].menu_bar_items[i]) + 2) * MW_GL_STANDARD_CHARACTER_WIDTH)
+								next_menu_item_text_left_pos + (int16_t)(strlen(mw_all_windows[window_to_receive_message].menu_bar_items[i]) + 2) * (mw_gl_get_font_width() + 1))
 					{
 						/* check if this particular line is enabled */
 						if (mw_util_get_bit(mw_all_windows[window_to_receive_message].menu_bar_item_enables, i))
@@ -2742,7 +2749,7 @@ static window_redimensioning_state_t process_touch_event(void)
 					}
 
 					/* increment the running total of the position of the text labels */
-					next_menu_item_text_left_pos += (strlen(mw_all_windows[window_to_receive_message].menu_bar_items[i]) + 2) * MW_GL_STANDARD_CHARACTER_WIDTH;
+					next_menu_item_text_left_pos += (strlen(mw_all_windows[window_to_receive_message].menu_bar_items[i]) + 2) * (mw_gl_get_font_width() + 1);
 				}
 			}
 
@@ -3049,6 +3056,9 @@ void mw_init()
 
 	/* initialise the hardware drivers */
 	mw_hal_init();
+
+	/* initialise gl */
+	mw_gl_init();
 
 	/* load the settings from non vol storage */
 	mw_settings_load();
@@ -4279,14 +4289,16 @@ void mw_show_busy(bool show)
 		mw_gl_set_line(MW_GL_SOLID_LINE);
 		mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 		mw_gl_rectangle(&draw_info_root,
-				(MW_HAL_LCD_WIDTH - (mw_gl_large_string_width(MW_BUSY_TEXT) + 30)) / 2,
+				(MW_HAL_LCD_WIDTH - (mw_gl_get_string_width_pixels(MW_BUSY_TEXT) + 30)) / 2,
 				(MW_HAL_LCD_HEIGHT - 30) / 2,
-				mw_gl_large_string_width(MW_BUSY_TEXT) + 30,
+				mw_gl_get_string_width_pixels(MW_BUSY_TEXT) + 30,
 				30);
 		mw_gl_set_bg_transparency(MW_GL_BG_TRANSPARENT);
-		mw_gl_large_string(&draw_info_root,
-				(MW_HAL_LCD_WIDTH - mw_gl_large_string_width(MW_BUSY_TEXT)) / 2,
-				2 + (MW_HAL_LCD_HEIGHT - MW_GL_LARGE_CHARACTER_HEIGHT) / 2,
+		mw_gl_set_text_rotation(MW_GL_TEXT_ROTATION_0);
+		mw_gl_set_font(MW_GL_TITLE_FONT);
+		mw_gl_string(&draw_info_root,
+				(MW_HAL_LCD_WIDTH - mw_gl_get_string_width_pixels(MW_BUSY_TEXT)) / 2,
+				2 + (MW_HAL_LCD_HEIGHT - MW_GL_TITLE_FONT_HEIGHT) / 2,
 				MW_BUSY_TEXT);
 	}
 	else

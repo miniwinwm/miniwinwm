@@ -86,12 +86,14 @@ void mw_debug_print_assert(bool expression, const char *function_name, int32_t l
 
 	mw_gl_set_fg_colour(MW_HAL_LCD_YELLOW);
 	mw_gl_set_bg_transparency(MW_GL_BG_TRANSPARENT);
+	mw_gl_set_font(MW_GL_FONT_9);
+	mw_gl_set_text_rotation(MW_GL_TEXT_ROTATION_0);
 
 	mw_gl_string(&draw_info, 0, 0, "ASSERT FAILED");
-	mw_gl_string(&draw_info, 0, MW_GL_STANDARD_CHARACTER_HEIGHT, function_name);
+	mw_gl_string(&draw_info, 0, mw_gl_get_font_height() + 1, function_name);
 	sprintf(number_buffer, "line: %d", (int)line_number);
-	mw_gl_string(&draw_info, 0, 2 * MW_GL_STANDARD_CHARACTER_HEIGHT, number_buffer);
-	mw_gl_string(&draw_info, 0, 3 * MW_GL_STANDARD_CHARACTER_HEIGHT, message);
+	mw_gl_string(&draw_info, 0, 2 * (mw_gl_get_font_height() + 1), number_buffer);
+	mw_gl_string(&draw_info, 0, 3 * (mw_gl_get_font_height() + 1), message);
 
 	while(true);
 }

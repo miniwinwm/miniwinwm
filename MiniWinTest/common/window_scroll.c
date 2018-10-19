@@ -54,9 +54,8 @@ typedef struct
 ***********************/
 
 #define LINES 80
-#define DATA_HEIGHT (LINES * MW_GL_STANDARD_CHARACTER_HEIGHT)
 #define COLUMNS 80
-#define DATA_WIDTH (COLUMNS * MW_GL_STANDARD_CHARACTER_WIDTH)
+#define DATA_WIDTH (COLUMNS * (mw_gl_get_font_width() + 1))
 
 /*************************
 *** EXTERNAL VARIABLES ***
@@ -96,15 +95,17 @@ void window_scroll_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *d
 	mw_gl_set_fg_colour(MW_HAL_LCD_YELLOW);
 	mw_gl_set_bg_colour(MW_HAL_LCD_BLACK);
 	mw_gl_set_bg_transparency(MW_GL_BG_NOT_TRANSPARENT);
+	mw_gl_set_font(MW_GL_FONT_9);
+	mw_gl_set_text_rotation(MW_GL_TEXT_ROTATION_0);
 
 	for (line = 0; line < LINES; line++)
 	{
-		line_y = line * MW_GL_STANDARD_CHARACTER_HEIGHT;
-		scroll_offset_y = ((DATA_HEIGHT - mw_get_window_client_rect(window_ref).height) * window_scroll_data.scroll_y) /
+		line_y = line * (mw_gl_get_font_height() + 1);
+		scroll_offset_y = (((LINES * (mw_gl_get_font_height() + 1)) - mw_get_window_client_rect(window_ref).height) * window_scroll_data.scroll_y) /
 				UINT8_MAX;
 
 		/* ignore text above client area */
-		if (line_y - scroll_offset_y + MW_GL_STANDARD_CHARACTER_HEIGHT < 0)
+		if (line_y - scroll_offset_y + mw_gl_get_font_height() + 1 < 0)
 		{
 			continue;
 		}
@@ -117,12 +118,12 @@ void window_scroll_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *d
 
 		for (column = 3; column < COLUMNS; column++)
 		{
-			column_x = column * MW_GL_STANDARD_CHARACTER_WIDTH;
-			scroll_offset_x = ((DATA_WIDTH - mw_get_window_client_rect(window_ref).width) * window_scroll_data.scroll_x) /
+			column_x = column * (mw_gl_get_font_width() + 1);
+			scroll_offset_x = (((COLUMNS * (mw_gl_get_font_width() + 1)) - mw_get_window_client_rect(window_ref).width) * window_scroll_data.scroll_x) /
 					UINT8_MAX;
 
 			/* ignore text left of client area */
-			if (column_x - scroll_offset_x + MW_GL_STANDARD_CHARACTER_WIDTH < 0)
+			if (column_x - scroll_offset_x + mw_gl_get_font_width() + 1 < 0)
 			{
 				continue;
 			}

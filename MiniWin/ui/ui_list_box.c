@@ -76,11 +76,13 @@ void mw_ui_list_box_paint_function(uint8_t control_ref, const mw_gl_draw_info_t 
 
 	if (mw_get_control_flags(control_ref) & MW_CONTROL_FLAGS_LARGE_SIZE)
 	{
+		mw_gl_set_font(MW_GL_TITLE_FONT);
 		row_height = MW_UI_LIST_BOX_LARGE_ROW_HEIGHT;
 		icon_x_offset = MW_UI_LIST_BOX_LARGE_LABEL_X_OFFSET - 4;
 	}
 	else
 	{
+		mw_gl_set_font(MW_GL_FONT_9);
 		row_height = MW_UI_LIST_BOX_ROW_HEIGHT;
 		icon_x_offset = MW_UI_LIST_BOX_LABEL_X_OFFSET;
 	}
@@ -105,8 +107,9 @@ void mw_ui_list_box_paint_function(uint8_t control_ref, const mw_gl_draw_info_t 
 	mw_gl_vline(draw_info, mw_get_control_rect(control_ref).width - 2, 1, mw_get_control_rect(control_ref).height - 2);
 	mw_gl_hline(draw_info, 1, mw_get_control_rect(control_ref).width - 2, mw_get_control_rect(control_ref).height - 2);
 
-    /* set up text transparency */
+    /* set up text */
 	mw_gl_set_bg_transparency(MW_GL_BG_TRANSPARENT);
+	mw_gl_set_text_rotation(MW_GL_TEXT_ROTATION_0);
 	
 	for(i = 0; i < this_list_box->number_of_lines; i++)
 	{
@@ -208,14 +211,14 @@ void mw_ui_list_box_paint_function(uint8_t control_ref, const mw_gl_draw_info_t 
 
 			if(this_list_box->line_is_selected && (this_list_box->selection - this_list_box->lines_to_scroll) == i)
 			{
-				mw_gl_large_string(draw_info,
+				mw_gl_string(draw_info,
 						text_x_offset + 2,
 						row_height * i + MW_UI_LIST_BOX_LARGE_LABEL_Y_OFFSET + 2,
 						this_list_box->list_box_entries[i + this_list_box->lines_to_scroll].label);
 			}
 			else
 			{
-				mw_gl_large_string(draw_info,
+				mw_gl_string(draw_info,
 						text_x_offset,
 						row_height * i + MW_UI_LIST_BOX_LARGE_LABEL_Y_OFFSET,
 						this_list_box->list_box_entries[i + this_list_box->lines_to_scroll].label);

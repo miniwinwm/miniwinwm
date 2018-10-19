@@ -44,6 +44,7 @@
 /* Private variables ---------------------------------------------------------*/
 extern HCD_HandleTypeDef hhcd;
 extern TIM_HandleTypeDef Tim3Handle;
+
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
 

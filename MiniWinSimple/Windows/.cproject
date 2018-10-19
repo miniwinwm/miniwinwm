@@ -18,7 +18,7 @@
 							<targetPlatform id="cdt.managedbuild.target.gnu.platform.mingw.exe.debug.1540360980" name="Debug Platform" superClass="cdt.managedbuild.target.gnu.platform.mingw.exe.debug"/>
 							<builder buildPath="${workspace_loc:/MiniWinSimple_Windows}/Debug" customBuilderProperties="toolChainpathType=1|toolChainpathString=D:\\TrueSTUDIO for ARM 8.1.0\\PCTools\\bin|" id="cdt.managedbuild.tool.gnu.builder.mingw.base.780613169" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="CDT Internal Builder" superClass="cdt.managedbuild.tool.gnu.builder.mingw.base"/>
 							<tool id="cdt.managedbuild.tool.gnu.assembler.mingw.exe.debug.1122427296" name="Assembler" superClass="cdt.managedbuild.tool.gnu.assembler.mingw.exe.debug">
-								<option id="gnu.both.asm.option.include.paths.826650851" name="Include paths (-I)" superClass="gnu.both.asm.option.include.paths"/>
+								<option id="gnu.both.asm.option.include.paths.826650851" name="Include paths (-I)" superClass="gnu.both.asm.option.include.paths" valueType="includePath"/>
 								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.1413530299" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.archiver.mingw.base.219402976" name="Archiver" superClass="cdt.managedbuild.tool.gnu.archiver.mingw.base"/>
@@ -47,14 +47,9 @@
 							<tool id="cdt.managedbuild.tool.gnu.cpp.linker.mingw.exe.debug.1743852953" name="C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.mingw.exe.debug"/>
 						</toolChain>
 					</folderInfo>
-					<fileInfo id="cdt.managedbuild.config.gnu.mingw.exe.debug.1962001431.59948476" name="dialog_date_chooser.c" rcbsApplicability="disable" resourcePath="MiniWin/dialogs/dialog_date_chooser.c" toolsToInvoke="cdt.managedbuild.tool.gnu.c.compiler.mingw.exe.debug.1507607826.119573335">
-						<tool id="cdt.managedbuild.tool.gnu.c.compiler.mingw.exe.debug.1507607826.119573335" name="C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.mingw.exe.debug.1507607826">
-							<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.130577139" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
-						</tool>
-					</fileInfo>
 					<sourceEntries>
 						<entry excluding="common|MiniWin" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
-						<entry excluding="user/minwin_user.c|hal/stm32f429|hal/stm32f407" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="MiniWin"/>
+						<entry excluding="gl/iso8859_15_5x9.c|gl/ascii_5x9.c|user/minwin_user.c|hal/stm32f429|hal/stm32f407" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="MiniWin"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="common"/>
 					</sourceEntries>
 				</configuration>

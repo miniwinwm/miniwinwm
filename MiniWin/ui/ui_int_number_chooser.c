@@ -90,6 +90,9 @@ void mw_ui_int_number_chooser_paint_function(uint8_t control_ref, const mw_gl_dr
 	mw_gl_set_line(MW_GL_SOLID_LINE);
 	mw_gl_set_border(MW_GL_BORDER_ON);
 	mw_gl_set_bg_transparency(MW_GL_BG_TRANSPARENT);
+	mw_gl_set_font(MW_GL_FONT_9);
+	mw_gl_set_text_rotation(MW_GL_TEXT_ROTATION_0);
+
 	for (i = 0; i < MW_UI_INT_NUMBER_CHOOSER_KEY_COUNT; i++)
 	{
 		/* set colour of key box fill according to pressed state */
@@ -231,7 +234,7 @@ void mw_ui_int_number_chooser_paint_function(uint8_t control_ref, const mw_gl_dr
 			MW_UI_INT_NUMBER_CHOOSER_WIDTH - 2,
 			MW_UI_INT_NUMBER_CHOOSER_KEY_SIZE - 2);
 
-	cursor_x_coordinate = 2 + this_int_number_chooser->cursor_position * MW_GL_STANDARD_CHARACTER_WIDTH;
+	cursor_x_coordinate = 2 + this_int_number_chooser->cursor_position * (mw_gl_get_font_width() + 1);
 
 	/* draw the number */
 	mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
@@ -239,8 +242,8 @@ void mw_ui_int_number_chooser_paint_function(uint8_t control_ref, const mw_gl_dr
 	{
 		/* draw negative sign and number */
 		mw_gl_character(draw_info, 3, 4, '-');
-		mw_gl_string(draw_info, 3 + MW_GL_STANDARD_CHARACTER_WIDTH, 4, this_int_number_chooser->number_buffer);
-		cursor_x_coordinate += MW_GL_STANDARD_CHARACTER_WIDTH;
+		mw_gl_string(draw_info, 3 + mw_gl_get_font_width() + 1, 4, this_int_number_chooser->number_buffer);
+		cursor_x_coordinate += (mw_gl_get_font_width() + 1);
 	}
 	else
 	{
@@ -251,11 +254,11 @@ void mw_ui_int_number_chooser_paint_function(uint8_t control_ref, const mw_gl_dr
 	/* draw cursor */
 	if (this_int_number_chooser->draw_cursor)
 	{
-		mw_gl_set_fg_colour(MW_CONTROL_DISABLED_COLOUR);
+		mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 		mw_gl_vline(draw_info,
 				cursor_x_coordinate,
 				2,
-				MW_GL_STANDARD_CHARACTER_HEIGHT + 4);
+				mw_gl_get_font_height() + 4);
 	}
 }
 
@@ -318,14 +321,15 @@ void mw_ui_int_number_chooser_message_function(const mw_message_t *message)
 			this_int_number_chooser->draw_cursor = !this_int_number_chooser->draw_cursor;
 
 			/* repaint cursor area only */
-			invalid_rect.x = 2 + this_int_number_chooser->cursor_position * MW_GL_STANDARD_CHARACTER_WIDTH;
+			mw_gl_set_font(MW_GL_FONT_9);	/* needed to get font width */
+			invalid_rect.x = 2 + this_int_number_chooser->cursor_position * (mw_gl_get_font_width() + 1);
 			if (this_int_number_chooser->is_negative)
 			{
-				invalid_rect.x += MW_GL_STANDARD_CHARACTER_WIDTH;
+				invalid_rect.x += (mw_gl_get_font_width() + 1);
 			}
 			invalid_rect.y = 2;
 			invalid_rect.width = 1;
-			invalid_rect.height = MW_GL_STANDARD_CHARACTER_HEIGHT + 4;
+			invalid_rect.height = 14;
 			mw_paint_control_rect(message->recipient_id, &invalid_rect);
 		}
 
@@ -454,7 +458,9 @@ void mw_ui_int_number_chooser_message_function(const mw_message_t *message)
 			}
 			else
 			{
-				this_int_number_chooser->cursor_position = (message->message_data >> 16) / MW_GL_STANDARD_CHARACTER_WIDTH;
+				mw_gl_set_font(MW_GL_FONT_9);		/* needed to get font width */
+				this_int_number_chooser->cursor_position = (message->message_data >> 16) /
+						(mw_gl_get_font_width() + 1);
 				if (this_int_number_chooser->is_negative)
 				{
 					(this_int_number_chooser->cursor_position)--;

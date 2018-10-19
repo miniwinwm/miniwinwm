@@ -35,8 +35,9 @@ SOFTWARE.
 *** INCLUDES ***
 ***************/
 
-#include <miniwin_utilities.h>
+#include "miniwin_utilities.h"
 #include "hal/hal_lcd.h"
+#include "gl/fonts/fonts.h"
 
 /****************
 *** CONSTANTS ***
@@ -53,9 +54,7 @@ SOFTWARE.
 /**
  * Non-user configurable values
  */
-#define MW_GL_STANDARD_CHARACTER_HEIGHT 	10                  /**< Height of standard character plus inter-line space */
-#define MW_GL_STANDARD_CHARACTER_WIDTH 		6                   /**< Width of standard character plus inter-character space */ 
-#define MW_GL_LARGE_CHARACTER_HEIGHT		16                  /**< Height of large character plus inter-line space */
+#define MW_GL_TITLE_FONT_HEIGHT				16                  /**< Height of title font character plus inter-line space */
 #define MW_GL_BITMAP_BYTES_PER_PIXEL		3					/**< Bitmaps expected in 24 bit colour depth */
 
 /************
@@ -90,6 +89,30 @@ typedef enum
 } mw_gl_bg_transparent_t;
 
 /**
+ * Enum of fonts
+ */
+typedef enum
+{
+	MW_GL_FONT_9,							/** 8 pixel high font */
+	MW_GL_FONT_12,							/** 12 pixel high font */
+	MW_GL_FONT_16,							/** 16 pixel high font */
+	MW_GL_FONT_20,							/** 20 pixel high font */
+	MW_GL_FONT_24,							/** 24 pixel high font */
+	MW_GL_TITLE_FONT						/** Proportional title font MW_GL_TITLE_FONT_HEIGHT pixels high */
+} mw_gl_font_t;
+
+/**
+ * Enum of text clockwise rotations
+ */
+typedef enum
+{
+	MW_GL_TEXT_ROTATION_0,					/** 0 degrees text rotation */
+	MW_GL_TEXT_ROTATION_90,					/** 90 degrees text rotation */
+	MW_GL_TEXT_ROTATION_180,				/** 180 degrees text rotation */
+	MW_GL_TEXT_ROTATION_270					/** 270 degrees text rotation */
+} mw_gl_text_rotation_t;
+
+/**
  * Enum of line styles. These need to be 16 bits.
  */
 typedef enum
@@ -115,15 +138,17 @@ typedef uint16_t mw_gl_pattern_t[16];
  */
 typedef struct
 {
-	mw_hal_lcd_colour_t fg_colour;             		/**< foreground colour for text and line drawing */
-	mw_hal_lcd_colour_t bg_colour;                     /**< background colour for text and line drawing */
-	mw_hal_lcd_colour_t solid_fill_colour;             /**< solid fill colour for filled shapes */
-	mw_gl_line_t line;                            /**< line style */
-	mw_gl_pattern_t pattern;                      /**< pattern fill definition - 16x16 bits */
-	mw_gl_border_t border;                        /**< whether to plot a border on shapes that are filled */
-	mw_gl_fill_t fill;                            /**< whether to fill a shape with solid colour or pattern */
+	mw_hal_lcd_colour_t fg_colour;          /**< foreground colour for text and line drawing */
+	mw_hal_lcd_colour_t bg_colour;          /**< background colour for text and line drawing */
+	mw_hal_lcd_colour_t solid_fill_colour;  /**< solid fill colour for filled shapes */
+	mw_gl_line_t line;                      /**< line style */
+	mw_gl_pattern_t pattern;                /**< pattern fill definition - 16x16 bits */
+	mw_gl_border_t border;                  /**< whether to plot a border on shapes that are filled */
+	mw_gl_fill_t fill;                      /**< whether to fill a shape with solid colour or pattern */
 	uint8_t pattern_set;                    /**< whether a pattern has been set and used. If not set, fill will be solid colour */
-	mw_gl_bg_transparent_t bg_transparent;    	/**< whether to clear the background of text or draw transparently */
+	mw_gl_bg_transparent_t bg_transparent;  /**< whether to clear the background of text or draw transparently */
+	mw_gl_font_t font;						/**< the current font in use */
+	mw_gl_text_rotation_t text_rotation;	/**< the current text rotation */
 } mw_gl_gc_t;
 
 /**
@@ -216,6 +241,33 @@ void mw_gl_set_fill(mw_gl_fill_t fill);
  */
 void mw_gl_set_bg_transparency(mw_gl_bg_transparent_t bg_transparent);
 
+/* Set the font to use by the standard text drawing routines
+ *
+ * @param font The font to use
+ */
+void mw_gl_set_font(mw_gl_font_t font);
+
+/**
+ * Set text rotation
+ *
+ * @param text_rotation The rotation angle to apply to subsequent text drawing
+ */
+void mw_gl_set_text_rotation(mw_gl_text_rotation_t text_rotation);
+
+/**
+ * Gets the current font's width in pixels excluding inter-character gap
+ *
+ * @return Width in pixels
+ */
+uint8_t mw_gl_get_font_width(void);
+
+/**
+ * Gets the current font's height in pixels excluding inter-line gap
+ *
+ * @return Width in pixels
+ */
+uint8_t mw_gl_get_font_height(void);
+
 /**
  * Draw a single pixel taking into account pattern and solid fill colour.
  *
@@ -286,12 +338,12 @@ void mw_gl_line(const mw_gl_draw_info_t *draw_info, int16_t p1x, int16_t p1y, in
 void mw_gl_rectangle(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y, int16_t width, int16_t height);
 
 /**
- * Draw a single small fixed width horizontal character. Foreground colour, background colour and transparency controlled by gc.
+ * Draw a single fixed width character. Foreground colour, background colour, font, rotation and transparency controlled by gc.
  *
  * @param draw_info Reference frame origin coordinates and clip region rect
  * @param x Coordinate of the left edge of the rectangle containing the character
  * @param y Coordinate of the top edge of the rectangle containing the character
- * @param c The ISO8859-15 character
+ * @param c The character
  */
 void mw_gl_character(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y, char c);
 
@@ -306,51 +358,11 @@ void mw_gl_character(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y, c
 void mw_gl_string(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y, const char *s);
 
 /**
- * Draw a single small fixed width vertical character rotated 90 degrees clockwise. Foreground colour, background colour and transparency controlled by gc.
- *
- * @param draw_info Reference frame origin coordinates and clip region rect
- * @param x Coordinate of the top of the rotated character, i.e. the character will be drawn from this point left
- * @param y Coordinate of the left edge of the character, i.e. the character will be drawn from this point down
- * @param c the ISO8859-15 character
- */
-void mw_gl_character_vert(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y, char c);
-
-/**
- * Draw a vertical string of small fixed width horizontal characters rotated 90 degrees clockwise. Foreground colour, background colour and transparency controlled by gc.
- *
- * @param draw_info Reference frame origin coordinates and clip region rect
- * @param x Coordinate of the top of the rotated characters, i.e. the characters will be drawn from this point left
- * @param y Coordinate of the left edge of the first character, i.e. the characters will be drawn from this point down
- * @param s Pointer to the null terminated string containing ISO8859-15 characters
- */
-void mw_gl_string_vert(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y, const char *s);
-
-/**
- * Draw a horizontal string of large proportional characters. Foreground colour, background colour and transparency controlled by gc.
- *
- * @param draw_info Reference frame origin coordinates and clip region rect
- * @param x Coordinate of the left edge of the rectangle containing the first character
- * @param y Coordinate of the top edge of the rectangle containing the first character
- * @param s Pointer to the null terminated string containing ISO8859-15 characters
- */
-void mw_gl_large_string(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y, const char *s);
-
-/**
- * Draw a vertical string of large proportional characters rotated 90 degrees clockwise.
- *
- * @param draw_info Reference frame origin coordinates and clip region rect
- * @param x Coordinate of the top of the rotated characters, i.e. the characters will be drawn from this point left
- * @param y Coordinate of the left edge of the first character, i.e. the characters will be drawn from this point down
- * @param s Pointer to the null terminated string containing ISO8859-15 characters
- */
-void mw_gl_large_string_vert(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y, const char *s);
-
-/**
- * Calculate the width in pixels of a string of large proportional characters.
+ * Calculate the width in pixels of a string of characters in current font.
  * @param s Null terminated string to calculate the width of
  * @return Width in pixels
  */
-uint16_t mw_gl_large_string_width(const char *s);
+uint16_t mw_gl_get_string_width_pixels(const char *s);
 
 /**
  * Calculate the width in pixels of an array of strings of large proportional characters.

@@ -56,22 +56,16 @@ uint8_t window_file_id;
 /* controls */
 
 uint8_t button_id;
-uint8_t list_box_file_id;
-uint8_t arrow_file_up_id;
-uint8_t arrow_file_down_id;
-uint8_t arrow_file_back_id;
-uint8_t label_file_id;
-uint8_t label_folder_id;
+uint8_t button_set_clock_id;
+uint8_t label_time_id;
+uint8_t label_date_id;
 
-/* controls extra data */
+/* controls instance data */
 
 mw_ui_button_data_t button_data;
-mw_ui_list_box_data_t list_box_file_data;
-mw_ui_arrow_data_t arrow_up_file_data;
-mw_ui_arrow_data_t arrow_down_file_data;
-mw_ui_arrow_data_t arrow_back_file_data;
-mw_ui_label_data_t label_file_data;
-mw_ui_label_data_t label_folder_data;
+mw_ui_button_data_t button_set_clock_data;
+mw_ui_label_data_t label_time_data;
+mw_ui_label_data_t label_date_data;
 
 /**********************
 *** LOCAL VARIABLES ***
@@ -124,56 +118,32 @@ void mw_user_init(void)
 			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
 			&button_data);
 
-	/* create a list box for directory listing */
-	list_box_file_data.number_of_lines = 5;
-	list_box_file_data.number_of_items = 0;
-	list_box_file_data.list_box_entries = NULL;
-	list_box_file_data.line_enables = MW_ALL_ITEMS_ENABLED;
-	list_box_file_id = mw_ui_list_box_add_new(50,
-			20,
-			120,
-			window_file_id,
-			MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_IS_VISIBLE,
-			&list_box_file_data);
-
-	arrow_up_file_data.mw_ui_arrow_direction = MW_UI_ARROW_UP;
-	arrow_file_up_id = mw_ui_arrow_add_new(175,
-			20,
-			window_file_id,
-			MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_IS_VISIBLE,
-			&arrow_up_file_data);
-
-	arrow_down_file_data.mw_ui_arrow_direction = MW_UI_ARROW_DOWN;
-	arrow_file_down_id = mw_ui_arrow_add_new(175,
-			74,
-			window_file_id,
-			MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_IS_VISIBLE,
-			&arrow_down_file_data);
-
-	arrow_back_file_data.mw_ui_arrow_direction = MW_UI_ARROW_LEFT;
-	arrow_file_back_id = mw_ui_arrow_add_new(175,
-			46,
-			window_file_id,
-			MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_IS_VISIBLE,
-			&arrow_back_file_data);
-
-	/* create file label */
-	mw_util_safe_strcpy(label_file_data.label, MW_UI_LABEL_MAX_CHARS, "");
-	label_file_id = mw_ui_label_add_new(20,
-			140,
-			180,
+	mw_util_safe_strcpy(button_set_clock_data.button_label, MW_UI_BUTTON_LABEL_MAX_CHARS, "Set");
+	button_set_clock_id = mw_ui_button_add_new(80,
+			145,
 			window_file_id,
 			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
-			&label_file_data);
+			&button_set_clock_data);
 
-	/* create folder label */
-	mw_util_safe_strcpy(label_file_data.label, MW_UI_LABEL_MAX_CHARS, "");
-	label_folder_id = mw_ui_label_add_new(20,
-			125,
-			180,
+	mw_util_safe_strcpy(label_time_data.label,
+			MW_UI_LABEL_MAX_CHARS,
+			"Waiting...");
+	label_time_id = mw_ui_label_add_new(5,
+			5,
+			100,
 			window_file_id,
 			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
-			&label_folder_data);
+			&label_time_data);
+
+	mw_util_safe_strcpy(label_date_data.label,
+			MW_UI_LABEL_MAX_CHARS,
+			"Waiting...");
+	label_date_id = mw_ui_label_add_new(5,
+			20,
+			100,
+			window_file_id,
+			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
+			&label_date_data);
 
 	mw_paint_all();
 }

@@ -48,7 +48,7 @@ SOFTWARE.
  * System define constants that must not be changed 
  */
 #define MW_BORDER_WIDTH 						1               					/**< Width of a window border */
-#define MW_TITLE_BAR_HEIGHT 					(MW_GL_LARGE_CHARACTER_HEIGHT + 2)  /**< Height of a window's title bar which should be greater than MW_LARGE_CHARACTER_HEIGHT */
+#define MW_TITLE_BAR_HEIGHT 					(MW_GL_TITLE_FONT_HEIGHT + 2)  /**< Height of a window's title bar which should be greater than MW_LARGE_CHARACTER_HEIGHT */
 #define MW_TITLE_X_OFFSET						18									/**< Title text x offset in title bar */
 #define MW_TITLE_Y_OFFSET						2									/**< Title text y offset in title bar */
 #define MW_USER_MESSAGE_BASE					50      							/**< User messages can be defined from this base value upwards */
@@ -61,7 +61,7 @@ SOFTWARE.
 #define MW_TITLE_BAR_ICON_OFFSET				16									/**< Distance between each title bar icon */
 #define MW_DESKTOP_ICONS_PER_ROW				4           						/**< Number of icons of minimized windows to show across bottom of screen */
 #define MW_DESKTOP_ICON_WIDTH					(MW_HAL_LCD_WIDTH / MW_DESKTOP_ICONS_PER_ROW)	/**< Number of icons across desktop */
-#define MW_DESKTOP_ICON_HEIGHT					(MW_GL_STANDARD_CHARACTER_HEIGHT + 8)			/**< Height of desktop minimised icons */
+#define MW_DESKTOP_ICON_HEIGHT					18									/**< Height of desktop minimised icons */
 #define MW_UNUSED_MESSAGE_PARAMETER				0									/**< To indicate that a parameter to post message is unused rather than zero */
 #define MW_ALL_ITEMS_ENABLED					0xffff								/**< All items in a control that can have individual items enabled are enabled */
 #define MW_ALL_ITEMS_DISABLED					0									/**< All items in a control that can have individual items enabled are disabled */
@@ -161,8 +161,12 @@ typedef enum
 	/* Messages posted by standard dialogs */
 	MW_DIALOG_ONE_BUTTON_DISMISSED_MESSAGE,			/**< One button dialog has been dismissed */
 	MW_DIALOG_TWO_BUTTONS_DISMISSED_MESSAGE,		/**< Two button dialog has been dismissed */
-	MW_DIALOG_TIME_CHOOSER_DISMISSED_MESSAGE,		/**< Time chooser dialog has been dismissed by ok button*/
-	MW_DIALOG_DATE_CHOOSER_DISMISSED_MESSAGE,		/**< Date chooser dialog has been dismissed by ok button*/
+	MW_DIALOG_TIME_CHOOSER_OK_MESSAGE,				/**< Time chooser dialog has been dismissed by ok button*/
+	MW_DIALOG_TIME_CHOOSER_CANCEL_MESSAGE,			/**< Time chooser dialog has been dismissed by cancel button*/
+	MW_DIALOG_DATE_CHOOSER_OK_MESSAGE,				/**< Date chooser dialog has been dismissed by ok button*/
+	MW_DIALOG_DATE_CHOOSER_CANCEL_MESSAGE,			/**< Date chooser dialog has been dismissed by cancel button*/
+	MW_DIALOG_FILE_CHOOSER_OK_PTR_MESSAGE,			/**< File chosen in file chooser dialog */
+	MW_DIALOG_FILE_CHOOSER_CANCEL_MESSAGE,			/**< File chooser dialog was cancelled with no file chosen */
 
 	/* Messages that can be posted from user code or user code called utility functions */
 	MW_WINDOW_PAINT_ALL_MESSAGE,			       	/**< System message to paint everything */

@@ -100,6 +100,8 @@ void mw_ui_keyboard_paint_function(uint8_t control_ref, const mw_gl_draw_info_t 
 	mw_gl_set_line(MW_GL_SOLID_LINE);
 	mw_gl_set_border(MW_GL_BORDER_ON);
 	mw_gl_set_bg_transparency(MW_GL_BG_TRANSPARENT);
+	mw_gl_set_font(MW_GL_FONT_9);
+	mw_gl_set_text_rotation(MW_GL_TEXT_ROTATION_0);
 
 	for (row = 0; row < 3; row ++)
 	{
@@ -298,11 +300,11 @@ void mw_ui_keyboard_paint_function(uint8_t control_ref, const mw_gl_draw_info_t 
 	/* draw cursor */
 	if (this_keyboard->draw_cursor)
 	{
-		mw_gl_set_fg_colour(MW_CONTROL_DISABLED_COLOUR);
+		mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 		mw_gl_vline(draw_info,
-				2 + this_keyboard->cursor_position * MW_GL_STANDARD_CHARACTER_WIDTH,
+				2 + this_keyboard->cursor_position * (mw_gl_get_font_width() + 1),
 				2,
-				MW_GL_STANDARD_CHARACTER_HEIGHT + 4);
+				mw_gl_get_font_height() + 4);
 	}
 }
 
@@ -371,10 +373,11 @@ void mw_ui_keyboard_message_function(const mw_message_t *message)
 		{
 			/* repaint cursor area only */
 			this_keyboard->draw_cursor = !this_keyboard->draw_cursor;
-			invalid_rect.x = 2 + this_keyboard->cursor_position * MW_GL_STANDARD_CHARACTER_WIDTH;
+			mw_gl_set_font(MW_GL_FONT_9);		/* needed to get font width */
+			invalid_rect.x = 2 + this_keyboard->cursor_position * (mw_gl_get_font_width() + 1);
 			invalid_rect.y = 2;
 			invalid_rect.width = 1;
-			invalid_rect.height = MW_GL_STANDARD_CHARACTER_HEIGHT + 4;
+			invalid_rect.height = 14;
 			mw_paint_control_rect(message->recipient_id, &invalid_rect);
 		}
 
@@ -501,7 +504,8 @@ void mw_ui_keyboard_message_function(const mw_message_t *message)
 		}
 		else
 		{
-			this_keyboard->cursor_position = (message->message_data >> 16) / MW_GL_STANDARD_CHARACTER_WIDTH;
+			mw_gl_set_font(MW_GL_FONT_9);		/* needed to get font width */
+			this_keyboard->cursor_position = (message->message_data >> 16) / (mw_gl_get_font_width() + 1);
 			if (this_keyboard->cursor_position > strlen(this_keyboard->entry_buffer))
 			{
 				this_keyboard->cursor_position = strlen(this_keyboard->entry_buffer);

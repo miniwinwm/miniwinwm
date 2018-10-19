@@ -132,7 +132,10 @@ void window_temp_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *dra
 			mw_get_window_client_rect(window_ref).width,
 			18);
 	mw_gl_set_fg_colour(MW_HAL_LCD_WHITE);
-	mw_gl_large_string(draw_info, 2, 2, "Temperature Log");
+	mw_gl_set_bg_transparency(MW_GL_BG_TRANSPARENT);
+	mw_gl_set_text_rotation(MW_GL_TEXT_ROTATION_0);
+	mw_gl_set_font(MW_GL_TITLE_FONT);
+	mw_gl_string(draw_info, 2, 2, "Temperature Log");
 
 	/* white area edge */
 	mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
@@ -148,6 +151,8 @@ void window_temp_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *dra
 
 	/* top graph title */
 	mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
+	mw_gl_set_font(MW_GL_FONT_9);
+	mw_gl_set_text_rotation(MW_GL_TEXT_ROTATION_0);
 	mw_gl_string(draw_info, 13, 30, "Day Log");
 
 	/* top graph vertical lines */

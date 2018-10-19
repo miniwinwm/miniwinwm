@@ -66,10 +66,10 @@ extern const uint8_t mw_bitmaps_folder_icon_small[];
 *** LOCAL VARIABLES ***
 **********************/
 
-static FATFS USBDISK_FatFs;  										/**< File system object for USB Disk logical drive */
-static char USB_Path[4];     										/**< USB Disk logical drive path */
-static MSC_ApplicationTypeDef Appli_state = APPLICATION_IDLE;		/**< USB host state machine state variable */
-static FIL in_file;													/**< Handle to the single file used by this app */
+static FATFS usb_disk_fatfs;  										/**< File system object for USB Disk logical drive */
+static char usb_path[4];     										/**< USB Disk logical drive path */
+static MSC_ApplicationTypeDef application_state = APPLICATION_IDLE;	/**< USB host state machine state variable */
+static FIL in_file;													/**< File to read from */
 
 /********************************
 *** LOCAL FUNCTION PROTOTYPES ***
@@ -138,12 +138,12 @@ static void USBH_UserProcess(USBH_HandleTypeDef *phost, uint8_t id)
 	switch (id)
 	{
 	case HOST_USER_DISCONNECTION:
-		Appli_state = APPLICATION_IDLE;
-		f_mount(&USBDISK_FatFs, "", 0);
+		application_state = APPLICATION_IDLE;
+		f_mount(&usb_disk_fatfs, "", 0);
 		break;
 
 	case HOST_USER_CLASS_ACTIVE:
-		Appli_state = APPLICATION_START;
+		application_state = APPLICATION_START;
 		break;
 	}
 }
@@ -166,7 +166,7 @@ void app_init(void)
 	}
 
 	/* Link the USB Mass Storage disk I/O driver */
-	FATFS_LinkDriver(&USBH_Driver, USB_Path);
+	FATFS_LinkDriver(&USBH_Driver, usb_path);
 
 	/* Init Host Library */
 	USBH_Init(&hUSB_Host, USBH_UserProcess, 0);
@@ -178,14 +178,14 @@ void app_init(void)
 	USBH_Start(&hUSB_Host);
 
 	/* Register the file system object to the FatFs module */
-	f_mount(&USBDISK_FatFs, (TCHAR const*)USB_Path, 0);
+	f_mount(&usb_disk_fatfs, (TCHAR const*)usb_path, 0);
 }
 
 bool app_file_open(char *path_and_file_name)
 {
 	bool result = false;
 
-	if (Appli_state == APPLICATION_START)
+	if (application_state == APPLICATION_START)
 	{
 		if (f_open(&in_file, path_and_file_name, FA_READ) == FR_OK)
 		{
@@ -230,7 +230,7 @@ void app_file_close(void)
 
 char *app_get_root_folder_path(void)
 {
-	return USB_Path;
+	return usb_path;
 }
 
 void app_main_loop_process(void)
@@ -240,41 +240,43 @@ void app_main_loop_process(void)
 
 uint8_t find_directory_entries(char* path,
 		mw_ui_list_box_entry *list_box_settings_entries,
-		uint8_t max_entries)
+		uint8_t max_entries,
+		const uint8_t *file_entry_icon,
+		const uint8_t *folder_entry_icon)
 {
-    FRESULT res;
-    DIR dir;
-    FILINFO fno;
+    FRESULT result;
+    DIR directory;
+    FILINFO file_info;
     UINT i;
 
     i = 0;
-    res = f_opendir(&dir, path);                       /* Open the directory */
-    if (res == FR_OK)
+    result = f_opendir(&directory, path);                       /* Open the directory */
+    if (result == FR_OK)
     {
         for (;;)
         {
-            res = f_readdir(&dir, &fno);                   /* Read a directory item */
-            if (res != FR_OK || fno.fname[0] == 0)
+            result = f_readdir(&directory, &file_info);                   /* Read a directory item */
+            if (result != FR_OK || file_info.fname[0] == 0)
             {
             	break;  /* Break on error or end of dir */
             }
 
         	/* Ignore if it's a hidden or system entry*/
-        	if ((fno.fattrib & AM_HID) || (fno.fattrib & AM_SYS))
+        	if ((file_info.fattrib & AM_HID) || (file_info.fattrib & AM_SYS))
         	{
         		continue;
         	}
 
-            mw_util_safe_strcpy(list_box_settings_entries[i].label, MAX_FILE_NAME_LENGTH + 1, fno.fname);
-            if (fno.fattrib & AM_DIR)
+            mw_util_safe_strcpy(list_box_settings_entries[i].label, MAX_FILE_NAME_LENGTH + 1, file_info.fname);
+            if (file_info.fattrib & AM_DIR)
             {
             	/* It is a directory */
-            	list_box_settings_entries[i].icon = mw_bitmaps_folder_icon_small;
+            	list_box_settings_entries[i].icon = folder_entry_icon;
             }
             else
             {
             	/* It is a file. */
-                list_box_settings_entries[i].icon = mw_bitmaps_file_icon_small;
+                list_box_settings_entries[i].icon = file_entry_icon;
             }
             i++;
             if (i == max_entries)
@@ -282,8 +284,22 @@ uint8_t find_directory_entries(char* path,
             	break;
             }
         }
-        f_closedir(&dir);
+        f_closedir(&directory);
     }
 
     return i;
+}
+
+struct tm app_get_time_date(void)
+{
+	struct tm tm = {0};
+
+	// todo
+
+	return tm;
+}
+
+void app_set_time_date(struct tm tm)
+{
+	// todo
 }

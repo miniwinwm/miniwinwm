@@ -35,12 +35,14 @@ SOFTWARE.
 *** INCLUDES ***
 ***************/
 
+#include <time.h>
 #include "ui/ui_common.h"
 
 /****************
 *** CONSTANTS ***
 ****************/
 
+#define MW_DIALOG_FILE_CHOOSER						/**< File chooser dialog is optional and is only built if this is defined */
 #define MAX_FILE_NAME_LENGTH				12		/**< Maximum length of a file name in eight dot three format */
 #define MAX_FOLDER_AND_FILE_NAME_LENGTH		128
 
@@ -67,12 +69,17 @@ void app_main_loop_process(void);
  *
  * @param path pointer to path text. Path separators are '/'. Must not end in '/' apart from root.
  * @param list_box_settings_entries the returned entries data which has the text and an icon filled in for each entry
- * @param max_entries the maximum number of entires to look for
+ * @param max_entries the maximum number of entries to look for
+ * @param file_entry_icon Pointer to the icon to use for a file entry
+ * @param folder_entry_icon Pointer to the icon to use for a folder entry
  * @return the number of entries found
+ * @note this function is required if MW_DIALOG_FILE_CHOOSER is defined
  */
 uint8_t find_directory_entries(char *path,
 		mw_ui_list_box_entry *list_box_settings_entries,
-		uint8_t max_entries);
+		uint8_t max_entries,
+		const uint8_t *file_entry_icon,
+		const uint8_t *folder_entry_icon);
 
 /**
  * Accessor to the root folder path which comes from the FatFS module and is stored in app source file
@@ -123,6 +130,20 @@ void app_file_fread(uint8_t *buffer, uint32_t count);
  * Close an open file
  */
 void app_file_close(void);
+
+/**
+ * Get the date and time from hardware
+ *
+ * @return The date and time, year in xxxx format, date 1-31, month 1-12
+ */
+struct tm app_get_time_date(void);
+
+/**
+ * Set the date and time from hardware
+ *
+ * @param tm, The date and time, year in xxxx format, date 1-31, month 1-12
+ */
+void app_set_time_date(struct tm tm);
 
 #ifdef __cplusplus
 }

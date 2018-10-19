@@ -24,8 +24,8 @@ SOFTWARE.
 
 */
 
-#ifndef _DIALOG_TWO_BUTTON_H
-#define _DIALOG_TWO_BUTTON_H
+#ifndef _DIALOG_FILE_CHOOSER_H
+#define _DIALOG_FILE_CHOOSER_H
 
 #ifdef __cplusplus
  extern "C" {
@@ -41,6 +41,8 @@ SOFTWARE.
 *** CONSTANTS ***
 ****************/
 
+#define FILE_LIST_BOX_MAX_ENTRIES 	16	/**< The maximum number of files or folders that can be displayed in the list box of a folder's contents */
+
  /************
  *** TYPES ***
  ************/
@@ -50,17 +52,14 @@ SOFTWARE.
 ***************************/
 
 /**
- * Create a dynamic dialog window with two buttons.
+ * Create a dynamic dialog window to choose a file.
  *
- * @param x left coordinate of dialog window
- * @param y top coordinate of dialog window
- * @param width width of dialog window
- * @param title pointer to text displayed in the window title bar
- * @param message pointer to the message displayed in the window
- * @param button_1_label pointer to the text of the left button's label
- * @param button_2_label pointer to the text of the right button's label
- * @param large_size true for large size controls/text, false for small
- * @param response_window_id window id of the window that the response message is posted to when the dialog is dismissed
+ * @param x Left coordinate of dialog window
+ * @param y Top coordinate of dialog window
+ * @param title Pointer to text displayed in the window title bar
+ * @param start_path Path of folder to open when dialog displays, folders separated by '/' and path not to end in a '/' except for root folder
+ * @param large_size True for large size controls/text, false for small
+ * @param response_window_id Window id of the window that the response message is posted to when the dialog is dismissed
  * @return the window id of the window used for the dialog which is only valid while the dialog is showing
  * @note There must be space in the window array for one new window and space in the control array
  *       for one new control. These resources are released when the dialog is dismissed.
@@ -70,13 +69,10 @@ SOFTWARE.
  *       In the response message data the value 0 indicates left button, 1 right button
  * @warning Do not call this from a client window paint function. In debug mode it will cause an assert failure.
  */
-uint8_t mw_create_window_dialog_two_button(uint16_t x,
+uint8_t mw_create_window_dialog_file_chooser(uint16_t x,
 		uint16_t y,
-		uint16_t width,
 		char *title,
-		char *message,
-		char *button_1_label,
-		char *button_2_label,
+		char *start_path,
 		bool large_size,
 		uint8_t response_window_id);
 

@@ -50,23 +50,6 @@ SOFTWARE.
 ***************************/
 
 /**
- * Window paint routine, called by window manager.
- *
- * @param window_ref The window identifier in the array of windows
- * @param draw_info Draw info structure describing offset and clip region
- * @note Do not call this directly from user code
- */
-void mw_dialog_date_chooser_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_info);
-
-/**
- * Window message handler called by the window manager.
- *
- * @param message The message to be processed
- * @note Do not call this directly from user code
- */
-void mw_dialog_date_chooser_message_function(const mw_message_t *message);
-
-/**
  * Create a dynamic time chooser dialog window.
  *
  * @param x left coordinate of dialog window

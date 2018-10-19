@@ -92,6 +92,7 @@ void window_text_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *dra
 
 	mw_gl_set_fg_colour(MW_HAL_LCD_BLUE);
 	mw_gl_set_bg_transparency(MW_GL_BG_TRANSPARENT);
+	mw_gl_set_font(MW_GL_FONT_9);
 
 	/* get this window instance data pointer and check for not null */
 	text_window_data = (text_window_data_t *)mw_get_window_instance_data(window_ref);
@@ -101,8 +102,8 @@ void window_text_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *dra
 		return;
 	}
 
-	x_pos = 0;
-	y_pos = 0;
+	x_pos = 1;
+	y_pos = 1;
 	if (app_file_open(text_window_data->path_and_filename_text))
 	{
 		file_size = app_file_size();
@@ -116,11 +117,11 @@ void window_text_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *dra
 			{
 				mw_gl_character(draw_info, x_pos, y_pos, c);
 			}
-			x_pos += MW_GL_STANDARD_CHARACTER_WIDTH;
+			x_pos += mw_gl_get_font_width() + 1;
 			if (c == '\n')
 			{
 				x_pos = 0;
-				y_pos += MW_GL_STANDARD_CHARACTER_HEIGHT;
+				y_pos += mw_gl_get_font_height() + 1;
 				if (y_pos >= client_height)
 				{
 					break;

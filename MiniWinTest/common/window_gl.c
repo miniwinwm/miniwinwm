@@ -298,45 +298,246 @@ void window_gl_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_
 		break;
 
 	case 13:
-		/* check text without background and clipping */
+		/* check text without background 0 degrees*/
 		mw_gl_set_bg_transparency(MW_GL_BG_TRANSPARENT);
+
+		mw_gl_set_fg_colour(MW_HAL_LCD_PURPLE);
+		mw_gl_vline(draw_info, 10, 0, 200);
+		mw_gl_hline(draw_info, 0, 200, 30);
+		mw_gl_hline(draw_info, 0, 200, 40);
+		mw_gl_hline(draw_info, 0, 200, 53);
+		mw_gl_hline(draw_info, 0, 200, 70);
+		mw_gl_hline(draw_info, 0, 200, 90);
+		mw_gl_hline(draw_info, 0, 200, 120);
+
 		mw_gl_set_fg_colour(MW_HAL_LCD_GREEN);
 		mw_gl_set_bg_colour(MW_HAL_LCD_BLACK);
-		mw_gl_string(draw_info, 100, 50, "Fred and Berty");
-		mw_gl_string(draw_info, mw_get_window_client_rect(window_ref).width - 40, 100, "Fred and Berty");
+		mw_gl_set_text_rotation(MW_GL_TEXT_ROTATION_0);
+		mw_gl_set_font(MW_GL_FONT_9);
+		mw_gl_string(draw_info, 10, 30, "Fred and Berty");
+		mw_gl_set_font(MW_GL_FONT_12);
+		mw_gl_string(draw_info, 10, 40, "Fred and Berty");
+		mw_gl_set_font(MW_GL_FONT_16);
+		mw_gl_string(draw_info, 10, 53, "Fred and Berty");
+		mw_gl_set_font(MW_GL_FONT_20);
+		mw_gl_string(draw_info, 10, 70, "Fred and Berty");
+		mw_gl_set_font(MW_GL_FONT_24);
+		mw_gl_string(draw_info, 10, 90, "Fred and Berty");
+		mw_gl_set_font(MW_GL_TITLE_FONT);
+		mw_gl_string(draw_info, 10, 120, "Fred and Berty");
 		break;
 
 	case 14:
-		/* check text with background and clipping */
+		/* check text with background 0 degrees */
 		mw_gl_set_bg_transparency(MW_GL_BG_NOT_TRANSPARENT);
+
+		mw_gl_set_fg_colour(MW_HAL_LCD_PURPLE);
+		mw_gl_vline(draw_info, 10, 0, 200);
+		mw_gl_hline(draw_info, 0, 200, 30);
+		mw_gl_hline(draw_info, 0, 200, 40);
+		mw_gl_hline(draw_info, 0, 200, 53);
+		mw_gl_hline(draw_info, 0, 200, 70);
+		mw_gl_hline(draw_info, 0, 200, 90);
+		mw_gl_hline(draw_info, 0, 200, 120);
+
 		mw_gl_set_fg_colour(MW_HAL_LCD_GREEN);
 		mw_gl_set_bg_colour(MW_HAL_LCD_BLACK);
-		mw_gl_string(draw_info, 100, 50, "Fred and Berty");
-		mw_gl_string(draw_info, mw_get_window_client_rect(window_ref).width - 40, 100, "Fred and Berty");
+		mw_gl_set_text_rotation(MW_GL_TEXT_ROTATION_0);
+		mw_gl_set_font(MW_GL_FONT_9);
+		mw_gl_string(draw_info, 10, 30, "Fred and Berty");
+		mw_gl_set_font(MW_GL_FONT_12);
+		mw_gl_string(draw_info, 10, 40, "Fred and Berty");
+		mw_gl_set_font(MW_GL_FONT_16);
+		mw_gl_string(draw_info, 10, 53, "Fred and Berty");
+		mw_gl_set_font(MW_GL_FONT_20);
+		mw_gl_string(draw_info, 10, 70, "Fred and Berty");
+		mw_gl_set_font(MW_GL_FONT_24);
+		mw_gl_string(draw_info, 10, 90, "Fred and Berty");
+		mw_gl_set_font(MW_GL_TITLE_FONT);
+		mw_gl_string(draw_info, 10, 120, "Fred and Berty");
 		break;
 
 	case 15:
-		/* check rotated text without background and clipping */
+		/* check rotated text without background 90 degrees*/
 		mw_gl_set_bg_transparency(MW_GL_BG_TRANSPARENT);
+
+		mw_gl_set_fg_colour(MW_HAL_LCD_PURPLE);
+		mw_gl_hline(draw_info, 0, 200, 10);
+		mw_gl_vline(draw_info, 30, 0, 200);
+		mw_gl_vline(draw_info, 43, 0, 200);
+		mw_gl_vline(draw_info, 60, 0, 200);
+		mw_gl_vline(draw_info, 81, 0, 200);
+		mw_gl_vline(draw_info, 105, 0, 200);
+		mw_gl_vline(draw_info, 135, 0, 200);
+
 		mw_gl_set_fg_colour(MW_HAL_LCD_GREEN);
 		mw_gl_set_bg_colour(MW_HAL_LCD_BLACK);
-		mw_gl_set_line(MW_GL_DASH_LINE);
-		mw_gl_string_vert(draw_info, 100, 50, "Fred and Berty");
-		mw_gl_vline(draw_info, 100, 20, 70);
-		mw_gl_hline(draw_info, 10, 120, 50);
-		mw_gl_string_vert(draw_info, 100, mw_get_window_client_rect(window_ref).height - 20, "Fred and Berty");
+		mw_gl_set_text_rotation(MW_GL_TEXT_ROTATION_90);
+		mw_gl_set_font(MW_GL_FONT_9);
+		mw_gl_string(draw_info, 30, 10, "Fred and Berty");
+		mw_gl_set_font(MW_GL_FONT_12);
+		mw_gl_string(draw_info, 43, 10, "Fred and Berty");
+		mw_gl_set_font(MW_GL_FONT_16);
+		mw_gl_string(draw_info, 60, 10, "Fred and Berty");
+		mw_gl_set_font(MW_GL_FONT_20);
+		mw_gl_string(draw_info, 81, 10, "Fred and Berty");
+		mw_gl_set_font(MW_GL_FONT_24);
+		mw_gl_string(draw_info, 105, 10, "Fred and Berty");
+		mw_gl_set_font(MW_GL_TITLE_FONT);
+		mw_gl_string(draw_info, 135, 10, "Fred and Berty");
 		break;
 
 	case 16:
-		/* check rotated text with background and clipping */
+		/* check rotated text with background 90 degrees */
 		mw_gl_set_bg_transparency(MW_GL_BG_NOT_TRANSPARENT);
+
+		mw_gl_set_fg_colour(MW_HAL_LCD_PURPLE);
+		mw_gl_hline(draw_info, 0, 200, 10);
+		mw_gl_vline(draw_info, 30, 0, 200);
+		mw_gl_vline(draw_info, 43, 0, 200);
+		mw_gl_vline(draw_info, 60, 0, 200);
+		mw_gl_vline(draw_info, 81, 0, 200);
+		mw_gl_vline(draw_info, 105, 0, 200);
+		mw_gl_vline(draw_info, 135, 0, 200);
+
 		mw_gl_set_fg_colour(MW_HAL_LCD_GREEN);
 		mw_gl_set_bg_colour(MW_HAL_LCD_BLACK);
-		mw_gl_string_vert(draw_info, 100, 50, "Fred and Berty");
-		mw_gl_string_vert(draw_info, 100, mw_get_window_client_rect(window_ref).height - 20, "Fred and Berty");
+		mw_gl_set_text_rotation(MW_GL_TEXT_ROTATION_90);
+		mw_gl_set_font(MW_GL_FONT_9);
+		mw_gl_string(draw_info, 30, 10, "Fred and Berty");
+		mw_gl_set_font(MW_GL_FONT_12);
+		mw_gl_string(draw_info, 43, 10, "Fred and Berty");
+		mw_gl_set_font(MW_GL_FONT_16);
+		mw_gl_string(draw_info, 60, 10, "Fred and Berty");
+		mw_gl_set_font(MW_GL_FONT_20);
+		mw_gl_string(draw_info, 81, 10, "Fred and Berty");
+		mw_gl_set_font(MW_GL_FONT_24);
+		mw_gl_string(draw_info, 105, 10, "Fred and Berty");
+		mw_gl_set_font(MW_GL_TITLE_FONT);
+		mw_gl_string(draw_info, 135, 10, "Fred and Berty");
 		break;
 
 	case 17:
+		/* check rotated text without background 180 degrees*/
+		mw_gl_set_bg_transparency(MW_GL_BG_TRANSPARENT);
+
+		mw_gl_set_fg_colour(MW_HAL_LCD_PURPLE);
+		mw_gl_vline(draw_info, 200, 0, 200);
+		mw_gl_hline(draw_info, 0, 200, 30);
+		mw_gl_hline(draw_info, 0, 200, 43);
+		mw_gl_hline(draw_info, 0, 200, 60);
+		mw_gl_hline(draw_info, 0, 200, 81);
+		mw_gl_hline(draw_info, 0, 200, 105);
+		mw_gl_hline(draw_info, 0, 200, 135);
+
+		mw_gl_set_fg_colour(MW_HAL_LCD_GREEN);
+		mw_gl_set_bg_colour(MW_HAL_LCD_BLACK);
+		mw_gl_set_text_rotation(MW_GL_TEXT_ROTATION_180);
+		mw_gl_set_font(MW_GL_FONT_9);
+		mw_gl_string(draw_info, 200, 30, "Fred and Berty");
+		mw_gl_set_font(MW_GL_FONT_12);
+		mw_gl_string(draw_info, 200, 43, "Fred and Berty");
+		mw_gl_set_font(MW_GL_FONT_16);
+		mw_gl_string(draw_info, 200, 60, "Fred and Berty");
+		mw_gl_set_font(MW_GL_FONT_20);
+		mw_gl_string(draw_info, 200, 81, "Fred and Berty");
+		mw_gl_set_font(MW_GL_FONT_24);
+		mw_gl_string(draw_info, 200, 105, "Fred and Berty");
+		mw_gl_set_font(MW_GL_TITLE_FONT);
+		mw_gl_string(draw_info, 200, 135, "Fred and Berty");
+		break;
+
+	case 18:
+		/* check rotated text with background 180 degrees */
+		mw_gl_set_bg_transparency(MW_GL_BG_NOT_TRANSPARENT);
+
+		mw_gl_set_fg_colour(MW_HAL_LCD_PURPLE);
+		mw_gl_vline(draw_info, 200, 0, 200);
+		mw_gl_hline(draw_info, 0, 200, 30);
+		mw_gl_hline(draw_info, 0, 200, 43);
+		mw_gl_hline(draw_info, 0, 200, 60);
+		mw_gl_hline(draw_info, 0, 200, 81);
+		mw_gl_hline(draw_info, 0, 200, 105);
+		mw_gl_hline(draw_info, 0, 200, 135);
+
+		mw_gl_set_fg_colour(MW_HAL_LCD_GREEN);
+		mw_gl_set_bg_colour(MW_HAL_LCD_BLACK);
+		mw_gl_set_text_rotation(MW_GL_TEXT_ROTATION_180);
+		mw_gl_set_font(MW_GL_FONT_9);
+		mw_gl_string(draw_info, 200, 30, "Fred and Berty");
+		mw_gl_set_font(MW_GL_FONT_12);
+		mw_gl_string(draw_info, 200, 43, "Fred and Berty");
+		mw_gl_set_font(MW_GL_FONT_16);
+		mw_gl_string(draw_info, 200, 60, "Fred and Berty");
+		mw_gl_set_font(MW_GL_FONT_20);
+		mw_gl_string(draw_info, 200, 81, "Fred and Berty");
+		mw_gl_set_font(MW_GL_FONT_24);
+		mw_gl_string(draw_info, 200, 105, "Fred and Berty");
+		mw_gl_set_font(MW_GL_TITLE_FONT);
+		mw_gl_string(draw_info, 200, 135, "Fred and Berty");
+		break;
+
+	case 19:
+		/* check rotated text without background 270 degrees*/
+		mw_gl_set_bg_transparency(MW_GL_BG_TRANSPARENT);
+
+		mw_gl_set_fg_colour(MW_HAL_LCD_PURPLE);
+		mw_gl_hline(draw_info, 0, 200, 150);
+		mw_gl_vline(draw_info, 30, 0, 200);
+		mw_gl_vline(draw_info, 43, 0, 200);
+		mw_gl_vline(draw_info, 60, 0, 200);
+		mw_gl_vline(draw_info, 81, 0, 200);
+		mw_gl_vline(draw_info, 105, 0, 200);
+		mw_gl_vline(draw_info, 135, 0, 200);
+
+		mw_gl_set_fg_colour(MW_HAL_LCD_GREEN);
+		mw_gl_set_bg_colour(MW_HAL_LCD_BLACK);
+		mw_gl_set_text_rotation(MW_GL_TEXT_ROTATION_270);
+		mw_gl_set_font(MW_GL_FONT_9);
+		mw_gl_string(draw_info, 30, 150, "Fred and Berty");
+		mw_gl_set_font(MW_GL_FONT_12);
+		mw_gl_string(draw_info, 43, 150, "Fred and Berty");
+		mw_gl_set_font(MW_GL_FONT_16);
+		mw_gl_string(draw_info, 60, 150, "Fred and Berty");
+		mw_gl_set_font(MW_GL_FONT_20);
+		mw_gl_string(draw_info, 81, 150, "Fred and Berty");
+		mw_gl_set_font(MW_GL_FONT_24);
+		mw_gl_string(draw_info, 105, 150, "Fred and Berty");
+		mw_gl_set_font(MW_GL_TITLE_FONT);
+		mw_gl_string(draw_info, 135, 150, "Fred and Berty");
+		break;
+
+	case 20:
+		/* check rotated text with background 270 degrees */
+		mw_gl_set_bg_transparency(MW_GL_BG_NOT_TRANSPARENT);
+
+		mw_gl_set_fg_colour(MW_HAL_LCD_PURPLE);
+		mw_gl_hline(draw_info, 0, 200, 150);
+		mw_gl_vline(draw_info, 30, 0, 200);
+		mw_gl_vline(draw_info, 43, 0, 200);
+		mw_gl_vline(draw_info, 60, 0, 200);
+		mw_gl_vline(draw_info, 81, 0, 200);
+		mw_gl_vline(draw_info, 105, 0, 200);
+		mw_gl_vline(draw_info, 135, 0, 200);
+
+		mw_gl_set_fg_colour(MW_HAL_LCD_GREEN);
+		mw_gl_set_bg_colour(MW_HAL_LCD_BLACK);
+		mw_gl_set_text_rotation(MW_GL_TEXT_ROTATION_270);
+		mw_gl_set_font(MW_GL_FONT_9);
+		mw_gl_string(draw_info, 30, 150, "Fred and Berty");
+		mw_gl_set_font(MW_GL_FONT_12);
+		mw_gl_string(draw_info, 43, 150, "Fred and Berty");
+		mw_gl_set_font(MW_GL_FONT_16);
+		mw_gl_string(draw_info, 60, 150, "Fred and Berty");
+		mw_gl_set_font(MW_GL_FONT_20);
+		mw_gl_string(draw_info, 81, 150, "Fred and Berty");
+		mw_gl_set_font(MW_GL_FONT_24);
+		mw_gl_string(draw_info, 105, 150, "Fred and Berty");
+		mw_gl_set_font(MW_GL_TITLE_FONT);
+		mw_gl_string(draw_info, 135, 150, "Fred and Berty");
+		break;
+
+	case 21:
 		/* check mono bitmap rendering and location */
 		mw_gl_set_bg_transparency(MW_GL_BG_NOT_TRANSPARENT);
 		mw_gl_set_fg_colour(MW_HAL_LCD_RED);
@@ -346,7 +547,7 @@ void window_gl_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_
 		mw_gl_vline(draw_info, 1, 0, 100);
 		break;
 
-	case 18:
+	case 22:
 		/* check bitmap clipping */
 		mw_gl_set_bg_transparency(MW_GL_BG_NOT_TRANSPARENT);
 		mw_gl_set_fg_colour(MW_HAL_LCD_YELLOW);
@@ -355,7 +556,7 @@ void window_gl_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_
 		mw_gl_monochrome_bitmap(draw_info, 10, mw_get_window_client_rect(window_ref).height - 10, 18, 16, snail);
 		break;
 
-	case 19:
+	case 23:
 		/* check bitmap transparent */
 		mw_gl_set_border(MW_GL_BORDER_OFF);
 		mw_gl_set_fill(MW_GL_FILL);
@@ -369,7 +570,7 @@ void window_gl_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_
 		mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 		break;
 
-	case 20:
+	case 24:
 		/* check position of circle with border fill */
 		mw_gl_set_border(MW_GL_BORDER_ON);
 		mw_gl_set_line(MW_GL_SOLID_LINE);
@@ -384,7 +585,7 @@ void window_gl_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_
 		mw_gl_vline(draw_info, 150, 0, mw_get_window_client_rect(window_ref).height);
 		break;
 
-	case 21:
+	case 25:
 		/* check circle line style */
 		mw_gl_set_border(MW_GL_BORDER_ON);
 		mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
@@ -395,7 +596,7 @@ void window_gl_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_
 		mw_gl_circle(draw_info, 100, 100, 100);
 		break;
 
-	case 22:
+	case 26:
 		/* check circle no border solid fill */
 		mw_gl_set_fill(MW_GL_FILL);
 		mw_gl_clear_pattern();
@@ -410,7 +611,7 @@ void window_gl_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_
 		mw_gl_vline(draw_info, 150, 0, mw_get_window_client_rect(window_ref).height);
 		break;
 
-	case 23:
+	case 27:
 		/* check circle clipped with border solid fill */
 		mw_gl_set_border(MW_GL_BORDER_ON);
 		mw_gl_set_line(MW_GL_SOLID_LINE);
@@ -420,7 +621,7 @@ void window_gl_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_
 		mw_gl_circle(draw_info, mw_get_window_client_rect(window_ref).width - 20, mw_get_window_client_rect(window_ref).height - 20, 50);
 		break;
 
-	case 24:
+	case 28:
 		/* check circle no border pattern fill */
 		mw_gl_set_pattern(pattern);
 		mw_gl_set_border(MW_GL_BORDER_OFF);
@@ -435,7 +636,7 @@ void window_gl_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_
 		mw_gl_vline(draw_info, 150, 0, mw_get_window_client_rect(window_ref).height);
 		break;
 
-	case 25:
+	case 29:
 		/* check circle with border pattern fill */
 		mw_gl_set_border(MW_GL_BORDER_ON);
 		mw_gl_set_line(MW_GL_SOLID_LINE);
@@ -450,7 +651,7 @@ void window_gl_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_
 		mw_gl_vline(draw_info, 150, 0, mw_get_window_client_rect(window_ref).height);
 		break;
 
-	case 26:
+	case 30:
 		/* check plain arc */
 		mw_gl_set_line(MW_GL_SOLID_LINE);
 		mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
@@ -461,7 +662,7 @@ void window_gl_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_
 		mw_gl_vline(draw_info, 150, 0, mw_get_window_client_rect(window_ref).height);
 		break;
 
-	case 27:
+	case 31:
 		/* check line-styled arc */
 		mw_gl_set_line(MW_GL_LARGE_DASH_LINE);
 		mw_gl_set_bg_transparency(MW_GL_BG_NOT_TRANSPARENT);
@@ -475,42 +676,42 @@ void window_gl_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_
 		mw_gl_vline(draw_info, 150, 0, mw_get_window_client_rect(window_ref).height);
 		break;
 
-	case 28:
+	case 32:
 		/* check arc angles 1 */
 		mw_gl_set_line(MW_GL_SOLID_LINE);
 		mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 		mw_gl_arc(draw_info, 100, 100, 50, 0, 360);
 		break;
 
-	case 29:
+	case 33:
 		/* check arc angles 2 */	
 		mw_gl_set_line(MW_GL_SOLID_LINE);
 		mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 		mw_gl_arc(draw_info, 100, 100, 50, 10, 180);
 		break;
 
-	case 30:
+	case 34:
 		/* check arc angles 3 */	
 		mw_gl_set_line(MW_GL_SOLID_LINE);
 		mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 		mw_gl_arc(draw_info, 100, 100, 50, 10, 270);
 		break;
 
-	case 31:
+	case 35:
 		/* check arc angles 4 */
 		mw_gl_set_line(MW_GL_SOLID_LINE);
 		mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 		mw_gl_arc(draw_info, 100, 100, 50, 45, 90);
 		break;
 
-	case 32:
+	case 36:
 		/* check arc angles 5 */
 		mw_gl_set_line(MW_GL_SOLID_LINE);
 		mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 		mw_gl_arc(draw_info, 100, 100, 50, 45, 15);
 		break;
 
-	case 33:
+	case 37:
 		/* check position of segment */
 		mw_gl_set_line(MW_GL_SOLID_LINE);
 		mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
@@ -522,7 +723,7 @@ void window_gl_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_
 		mw_gl_vline(draw_info, 150, 0, mw_get_window_client_rect(window_ref).height);
 		break;
 
-	case 34:
+	case 38:
 		/* check segment line style */
 		mw_gl_set_line(MW_GL_LARGE_DASH_LINE);
 		mw_gl_set_bg_transparency(MW_GL_BG_NOT_TRANSPARENT);
@@ -532,7 +733,7 @@ void window_gl_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_
 		mw_gl_segment(draw_info, 100, 100, 100, 120, 90);
 		break;
 
-	case 35:
+	case 39:
 		/* check segment no border solid fill */
 		mw_gl_set_fill(MW_GL_FILL);
 		mw_gl_clear_pattern();
@@ -547,7 +748,7 @@ void window_gl_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_
 		mw_gl_vline(draw_info, 150, 0, mw_get_window_client_rect(window_ref).height);
 		break;
 
-	case 36:
+	case 40:
 		/* check segment with border solid fill */
 		mw_gl_set_fill(MW_GL_FILL);
 		mw_gl_clear_pattern();
@@ -562,7 +763,7 @@ void window_gl_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_
 		mw_gl_vline(draw_info, 150, 0, mw_get_window_client_rect(window_ref).height);
 		break;
 
-	case 37:
+	case 41:
 		/* check segment no border pattern fill */
 		mw_gl_set_pattern(pattern);
 		mw_gl_set_border(MW_GL_BORDER_OFF);
@@ -578,7 +779,7 @@ void window_gl_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_
 		mw_gl_vline(draw_info, 150, 0, mw_get_window_client_rect(window_ref).height);
 		break;
 
-	case 38:
+	case 42:
 		/* check segment with border pattern fill */
 		mw_gl_set_border(MW_GL_BORDER_ON);
 		mw_gl_set_pattern(pattern);
@@ -594,7 +795,7 @@ void window_gl_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_
 		mw_gl_vline(draw_info, 150, 0, mw_get_window_client_rect(window_ref).height);
 		break;
 
-	case 39:
+	case 43:
 		/* check position of rounded rectangle */
 		mw_gl_set_line(MW_GL_SOLID_LINE);
 		mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
@@ -606,7 +807,7 @@ void window_gl_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_
 		mw_gl_vline(draw_info, 149, 0, mw_get_window_client_rect(window_ref).height);
 		break;
 
-	case 40:
+	case 44:
 		/* check rounded rectangle line style */
 		mw_gl_set_line(MW_GL_LARGE_DASH_LINE);
 		mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
@@ -616,7 +817,7 @@ void window_gl_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_
 		mw_gl_rounded_rectangle(draw_info, 50, 50, 100, 80, 20);
 		break;
 
-	case 41:
+	case 45:
 		/* check rounded rectangle no border solid fill */
 		mw_gl_set_fill(MW_GL_FILL);
 		mw_gl_set_solid_fill_colour(MW_HAL_LCD_GREEN);
@@ -625,7 +826,7 @@ void window_gl_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_
 		mw_gl_rounded_rectangle(draw_info, 50, 50, 100, 80, 20);
 		break;
 
-	case 42:
+	case 46:
 		/* check rounded rectangle with border solid fill */
 		mw_gl_set_border(MW_GL_BORDER_ON);
 		mw_gl_set_line(MW_GL_SOLID_LINE);
@@ -636,7 +837,7 @@ void window_gl_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_
 		mw_gl_rounded_rectangle(draw_info, 50, 50, 100, 80, 20);
 		break;
 
-	case 43:
+	case 47:
 		/* check rounded rectangle no border pattern fill */
 		mw_gl_set_pattern(pattern);
 		mw_gl_set_border(MW_GL_BORDER_OFF);
@@ -647,7 +848,7 @@ void window_gl_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_
 		mw_gl_rounded_rectangle(draw_info, 50, 50, 100, 80, 20);
 		break;
 
-	case 44:
+	case 48:
 		/* check rounded rectangle with border pattern fill */
 		mw_gl_set_border(MW_GL_BORDER_ON);
 		mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
@@ -658,7 +859,7 @@ void window_gl_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_
 		mw_gl_rounded_rectangle(draw_info, 50, 50, 100, 80, 20);
 		break;
 
-	case 45:
+	case 49:
 		/* check poly draw 1 */
 		mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 		mw_gl_set_line(MW_GL_SOLID_LINE);
@@ -669,7 +870,7 @@ void window_gl_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_
 		mw_gl_poly(draw_info, SHAPE_POINTS, shape_x, shape_y, 150,150);
 		break;
 
-	case 46:
+	case 50:
 		/* check poly scale and rotate */
 		mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 		mw_gl_set_line(MW_GL_SOLID_LINE);
@@ -682,7 +883,7 @@ void window_gl_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_
 		mw_gl_poly(draw_info, SHAPE_POINTS, shape_x, shape_y, 150,150);
 		break;
 
-	case 47:
+	case 51:
 		/* check poly rotate 2 */	
 		mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 		mw_gl_set_line(MW_GL_SOLID_LINE);
@@ -695,7 +896,7 @@ void window_gl_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_
 		mw_gl_poly(draw_info, SHAPE_POINTS, shape_x, shape_y, 150, 150);
 		break;
 
-	case 48:
+	case 52:
 		/* check poly rotate 3 */	
 		mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 		mw_gl_set_line(MW_GL_SOLID_LINE);
@@ -708,7 +909,7 @@ void window_gl_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_
 		mw_gl_poly(draw_info, SHAPE_POINTS, shape_x, shape_y, 150, 150);
 		break;
 
-	case 49:
+	case 53:
 		/* basic poly */
 		mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 		mw_gl_set_line(MW_GL_SOLID_LINE);
@@ -721,7 +922,7 @@ void window_gl_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_
 		mw_gl_poly(draw_info, SHAPE_POINTS, shape_x, shape_y, 150, 150);
 		break;
 
-	case 50:
+	case 54:
 		/* check poly line style */
 		mw_gl_set_line(MW_GL_LARGE_DASH_LINE);
 		mw_gl_set_border(MW_GL_BORDER_ON);
@@ -732,7 +933,7 @@ void window_gl_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_
 		mw_gl_poly(draw_info, SHAPE_POINTS, shape_x, shape_y, 150, 150);
 		break;
 
-	case 51:
+	case 55:
 		/* check poly no border solid fill */
 		mw_gl_set_fill(MW_GL_FILL);
 		mw_gl_clear_pattern();
@@ -741,7 +942,7 @@ void window_gl_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_
 		mw_gl_poly(draw_info, SHAPE_POINTS, shape_x, shape_y, 150,150);
 		break;
 
-	case 52:
+	case 56:
 		/* poly with border solid fill */
 		mw_gl_set_border(MW_GL_BORDER_ON);
 		mw_gl_set_fill(MW_GL_FILL);
@@ -751,7 +952,7 @@ void window_gl_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_
 		mw_gl_poly(draw_info, SHAPE_POINTS, shape_x, shape_y, 150,150);
 		break;
 
-	case 53:
+	case 57:
 		/* check poly no border pattern fill */
 		mw_gl_set_pattern(pattern);
 		mw_gl_set_border(MW_GL_BORDER_OFF);
@@ -761,7 +962,7 @@ void window_gl_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_
 		mw_gl_poly(draw_info, SHAPE_POINTS, shape_x, shape_y, 150,150);
 		break;
 
-	case 54:
+	case 58:
 		/* check poly with border pattern fill */
 		mw_gl_set_pattern(pattern);
 		mw_gl_set_border(MW_GL_BORDER_ON);
@@ -771,7 +972,7 @@ void window_gl_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_
 		mw_gl_poly(draw_info, SHAPE_POINTS, shape_x, shape_y, 150, 150);
 		break;
 
-	case 55:
+	case 59:
 		/* check colour bitmap */
 		mw_gl_colour_bitmap(draw_info,
 				10,

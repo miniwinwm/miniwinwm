@@ -28,9 +28,9 @@ SOFTWARE.
 *** INCLUDES ***
 ***************/
 
-#include <dialogs/dialog_one_button.h>
-#include <miniwin.h>
 #include <string.h>
+#include "dialogs/dialog_one_button.h"
+#include "miniwin.h"
 #include "ui/ui_button.h"
 
 /****************
@@ -72,9 +72,89 @@ static mw_dialog_one_button_data_t mw_dialog_one_button_data;
 *** LOCAL FUNCTION PROTOTYPES ***
 ********************************/
 
+static void remove_resources(void);
+static void mw_dialog_one_button_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_info);
+static void mw_dialog_one_button_message_function(const mw_message_t *message);
+
 /**********************
 *** LOCAL FUNCTIONS ***
 **********************/
+
+/**
+ * Remove this dialog window and all controls
+ */
+static void remove_resources(void)
+{
+	mw_remove_control(mw_dialog_one_button_data.button_id);
+	mw_remove_window(mw_dialog_one_button_data.window_dialog_one_button_id);
+}
+
+/**
+ * Window paint routine, called by window manager.
+ *
+ * @param window_ref The window identifier in the array of windows
+ * @param draw_info Draw info structure describing offset and clip region
+ * @note Do not call this directly from user code
+ */
+static void mw_dialog_one_button_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_info)
+{
+	mw_gl_set_fill(MW_GL_FILL);
+	mw_gl_set_solid_fill_colour(MW_HAL_LCD_WHITE);
+	mw_gl_set_border(MW_GL_BORDER_OFF);
+	mw_gl_clear_pattern();
+	mw_gl_rectangle(draw_info,
+			0,
+			0,
+			mw_get_window_client_rect(window_ref).width,
+			mw_get_window_client_rect(window_ref).height);
+
+	mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
+	mw_gl_set_bg_transparency(MW_GL_BG_TRANSPARENT);
+	mw_gl_set_text_rotation(MW_GL_TEXT_ROTATION_0);
+
+	if (mw_dialog_one_button_data.large_size)
+	{
+		mw_gl_set_font(MW_GL_TITLE_FONT);
+		mw_gl_string(draw_info, 12, 10, mw_dialog_one_button_data.message);
+	}
+	else
+	{
+		mw_gl_set_font(MW_GL_FONT_9);
+		mw_gl_string(draw_info, 12, 10, mw_dialog_one_button_data.message);
+	}
+}
+
+/**
+ * Window message handler called by the window manager.
+ *
+ * @param message The message to be processed
+ * @note Do not call this directly from user code
+ */
+static void mw_dialog_one_button_message_function(const mw_message_t *message)
+{
+	MW_ASSERT(message, "Null pointer argument");
+
+	switch (message->message_id)
+	{
+	case MW_BUTTON_PRESSED_MESSAGE:
+		/* remove all controls and window */
+		remove_resources();
+
+		/* post response to receiving window */
+		mw_post_message(MW_DIALOG_ONE_BUTTON_DISMISSED_MESSAGE,
+				MW_UNUSED_MESSAGE_PARAMETER,
+				mw_dialog_one_button_data.response_window_id,
+				MW_UNUSED_MESSAGE_PARAMETER,
+				MW_WINDOW_MESSAGE);
+
+		/* a window has changed visibility so repaint all */
+		mw_paint_all();
+		break;
+
+	default:
+		break;
+	}
+}
 
 /***********************
 *** GLOBAL FUNCTIONS ***
@@ -185,8 +265,9 @@ uint8_t mw_create_window_dialog_one_button(uint16_t x,
 	/* check if button could be created */
 	if (mw_dialog_one_button_data.button_id == MW_MAX_CONTROL_COUNT)
 	{
-		/* it couldn't so remove window then exit */
-		mw_remove_window(mw_dialog_one_button_data.window_dialog_one_button_id);
+		/* remove all controls and window */
+		remove_resources();
+
 		return MW_MAX_WINDOW_COUNT;
 	}
 
@@ -195,58 +276,4 @@ uint8_t mw_create_window_dialog_one_button(uint16_t x,
 	mw_paint_window_client(mw_dialog_one_button_data.window_dialog_one_button_id);
 
 	return mw_dialog_one_button_data.window_dialog_one_button_id;
-}
-
-void mw_dialog_one_button_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_info)
-{
-	mw_gl_set_fill(MW_GL_FILL);
-	mw_gl_set_solid_fill_colour(MW_HAL_LCD_WHITE);
-	mw_gl_set_border(MW_GL_BORDER_OFF);
-	mw_gl_clear_pattern();
-	mw_gl_rectangle(draw_info,
-			0,
-			0,
-			mw_get_window_client_rect(window_ref).width,
-			mw_get_window_client_rect(window_ref).height);
-	mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
-	mw_gl_set_bg_transparency(MW_GL_BG_TRANSPARENT);
-
-	if (mw_dialog_one_button_data.large_size)
-	{
-		mw_gl_large_string(draw_info, 12, 10, mw_dialog_one_button_data.message);
-	}
-	else
-	{
-		mw_gl_string(draw_info, 12, 10, mw_dialog_one_button_data.message);
-	}
-}
-
-
-void mw_dialog_one_button_message_function(const mw_message_t *message)
-{
-	MW_ASSERT(message, "Null pointer argument");
-
-	switch (message->message_id)
-	{
-	case MW_BUTTON_PRESSED_MESSAGE:
-		/* remove the button */
-		mw_remove_control(mw_dialog_one_button_data.button_id);
-
-		/* post response to receiving window */
-		mw_post_message(MW_DIALOG_ONE_BUTTON_DISMISSED_MESSAGE,
-				mw_dialog_one_button_data.window_dialog_one_button_id,
-				mw_dialog_one_button_data.response_window_id,
-				0,
-				MW_WINDOW_MESSAGE);
-
-		/* remove this window */
-		mw_remove_window(mw_dialog_one_button_data.window_dialog_one_button_id);
-
-		/* a window has changed visibility so repaint all */
-		mw_paint_all();
-		break;
-
-	default:
-		break;
-	}
 }

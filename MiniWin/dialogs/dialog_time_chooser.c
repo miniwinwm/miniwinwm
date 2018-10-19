@@ -28,9 +28,9 @@ SOFTWARE.
 *** INCLUDES ***
 ***************/
 
-#include <miniwin.h>
 #include <stdio.h>
 #include <string.h>
+#include "miniwin.h"
 #include "dialogs/dialog_time_chooser.h"
 #include "ui/ui_common.h"
 
@@ -38,7 +38,7 @@ SOFTWARE.
 *** CONSTANTS ***
 ****************/
 
-static const mw_util_rect_t text_rect_standard = {66, 20, 2 * MW_GL_STANDARD_CHARACTER_WIDTH, 50};
+static const mw_util_rect_t text_rect_standard = {66, 20, 12, 50};
 static const mw_util_rect_t text_rect_large = {140, 40, 20, 95};
 
 /************
@@ -87,11 +87,28 @@ static mw_dialog_time_chooser_data_t mw_dialog_time_chooser_data;
 *** LOCAL FUNCTION PROTOTYPES ***
 ********************************/
 
+static void remove_resources(void);
 static void update_arrow_enable_states(void);
+static void mw_dialog_time_chooser_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_info);
+static void mw_dialog_time_chooser_message_function(const mw_message_t *message);
 
 /**********************
 *** LOCAL FUNCTIONS ***
 **********************/
+
+/**
+ * Remove this dialog window and all controls
+ */
+static void remove_resources(void)
+{
+	mw_remove_control(mw_dialog_time_chooser_data.button_ok_id);
+	mw_remove_control(mw_dialog_time_chooser_data.button_ok_id);
+	mw_remove_control(mw_dialog_time_chooser_data.arrow_hour_up_id);
+	mw_remove_control(mw_dialog_time_chooser_data.arrow_hour_down_id);
+	mw_remove_control(mw_dialog_time_chooser_data.arrow_minute_up_id);
+	mw_remove_control(mw_dialog_time_chooser_data.arrow_minute_down_id);
+	mw_remove_window(mw_dialog_time_chooser_data.window_dialog_time_chooser_id);
+}
 
 /**
  * Set all the arrow enable states according to value of current time
@@ -126,6 +143,145 @@ static void update_arrow_enable_states(void)
 	mw_paint_control(mw_dialog_time_chooser_data.arrow_minute_down_id);
 	mw_paint_control(mw_dialog_time_chooser_data.arrow_hour_up_id);
 	mw_paint_control(mw_dialog_time_chooser_data.arrow_hour_down_id);
+}
+
+/**
+ * Window paint routine, called by window manager.
+ *
+ * @param window_ref The window identifier in the array of windows
+ * @param draw_info Draw info structure describing offset and clip region
+ * @note Do not call this directly from user code
+ */
+static void mw_dialog_time_chooser_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_info)
+{
+	char text_hour[16];
+	char text_min[16];
+
+	mw_gl_set_fill(MW_GL_FILL);
+	mw_gl_set_solid_fill_colour(MW_HAL_LCD_WHITE);
+	mw_gl_set_border(MW_GL_BORDER_OFF);
+	mw_gl_clear_pattern();
+	mw_gl_rectangle(draw_info,
+			0,
+			0,
+			mw_get_window_client_rect(window_ref).width,
+			mw_get_window_client_rect(window_ref).height);
+
+	mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
+	mw_gl_set_bg_transparency(MW_GL_BG_TRANSPARENT);
+	mw_gl_set_text_rotation(MW_GL_TEXT_ROTATION_0);
+
+	snprintf(text_hour, 16, "Hour: %u", (unsigned int)mw_dialog_time_chooser_data.current_time_hours);
+	snprintf(text_min, 16, "Minute: %u", (unsigned int)mw_dialog_time_chooser_data.current_time_mins);
+
+	if (mw_dialog_time_chooser_data.large_size)
+	{
+		mw_gl_set_font(MW_GL_TITLE_FONT);
+		mw_gl_string(draw_info, 101, 40, text_hour);
+		mw_gl_string(draw_info, 89, 120, text_min);
+	}
+	else
+	{
+		mw_gl_set_font(MW_GL_FONT_9);
+		mw_gl_string(draw_info, 30, 20, text_hour);
+		mw_gl_string(draw_info, 18, 60, text_min);
+	}
+}
+
+/**
+ * Window message handler called by the window manager.
+ *
+ * @param message The message to be processed
+ * @note Do not call this directly from user code
+ */
+static void mw_dialog_time_chooser_message_function(const mw_message_t *message)
+{
+	MW_ASSERT(message, "Null pointer argument");
+
+	switch (message->message_id)
+	{
+	case MW_ARROW_PRESSED_MESSAGE:
+		if (message->sender_id == mw_dialog_time_chooser_data.arrow_hour_up_id)
+		{
+			if (mw_dialog_time_chooser_data.current_time_hours < 23)
+			{
+				mw_dialog_time_chooser_data.current_time_hours++;
+			}
+		}
+		else if (message->sender_id == mw_dialog_time_chooser_data.arrow_hour_down_id)
+		{
+			if (mw_dialog_time_chooser_data.current_time_hours > 0)
+			{
+				mw_dialog_time_chooser_data.current_time_hours--;
+			}
+		}
+		else if (message->sender_id == mw_dialog_time_chooser_data.arrow_minute_up_id)
+		{
+			if (mw_dialog_time_chooser_data.current_time_mins < 59)
+			{
+				mw_dialog_time_chooser_data.current_time_mins++;
+			}
+		}
+		else if (message->sender_id == mw_dialog_time_chooser_data.arrow_minute_down_id)
+		{
+			if (mw_dialog_time_chooser_data.current_time_mins > 0)
+			{
+				mw_dialog_time_chooser_data.current_time_mins--;
+			}
+		}
+		else
+		{
+			MW_ASSERT(false, "Unknown control id");
+		}
+
+		/* enable or disable arrow controls as required */
+		update_arrow_enable_states();
+
+		/* just paint the changed text */
+		if (mw_dialog_time_chooser_data.large_size)
+		{
+			mw_paint_window_client_rect(mw_dialog_time_chooser_data.window_dialog_time_chooser_id, &text_rect_large);
+		}
+		else
+		{
+			mw_paint_window_client_rect(mw_dialog_time_chooser_data.window_dialog_time_chooser_id, &text_rect_standard);
+		}
+		break;
+
+	case MW_BUTTON_PRESSED_MESSAGE:
+		/* remove all controls and window */
+		remove_resources();
+
+		if (message->sender_id == mw_dialog_time_chooser_data.button_ok_id)
+		{
+			/* post ok response to receiving window */
+			mw_post_message(MW_DIALOG_TIME_CHOOSER_OK_MESSAGE,
+					MW_UNUSED_MESSAGE_PARAMETER,
+					mw_dialog_time_chooser_data.response_window_id,
+					(uint32_t)mw_dialog_time_chooser_data.current_time_hours << 8 | mw_dialog_time_chooser_data.current_time_mins,
+					MW_WINDOW_MESSAGE);
+		}
+		else if (message->sender_id == mw_dialog_time_chooser_data.button_cancel_id)
+		{
+			/* post cancel response to receiving window */
+			mw_post_message(MW_DIALOG_TIME_CHOOSER_CANCEL_MESSAGE,
+					MW_UNUSED_MESSAGE_PARAMETER,
+					mw_dialog_time_chooser_data.response_window_id,
+					MW_UNUSED_MESSAGE_PARAMETER,
+					MW_WINDOW_MESSAGE);
+		}
+		else
+		{
+			MW_ASSERT(false, "Unknown control id");
+		}
+
+		/* a window has changed visibility so repaint all */
+		mw_paint_all();
+		break;
+
+	default:
+		break;
+	}
 }
 
 /***********************
@@ -294,14 +450,9 @@ uint8_t mw_create_window_dialog_time_chooser(uint16_t x,
 			mw_dialog_time_chooser_data.arrow_minute_up_id == MW_MAX_CONTROL_COUNT ||
 			mw_dialog_time_chooser_data.arrow_minute_down_id == MW_MAX_CONTROL_COUNT)
 	{
-		mw_remove_control(mw_dialog_time_chooser_data.button_ok_id);
-		mw_remove_control(mw_dialog_time_chooser_data.button_cancel_id);
-		mw_remove_control(mw_dialog_time_chooser_data.arrow_hour_up_id);
-		mw_remove_control(mw_dialog_time_chooser_data.arrow_hour_down_id);
-		mw_remove_control(mw_dialog_time_chooser_data.arrow_minute_up_id);
-		mw_remove_control(mw_dialog_time_chooser_data.arrow_minute_down_id);
+		/* remove all controls and window */
+		remove_resources();
 
-		mw_remove_window(mw_dialog_time_chooser_data.window_dialog_time_chooser_id);
 		return MW_MAX_WINDOW_COUNT;
 	}
 
@@ -314,129 +465,3 @@ uint8_t mw_create_window_dialog_time_chooser(uint16_t x,
 	return mw_dialog_time_chooser_data.window_dialog_time_chooser_id;
 }
 
-void mw_dialog_time_chooser_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_info)
-{
-	char text_hour[16];
-	char text_min[16];
-
-	mw_gl_set_fill(MW_GL_FILL);
-	mw_gl_set_solid_fill_colour(MW_HAL_LCD_WHITE);
-	mw_gl_set_border(MW_GL_BORDER_OFF);
-	mw_gl_clear_pattern();
-	mw_gl_rectangle(draw_info,
-			0,
-			0,
-			mw_get_window_client_rect(window_ref).width,
-			mw_get_window_client_rect(window_ref).height);
-	mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
-	mw_gl_set_bg_transparency(MW_GL_BG_TRANSPARENT);
-
-	mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
-	mw_gl_set_bg_transparency(MW_GL_BG_TRANSPARENT);
-	snprintf(text_hour, 16, "Hour: %u", (unsigned int)mw_dialog_time_chooser_data.current_time_hours);
-	snprintf(text_min, 16, "Minute: %u", (unsigned int)mw_dialog_time_chooser_data.current_time_mins);
-
-	if (mw_dialog_time_chooser_data.large_size)
-	{
-		mw_gl_large_string(draw_info, 101, 40, text_hour);
-		mw_gl_large_string(draw_info, 89, 120, text_min);
-	}
-	else
-	{
-		mw_gl_string(draw_info, 30, 20, text_hour);
-		mw_gl_string(draw_info, 18, 60, text_min);
-	}
-}
-
-void mw_dialog_time_chooser_message_function(const mw_message_t *message)
-{
-	MW_ASSERT(message, "Null pointer argument");
-
-	switch (message->message_id)
-	{
-	case MW_ARROW_PRESSED_MESSAGE:
-		if (message->sender_id == mw_dialog_time_chooser_data.arrow_hour_up_id)
-		{
-			if (mw_dialog_time_chooser_data.current_time_hours < 23)
-			{
-				mw_dialog_time_chooser_data.current_time_hours++;
-			}
-		}
-		else if (message->sender_id == mw_dialog_time_chooser_data.arrow_hour_down_id)
-		{
-			if (mw_dialog_time_chooser_data.current_time_hours > 0)
-			{
-				mw_dialog_time_chooser_data.current_time_hours--;
-			}
-		}
-		else if (message->sender_id == mw_dialog_time_chooser_data.arrow_minute_up_id)
-		{
-			if (mw_dialog_time_chooser_data.current_time_mins < 59)
-			{
-				mw_dialog_time_chooser_data.current_time_mins++;
-			}
-		}
-		else if (message->sender_id == mw_dialog_time_chooser_data.arrow_minute_down_id)
-		{
-			if (mw_dialog_time_chooser_data.current_time_mins > 0)
-			{
-				mw_dialog_time_chooser_data.current_time_mins--;
-			}
-		}
-		else
-		{
-			MW_ASSERT(false, "Unknown control id");
-		}
-
-		/* enable or disable arrow controls as required */
-		update_arrow_enable_states();
-
-		/* just paint the changed text */
-		if (mw_dialog_time_chooser_data.large_size)
-		{
-			mw_paint_window_client_rect(mw_dialog_time_chooser_data.window_dialog_time_chooser_id, &text_rect_large);
-		}
-		else
-		{
-			mw_paint_window_client_rect(mw_dialog_time_chooser_data.window_dialog_time_chooser_id, &text_rect_standard);
-		}
-		break;
-
-	case MW_BUTTON_PRESSED_MESSAGE:
-		if (message->sender_id == mw_dialog_time_chooser_data.button_ok_id)
-		{
-			/* post response to receiving window */
-			mw_post_message(MW_DIALOG_TIME_CHOOSER_DISMISSED_MESSAGE,
-					mw_dialog_time_chooser_data.window_dialog_time_chooser_id,
-					mw_dialog_time_chooser_data.response_window_id,
-					(uint32_t)mw_dialog_time_chooser_data.current_time_hours << 8 | mw_dialog_time_chooser_data.current_time_mins,
-					MW_WINDOW_MESSAGE);
-		}
-		else if (message->sender_id == mw_dialog_time_chooser_data.button_cancel_id)
-		{
-			/* do nothing */
-		}
-		else
-		{
-			MW_ASSERT(false, "Unknown control id");
-		}
-
-		/* remove the controls */
-		mw_remove_control(mw_dialog_time_chooser_data.button_ok_id);
-		mw_remove_control(mw_dialog_time_chooser_data.button_ok_id);
-		mw_remove_control(mw_dialog_time_chooser_data.arrow_hour_up_id);
-		mw_remove_control(mw_dialog_time_chooser_data.arrow_hour_down_id);
-		mw_remove_control(mw_dialog_time_chooser_data.arrow_minute_up_id);
-		mw_remove_control(mw_dialog_time_chooser_data.arrow_minute_down_id);
-
-		/* remove this window */
-		mw_remove_window(mw_dialog_time_chooser_data.window_dialog_time_chooser_id);
-
-		/* a window has changed visibility so repaint all */
-		mw_paint_all();
-		break;
-
-	default:
-		break;
-	}
-}

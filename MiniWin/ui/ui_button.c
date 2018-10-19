@@ -115,8 +115,10 @@ void mw_ui_button_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *d
 	mw_gl_vline(draw_info, mw_get_control_rect(control_ref).width - 2, 1, mw_get_control_rect(control_ref).height - 2);
 	mw_gl_hline(draw_info, 1, mw_get_control_rect(control_ref).width - 2, mw_get_control_rect(control_ref).height - 2);
 
-    /* set text colour according to enabled state */
-	mw_gl_set_bg_transparency(MW_GL_BG_TRANSPARENT);
+ 	mw_gl_set_bg_transparency(MW_GL_BG_TRANSPARENT);
+	mw_gl_set_text_rotation(MW_GL_TEXT_ROTATION_0);
+
+	/* set text colour according to enabled state */
 	if (mw_get_control_flags(control_ref) & MW_CONTROL_FLAG_IS_ENABLED)
 	{
 		mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
@@ -126,13 +128,16 @@ void mw_ui_button_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *d
 		mw_gl_set_fg_colour(MW_CONTROL_DISABLED_COLOUR);
 	}
 
+	/* get the text width */
 	if (mw_get_control_flags(control_ref) & MW_CONTROL_FLAGS_LARGE_SIZE)
 	{
-		text_width = mw_gl_large_string_width(this_button->button_label);
+		mw_gl_set_font(MW_GL_TITLE_FONT);
+		text_width = mw_gl_get_string_width_pixels(this_button->button_label);
 	}
 	else
 	{
-		text_width = strlen(this_button->button_label) * MW_GL_STANDARD_CHARACTER_WIDTH;
+		mw_gl_set_font(MW_GL_FONT_9);
+		text_width = strlen(this_button->button_label) * (mw_gl_get_font_width() + 1);
 	}
 	text_x = (mw_get_control_rect(control_ref).width - text_width) / 2;
 
@@ -140,7 +145,7 @@ void mw_ui_button_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *d
 	{
 		if (mw_get_control_flags(control_ref) & MW_CONTROL_FLAGS_LARGE_SIZE)
 		{
-	 		mw_gl_large_string(draw_info, text_x + 2, 11, this_button->button_label);
+			mw_gl_string(draw_info, text_x + 2, 11, this_button->button_label);
 		}
 		else
 		{
@@ -151,7 +156,7 @@ void mw_ui_button_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *d
 	{
 		if (mw_get_control_flags(control_ref) & MW_CONTROL_FLAGS_LARGE_SIZE)
 		{
-			mw_gl_large_string(draw_info, text_x, 9, this_button->button_label);
+			mw_gl_string(draw_info, text_x, 9, this_button->button_label);
 		}
 		else
 		{

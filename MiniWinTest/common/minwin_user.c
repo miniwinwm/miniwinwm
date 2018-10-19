@@ -42,7 +42,7 @@ SOFTWARE.
 *** CONSTANTS ***
 ****************/
 
-static const char *menu_bar_labels[] = {"Cat", "Dog", "\xa2\xa3\xa4"};
+static const char *menu_bar_labels[] = {"Cat", "Dog", "Gnu"};
 #define MENU_BAR_1_ITEMS_COUNT				(sizeof(menu_bar_labels)/sizeof(char *))
 static const char *radio_button_labels[] = {"Elk", "Ant", "Hog"};
 #define RADIO_BUTTON_1_ITEMS_COUNT			(sizeof(radio_button_labels)/sizeof(char *))

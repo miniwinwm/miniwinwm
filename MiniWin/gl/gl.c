@@ -33,6 +33,7 @@ SOFTWARE.
 #include <miniwin_debug.h>
 #include "hal/hal_delay.h"
 #include "gl/gl.h"
+#include "gl/fonts/fonts.h"
 
 /****************
 *** CONSTANTS ***
@@ -55,16 +56,19 @@ SOFTWARE.
 *** EXTERNAL VARIABLES ***
 **************************/
 
-extern const uint16_t mw_fonts_large_positions[];   	/**< positions of start of character data of proportional fonts */
-extern const uint8_t mw_fonts_large_pro[];      		/**< 16 high proportional font, widths vary */
-extern const uint8_t mw_fonts_ascii_5x9[]; 					/**< 5x9 fixed width font */
-extern const uint8_t mw_fonts_iso8859_15_5x9[];				/**< 5x9 fixed width font ISO8859 part 15 extension */
+extern const uint16_t mw_title_font_positions[];   	/**< positions of start of character data of proportional fonts */
+extern const uint8_t mw_title_font_bitmap[];      	/**< 16 high proportional title font, widths vary */
+extern const sFONT Font9;							/**< Information structure for font */
+extern const sFONT Font12;							/**< Information structure for font */
+extern const sFONT Font16;							/**< Information structure for font */
+extern const sFONT Font20;							/**< Information structure for font */
+extern const sFONT Font24;							/**< Information structure for font */
 
 /**********************
 *** LOCAL VARIABLES ***
 **********************/
 
-static mw_gl_gc_t gc;                       /**< the graphics context used to hold all the settings used by the plotting routines */
+static mw_gl_gc_t gc;                       		/**< the graphics context used to hold all the settings used by the plotting routines */
 
 /********************************
 *** LOCAL FUNCTION PROTOTYPES ***
@@ -78,6 +82,12 @@ static void arc_point(const mw_gl_draw_info_t *draw_info, int16_t centre_x, int1
 static void filled_circle(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y, int16_t radius);
 static void circle_bres(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y, int16_t radius);
 static void filled_segment(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y, int16_t radius, int16_t start_angle, int16_t end_angle, int16_t angle_step_size);
+static void draw_character_0_degrees(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y, char c);
+static void draw_character_90_degrees(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y, char c);
+static void draw_character_180_degrees(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y, char c);
+static void draw_character_270_degrees(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y, char c);
+static void title_font_string(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y, const char *s);
+static const uint8_t *get_font_data(void);
 
 /**********************
 *** LOCAL FUNCTIONS ***
@@ -602,6 +612,484 @@ static void filled_segment(const mw_gl_draw_info_t *draw_info, int16_t x, int16_
 	}
 }
 
+/**
+ * Draw a single fixed width character at 0 degrees rotation.
+ * Foreground colour, background colour, font and transparency controlled by gc.
+ *
+ * @param draw_info Reference frame origin coordinates and clip region rect
+ * @param x Coordinate of the left edge of the rectangle containing the character
+ * @param y Coordinate of the top edge of the rectangle containing the character
+ * @param c The character
+ */
+static void draw_character_0_degrees(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y, char c)
+{
+	int16_t char_x;
+	int16_t char_y;
+	uint32_t mask;
+	uint32_t word;
+	uint8_t character_byte_width;
+	uint16_t byte_pos;
+	uint8_t byte;
+
+	if (x >= draw_info->clip_rect.x + draw_info->clip_rect.width ||
+			y >= draw_info->clip_rect.y + draw_info->clip_rect.height ||
+			x + mw_gl_get_font_width() + 1 <= draw_info->clip_rect.x ||
+			y + mw_gl_get_font_height() + 1 <= draw_info->clip_rect.y)
+	{
+		return;
+	}
+
+	if (gc.bg_transparent == MW_GL_BG_NOT_TRANSPARENT)
+	{
+		filled_rectangle(draw_info,
+				x,
+				y,
+				mw_gl_get_font_width() + 1,
+				mw_gl_get_font_height() + 1,
+				gc.bg_colour);
+	}
+
+	character_byte_width = mw_gl_get_font_width() / 8 + (mw_gl_get_font_width() % 8 > 0);
+	byte_pos = (c - ' ') * mw_gl_get_font_height() * character_byte_width;
+
+	for (char_y = 0; char_y < mw_gl_get_font_height(); char_y++)
+	{
+		word = 0;
+		for (byte = 0; byte < character_byte_width; byte++)
+		{
+			word <<= 8;
+			word |= (uint32_t)get_font_data()[byte_pos];
+			byte_pos++;
+		}
+
+		word <<= ((4 - character_byte_width) * 8);
+		mask = 0x80000000;
+
+		for (char_x = 0; char_x < mw_gl_get_font_width(); char_x++)
+		{
+			if (word & mask)
+			{
+				mw_gl_fg_pixel(draw_info, x + char_x, y + char_y);
+			}
+
+			mask >>= 1;
+		}
+	}
+}
+
+/**
+ * Draw a single fixed width character at 90 degrees rotation.
+ * Foreground colour, background colour, font and transparency controlled by gc.
+ *
+ * @param draw_info Reference frame origin coordinates and clip region rect
+ * @param x Coordinate of the left edge of the rectangle containing the character
+ * @param y Coordinate of the top edge of the rectangle containing the character
+ * @param c The character
+ */
+static void draw_character_90_degrees(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y, char c)
+{
+	int16_t char_x;
+	int16_t char_y;
+	uint32_t mask;
+	uint32_t word;
+	uint8_t character_byte_width;
+	uint16_t byte_pos;
+	uint8_t byte;
+
+	if (x - mw_gl_get_font_height() >= draw_info->clip_rect.x + draw_info->clip_rect.width ||
+			y >= draw_info->clip_rect.y + draw_info->clip_rect.height ||
+			x <= draw_info->clip_rect.x ||
+			y + mw_gl_get_font_width() <= draw_info->clip_rect.y)
+	{
+		return;
+	}
+
+	if (gc.bg_transparent == MW_GL_BG_NOT_TRANSPARENT)
+	{
+		filled_rectangle(draw_info,
+				x - mw_gl_get_font_height(),
+				y,
+				mw_gl_get_font_height() + 1,
+				mw_gl_get_font_width() + 1,
+				gc.bg_colour);
+	}
+
+	character_byte_width = mw_gl_get_font_width() / 8 + (mw_gl_get_font_width() % 8 > 0);
+	byte_pos = (c - ' ') * mw_gl_get_font_height() * character_byte_width;
+
+	for (char_y = 0; char_y < mw_gl_get_font_height(); char_y++)
+	{
+		word = 0;
+		for (byte = 0; byte < character_byte_width; byte++)
+		{
+			word <<= 8;
+			word |= (uint32_t)get_font_data()[byte_pos];
+			byte_pos++;
+		}
+
+		word <<= ((4 - character_byte_width) * 8);
+		mask = 0x80000000;
+
+		for (char_x = 0; char_x < mw_gl_get_font_width(); char_x++)
+		{
+			if (word & mask)
+			{
+	   			mw_gl_fg_pixel(draw_info, x - char_y, y + char_x);
+			}
+
+			mask >>= 1;
+		}
+	}
+}
+
+/**
+ * Draw a single fixed width character at 180 degrees rotation.
+ * Foreground colour, background colour, font and transparency controlled by gc.
+ *
+ * @param draw_info Reference frame origin coordinates and clip region rect
+ * @param x Coordinate of the left edge of the rectangle containing the character
+ * @param y Coordinate of the top edge of the rectangle containing the character
+ * @param c The character
+ */
+static void draw_character_180_degrees(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y, char c)
+{
+	int16_t char_x;
+	int16_t char_y;
+	uint32_t mask;
+	uint32_t word;
+	uint8_t character_byte_width;
+	uint16_t byte_pos;
+	uint8_t byte;
+
+	if (x <= draw_info->clip_rect.x ||
+			y <= draw_info->clip_rect.y ||
+			x - mw_gl_get_font_width() + 1 >= draw_info->clip_rect.x + draw_info->clip_rect.width ||
+			y - mw_gl_get_font_height() + 1 >= draw_info->clip_rect.y +  draw_info->clip_rect.height)
+	{
+		return;
+	}
+
+	if (gc.bg_transparent == MW_GL_BG_NOT_TRANSPARENT)
+	{
+		filled_rectangle(draw_info,
+				x - mw_gl_get_font_width(),
+				y - mw_gl_get_font_height(),
+				mw_gl_get_font_width() + 1,
+				mw_gl_get_font_height() + 1,
+				gc.bg_colour);
+	}
+
+	character_byte_width = mw_gl_get_font_width() / 8 + (mw_gl_get_font_width() % 8 > 0);
+	byte_pos = (c - ' ') * mw_gl_get_font_height() * character_byte_width;
+
+	for (char_y = 0; char_y < mw_gl_get_font_height(); char_y++)
+	{
+		word = 0;
+		for (byte = 0; byte < character_byte_width; byte++)
+		{
+			word <<= 8;
+			word |= (uint32_t)get_font_data()[byte_pos];
+			byte_pos++;
+		}
+
+		word <<= ((4 - character_byte_width) * 8);
+		mask = 0x80000000;
+
+		for (char_x = 0; char_x < mw_gl_get_font_width(); char_x++)
+		{
+			if (word & mask)
+			{
+				mw_gl_fg_pixel(draw_info, x - char_x, y - char_y);
+			}
+
+			mask >>= 1;
+		}
+	}
+}
+
+/**
+ * Draw a single fixed width character at 270 degrees rotation.
+ * Foreground colour, background colour, font and transparency controlled by gc.
+ *
+ * @param draw_info Reference frame origin coordinates and clip region rect
+ * @param x Coordinate of the left edge of the rectangle containing the character
+ * @param y Coordinate of the top edge of the rectangle containing the character
+ * @param c The character
+ */
+static void draw_character_270_degrees(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y, char c)
+{
+	int16_t char_x;
+	int16_t char_y;
+	uint32_t mask;
+	uint32_t word;
+	uint8_t character_byte_width;
+	uint16_t byte_pos;
+	uint8_t byte;
+
+	if (x >= draw_info->clip_rect.x + draw_info->clip_rect.width ||
+			y <= draw_info->clip_rect.y ||
+			x + mw_gl_get_font_height() + 1 <= draw_info->clip_rect.x ||
+			y - mw_gl_get_font_width() + 1 >= draw_info->clip_rect.y +  draw_info->clip_rect.height)
+	{
+		return;
+	}
+
+	if (gc.bg_transparent == MW_GL_BG_NOT_TRANSPARENT)
+	{
+		filled_rectangle(draw_info,
+				x,
+				y - mw_gl_get_font_width(),
+				mw_gl_get_font_height() + 1,
+				mw_gl_get_font_width() + 1,
+				gc.bg_colour);
+	}
+
+	character_byte_width = mw_gl_get_font_width() / 8 + (mw_gl_get_font_width() % 8 > 0);
+	byte_pos = (c - ' ') * mw_gl_get_font_height() * character_byte_width;
+
+	for (char_y = 0; char_y < mw_gl_get_font_height(); char_y++)
+	{
+		word = 0;
+		for (byte = 0; byte < character_byte_width; byte++)
+		{
+			word <<= 8;
+			word |= (uint32_t)get_font_data()[byte_pos];
+			byte_pos++;
+		}
+
+		word <<= ((4 - character_byte_width) * 8);
+		mask = 0x80000000;
+
+		for (char_x = 0; char_x < mw_gl_get_font_width(); char_x++)
+		{
+			if (word & mask)
+			{
+	   			mw_gl_fg_pixel(draw_info, x + char_y, y - char_x);
+			}
+
+			mask >>= 1;
+		}
+	}
+}
+
+/**
+ * Draw a string of proportional title font string. Foreground colour, background colour, rotation and transparency controlled by gc.
+ *
+ * @param draw_info Reference frame origin coordinates and clip region rect
+ * @param x Coordinate of the left edge of the rectangle containing the first character
+ * @param y Coordinate of the top edge of the rectangle containing the first character
+ * @param s Pointer to the null terminated string containing characters
+ */
+static void title_font_string(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y, const char *s)
+{
+	uint8_t length = strlen((char *)s);
+	uint8_t mask;
+	uint16_t start_pos_in_bitmap;
+	uint16_t end_pos_in_bitmap;
+	int16_t bitmap_x;
+	int16_t bitmap_y;
+	uint8_t i;
+	uint8_t byte_from_bitmap;
+	char c;
+	uint8_t next_char_start_position_along_string = 0;
+	uint16_t position_across_character;
+	uint16_t string_width_pixels;
+
+	if (!draw_info || !s)
+	{
+		MW_ASSERT(false, "Null pointer argument");
+		return;
+	}
+
+	string_width_pixels = mw_gl_get_string_width_pixels(s);
+
+	switch (gc.text_rotation)
+	{
+	case MW_GL_TEXT_ROTATION_0:
+		/* check for completely off rect */
+		if (x >= draw_info->clip_rect.x + draw_info->clip_rect.width ||
+				y >= draw_info->clip_rect.y + draw_info->clip_rect.height ||
+				x + string_width_pixels <= draw_info->clip_rect.x ||
+				y + MW_GL_TITLE_FONT_HEIGHT <= draw_info->clip_rect.y)
+		{
+			return;
+		}
+
+		if (gc.bg_transparent == MW_GL_BG_NOT_TRANSPARENT)
+		{
+			filled_rectangle(draw_info,
+					x,
+					y,
+					string_width_pixels,
+					MW_GL_TITLE_FONT_HEIGHT,
+					gc.bg_colour);
+		}
+		break;
+
+	case MW_GL_TEXT_ROTATION_90:
+		/* check for completely off rect */
+		if (x - MW_GL_TITLE_FONT_HEIGHT >= draw_info->clip_rect.x + draw_info->clip_rect.width ||
+				y >= draw_info->clip_rect.y + draw_info->clip_rect.height ||
+				x <= draw_info->clip_rect.x ||
+				y + string_width_pixels <= draw_info->clip_rect.y)
+		{
+			return;
+		}
+
+		if (gc.bg_transparent == MW_GL_BG_NOT_TRANSPARENT)
+		{
+			filled_rectangle(draw_info,
+					x - MW_GL_TITLE_FONT_HEIGHT + 1,
+					y,
+					MW_GL_TITLE_FONT_HEIGHT,
+					string_width_pixels,
+					gc.bg_colour);
+		}
+		break;
+
+	case MW_GL_TEXT_ROTATION_180:
+		/* check for completely off rect */
+		if (x <= draw_info->clip_rect.x ||
+				y <= draw_info->clip_rect.y ||
+				x - string_width_pixels >= draw_info->clip_rect.x  + draw_info->clip_rect.width ||
+				y - MW_GL_TITLE_FONT_HEIGHT >= draw_info->clip_rect.y + draw_info->clip_rect.height)
+		{
+			return;
+		}
+
+		if (gc.bg_transparent == MW_GL_BG_NOT_TRANSPARENT)
+		{
+			filled_rectangle(draw_info,
+					x - string_width_pixels + 1,
+					y - MW_GL_TITLE_FONT_HEIGHT + 1,
+					string_width_pixels,
+					MW_GL_TITLE_FONT_HEIGHT,
+					gc.bg_colour);
+		}
+		break;
+
+	case MW_GL_TEXT_ROTATION_270:
+		/* check for completely off rect */
+		if (x >= draw_info->clip_rect.x + draw_info->clip_rect.width ||
+				y <= draw_info->clip_rect.y ||
+				x + MW_GL_TITLE_FONT_HEIGHT <= draw_info->clip_rect.x ||
+				y - string_width_pixels >= draw_info->clip_rect.y +  draw_info->clip_rect.height)
+		{
+			return;
+		}
+
+		if (gc.bg_transparent == MW_GL_BG_NOT_TRANSPARENT)
+		{
+			filled_rectangle(draw_info,
+					x,
+					y - string_width_pixels + 1,
+					MW_GL_TITLE_FONT_HEIGHT,
+					string_width_pixels,
+					gc.bg_colour);
+		}
+		break;
+
+	default:
+		MW_ASSERT(false, "Unknown text rotation");
+		break;
+	}
+
+	for (i = 0; i < length; i++)
+	{
+		for (bitmap_y = 0; bitmap_y < MW_GL_TITLE_FONT_HEIGHT; bitmap_y++)
+		{
+			c = s[i];
+			if (c < ' ' || c > '~')
+			{
+				c = '*';
+			}
+			c -= ' ';
+
+			start_pos_in_bitmap = mw_title_font_positions[(uint8_t)c];
+			end_pos_in_bitmap = mw_title_font_positions[(uint8_t)c + 1];
+
+			mask = 0x80;
+			mask >>= (mw_title_font_positions[(uint8_t)c] % 8);
+
+			position_across_character = 0;
+			for (bitmap_x = start_pos_in_bitmap; bitmap_x < end_pos_in_bitmap; bitmap_x++)
+			{
+				byte_from_bitmap = mw_title_font_bitmap[(bitmap_x >> 3) + bitmap_y * 87];
+
+				if (!(byte_from_bitmap & mask))
+				{
+					switch (gc.text_rotation)
+					{
+					case MW_GL_TEXT_ROTATION_0:
+						mw_gl_fg_pixel(draw_info,
+								x + next_char_start_position_along_string + position_across_character ,
+								y + bitmap_y);
+						break;
+
+					case MW_GL_TEXT_ROTATION_90:
+						mw_gl_fg_pixel(draw_info,
+								x - bitmap_y,
+								y + next_char_start_position_along_string + position_across_character);
+						break;
+
+					case MW_GL_TEXT_ROTATION_180:
+						mw_gl_fg_pixel(draw_info,
+								x - next_char_start_position_along_string - position_across_character,
+								y - bitmap_y);
+
+						break;
+
+					case MW_GL_TEXT_ROTATION_270:
+						mw_gl_fg_pixel(draw_info,
+								x + bitmap_y,
+								y - next_char_start_position_along_string - position_across_character);
+						break;
+					}
+				}
+
+				mask >>= 1;
+				if (mask == 0)
+				{
+					mask = 0x80;
+				}
+				position_across_character++;
+			}
+		}
+		next_char_start_position_along_string += position_across_character;
+	}
+}
+
+/**
+ * Get a pointer to a font's bitmap for fixed width fonts
+ *
+ * @return Pointer to bit map data
+ */
+static const uint8_t *get_font_data(void)
+{
+	switch (gc.font)
+	{
+	case MW_GL_FONT_9:
+		return Font9.table;
+
+	case MW_GL_FONT_12:
+		return Font12.table;
+
+	case MW_GL_FONT_16:
+		return Font16.table;
+
+	case MW_GL_FONT_20:
+		return Font20.table;
+
+	case MW_GL_FONT_24:
+		return Font24.table;
+
+	case MW_GL_TITLE_FONT:
+		return NULL;
+	}
+
+	return NULL;
+}
+
 /***********************
 *** GLOBAL FUNCTIONS ***
 ***********************/
@@ -616,6 +1104,8 @@ void mw_gl_init(void)
 	gc.fill = MW_GL_NO_FILL;
 	gc.pattern_set = false;
 	gc.bg_transparent = MW_GL_BG_NOT_TRANSPARENT;
+	gc.font = MW_GL_FONT_9;
+	gc.text_rotation = MW_GL_TEXT_ROTATION_0;
 }
 
 mw_gl_gc_t *mw_gl_get_gc(void)
@@ -667,6 +1157,76 @@ void mw_gl_set_fill(mw_gl_fill_t fill)
 void mw_gl_set_bg_transparency(mw_gl_bg_transparent_t bg_transparent)
 {
 	gc.bg_transparent = bg_transparent;
+}
+
+void mw_gl_set_font(mw_gl_font_t font)
+{
+	MW_ASSERT(font == MW_GL_FONT_9 ||
+			font == MW_GL_FONT_12 ||
+			font == MW_GL_FONT_16 ||
+			font == MW_GL_FONT_20 ||
+			font == MW_GL_FONT_24 ||
+			font == MW_GL_TITLE_FONT,
+			"Unknown font");
+
+	gc.font = font;
+}
+
+void mw_gl_set_text_rotation(mw_gl_text_rotation_t text_rotation)
+{
+	gc.text_rotation = text_rotation;
+}
+
+uint8_t mw_gl_get_font_width(void)
+{
+	switch (gc.font)
+	{
+	case MW_GL_FONT_9:
+		return Font9.Width;
+
+	case MW_GL_FONT_12:
+		return Font12.Width;
+
+	case MW_GL_FONT_16:
+		return Font16.Width;
+
+	case MW_GL_FONT_20:
+		return Font20.Width;
+
+	case MW_GL_FONT_24:
+		return Font24.Width;
+
+	case MW_GL_TITLE_FONT:
+		return 0;
+	}
+
+	return 0;
+}
+
+uint8_t mw_gl_get_font_height(void)
+{
+	switch (gc.font)
+	{
+	case MW_GL_FONT_9:
+		return Font9.Height;
+
+	case MW_GL_FONT_12:
+		return Font12.Height;
+
+	case MW_GL_FONT_16:
+		return Font16.Height;
+
+	case MW_GL_FONT_20:
+		return Font20.Height;
+
+	case MW_GL_FONT_24:
+		return Font24.Height;
+
+	case MW_GL_TITLE_FONT:
+		return MW_GL_TITLE_FONT_HEIGHT;
+	}
+
+	return 0;
 }
 
 void mw_gl_solid_fill_pixel(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y)
@@ -1115,16 +1675,7 @@ void mw_gl_rectangle(const mw_gl_draw_info_t *draw_info, int16_t x_start, int16_
 
 void mw_gl_character(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y, char c)
 {
-	int16_t char_x;
-	int16_t char_y;
-	uint16_t bitmap_start_position;
-	uint16_t bitmap_start_byte;
-	uint8_t mask;
-	uint8_t byte;
-	unsigned char uc;
-	const uint8_t *font_bitmap_array;
-
-	uc = (unsigned char)c;
+	char character_buffer[2];
 
 	if (!draw_info)
 	{
@@ -1132,56 +1683,48 @@ void mw_gl_character(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y, c
 		return;
 	}
 
-	if (x >= draw_info->clip_rect.x + draw_info->clip_rect.width ||
-			y >= draw_info->clip_rect.y + draw_info->clip_rect.height ||
-			x + MW_GL_STANDARD_CHARACTER_WIDTH <= draw_info->clip_rect.x ||
-			y + MW_GL_STANDARD_CHARACTER_HEIGHT <= draw_info->clip_rect.y)
+	/* do not attempt to draw control characters */
+	if (c < ' ')
 	{
 		return;
 	}
 
-	if (uc < ' ' || (uc > '~' && uc < 0xa0))
+	/* replace other non-ascii characters with a '*' */
+	if ((unsigned char)c > '~')
 	{
-		uc = '*';
+		c = '*';
 	}
 
-	if (gc.bg_transparent == MW_GL_BG_NOT_TRANSPARENT)
+	/* check for proportional title font as handled differently */
+	if (gc.font == MW_GL_TITLE_FONT)
 	{
-		filled_rectangle(draw_info, x, y, MW_GL_STANDARD_CHARACTER_WIDTH, MW_GL_STANDARD_CHARACTER_HEIGHT, gc.bg_colour);
+		character_buffer[0] = c;
+		character_buffer[1] = '\0';
+		title_font_string(draw_info, x, y, character_buffer);
+		return;
 	}
 
-	if (uc <= '~')
+	switch(gc.text_rotation)
 	{
-		bitmap_start_position = (uc - ' ') * MW_GL_STANDARD_CHARACTER_WIDTH;
-		font_bitmap_array = mw_fonts_ascii_5x9;
-	}
-	else
-	{
-		bitmap_start_position = (uc - 0xa0) * MW_GL_STANDARD_CHARACTER_WIDTH;
-		font_bitmap_array = mw_fonts_iso8859_15_5x9;
-	}
+	case MW_GL_TEXT_ROTATION_0:
+		draw_character_0_degrees(draw_info, x, y, c);
+		break;
 
-	for (char_y = 0; char_y < MW_GL_STANDARD_CHARACTER_HEIGHT - 1; char_y++)
-	{
-		bitmap_start_byte = (char_y * 72) + (bitmap_start_position / 8);
-		mask = 0x80 >> (bitmap_start_position % 8);
-		byte = font_bitmap_array[bitmap_start_byte];
+	case MW_GL_TEXT_ROTATION_90:
+		draw_character_90_degrees(draw_info, x, y, c);
+		break;
 
-		for (char_x = 0; char_x < MW_GL_STANDARD_CHARACTER_WIDTH - 1; char_x++)
-		{
-			if (!(byte & mask))
-			{
-				mw_gl_fg_pixel(draw_info, x + char_x, y + char_y);
-			}
+	case MW_GL_TEXT_ROTATION_180:
+		draw_character_180_degrees(draw_info, x, y, c);
+		break;
 
-			mask >>= 1;
-			if (mask == 0)
-			{
-				mask = 0x80;
-				bitmap_start_byte++;
-				byte = font_bitmap_array[bitmap_start_byte];
-			}
-		}
+	case MW_GL_TEXT_ROTATION_270:
+		draw_character_270_degrees(draw_info, x, y, c);
+		break;
+
+	default:
+		MW_ASSERT(false, "Unknown text rotation");
+		break;
 	}
 }
 
@@ -1196,257 +1739,42 @@ void mw_gl_string(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y, cons
 		return;
 	}
 
-	length = strlen((char *)s);
-	for (c = 0; c < length; c++)
+	/* check for title font as that's done elsewhere */
+	if (gc.font == MW_GL_TITLE_FONT)
 	{
-		mw_gl_character(draw_info, x + c * MW_GL_STANDARD_CHARACTER_WIDTH, y, s[c]);
-	}
-}
-
-void mw_gl_character_vert(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y, char c)
-{
-	int16_t char_x;
-	int16_t char_y;
-	uint16_t bitmap_start_position;
-	uint16_t bitmap_start_byte;
-	uint8_t mask;
-	uint8_t byte;
-	unsigned char uc;
-	const uint8_t *font_bitmap_array;
-
-	uc = (unsigned char)c;
-
-	if (!draw_info)
-	{
-		MW_ASSERT(false, "Null pointer argument");
-		return;
-	}
-
-	if (x >= draw_info->clip_rect.x + draw_info->clip_rect.width ||
-			y >= draw_info->clip_rect.y + draw_info->clip_rect.height ||
-			x + MW_GL_STANDARD_CHARACTER_WIDTH <= draw_info->clip_rect.x ||
-			y + MW_GL_STANDARD_CHARACTER_HEIGHT <= draw_info->clip_rect.y)
-	{
-		return;
-	}
-
-	if (uc < ' ' || (uc > '~' && uc < 0xa0))
-	{
-		uc = '*';
-	}
-
-	if (gc.bg_transparent == MW_GL_BG_NOT_TRANSPARENT)
-	{
-		filled_rectangle(draw_info, x - MW_GL_STANDARD_CHARACTER_HEIGHT + 1, y,
-				MW_GL_STANDARD_CHARACTER_HEIGHT, MW_GL_STANDARD_CHARACTER_WIDTH, gc.bg_colour);
-	}
-
-	if (uc <= '~')
-	{
-		bitmap_start_position = (uc - ' ') * MW_GL_STANDARD_CHARACTER_WIDTH;
-		font_bitmap_array = mw_fonts_ascii_5x9;
-	}
-	else
-	{
-		bitmap_start_position = (uc - 0xa0) * MW_GL_STANDARD_CHARACTER_WIDTH;
-		font_bitmap_array = mw_fonts_iso8859_15_5x9;
-	}
-	for (char_y = 0; char_y < MW_GL_STANDARD_CHARACTER_HEIGHT - 1; char_y++)
-	{
-		bitmap_start_byte = (char_y * 72) + (bitmap_start_position / 8);
-		mask = 0x80 >> (bitmap_start_position % 8);
-		byte = font_bitmap_array[bitmap_start_byte];
-
-		for (char_x = 0; char_x < MW_GL_STANDARD_CHARACTER_WIDTH - 1; char_x++)
-		{
-			if (!(byte & mask))
-			{
-	   			mw_gl_fg_pixel(draw_info, x - char_y, y + char_x);
-			}
-
-			mask >>= 1;
-			if (mask == 0)
-			{
-				mask = 0x80;
-				bitmap_start_byte++;
-				byte = font_bitmap_array[bitmap_start_byte];
-			}
-		}
-	}
-}
-
-void mw_gl_string_vert(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y, const char *s)
-{
-	uint8_t c;
-	uint8_t length;
-
-	if (!draw_info || !s)
-	{
-		MW_ASSERT(false, "Null pointer argument");
+		title_font_string(draw_info, x, y, s);
 		return;
 	}
 
 	length = strlen((char *)s);
 	for (c = 0; c < length; c++)
 	{
-		mw_gl_character_vert(draw_info, x, y + c * MW_GL_STANDARD_CHARACTER_WIDTH, s[c]);
-	}
-}
-
-void mw_gl_large_string(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y, const char *s)
-{
-	uint8_t length = strlen((char *)s);
-	uint8_t mask;
-	uint16_t start_pos_in_bitmap;
-	uint16_t end_pos_in_bitmap;
-	int16_t char_x;
-	int16_t char_y;
-	uint8_t i;
-	uint8_t byte_from_bitmap;
-	char c;
-	uint8_t next_char_start_x = 0;
-	uint16_t x_position_in_character;
-	uint16_t string_width_pixels;
-
-	if (!draw_info || !s)
-	{
-		MW_ASSERT(false, "Null pointer argument");
-		return;
-	}
-
-	string_width_pixels = mw_gl_large_string_width(s);
-
-	/* check for completely off rect */
-	if (x > draw_info->clip_rect.x + draw_info->clip_rect.width ||
-			y > draw_info->clip_rect.y + draw_info->clip_rect.height ||
-			x + string_width_pixels < draw_info->clip_rect.x ||
-			y + MW_GL_LARGE_CHARACTER_HEIGHT < draw_info->clip_rect.y)
-	{
-		return;
-	}
-
-	if (gc.bg_transparent == MW_GL_BG_NOT_TRANSPARENT)
-	{
-		filled_rectangle(draw_info, x, y, mw_gl_large_string_width(s), MW_GL_LARGE_CHARACTER_HEIGHT, gc.bg_colour);
-	}
-
-	for (i = 0; i < length; i++)
-	{
-		for (char_y = 0; char_y < MW_GL_LARGE_CHARACTER_HEIGHT; char_y++)
+		switch (gc.text_rotation)
 		{
-			c = s[i];
-			if (c < ' ' || c > '~')
-			{
-				c = '*';
-			}
-			c -= ' ';
+		case MW_GL_TEXT_ROTATION_0:
+			mw_gl_character(draw_info, x + c * (mw_gl_get_font_width() + 1), y, s[c]);
+			break;
 
-			start_pos_in_bitmap = mw_fonts_large_positions[(uint8_t)c];
-			end_pos_in_bitmap = mw_fonts_large_positions[(uint8_t)c + 1];
+		case MW_GL_TEXT_ROTATION_90:
+			mw_gl_character(draw_info, x, y + c * (mw_gl_get_font_width() + 1), s[c]);
+			break;
 
-			mask = 0x80;
-			mask >>= (mw_fonts_large_positions[(uint8_t)c] % 8);
+		case MW_GL_TEXT_ROTATION_180:
+			mw_gl_character(draw_info, x - c * (mw_gl_get_font_width() + 1), y, s[c]);
+			break;
 
-			x_position_in_character = 0;
-			for (char_x = start_pos_in_bitmap; char_x < end_pos_in_bitmap; char_x++)
-			{
-				byte_from_bitmap = mw_fonts_large_pro[(char_x >> 3) + char_y * 87];
+		case MW_GL_TEXT_ROTATION_270:
+			mw_gl_character(draw_info, x, y - c * (mw_gl_get_font_width() + 1), s[c]);
+			break;
 
-				if (!(byte_from_bitmap & mask))
-				{
-					mw_gl_fg_pixel(draw_info, x + x_position_in_character + next_char_start_x, y + char_y);
-				}
-
-				mask >>= 1;
-				if (mask == 0)
-				{
-					mask = 0x80;
-				}
-				x_position_in_character++;
-			}
+		default:
+			MW_ASSERT(false, "Unknown text rotation");
+			break;
 		}
-		next_char_start_x += x_position_in_character;
 	}
 }
 
-void mw_gl_large_string_vert(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y, const char *s)
-{
-	uint8_t length = strlen((char *)s);
-	uint8_t mask;
-	uint16_t start_pos_in_bitmap, end_pos_in_bitmap;
-	int16_t char_x;
-	int16_t char_y;
-	uint8_t i;
-	uint8_t byte_from_bitmap;
-	char c;
-	uint16_t next_char_start_y = 0;
-	uint16_t x_position_in_character;
-	uint16_t string_width_pixels;
-
-	if (!draw_info || !s)
-	{
-		MW_ASSERT(false, "Null pointer argument");
-		return;
-	}
-
-	string_width_pixels = mw_gl_large_string_width(s);
-
-	/* check for completely off rect */
-	if (x - MW_GL_LARGE_CHARACTER_HEIGHT > draw_info->clip_rect.x + draw_info->clip_rect.width ||
-			y > draw_info->clip_rect.y + draw_info->clip_rect.height ||
-			x < draw_info->clip_rect.x ||
-			y + string_width_pixels < draw_info->clip_rect.y)
-	{
-		return;
-	}
-
-	if (gc.bg_transparent == MW_GL_BG_NOT_TRANSPARENT)
-	{
-		filled_rectangle(draw_info, x - MW_GL_LARGE_CHARACTER_HEIGHT + 1, y,
-				MW_GL_LARGE_CHARACTER_HEIGHT, mw_gl_large_string_width(s), gc.bg_colour);
-	}
-
-	for (i = 0; i < length; i++)
-	{
-		for (char_y = 0; char_y < MW_GL_LARGE_CHARACTER_HEIGHT; char_y++)
-		{
-			c = s[i];
-			if (c < ' ' || c > '~')
-			{
-				c = '*';
-			}
-			c -= ' ';
-
-			start_pos_in_bitmap = mw_fonts_large_positions[(uint8_t)c];
-			end_pos_in_bitmap = mw_fonts_large_positions[(uint8_t)c + 1];
-
-			mask = 0x80;
-			mask >>= (mw_fonts_large_positions[(uint8_t)c] % 8);
-
-			x_position_in_character = 0;
-			for (char_x = start_pos_in_bitmap; char_x < end_pos_in_bitmap; char_x++)
-			{
-				byte_from_bitmap = mw_fonts_large_pro[(char_x >> 3) + char_y * 87];
-
-				if (!(byte_from_bitmap & mask))
-				{
-					mw_gl_fg_pixel(draw_info, x + (MW_GL_LARGE_CHARACTER_HEIGHT - char_y) - MW_GL_LARGE_CHARACTER_HEIGHT,
-							y + x_position_in_character + next_char_start_y);
-				}
-
-				mask >>= 1;
-				if (mask == 0)
-				{
-					mask = 0x80;
-				}
-				x_position_in_character++;
-			}
-		}
-		next_char_start_y+=x_position_in_character;
-	}
-}
-
-uint16_t mw_gl_large_string_width(const char *s)
+uint16_t mw_gl_get_string_width_pixels(const char *s)
 {
 	uint8_t i;
 	uint16_t width = 0;
@@ -1457,9 +1785,16 @@ uint16_t mw_gl_large_string_width(const char *s)
 		return 0;
 	}
 
-	for (i = 0; i < strlen((char *)s); i++)
+	if (gc.font == MW_GL_TITLE_FONT)
 	{
-		width += mw_fonts_large_positions[s[i] - ' ' + 1] - mw_fonts_large_positions[s[i] - ' '];
+		for (i = 0; i < strlen((char *)s); i++)
+		{
+			width += mw_title_font_positions[s[i] - ' ' + 1] - mw_title_font_positions[s[i] - ' '];
+		}
+	}
+	else
+	{
+		width = strlen(s) * (mw_gl_get_font_width() + 1);
 	}
 
 	return width;
@@ -1479,7 +1814,7 @@ uint16_t mw_gl_largest_string_width(const char **s, uint16_t count)
 
 	for (i = 0; i < count; i++)
 	{
-		width = mw_gl_large_string_width(s[i]);
+		width = mw_gl_get_string_width_pixels(s[i]);
 		if (width > largest_width)
 		{
 			largest_width = width;

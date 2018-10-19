@@ -82,12 +82,15 @@ void mw_ui_check_box_paint_function(uint8_t control_ref, const mw_gl_draw_info_t
 	}
 
 	mw_gl_set_bg_transparency(MW_GL_BG_TRANSPARENT);
+	mw_gl_set_text_rotation(MW_GL_TEXT_ROTATION_0);
+
     if (mw_get_control_flags(control_ref) & MW_CONTROL_FLAGS_LARGE_SIZE)
     {
     	height = MW_UI_CHECK_BOX_LARGE_HEIGHT;
 
     	/* draw the label text */
-    	mw_gl_large_string(draw_info,
+		mw_gl_set_font(MW_GL_TITLE_FONT);
+    	mw_gl_string(draw_info,
     			MW_UI_CHECK_BOX_LARGE_LABEL_X_OFFSET,
     			MW_UI_CHECK_BOX_LARGE_LABEL_Y_OFFSET,
     			this_check_box->label);
@@ -97,6 +100,7 @@ void mw_ui_check_box_paint_function(uint8_t control_ref, const mw_gl_draw_info_t
     	height = MW_UI_CHECK_BOX_HEIGHT;
 
     	/* draw the label text */
+		mw_gl_set_font(MW_GL_FONT_9);
     	mw_gl_string(draw_info,
     			MW_UI_CHECK_BOX_LABEL_X_OFFSET,
     			MW_UI_CHECK_BOX_LABEL_Y_OFFSET,

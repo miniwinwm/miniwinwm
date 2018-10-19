@@ -48,7 +48,7 @@ SOFTWARE.
 
  typedef struct
  {
- 	char path_and_filename_text[MAX_FOLDER_AND_FILE_NAME_LENGTH];
+ 	char path_and_filename_text[MAX_FOLDER_AND_FILE_NAME_LENGTH + 1];
  	uint8_t text_window_id;
  } text_window_data_t;
 

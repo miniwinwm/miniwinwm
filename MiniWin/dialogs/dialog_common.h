@@ -40,6 +40,7 @@ SOFTWARE.
 #include "dialogs/dialog_two_button.h"
 #include "dialogs/dialog_time_chooser.h"
 #include "dialogs/dialog_date_chooser.h"
+#include "dialogs/dialog_file_chooser.h"
 
 /****************
 *** CONSTANTS ***

@@ -102,7 +102,9 @@ void window_settings_paint_function(uint8_t window_ref, const mw_gl_draw_info_t 
 			mw_get_window_client_rect(window_ref).width,
 			18);
 	mw_gl_set_fg_colour(MW_HAL_LCD_WHITE);
-	mw_gl_large_string(draw_info, 2, 2, "Logging Settings");
+	mw_gl_set_text_rotation(MW_GL_TEXT_ROTATION_0);
+	mw_gl_set_font(MW_GL_TITLE_FONT);
+	mw_gl_string(draw_info, 2, 2, "Logging Settings");
 }
 
 void window_settings_message_function(const mw_message_t *message)

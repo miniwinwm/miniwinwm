@@ -28,8 +28,7 @@ SOFTWARE.
 *** INCLUDES ***
 ***************/
 
-#include "window_simple.h"
-#include "ui/ui_common.h"
+#include "stm32f4xx_hal.h"
 
 /****************
 *** CONSTANTS ***
@@ -42,17 +41,6 @@ SOFTWARE.
 /***********************
 *** GLOBAL VARIABLES ***
 ***********************/
-
-/* window */
-uint8_t window_simple_id;
-
-/* control */
-uint8_t button_id;
-uint8_t label_id;
-
-/* controls extra data */
-mw_ui_label_data_t label_data;
-mw_ui_button_data_t button_data;
 
 /*************************
 *** EXTERNAL VARIABLES ***
@@ -74,49 +62,25 @@ mw_ui_button_data_t button_data;
 *** GLOBAL FUNCTIONS ***
 ***********************/
 
-void mw_user_root_paint_function(const mw_gl_draw_info_t *draw_info)
+void HAL_RTC_MspInit(RTC_HandleTypeDef *hrtc)
 {
-	mw_gl_set_solid_fill_colour(MW_HAL_LCD_PURPLE);
-	mw_gl_clear_pattern();
-	mw_gl_set_border(MW_GL_BORDER_OFF);
-	mw_gl_set_fill(MW_GL_FILL);
-	mw_gl_rectangle(draw_info, 0, 0, MW_ROOT_WIDTH, MW_ROOT_HEIGHT);
+  RCC_OscInitTypeDef        RCC_OscInitStruct;
+  RCC_PeriphCLKInitTypeDef  PeriphClkInitStruct;
+
+  RCC_OscInitStruct.OscillatorType =  RCC_OSCILLATORTYPE_LSI | RCC_OSCILLATORTYPE_LSE;
+  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
+  RCC_OscInitStruct.LSIState = RCC_LSI_ON;
+  RCC_OscInitStruct.LSEState = RCC_LSE_OFF;
+  HAL_RCC_OscConfig(&RCC_OscInitStruct);
+
+  PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_RTC;
+  PeriphClkInitStruct.RTCClockSelection = RCC_RTCCLKSOURCE_LSI;
+  HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct);
+
+  __HAL_RCC_RTC_ENABLE();
 }
 
-void mw_user_root_message_function(const mw_message_t *message)
+void HAL_RTC_MspDeInit(RTC_HandleTypeDef *hrtc)
 {
-	(void)message;
-}
-
-void mw_user_init(void)
-{
-	mw_util_rect_t r;
-
-	mw_util_set_rect(&r, 15, 100, 220, 210);
-	window_simple_id = mw_add_window(&r,
-			"SIMPLE",
-			window_simple_paint_function,
-			window_simple_message_function,
-			NULL,
-			0,
-			MW_WINDOW_FLAG_HAS_BORDER | MW_WINDOW_FLAG_HAS_TITLE_BAR |
-				MW_WINDOW_FLAG_CAN_BE_CLOSED | MW_WINDOW_FLAG_IS_VISIBLE,
-			NULL);
-
-	mw_util_safe_strcpy(label_data.label, MW_UI_LABEL_MAX_CHARS, "Not yet set");
-	label_id = mw_ui_label_add_new(100,
-			5,
-			84,
-			window_simple_id,
-			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
-			&label_data);
-
-	mw_util_safe_strcpy(button_data.button_label, MW_UI_BUTTON_LABEL_MAX_CHARS, "TEST");
-	button_id = mw_ui_button_add_new(10,
-			10,
-			window_simple_id,
-			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
-			&button_data);
-
-	mw_paint_all();
+   __HAL_RCC_RTC_DISABLE();
 }

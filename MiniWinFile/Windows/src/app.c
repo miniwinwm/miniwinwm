@@ -30,6 +30,7 @@ SOFTWARE.
 
 #include <windows.h>
 #include <stdio.h>
+#include <time.h>
 #include "app.h"
 
 /****************
@@ -47,9 +48,6 @@ SOFTWARE.
 /*************************
 *** EXTERNAL VARIABLES ***
 **************************/
-
-extern const uint8_t mw_bitmaps_file_icon_small[];
-extern const uint8_t mw_bitmaps_folder_icon_small[];
 
 /**********************
 *** LOCAL VARIABLES ***
@@ -129,7 +127,9 @@ void app_file_close(void)
 
 uint8_t find_directory_entries(char* path,
 		mw_ui_list_box_entry *list_box_settings_entries,
-		uint8_t max_entries)
+		uint8_t max_entries,
+		const uint8_t *file_entry_icon,
+		const uint8_t *folder_entry_icon)
 {
 	TCHAR szDir[MAX_FOLDER_AND_FILE_NAME_LENGTH];
 	HANDLE hFind = INVALID_HANDLE_VALUE;
@@ -166,12 +166,12 @@ uint8_t find_directory_entries(char* path,
 		if (ffd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
 		{
         	/* It is a directory */
-        	list_box_settings_entries[i].icon = mw_bitmaps_folder_icon_small;
+        	list_box_settings_entries[i].icon = folder_entry_icon;
 		}
 		else
 		{
         	/* It is a file. */
-            list_box_settings_entries[i].icon = mw_bitmaps_file_icon_small;
+            list_box_settings_entries[i].icon = file_entry_icon;
 		}
 
         i++;
@@ -185,4 +185,20 @@ uint8_t find_directory_entries(char* path,
 	FindClose(hFind);
 
 	return i;
+}
+
+struct tm app_get_time_date(void)
+{
+	struct tm tm;
+	time_t t;
+
+	time(&t);
+	memcpy(&tm, localtime(&t), sizeof(struct tm));
+	tm.tm_year += 1900;
+	return tm;
+}
+
+void app_set_time_date(struct tm tm)
+{
+	/* do nothing for windows build */
 }
