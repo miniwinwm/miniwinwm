@@ -53,7 +53,7 @@ SOFTWARE.
 *** LOCAL VARIABLES ***
 **********************/
 
-static FILE *in_file;
+static FILE *file_handle;		/**< File to access */
 
 /********************************
 *** LOCAL FUNCTION PROTOTYPES ***
@@ -84,9 +84,9 @@ bool app_file_open(char *path_and_file_name)
 {
 	bool result = false;
 
-	in_file = fopen(path_and_file_name, "rb");
+	file_handle = fopen(path_and_file_name, "rb");
 
-	if (in_file != NULL)
+	if (file_handle != NULL)
 	{
 		result = true;
 	}
@@ -98,35 +98,41 @@ uint32_t app_file_size(void)
 {
 	uint32_t size;
 
-	fseek(in_file, 0L, SEEK_END);
-	size = (uint32_t)ftell(in_file);
-	fseek(in_file, 0L, SEEK_SET);
+	fseek(file_handle, 0L, SEEK_END);
+	size = (uint32_t)ftell(file_handle);
+	fseek(file_handle, 0L, SEEK_SET);
 
 	return size;
 }
 
 uint8_t app_file_getc(void)
 {
-	return (uint8_t)fgetc(in_file);
+	return (uint8_t)fgetc(file_handle);
 }
 
-void app_file_fread(uint8_t *buffer, uint32_t count)
+void app_file_read(uint8_t *buffer, uint32_t count)
 {
-	fread(buffer, 1, count, in_file);
+	fread(buffer, 1, count, file_handle);
+}
+
+void app_file_write(uint8_t *buffer, uint32_t count)
+{
+	fwrite(buffer, 1, count, file_handle);
 }
 
 uint32_t app_file_seek(uint32_t position)
 {
-	return (uint32_t)fseek(in_file, position, SEEK_SET);
+	return (uint32_t)fseek(file_handle, position, SEEK_SET);
 }
 
 void app_file_close(void)
 {
-	fclose(in_file);
+	fclose(file_handle);
 }
 
 uint8_t find_directory_entries(char* path,
 		mw_ui_list_box_entry *list_box_settings_entries,
+		bool folders_only,
 		uint8_t max_entries,
 		const uint8_t *file_entry_icon,
 		const uint8_t *folder_entry_icon)
@@ -161,11 +167,17 @@ uint8_t find_directory_entries(char* path,
     		continue;
     	}
 
+    	/* ignore if not a directory and we want directories only */
+    	if (folders_only && !(ffd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY))
+    	{
+    		continue;
+    	}
+
         mw_util_safe_strcpy(list_box_settings_entries[i].label, MAX_FILE_NAME_LENGTH + 1, ffd.cFileName);
 
 		if (ffd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
 		{
-        	/* It is a directory */
+        	/* It is a folder */
         	list_box_settings_entries[i].icon = folder_entry_icon;
 		}
 		else

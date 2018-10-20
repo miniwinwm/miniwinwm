@@ -69,7 +69,7 @@ extern const uint8_t mw_bitmaps_folder_icon_small[];
 static FATFS usb_disk_fatfs;  										/**< File system object for USB Disk logical drive */
 static char usb_path[4];     										/**< USB Disk logical drive path */
 static MSC_ApplicationTypeDef application_state = APPLICATION_IDLE;	/**< USB host state machine state variable */
-static FIL in_file;													/**< File to read from */
+static FIL file_handle;												/**< File to access */
 static RTC_HandleTypeDef rtc_handle;								/**< Driver handle for RTC */
 
 /********************************
@@ -196,7 +196,7 @@ bool app_file_open(char *path_and_file_name)
 
 	if (application_state == APPLICATION_START)
 	{
-		if (f_open(&in_file, path_and_file_name, FA_READ) == FR_OK)
+		if (f_open(&file_handle, path_and_file_name, FA_READ) == FR_OK)
 		{
 			result = true;
 		}
@@ -207,7 +207,7 @@ bool app_file_open(char *path_and_file_name)
 
 uint32_t app_file_size(void)
 {
-	return (uint32_t)f_size(&in_file);
+	return (uint32_t)f_size(&file_handle);
 }
 
 uint8_t app_file_getc()
@@ -215,26 +215,33 @@ uint8_t app_file_getc()
 	uint8_t byte;
 	UINT bytes_read;
 
-	f_read(&in_file, &byte, 1, &bytes_read);
+	f_read(&file_handle, &byte, 1, &bytes_read);
 
 	return byte;
 }
 
-void app_file_fread(uint8_t *buffer, uint32_t count)
+void app_file_read(uint8_t *buffer, uint32_t count)
 {
 	UINT bytes_read;
 
-	f_read(&in_file, buffer, count, &bytes_read);			/* Read data from the file */
+	f_read(&file_handle, buffer, count, &bytes_read);
+}
+
+void app_file_write(uint8_t *buffer, uint32_t count)
+{
+	UINT bytes_written;
+
+	f_write (&file_handle, buffer, count, &bytes_written);
 }
 
 uint32_t app_file_seek(uint32_t position)
 {
-	return (uint32_t)(f_lseek(&in_file, position));
+	return (uint32_t)(f_lseek(&file_handle, position));
 }
 
 void app_file_close(void)
 {
-	f_close(&in_file);
+	f_close(&file_handle);
 }
 
 char *app_get_root_folder_path(void)
@@ -247,8 +254,9 @@ void app_main_loop_process(void)
     USBH_Process(&hUSBHost);
 }
 
-uint8_t find_directory_entries(char* path,
+uint8_t find_directory_entries(char *path,
 		mw_ui_list_box_entry *list_box_settings_entries,
+		bool folders_only,
 		uint8_t max_entries,
 		const uint8_t *file_entry_icon,
 		const uint8_t *folder_entry_icon)
@@ -272,6 +280,12 @@ uint8_t find_directory_entries(char* path,
 
         	/* Ignore if it's a hidden or system entry*/
         	if ((file_info.fattrib & AM_HID) || (file_info.fattrib & AM_SYS))
+        	{
+        		continue;
+        	}
+
+        	/* ignore if not a directory and we want directories only */
+        	if (folders_only && !(file_info.fattrib & AM_DIR))
         	{
         		continue;
         	}

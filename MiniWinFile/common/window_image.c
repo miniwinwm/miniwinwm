@@ -122,19 +122,19 @@ void window_image_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *dr
 			if (app_file_getc() == 'B' && app_file_getc() == 'M')
 			{
 				app_file_seek(10);
-				app_file_fread(file_buffer, 4);
+				app_file_read(file_buffer, 4);
 				file_data_offset = file_buffer[0] + (file_buffer[1] << 8) + (file_buffer[2] << 16) + (file_buffer[3] << 24);
-				app_file_fread(file_buffer, 4);
+				app_file_read(file_buffer, 4);
 				if (file_buffer[0] + (file_buffer[1] << 8) + (file_buffer[2] << 16) + (file_buffer[3] << 24) == 40)
 				{
 					/* Windows BITMAPINFOHEADER */
-					app_file_fread(file_buffer, 4);
+					app_file_read(file_buffer, 4);
 					image_width = file_buffer[0] + (file_buffer[1] << 8) + (file_buffer[2] << 16) + (file_buffer[3] << 24);
-					app_file_fread(file_buffer, 4);
+					app_file_read(file_buffer, 4);
 					image_height = file_buffer[0] + (file_buffer[1] << 8) + (file_buffer[2] << 16) + (file_buffer[3] << 24);
 					row_size = ((image_width * 3) + 3) & 0xfffffffc;
 
-					app_file_fread(file_buffer, 4);
+					app_file_read(file_buffer, 4);
 					if (file_buffer[0] + (file_buffer[1] << 8) + (file_buffer[2] << 16) + (file_buffer[3] << 24) == 0x00180001)
 					{
 						success = true;
@@ -152,7 +152,7 @@ void window_image_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *dr
 							{
 								if (x_pos + BITMAP_TRASFER_BUFFER_SIZE < image_width && x_pos + 16 < client_width)
 								{
-									app_file_fread(bitmap_buffer, 48);
+									app_file_read(bitmap_buffer, 48);
 									mw_gl_colour_bitmap(draw_info,
 											x_pos,
 											y_pos,
@@ -174,7 +174,7 @@ void window_image_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *dr
 
 									for (uint16_t x = x_pos; x < x_pos + remainder; x++)
 									{
-										app_file_fread(file_buffer, 3);
+										app_file_read(file_buffer, 3);
 										pixel = (file_buffer[0]) | (file_buffer[1] << 8) | (file_buffer[2] << 16);
 										mw_gl_set_fg_colour(pixel);
 										mw_gl_fg_pixel(draw_info, x, y_pos);

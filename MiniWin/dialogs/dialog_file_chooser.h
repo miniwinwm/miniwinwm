@@ -58,6 +58,7 @@ SOFTWARE.
  * @param y Top coordinate of dialog window
  * @param title Pointer to text displayed in the window title bar
  * @param start_path Path of folder to open when dialog displays, folders separated by '/' and path not to end in a '/' except for root folder
+ * @param folders_only If to show folders only, not files, so user can only choose a folder
  * @param large_size True for large size controls/text, false for small
  * @param response_window_id Window id of the window that the response message is posted to when the dialog is dismissed
  * @return the window id of the window used for the dialog which is only valid while the dialog is showing
@@ -73,6 +74,7 @@ uint8_t mw_create_window_dialog_file_chooser(uint16_t x,
 		uint16_t y,
 		char *title,
 		char *start_path,
+		bool folders_only,
 		bool large_size,
 		uint8_t response_window_id);
 

@@ -165,7 +165,8 @@ typedef enum
 	MW_DIALOG_TIME_CHOOSER_CANCEL_MESSAGE,			/**< Time chooser dialog has been dismissed by cancel button*/
 	MW_DIALOG_DATE_CHOOSER_OK_MESSAGE,				/**< Date chooser dialog has been dismissed by ok button*/
 	MW_DIALOG_DATE_CHOOSER_CANCEL_MESSAGE,			/**< Date chooser dialog has been dismissed by cancel button*/
-	MW_DIALOG_FILE_CHOOSER_OK_PTR_MESSAGE,			/**< File chosen in file chooser dialog */
+	MW_DIALOG_FILE_CHOOSER_FILE_OK_PTR_MESSAGE,		/**< File chosen in file chooser dialog */
+	MW_DIALOG_FILE_CHOOSER_FOLDER_OK_PTR_MESSAGE,	/**< Folder chosen in file chooser dialog */
 	MW_DIALOG_FILE_CHOOSER_CANCEL_MESSAGE,			/**< File chooser dialog was cancelled with no file chosen */
 
 	/* Messages that can be posted from user code or user code called utility functions */

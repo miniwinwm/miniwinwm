@@ -46,8 +46,8 @@ SOFTWARE.
  */
 typedef struct
 {
-	uint8_t button_id;						/**< Control id of button */
-	mw_ui_button_data_t button_data;		/**< Instance data of button */
+	uint8_t button_open_id;						/**< Control id of button */
+	mw_ui_button_data_t button_open_data;		/**< Instance data of button */
 	uint8_t window_dialog_one_button_id;	/**< Instance data of button */
 	char *message;							/**< Text to display in dialog */
 	bool large_size;						/**< True for large size false for standard size */
@@ -85,7 +85,7 @@ static void mw_dialog_one_button_message_function(const mw_message_t *message);
  */
 static void remove_resources(void)
 {
-	mw_remove_control(mw_dialog_one_button_data.button_id);
+	mw_remove_control(mw_dialog_one_button_data.button_open_id);
 	mw_remove_window(mw_dialog_one_button_data.window_dialog_one_button_id);
 }
 
@@ -241,29 +241,29 @@ uint8_t mw_create_window_dialog_one_button(uint16_t x,
 	window_client_width = mw_get_window_client_rect(mw_dialog_one_button_data.window_dialog_one_button_id).width;
 
 	/* create a button control and add it to the  window */
-	mw_util_safe_strcpy(mw_dialog_one_button_data.button_data.button_label,
+	mw_util_safe_strcpy(mw_dialog_one_button_data.button_open_data.button_label,
 			MW_UI_BUTTON_LABEL_MAX_CHARS, button_label);
 	if (large_size)
 	{
-		mw_dialog_one_button_data.button_id = mw_ui_button_add_new(
+		mw_dialog_one_button_data.button_open_id = mw_ui_button_add_new(
 				(window_client_width - MW_UI_BUTTON_LARGE_WIDTH) / 2,
 				35,
 				mw_dialog_one_button_data.window_dialog_one_button_id,
 				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAGS_LARGE_SIZE,
-				&mw_dialog_one_button_data.button_data);
+				&mw_dialog_one_button_data.button_open_data);
 	}
 	else
 	{
-		mw_dialog_one_button_data.button_id = mw_ui_button_add_new(
+		mw_dialog_one_button_data.button_open_id = mw_ui_button_add_new(
 				(window_client_width - MW_UI_BUTTON_WIDTH) / 2,
 				30,
 				mw_dialog_one_button_data.window_dialog_one_button_id,
 				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
-				&mw_dialog_one_button_data.button_data);
+				&mw_dialog_one_button_data.button_open_data);
 	}
 
 	/* check if button could be created */
-	if (mw_dialog_one_button_data.button_id == MW_MAX_CONTROL_COUNT)
+	if (mw_dialog_one_button_data.button_open_id == MW_MAX_CONTROL_COUNT)
 	{
 		/* remove all controls and window */
 		remove_resources();

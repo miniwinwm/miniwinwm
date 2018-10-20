@@ -68,8 +68,9 @@ typedef struct
 *** EXTERNAL VARIABLES ***
 **************************/
 
-extern uint8_t button_id;
+extern uint8_t button_open_id;
 extern uint8_t button_set_clock_id;
+extern uint8_t button_create_id;
 extern uint8_t label_time_id;
 extern uint8_t label_date_id;
 extern mw_ui_label_data_t label_time_data;
@@ -286,12 +287,13 @@ void window_file_message_function(const mw_message_t *message)
 		break;
 
 	case MW_BUTTON_PRESSED_MESSAGE:
-		if (message->sender_id == button_id)
+		if (message->sender_id == button_open_id)
 		{
 			mw_create_window_dialog_file_chooser(5,
 					20,
 					"Choose File",
 					app_get_root_folder_path(),
+					false,
 					false,
 					message->recipient_id);
 		}
@@ -301,6 +303,16 @@ void window_file_message_function(const mw_message_t *message)
 					20,
 					0,
 					0,
+					false,
+					message->recipient_id);
+		}
+		else if (message->sender_id == button_create_id)
+		{
+			mw_create_window_dialog_file_chooser(5,
+					20,
+					"Choose Folder",
+					app_get_root_folder_path(),
+					true,
 					false,
 					message->recipient_id);
 		}
@@ -327,7 +339,7 @@ void window_file_message_function(const mw_message_t *message)
 				message->recipient_id);
 		break;
 
-	case MW_DIALOG_FILE_CHOOSER_OK_PTR_MESSAGE:
+	case MW_DIALOG_FILE_CHOOSER_FILE_OK_PTR_MESSAGE:
 		{
 			const char *extension;
 			bool window_added;
@@ -383,6 +395,14 @@ void window_file_message_function(const mw_message_t *message)
 			mw_paint_window_client(message->recipient_id);
 		}
 		break;
+
+	case MW_DIALOG_FILE_CHOOSER_FOLDER_OK_PTR_MESSAGE:
+		{
+			//todo folder name arrived here
+			char fred[255];
+			strcpy(fred, (char *)message->message_data);
+			break;
+		}
 
 	case MW_TRANSFER_DATA_1_MESSAGE:
 		/* a pop up window has been closed */

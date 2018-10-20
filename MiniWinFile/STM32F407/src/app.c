@@ -69,7 +69,8 @@ extern const uint8_t mw_bitmaps_folder_icon_small[];
 static FATFS usb_disk_fatfs;  										/**< File system object for USB Disk logical drive */
 static char usb_path[4];     										/**< USB Disk logical drive path */
 static MSC_ApplicationTypeDef application_state = APPLICATION_IDLE;	/**< USB host state machine state variable */
-static FIL in_file;													/**< File to read from */
+static FIL file_handle;													/**< File to access */
+static RTC_HandleTypeDef rtc_handle;								/**< Driver handle for RTC */
 
 /********************************
 *** LOCAL FUNCTION PROTOTYPES ***
@@ -154,8 +155,33 @@ static void USBH_UserProcess(USBH_HandleTypeDef *phost, uint8_t id)
 
 void app_init(void)
 {
+	RTC_DateTypeDef  hal_date_structure;
+	RTC_TimeTypeDef  hal_time_structure;
+
 	HAL_Init();
 	SystemClock_Config();
+
+	rtc_handle.Instance = RTC;
+	rtc_handle.Init.HourFormat = RTC_HOURFORMAT_24;
+	rtc_handle.Init.AsynchPrediv = 0x7F;
+	rtc_handle.Init.SynchPrediv = 0x0130;
+	rtc_handle.Init.OutPut = RTC_OUTPUT_DISABLE;
+	rtc_handle.Init.OutPutPolarity = RTC_OUTPUT_POLARITY_HIGH;
+	rtc_handle.Init.OutPutType = RTC_OUTPUT_TYPE_OPENDRAIN;
+	HAL_RTC_Init(&rtc_handle);
+
+	hal_date_structure.Year = 0x00;
+	hal_date_structure.Month = RTC_MONTH_JANUARY;
+	hal_date_structure.Date = 0x01;
+	HAL_RTC_SetDate(&rtc_handle, &hal_date_structure, FORMAT_BCD);
+
+	hal_time_structure.Hours = 0x01;
+	hal_time_structure.Minutes = 0x0;
+	hal_time_structure.Seconds = 0x00;
+	hal_time_structure.TimeFormat = RTC_HOURFORMAT12_AM;
+	hal_time_structure.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
+	hal_time_structure.StoreOperation = RTC_STOREOPERATION_RESET;
+	HAL_RTC_SetTime(&rtc_handle, &hal_time_structure, FORMAT_BCD);
 
 	/* if board button pressed clear settings which forces a screen recalibration */
 	BSP_PB_Init(BUTTON_KEY, BUTTON_MODE_GPIO);
@@ -187,7 +213,7 @@ bool app_file_open(char *path_and_file_name)
 
 	if (application_state == APPLICATION_START)
 	{
-		if (f_open(&in_file, path_and_file_name, FA_READ) == FR_OK)
+		if (f_open(&file_handle, path_and_file_name, FA_READ) == FR_OK)
 		{
 			result = true;
 		}
@@ -198,7 +224,7 @@ bool app_file_open(char *path_and_file_name)
 
 uint32_t app_file_size(void)
 {
-	return (uint32_t)f_size(&in_file);
+	return (uint32_t)f_size(&file_handle);
 }
 
 uint8_t app_file_getc()
@@ -206,26 +232,33 @@ uint8_t app_file_getc()
 	uint8_t byte;
 	UINT bytes_read;
 
-	f_read(&in_file, &byte, 1, &bytes_read);
+	f_read(&file_handle, &byte, 1, &bytes_read);
 
 	return byte;
 }
 
-void app_file_fread(uint8_t *buffer, uint32_t count)
+void app_file_read(uint8_t *buffer, uint32_t count)
 {
 	UINT bytes_read;
 
-	f_read(&in_file, buffer, count, &bytes_read);			/* Read data from the file */
+	f_read(&file_handle, buffer, count, &bytes_read);
+}
+
+void app_file_write(uint8_t *buffer, uint32_t count)
+{
+	UINT bytes_written;
+
+	f_write (&file_handle, buffer, count, &bytes_written);
 }
 
 uint32_t app_file_seek(uint32_t position)
 {
-	return (uint32_t)(f_lseek(&in_file, position));
+	return (uint32_t)(f_lseek(&file_handle, position));
 }
 
 void app_file_close(void)
 {
-	f_close(&in_file);
+	f_close(&file_handle);
 }
 
 char *app_get_root_folder_path(void)
@@ -267,6 +300,12 @@ uint8_t find_directory_entries(char* path,
         		continue;
         	}
 
+        	/* ignore if not a directory and we want directories only */
+        	if (folders_only && !(file_info.fattrib & AM_DIR))
+        	{
+        		continue;
+        	}
+
             mw_util_safe_strcpy(list_box_settings_entries[i].label, MAX_FILE_NAME_LENGTH + 1, file_info.fname);
             if (file_info.fattrib & AM_DIR)
             {
@@ -292,14 +331,37 @@ uint8_t find_directory_entries(char* path,
 
 struct tm app_get_time_date(void)
 {
-	struct tm tm = {0};
+	RTC_DateTypeDef rtc_date;
+	RTC_TimeTypeDef rtc_time;
+	struct tm stdlib_tm;
 
-	// todo
+	HAL_RTC_GetTime(&rtc_handle, &rtc_time, FORMAT_BIN);
+	HAL_RTC_GetDate(&rtc_handle, &rtc_date, FORMAT_BIN);
 
-	return tm;
+	stdlib_tm.tm_hour = rtc_time.Hours;
+	stdlib_tm.tm_min = rtc_time.Minutes;
+	stdlib_tm.tm_sec = rtc_time.Seconds;
+	stdlib_tm.tm_year = rtc_date.Year + 2000;
+	stdlib_tm.tm_mon = rtc_date.Month;
+	stdlib_tm.tm_mday = rtc_date.Date;
+
+	return stdlib_tm;
 }
 
 void app_set_time_date(struct tm tm)
 {
-	// todo
-}
+	RTC_DateTypeDef  hal_date_structure;
+	RTC_TimeTypeDef  hal_time_structure;
+
+	hal_date_structure.Year = tm.tm_year - 2000;
+	hal_date_structure.Month = tm.tm_mon;
+	hal_date_structure.Date = tm.tm_mday;
+	HAL_RTC_SetDate(&rtc_handle, &hal_date_structure, FORMAT_BIN);
+
+	hal_time_structure.Hours = tm.tm_hour;
+	hal_time_structure.Minutes = tm.tm_min;
+	hal_time_structure.Seconds = 0x00;
+	hal_time_structure.TimeFormat = RTC_HOURFORMAT12_AM;
+	hal_time_structure.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
+	hal_time_structure.StoreOperation = RTC_STOREOPERATION_RESET;
+	HAL_RTC_SetTime(&rtc_handle, &hal_time_structure, FORMAT_BIN);}

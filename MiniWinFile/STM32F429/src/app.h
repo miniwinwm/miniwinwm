@@ -69,6 +69,7 @@ void app_main_loop_process(void);
  *
  * @param path pointer to path text. Path separators are '/'. Must not end in '/' apart from root.
  * @param list_box_settings_entries the returned entries data which has the text and an icon filled in for each entry
+ * @param folders_only If true find only folders
  * @param max_entries the maximum number of entries to look for
  * @param file_entry_icon Pointer to the icon to use for a file entry
  * @param folder_entry_icon Pointer to the icon to use for a folder entry
@@ -77,6 +78,7 @@ void app_main_loop_process(void);
  */
 uint8_t find_directory_entries(char *path,
 		mw_ui_list_box_entry *list_box_settings_entries,
+		bool folders_only,
 		uint8_t max_entries,
 		const uint8_t *file_entry_icon,
 		const uint8_t *folder_entry_icon);
@@ -122,9 +124,17 @@ uint32_t app_file_seek(uint32_t position);
  * Read from open file
  *
  * @param buffer destination buffer to read in to
- * @param count bytes to read
+ * @param count number of bytes to read
  */
-void app_file_fread(uint8_t *buffer, uint32_t count);
+void app_file_read(uint8_t *buffer, uint32_t count);
+
+/**
+ * Write to open file
+ *
+ * @param buffer buffer containing bytes to write
+ * @param count number of bytes to write
+ */
+void app_file_write(uint8_t *buffer, uint32_t count);
 
 /**
  * Close an open file
