@@ -54,7 +54,7 @@ SOFTWARE.
 ************/
 
 /**
- * Extra data structure for button ui component
+ * Instance data structure for button ui component
  */
 typedef struct
 {

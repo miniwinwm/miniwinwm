@@ -60,7 +60,7 @@ SOFTWARE.
 ************/
 
 /**
- * Extra data structure for radio_button ui component
+ * Instance data structure for radio_button ui component
  */
 typedef struct
 {

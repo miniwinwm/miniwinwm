@@ -54,7 +54,6 @@ SOFTWARE.
 uint8_t window_file_id;
 
 /* controls */
-
 uint8_t button_open_id;
 uint8_t button_set_clock_id;
 uint8_t button_create_id;
@@ -62,7 +61,6 @@ uint8_t label_time_id;
 uint8_t label_date_id;
 
 /* controls instance data */
-
 mw_ui_button_data_t button_open_data;
 mw_ui_button_data_t button_set_clock_data;
 mw_ui_button_data_t button_create_data;
@@ -131,7 +129,7 @@ void mw_user_init(void)
 	button_create_id = mw_ui_button_add_new(80,
 			125,
 			window_file_id,
-			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
+			MW_CONTROL_FLAG_IS_VISIBLE,
 			&button_create_data);
 
 	mw_util_safe_strcpy(label_time_data.label,

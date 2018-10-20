@@ -58,7 +58,7 @@ SOFTWARE.
 ************/
 
 /**
- * Extra data structure for checkbox ui component
+ * Instance data structure for checkbox ui component
  */
 typedef struct
 {

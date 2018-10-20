@@ -31,7 +31,7 @@ SOFTWARE.
 #include <miniwin.h>
 #include <string.h>
 #include <stdio.h>
-#include "ui/ui_keyboard.h"
+#include "ui/ui_common.h"
 
 /****************
 *** CONSTANTS ***

@@ -50,7 +50,7 @@ uint8_t window_simple_id;
 uint8_t button_id;
 uint8_t label_id;
 
-/* controls extra data */
+/* controls instance data */
 mw_ui_label_data_t label_data;
 mw_ui_button_data_t button_data;
 

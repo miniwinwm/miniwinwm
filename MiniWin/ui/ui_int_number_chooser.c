@@ -31,8 +31,7 @@ SOFTWARE.
 #include <miniwin.h>
 #include <string.h>
 #include <stdio.h>
-#include "user/minwin_config.h"
-#include "ui/ui_int_number_chooser.h"
+#include "ui/ui_common.h"
 
 /****************
 *** CONSTANTS ***

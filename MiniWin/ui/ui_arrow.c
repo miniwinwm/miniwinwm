@@ -30,8 +30,7 @@ SOFTWARE.
 
 #include <miniwin.h>
 #include <string.h>
-#include "ui/ui_arrow.h"
-#include "user/minwin_config.h"
+#include "ui/ui_common.h"
 
 /****************
 *** CONSTANTS ***

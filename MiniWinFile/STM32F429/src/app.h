@@ -43,8 +43,8 @@ SOFTWARE.
 ****************/
 
 #define MW_DIALOG_FILE_CHOOSER						/**< File chooser dialog is optional and is only built if this is defined */
-#define MAX_FILE_NAME_LENGTH				12		/**< Maximum length of a file name in eight dot three format */
-#define MAX_FOLDER_AND_FILE_NAME_LENGTH		128
+#define MAX_FILENAME_LENGTH					12		/**< Maximum length of a file name in eight dot three format */
+#define MAX_FOLDER_AND_FILENAME_LENGTH		128
 
  /************
 *** TYPES ***
@@ -65,7 +65,7 @@ void app_init(void);
 void app_main_loop_process(void);
 
 /**
- * Find all the entries in the directory of the given path
+ * Find all the entries in the folder of the given path
  *
  * @param path pointer to path text. Path separators are '/'. Must not end in '/' apart from root.
  * @param list_box_settings_entries the returned entries data which has the text and an icon filled in for each entry
@@ -76,7 +76,7 @@ void app_main_loop_process(void);
  * @return the number of entries found
  * @note this function is required if MW_DIALOG_FILE_CHOOSER is defined
  */
-uint8_t find_directory_entries(char *path,
+uint8_t find_folder_entries(char *path,
 		mw_ui_list_box_entry *list_box_settings_entries,
 		bool folders_only,
 		uint8_t max_entries,
@@ -87,16 +87,25 @@ uint8_t find_directory_entries(char *path,
  * Accessor to the root folder path which comes from the FatFS module and is stored in app source file
  *
  * @return pointer to the root path
+ * @note this function is required if MW_DIALOG_FILE_CHOOSER is defined
  */
 char *app_get_root_folder_path(void);
 
 /**
  * Open an input file for reading
  *
- * @param path_and_file_name the path and name of the file to open
+ * @param path_and_filename the path and name of the file to open
  * @return true if opened else false
  */
-bool app_file_open(char *path_and_file_name);
+bool app_file_open(char *path_and_filename);
+
+/**
+ * Create an output file for writing
+ *
+ * @param path_and_filename the path and name of the file to create
+ * @return true if created else false
+ */
+bool app_file_create(char *path_and_filename);
 
 /**
  * Gets the size of the opened file

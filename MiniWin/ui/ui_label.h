@@ -54,7 +54,7 @@ SOFTWARE.
 ************/
 
 /**
- * Extra data structure for label ui component
+ * Instance data structure for label ui component
  */
 typedef struct
 {

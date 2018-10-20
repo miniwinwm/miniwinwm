@@ -173,6 +173,7 @@ void app_init(void)
 	hal_date_structure.Year = 0x00;
 	hal_date_structure.Month = RTC_MONTH_JANUARY;
 	hal_date_structure.Date = 0x01;
+	hal_date_structure.WeekDay = RTC_WEEKDAY_MONDAY;	/* must be set to something even if not correct for the date */
 	HAL_RTC_SetDate(&rtc_handle, &hal_date_structure, FORMAT_BCD);
 
 	hal_time_structure.Hours = 0x01;
@@ -207,13 +208,28 @@ void app_init(void)
 	f_mount(&usb_disk_fatfs, (TCHAR const*)usb_path, 0);
 }
 
-bool app_file_open(char *path_and_file_name)
+bool app_file_open(char *path_and_filename)
 {
 	bool result = false;
 
 	if (application_state == APPLICATION_START)
 	{
-		if (f_open(&file_handle, path_and_file_name, FA_READ) == FR_OK)
+		if (f_open(&file_handle, path_and_filename, FA_READ) == FR_OK)
+		{
+			result = true;
+		}
+	}
+
+	return result;
+}
+
+bool app_file_create(char *path_and_filename)
+{
+	bool result = false;
+
+	if (application_state == APPLICATION_START)
+	{
+		if (f_open(&file_handle, path_and_filename, FA_WRITE | FA_CREATE_ALWAYS) == FR_OK)
 		{
 			result = true;
 		}
@@ -271,24 +287,25 @@ void app_main_loop_process(void)
     USBH_Process(&hUSB_Host);
 }
 
-uint8_t find_directory_entries(char* path,
+uint8_t find_folder_entries(char *path,
 		mw_ui_list_box_entry *list_box_settings_entries,
+		bool folders_only,
 		uint8_t max_entries,
 		const uint8_t *file_entry_icon,
 		const uint8_t *folder_entry_icon)
 {
     FRESULT result;
-    DIR directory;
+    DIR folder;
     FILINFO file_info;
     UINT i;
 
     i = 0;
-    result = f_opendir(&directory, path);                       /* Open the directory */
+    result = f_opendir(&folder, path);                       /* Open the folder */
     if (result == FR_OK)
     {
         for (;;)
         {
-            result = f_readdir(&directory, &file_info);                   /* Read a directory item */
+            result = f_readdir(&folder, &file_info);                   /* Read a folder item */
             if (result != FR_OK || file_info.fname[0] == 0)
             {
             	break;  /* Break on error or end of dir */
@@ -300,16 +317,16 @@ uint8_t find_directory_entries(char* path,
         		continue;
         	}
 
-        	/* ignore if not a directory and we want directories only */
+        	/* ignore if not a folder and we want directories only */
         	if (folders_only && !(file_info.fattrib & AM_DIR))
         	{
         		continue;
         	}
 
-            mw_util_safe_strcpy(list_box_settings_entries[i].label, MAX_FILE_NAME_LENGTH + 1, file_info.fname);
+            mw_util_safe_strcpy(list_box_settings_entries[i].label, MAX_FILENAME_LENGTH + 1, file_info.fname);
             if (file_info.fattrib & AM_DIR)
             {
-            	/* It is a directory */
+            	/* It is a folder */
             	list_box_settings_entries[i].icon = folder_entry_icon;
             }
             else
@@ -323,7 +340,7 @@ uint8_t find_directory_entries(char* path,
             	break;
             }
         }
-        f_closedir(&directory);
+        f_closedir(&folder);
     }
 
     return i;
@@ -356,6 +373,7 @@ void app_set_time_date(struct tm tm)
 	hal_date_structure.Year = tm.tm_year - 2000;
 	hal_date_structure.Month = tm.tm_mon;
 	hal_date_structure.Date = tm.tm_mday;
+	hal_date_structure.WeekDay = RTC_WEEKDAY_MONDAY;	/* must be set to something even if not correct for the date */
 	HAL_RTC_SetDate(&rtc_handle, &hal_date_structure, FORMAT_BIN);
 
 	hal_time_structure.Hours = tm.tm_hour;

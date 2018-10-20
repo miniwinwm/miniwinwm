@@ -47,15 +47,15 @@ SOFTWARE.
  */
 typedef enum
 {
-	ROOT_DIRECTORY,							/**< root directory on show */
-	DIRECTORY_IMAGES,						/**< images directory shown */
-	DIRECTORY_DOCS							/**< documents directory shown */
-} directory_shown_t;
+	ROOT_FOLDER,							/**< root folder on show */
+	FOLDER_IMAGES,						/**< images folder shown */
+	FOLDER_DOCS							/**< documents folder shown */
+} folder_shown_t;
 
 typedef struct
 {
-	uint8_t lines_to_scroll;				/**< number of lines directory list box is scrolled */
-	directory_shown_t directory_shown;		/**< the current directory on display in the list box */
+	uint8_t lines_to_scroll;				/**< number of lines folder list box is scrolled */
+	folder_shown_t folder_shown;		/**< the current folder on display in the list box */
 } file_data_t;
 
 
@@ -124,7 +124,7 @@ void window_file_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *dra
 void window_file_message_function(const mw_message_t *message)
 {
 	uint8_t item_chosen;
-	bool directory_changed;
+	bool folder_changed;
 
 	MW_ASSERT(message, "Null pointer parameter");
 
@@ -141,7 +141,7 @@ void window_file_message_function(const mw_message_t *message)
 			mw_paint_control(label_file_id);
 
 			file_data.lines_to_scroll = 0;
-			file_data.directory_shown = ROOT_DIRECTORY;
+			file_data.folder_shown = ROOT_FOLDER;
 			list_box_file_data.list_box_entries = list_box_file_entries_root;
 			list_box_file_data.number_of_items = list_box_file_entries_root_count;
 			mw_set_control_enabled(arrow_file_up_id, false);
@@ -172,35 +172,35 @@ void window_file_message_function(const mw_message_t *message)
 		mw_ui_common_post_pointer_to_control(label_file_id, list_box_file_data.list_box_entries[item_chosen].label);
 		mw_paint_control(label_file_id);
 
-		/* check if a directory has been chosen and if so update the list control to show new contents */
-		directory_changed = false;
-		if (file_data.directory_shown == ROOT_DIRECTORY)
+		/* check if a folder has been chosen and if so update the list control to show new contents */
+		folder_changed = false;
+		if (file_data.folder_shown == ROOT_FOLDER)
 		{
 			if (item_chosen == 0)
 			{
-				file_data.directory_shown = DIRECTORY_IMAGES;
+				file_data.folder_shown = FOLDER_IMAGES;
 				list_box_file_data.list_box_entries = list_box_file_entries_images;
 				list_box_file_data.number_of_items = list_box_file_entries_images_count;
-				directory_changed = true;
+				folder_changed = true;
 			}
 			else if (item_chosen == 1)
 			{
-				file_data.directory_shown = DIRECTORY_DOCS;
+				file_data.folder_shown = FOLDER_DOCS;
 				list_box_file_data.list_box_entries = list_box_file_entries_docs;
 				list_box_file_data.number_of_items = list_box_file_entries_docs_count;
-				directory_changed = true;
+				folder_changed = true;
 			}
 		}
 		else if (item_chosen == 0)
 		{
-			file_data.directory_shown = ROOT_DIRECTORY;
+			file_data.folder_shown = ROOT_FOLDER;
 			list_box_file_data.list_box_entries = list_box_file_entries_root;
 			list_box_file_data.number_of_items = list_box_file_entries_root_count;
-			directory_changed = true;
+			folder_changed = true;
 		}
 
-		/* if directory changed update directory list box data and arrow enabled states and repaint all of them */
-		if (directory_changed)
+		/* if folder changed update folder list box data and arrow enabled states and repaint all of them */
+		if (folder_changed)
 		{
 			file_data.lines_to_scroll = 0;
 			mw_paint_control(list_box_file_id);

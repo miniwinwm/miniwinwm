@@ -41,6 +41,7 @@ SOFTWARE.
 #include "dialogs/dialog_time_chooser.h"
 #include "dialogs/dialog_date_chooser.h"
 #include "dialogs/dialog_file_chooser.h"
+#include "dialogs/dialog_text_entry.h"
 
 /****************
 *** CONSTANTS ***
@@ -49,6 +50,12 @@ SOFTWARE.
  /************
  *** TYPES ***
  ************/
+
+ typedef struct
+ {
+	 uint8_t window_id;			/**< The id of the window that the dialog was created in */
+	 uint32_t data;				/**< Response message data, can be numerical or pointer */
+ } mw_dialog_response_t;
 
 /***************************
 *** FUNCTIONS PROTOTYPES ***

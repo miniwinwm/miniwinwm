@@ -2848,7 +2848,7 @@ static window_redimensioning_state_t process_touch_event(void)
 			else
 			{
 				/* check for touch anywhere else on title bar which will start a window move */
-				if (touch_message == MW_TOUCH_DOWN_MESSAGE && !(mw_all_windows[window_to_receive_message].window_flags & MW_WINDOW_IS_MODAL))
+				if (touch_message == MW_TOUCH_DOWN_MESSAGE)
 				{
 					/* touch is elsewhere on title bar so start move process */
 					window_redimensioning_state = WINDOW_BEING_MOVED;

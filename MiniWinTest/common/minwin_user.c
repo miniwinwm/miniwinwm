@@ -98,7 +98,7 @@ uint8_t list_box_1_id;
 uint8_t list_box_2_id;
 uint8_t list_box_3_id;
 
-/* controls extra data */
+/* controls instance data */
 mw_ui_check_box_data_t check_box_1_data;
 mw_ui_radio_button_data_t radio_button_1_data;
 mw_ui_list_box_data_t list_box_1_data;

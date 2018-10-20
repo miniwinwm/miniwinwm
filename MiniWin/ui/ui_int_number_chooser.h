@@ -55,7 +55,7 @@ SOFTWARE.
 ************/
 
 /**
- * Extra data structure for number chooser ui component
+ * Instance data structure for number chooser ui component
  */
 typedef struct
 {

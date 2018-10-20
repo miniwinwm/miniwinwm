@@ -92,7 +92,6 @@ const uint8_t list_box_file_entries_docs_count = (sizeof(list_box_file_entries_d
 ***********************/
 
 /* windows */
-
 uint8_t window_help_icon_id;
 uint8_t window_file_icon_id;
 uint8_t window_file_id;
@@ -104,7 +103,6 @@ uint8_t window_temp_icon_id;
 uint8_t window_temp_id;
 
 /* controls */
-
 uint8_t button_temp_back_id;
 uint8_t button_settings_ok_id;
 uint8_t check_box_settings_id;
@@ -119,8 +117,7 @@ uint8_t arrow_file_down_id;
 uint8_t label_file_id;
 uint8_t button_file_ok_id;
 
-/* controls extra data */
-
+/* controls instance data */
 mw_ui_button_data_t button_temp_back_data;
 mw_ui_button_data_t button_settings_ok_data;
 mw_ui_check_box_data_t check_box_settings_ok_data;
@@ -353,7 +350,7 @@ void mw_user_init(void)
 			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAGS_LARGE_SIZE,
 			&label_file_data);
 
-	/* create a list box for directory listing */
+	/* create a list box for folder listing */
 	list_box_file_data.number_of_lines = 3;
 	list_box_file_data.number_of_items = list_box_file_entries_root_count;
 	list_box_file_data.list_box_entries = list_box_file_entries_root;

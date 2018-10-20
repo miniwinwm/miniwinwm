@@ -211,11 +211,11 @@ int mw_util_compare_int16_t(const void *a, const void *b)
 	return 1;
 }
 
-const char *mw_util_get_file_name_ext(const char *file_name)
+const char *mw_util_get_filename_ext(const char *filename)
 {
-    const char *dot = strrchr(file_name, '.');
+    const char *dot = strrchr(filename, '.');
 
-    if (!dot || dot == file_name)
+    if (!dot || dot == filename)
     {
     	return "";
     }

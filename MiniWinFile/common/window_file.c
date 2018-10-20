@@ -55,9 +55,10 @@ SOFTWARE.
 
 typedef struct
 {
-	text_window_data_t text_windows_data[TEXT_WINDOW_COUNT];		/**< array of window data structures for text windows */
-	image_window_data_t image_windows_data[IMAGE_WINDOW_COUNT];		/**< array of window data structures for image windows */
-	struct tm set_time;												/**< Time/date from dialogs to send to hardware clock */
+	text_window_data_t text_windows_data[TEXT_WINDOW_COUNT];				/**< array of window data structures for text windows */
+	image_window_data_t image_windows_data[IMAGE_WINDOW_COUNT];				/**< array of window data structures for image windows */
+	struct tm set_time;														/**< Time/date from dialogs to send to hardware clock */
+	char create_path_and_filename[MAX_FOLDER_AND_FILENAME_LENGTH + 1];	/**< Path and file name for file to create */
 } window_file_data_t;
 
 /***********************
@@ -89,10 +90,21 @@ static window_file_data_t window_file_data;
 
 static bool add_text_window(char *path_and_filename);
 static bool add_image_window(char *path_and_filename);
+static void create_new_file(void);
 
 /**********************
 *** LOCAL FUNCTIONS ***
 **********************/
+
+/**
+ * Create a new text file and add some text
+ */
+static void create_new_file(void)
+{
+	app_file_create(window_file_data.create_path_and_filename);
+	app_file_write((uint8_t *)"Created by MiniWin File example app.\n", 37);
+	app_file_close();
+}
 
 /**
  * Add a new text window if there is space available
@@ -143,7 +155,7 @@ static bool add_text_window(char *path_and_filename)
 			window_file_data.text_windows_data[i].text_window_id  = new_window_id;
 
 			mw_util_safe_strcpy(window_file_data.text_windows_data[i].path_and_filename_text,
-					MAX_FOLDER_AND_FILE_NAME_LENGTH,
+					MAX_FOLDER_AND_FILENAME_LENGTH,
 					path_and_filename);
 
 			/* removal of the dialog choosing the image file causes a repaint all */
@@ -205,7 +217,7 @@ static bool add_image_window(char *path_and_filename)
 			window_file_data.image_windows_data[i].image_window_id  = new_window_id;
 
 			mw_util_safe_strcpy(window_file_data.image_windows_data[i].path_and_filename_image,
-					MAX_FOLDER_AND_FILE_NAME_LENGTH,
+					MAX_FOLDER_AND_FILENAME_LENGTH,
 					path_and_filename);
 
 			/* removal of the dialog choosing the image file causes a repaint all */
@@ -319,50 +331,60 @@ void window_file_message_function(const mw_message_t *message)
 		break;
 
 	case MW_DIALOG_DATE_CHOOSER_OK_MESSAGE:
-		window_file_data.set_time.tm_mday = (int)(message->message_data & 0xff);
-		window_file_data.set_time.tm_mon = (int)((message->message_data >> 8) & 0xff);
-		window_file_data.set_time.tm_year = (int)(message->message_data >> 16);
-		app_set_time_date(window_file_data.set_time);
+		{
+			mw_dialog_response_t *dialog_response = (mw_dialog_response_t *)message->message_data;
+			window_file_data.set_time.tm_mday = (int)(dialog_response->data & 0xff);
+			window_file_data.set_time.tm_mon = (int)((dialog_response->data >> 8) & 0xff);
+			window_file_data.set_time.tm_year = (int)(dialog_response->data >> 16);
+			app_set_time_date(window_file_data.set_time);
+
+			/* enable the create button now time/date set */
+			mw_set_control_enabled(button_create_id, true);
+		}
 		break;
 
 	case MW_DIALOG_TIME_CHOOSER_OK_MESSAGE:
-		window_file_data.set_time.tm_sec = 0;
-		window_file_data.set_time.tm_hour = (int)(message->message_data >> 8);
-		window_file_data.set_time.tm_min = (int)(message->message_data & 0xff);
+		{
+			mw_dialog_response_t *dialog_response = (mw_dialog_response_t *)message->message_data;
+			window_file_data.set_time.tm_sec = 0;
+			window_file_data.set_time.tm_hour = (int)(dialog_response->data >> 8);
+			window_file_data.set_time.tm_min = (int)(dialog_response->data & 0xff);
 
-		mw_create_window_dialog_date_chooser(5,
-				20,
-				1,
-				1,
-				2018,
-				false,
-				message->recipient_id);
+			mw_create_window_dialog_date_chooser(5,
+					20,
+					1,
+					1,
+					2018,
+					false,
+					message->recipient_id);
+		}
 		break;
 
-	case MW_DIALOG_FILE_CHOOSER_FILE_OK_PTR_MESSAGE:
+	case MW_DIALOG_FILE_CHOOSER_FILE_OK_MESSAGE:
 		{
+			mw_dialog_response_t *dialog_response = (mw_dialog_response_t *)message->message_data;
 			const char *extension;
 			bool window_added;
 			bool format_supported;
-			char *item_chosen_path_and_filename;
+			char *open_path_and_filename;
 
 			/* get the item chosen path and file name from message */
-			item_chosen_path_and_filename = (char *)message->message_data;
+			open_path_and_filename = (char *)dialog_response->data;
 
 			/* get filename extension */
-			extension = mw_util_get_file_name_ext(item_chosen_path_and_filename);
+			extension = mw_util_get_filename_ext(open_path_and_filename);
 
 			window_added = false;
 			format_supported = false;
 			if (mw_util_strcicmp(extension, TEXT_FILE_EXTENSION) == 0)
 			{
 				format_supported = true;
-				window_added = add_text_window(item_chosen_path_and_filename);
+				window_added = add_text_window(open_path_and_filename);
 			}
 			else if (mw_util_strcicmp(extension, IMAGE_FILE_EXTENSION) == 0)
 			{
 				format_supported = true;
-				window_added = add_image_window(item_chosen_path_and_filename);
+				window_added = add_image_window(open_path_and_filename);
 			}
 			else
 			{
@@ -396,13 +418,71 @@ void window_file_message_function(const mw_message_t *message)
 		}
 		break;
 
-	case MW_DIALOG_FILE_CHOOSER_FOLDER_OK_PTR_MESSAGE:
+	case MW_DIALOG_FILE_CHOOSER_FOLDER_OK_MESSAGE:
 		{
-			//todo folder name arrived here
-			char fred[255];
-			strcpy(fred, (char *)message->message_data);
-			break;
+			mw_dialog_response_t *dialog_response = (mw_dialog_response_t *)message->message_data;
+
+			mw_util_safe_strcpy(window_file_data.create_path_and_filename,
+					MAX_FOLDER_AND_FILENAME_LENGTH,
+					(char *)dialog_response->data);
+			mw_create_window_dialog_text_entry(20, 20, "New file name", message->recipient_id);
 		}
+		break;
+
+	case MW_DIALOG_TEXT_ENTRY_OK_MESSAGE:
+		{
+			mw_dialog_response_t *dialog_response = (mw_dialog_response_t *)message->message_data;
+
+			/* add trailing / to path if it isn't there */
+			if (window_file_data.create_path_and_filename[strlen(window_file_data.create_path_and_filename) - 1] != '/')
+			{
+				mw_util_safe_strcat(window_file_data.create_path_and_filename,
+						MAX_FOLDER_AND_FILENAME_LENGTH,
+						"/");
+			}
+
+			/* add file name */
+			mw_util_safe_strcat(window_file_data.create_path_and_filename,
+					MAX_FOLDER_AND_FILENAME_LENGTH,
+					(char *)dialog_response->data);
+
+			/* attempt to open file for reading to see if it's there */
+			if (app_file_open(window_file_data.create_path_and_filename))
+			{
+				/* file opened successfully, it must exists already */
+				app_file_close();
+
+				/* ask if to overwrite */
+				mw_create_window_dialog_two_button(20,
+						20,
+						210,
+						"Creating file",
+						"File already exists. Overwrite?",
+						"Yes",
+						"No",
+						false,
+						message->recipient_id);
+			}
+			else
+			{
+				/* create the new file */
+				create_new_file();
+			}
+		}
+		break;
+
+	case MW_DIALOG_TWO_BUTTONS_DISMISSED_MESSAGE:
+		{
+			mw_dialog_response_t *dialog_response = (mw_dialog_response_t *)message->message_data;
+
+			/* check response from dialog asking if to overwrite existing file when creating a new one */
+			if (dialog_response->data == 0)
+			{
+				/* left button is yes response so create file */
+				create_new_file();
+			}
+		}
+		break;
 
 	case MW_TRANSFER_DATA_1_MESSAGE:
 		/* a pop up window has been closed */

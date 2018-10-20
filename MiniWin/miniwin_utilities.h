@@ -151,11 +151,11 @@ int mw_util_compare_int16_t(const void *a, const void *b);
 
 /**
  * Finds the file name extension following a . in a file name.
- * @param file_name the full file name
+ * @param filename the full file name
  * @return the extension excluding the ., or an empty string if no . found, or the full file name if it begins with a .
  * @note never returns null
  */
-const char *mw_util_get_file_name_ext(const char *file_name);
+const char *mw_util_get_filename_ext(const char *filename);
 
 /**
  * Case insensitive string compare

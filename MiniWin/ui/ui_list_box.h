@@ -69,7 +69,7 @@ SOFTWARE.
  } mw_ui_list_box_entry;
 
 /**
- * Extra data structure for list box ui component
+ * Instance data structure for list box ui component
  */
 typedef struct
 {

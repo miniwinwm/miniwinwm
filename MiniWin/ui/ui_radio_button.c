@@ -29,7 +29,7 @@ SOFTWARE.
 ***************/
 
 #include <miniwin.h>
-#include "ui/ui_radio_button.h"
+#include "ui/ui_common.h"
 
 /****************
 *** CONSTANTS ***

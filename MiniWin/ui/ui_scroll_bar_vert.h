@@ -46,7 +46,7 @@ SOFTWARE.
 ************/
 
 /**
- * Extra data structure for vertical scroll bar ui component
+ * Instance data structure for vertical scroll bar ui component
  */
 typedef struct
 {

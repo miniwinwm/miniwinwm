@@ -62,7 +62,7 @@ SOFTWARE.
  } keyboard_display_t;
 
 /**
- * Extra data structure for number chooser ui component
+ * Instance data structure for number chooser ui component
  */
 typedef struct
 {

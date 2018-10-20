@@ -80,11 +80,25 @@ void app_main_loop_process(void)
 {
 }
 
-bool app_file_open(char *path_and_file_name)
+bool app_file_open(char *path_and_filename)
 {
 	bool result = false;
 
-	file_handle = fopen(path_and_file_name, "rb");
+	file_handle = fopen(path_and_filename, "rb");
+
+	if (file_handle != NULL)
+	{
+		result = true;
+	}
+
+	return result;
+}
+
+bool app_file_create(char *path_and_filename)
+{
+	bool result = false;
+
+	file_handle = fopen(path_and_filename, "w");
 
 	if (file_handle != NULL)
 	{
@@ -130,23 +144,23 @@ void app_file_close(void)
 	fclose(file_handle);
 }
 
-uint8_t find_directory_entries(char* path,
+uint8_t find_folder_entries(char* path,
 		mw_ui_list_box_entry *list_box_settings_entries,
 		bool folders_only,
 		uint8_t max_entries,
 		const uint8_t *file_entry_icon,
 		const uint8_t *folder_entry_icon)
 {
-	TCHAR szDir[MAX_FOLDER_AND_FILE_NAME_LENGTH];
+	TCHAR szDir[MAX_FOLDER_AND_FILENAME_LENGTH];
 	HANDLE hFind = INVALID_HANDLE_VALUE;
 	WIN32_FIND_DATA ffd;
 	uint8_t i;
 
 	i = 0;
-	mw_util_safe_strcpy(szDir, MAX_FOLDER_AND_FILE_NAME_LENGTH - 2, path);
+	mw_util_safe_strcpy(szDir, MAX_FOLDER_AND_FILENAME_LENGTH - 2, path);
 	strcat(szDir, TEXT("\\*"));
 
-	/* Find the first file in the directory */
+	/* Find the first file in the folder */
 	hFind = FindFirstFile(szDir, &ffd);
 	if (hFind == INVALID_HANDLE_VALUE)
 	{
@@ -167,13 +181,13 @@ uint8_t find_directory_entries(char* path,
     		continue;
     	}
 
-    	/* ignore if not a directory and we want directories only */
+    	/* ignore if not a folder and we want folders only */
     	if (folders_only && !(ffd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY))
     	{
     		continue;
     	}
 
-        mw_util_safe_strcpy(list_box_settings_entries[i].label, MAX_FILE_NAME_LENGTH + 1, ffd.cFileName);
+        mw_util_safe_strcpy(list_box_settings_entries[i].label, MAX_FILENAME_LENGTH + 1, ffd.cFileName);
 
 		if (ffd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
 		{

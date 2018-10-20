@@ -165,9 +165,11 @@ typedef enum
 	MW_DIALOG_TIME_CHOOSER_CANCEL_MESSAGE,			/**< Time chooser dialog has been dismissed by cancel button*/
 	MW_DIALOG_DATE_CHOOSER_OK_MESSAGE,				/**< Date chooser dialog has been dismissed by ok button*/
 	MW_DIALOG_DATE_CHOOSER_CANCEL_MESSAGE,			/**< Date chooser dialog has been dismissed by cancel button*/
-	MW_DIALOG_FILE_CHOOSER_FILE_OK_PTR_MESSAGE,		/**< File chosen in file chooser dialog */
-	MW_DIALOG_FILE_CHOOSER_FOLDER_OK_PTR_MESSAGE,	/**< Folder chosen in file chooser dialog */
+	MW_DIALOG_FILE_CHOOSER_FILE_OK_MESSAGE,			/**< File chosen in file chooser dialog */
+	MW_DIALOG_FILE_CHOOSER_FOLDER_OK_MESSAGE,		/**< Folder chosen in file chooser dialog */
 	MW_DIALOG_FILE_CHOOSER_CANCEL_MESSAGE,			/**< File chooser dialog was cancelled with no file chosen */
+	MW_DIALOG_TEXT_ENTRY_OK_MESSAGE,				/**< Text entry dialog ok message */
+	MW_DIALOG_TEXT_ENTRY_CANCEL_MESSAGE,			/**< Text entry dialog cancel message */
 
 	/* Messages that can be posted from user code or user code called utility functions */
 	MW_WINDOW_PAINT_ALL_MESSAGE,			       	/**< System message to paint everything */
@@ -246,7 +248,7 @@ typedef struct
     mw_paint_func_p paint_func;         /**< Pointer to window paint function */
     mw_message_func_p message_func;     /**< Pointer to window message handler function */	
     uint32_t window_flags;				/**< All the flags defining a window's description and state */
-	void *instance_data;				/**< Optional void pointer to window specific data structure containing extra window instance specific data */
+	void *instance_data;				/**< Optional void pointer to window specific data structure containing window instance specific data */
 	mw_util_rect_t window_rect;         /**< Rect containing coordinates of window including title bar and border if present */
 	mw_util_rect_t client_rect;         /**< Rect containing coordinates of window's client area */
 	uint16_t menu_bar_item_enables;		/**< Bitfield of individual enable flags for menu bar items */
@@ -265,7 +267,7 @@ typedef struct
 {
     mw_paint_func_p paint_func;         /**< Pointer to control paint function */
     mw_message_func_p message_func;     /**< Pointer to control message handler function */
-	void *instance_data;				/**< Void pointer to control specific data structure containing extra control specific configuration data per instance */
+	void *instance_data;				/**< Void pointer to control specific data structure containing control specific configuration data per instance */
 	uint16_t control_flags;				/**< All the flags defining a control's description and state */
 	mw_util_rect_t control_rect;        /**< Rect containing coordinates of control's area */
     uint8_t parent;                     /**< This control's parent window */

@@ -29,8 +29,7 @@ SOFTWARE.
 ***************/
 
 #include <miniwin.h>
-#include <miniwin_utilities.h>
-#include "ui/ui_progress_bar.h"
+#include "ui/ui_common.h"
 
 /****************
 *** CONSTANTS ***

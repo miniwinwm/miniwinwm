@@ -29,8 +29,7 @@ SOFTWARE.
 ***************/
 
 #include <miniwin.h>
-#include <miniwin_utilities.h>
-#include "ui/ui_label.h"
+#include "ui/ui_common.h"
 
 /****************
 *** CONSTANTS ***

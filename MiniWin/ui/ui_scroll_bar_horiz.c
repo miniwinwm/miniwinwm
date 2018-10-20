@@ -28,9 +28,7 @@ SOFTWARE.
 *** INCLUDES ***
 ***************/
 
-#include <limits.h>
 #include <miniwin.h>
-#include "ui/ui_scroll_bar_horiz.h"
 #include "ui/ui_common.h"
 
 /****************

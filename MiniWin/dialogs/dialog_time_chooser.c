@@ -31,7 +31,7 @@ SOFTWARE.
 #include <stdio.h>
 #include <string.h>
 #include "miniwin.h"
-#include "dialogs/dialog_time_chooser.h"
+#include "dialogs/dialog_common.h"
 #include "ui/ui_common.h"
 
 /****************
@@ -62,11 +62,11 @@ typedef struct
 	mw_ui_arrow_data_t arrow_minute_up_data;		/**< Instance data of minute up button */
 	uint8_t arrow_minute_down_id;					/**< Control id of minute down button */
 	mw_ui_arrow_data_t arrow_minute_down_data;		/**< Instance data of minute down button */
-	uint8_t window_dialog_time_chooser_id;			/**< Window id of dialog */
 	uint8_t current_time_hours;						/**< Current time in dialog hours */
 	uint8_t current_time_mins;						/**< Current time in dialog minutes */
 	bool large_size;								/**< True for large size false for standard size */
 	uint8_t response_window_id;						/**< Window id to send response message to */
+	mw_dialog_response_t mw_dialog_response;		/**< Dialog response structure */
 } mw_dialog_time_chooser_data_t;
 
 /***********************
@@ -107,7 +107,7 @@ static void remove_resources(void)
 	mw_remove_control(mw_dialog_time_chooser_data.arrow_hour_down_id);
 	mw_remove_control(mw_dialog_time_chooser_data.arrow_minute_up_id);
 	mw_remove_control(mw_dialog_time_chooser_data.arrow_minute_down_id);
-	mw_remove_window(mw_dialog_time_chooser_data.window_dialog_time_chooser_id);
+	mw_remove_window(mw_dialog_time_chooser_data.mw_dialog_response.window_id);
 }
 
 /**
@@ -240,11 +240,11 @@ static void mw_dialog_time_chooser_message_function(const mw_message_t *message)
 		/* just paint the changed text */
 		if (mw_dialog_time_chooser_data.large_size)
 		{
-			mw_paint_window_client_rect(mw_dialog_time_chooser_data.window_dialog_time_chooser_id, &text_rect_large);
+			mw_paint_window_client_rect(mw_dialog_time_chooser_data.mw_dialog_response.window_id, &text_rect_large);
 		}
 		else
 		{
-			mw_paint_window_client_rect(mw_dialog_time_chooser_data.window_dialog_time_chooser_id, &text_rect_standard);
+			mw_paint_window_client_rect(mw_dialog_time_chooser_data.mw_dialog_response.window_id, &text_rect_standard);
 		}
 		break;
 
@@ -255,19 +255,22 @@ static void mw_dialog_time_chooser_message_function(const mw_message_t *message)
 		if (message->sender_id == mw_dialog_time_chooser_data.button_ok_id)
 		{
 			/* post ok response to receiving window */
+			mw_dialog_time_chooser_data.mw_dialog_response.data = mw_dialog_time_chooser_data.current_time_hours << 8 |
+					mw_dialog_time_chooser_data.current_time_mins;
 			mw_post_message(MW_DIALOG_TIME_CHOOSER_OK_MESSAGE,
 					MW_UNUSED_MESSAGE_PARAMETER,
 					mw_dialog_time_chooser_data.response_window_id,
-					(uint32_t)mw_dialog_time_chooser_data.current_time_hours << 8 | mw_dialog_time_chooser_data.current_time_mins,
+					(uint32_t)&mw_dialog_time_chooser_data.mw_dialog_response,
 					MW_WINDOW_MESSAGE);
 		}
 		else if (message->sender_id == mw_dialog_time_chooser_data.button_cancel_id)
 		{
 			/* post cancel response to receiving window */
+			mw_dialog_time_chooser_data.mw_dialog_response.data = MW_UNUSED_MESSAGE_PARAMETER;
 			mw_post_message(MW_DIALOG_TIME_CHOOSER_CANCEL_MESSAGE,
 					MW_UNUSED_MESSAGE_PARAMETER,
 					mw_dialog_time_chooser_data.response_window_id,
-					MW_UNUSED_MESSAGE_PARAMETER,
+					(uint32_t)&mw_dialog_time_chooser_data.mw_dialog_response,
 					MW_WINDOW_MESSAGE);
 		}
 		else
@@ -339,7 +342,7 @@ uint8_t mw_create_window_dialog_time_chooser(uint16_t x,
 	rect.x = x;
 	rect.y = y;
 
-	mw_dialog_time_chooser_data.window_dialog_time_chooser_id = mw_add_window(&rect,
+	mw_dialog_time_chooser_data.mw_dialog_response.window_id = mw_add_window(&rect,
 			"Set time",
 			mw_dialog_time_chooser_paint_function,
 			mw_dialog_time_chooser_message_function,
@@ -350,7 +353,7 @@ uint8_t mw_create_window_dialog_time_chooser(uint16_t x,
 			NULL);
 
 	/* check if window could be created */
-	if (mw_dialog_time_chooser_data.window_dialog_time_chooser_id == MW_MAX_WINDOW_COUNT)
+	if (mw_dialog_time_chooser_data.mw_dialog_response.window_id == MW_MAX_WINDOW_COUNT)
 	{
 		/* it couldn't so exit */
 		return MW_MAX_WINDOW_COUNT;
@@ -370,37 +373,37 @@ uint8_t mw_create_window_dialog_time_chooser(uint16_t x,
 	{
 		mw_dialog_time_chooser_data.button_ok_id = mw_ui_button_add_new(5,
 				170,
-				mw_dialog_time_chooser_data.window_dialog_time_chooser_id,
+				mw_dialog_time_chooser_data.mw_dialog_response.window_id,
 				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAGS_LARGE_SIZE,
 				&mw_dialog_time_chooser_data.button_ok_data);
 
 		mw_dialog_time_chooser_data.button_cancel_id = mw_ui_button_add_new(120,
 				170,
-				mw_dialog_time_chooser_data.window_dialog_time_chooser_id,
+				mw_dialog_time_chooser_data.mw_dialog_response.window_id,
 				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAGS_LARGE_SIZE,
 				&mw_dialog_time_chooser_data.button_cancel_data);
 
 		mw_dialog_time_chooser_data.arrow_hour_up_id = mw_ui_arrow_add_new(186,
 				10,
-				mw_dialog_time_chooser_data.window_dialog_time_chooser_id,
+				mw_dialog_time_chooser_data.mw_dialog_response.window_id,
 				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAGS_LARGE_SIZE,
 				&mw_dialog_time_chooser_data.arrow_hour_up_data);
 
 		mw_dialog_time_chooser_data.arrow_hour_down_id = mw_ui_arrow_add_new(186,
 				50,
-				mw_dialog_time_chooser_data.window_dialog_time_chooser_id,
+				mw_dialog_time_chooser_data.mw_dialog_response.window_id,
 				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAGS_LARGE_SIZE,
 				&mw_dialog_time_chooser_data.arrow_hour_down_data);
 
 		mw_dialog_time_chooser_data.arrow_minute_up_id = mw_ui_arrow_add_new(186,
 				90,
-				mw_dialog_time_chooser_data.window_dialog_time_chooser_id,
+				mw_dialog_time_chooser_data.mw_dialog_response.window_id,
 				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAGS_LARGE_SIZE,
 				&mw_dialog_time_chooser_data.arrow_minute_up_data);
 
 		mw_dialog_time_chooser_data.arrow_minute_down_id = mw_ui_arrow_add_new(186,
 				130,
-				mw_dialog_time_chooser_data.window_dialog_time_chooser_id,
+				mw_dialog_time_chooser_data.mw_dialog_response.window_id,
 				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAGS_LARGE_SIZE,
 				&mw_dialog_time_chooser_data.arrow_minute_down_data);
 	}
@@ -408,37 +411,37 @@ uint8_t mw_create_window_dialog_time_chooser(uint16_t x,
 	{
 		mw_dialog_time_chooser_data.button_ok_id = mw_ui_button_add_new(5,
 				90,
-				mw_dialog_time_chooser_data.window_dialog_time_chooser_id,
+				mw_dialog_time_chooser_data.mw_dialog_response.window_id,
 				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
 				&mw_dialog_time_chooser_data.button_ok_data);
 
 		mw_dialog_time_chooser_data.button_cancel_id = mw_ui_button_add_new(60,
 				90,
-				mw_dialog_time_chooser_data.window_dialog_time_chooser_id,
+				mw_dialog_time_chooser_data.mw_dialog_response.window_id,
 				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
 				&mw_dialog_time_chooser_data.button_cancel_data);
 
 		mw_dialog_time_chooser_data.arrow_hour_up_id = mw_ui_arrow_add_new(93,
 				5,
-				mw_dialog_time_chooser_data.window_dialog_time_chooser_id,
+				mw_dialog_time_chooser_data.mw_dialog_response.window_id,
 				MW_CONTROL_FLAG_IS_VISIBLE,
 				&mw_dialog_time_chooser_data.arrow_hour_up_data);
 
 		mw_dialog_time_chooser_data.arrow_hour_down_id = mw_ui_arrow_add_new(93,
 				25,
-				mw_dialog_time_chooser_data.window_dialog_time_chooser_id,
+				mw_dialog_time_chooser_data.mw_dialog_response.window_id,
 				MW_CONTROL_FLAG_IS_VISIBLE,
 				&mw_dialog_time_chooser_data.arrow_hour_down_data);
 
 		mw_dialog_time_chooser_data.arrow_minute_up_id = mw_ui_arrow_add_new(93,
 				45,
-				mw_dialog_time_chooser_data.window_dialog_time_chooser_id,
+				mw_dialog_time_chooser_data.mw_dialog_response.window_id,
 				MW_CONTROL_FLAG_IS_VISIBLE,
 				&mw_dialog_time_chooser_data.arrow_minute_up_data);
 
 		mw_dialog_time_chooser_data.arrow_minute_down_id = mw_ui_arrow_add_new(93,
 				65,
-				mw_dialog_time_chooser_data.window_dialog_time_chooser_id,
+				mw_dialog_time_chooser_data.mw_dialog_response.window_id,
 				MW_CONTROL_FLAG_IS_VISIBLE,
 				&mw_dialog_time_chooser_data.arrow_minute_down_data);
 	}
@@ -462,6 +465,6 @@ uint8_t mw_create_window_dialog_time_chooser(uint16_t x,
 	/* a window has changed visibility so repaint all */
 	mw_paint_all();
 
-	return mw_dialog_time_chooser_data.window_dialog_time_chooser_id;
+	return mw_dialog_time_chooser_data.mw_dialog_response.window_id;
 }
 
