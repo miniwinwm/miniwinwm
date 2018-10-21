@@ -150,13 +150,14 @@ typedef enum
 	MW_CHECKBOX_STATE_CHANGE_MESSAGE,				/**< Response message from a check box that its state has changed */
 	MW_RADIO_BUTTON_ITEM_SELECTED_MESSAGE,			/**< Response message from a radio button that its state has changed */
 	MW_LIST_BOX_ITEM_PRESSED_MESSAGE,				/**< Response message from a list box that an item has been pressed */
-	MW_INT_NUMBER_CHOOSER_OK_MESSAGE,				/**< OK response message from an integer number chooser */
-	MW_INT_NUMBER_CHOOSER_CANCEL_MESSAGE,			/**< Cancel response message from an integer number chooser */
+	MW_INT_NUMBER_CHOOSER_OK_MESSAGE,				/**< OK response message from an integer number chooser */	//todo remove
+	MW_INT_NUMBER_CHOOSER_CANCEL_MESSAGE,			/**< Cancel response message from an integer number chooser */	// todo remove
 	MW_KEYBOARD_OK_MESSAGE,							/**< OK response message from a keyboard */
 	MW_KEYBOARD_CANCEL_MESSAGE,						/**< Cancel Response message from a keyboard */
 	MW_CONTROL_VERT_SCROLL_BAR_SCROLLED_MESSAGE,	/**< Response message from a vertical control scroll bar that it has been scrolled */
 	MW_CONTROL_HORIZ_SCROLL_BAR_SCROLLED_MESSAGE,	/**< Response message from a horizontal control scroll bar that it has been scrolled */
 	MW_ARROW_PRESSED_MESSAGE,						/**< Response message from a arrow that it has been pressed */
+	MW_KEY_PRESSED_MESSAGE,							/**< ASCII value of key pressed, can be backspace \b */
 
 	/* Messages posted by standard dialogs */
 	MW_DIALOG_ONE_BUTTON_DISMISSED_MESSAGE,			/**< One button dialog has been dismissed */
@@ -170,6 +171,8 @@ typedef enum
 	MW_DIALOG_FILE_CHOOSER_CANCEL_MESSAGE,			/**< File chooser dialog was cancelled with no file chosen */
 	MW_DIALOG_TEXT_ENTRY_OK_MESSAGE,				/**< Text entry dialog ok message */
 	MW_DIALOG_TEXT_ENTRY_CANCEL_MESSAGE,			/**< Text entry dialog cancel message */
+	MW_DIALOG_NUMBER_ENTRY_OK_MESSAGE,				/**< Number entry dialog ok message */
+	MW_DIALOG_NUMBER_ENTRY_CANCEL_MESSAGE,			/**< Number entry dialog cancel message */
 
 	/* Messages that can be posted from user code or user code called utility functions */
 	MW_WINDOW_PAINT_ALL_MESSAGE,			       	/**< System message to paint everything */

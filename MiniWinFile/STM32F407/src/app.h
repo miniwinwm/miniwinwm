@@ -42,11 +42,11 @@ SOFTWARE.
 *** CONSTANTS ***
 ****************/
 
-#define MW_DIALOG_FILE_CHOOSER						/**< File chooser dialog is optional and is only built if this is defined */
-#define MAX_FILENAME_LENGTH					12		/**< Maximum length of a file name in eight dot three format */
-#define MAX_FOLDER_AND_FILENAME_LENGTH		128
+#define MW_DIALOG_FILE_CHOOSER							/**< File chooser dialog is optional and is only built if this is defined */
+#define MAX_FILENAME_LENGTH					12			/**< Maximum length of a file name in eight dot three format */
+#define MAX_FOLDER_AND_FILENAME_LENGTH		128			/**< Maximum length of a file name and its path */
 
- /************
+/************
 *** TYPES ***
 ************/
 
@@ -84,10 +84,10 @@ uint8_t find_folder_entries(char *path,
 		const uint8_t *folder_entry_icon);
 
 /**
- * Accessor to the root folder path which comes from the FatFS module and is stored in app source file
+ * Accessor to the root folder path which comes from the FatFS module and is stored in
+ * app source file
  *
  * @return pointer to the root path
- * @note this function is required if MW_DIALOG_FILE_CHOOSER is defined
  */
 char *app_get_root_folder_path(void);
 
@@ -119,7 +119,7 @@ uint32_t app_file_size(void);
  *
  * @return the byte read
  */
-uint8_t app_file_getc();
+uint8_t app_file_getc(void);
 
 /**
  * Seek to a position in a file

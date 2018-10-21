@@ -572,7 +572,8 @@ uint8_t mw_create_window_dialog_file_chooser(uint16_t x,
 				209,
 				mw_dialog_file_chooser_data.mw_dialog_response.window_id,
 				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAGS_LARGE_SIZE,
-				&mw_dialog_file_chooser_data.label_choice_data);	}
+				&mw_dialog_file_chooser_data.label_choice_data);
+	}
 	else
 	{
 		mw_dialog_file_chooser_data.arrow_file_up_id = mw_ui_arrow_add_new(130,

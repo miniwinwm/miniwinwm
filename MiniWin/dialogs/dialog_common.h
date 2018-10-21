@@ -42,6 +42,7 @@ SOFTWARE.
 #include "dialogs/dialog_date_chooser.h"
 #include "dialogs/dialog_file_chooser.h"
 #include "dialogs/dialog_text_entry.h"
+#include "dialogs/dialog_number_entry.h"
 
 /****************
 *** CONSTANTS ***

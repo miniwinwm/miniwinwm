@@ -116,12 +116,21 @@ void window_simple_message_function(const mw_message_t *message)
 	case MW_BUTTON_PRESSED_MESSAGE:
 		if (message->sender_id == button_id)
 		{
+			/* todo
 			mw_create_window_dialog_one_button(20,
 					50,
 					150,
 					"Title",
 					"This is a message",
 					"Yep",
+					false,
+					message->recipient_id);
+					*/
+
+			 mw_create_window_dialog_number_entry(0,
+					0,
+					"Enter number",
+					true,
 					false,
 					message->recipient_id);
 		}

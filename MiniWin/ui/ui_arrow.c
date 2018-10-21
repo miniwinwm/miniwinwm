@@ -68,15 +68,20 @@ static int16_t shape_y[ARROW_POINTS];
 *** LOCAL FUNCTION PROTOTYPES ***
 ********************************/
 
+static void mw_ui_arrow_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *draw_info);
+static void mw_ui_arrow_message_function(const mw_message_t *message);
+
 /**********************
 *** LOCAL FUNCTIONS ***
 **********************/
 
-/***********************
-*** GLOBAL FUNCTIONS ***
-***********************/
-
-void mw_ui_arrow_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *draw_info)
+/**
+ * Control paint routine, called by window manager.
+ *
+ * @param control_ref The control identifier in the array of controls
+ * @param draw_info Draw info structure describing offset and clip region
+ */
+static void mw_ui_arrow_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *draw_info)
 {
 	mw_ui_arrow_data_t *this_arrow = (mw_ui_arrow_data_t*)mw_get_control_instance_data(control_ref);
 	uint16_t arrow_size;
@@ -168,7 +173,12 @@ void mw_ui_arrow_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *dr
 			arrow_offset);
 }
 
-void mw_ui_arrow_message_function(const mw_message_t *message)
+/**
+ * Control message handler called by the window manager.
+ *
+ * @param message The message to be processed
+ */
+static void mw_ui_arrow_message_function(const mw_message_t *message)
 {
 	mw_ui_arrow_data_t *this_arrow = (mw_ui_arrow_data_t*)mw_get_control_instance_data(message->recipient_id);
 
@@ -221,6 +231,10 @@ void mw_ui_arrow_message_function(const mw_message_t *message)
 			break;
 	}
 }
+
+/***********************
+*** GLOBAL FUNCTIONS ***
+***********************/
 
 uint8_t mw_ui_arrow_add_new(uint16_t x,
 		uint16_t y,

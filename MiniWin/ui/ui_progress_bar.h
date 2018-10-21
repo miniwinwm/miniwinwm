@@ -63,23 +63,6 @@ typedef struct
 ***************************/
 
 /**
- * Control paint routine, called by window manager.
- *
- * @param control_ref The control identifier in the array of controls
- * @param draw_info Draw info structure describing offset and clip region
- * @note Do not call this directly from user code
- */
-void mw_ui_progress_bar_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *draw_info);
-
-/**
- * Control message handler called by the window manager.
- *
- * @param message The message to be processed
- * @note Do not call this directly from user code
- */
-void mw_ui_progress_bar_message_function(const mw_message_t *message);
-
-/**
  * Add a label control to a window
  *
  * @param x The x coordinate of the control relative to parent window client area

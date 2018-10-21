@@ -41,8 +41,6 @@ SOFTWARE.
 *** CONSTANTS ***
 ****************/
 
-/* common control settings */
-
 /* standard control size settings */
 #define MW_UI_ARROW_SIZE		15
 
@@ -62,7 +60,7 @@ SOFTWARE.
  } mw_ui_arrow_direction_t;
 
 /**
- * Instance data structure for button ui component
+ * Instance data structure for arrow ui component
  */
 typedef struct
 {
@@ -78,23 +76,6 @@ typedef struct
 /***************************
 *** FUNCTIONS PROTOTYPES ***
 ***************************/
-
-/**
- * Control paint routine, called by window manager.
- *
- * @param control_ref The control identifier in the array of controls
- * @param draw_info Draw info structure describing offset and clip region
- * @note Do not call this directly from user code
- */
-void mw_ui_arrow_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *draw_info);
-
-/**
- * Control message handler called by the window manager.
- *
- * @param message The message to be processed
- * @note Do not call this directly from user code
- */
-void mw_ui_arrow_message_function(const mw_message_t *message);
 
 /**
  * Add a button control to a window

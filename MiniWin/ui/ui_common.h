@@ -47,6 +47,7 @@ SOFTWARE.
 #include "ui/ui_progress_bar.h"
 #include "ui/ui_keyboard.h"
 #include "ui/ui_arrow.h"
+#include "ui/ui_keypad.h"
 
 /****************
 *** CONSTANTS ***

@@ -101,9 +101,30 @@ static void create_new_file(void);
  */
 static void create_new_file(void)
 {
-	app_file_create(window_file_data.create_path_and_filename);
-	app_file_write((uint8_t *)"Created by MiniWin File example app.\n", 37);
-	app_file_close();
+	if (app_file_create(window_file_data.create_path_and_filename))
+	{
+		app_file_write((uint8_t *)"Created by MiniWin File example app.\n", 37);
+		app_file_close();
+		mw_create_window_dialog_one_button(20,
+				20,
+				175,
+				"File create",
+				"File created successfully",
+				"Ok",
+				false,
+				MW_UNUSED_MESSAGE_PARAMETER);
+	}
+	else
+	{
+		mw_create_window_dialog_one_button(20,
+				20,
+				150,
+				"File create",
+				"Could not create file",
+				"Ok",
+				false,
+				MW_UNUSED_MESSAGE_PARAMETER);
+	}
 }
 
 /**
@@ -239,6 +260,7 @@ void window_file_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *dra
 	MW_ASSERT(draw_info, "Null pointer parameter");
 
 	mw_gl_set_fill(MW_GL_FILL);
+	mw_gl_set_line(MW_GL_SOLID_LINE);
 	mw_gl_set_solid_fill_colour(MW_HAL_LCD_WHITE);
 	mw_gl_set_border(MW_GL_BORDER_OFF);
 	mw_gl_clear_pattern();
@@ -247,6 +269,22 @@ void window_file_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *dra
 			0,
 			mw_get_window_client_rect(window_ref).width,
 			mw_get_window_client_rect(window_ref).height);
+
+	/* Draw rectangles */
+	mw_gl_set_fill(MW_GL_NO_FILL);
+	mw_gl_set_border(MW_GL_BORDER_ON);
+	mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
+	mw_gl_rectangle(draw_info, 5, 7, 150, 50);
+	mw_gl_rectangle(draw_info, 5, 62, 150, 40);
+
+	/* Draw text on rectangles */
+	mw_gl_set_bg_transparency(MW_GL_BG_NOT_TRANSPARENT);
+	mw_gl_set_text_rotation(MW_GL_TEXT_ROTATION_0);
+	mw_gl_set_font(MW_GL_FONT_9);
+	mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
+	mw_gl_set_bg_colour(MW_HAL_LCD_WHITE);
+	mw_gl_string(draw_info, 15, 5, "Time/Date");
+	mw_gl_string(draw_info, 15, 60, "File");
 }
 
 void window_file_message_function(const mw_message_t *message)
@@ -301,8 +339,8 @@ void window_file_message_function(const mw_message_t *message)
 	case MW_BUTTON_PRESSED_MESSAGE:
 		if (message->sender_id == button_open_id)
 		{
-			mw_create_window_dialog_file_chooser(5,
-					20,
+			mw_create_window_dialog_file_chooser(70,
+					100,
 					"Choose File",
 					app_get_root_folder_path(),
 					false,
@@ -311,8 +349,8 @@ void window_file_message_function(const mw_message_t *message)
 		}
 		else if (message->sender_id == button_set_clock_id)
 		{
-			mw_create_window_dialog_time_chooser(5,
-					20,
+			mw_create_window_dialog_time_chooser(70,
+					120,
 					0,
 					0,
 					false,
@@ -320,8 +358,8 @@ void window_file_message_function(const mw_message_t *message)
 		}
 		else if (message->sender_id == button_create_id)
 		{
-			mw_create_window_dialog_file_chooser(5,
-					20,
+			mw_create_window_dialog_file_chooser(70,
+					120,
 					"Choose Folder",
 					app_get_root_folder_path(),
 					true,
@@ -350,8 +388,8 @@ void window_file_message_function(const mw_message_t *message)
 			window_file_data.set_time.tm_hour = (int)(dialog_response->data >> 8);
 			window_file_data.set_time.tm_min = (int)(dialog_response->data & 0xff);
 
-			mw_create_window_dialog_date_chooser(5,
-					20,
+			mw_create_window_dialog_date_chooser(70,
+					100,
 					1,
 					1,
 					2018,
