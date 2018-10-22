@@ -70,7 +70,6 @@ extern uint8_t label_1_id;
 extern uint8_t progress_bar_1_id;
 extern uint8_t list_box_1_id;
 extern uint8_t check_box_1_id;
-extern uint8_t int_number_chooser_1_id;
 extern uint8_t scroll_bar_vert_1_id;
 extern uint8_t list_box_3_id;
 extern mw_ui_scroll_bar_vert_data_t scroll_bar_vert_1_data;
@@ -202,12 +201,6 @@ void window_test_message_function(const mw_message_t *message)
 			mw_paint_window_frame(message->recipient_id, MW_WINDOW_FRAME_COMPONENT_MENU_BAR);
 			mw_paint_window_client(message->recipient_id);
 		}
-		break;
-
-	case MW_INT_NUMBER_CHOOSER_OK_MESSAGE:
-		/* number chooser ok pressed */
-		mw_set_control_visible(int_number_chooser_1_id, false);
-		mw_paint_window_client(message->recipient_id);
 		break;
 
 	case MW_CONTROL_HORIZ_SCROLL_BAR_SCROLLED_MESSAGE:

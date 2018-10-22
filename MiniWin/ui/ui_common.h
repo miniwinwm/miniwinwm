@@ -43,7 +43,6 @@ SOFTWARE.
 #include "ui/ui_label.h"
 #include "ui/ui_scroll_bar_vert.h"
 #include "ui/ui_scroll_bar_horiz.h"
-#include "ui/ui_int_number_chooser.h"
 #include "ui/ui_progress_bar.h"
 #include "ui/ui_keyboard.h"
 #include "ui/ui_arrow.h"

@@ -90,7 +90,6 @@ uint8_t radio_button_1_id;
 uint8_t scroll_bar_vert_1_id;
 uint8_t scroll_bar_vert_2_id;
 uint8_t scroll_bar_horiz_1_id;
-uint8_t int_number_chooser_1_id;
 uint8_t keyboard_1_id;
 uint8_t label_1_id;
 uint8_t progress_bar_1_id;
@@ -103,7 +102,6 @@ mw_ui_check_box_data_t check_box_1_data;
 mw_ui_radio_button_data_t radio_button_1_data;
 mw_ui_list_box_data_t list_box_1_data;
 mw_ui_label_data_t label_1_data;
-mw_ui_int_number_chooser_data_t int_number_chooser_1_data;
 mw_ui_progress_bar_data_t progress_bar_1_data;
 mw_ui_keyboard_data_t keyboard_1_data;
 mw_ui_list_box_data_t list_box_2_data;
@@ -242,15 +240,6 @@ void mw_user_init(void)
 			window_test_id,
 			MW_CONTROL_FLAG_IS_VISIBLE,
 			&scroll_bar_vert_1_data);
-
-	/* create a new number chooser and add it to the drag test window */
-	int_number_chooser_1_data.is_only_positive = false;
-	int_number_chooser_1_id = mw_ui_int_number_chooser_add_new(10,
-			100,
-			window_test_id,
-			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
-			&int_number_chooser_1_data);
-	mw_ui_common_post_number_to_control(int_number_chooser_1_id, (uint32_t)-67);
 
 	/* create a new keyboard and add it to the drag test window */
 	keyboard_1_id = mw_ui_keyboard_add_new(10,

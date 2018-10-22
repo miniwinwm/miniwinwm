@@ -1389,6 +1389,7 @@ static void draw_horizontal_window_scroll_bar(const mw_gl_draw_info_t *draw_info
 
 	mw_gl_set_fill(MW_GL_FILL);
 	mw_gl_set_border(MW_GL_BORDER_ON);
+	mw_gl_set_line(MW_GL_SOLID_LINE);
 	mw_gl_clear_pattern();
 	mw_gl_set_solid_fill_colour(MW_CONTROL_UP_COLOUR);
 	if (mw_all_windows[window_ref].window_flags & MW_WINDOWS_HORIZ_SCROLL_BAR_ENABLED)
@@ -1416,8 +1417,6 @@ static void draw_horizontal_window_scroll_bar(const mw_gl_draw_info_t *draw_info
 	scroll_bar_horiz_slider_left += (mw_all_windows[window_ref].client_rect.x -
 		mw_all_windows[window_ref].window_rect.x);
 
-	mw_gl_set_border(MW_GL_BORDER_ON);
-	mw_gl_set_line(MW_GL_SOLID_LINE);
 	mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 	mw_gl_rectangle(draw_info,
 			scroll_bar_horiz_slider_left,
@@ -1478,6 +1477,7 @@ static void draw_vertical_window_scroll_bar(const mw_gl_draw_info_t *draw_info, 
 
 	mw_gl_set_fill(MW_GL_FILL);
 	mw_gl_set_border(MW_GL_BORDER_ON);
+	mw_gl_set_line(MW_GL_SOLID_LINE);
 	mw_gl_clear_pattern();
 	mw_gl_set_solid_fill_colour(MW_CONTROL_UP_COLOUR);
 	if (mw_all_windows[window_ref].window_flags & MW_WINDOWS_HORIZ_SCROLL_BAR_ENABLED)
@@ -1504,8 +1504,6 @@ static void draw_vertical_window_scroll_bar(const mw_gl_draw_info_t *draw_info, 
 
 	scroll_bar_horiz_slider_top += (mw_all_windows[window_ref].client_rect.y - mw_all_windows[window_ref].window_rect.y);
 
-	mw_gl_set_border(MW_GL_BORDER_ON);
-	mw_gl_set_line(MW_GL_SOLID_LINE);
 	mw_gl_rectangle(draw_info,
 			mw_all_windows[window_ref].window_rect.width -
 				(mw_all_windows[window_ref].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0) -

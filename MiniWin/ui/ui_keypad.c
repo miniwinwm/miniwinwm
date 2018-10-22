@@ -35,9 +35,12 @@ SOFTWARE.
 *** CONSTANTS ***
 ****************/
 
-static const char key_codes[] = "789456123-0\b";
-#define MW_UI_KEYPAD_KEY_TEXT_OFFSET 7
-#define MW_UI_KEYPAD_KEY_TEXT_LARGE_OFFSET 14
+static const char key_codes[] = 				"789456123-0\b";	/**< The actual characters represented by each key going across columns then down rows */
+#define MW_UI_KEYPAD_KEY_TEXT_OFFSET 			7					/**< Start position relative to square for character */
+#define MW_UI_KEYPAD_KEY_TEXT_LARGE_OFFSET 		14					/**< Start position relative to large square for large character */
+#define MW_UI_KEYPAD_KEY_BITMAP_SIZE			16					/**< Backspace symbol bitmap size */
+#define MW_UI_KEYPAD_KEY_BITMAP_OFFSET 			2					/**< Start position relative to square for bitmap */
+#define MW_UI_KEYPAD_KEY_BITMAP_LARGE_OFFSET	12					/**< Start position relative to large square for bitmap */
 
 /************
 *** TYPES ***
@@ -52,7 +55,7 @@ static const char key_codes[] = "789456123-0\b";
 **************************/
 
 extern volatile uint32_t mw_tick_counter;
-//extern const uint8_t mw_bitmaps_backspace_key[];		// todo
+extern const uint8_t mw_bitmaps_backspace_key[];
 
 /**********************
 *** LOCAL VARIABLES ***
@@ -86,28 +89,22 @@ static void mw_ui_keypad_paint_function(uint8_t control_ref, const mw_gl_draw_in
 	uint8_t column;
 	uint8_t key_size;
 	uint8_t text_offset;
+	uint8_t bitmap_offset;
+	uint8_t c;
 
 	if (mw_get_control_flags(control_ref) & MW_CONTROL_FLAGS_LARGE_SIZE)
 	{
 		key_size = MW_UI_KEYPAD_KEY_LARGE_SIZE;
 		mw_gl_set_font(MW_GL_TITLE_FONT);
 		text_offset = MW_UI_KEYPAD_KEY_TEXT_LARGE_OFFSET;
+		bitmap_offset = MW_UI_KEYPAD_KEY_BITMAP_LARGE_OFFSET;
 	}
 	else
 	{
 		key_size = MW_UI_KEYPAD_KEY_SIZE;
 		mw_gl_set_font(MW_GL_FONT_9);
 		text_offset = MW_UI_KEYPAD_KEY_TEXT_OFFSET;
-	}
-
-	/* set colour of text according to control enabled state */
-	if (mw_get_control_flags(control_ref) & MW_CONTROL_FLAG_IS_ENABLED)
-	{
-		mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
-	}
-	else
-	{
-		mw_gl_set_fg_colour(MW_CONTROL_DISABLED_COLOUR);
+		bitmap_offset = MW_UI_KEYPAD_KEY_BITMAP_OFFSET;
 	}
 
 	/* draw the keys */
@@ -117,7 +114,6 @@ static void mw_ui_keypad_paint_function(uint8_t control_ref, const mw_gl_draw_in
 	mw_gl_set_border(MW_GL_BORDER_ON);
 	mw_gl_set_bg_transparency(MW_GL_BG_TRANSPARENT);
 	mw_gl_set_text_rotation(MW_GL_TEXT_ROTATION_0);
-
 
 	for (row = 0; row < 4; row++)
 	{
@@ -132,14 +128,64 @@ static void mw_ui_keypad_paint_function(uint8_t control_ref, const mw_gl_draw_in
 			{
 				mw_gl_set_solid_fill_colour(MW_CONTROL_UP_COLOUR);
 			}
-			mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
+
+			/* set fg colour according to control enabled state */
+			if (mw_get_control_flags(control_ref) & MW_CONTROL_FLAG_IS_ENABLED)
+			{
+				mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
+			}
+			else
+			{
+				mw_gl_set_fg_colour(MW_CONTROL_DISABLED_COLOUR);
+			}
 
 			/* draw key rectangle */
 			mw_gl_rectangle(draw_info,
-			column * key_size,
-			row * key_size,
-			key_size,
-			key_size);
+					column * key_size,
+					row * key_size,
+					key_size,
+					key_size);
+
+			/* draw key text character */
+			c = key_codes[(row * 3) + column];
+			if (this_keypad->is_key_pressed && (row * 3) + column == this_keypad->key_pressed_number)
+			{
+				if (c == '\b')
+				{
+					mw_gl_monochrome_bitmap(draw_info,
+							(column * key_size) + bitmap_offset + 1,
+							(row * key_size) + bitmap_offset + 1,
+							MW_UI_KEYPAD_KEY_BITMAP_SIZE,
+							MW_UI_KEYPAD_KEY_BITMAP_SIZE,
+							mw_bitmaps_backspace_key);
+				}
+				else
+				{
+					mw_gl_character(draw_info,
+							(column * key_size) + text_offset + 1,
+							(row * key_size) + text_offset + 1,
+							c);
+				}
+			}
+			else
+			{
+				if (c == '\b')
+				{
+					mw_gl_monochrome_bitmap(draw_info,
+							(column * key_size) + bitmap_offset,
+							(row * key_size) + bitmap_offset,
+							MW_UI_KEYPAD_KEY_BITMAP_SIZE,
+							MW_UI_KEYPAD_KEY_BITMAP_SIZE,
+							mw_bitmaps_backspace_key);
+				}
+				else
+				{
+					mw_gl_character(draw_info,
+							(column * key_size) + text_offset,
+							(row * key_size) + text_offset,
+							c);
+				}
+			}
 
 			/* draw 3d effect */
 			if (this_keypad->is_key_pressed && (row * 3) + column == this_keypad->key_pressed_number)
@@ -172,25 +218,6 @@ static void mw_ui_keypad_paint_function(uint8_t control_ref, const mw_gl_draw_in
 					(column * key_size) + 1,
 					((column + 1) * key_size) - 2,
 					((row + 1) * key_size) - 2);
-
-			/* draw key text character */
-			mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
-			if (this_keypad->is_key_pressed && (row * 4) + column == this_keypad->key_pressed_number)
-			{
-				// todo draw backspace bitmap
-				mw_gl_character(draw_info,
-						(column * key_size) + text_offset + 1,
-						(row * key_size) + text_offset + 1,
-						key_codes[(row * 3) + column]);
-			}
-			else
-			{
-				// todo draw backspace bitmap
-				mw_gl_character(draw_info,
-						(column * key_size) + text_offset,
-						(row * key_size) + text_offset,
-						key_codes[(row * 3) + column]);
-			}
 		}
 	}
 
