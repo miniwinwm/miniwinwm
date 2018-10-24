@@ -44,21 +44,24 @@ SOFTWARE.
 *** CONSTANTS ***
 ****************/
 
-#define TEXT_WINDOW_COUNT			3
-#define IMAGE_WINDOW_COUNT			2
-#define TEXT_FILE_EXTENSION			"txt"
-#define IMAGE_FILE_EXTENSION		"bmp"
+#define TEXT_WINDOW_COUNT			3		/**< Maximum number of text windows concurrently open */
+#define IMAGE_WINDOW_COUNT			2		/**< Maximum number of image windows concurrently open */
+#define TEXT_FILE_EXTENSION			"txt"	/**< Text file extension */
+#define IMAGE_FILE_EXTENSION		"bmp"	/**< Image file extension */
 
 /************
 *** TYPES ***
 ************/
 
+/**
+ * Window instance data structure
+ */
 typedef struct
 {
 	text_window_data_t text_windows_data[TEXT_WINDOW_COUNT];				/**< array of window data structures for text windows */
 	image_window_data_t image_windows_data[IMAGE_WINDOW_COUNT];				/**< array of window data structures for image windows */
 	struct tm set_time;														/**< Time/date from dialogs to send to hardware clock */
-	char create_path_and_filename[MAX_FOLDER_AND_FILENAME_LENGTH + 1];	/**< Path and file name for file to create */
+	char create_path_and_filename[MAX_FOLDER_AND_FILENAME_LENGTH + 1];		/**< Path and file name for file to create */
 } window_file_data_t;
 
 /***********************
@@ -273,6 +276,7 @@ void window_file_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *dra
 	/* Draw rectangles */
 	mw_gl_set_fill(MW_GL_NO_FILL);
 	mw_gl_set_border(MW_GL_BORDER_ON);
+	mw_gl_set_line(MW_GL_SOLID_LINE);
 	mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 	mw_gl_rectangle(draw_info, 5, 7, 150, 50);
 	mw_gl_rectangle(draw_info, 5, 62, 150, 40);
@@ -463,7 +467,7 @@ void window_file_message_function(const mw_message_t *message)
 			mw_util_safe_strcpy(window_file_data.create_path_and_filename,
 					MAX_FOLDER_AND_FILENAME_LENGTH,
 					(char *)dialog_response->data);
-			mw_create_window_dialog_text_entry(20, 20, "New file name", message->recipient_id);
+			mw_create_window_dialog_text_entry(0, 20, "New file name", message->recipient_id);
 		}
 		break;
 

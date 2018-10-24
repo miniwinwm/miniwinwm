@@ -266,13 +266,6 @@ static void mw_ui_keypad_message_function(const mw_message_t *message)
 		/* set key pressed to false */
 		this_keypad->is_key_pressed = false;
 
-		/* post message for keypress */
-		mw_post_message(MW_KEY_PRESSED_MESSAGE,
-				message->recipient_id,
-				mw_get_control_parent_window(message->recipient_id),
-				(uint8_t)key_codes[this_keypad->key_pressed_number],
-				MW_WINDOW_MESSAGE);
-
 		/* repaint pressed key area only */
 		invalid_rect.x = (this_keypad->key_pressed_number % 3) * key_size;
 		invalid_rect.y = (this_keypad->key_pressed_number / 3) * key_size;
@@ -296,6 +289,13 @@ static void mw_ui_keypad_message_function(const mw_message_t *message)
 				/* set up for key up redraw after timer expired */
 				mw_set_timer(mw_tick_counter + MW_CONTROL_DOWN_TIME, message->recipient_id, MW_CONTROL_MESSAGE);
 				this_keypad->is_key_pressed = true;
+
+				/* post message for keypress */
+				mw_post_message(MW_KEY_PRESSED_MESSAGE,
+						message->recipient_id,
+						mw_get_control_parent_window(message->recipient_id),
+						(uint32_t)key_codes[this_keypad->key_pressed_number],
+						MW_WINDOW_MESSAGE);
 
 				/* repaint pressed key area only */
 				invalid_rect.x = key_pressed_column * key_size;

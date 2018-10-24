@@ -90,7 +90,6 @@ uint8_t radio_button_1_id;
 uint8_t scroll_bar_vert_1_id;
 uint8_t scroll_bar_vert_2_id;
 uint8_t scroll_bar_horiz_1_id;
-uint8_t keyboard_1_id;
 uint8_t label_1_id;
 uint8_t progress_bar_1_id;
 uint8_t list_box_1_id;
@@ -103,7 +102,6 @@ mw_ui_radio_button_data_t radio_button_1_data;
 mw_ui_list_box_data_t list_box_1_data;
 mw_ui_label_data_t label_1_data;
 mw_ui_progress_bar_data_t progress_bar_1_data;
-mw_ui_keyboard_data_t keyboard_1_data;
 mw_ui_list_box_data_t list_box_2_data;
 mw_ui_list_box_data_t list_box_3_data;
 mw_ui_scroll_bar_vert_data_t scroll_bar_vert_1_data;
@@ -240,14 +238,6 @@ void mw_user_init(void)
 			window_test_id,
 			MW_CONTROL_FLAG_IS_VISIBLE,
 			&scroll_bar_vert_1_data);
-
-	/* create a new keyboard and add it to the drag test window */
-	keyboard_1_id = mw_ui_keyboard_add_new(10,
-			140,
-			window_test_id,
-			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
-			&keyboard_1_data);
-	mw_ui_common_post_pointer_to_control(keyboard_1_id, "Fred");
 
 	/* create a new list box control and add it to the ui test window */
 	list_box_3_data.number_of_lines = 3;

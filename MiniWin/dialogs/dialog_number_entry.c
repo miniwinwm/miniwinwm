@@ -58,7 +58,7 @@ typedef struct
 	mw_ui_keypad_data_t mw_ui_keypad_data;		/**< Keypad control instance data */
 	mw_ui_button_data_t button_ok_data;			/**< Instance data of ok button */
 	mw_ui_button_data_t button_cancel_data;		/**< Instance data of cancel button */
-	char number_buffer[MW_DIALOG_MAX_NUMBER_LENGTH + 2];	/**< MW_DIALOG_MAX_NUMBER_LENGTH digits, terminating null */
+	char number_buffer[MW_DIALOG_MAX_NUMBER_LENGTH + 2];	/**< MW_DIALOG_MAX_NUMBER_LENGTH digits, - sign, terminating null */
 	bool large_size;							/**< True for large size false for standard size */
 	uint8_t response_window_id;					/**< Window id to send response message to */
 	mw_dialog_response_t mw_dialog_response;	/**< Dialog response structure */
@@ -161,7 +161,7 @@ static void mw_dialog_number_entry_paint_function(uint8_t window_ref, const mw_g
 		mw_gl_set_font(MW_GL_FONT_16);
 		mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 
-		cursor_x_coordinate = 61 + mw_dialog_number_entry_data.cursor_position * (mw_gl_get_font_width() + 1);
+		cursor_x_coordinate = 50 + mw_dialog_number_entry_data.cursor_position * (mw_gl_get_font_width() + 1);
 
 		if (mw_dialog_number_entry_data.is_negative && strcmp(mw_dialog_number_entry_data.number_buffer, "0") !=0)
 		{
@@ -215,7 +215,7 @@ static void mw_dialog_number_entry_paint_function(uint8_t window_ref, const mw_g
 		mw_gl_set_font(MW_GL_FONT_9);
 		mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 
-		cursor_x_coordinate = 32 + mw_dialog_number_entry_data.cursor_position * (mw_gl_get_font_width() + 1);
+		cursor_x_coordinate = 26 + mw_dialog_number_entry_data.cursor_position * (mw_gl_get_font_width() + 1);
 
 		if (mw_dialog_number_entry_data.is_negative && strcmp(mw_dialog_number_entry_data.number_buffer, "0") !=0)
 		{
@@ -258,7 +258,6 @@ static void mw_dialog_number_entry_message_function(const mw_message_t *message)
 		mw_dialog_number_entry_data.timer_id = mw_set_timer(mw_tick_counter + MW_TICKS_PER_SECOND,
 				message->recipient_id,
 				MW_WINDOW_MESSAGE);
-		mw_dialog_number_entry_data.cursor_position = 0;
 		break;
 
 	case MW_WINDOW_TIMER_MESSAGE:
@@ -283,14 +282,14 @@ static void mw_dialog_number_entry_message_function(const mw_message_t *message)
 			if (mw_dialog_number_entry_data.large_size)
 			{
 				mw_gl_set_font(MW_GL_FONT_16);		/* needed to get font width */
-				mw_dialog_number_entry_data.cursor_position = ((message->message_data >> 16) - 58) /
+				mw_dialog_number_entry_data.cursor_position = ((message->message_data >> 16) - 47) /
 						(mw_gl_get_font_width() + 1);
 			}
 			else
 			{
-				mw_dialog_number_entry_data.cursor_position = ((message->message_data >> 16) - 30) /
-						(mw_gl_get_font_width() + 1);
 				mw_gl_set_font(MW_GL_FONT_9);		/* needed to get font width */
+				mw_dialog_number_entry_data.cursor_position = ((message->message_data >> 16) - 24) /
+						(mw_gl_get_font_width() + 1);
 			}
 
 			if (mw_dialog_number_entry_data.is_negative)
@@ -300,6 +299,10 @@ static void mw_dialog_number_entry_message_function(const mw_message_t *message)
 			if (mw_dialog_number_entry_data.cursor_position > strlen(mw_dialog_number_entry_data.number_buffer) - 1)
 			{
 				mw_dialog_number_entry_data.cursor_position = strlen(mw_dialog_number_entry_data.number_buffer) - 1;
+			}
+			if (mw_dialog_number_entry_data.cursor_position == 0)
+			{
+				mw_dialog_number_entry_data.cursor_position = 1;
 			}
 		}
 		break;
@@ -323,19 +326,20 @@ static void mw_dialog_number_entry_message_function(const mw_message_t *message)
 						mw_dialog_number_entry_data.is_negative = false;
 						strcpy(mw_dialog_number_entry_data.number_buffer, "0");
 					}
-					else if (mw_dialog_number_entry_data.cursor_position == current_length - 1)
+					else if (mw_dialog_number_entry_data.cursor_position == current_length)
 					{
 						mw_dialog_number_entry_data.number_buffer[current_length - 1] = '\0';
 						mw_dialog_number_entry_data.cursor_position--;
 					}
 					else
 					{
-						memmove(&mw_dialog_number_entry_data.number_buffer[mw_dialog_number_entry_data.cursor_position],
-										&mw_dialog_number_entry_data.number_buffer[mw_dialog_number_entry_data.cursor_position + 1],
-										current_length - mw_dialog_number_entry_data.cursor_position);
-						if (mw_dialog_number_entry_data.cursor_position > 0)
+						memmove(&mw_dialog_number_entry_data.number_buffer[mw_dialog_number_entry_data.cursor_position - 1],
+										&mw_dialog_number_entry_data.number_buffer[mw_dialog_number_entry_data.cursor_position],
+										current_length - mw_dialog_number_entry_data.cursor_position + 1);
+						mw_dialog_number_entry_data.cursor_position--;
+						if (mw_dialog_number_entry_data.cursor_position == 0)
 						{
-							mw_dialog_number_entry_data.cursor_position--;
+							mw_dialog_number_entry_data.cursor_position = 1;
 						}
 					}
 				}
@@ -346,23 +350,23 @@ static void mw_dialog_number_entry_message_function(const mw_message_t *message)
 						if (mw_dialog_number_entry_data.number_buffer[0] == '0')
 						{
 							/* replace 0 with entered digit */
-							mw_dialog_number_entry_data.number_buffer[0] = message->message_data;
+							mw_dialog_number_entry_data.number_buffer[0] = (char)message->message_data;
 							mw_dialog_number_entry_data.number_buffer[1] = '\0';
 						}
-						else if (current_length == mw_dialog_number_entry_data.cursor_position + 1)
+						else if (current_length == mw_dialog_number_entry_data.cursor_position)
 						{
 							/* append entered digit to existing digits */
-							mw_dialog_number_entry_data.number_buffer[current_length] = message->message_data;
+							mw_dialog_number_entry_data.number_buffer[current_length] = (char)message->message_data;
 							mw_dialog_number_entry_data.number_buffer[current_length + 1] = '\0';
 							mw_dialog_number_entry_data.cursor_position++;
 						}
 						else
 						{
 							/* move everything from cursor onwards along and insert digit */
-							memmove(&mw_dialog_number_entry_data.number_buffer[mw_dialog_number_entry_data.cursor_position + 2],
-											&mw_dialog_number_entry_data.number_buffer[mw_dialog_number_entry_data.cursor_position + 1],
-											current_length - mw_dialog_number_entry_data.cursor_position + 1);
-							mw_dialog_number_entry_data.number_buffer[mw_dialog_number_entry_data.cursor_position + 1] = message->message_data;
+							memmove(&mw_dialog_number_entry_data.number_buffer[mw_dialog_number_entry_data.cursor_position + 1],
+											&mw_dialog_number_entry_data.number_buffer[mw_dialog_number_entry_data.cursor_position],
+											current_length - mw_dialog_number_entry_data.cursor_position);
+							mw_dialog_number_entry_data.number_buffer[mw_dialog_number_entry_data.cursor_position] = message->message_data;
 							mw_dialog_number_entry_data.cursor_position++;
 						}
 					}
@@ -433,6 +437,7 @@ uint8_t mw_create_window_dialog_number_entry(uint16_t x,
 		uint16_t y,
 		char *title,
 		bool enable_negative,
+		int32_t initial_number,
 		bool large_size,
 		uint8_t response_window_id)
 {
@@ -442,6 +447,13 @@ uint8_t mw_create_window_dialog_number_entry(uint16_t x,
 	if (!title)
 	{
 		MW_ASSERT(false, "Null pointer argument");
+		return MW_MAX_WINDOW_COUNT;
+	}
+
+	/* check negative/initial number sanity */
+	if (!enable_negative && initial_number < 0)
+	{
+		MW_ASSERT(false, "Nonsense arguments");
 		return MW_MAX_WINDOW_COUNT;
 	}
 
@@ -554,9 +566,14 @@ uint8_t mw_create_window_dialog_number_entry(uint16_t x,
 		return MW_MAX_WINDOW_COUNT;
 	}
 
-	mw_dialog_number_entry_data.is_negative = false;
+	mw_dialog_number_entry_data.is_negative = (initial_number < 0);
+	if (initial_number < 0)
+	{
+		initial_number =-initial_number;
+	}
+	sprintf(mw_dialog_number_entry_data.number_buffer, "%u", (unsigned int)initial_number);
 	mw_dialog_number_entry_data.large_size = large_size;
-	strcpy(mw_dialog_number_entry_data.number_buffer, "0");
+	mw_dialog_number_entry_data.cursor_position = strlen(mw_dialog_number_entry_data.number_buffer);
 
 	/* this window needs painting; it is coming up at the front so paint only this one */
 	mw_paint_window_frame(mw_dialog_number_entry_data.mw_dialog_response.window_id, MW_WINDOW_FRAME_COMPONENT_ALL);

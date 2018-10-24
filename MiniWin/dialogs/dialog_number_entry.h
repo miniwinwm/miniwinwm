@@ -58,6 +58,7 @@ SOFTWARE.
  * @param y top coordinate of dialog window
  * @param title pointer to text displayed in the window title bar
  * @param enable_negative If the negative sign is enabled on the keypad
+ * @param initial_number The number to show the dialog with at start-up
  * @param large_size If to create the dialog at large size
  * @param response_window_id window id of the window that the response message is posted to when the dialog is dismissed
  * @return the window id of the window used for the dialog which is only valid while the dialog is showing
@@ -66,6 +67,7 @@ SOFTWARE.
  *       The dialog is created modal and is brought to the front on showing.
  *       The dialog must fit entirely on the screen or else it will not be created.
  *       The text strings are not copied and must exists while the dialog is showing
+ *       If enable_negative is true then initial_number must be positive
  *
  * @warning Do not call this from a client window paint function. In debug mode it will cause an assert failure.
  */
@@ -73,6 +75,7 @@ uint8_t mw_create_window_dialog_number_entry(uint16_t x,
 		uint16_t y,
 		char *title,
 		bool enable_negative,
+		int32_t initial_number,
 		bool large_size,
 		uint8_t response_window_id);
 

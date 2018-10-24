@@ -41,6 +41,8 @@ SOFTWARE.
 *** CONSTANTS ***
 ****************/
 
+#define MW_DIALOG_MAX_TEXT_LENGTH		20 /**< Maximum number of characters that can be entered */
+
  /************
  *** TYPES ***
  ************/

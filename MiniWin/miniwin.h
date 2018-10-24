@@ -150,10 +150,6 @@ typedef enum
 	MW_CHECKBOX_STATE_CHANGE_MESSAGE,				/**< Response message from a check box that its state has changed */
 	MW_RADIO_BUTTON_ITEM_SELECTED_MESSAGE,			/**< Response message from a radio button that its state has changed */
 	MW_LIST_BOX_ITEM_PRESSED_MESSAGE,				/**< Response message from a list box that an item has been pressed */
-	MW_INT_NUMBER_CHOOSER_OK_MESSAGE,				/**< OK response message from an integer number chooser */	//todo remove
-	MW_INT_NUMBER_CHOOSER_CANCEL_MESSAGE,			/**< Cancel response message from an integer number chooser */	// todo remove
-	MW_KEYBOARD_OK_MESSAGE,							/**< OK response message from a keyboard */
-	MW_KEYBOARD_CANCEL_MESSAGE,						/**< Cancel Response message from a keyboard */
 	MW_CONTROL_VERT_SCROLL_BAR_SCROLLED_MESSAGE,	/**< Response message from a vertical control scroll bar that it has been scrolled */
 	MW_CONTROL_HORIZ_SCROLL_BAR_SCROLLED_MESSAGE,	/**< Response message from a horizontal control scroll bar that it has been scrolled */
 	MW_ARROW_PRESSED_MESSAGE,						/**< Response message from a arrow that it has been pressed */

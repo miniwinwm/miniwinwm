@@ -41,13 +41,12 @@ SOFTWARE.
 *** CONSTANTS ***
 ****************/
 
-#define MW_UI_KEYBOARD_KEY_SIZE				16
+#define MW_UI_KEYBOARD_KEY_SIZE				20
 #define MW_UI_KEYBOARD_WIDTH				(MW_UI_KEYBOARD_KEY_SIZE * 11)
 #define MW_UI_KEYBOARD_HEIGHT				(MW_UI_KEYBOARD_KEY_SIZE * 4)
-#define MW_UI_KEYBOARD_MAX_CHARS			20
-#define MW_UI_KEYBOARD_KEY_TEXT_OFFSET		5
-#define MW_UI_KEYBOARD_KEY_BITMAP_OFFSET	1
-#define MW_UI_KEYBOARD_KEY_BITMAP_SIZE		(MW_UI_KEYBOARD_KEY_SIZE - 2)
+#define MW_UI_KEYBOARD_KEY_TEXT_OFFSET		7
+#define MW_UI_KEYBOARD_KEY_BITMAP_OFFSET	2
+#define MW_UI_KEYBOARD_KEY_BITMAP_SIZE		16
 
 /************
 *** TYPES ***
@@ -69,15 +68,12 @@ typedef struct
   	/* User modifiable fields */ 
   
     /* Non-user modifiable fields */ 
-	char entry_buffer[MW_UI_KEYBOARD_MAX_CHARS + 1];	/**< buffer to hold the entered text */
 	bool is_key_pressed;						/**< if a key is currently pressed */
 	bool swap_keyboard;							/**< if the keyboard needs swapping on next key up timer event */
 	uint8_t	key_pressed_row;					/**< the currently pressed key */
 	uint8_t	key_pressed_column;					/**< the currently pressed key */
 	keyboard_display_t keyboard_display;		/**< the keyboard to display */
-	uint8_t timer_id;							/**< timer used for key presses and cursor */
-	bool draw_cursor;							/**< if to draw cursor this timer tick or not */
-	uint8_t cursor_position;					/**< current position of cursor */
+	uint8_t timer_id;							/**< timer used for key presses */
 } mw_ui_keyboard_data_t;
 
 /***************************
