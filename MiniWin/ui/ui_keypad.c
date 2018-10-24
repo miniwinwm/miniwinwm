@@ -287,7 +287,7 @@ static void mw_ui_keypad_message_function(const mw_message_t *message)
 			if (!(this_keypad->key_pressed_number == 9 && !this_keypad->enable_negative))
 			{
 				/* set up for key up redraw after timer expired */
-				mw_set_timer(mw_tick_counter + MW_CONTROL_DOWN_TIME, message->recipient_id, MW_CONTROL_MESSAGE);
+				mw_set_timer(mw_tick_counter + MW_KEY_DOWN_TIME, message->recipient_id, MW_CONTROL_MESSAGE);
 				this_keypad->is_key_pressed = true;
 
 				/* post message for keypress */

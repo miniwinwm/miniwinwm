@@ -467,7 +467,7 @@ void window_file_message_function(const mw_message_t *message)
 			mw_util_safe_strcpy(window_file_data.create_path_and_filename,
 					MAX_FOLDER_AND_FILENAME_LENGTH,
 					(char *)dialog_response->data);
-			mw_create_window_dialog_text_entry(0, 20, "New file name", message->recipient_id);
+			mw_create_window_dialog_text_entry(0, 20, "New file name", "", message->recipient_id);
 		}
 		break;
 

@@ -70,6 +70,7 @@ SOFTWARE.
 
 /* Timings */
 #define MW_CONTROL_DOWN_TIME				4               	/**< Time for animated controls down time in system ticks */
+#define MW_KEY_DOWN_TIME					2               	/**< Time for animated keys down time in system ticks */
 #define MW_TICKS_PER_SECOND					20					/**< The number of window timer ticks per second */
 #define MW_WINDOW_MIN_MAX_EFFECT_TIME		5					/**< Number of window ticks to show window minimise/maximise effect for */
 #define MW_CURSOR_PERIOD_TICKS				10					/**< Period between cursor change in system ticks */

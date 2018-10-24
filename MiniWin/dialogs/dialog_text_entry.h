@@ -41,7 +41,7 @@ SOFTWARE.
 *** CONSTANTS ***
 ****************/
 
-#define MW_DIALOG_MAX_TEXT_LENGTH		20 /**< Maximum number of characters that can be entered */
+#define MW_DIALOG_MAX_TEXT_LENGTH		20 		/**< Maximum number of characters that can be entered */
 
  /************
  *** TYPES ***
@@ -54,11 +54,12 @@ SOFTWARE.
 /**
  * Create a dynamic dialog window with one button.
  *
- * @param x left coordinate of dialog window
- * @param y top coordinate of dialog window
- * @param title pointer to text displayed in the window title bar
- * @param response_window_id window id of the window that the response message is posted to when the dialog is dismissed
- * @return the window id of the window used for the dialog which is only valid while the dialog is showing
+ * @param x left Coordinate of dialog window
+ * @param y top Coordinate of dialog window
+ * @param title Pointer to text displayed in the window title bar
+ * @param initial_text The initial text to display when the dialog starts
+ * @param response_window_id Window id of the window that the response message is posted to when the dialog is dismissed
+ * @return The window id of the window used for the dialog which is only valid while the dialog is showing
  * @note There must be space in the window array for one new window and space in the control array
  *       for one new control. These resources are released when the dialog is dismissed.
  *       The dialog is created modal and is brought to the front on showing.
@@ -70,6 +71,7 @@ SOFTWARE.
 uint8_t mw_create_window_dialog_text_entry(uint16_t x,
 		uint16_t y,
 		char *title,
+		char *initial_text,
 		uint8_t response_window_id);
 
 #ifdef __cplusplus

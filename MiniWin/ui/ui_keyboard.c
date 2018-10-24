@@ -416,7 +416,7 @@ static void mw_ui_keyboard_message_function(const mw_message_t *message)
 		}
 
 		/* set up for key up redraw after timer expired */
-		this_keyboard->timer_id = mw_set_timer(mw_tick_counter + MW_CONTROL_DOWN_TIME, message->recipient_id, MW_CONTROL_MESSAGE);
+		this_keyboard->timer_id = mw_set_timer(mw_tick_counter + MW_KEY_DOWN_TIME, message->recipient_id, MW_CONTROL_MESSAGE);
 		this_keyboard->is_key_pressed = true;
 
 		/* get the key pressed from the touch coordinates */
