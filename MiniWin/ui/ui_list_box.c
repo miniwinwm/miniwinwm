@@ -58,8 +58,8 @@ extern volatile uint32_t mw_tick_counter;
 *** LOCAL FUNCTION PROTOTYPES ***
 ********************************/
 
-static void mw_ui_list_box_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *draw_info);
-static void mw_ui_list_box_message_function(const mw_message_t *message);
+static void list_box_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *draw_info);
+static void list_box_message_function(const mw_message_t *message);
 
 /**********************
 *** LOCAL FUNCTIONS ***
@@ -71,7 +71,7 @@ static void mw_ui_list_box_message_function(const mw_message_t *message);
  * @param control_ref The control identifier in the array of controls
  * @param draw_info Draw info structure describing offset and clip region
  */
-static void mw_ui_list_box_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *draw_info)
+static void list_box_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *draw_info)
 {
 	uint8_t i;
 	mw_ui_list_box_data_t *this_list_box = (mw_ui_list_box_data_t*)mw_get_control_instance_data(control_ref);
@@ -287,7 +287,7 @@ static void mw_ui_list_box_paint_function(uint8_t control_ref, const mw_gl_draw_
  *
  * @param message The message to be processed
  */
-static void mw_ui_list_box_message_function(const mw_message_t *message)
+static void list_box_message_function(const mw_message_t *message)
 {
 	uint16_t touch_y;
 	mw_ui_list_box_data_t *this_list_box = (mw_ui_list_box_data_t*)mw_get_control_instance_data(message->recipient_id);
@@ -398,8 +398,8 @@ uint8_t mw_ui_list_box_add_new(uint16_t x,
 
 	return mw_add_control(&r,
 			parent,
-			mw_ui_list_box_paint_function,
-			mw_ui_list_box_message_function,
+			list_box_paint_function,
+			list_box_message_function,
 			flags,
 			list_box_instance_data);
 }

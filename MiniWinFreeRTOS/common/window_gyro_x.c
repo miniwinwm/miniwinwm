@@ -52,7 +52,6 @@ static const mw_util_rect_t arrow_rect = {13, 13, 54, 54};			/**< Clip region fo
 
 typedef struct
 {
-	uint8_t timer_id;				/**< Timer driving progress bar */
 	int16_t angle;					/**< Last received angle */
 	char text_transfer_buffer[10];	/**< Buffer to hole label text */
 	int16_t angle_offset;			/**< Offset are using zero button */
@@ -131,7 +130,7 @@ void window_gyro_x_message_function(const mw_message_t *message)
 		window_gyro_x_data.angle_offset = 0;
 		window_gyro_x_data.angle = 0;
 		window_gyro_x_data.previous_drawn_angle = 0;
-		window_gyro_x_data.timer_id = mw_set_timer(mw_tick_counter + MW_TICKS_PER_SECOND / 4, message->recipient_id, MW_WINDOW_MESSAGE);
+		mw_set_timer(mw_tick_counter + MW_TICKS_PER_SECOND / 4, message->recipient_id, MW_WINDOW_MESSAGE);
 		break;
 
 	case MW_BUTTON_PRESSED_MESSAGE:
@@ -170,7 +169,7 @@ void window_gyro_x_message_function(const mw_message_t *message)
 			}
 
 			/* reset timer */
-			window_gyro_x_data.timer_id = mw_set_timer(mw_tick_counter + MW_TICKS_PER_SECOND / 4, message->recipient_id, MW_WINDOW_MESSAGE);
+			mw_set_timer(mw_tick_counter + MW_TICKS_PER_SECOND / 4, message->recipient_id, MW_WINDOW_MESSAGE);
 		}
 		break;
 

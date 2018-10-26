@@ -73,8 +73,9 @@ static mw_util_rect_t invalid_rect;
 *** LOCAL FUNCTION PROTOTYPES ***
 ********************************/
 
-static void mw_ui_keyboard_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *draw_info);
-static void mw_ui_keyboard_message_function(const mw_message_t *message);
+static void keyboard_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *draw_info);
+static void keyboard_message_function(const mw_message_t *message);
+static void process_keypress(const mw_message_t *message);
 
 /**********************
 *** LOCAL FUNCTIONS ***
@@ -86,7 +87,7 @@ static void mw_ui_keyboard_message_function(const mw_message_t *message);
  * @param control_ref The control identifier in the array of controls
  * @param draw_info Draw info structure describing offset and clip region
  */
-static void mw_ui_keyboard_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *draw_info)
+static void keyboard_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *draw_info)
 {
 	mw_ui_keyboard_data_t *this_keyboard = (mw_ui_keyboard_data_t*)mw_get_control_instance_data(control_ref);
 	uint8_t row;
@@ -369,15 +370,86 @@ static void mw_ui_keyboard_paint_function(uint8_t control_ref, const mw_gl_draw_
 }
 
 /**
+ * Process a keypress, either as a new touch down or a hold down from a previous touch down
+ *
+ * @param message Message passed in from message handler that calls this function
+ */
+static void process_keypress(const mw_message_t *message)
+{
+	mw_ui_keyboard_data_t *this_keyboard = (mw_ui_keyboard_data_t*)mw_get_control_instance_data(message->recipient_id);
+
+	/* check for shift key pressed */
+	if (this_keyboard->key_pressed_row == 2
+			&& this_keyboard->key_pressed_column == 0 &&
+			(this_keyboard->keyboard_display == KEYBOARD_UPPER_CHARS ||
+			 this_keyboard->keyboard_display == KEYBOARD_LOWER_CHARS))
+	{
+		if (this_keyboard->keyboard_display == KEYBOARD_UPPER_CHARS)
+		{
+			this_keyboard->keyboard_display = KEYBOARD_LOWER_CHARS;
+		}
+		else
+		{
+			this_keyboard->keyboard_display = KEYBOARD_UPPER_CHARS;
+		}
+		this_keyboard->swap_keyboard = true;
+	}
+	/* check for upper keypad change key pressed */
+	else if (this_keyboard->key_pressed_row == 0 && this_keyboard->key_pressed_column == 10)
+	{
+		if (this_keyboard->keyboard_display == KEYBOARD_LOWER_CHARS ||
+				this_keyboard->keyboard_display == KEYBOARD_UPPER_CHARS)
+		{
+			this_keyboard->keyboard_display = KEYBOARD_NUMBERS;
+		}
+		else
+		{
+			this_keyboard->keyboard_display = KEYBOARD_UPPER_CHARS;
+		}
+		this_keyboard->swap_keyboard = true;
+	}
+	/* check for lower keypad change key pressed */
+	else if (this_keyboard->key_pressed_row == 1 && this_keyboard->key_pressed_column == 10)
+	{
+		if (this_keyboard->keyboard_display == KEYBOARD_LOWER_CHARS ||
+				this_keyboard->keyboard_display == KEYBOARD_UPPER_CHARS ||
+				this_keyboard->keyboard_display == KEYBOARD_NUMBERS)
+		{
+			this_keyboard->keyboard_display = KEYBOARD_SYMBOLS;
+		}
+		else if (this_keyboard->keyboard_display == KEYBOARD_SYMBOLS)
+		{
+			this_keyboard->keyboard_display = KEYBOARD_NUMBERS;
+		}
+		this_keyboard->swap_keyboard = true;
+	}
+	/* else get the character that has been pressed */
+	else
+	{
+		/* post message for keypress */
+		mw_post_message(MW_KEY_PRESSED_MESSAGE,
+				message->recipient_id,
+				mw_get_control_parent_window(message->recipient_id),
+				(uint32_t)keyboards[this_keyboard->keyboard_display][this_keyboard->key_pressed_row][this_keyboard->key_pressed_column],
+				MW_WINDOW_MESSAGE);
+	}
+
+	/* repaint pressed key area only */
+	invalid_rect.x = this_keyboard->key_pressed_column * MW_UI_KEYBOARD_KEY_SIZE;
+	invalid_rect.y = this_keyboard->key_pressed_row * MW_UI_KEYBOARD_KEY_SIZE;
+	invalid_rect.width = MW_UI_KEYBOARD_KEY_SIZE;
+	invalid_rect.height = MW_UI_KEYBOARD_KEY_SIZE;
+	mw_paint_control_rect(message->recipient_id, &invalid_rect);
+}
+
+/**
  * Control message handler called by the window manager.
  *
  * @param message The message to be processed
  */
-static void mw_ui_keyboard_message_function(const mw_message_t *message)
+static void keyboard_message_function(const mw_message_t *message)
 {
 	mw_ui_keyboard_data_t *this_keyboard = (mw_ui_keyboard_data_t*)mw_get_control_instance_data(message->recipient_id);
-
-	MW_ASSERT(message, "Null pointer argument");
 
 	switch (message->message_id)
 	{
@@ -386,6 +458,28 @@ static void mw_ui_keyboard_message_function(const mw_message_t *message)
 		this_keyboard->is_key_pressed = false;
 		this_keyboard->keyboard_display = KEYBOARD_UPPER_CHARS;
 		this_keyboard->swap_keyboard = false;
+		this_keyboard->holding_down = false;
+		this_keyboard->timer_handle = MW_INVALID_HANDLE;
+		break;
+
+	case MW_TOUCH_DRAG_MESSAGE:
+	case MW_TOUCH_HOLD_DOWN_MESSAGE:
+		if (!(mw_get_control_flags(message->recipient_id) & MW_CONTROL_FLAG_IS_ENABLED))
+		{
+			break;
+		}
+
+		if (!this_keyboard->is_key_pressed)
+		{
+			break;
+		}
+
+		mw_cancel_timer(this_keyboard->timer_handle);
+		this_keyboard->holding_down = true;
+		if (mw_tick_counter - this_keyboard->touch_down_time > MW_HOLD_DOWN_DELAY_TICKS)
+		{
+			process_keypress(message);
+		}
 		break;
 
 	case MW_WINDOW_TIMER_MESSAGE:
@@ -415,76 +509,22 @@ static void mw_ui_keyboard_message_function(const mw_message_t *message)
 			break;
 		}
 
-		/* set up for key up redraw after timer expired */
-		this_keyboard->timer_id = mw_set_timer(mw_tick_counter + MW_KEY_DOWN_TIME, message->recipient_id, MW_CONTROL_MESSAGE);
-		this_keyboard->is_key_pressed = true;
-
 		/* get the key pressed from the touch coordinates */
 		this_keyboard->key_pressed_row = (message->message_data & 0xffff) / MW_UI_KEYBOARD_KEY_SIZE;
 		this_keyboard->key_pressed_column = (message->message_data >> 16) / MW_UI_KEYBOARD_KEY_SIZE;
 
-		/* check for shift key pressed */
-		if (this_keyboard->key_pressed_row == 2
-				&& this_keyboard->key_pressed_column == 0 &&
-				(this_keyboard->keyboard_display == KEYBOARD_UPPER_CHARS ||
-				 this_keyboard->keyboard_display == KEYBOARD_LOWER_CHARS))
-		{
-			if (this_keyboard->keyboard_display == KEYBOARD_UPPER_CHARS)
-			{
-				this_keyboard->keyboard_display = KEYBOARD_LOWER_CHARS;
-			}
-			else
-			{
-				this_keyboard->keyboard_display = KEYBOARD_UPPER_CHARS;
-			}
-			this_keyboard->swap_keyboard = true;
-		}
-		/* check for upper keypad change key pressed */
-		else if (this_keyboard->key_pressed_row == 0 && this_keyboard->key_pressed_column == 10)
-		{
-			if (this_keyboard->keyboard_display == KEYBOARD_LOWER_CHARS ||
-					this_keyboard->keyboard_display == KEYBOARD_UPPER_CHARS)
-			{
-				this_keyboard->keyboard_display = KEYBOARD_NUMBERS;
-			}
-			else
-			{
-				this_keyboard->keyboard_display = KEYBOARD_UPPER_CHARS;
-			}
-			this_keyboard->swap_keyboard = true;
-		}
-		/* check for lower keypad change key pressed */
-		else if (this_keyboard->key_pressed_row == 1 && this_keyboard->key_pressed_column == 10)
-		{
-			if (this_keyboard->keyboard_display == KEYBOARD_LOWER_CHARS ||
-					this_keyboard->keyboard_display == KEYBOARD_UPPER_CHARS ||
-					this_keyboard->keyboard_display == KEYBOARD_NUMBERS)
-			{
-				this_keyboard->keyboard_display = KEYBOARD_SYMBOLS;
-			}
-			else if (this_keyboard->keyboard_display == KEYBOARD_SYMBOLS)
-			{
-				this_keyboard->keyboard_display = KEYBOARD_NUMBERS;
-			}
-			this_keyboard->swap_keyboard = true;
-		}
-		/* else get the character that has been pressed */
-		else
-		{
-			/* post message for keypress */
-			mw_post_message(MW_KEY_PRESSED_MESSAGE,
-					message->recipient_id,
-					mw_get_control_parent_window(message->recipient_id),
-					(uint32_t)keyboards[this_keyboard->keyboard_display][this_keyboard->key_pressed_row][this_keyboard->key_pressed_column],
-					MW_WINDOW_MESSAGE);
-		}
+		this_keyboard->touch_down_time = mw_tick_counter;
+		this_keyboard->timer_handle = mw_set_timer(mw_tick_counter + MW_KEY_DOWN_TIME, message->recipient_id, MW_CONTROL_MESSAGE);
+		this_keyboard->is_key_pressed = true;
+		process_keypress(message);
+		break;
 
-		/* repaint pressed key area only */
-		invalid_rect.x = this_keyboard->key_pressed_column * MW_UI_KEYBOARD_KEY_SIZE;
-		invalid_rect.y = this_keyboard->key_pressed_row * MW_UI_KEYBOARD_KEY_SIZE;
-		invalid_rect.width = MW_UI_KEYBOARD_KEY_SIZE;
-		invalid_rect.height = MW_UI_KEYBOARD_KEY_SIZE;
-		mw_paint_control_rect(message->recipient_id, &invalid_rect);
+	case MW_TOUCH_UP_MESSAGE:
+		if (this_keyboard->holding_down)
+		{
+			this_keyboard->holding_down = false;
+			this_keyboard->timer_handle = mw_set_timer(mw_tick_counter + MW_KEY_DOWN_TIME, message->recipient_id, MW_CONTROL_MESSAGE);
+		}
 		break;
 
 	default:
@@ -508,8 +548,8 @@ uint8_t mw_ui_keyboard_add_new(uint16_t x,
 
 	return mw_add_control(&r,
 			parent,
-			mw_ui_keyboard_paint_function,
-			mw_ui_keyboard_message_function,
+			keyboard_paint_function,
+			keyboard_message_function,
 			flags,
 			keyboard_instance_data);
 }

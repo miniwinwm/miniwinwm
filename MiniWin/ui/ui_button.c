@@ -58,8 +58,8 @@ extern volatile uint32_t mw_tick_counter;
 *** LOCAL FUNCTION PROTOTYPES ***
 ********************************/
 
-static void mw_ui_button_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *draw_info);
-static void mw_ui_button_message_function(const mw_message_t *message);
+static void button_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *draw_info);
+static void button_message_function(const mw_message_t *message);
 
 /**********************
 *** LOCAL FUNCTIONS ***
@@ -71,7 +71,7 @@ static void mw_ui_button_message_function(const mw_message_t *message);
  * @param control_ref The control identifier in the array of controls
  * @param draw_info Draw info structure describing offset and clip region
  */
-static void mw_ui_button_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *draw_info)
+static void button_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *draw_info)
 {
 	mw_ui_button_data_t *this_button = (mw_ui_button_data_t*)mw_get_control_instance_data(control_ref);
 	mw_hal_lcd_colour_t highlighted_colour;
@@ -175,7 +175,7 @@ static void mw_ui_button_paint_function(uint8_t control_ref, const mw_gl_draw_in
  * @param message The message to be processed
  * @note Do not call this directly from user code
  */
-static void mw_ui_button_message_function(const mw_message_t *message)
+static void button_message_function(const mw_message_t *message)
 {
 	mw_ui_button_data_t *this_button = (mw_ui_button_data_t*)mw_get_control_instance_data(message->recipient_id);
 
@@ -237,8 +237,8 @@ uint8_t mw_ui_button_add_new(uint16_t x,
 
 	return mw_add_control(&r,
 			parent,
-			mw_ui_button_paint_function,
-			mw_ui_button_message_function,
+			button_paint_function,
+			button_message_function,
 			flags,
 			button_instance_data);
 }

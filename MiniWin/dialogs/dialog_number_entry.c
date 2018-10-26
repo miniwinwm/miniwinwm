@@ -62,7 +62,6 @@ typedef struct
 	bool large_size;							/**< True for large size false for standard size */
 	uint8_t response_window_id;					/**< Window id to send response message to */
 	mw_dialog_response_t mw_dialog_response;	/**< Dialog response structure */
-	uint8_t timer_id;							/**< timer used for key presses and cursor */
 	bool draw_cursor;							/**< if to draw cursor this timer tick or not */
 	mw_util_rect_t cursor_rect;					/**< rect of cursor in window coordinates */
 } mw_dialog_number_entry_data_t;
@@ -232,7 +231,7 @@ static void mw_dialog_number_entry_paint_function(uint8_t window_ref, const mw_g
 		{
 			/* draw negative sign and number */
 			mw_gl_character(draw_info, 27, 8, '-');
-			mw_gl_string(draw_info, 27 + mw_gl_get_font_width() + 1, 5, mw_dialog_number_entry_data.number_buffer);
+			mw_gl_string(draw_info, 27 + mw_gl_get_font_width() + 1, 8, mw_dialog_number_entry_data.number_buffer);
 		}
 		else
 		{
@@ -265,9 +264,7 @@ static void mw_dialog_number_entry_message_function(const mw_message_t *message)
 	switch (message->message_id)
 	{
 	case MW_WINDOW_CREATED_MESSAGE:
-		mw_dialog_number_entry_data.timer_id = mw_set_timer(mw_tick_counter + MW_CURSOR_PERIOD_TICKS,
-				message->recipient_id,
-				MW_WINDOW_MESSAGE);
+		mw_set_timer(mw_tick_counter + MW_CURSOR_PERIOD_TICKS, message->recipient_id, MW_WINDOW_MESSAGE);
 
 		/* set cursor rect values */
 		mw_dialog_number_entry_data.cursor_rect.x = get_cursor_x_coordinate();
@@ -287,9 +284,7 @@ static void mw_dialog_number_entry_message_function(const mw_message_t *message)
 	case MW_WINDOW_TIMER_MESSAGE:
 		mw_dialog_number_entry_data.draw_cursor = !mw_dialog_number_entry_data.draw_cursor;
 		mw_paint_window_client_rect(message->recipient_id, &mw_dialog_number_entry_data.cursor_rect);
-		mw_dialog_number_entry_data.timer_id = mw_set_timer(mw_tick_counter + MW_CURSOR_PERIOD_TICKS,
-				message->recipient_id,
-				MW_WINDOW_MESSAGE);
+		mw_set_timer(mw_tick_counter + MW_CURSOR_PERIOD_TICKS, message->recipient_id, MW_WINDOW_MESSAGE);
 		break;
 
 	case MW_KEY_PRESSED_MESSAGE:
@@ -351,7 +346,6 @@ static void mw_dialog_number_entry_message_function(const mw_message_t *message)
 	case MW_BUTTON_PRESSED_MESSAGE:
 		{
 			/* remove all controls and window */
-			mw_cancel_timer(mw_dialog_number_entry_data.timer_id);
 			remove_resources();
 
 			if (message->sender_id == mw_dialog_number_entry_data.button_cancel_id)

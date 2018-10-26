@@ -58,8 +58,12 @@ typedef struct
 	
 	 /* Non-user modifiable fields */ 
 	bool is_key_pressed;						/**< if a key is currently pressed */
-	uint8_t	key_pressed_number;					/**< the currently pressed key */
-	uint8_t timer_id;							/**< timer used for key presses and cursor */
+	uint8_t	key_pressed_row;					/**< the currently pressed key */
+	uint8_t	key_pressed_column;					/**< the currently pressed key */
+	uint8_t key_size;							/**< size of individual key depending on if large size or standard size */
+	mw_handle_t timer_handle;					/**< timer handle for animations and hold down repeat timeout */
+	uint32_t touch_down_time;					/**< time in ticks a key was first pressed down */
+	bool holding_down;							/**< true when holding down a key */
 } mw_ui_keypad_data_t;
 
 /***************************

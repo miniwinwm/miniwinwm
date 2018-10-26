@@ -55,8 +55,8 @@ SOFTWARE.
 *** LOCAL FUNCTION PROTOTYPES ***
 ********************************/
 
-static void mw_ui_scroll_bar_horiz_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *draw_info);
-static void mw_ui_scroll_bar_horiz_message_function(const mw_message_t *message);
+static void scroll_bar_horiz_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *draw_info);
+static void scroll_bar_horiz_message_function(const mw_message_t *message);
 
 /**********************
 *** LOCAL FUNCTIONS ***
@@ -68,7 +68,7 @@ static void mw_ui_scroll_bar_horiz_message_function(const mw_message_t *message)
  * @param control_ref The control identifier in the array of controls
  * @param draw_info Draw info structure describing offset and clip region
  */
-static void mw_ui_scroll_bar_horiz_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *draw_info)
+static void scroll_bar_horiz_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *draw_info)
 {
 	mw_ui_scroll_bar_horiz_data_t *this_scroll_bar_horiz = (mw_ui_scroll_bar_horiz_data_t*)mw_get_control_instance_data(control_ref);
 	uint16_t scroll_bar_horiz_slider_left;
@@ -148,7 +148,7 @@ static void mw_ui_scroll_bar_horiz_paint_function(uint8_t control_ref, const mw_
  *
  * @param message The message to be processed
  */
-static void mw_ui_scroll_bar_horiz_message_function(const mw_message_t *message)
+static void scroll_bar_horiz_message_function(const mw_message_t *message)
 {
 	mw_ui_scroll_bar_horiz_data_t *this_scroll_bar_horiz = (mw_ui_scroll_bar_horiz_data_t*)mw_get_control_instance_data(message->recipient_id);
 	int16_t touch_x;
@@ -224,8 +224,8 @@ uint8_t mw_ui_scroll_bar_horiz_add_new(uint16_t x,
 
 	return mw_add_control(&r,
 			parent,
-			mw_ui_scroll_bar_horiz_paint_function,
-			mw_ui_scroll_bar_horiz_message_function,
+			scroll_bar_horiz_paint_function,
+			scroll_bar_horiz_message_function,
 			flags,
 			scroll_bar_horiz_instance_data);
 }

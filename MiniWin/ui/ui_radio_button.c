@@ -55,8 +55,8 @@ SOFTWARE.
 *** LOCAL FUNCTION PROTOTYPES ***
 ********************************/
 
-static void mw_ui_radio_button_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *draw_info);
-static void mw_ui_radio_button_message_function(const mw_message_t *message);
+static void radio_button_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *draw_info);
+static void radio_button_message_function(const mw_message_t *message);
 
 /**********************
 *** LOCAL FUNCTIONS ***
@@ -68,7 +68,7 @@ static void mw_ui_radio_button_message_function(const mw_message_t *message);
  * @param control_ref The control identifier in the array of controls
  * @param draw_info Draw info structure describing offset and clip region
  */
-static void mw_ui_radio_button_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *draw_info)
+static void radio_button_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *draw_info)
 {
 	uint8_t i;
 	mw_ui_radio_button_data_t *this_radio_radio_button = (mw_ui_radio_button_data_t*)mw_get_control_instance_data(control_ref);
@@ -182,7 +182,7 @@ static void mw_ui_radio_button_paint_function(uint8_t control_ref, const mw_gl_d
  *
  * @param message The message to be processed
  */
-static void mw_ui_radio_button_message_function(const mw_message_t *message)
+static void radio_button_message_function(const mw_message_t *message)
 {
 	mw_ui_radio_button_data_t *this_radio_radio_button = (mw_ui_radio_button_data_t*)mw_get_control_instance_data(message->recipient_id);
 	uint16_t height;
@@ -264,8 +264,8 @@ uint8_t mw_ui_radio_button_add_new(uint16_t x,
 
 	return mw_add_control(&r,
 			parent,
-			mw_ui_radio_button_paint_function,
-			mw_ui_radio_button_message_function,
+			radio_button_paint_function,
+			radio_button_message_function,
 			flags,
 			radio_button_instance_data);
 }

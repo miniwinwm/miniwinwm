@@ -79,6 +79,42 @@ typedef enum
 } system_timer_event_t;
 
 /**
+ * Structure containing information pertaining to each window
+ */
+typedef struct
+{
+    char **menu_bar_items;				/**< Pointer to array of menu bar entry labels */
+    mw_paint_func_p paint_func;         /**< Pointer to window paint function */
+    mw_message_func_p message_func;     /**< Pointer to window message handler function */
+    uint32_t window_flags;				/**< All the flags defining a window's description and state */
+	void *instance_data;				/**< Optional void pointer to window specific data structure containing window instance specific data */
+	mw_util_rect_t window_rect;         /**< Rect containing coordinates of window including title bar and border if present */
+	mw_util_rect_t client_rect;         /**< Rect containing coordinates of window's client area */
+	uint16_t menu_bar_item_enables;		/**< Bitfield of individual enable flags for menu bar items */
+	uint8_t z_order;                    /**< Z order of the window, higher value drawn on top of lower values */
+    uint8_t	horiz_scroll_pos; 			/**< Current scroll position of a horizontal scroll bar scaled to 0-255 */
+    uint8_t vert_scroll_pos;			/**< Current scroll position of a vertical scroll bar scaled to 0-255 */
+    uint8_t menu_bar_items_count;		/**< Number of items in above array */
+    uint8_t menu_bar_selected_item;		/**< The most recently selected menu bar item */
+    char title[MW_MAX_TITLE_SIZE + 1];  /**< The window's title in the title bar */
+	mw_handle_t handle;					/**< handle used to refer to this window */
+} window_t;
+
+/**
+ * Structure containing information pertaining to each control
+ */
+typedef struct
+{
+    mw_paint_func_p paint_func;         /**< Pointer to control paint function */
+    mw_message_func_p message_func;     /**< Pointer to control message handler function */
+	void *instance_data;				/**< Void pointer to control specific data structure containing control specific configuration data per instance */
+	uint16_t control_flags;				/**< All the flags defining a control's description and state */
+	mw_util_rect_t control_rect;        /**< Rect containing coordinates of control's area */
+    uint8_t parent;                     /**< This control's parent window */
+	mw_handle_t handle;					/**< handle used to refer to this control */
+} control_t;
+
+/**
  * WIndow timer information structure
  */
 typedef struct
@@ -86,6 +122,7 @@ typedef struct
 	uint32_t next_fire_time;        				/**< the time for the timer to go off in window manager ticks; this is an absolute value, not relative */
 	uint8_t recipient_id;           				/**< the window or control id of the recipient of the timer fired message */
 	mw_message_recipient_type_t recipient_type;   	/**< the type of recipient of timer fired message */
+	mw_handle_t handle;								/**< handle used to refer to this timer */
 } window_timer_t;
 
 /**
@@ -116,8 +153,8 @@ extern volatile uint32_t mw_tick_counter;
 *** LOCAL VARIABLES ***
 **********************/
 
-static mw_window_t mw_all_windows[MW_MAX_WINDOW_COUNT];    	/**< Array of structures describing all the windows */
-static mw_control_t mw_all_controls[MW_MAX_CONTROL_COUNT]; 	/**< Array of structures describing all the controls */
+static window_t mw_all_windows[MW_MAX_WINDOW_COUNT];    	/**< Array of structures describing all the windows */
+static control_t mw_all_controls[MW_MAX_CONTROL_COUNT]; 	/**< Array of structures describing all the controls */
 static window_timer_t mw_all_timers[MW_MAX_TIMER_COUNT];   	/**< Array of structures describing containing information on all the timers */
 static uint8_t window_with_focus = MW_ROOT_WINDOW_ID;		/**< The window at the front with focus receiving touch events within its rect */
 static int16_t vertical_edges[(MW_MAX_WINDOW_COUNT) * 2];	/**< Scratch area to store array of vertical window edges, used in various places, for window analysis when repainting */
@@ -198,6 +235,12 @@ static void paint_all_controls_in_window_rect(uint8_t window_ref, const mw_util_
 static void do_paint_control_rect(uint8_t control_ref, const mw_util_rect_t *invalid_rect);
 static void do_paint_control(uint8_t control_ref);
 static void do_paint_control2(uint8_t control_ref, const mw_util_rect_t *invalid_rect);
+
+/* handle control functions */
+static mw_handle_t get_next_handle(void);
+static uint8_t get_timer_id_for_handle(mw_handle_t handle);
+static uint8_t get_window_id_for_handle(mw_handle_t handle);
+static uint8_t get_control_id_for_handle(mw_handle_t handle);
 
 /* other functions */
 static window_redimensioning_state_t process_touch_event(void);
@@ -2341,6 +2384,82 @@ static void do_paint_control2(uint8_t control_ref, const mw_util_rect_t *invalid
 }
 
 /**
+ * Get the next handle to use for a window manager resource
+ *
+ * @return The next handle
+ */
+static mw_handle_t get_next_handle(void)
+{
+	static mw_handle_t next_handle = 0;
+
+	next_handle++;
+	return next_handle;
+}
+
+/**
+ * Get a timer_id represented by a timer handle
+ *
+ * @param The timer handle
+ * @return The id of the timer the handle represents
+ */
+static uint8_t get_timer_id_for_handle(mw_handle_t handle)
+{
+	uint8_t i;
+
+	for (i = 0; i < MW_MAX_TIMER_COUNT; i++)
+	{
+		if (mw_all_timers[i].handle == handle)
+		{
+			return i;
+		}
+	}
+
+	return MW_MAX_TIMER_COUNT;
+}
+
+/**
+ * Get a window_id represented by a window's handle
+ *
+ * @param The window's handle
+ * @return The id of the window the handle represents
+ */
+static uint8_t get_window_id_for_handle(mw_handle_t handle)
+{
+	uint8_t i;
+
+	for (i = 0; i < MW_MAX_WINDOW_COUNT; i++)
+	{
+		if (mw_all_windows[i].handle == handle)
+		{
+			return i;
+		}
+	}
+
+	return MW_MAX_WINDOW_COUNT;
+}
+
+/**
+ * Get a control_id represented by a control's handle
+ *
+ * @param The control's handle
+ * @return The id of the control the handle represents
+ */
+static uint8_t get_control_id_for_handle(mw_handle_t handle)
+{
+	uint8_t i;
+
+	for (i = 0; i < MW_MAX_CONTROL_COUNT; i++)
+	{
+		if (mw_all_controls[i].handle == handle)
+		{
+			return i;
+		}
+	}
+
+	return MW_MAX_CONTROL_COUNT;
+}
+
+/**
  * Check if a touch event has been raised and if so process it or send it to the appropriate recipient.
  *
  * @return One of window_redimensioning_state_t depending on if window is being resized, moved or neither
@@ -3634,13 +3753,13 @@ void mw_remove_window(uint8_t window_ref)
 	/* cancel all outstanding timers for this window */
 	for (i = 0; i < MW_MAX_TIMER_COUNT; i++)
 	{
-		if (mw_all_timers[i].next_fire_time > 0 &&
+		if (mw_all_timers[i].handle != MW_INVALID_HANDLE &&
 				mw_all_timers[i].recipient_type == MW_WINDOW_MESSAGE &&
 				mw_all_timers[i].recipient_id == window_ref)
 
 		{
 			/* timers are one shot so mark this timer as unused again */
-			mw_all_timers[i].next_fire_time = 0;
+			mw_all_timers[i].handle = MW_INVALID_HANDLE;
 		}
 	}
 
@@ -3898,13 +4017,13 @@ void mw_remove_control(uint8_t control_ref)
 	/* cancel all outstanding timers for this control */
 	for (i = 0; i < MW_MAX_TIMER_COUNT; i++)
 	{
-		if (mw_all_timers[i].next_fire_time > 0 &&
+		if (mw_all_timers[i].handle != MW_INVALID_HANDLE &&
 				mw_all_timers[i].recipient_type == MW_CONTROL_MESSAGE &&
 				mw_all_timers[i].recipient_id == control_ref)
 
 		{
 			/* timers are one shot so mark this timer as unused again */
-			mw_all_timers[i].next_fire_time = 0;
+			mw_all_timers[i].handle = MW_INVALID_HANDLE;
 		}
 	}
 
@@ -3965,70 +4084,76 @@ uint16_t mw_get_control_flags(uint8_t control_ref)
 	return mw_all_controls[control_ref].control_flags;
 }
 
-uint8_t mw_set_timer(uint32_t fire_time, uint8_t recipient_id, mw_message_recipient_type_t recipient_type)
+mw_handle_t mw_set_timer(uint32_t fire_time, uint8_t recipient_id, mw_message_recipient_type_t recipient_type)
 {
 	uint8_t i;
 
 	/* reject fire time in the past */
 	if (fire_time <= mw_tick_counter)
 	{
-		return MW_MAX_TIMER_COUNT;
+		return MW_INVALID_HANDLE;
 	}
 
 	/* reject any other recipient than window or control */
 	if (recipient_type != MW_WINDOW_MESSAGE && recipient_type != MW_CONTROL_MESSAGE)
 	{
-		MW_ASSERT(false, "Illegal timer recopient type");
-		return MW_MAX_TIMER_COUNT;
+		MW_ASSERT(false, "Illegal timer recipient type");
+		return MW_INVALID_HANDLE;
 	}
 	
 	/* check that recipient id is in range for recipient type */
 	if (recipient_type == MW_WINDOW_MESSAGE && recipient_id > MW_MAX_WINDOW_COUNT)
 	{
 		MW_ASSERT(false, "Illegal recipient window id");
-		return MW_MAX_TIMER_COUNT;
+		return MW_INVALID_HANDLE;
 	}
 	if (recipient_type == MW_CONTROL_MESSAGE && recipient_id > MW_MAX_CONTROL_COUNT)
 	{
 		MW_ASSERT(false, "Illegal control recipient id");
-		return MW_MAX_TIMER_COUNT;
+		return MW_INVALID_HANDLE;
 	}	
 
 	for (i = 0; i < MW_MAX_TIMER_COUNT; i++)
 	{
 		/* find an unused slot */
-		if (mw_all_timers[i].next_fire_time == 0)
+		if (mw_all_timers[i].handle == MW_INVALID_HANDLE)
 		{
 			/* slot found, set details */
 			mw_all_timers[i].next_fire_time = fire_time;
 			mw_all_timers[i].recipient_id = recipient_id;
 			mw_all_timers[i].recipient_type = recipient_type;
-			return i;
+			mw_all_timers[i].handle = get_next_handle();
+			return mw_all_timers[i].handle;
 		}
 	}
 
 	/* failed to find an empty timer slot */
 	MW_ASSERT(false, "No space to add timer");
-
-	return MW_MAX_TIMER_COUNT;
+	return MW_INVALID_HANDLE;
 }
 
-void mw_cancel_timer(uint8_t timer_id)
+void mw_cancel_timer(mw_handle_t timer_handle)
 {
 	uint8_t i;
 	mw_message_t *message;
+	uint8_t timer_id;
 
 	/* sanity check on timer id */
-	if (timer_id >= MW_MAX_TIMER_COUNT)
+	if (timer_handle == MW_INVALID_HANDLE)
 	{
-		MW_ASSERT(false, "Illegal timer id");
 		return;
 	}
 
-	/* an unused timer has its fire time at zero */
-	mw_all_timers[timer_id].next_fire_time = 0;
+	/* check all timers for any that are pending and have not timed out */
+	timer_id = get_timer_id_for_handle(timer_handle);
+	if (timer_id != MW_MAX_TIMER_COUNT)
+	{
+		/* a timer for this handle has been found that has this handle so cancel timer by setting its handle invalid */
+		mw_all_timers[timer_id].handle = MW_INVALID_HANDLE;
+		return;
+	}
 
-	/* mark any pending timer messages in message queue for this timer_id as cancelled */
+	/* no unexpired timer found so go timer messages in message queue for this timer handle and cancel those */
 	for (i = 0; i < MW_MESSAGE_QUEUE_SIZE; i++)
 	{
 		message = mw_message_queue_get_ref_to_item_at_position(i);
@@ -4036,7 +4161,7 @@ void mw_cancel_timer(uint8_t timer_id)
 
 		if (message)
 		{
-			if (message->message_id == MW_WINDOW_TIMER_MESSAGE && message->message_data == timer_id)
+			if (message->message_id == MW_WINDOW_TIMER_MESSAGE && message->message_data == timer_handle)
 			{
 				/* this leaves the message in the message queue but marks it as to be ignored when the message is processed */
 				message->message_recipient_type = MW_CANCELLED_MESSAGE;
@@ -4124,11 +4249,8 @@ bool mw_process_message(void)
 		for (i = 0; i < MW_MAX_TIMER_COUNT; i++)
 		{
 			/* check fire time of this timer to current time */
-			if (mw_all_timers[i].next_fire_time > 0 && mw_tick_counter >= mw_all_timers[i].next_fire_time)
+			if (mw_all_timers[i].handle != MW_INVALID_HANDLE && mw_tick_counter >= mw_all_timers[i].next_fire_time)
 			{
-				/* timers are one shot so mark this timer as unused again */
-				mw_all_timers[i].next_fire_time = 0;
-
 				/* check recipient type */
 				if (mw_all_timers[i].recipient_type == MW_WINDOW_MESSAGE)
 				{
@@ -4141,7 +4263,7 @@ bool mw_process_message(void)
 							mw_post_message(MW_WINDOW_TIMER_MESSAGE,
 									MW_UNUSED_MESSAGE_PARAMETER,
 									mw_all_timers[i].recipient_id,
-									i,
+									mw_all_timers[i].handle,
 									MW_WINDOW_MESSAGE);
 						}
 					}
@@ -4162,7 +4284,7 @@ bool mw_process_message(void)
 							mw_post_message(MW_WINDOW_TIMER_MESSAGE,
 									MW_UNUSED_MESSAGE_PARAMETER,
 									mw_all_timers[i].recipient_id,
-									i,
+									mw_all_timers[i].handle,
 									MW_CONTROL_MESSAGE);
 						}
 					}
@@ -4177,6 +4299,9 @@ bool mw_process_message(void)
 					/* bad recipient type */
 					MW_ASSERT(false, "Illegal timer recipient type");
 				}
+
+				/* timers are one shot so mark this timer as unused again */
+				mw_all_timers[i].handle = MW_INVALID_HANDLE;
 			}
 		}
 	}

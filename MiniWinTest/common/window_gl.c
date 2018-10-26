@@ -71,7 +71,7 @@ static const uint8_t snail[]={
 typedef struct
 {
 	uint8_t next_test;				/**< Next test to run */
-	uint8_t timer_id;				/**< Timer driving tests */
+	uint8_t timer_handle;				/**< Timer driving tests */
 } window_gl_data_t;
 
 /***********************
@@ -997,15 +997,15 @@ void window_gl_message_function(const mw_message_t *message)
 	{
 	case MW_WINDOW_CREATED_MESSAGE:
 		window_GL_data.next_test = 0;
-		window_GL_data.timer_id = mw_set_timer(mw_tick_counter + GL_TEST_TIME, message->recipient_id, MW_WINDOW_MESSAGE);
+		window_GL_data.timer_handle = mw_set_timer(mw_tick_counter + GL_TEST_TIME, message->recipient_id, MW_WINDOW_MESSAGE);
 		break;
 
 	case MW_WINDOW_REMOVED_MESSAGE:
-		mw_cancel_timer(window_GL_data.timer_id);
+		mw_cancel_timer(window_GL_data.timer_handle);
 		break;
 
 	case MW_WINDOW_TIMER_MESSAGE:
-		window_GL_data.timer_id = mw_set_timer(mw_tick_counter + GL_TEST_TIME, message->recipient_id, MW_WINDOW_MESSAGE);
+		window_GL_data.timer_handle = mw_set_timer(mw_tick_counter + GL_TEST_TIME, message->recipient_id, MW_WINDOW_MESSAGE);
 		window_GL_data.next_test++;
 		mw_paint_window_client(message->recipient_id);
 		break;

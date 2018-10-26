@@ -50,7 +50,6 @@ typedef struct
 	uint16_t circle_x;				/**< X coordinate of user touch point which is where to draw circle */
 	uint16_t circle_y;				/**< Y coordinate of user touch point which is where to draw circle */
 	bool draw_circle;				/**< If the screen has been touched and need to draw the circle */
-	uint8_t timer_id;				/**< Timer driving progress bar */
 	uint8_t i;						/**< Value shown in label and progress bar progress */
 	char transfer_buffer[10];		/**< Buffer to transfer data to label */
 	uint8_t lines_to_scroll;		/**< number of lines list box is scrolled */
@@ -128,7 +127,7 @@ void window_test_message_function(const mw_message_t *message)
 		window_test_data.lines_to_scroll = 0;
 		window_test_data.draw_circle = false;
 		window_test_data.i = 0;
-		window_test_data.timer_id = mw_set_timer(mw_tick_counter + MW_TICKS_PER_SECOND, message->recipient_id, MW_WINDOW_MESSAGE);
+		mw_set_timer(mw_tick_counter + MW_TICKS_PER_SECOND, message->recipient_id, MW_WINDOW_MESSAGE);
 		break;
 
 	case MW_TOUCH_DOWN_MESSAGE:
@@ -237,7 +236,7 @@ void window_test_message_function(const mw_message_t *message)
 		mw_ui_common_post_number_to_control(progress_bar_1_id, window_test_data.i);
 		mw_paint_control(label_1_id);
 		mw_paint_control(progress_bar_1_id);
-		window_test_data.timer_id = mw_set_timer(mw_tick_counter + MW_TICKS_PER_SECOND, message->recipient_id, MW_WINDOW_MESSAGE);
+		mw_set_timer(mw_tick_counter + MW_TICKS_PER_SECOND, message->recipient_id, MW_WINDOW_MESSAGE);
 		break;
 
 	default:

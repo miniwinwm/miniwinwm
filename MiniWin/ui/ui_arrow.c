@@ -36,7 +36,6 @@ SOFTWARE.
 *** CONSTANTS ***
 ****************/
 
-#define HOLD_DOWN_DELAY_TICKS	10
 #define ARROW_POINTS 			(sizeof(shape_x_const) / sizeof(int16_t))
 static const int16_t shape_x_const[] = {-3, 0, 4};
 static const int16_t shape_y_const[] = {4, -3, 4};
@@ -68,8 +67,8 @@ static int16_t shape_y[ARROW_POINTS];
 *** LOCAL FUNCTION PROTOTYPES ***
 ********************************/
 
-static void mw_ui_arrow_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *draw_info);
-static void mw_ui_arrow_message_function(const mw_message_t *message);
+static void arrow_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *draw_info);
+static void arrow_message_function(const mw_message_t *message);
 
 /**********************
 *** LOCAL FUNCTIONS ***
@@ -81,7 +80,7 @@ static void mw_ui_arrow_message_function(const mw_message_t *message);
  * @param control_ref The control identifier in the array of controls
  * @param draw_info Draw info structure describing offset and clip region
  */
-static void mw_ui_arrow_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *draw_info)
+static void arrow_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *draw_info)
 {
 	mw_ui_arrow_data_t *this_arrow = (mw_ui_arrow_data_t*)mw_get_control_instance_data(control_ref);
 	uint16_t arrow_size;
@@ -178,7 +177,7 @@ static void mw_ui_arrow_paint_function(uint8_t control_ref, const mw_gl_draw_inf
  *
  * @param message The message to be processed
  */
-static void mw_ui_arrow_message_function(const mw_message_t *message)
+static void arrow_message_function(const mw_message_t *message)
 {
 	mw_ui_arrow_data_t *this_arrow = (mw_ui_arrow_data_t*)mw_get_control_instance_data(message->recipient_id);
 
@@ -204,9 +203,9 @@ static void mw_ui_arrow_message_function(const mw_message_t *message)
 
 	case MW_TOUCH_DRAG_MESSAGE:
 	case MW_TOUCH_HOLD_DOWN_MESSAGE:
-		mw_cancel_timer(this_arrow->arrow_timer);
-		this_arrow->arrow_timer = mw_set_timer(mw_tick_counter + MW_CONTROL_DOWN_TIME, message->recipient_id, MW_CONTROL_MESSAGE);
-		if (mw_tick_counter - this_arrow->touch_down_time > HOLD_DOWN_DELAY_TICKS)
+		mw_cancel_timer(this_arrow->timer_handle);
+		this_arrow->timer_handle = mw_set_timer(mw_tick_counter + MW_CONTROL_DOWN_TIME, message->recipient_id, MW_CONTROL_MESSAGE);
+		if (mw_tick_counter - this_arrow->touch_down_time > MW_HOLD_DOWN_DELAY_TICKS)
 		{
 			mw_post_message(MW_ARROW_PRESSED_MESSAGE,
 					message->recipient_id,
@@ -220,7 +219,7 @@ static void mw_ui_arrow_message_function(const mw_message_t *message)
 		/* handle a touch down event within this control */	
 		if (mw_get_control_flags(message->recipient_id) & MW_CONTROL_FLAG_IS_ENABLED)
 		{
-			this_arrow->arrow_timer = mw_set_timer(mw_tick_counter + MW_CONTROL_DOWN_TIME, message->recipient_id, MW_CONTROL_MESSAGE);
+			this_arrow->timer_handle = mw_set_timer(mw_tick_counter + MW_CONTROL_DOWN_TIME, message->recipient_id, MW_CONTROL_MESSAGE);
 			this_arrow->arrow_down = true;
 			mw_paint_control(message->recipient_id);
 			this_arrow->touch_down_time = mw_tick_counter;
@@ -255,8 +254,8 @@ uint8_t mw_ui_arrow_add_new(uint16_t x,
 
 	return mw_add_control(&r,
 			parent,
-			mw_ui_arrow_paint_function,
-			mw_ui_arrow_message_function,
+			arrow_paint_function,
+			arrow_message_function,
 			flags,
 			arrow_instance_data);
 }

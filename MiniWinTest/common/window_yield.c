@@ -44,7 +44,7 @@ SOFTWARE.
  */
 typedef struct 
 {
-	uint8_t timer_id;					/**< Timer used to drive breaking up of task this time  */
+	uint8_t timer_handle;				/**< Timer used to drive breaking up of task this time  */
 	uint16_t progress;					/**< How far through the task this time  */
 	uint16_t x[10];						/**< X coordinate of all circle positions this time  */
 	uint16_t y[10];						/**< Y coordinate of all circle positions this time  */
@@ -127,16 +127,16 @@ void window_yield_message_function(const mw_message_t *message)
 		window_yield_data.progress = 0;
 		if (window_yield_data.timer_running)
 		{
-			mw_cancel_timer(window_yield_data.timer_id);
+			mw_cancel_timer(window_yield_data.timer_handle);
 		}
-		window_yield_data.timer_id = mw_set_timer(mw_tick_counter + 5, message->recipient_id, MW_WINDOW_MESSAGE);
+		window_yield_data.timer_handle = mw_set_timer(mw_tick_counter + 5, message->recipient_id, MW_WINDOW_MESSAGE);
 		window_yield_data.timer_running = true;
 		break;
 
 	case MW_WINDOW_MINIMISED:
 		if (window_yield_data.timer_running)
 		{
-			mw_cancel_timer(window_yield_data.timer_id);
+			mw_cancel_timer(window_yield_data.timer_handle);
 			window_yield_data.timer_running = false;
 		}
 		break;
@@ -159,7 +159,7 @@ void window_yield_message_function(const mw_message_t *message)
 		window_yield_data.progress += 10;
 		if (window_yield_data.progress < 1000)
 		{
-			window_yield_data.timer_id = mw_set_timer(mw_tick_counter + 10, message->recipient_id, MW_WINDOW_MESSAGE);
+			window_yield_data.timer_handle = mw_set_timer(mw_tick_counter + 10, message->recipient_id, MW_WINDOW_MESSAGE);
 			window_yield_data.timer_running = true;
 		}
 		break;

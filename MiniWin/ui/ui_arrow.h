@@ -69,7 +69,7 @@ typedef struct
   
 	/* Non-user modifiable fields */
 	bool arrow_down;										/**< set when the arrow is down */
-	uint8_t arrow_timer;									/**< used for animation and holding down */
+	uint8_t timer_handle;									/**< used for animation and holding down */
 	uint32_t touch_down_time;								/**< time in ticks the arrow was first pressed down */
 } mw_ui_arrow_data_t;
 

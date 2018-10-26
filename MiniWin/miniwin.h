@@ -71,6 +71,7 @@ SOFTWARE.
 #define MW_SCROLL_BAR_LARGE_SLIDER_SIZE			MW_SCROLL_BAR_LARGE_NARROW_DIMESION /**< Length of large scroll bar slider */
 #define MW_MENU_BAR_HEIGHT						14									/**< Menu bar height */
 #define MW_MENU_BAR_LABEL_Y_OFFSET				3               					/**< Gap between top edge of menu bar and text */
+#define MW_INVALID_HANDLE						0									/**< Invalid handle, returned when a resource cannot be allocated */
 
  /**
  * Window option and state flags
@@ -205,6 +206,11 @@ typedef enum
 	MW_CANCELLED_MESSAGE							/**< Message has been cancelled but not removed from queue, ignore */
 } mw_message_recipient_type_t;
 
+/**
+ * Window manager handle type
+ */
+typedef uint32_t mw_handle_t;
+
 /* forward declare message struct and its typedef */
 struct mw_message_tag;
 typedef struct mw_message_tag mw_message_t;
@@ -237,40 +243,6 @@ typedef struct mw_message_tag
 	mw_message_recipient_type_t message_recipient_type;        /**< Type of recipient this message is for */
 	uint32_t message_data;              /**< Data value passed to recipient with a message; this is message specific and may be a pointer */
 } mw_message_t;
-
-/**
- * Structure containing information pertaining to each window
- */
-typedef struct 
-{
-    char **menu_bar_items;				/**< Pointer to array of menu bar entry labels */
-    mw_paint_func_p paint_func;         /**< Pointer to window paint function */
-    mw_message_func_p message_func;     /**< Pointer to window message handler function */	
-    uint32_t window_flags;				/**< All the flags defining a window's description and state */
-	void *instance_data;				/**< Optional void pointer to window specific data structure containing window instance specific data */
-	mw_util_rect_t window_rect;         /**< Rect containing coordinates of window including title bar and border if present */
-	mw_util_rect_t client_rect;         /**< Rect containing coordinates of window's client area */
-	uint16_t menu_bar_item_enables;		/**< Bitfield of individual enable flags for menu bar items */
-	uint8_t z_order;                    /**< Z order of the window, higher value drawn on top of lower values */
-    uint8_t	horiz_scroll_pos; 			/**< Current scroll position of a horizontal scroll bar scaled to 0-255 */
-    uint8_t vert_scroll_pos;			/**< Current scroll position of a vertical scroll bar scaled to 0-255 */
-    uint8_t menu_bar_items_count;		/**< Number of items in above array */
-    uint8_t menu_bar_selected_item;		/**< The most recently selected menu bar item */
-    char title[MW_MAX_TITLE_SIZE + 1];  /**< The window's title in the title bar */
-} mw_window_t;
-
-/**
- * Structure containing information pertaining to each control
- */
-typedef struct 
-{
-    mw_paint_func_p paint_func;         /**< Pointer to control paint function */
-    mw_message_func_p message_func;     /**< Pointer to control message handler function */
-	void *instance_data;				/**< Void pointer to control specific data structure containing control specific configuration data per instance */
-	uint16_t control_flags;				/**< All the flags defining a control's description and state */
-	mw_util_rect_t control_rect;        /**< Rect containing coordinates of control's area */
-    uint8_t parent;                     /**< This control's parent window */
-} mw_control_t;
 
 /***************************
 *** FUNCTIONS PROTOTYPES ***
@@ -655,16 +627,16 @@ bool mw_find_if_any_control_slots_free(void);
  * @param fire_time The time in window manager ticks for the timer to timeout; this is an absolute time, not relative
  * @param recipient_id The position in the array of windows or controls of the recipient window or control
  * @param recipient_type If the recipient is a window or a conreol
- * @return The new timer id if the timer could be set or MAX_TIMER_COUNT if it could not be set
+ * @return The new handle if the timer could be set or MW_INVALID_HANDLE if it could not be set
  */
-uint8_t mw_set_timer(uint32_t fire_time, uint8_t recipient_id, mw_message_recipient_type_t recipient_type);
+mw_handle_t mw_set_timer(uint32_t fire_time, uint8_t recipient_id, mw_message_recipient_type_t recipient_type);
 
 /**
  * Cancel a previously set timer.
  *
- * @param timer_id The id of the timer to cancel as returned by set_timer
+ * @param timer_handle The handle of the timer to cancel as returned by set_timer
  */
-void mw_cancel_timer(uint8_t timer_id);
+void mw_cancel_timer(mw_handle_t timer_handle);
 
 /**
  * Package up the filling in and sending of a windows message.

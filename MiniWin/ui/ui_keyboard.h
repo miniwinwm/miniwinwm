@@ -43,7 +43,7 @@ SOFTWARE.
 
 #define MW_UI_KEYBOARD_KEY_SIZE				20
 #define MW_UI_KEYBOARD_WIDTH				(MW_UI_KEYBOARD_KEY_SIZE * 11)
-#define MW_UI_KEYBOARD_HEIGHT				(MW_UI_KEYBOARD_KEY_SIZE * 4)
+#define MW_UI_KEYBOARD_HEIGHT				(MW_UI_KEYBOARD_KEY_SIZE * 3)
 #define MW_UI_KEYBOARD_KEY_TEXT_OFFSET		7
 #define MW_UI_KEYBOARD_KEY_BITMAP_OFFSET	2
 #define MW_UI_KEYBOARD_KEY_BITMAP_SIZE		16
@@ -70,10 +70,12 @@ typedef struct
     /* Non-user modifiable fields */ 
 	bool is_key_pressed;						/**< if a key is currently pressed */
 	bool swap_keyboard;							/**< if the keyboard needs swapping on next key up timer event */
-	uint8_t	key_pressed_row;					/**< the currently pressed key */
-	uint8_t	key_pressed_column;					/**< the currently pressed key */
+	uint8_t	key_pressed_row;					/**< the currently pressed key row */
+	uint8_t	key_pressed_column;					/**< the currently pressed key column */
 	keyboard_display_t keyboard_display;		/**< the keyboard to display */
-	uint8_t timer_id;							/**< timer used for key presses */
+	mw_handle_t timer_handle;					/**< timer handle for animations and hold down repeat timeout */
+	uint32_t touch_down_time;					/**< time in ticks a key was first pressed down */
+	bool holding_down;							/**< true when holding down a key */
 } mw_ui_keyboard_data_t;
 
 /***************************

@@ -47,20 +47,6 @@
 							<tool id="cdt.managedbuild.tool.gnu.cpp.linker.mingw.exe.debug.1318759316" name="C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.mingw.exe.debug"/>
 						</toolChain>
 					</folderInfo>
-					<folderInfo id="cdt.managedbuild.config.gnu.mingw.exe.debug.488528513.326749472" name="/" resourcePath="MiniWin/hal/stm32f429">
-						<toolChain id="cdt.managedbuild.toolchain.gnu.mingw.exe.debug.694503010" name="Atollic PC Tools" superClass="cdt.managedbuild.toolchain.gnu.mingw.exe.debug" unusedChildren="">
-							<tool id="cdt.managedbuild.tool.gnu.assembler.mingw.exe.debug.248972410" name="Assembler" superClass="cdt.managedbuild.tool.gnu.assembler.mingw.exe.debug.1366490066">
-								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.1231565937" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
-							</tool>
-							<tool id="cdt.managedbuild.tool.gnu.archiver.mingw.base.217291406" name="Archiver" superClass="cdt.managedbuild.tool.gnu.archiver.mingw.base.1395773831"/>
-							<tool id="cdt.managedbuild.tool.gnu.c.compiler.mingw.exe.debug.1866579296" name="C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.mingw.exe.debug.1685953327">
-								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.1601869028" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
-							</tool>
-							<tool id="cdt.managedbuild.tool.gnu.c.linker.mingw.exe.debug.1971056503" name="C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.mingw.exe.debug.2066289076"/>
-							<tool id="cdt.managedbuild.tool.gnu.cpp.compiler.mingw.exe.debug.1179544585" name="C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.mingw.exe.debug.1644998599"/>
-							<tool id="cdt.managedbuild.tool.gnu.cpp.linker.mingw.exe.debug.7746734" name="C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.mingw.exe.debug.1318759316"/>
-						</toolChain>
-					</folderInfo>
 					<sourceEntries>
 						<entry excluding="MiniWin|common" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 						<entry excluding="hal/stm32f429|hal/stm32f407|user/minwin_user.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="MiniWin"/>
