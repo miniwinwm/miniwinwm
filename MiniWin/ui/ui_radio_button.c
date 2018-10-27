@@ -55,7 +55,7 @@ SOFTWARE.
 *** LOCAL FUNCTION PROTOTYPES ***
 ********************************/
 
-static void radio_button_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *draw_info);
+static void radio_button_paint_function(mw_handle_t control_handle, const mw_gl_draw_info_t *draw_info);
 static void radio_button_message_function(const mw_message_t *message);
 
 /**********************
@@ -65,13 +65,13 @@ static void radio_button_message_function(const mw_message_t *message);
 /**
  * Control paint routine, called by window manager.
  *
- * @param control_ref The control identifier in the array of controls
+ * @param control_handle The control identifier in the array of controls
  * @param draw_info Draw info structure describing offset and clip region
  */
-static void radio_button_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *draw_info)
+static void radio_button_paint_function(mw_handle_t control_handle, const mw_gl_draw_info_t *draw_info)
 {
 	uint8_t i;
-	mw_ui_radio_button_data_t *this_radio_radio_button = (mw_ui_radio_button_data_t*)mw_get_control_instance_data(control_ref);
+	mw_ui_radio_button_data_t *this_radio_radio_button = (mw_ui_radio_button_data_t*)mw_get_control_instance_data(control_handle);
 	uint16_t height;
 	uint16_t box_size;
 
@@ -83,7 +83,7 @@ static void radio_button_paint_function(uint8_t control_ref, const mw_gl_draw_in
 	mw_gl_set_text_rotation(MW_GL_TEXT_ROTATION_0);
 
 	/* set size dependent values */
-	if (mw_get_control_flags(control_ref) & MW_CONTROL_FLAGS_LARGE_SIZE)
+	if (mw_get_control_flags(control_handle) & MW_CONTROL_FLAGS_LARGE_SIZE)
 	{
 		height = MW_UI_RADIO_BUTTON_LARGE_HEIGHT;
 		box_size = MW_UI_RADIO_BUTTON_LARGE_BOX_SIZE;
@@ -99,7 +99,7 @@ static void radio_button_paint_function(uint8_t control_ref, const mw_gl_draw_in
 	for (i = 0; i < this_radio_radio_button->number_of_items; i++)
 	{
         /* set the box outline and text colour depending on enabled state */
-		if (mw_get_control_flags(control_ref) & MW_CONTROL_FLAG_IS_ENABLED)
+		if (mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_IS_ENABLED)
 		{
 			mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 		}
@@ -109,7 +109,7 @@ static void radio_button_paint_function(uint8_t control_ref, const mw_gl_draw_in
 		}
 
 		/* check size this control is being drawn at and draw appropriate text*/
-		if (mw_get_control_flags(control_ref) & MW_CONTROL_FLAGS_LARGE_SIZE)
+		if (mw_get_control_flags(control_handle) & MW_CONTROL_FLAGS_LARGE_SIZE)
 		{
 			/* draw the label text */
 			mw_gl_string(draw_info,
@@ -158,7 +158,7 @@ static void radio_button_paint_function(uint8_t control_ref, const mw_gl_draw_in
 		if (i == this_radio_radio_button->selected_radio_button)
 		{
             /* it is so set the box fill colour according to enabled state */
-			if (mw_get_control_flags(control_ref) & MW_CONTROL_FLAG_IS_ENABLED)
+			if (mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_IS_ENABLED)
 			{
 				mw_gl_set_solid_fill_colour(MW_HAL_LCD_BLACK);
 			}
@@ -184,13 +184,13 @@ static void radio_button_paint_function(uint8_t control_ref, const mw_gl_draw_in
  */
 static void radio_button_message_function(const mw_message_t *message)
 {
-	mw_ui_radio_button_data_t *this_radio_radio_button = (mw_ui_radio_button_data_t*)mw_get_control_instance_data(message->recipient_id);
+	mw_ui_radio_button_data_t *this_radio_radio_button = (mw_ui_radio_button_data_t*)mw_get_control_instance_data(message->recipient_handle);
 	uint16_t height;
 
 	MW_ASSERT(message, "Null pointer argument");
 
 	/* set size dependent values */
-	if (mw_get_control_flags(message->recipient_id) & MW_CONTROL_FLAGS_LARGE_SIZE)
+	if (mw_get_control_flags(message->recipient_handle) & MW_CONTROL_FLAGS_LARGE_SIZE)
 	{
 		height = MW_UI_RADIO_BUTTON_LARGE_HEIGHT;
 	}
@@ -216,18 +216,18 @@ static void radio_button_message_function(const mw_message_t *message)
 
 	case MW_TOUCH_DOWN_MESSAGE:
 		/* handle a touch down event within this control */		
-		if (mw_get_control_flags(message->recipient_id) & MW_CONTROL_FLAG_IS_ENABLED)
+		if (mw_get_control_flags(message->recipient_handle) & MW_CONTROL_FLAG_IS_ENABLED)
 		{
 			/* find which button was touched */
 			this_radio_radio_button->selected_radio_button = (message->message_data & 0xffff) / height;
 			
 			/* send control response message */
 			mw_post_message(MW_RADIO_BUTTON_ITEM_SELECTED_MESSAGE,
-					message->recipient_id,
-					mw_get_control_parent_window(message->recipient_id),
+					message->recipient_handle,
+					mw_get_control_parent_window(message->recipient_handle),
 					this_radio_radio_button->selected_radio_button,
 					MW_WINDOW_MESSAGE);
-			mw_paint_control(message->recipient_id);
+			mw_paint_control(message->recipient_handle);
 		}
 		break;
 
@@ -240,9 +240,9 @@ static void radio_button_message_function(const mw_message_t *message)
 *** GLOBAL FUNCTIONS ***
 ***********************/
 
-uint8_t mw_ui_radio_button_add_new(uint16_t x,
+mw_handle_t mw_ui_radio_button_add_new(uint16_t x,
 		uint16_t y,
-		uint8_t parent,
+		mw_handle_t parent,
 		uint32_t flags,
 		mw_ui_radio_button_data_t *radio_button_instance_data)
 {

@@ -51,8 +51,8 @@ typedef struct
 *** EXTERNAL VARIABLES ***
 **************************/
 
-extern uint8_t button_id;
-extern uint8_t label_id;
+extern mw_handle_t button_handle;
+extern mw_handle_t label_handle;
 
 /**********************
 *** LOCAL VARIABLES ***
@@ -72,7 +72,7 @@ static window_simple_data_t window_simple_data;
 *** GLOBAL FUNCTIONS ***
 ***********************/
 
-void window_simple_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_info)
+void window_simple_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_t *draw_info)
 {
 	MW_ASSERT(draw_info, "Null pointer parameter");
 
@@ -83,8 +83,8 @@ void window_simple_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *d
 	mw_gl_rectangle(draw_info,
 			0,
 			0,
-			mw_get_window_client_rect(window_ref).width,
-			mw_get_window_client_rect(window_ref).height);
+			mw_get_window_client_rect(window_handle).width,
+			mw_get_window_client_rect(window_handle).height);
 
 	mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 	if(window_simple_data.draw_circle)
@@ -110,11 +110,11 @@ void window_simple_message_function(const mw_message_t *message)
 		window_simple_data.circle_x = message->message_data >> 16;
 		window_simple_data.circle_y = message->message_data;
 		window_simple_data.draw_circle = true;
-		mw_paint_window_client(message->recipient_id);
+		mw_paint_window_client(message->recipient_handle);
 		break;
 
 	case MW_BUTTON_PRESSED_MESSAGE:
-		if (message->sender_id == button_id)
+		if (message->sender_handle == button_handle)
 		{
 			mw_create_window_dialog_one_button(20,
 					50,
@@ -123,13 +123,13 @@ void window_simple_message_function(const mw_message_t *message)
 					"This is a message",
 					"Yep",
 					false,
-					message->recipient_id);
+					message->recipient_handle);
 		}
 		break;
 
 	case MW_DIALOG_ONE_BUTTON_DISMISSED_MESSAGE:
-		mw_ui_common_post_pointer_to_control(label_id, "Hello world!");
-		mw_paint_control(label_id);
+		mw_ui_common_post_pointer_to_control(label_handle, "Hello world!");
+		mw_paint_control(label_handle);
 		break;
 
 	default:

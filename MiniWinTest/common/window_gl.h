@@ -52,11 +52,11 @@ SOFTWARE.
 /**
  * Window paint routine, called by window manager.
  *
- * @param window_ref The window identifier in the array of windows
+ * @param window_handle The window identifier in the array of windows
  * @param draw_info Draw info structure describing offset and clip region
  * @note Do not call this directly from user code
  */
-void window_gl_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_info);
+void window_gl_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_t *draw_info);
 
 /**
  * Window message handler called by the window manager.

@@ -49,13 +49,13 @@ SOFTWARE.
  */
 typedef struct
 {
-	uint8_t button_1_id;						/**< Control id of left button */
-	uint8_t button_2_id;						/**< Control id of right button */
+	mw_handle_t button_1_handle;				/**< Handle of left button */
+	mw_handle_t button_2_handle;				/**< Handle of right button */
 	mw_ui_button_data_t button_1_data;			/**< Instance data of left button */
 	mw_ui_button_data_t button_2_data;			/**< Instance data of right button */
 	char *message;								/**< Text to display in dialog */
 	bool large_size;							/**< True for large size false for standard size */
-	uint8_t response_window_id;					/**< Window id to send response message to */
+	mw_handle_t response_window_handle;			/**< Window handle to send response message to */
 	mw_dialog_response_t mw_dialog_response;	/**< Dialog response structure */
 
 } mw_dialog_two_button_data_t;
@@ -79,7 +79,7 @@ static mw_dialog_two_button_data_t mw_dialog_two_button_data;
 ********************************/
 
 static void remove_resources(void);
-static void mw_dialog_two_button_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_info);
+static void mw_dialog_two_button_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_t *draw_info);
 static void mw_dialog_two_button_message_function(const mw_message_t *message);
 
 /**********************
@@ -91,19 +91,19 @@ static void mw_dialog_two_button_message_function(const mw_message_t *message);
  */
 static void remove_resources(void)
 {
-	mw_remove_control(mw_dialog_two_button_data.button_1_id);
-	mw_remove_control(mw_dialog_two_button_data.button_2_id);
-	mw_remove_window(mw_dialog_two_button_data.mw_dialog_response.window_id);
+	mw_remove_control(mw_dialog_two_button_data.button_1_handle);
+	mw_remove_control(mw_dialog_two_button_data.button_2_handle);
+	mw_remove_window(mw_dialog_two_button_data.mw_dialog_response.window_handle);
 }
 
 /**
  * Window paint routine, called by window manager.
  *
- * @param window_ref The window identifier in the array of windows
+ * @param window_handle The window identifier in the array of windows
  * @param draw_info Draw info structure describing offset and clip region
  * @note Do not call this directly from user code
  */
-static void mw_dialog_two_button_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_info)
+static void mw_dialog_two_button_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_t *draw_info)
 {
 	mw_gl_set_fill(MW_GL_FILL);
 	mw_gl_set_solid_fill_colour(MW_HAL_LCD_WHITE);
@@ -112,8 +112,8 @@ static void mw_dialog_two_button_paint_function(uint8_t window_ref, const mw_gl_
 	mw_gl_rectangle(draw_info,
 			0,
 			0,
-			mw_get_window_client_rect(window_ref).width,
-			mw_get_window_client_rect(window_ref).height);
+			mw_get_window_client_rect(window_handle).width,
+			mw_get_window_client_rect(window_handle).height);
 
 	mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 	mw_gl_set_bg_transparency(MW_GL_BG_TRANSPARENT);
@@ -151,7 +151,7 @@ static void mw_dialog_two_button_message_function(const mw_message_t *message)
 			remove_resources();
 
 			/* find which button was pressed */
-			if (message->sender_id == mw_dialog_two_button_data.button_1_id)
+			if (message->sender_handle == mw_dialog_two_button_data.button_1_handle)
 			{
 				button_pressed = 0;
 			}
@@ -164,7 +164,7 @@ static void mw_dialog_two_button_message_function(const mw_message_t *message)
 			mw_dialog_two_button_data.mw_dialog_response.data = button_pressed;
 			mw_post_message(MW_DIALOG_TWO_BUTTONS_DISMISSED_MESSAGE,
 					MW_UNUSED_MESSAGE_PARAMETER,
-					mw_dialog_two_button_data.response_window_id,
+					mw_dialog_two_button_data.response_window_handle,
 					(uint32_t)&mw_dialog_two_button_data.mw_dialog_response,
 					MW_WINDOW_MESSAGE);
 
@@ -182,7 +182,7 @@ static void mw_dialog_two_button_message_function(const mw_message_t *message)
 *** GLOBAL FUNCTIONS ***
 ***********************/
 
-uint8_t mw_create_window_dialog_two_button(uint16_t x,
+mw_handle_t mw_create_window_dialog_two_button(uint16_t x,
 		uint16_t y,
 		uint16_t width,
 		char *title,
@@ -190,7 +190,7 @@ uint8_t mw_create_window_dialog_two_button(uint16_t x,
 		char *button_1_label,
 		char *button_2_label,
 		bool large_size,
-		uint8_t response_window_id)
+		mw_handle_t response_window_handle)
 {
 	mw_util_rect_t rect;
 	uint16_t window_client_width;
@@ -232,12 +232,12 @@ uint8_t mw_create_window_dialog_two_button(uint16_t x,
 
 	mw_dialog_two_button_data.large_size = large_size;
 	mw_dialog_two_button_data.message = message;
-	mw_dialog_two_button_data.response_window_id = response_window_id;
+	mw_dialog_two_button_data.response_window_handle = response_window_handle;
 	rect.x = x;
 	rect.y = y;
 	rect.width = width;
 
-	mw_dialog_two_button_data.mw_dialog_response.window_id = mw_add_window(&rect,
+	mw_dialog_two_button_data.mw_dialog_response.window_handle = mw_add_window(&rect,
 			title,
 			mw_dialog_two_button_paint_function,
 			mw_dialog_two_button_message_function,
@@ -248,14 +248,14 @@ uint8_t mw_create_window_dialog_two_button(uint16_t x,
 			NULL);
 
 	/* check if window could be created */
-	if (mw_dialog_two_button_data.mw_dialog_response.window_id == MW_MAX_WINDOW_COUNT)
+	if (mw_dialog_two_button_data.mw_dialog_response.window_handle == MW_MAX_WINDOW_COUNT)
 	{
 		/* it couldn't so exit */
 		return MW_MAX_WINDOW_COUNT;
 	}
 
 	/* get window client rect width */
-	window_client_width = mw_get_window_client_rect(mw_dialog_two_button_data.mw_dialog_response.window_id).width;
+	window_client_width = mw_get_window_client_rect(mw_dialog_two_button_data.mw_dialog_response.window_handle).width;
 
 	/* set controls data */
 	mw_util_safe_strcpy(mw_dialog_two_button_data.button_1_data.button_label,
@@ -265,40 +265,40 @@ uint8_t mw_create_window_dialog_two_button(uint16_t x,
 
 	if (large_size)
 	{
-		mw_dialog_two_button_data.button_1_id = mw_ui_button_add_new(
+		mw_dialog_two_button_data.button_1_handle = mw_ui_button_add_new(
 				(window_client_width - BUTTON_LARGE_GAP) / 2 - MW_UI_BUTTON_LARGE_WIDTH,
 				35,
-				mw_dialog_two_button_data.mw_dialog_response.window_id,
+				mw_dialog_two_button_data.mw_dialog_response.window_handle,
 				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAGS_LARGE_SIZE,
 				&mw_dialog_two_button_data.button_1_data);
 
-		mw_dialog_two_button_data.button_2_id = mw_ui_button_add_new(
+		mw_dialog_two_button_data.button_2_handle = mw_ui_button_add_new(
 				(window_client_width / 2) + BUTTON_LARGE_GAP / 2,
 				35,
-				mw_dialog_two_button_data.mw_dialog_response.window_id,
+				mw_dialog_two_button_data.mw_dialog_response.window_handle,
 				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAGS_LARGE_SIZE,
 				&mw_dialog_two_button_data.button_2_data);
 	}
 	else
 	{
-		mw_dialog_two_button_data.button_1_id = mw_ui_button_add_new(
+		mw_dialog_two_button_data.button_1_handle = mw_ui_button_add_new(
 				(window_client_width - BUTTON_GAP) / 2 - MW_UI_BUTTON_WIDTH,
 				30,
-				mw_dialog_two_button_data.mw_dialog_response.window_id,
+				mw_dialog_two_button_data.mw_dialog_response.window_handle,
 				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
 				&mw_dialog_two_button_data.button_1_data);
 
-		mw_dialog_two_button_data.button_2_id = mw_ui_button_add_new(
+		mw_dialog_two_button_data.button_2_handle = mw_ui_button_add_new(
 				(window_client_width / 2) + BUTTON_GAP / 2,
 				30,
-				mw_dialog_two_button_data.mw_dialog_response.window_id,
+				mw_dialog_two_button_data.mw_dialog_response.window_handle,
 				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
 				&mw_dialog_two_button_data.button_2_data);
 	}
 
 	/* check if controls could be created */
-	if (mw_dialog_two_button_data.button_1_id == MW_MAX_CONTROL_COUNT ||
-			mw_dialog_two_button_data.button_2_id == MW_MAX_CONTROL_COUNT)
+	if (mw_dialog_two_button_data.button_1_handle == MW_MAX_CONTROL_COUNT ||
+			mw_dialog_two_button_data.button_2_handle == MW_MAX_CONTROL_COUNT)
 	{
 		/* remove all controls and window */
 		remove_resources();
@@ -307,9 +307,9 @@ uint8_t mw_create_window_dialog_two_button(uint16_t x,
 	}
 
 	/* this window needs painting; it is coming up at the front so paint only this one */
-	mw_paint_window_frame(mw_dialog_two_button_data.mw_dialog_response.window_id, MW_WINDOW_FRAME_COMPONENT_ALL);
-	mw_paint_window_client(mw_dialog_two_button_data.mw_dialog_response.window_id);
+	mw_paint_window_frame(mw_dialog_two_button_data.mw_dialog_response.window_handle, MW_WINDOW_FRAME_COMPONENT_ALL);
+	mw_paint_window_client(mw_dialog_two_button_data.mw_dialog_response.window_handle);
 
-	return mw_dialog_two_button_data.mw_dialog_response.window_id;
+	return mw_dialog_two_button_data.mw_dialog_response.window_handle;
 }
 

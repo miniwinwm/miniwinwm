@@ -60,8 +60,8 @@ SOFTWARE.
  * @param button_1_label pointer to the text of the left button's label
  * @param button_2_label pointer to the text of the right button's label
  * @param large_size true for large size controls/text, false for small
- * @param response_window_id window id of the window that the response message is posted to when the dialog is dismissed
- * @return the window id of the window used for the dialog which is only valid while the dialog is showing
+ * @param response_window_handle Handle of the window that the response message is posted to when the dialog is dismissed
+ * @return Handle of the window used for the dialog which is only valid while the dialog is showing
  * @note There must be space in the window array for one new window and space in the control array
  *       for one new control. These resources are released when the dialog is dismissed.
  *       The dialog is created modal and is brought to the front on showing.
@@ -70,7 +70,7 @@ SOFTWARE.
  *       In the response message data the value 0 indicates left button, 1 right button
  * @warning Do not call this from a client window paint function. In debug mode it will cause an assert failure.
  */
-uint8_t mw_create_window_dialog_two_button(uint16_t x,
+ mw_handle_t mw_create_window_dialog_two_button(uint16_t x,
 		uint16_t y,
 		uint16_t width,
 		char *title,
@@ -78,7 +78,7 @@ uint8_t mw_create_window_dialog_two_button(uint16_t x,
 		char *button_1_label,
 		char *button_2_label,
 		bool large_size,
-		uint8_t response_window_id);
+		mw_handle_t response_window_handle);
 
 #ifdef __cplusplus
 }

@@ -49,7 +49,7 @@ SOFTWARE.
  typedef struct
  {
  	char path_and_filename_image[MAX_FOLDER_AND_FILENAME_LENGTH + 1];
- 	uint8_t image_window_id;
+ 	mw_handle_t image_window_handle;
  } image_window_data_t;
 
 /***************************
@@ -59,11 +59,11 @@ SOFTWARE.
 /**
  * Window paint routine, called by window manager.
  *
- * @param window_ref The window identifier in the array of windows
+ * @param window_handle The window identifier in the array of windows
  * @param draw_info Draw info structure describing offset and clip region
  * @note Do not call this directly from user code
  */
-void window_image_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_info);
+void window_image_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_t *draw_info);
 
 /**
  * Window message handler called by the window manager.

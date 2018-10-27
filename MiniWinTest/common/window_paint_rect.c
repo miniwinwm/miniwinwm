@@ -73,7 +73,7 @@ static window_paint_rect_data_t window_paint_rect_data;
 *** GLOBAL FUNCTIONS ***
 ***********************/
 
-void window_paint_rect_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_info)
+void window_paint_rect_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_t *draw_info)
 {
 	float x;
 	float y;
@@ -87,8 +87,8 @@ void window_paint_rect_paint_function(uint8_t window_ref, const mw_gl_draw_info_
 	mw_gl_rectangle(draw_info,
 			0,
 			0,
-			mw_get_window_client_rect(window_ref).width,
-			mw_get_window_client_rect(window_ref).height);
+			mw_get_window_client_rect(window_handle).width,
+			mw_get_window_client_rect(window_handle).height);
 
 	mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 	mw_gl_set_fill(MW_GL_NO_FILL);
@@ -157,7 +157,7 @@ void window_paint_rect_message_function(const mw_message_t *message)
 	case MW_LIST_BOX_ITEM_PRESSED_MESSAGE:
 		/* pop up list box item pressed */
 		window_paint_rect_data.choice = message->message_data;
-		mw_paint_window_client_rect(message->recipient_id, &rect_to_repaint);
+		mw_paint_window_client_rect(message->recipient_handle, &rect_to_repaint);
 		break;
 
 	default:

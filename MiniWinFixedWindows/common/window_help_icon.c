@@ -74,7 +74,7 @@ static window_help_icon_data_t window_help_icon_data;
 *** GLOBAL FUNCTIONS ***
 ***********************/
 
-void window_help_icon_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_info)
+void window_help_icon_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_t *draw_info)
 {
 	MW_ASSERT(draw_info, "Null pointer parameter");
 
@@ -110,13 +110,13 @@ void window_help_icon_message_function(const mw_message_t *message)
 
 	case MW_TOUCH_DOWN_MESSAGE:
 		window_help_icon_data.touch_down = true;
-		mw_set_timer(mw_tick_counter + MW_CONTROL_DOWN_TIME, message->recipient_id, MW_WINDOW_MESSAGE);
-		mw_paint_window_client(message->recipient_id);
+		mw_set_timer(mw_tick_counter + MW_CONTROL_DOWN_TIME, message->recipient_handle, MW_WINDOW_MESSAGE);
+		mw_paint_window_client(message->recipient_handle);
 		break;
 
 	case MW_WINDOW_TIMER_MESSAGE:
 		window_help_icon_data.touch_down = false;
-		mw_paint_window_client(message->recipient_id);
+		mw_paint_window_client(message->recipient_handle);
 		break;
 
 	default:

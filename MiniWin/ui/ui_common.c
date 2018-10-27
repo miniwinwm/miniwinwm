@@ -64,9 +64,9 @@ SOFTWARE.
 *** GLOBAL FUNCTIONS ***
 ***********************/
 
-void mw_ui_common_post_number_to_control(uint8_t control_id, uint32_t number)
+void mw_ui_common_post_number_to_control(mw_handle_t control_handle, uint32_t number)
 {
-	if (control_id >= MW_MAX_CONTROL_COUNT)
+	if (control_handle >= MW_MAX_CONTROL_COUNT)
 	{
 		MW_ASSERT(false, "Invalid control id");
 		return;
@@ -74,12 +74,12 @@ void mw_ui_common_post_number_to_control(uint8_t control_id, uint32_t number)
 
 	mw_post_message(MW_TRANSFER_DATA_1_MESSAGE,
 			0,
-			control_id,
+			control_handle,
 			number,
 			MW_CONTROL_MESSAGE);
 }
 
-void mw_ui_common_post_pointer_to_control(uint8_t control_id, void *pointer)
+void mw_ui_common_post_pointer_to_control(mw_handle_t control_handle, void *pointer)
 {
 	if (!pointer)
 	{
@@ -87,15 +87,15 @@ void mw_ui_common_post_pointer_to_control(uint8_t control_id, void *pointer)
 		return;
 	}
 
-	if (control_id >= MW_MAX_CONTROL_COUNT)
+	if (control_handle >= MW_MAX_CONTROL_COUNT)
 	{
-		if (control_id >= MW_MAX_CONTROL_COUNT)
+		if (control_handle >= MW_MAX_CONTROL_COUNT)
 		return;
 	}
 
 	mw_post_message(MW_TRANSFER_DATA_1_PTR_MESSAGE,
 			0,
-			control_id,
+			control_handle,
 			(uint32_t)pointer,
 			MW_CONTROL_MESSAGE);
 }

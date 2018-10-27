@@ -81,10 +81,11 @@ typedef struct
  * @param parent The containing window of this control
  * @param flags General control flags controlling the control
  * @param check_box_instance_data Instance structure containing check box specific data items
+ * @return The new control's handle
  */
-uint8_t mw_ui_check_box_add_new(uint16_t x,
+mw_handle_t mw_ui_check_box_add_new(uint16_t x,
 		uint16_t y,
-		uint8_t parent,
+		mw_handle_t parent,
 		uint32_t flags,
 		mw_ui_check_box_data_t *check_box_instance_data);
 

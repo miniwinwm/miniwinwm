@@ -48,14 +48,14 @@ const mw_util_rect_t text_display_rect = {51, 5, 125, 14};
  */
 typedef struct
 {
-	uint8_t keyboard_id;						/**< Keyboard control id */
-	uint8_t button_ok_id;						/**< Control id of ok button */
-	uint8_t button_cancel_id;					/**< Control id of cancel button */
+	mw_handle_t keyboard_handle;				/**< Keyboard control handle */
+	mw_handle_t button_ok_handle;				/**< Control handle of ok button */
+	mw_handle_t button_cancel_handle;			/**< Control handle of cancel button */
 	mw_ui_button_data_t button_ok_data;			/**< Instance data of ok button */
 	mw_ui_button_data_t button_cancel_data;		/**< Instance data of cancel button */
 	mw_ui_keyboard_data_t mw_ui_keyboard_data;	/**< Keyboard control instance data */
 	char text_buffer[MW_DIALOG_MAX_TEXT_LENGTH + 1];	/**< MW_DIALOG_MAX_TEXT_LENGTH digits, terminating null */
-	uint8_t response_window_id;					/**< Window id to send response message to */
+	mw_handle_t response_window_handle;			/**< Window handle to send response message to */
 	mw_dialog_response_t mw_dialog_response;	/**< Dialog response structure */
 	bool draw_cursor;							/**< if to draw cursor this timer tick or not */
 	uint8_t cursor_position;					/**< current position of cursor in characters */
@@ -84,7 +84,7 @@ static mw_dialog_text_entry_data_t mw_dialog_text_entry_data;
 
 static void remove_resources(void);
 static uint16_t get_cursor_x_coordinate(void);
-static void mw_dialog_text_entry_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_info);
+static void mw_dialog_text_entry_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_t *draw_info);
 static void mw_dialog_text_entry_message_function(const mw_message_t *message);
 
 /**********************
@@ -96,10 +96,10 @@ static void mw_dialog_text_entry_message_function(const mw_message_t *message);
  */
 static void remove_resources(void)
 {
-	mw_remove_control(mw_dialog_text_entry_data.keyboard_id);
-	mw_remove_control(mw_dialog_text_entry_data.button_ok_id);
-	mw_remove_control(mw_dialog_text_entry_data.button_cancel_id);
-	mw_remove_window(mw_dialog_text_entry_data.mw_dialog_response.window_id);
+	mw_remove_control(mw_dialog_text_entry_data.keyboard_handle);
+	mw_remove_control(mw_dialog_text_entry_data.button_ok_handle);
+	mw_remove_control(mw_dialog_text_entry_data.button_cancel_handle);
+	mw_remove_window(mw_dialog_text_entry_data.mw_dialog_response.window_handle);
 }
 
 /**
@@ -116,11 +116,11 @@ static uint16_t get_cursor_x_coordinate(void)
 /**
  * Window paint routine, called by window manager.
  *
- * @param window_ref The window identifier in the array of windows
+ * @param window_handle The window identifier in the array of windows
  * @param draw_info Draw info structure describing offset and clip region
  * @note Do not call this directly from user code
  */
-static void mw_dialog_text_entry_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_info)
+static void mw_dialog_text_entry_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_t *draw_info)
 {
 	mw_gl_set_fill(MW_GL_FILL);
 	mw_gl_set_solid_fill_colour(MW_HAL_LCD_WHITE);
@@ -129,8 +129,8 @@ static void mw_dialog_text_entry_paint_function(uint8_t window_ref, const mw_gl_
 	mw_gl_rectangle(draw_info,
 			0,
 			0,
-			mw_get_window_client_rect(window_ref).width,
-			mw_get_window_client_rect(window_ref).height);
+			mw_get_window_client_rect(window_handle).width,
+			mw_get_window_client_rect(window_handle).height);
 
 	mw_gl_set_border(MW_GL_BORDER_ON);
 	mw_gl_set_line(MW_GL_SOLID_LINE);
@@ -191,7 +191,7 @@ static void mw_dialog_text_entry_message_function(const mw_message_t *message)
 	switch (message->message_id)
 	{
 	case MW_WINDOW_CREATED_MESSAGE:
-		mw_set_timer(mw_tick_counter + MW_CURSOR_PERIOD_TICKS, message->recipient_id,	MW_WINDOW_MESSAGE);
+		mw_set_timer(mw_tick_counter + MW_CURSOR_PERIOD_TICKS, message->recipient_handle,	MW_WINDOW_MESSAGE);
 		mw_dialog_text_entry_data.cursor_position = strlen(mw_dialog_text_entry_data.text_buffer);
 
 		/* set cursor rect values */
@@ -203,13 +203,13 @@ static void mw_dialog_text_entry_message_function(const mw_message_t *message)
 
 	case MW_WINDOW_TIMER_MESSAGE:
 		mw_dialog_text_entry_data.draw_cursor = !mw_dialog_text_entry_data.draw_cursor;
-		mw_paint_window_client_rect(message->recipient_id, &mw_dialog_text_entry_data.cursor_rect);
-		mw_set_timer(mw_tick_counter + MW_CURSOR_PERIOD_TICKS, message->recipient_id,	MW_WINDOW_MESSAGE);
+		mw_paint_window_client_rect(message->recipient_handle, &mw_dialog_text_entry_data.cursor_rect);
+		mw_set_timer(mw_tick_counter + MW_CURSOR_PERIOD_TICKS, message->recipient_handle,	MW_WINDOW_MESSAGE);
 		break;
 
 	case MW_TOUCH_DOWN_MESSAGE:
 		/* handle a touch down event within this control */
-		if (mw_get_control_flags(message->recipient_id) & MW_CONTROL_FLAG_IS_ENABLED)
+		if (mw_get_control_flags(message->recipient_handle) & MW_CONTROL_FLAG_IS_ENABLED)
 		{
 			mw_gl_set_font(MW_GL_FONT_9);		/* needed to get font width */
 			mw_dialog_text_entry_data.cursor_position = ((message->message_data >> 16) - 51) /
@@ -221,7 +221,7 @@ static void mw_dialog_text_entry_message_function(const mw_message_t *message)
 			}
 
 			mw_dialog_text_entry_data.cursor_rect.x = get_cursor_x_coordinate();
-			mw_paint_window_client_rect(message->recipient_id, &text_display_rect);
+			mw_paint_window_client_rect(message->recipient_handle, &text_display_rect);
 		}
 		break;
 
@@ -275,7 +275,7 @@ static void mw_dialog_text_entry_message_function(const mw_message_t *message)
 			}
 
 			mw_dialog_text_entry_data.cursor_rect.x = get_cursor_x_coordinate();
-			mw_paint_window_client_rect(message->recipient_id, &text_display_rect);
+			mw_paint_window_client_rect(message->recipient_handle, &text_display_rect);
 		}
 		break;
 
@@ -283,13 +283,13 @@ static void mw_dialog_text_entry_message_function(const mw_message_t *message)
 		/* remove all controls and window */
 		remove_resources();
 
-		if (message->sender_id == mw_dialog_text_entry_data.button_cancel_id)
+		if (message->sender_handle == mw_dialog_text_entry_data.button_cancel_handle)
 		{
 			/* post cancel response to receiving window */
 			mw_dialog_text_entry_data.mw_dialog_response.data = MW_UNUSED_MESSAGE_PARAMETER;
 			mw_post_message(MW_DIALOG_TEXT_ENTRY_CANCEL_MESSAGE,
 					MW_UNUSED_MESSAGE_PARAMETER,
-					mw_dialog_text_entry_data.response_window_id,
+					mw_dialog_text_entry_data.response_window_handle,
 					(uint32_t)&mw_dialog_text_entry_data.mw_dialog_response,
 					MW_WINDOW_MESSAGE);
 		}
@@ -299,7 +299,7 @@ static void mw_dialog_text_entry_message_function(const mw_message_t *message)
 			mw_dialog_text_entry_data.mw_dialog_response.data = (uint32_t)mw_dialog_text_entry_data.text_buffer;
 			mw_post_message(MW_DIALOG_TEXT_ENTRY_OK_MESSAGE,
 					MW_UNUSED_MESSAGE_PARAMETER,
-					mw_dialog_text_entry_data.response_window_id,
+					mw_dialog_text_entry_data.response_window_handle,
 					(uint32_t)&mw_dialog_text_entry_data.mw_dialog_response,
 					MW_WINDOW_MESSAGE);
 		}
@@ -317,11 +317,11 @@ static void mw_dialog_text_entry_message_function(const mw_message_t *message)
 *** GLOBAL FUNCTIONS ***
 ***********************/
 
-uint8_t mw_create_window_dialog_text_entry(uint16_t x,
+mw_handle_t mw_create_window_dialog_text_entry(uint16_t x,
 		uint16_t y,
 		char *title,
 		char *initial_text,
-		uint8_t response_window_id)
+		mw_handle_t response_window_handle)
 {
 	mw_util_rect_t rect;
 
@@ -351,11 +351,11 @@ uint8_t mw_create_window_dialog_text_entry(uint16_t x,
 		return MW_MAX_WINDOW_COUNT;
 	}
 
-	mw_dialog_text_entry_data.response_window_id = response_window_id;
+	mw_dialog_text_entry_data.response_window_handle = response_window_handle;
 	rect.x = x;
 	rect.y = y;
 
-	mw_dialog_text_entry_data.mw_dialog_response.window_id = mw_add_window(&rect,
+	mw_dialog_text_entry_data.mw_dialog_response.window_handle = mw_add_window(&rect,
 			title,
 			mw_dialog_text_entry_paint_function,
 			mw_dialog_text_entry_message_function,
@@ -366,7 +366,7 @@ uint8_t mw_create_window_dialog_text_entry(uint16_t x,
 			NULL);
 
 	/* check if window could be created */
-	if (mw_dialog_text_entry_data.mw_dialog_response.window_id == MW_MAX_WINDOW_COUNT)
+	if (mw_dialog_text_entry_data.mw_dialog_response.window_handle == MW_MAX_WINDOW_COUNT)
 	{
 		/* it couldn't so exit */
 		return MW_MAX_WINDOW_COUNT;
@@ -379,28 +379,28 @@ uint8_t mw_create_window_dialog_text_entry(uint16_t x,
 			MW_UI_BUTTON_LABEL_MAX_CHARS, "Cancel");
 
 	/* create controls */
-	mw_dialog_text_entry_data.keyboard_id = mw_ui_keyboard_add_new(5,
+	mw_dialog_text_entry_data.keyboard_handle = mw_ui_keyboard_add_new(5,
 			24,
-			mw_dialog_text_entry_data.mw_dialog_response.window_id,
+			mw_dialog_text_entry_data.mw_dialog_response.window_handle,
 			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
 			&mw_dialog_text_entry_data.mw_ui_keyboard_data);
 
-	mw_dialog_text_entry_data.button_ok_id = mw_ui_button_add_new(25,
+	mw_dialog_text_entry_data.button_ok_handle = mw_ui_button_add_new(25,
 			90,
-			mw_dialog_text_entry_data.mw_dialog_response.window_id,
+			mw_dialog_text_entry_data.mw_dialog_response.window_handle,
 			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
 			&mw_dialog_text_entry_data.button_ok_data);
 
-	mw_dialog_text_entry_data.button_cancel_id = mw_ui_button_add_new(156,
+	mw_dialog_text_entry_data.button_cancel_handle = mw_ui_button_add_new(156,
 			90,
-			mw_dialog_text_entry_data.mw_dialog_response.window_id,
+			mw_dialog_text_entry_data.mw_dialog_response.window_handle,
 			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
 			&mw_dialog_text_entry_data.button_cancel_data);
 
 	/* check if keyboard could be created */
-	if (mw_dialog_text_entry_data.keyboard_id == MW_MAX_CONTROL_COUNT ||
-			mw_dialog_text_entry_data.button_ok_id == MW_MAX_CONTROL_COUNT ||
-			mw_dialog_text_entry_data.button_cancel_id == MW_MAX_CONTROL_COUNT)
+	if (mw_dialog_text_entry_data.keyboard_handle == MW_MAX_CONTROL_COUNT ||
+			mw_dialog_text_entry_data.button_ok_handle == MW_MAX_CONTROL_COUNT ||
+			mw_dialog_text_entry_data.button_cancel_handle == MW_MAX_CONTROL_COUNT)
 	{
 		/* remove all controls and window */
 		remove_resources();
@@ -412,8 +412,8 @@ uint8_t mw_create_window_dialog_text_entry(uint16_t x,
 	mw_util_safe_strcpy(mw_dialog_text_entry_data.text_buffer, MW_DIALOG_MAX_TEXT_LENGTH + 1, initial_text);
 
 	/* this window needs painting; it is coming up at the front so paint only this one */
-	mw_paint_window_frame(mw_dialog_text_entry_data.mw_dialog_response.window_id, MW_WINDOW_FRAME_COMPONENT_ALL);
-	mw_paint_window_client(mw_dialog_text_entry_data.mw_dialog_response.window_id);
+	mw_paint_window_frame(mw_dialog_text_entry_data.mw_dialog_response.window_handle, MW_WINDOW_FRAME_COMPONENT_ALL);
+	mw_paint_window_client(mw_dialog_text_entry_data.mw_dialog_response.window_handle);
 
-	return mw_dialog_text_entry_data.mw_dialog_response.window_id;
+	return mw_dialog_text_entry_data.mw_dialog_response.window_handle;
 }

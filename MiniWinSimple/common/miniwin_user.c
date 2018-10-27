@@ -44,11 +44,11 @@ SOFTWARE.
 ***********************/
 
 /* window */
-uint8_t window_simple_id;
+mw_handle_t window_simple_handle;
 
 /* control */
-uint8_t button_id;
-uint8_t label_id;
+mw_handle_t button_handle;
+mw_handle_t label_handle;
 
 /* controls instance data */
 mw_ui_label_data_t label_data;
@@ -93,7 +93,7 @@ void mw_user_init(void)
 	mw_util_rect_t r;
 
 	mw_util_set_rect(&r, 15, 100, 220, 210);
-	window_simple_id = mw_add_window(&r,
+	window_simple_handle = mw_add_window(&r,
 			"SIMPLE",
 			window_simple_paint_function,
 			window_simple_message_function,
@@ -104,17 +104,17 @@ void mw_user_init(void)
 			NULL);
 
 	mw_util_safe_strcpy(label_data.label, MW_UI_LABEL_MAX_CHARS, "Not yet set");
-	label_id = mw_ui_label_add_new(100,
+	label_handle = mw_ui_label_add_new(100,
 			5,
 			84,
-			window_simple_id,
+			window_simple_handle,
 			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
 			&label_data);
 
 	mw_util_safe_strcpy(button_data.button_label, MW_UI_BUTTON_LABEL_MAX_CHARS, "TEST");
-	button_id = mw_ui_button_add_new(10,
+	button_handle = mw_ui_button_add_new(10,
 			10,
-			window_simple_id,
+			window_simple_handle,
 			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
 			&button_data);
 

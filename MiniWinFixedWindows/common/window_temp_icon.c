@@ -54,7 +54,7 @@ typedef struct
 
 extern const uint8_t temp_bitmap[];
 extern const uint8_t temp_down_bitmap[];
-extern uint8_t window_temp_id;
+extern mw_handle_t window_temp_handle;
 extern volatile uint32_t mw_tick_counter;
 
 /**********************
@@ -75,7 +75,7 @@ static window_temp_icon_data_t window_temp_icon_data;
 *** GLOBAL FUNCTIONS ***
 ***********************/
 
-void window_temp_icon_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_info)
+void window_temp_icon_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_t *draw_info)
 {
 	MW_ASSERT(draw_info, "Null pointer parameter");
 
@@ -111,8 +111,8 @@ void window_temp_icon_message_function(const mw_message_t *message)
 
 	case MW_TOUCH_DOWN_MESSAGE:
 		window_temp_icon_data.touch_down = true;
-		mw_set_timer(mw_tick_counter + MW_CONTROL_DOWN_TIME, message->recipient_id, MW_WINDOW_MESSAGE);
-		mw_paint_window_client(message->recipient_id);
+		mw_set_timer(mw_tick_counter + MW_CONTROL_DOWN_TIME, message->recipient_handle, MW_WINDOW_MESSAGE);
+		mw_paint_window_client(message->recipient_handle);
 		break;
 
 	case MW_WINDOW_TIMER_MESSAGE:
@@ -120,17 +120,17 @@ void window_temp_icon_message_function(const mw_message_t *message)
 		{
 			/* repaint the window up for a moment before switching to the new window, this is not necessary but makes the ui feel better */
 			window_temp_icon_data.touch_down = false;
-			mw_paint_window_client(message->recipient_id);
-			mw_set_timer(mw_tick_counter + MW_CONTROL_DOWN_TIME * 2, message->recipient_id, MW_WINDOW_MESSAGE);
+			mw_paint_window_client(message->recipient_handle);
+			mw_set_timer(mw_tick_counter + MW_CONTROL_DOWN_TIME * 2, message->recipient_handle, MW_WINDOW_MESSAGE);
 		}
 		else
 		{
-			/* set window window_temp_id visible */
-			mw_set_window_visible(window_temp_id, true);
+			/* set window window_temp_handle visible */
+			mw_set_window_visible(window_temp_handle, true);
 
 			/* a window has changed visibility so repaint it */
-			mw_paint_window_frame(window_temp_id, MW_WINDOW_FRAME_COMPONENT_ALL);
-			mw_paint_window_client(window_temp_id);
+			mw_paint_window_frame(window_temp_handle, MW_WINDOW_FRAME_COMPONENT_ALL);
+			mw_paint_window_client(window_temp_handle);
 		}
 		break;
 

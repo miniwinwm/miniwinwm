@@ -55,7 +55,7 @@ SOFTWARE.
 *** LOCAL FUNCTION PROTOTYPES ***
 ********************************/
 
-static void progress_bar_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *draw_info);
+static void progress_bar_paint_function(mw_handle_t control_handle, const mw_gl_draw_info_t *draw_info);
 static void progress_bar_message_function(const mw_message_t *message);
 
 /**********************
@@ -65,12 +65,12 @@ static void progress_bar_message_function(const mw_message_t *message);
 /**
  * Control paint routine, called by window manager.
  *
- * @param control_ref The control identifier in the array of controls
+ * @param control_handle The control identifier in the array of controls
  * @param draw_info Draw info structure describing offset and clip region
  */
-static void progress_bar_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *draw_info)
+static void progress_bar_paint_function(mw_handle_t control_handle, const mw_gl_draw_info_t *draw_info)
 {
-	mw_ui_progress_bar_data_t *this_progress_bar = (mw_ui_progress_bar_data_t*)mw_get_control_instance_data(control_ref);
+	mw_ui_progress_bar_data_t *this_progress_bar = (mw_ui_progress_bar_data_t*)mw_get_control_instance_data(control_handle);
 
     /* draw the background */
 	mw_gl_set_solid_fill_colour(MW_CONTROL_UP_COLOUR);
@@ -83,8 +83,8 @@ static void progress_bar_paint_function(uint8_t control_ref, const mw_gl_draw_in
 	mw_gl_rectangle(draw_info,
 			0,
 			0,
-			mw_get_control_rect(control_ref).width,
-			mw_get_control_rect(control_ref).height);
+			mw_get_control_rect(control_handle).width,
+			mw_get_control_rect(control_handle).height);
 
 	if (this_progress_bar->progress_percent > 100)
 	{
@@ -92,14 +92,14 @@ static void progress_bar_paint_function(uint8_t control_ref, const mw_gl_draw_in
 	}
 
 	mw_gl_set_fg_colour(MW_HAL_LCD_WHITE);
-	mw_gl_vline(draw_info, 1, 1, mw_get_control_rect(control_ref).height - 2);
-	mw_gl_hline(draw_info, 1, mw_get_control_rect(control_ref).width - 2, 1);
+	mw_gl_vline(draw_info, 1, 1, mw_get_control_rect(control_handle).height - 2);
+	mw_gl_hline(draw_info, 1, mw_get_control_rect(control_handle).width - 2, 1);
 	mw_gl_set_fg_colour(MW_HAL_LCD_GREY7);
-	mw_gl_vline(draw_info, mw_get_control_rect(control_ref).width - 2, 1, mw_get_control_rect(control_ref).height - 2);
-	mw_gl_hline(draw_info, 1, mw_get_control_rect(control_ref).width - 2, mw_get_control_rect(control_ref).height - 2);
+	mw_gl_vline(draw_info, mw_get_control_rect(control_handle).width - 2, 1, mw_get_control_rect(control_handle).height - 2);
+	mw_gl_hline(draw_info, 1, mw_get_control_rect(control_handle).width - 2, mw_get_control_rect(control_handle).height - 2);
 
     /* set progress_bar progress fill colour according to enabled state */
-	if (mw_get_control_flags(control_ref) & MW_CONTROL_FLAG_IS_ENABLED)
+	if (mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_IS_ENABLED)
 	{
 		mw_gl_set_solid_fill_colour(MW_PROGRESS_BAR_COLOUR);
 	}
@@ -113,8 +113,8 @@ static void progress_bar_paint_function(uint8_t control_ref, const mw_gl_draw_in
 	mw_gl_rectangle(draw_info,
 			2,
 			2,
-			((mw_get_control_rect(control_ref).width - 4) * this_progress_bar->progress_percent) / 100,
-			mw_get_control_rect(control_ref).height - 4);
+			((mw_get_control_rect(control_handle).width - 4) * this_progress_bar->progress_percent) / 100,
+			mw_get_control_rect(control_handle).height - 4);
 }
 
 /**
@@ -124,7 +124,7 @@ static void progress_bar_paint_function(uint8_t control_ref, const mw_gl_draw_in
  */
 static void progress_bar_message_function(const mw_message_t *message)
 {
-	mw_ui_progress_bar_data_t *this_progress_bar = (mw_ui_progress_bar_data_t*)mw_get_control_instance_data(message->recipient_id);
+	mw_ui_progress_bar_data_t *this_progress_bar = (mw_ui_progress_bar_data_t*)mw_get_control_instance_data(message->recipient_handle);
 
 	MW_ASSERT(message, "Null pointer argument");
 
@@ -144,11 +144,11 @@ static void progress_bar_message_function(const mw_message_t *message)
 *** GLOBAL FUNCTIONS ***
 ***********************/
 
-uint8_t mw_ui_progress_bar_add_new(uint16_t x,
+mw_handle_t mw_ui_progress_bar_add_new(uint16_t x,
 		uint16_t y,
 		uint16_t width,
 		uint16_t height,
-		uint8_t parent,
+		mw_handle_t parent,
 		uint32_t flags,
 		mw_ui_progress_bar_data_t *progress_bar_instance_data)
 {

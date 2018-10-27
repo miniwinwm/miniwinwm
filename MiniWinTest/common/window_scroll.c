@@ -79,7 +79,7 @@ static window_scroll_data_t window_scroll_data;
 *** GLOBAL FUNCTIONS ***
 ***********************/
 
-void window_scroll_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_info)
+void window_scroll_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_t *draw_info)
 {
 	int16_t column;
 	int16_t line;
@@ -101,7 +101,7 @@ void window_scroll_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *d
 	for (line = 0; line < LINES; line++)
 	{
 		line_y = line * (mw_gl_get_font_height() + 1);
-		scroll_offset_y = (((LINES * (mw_gl_get_font_height() + 1)) - mw_get_window_client_rect(window_ref).height) * window_scroll_data.scroll_y) /
+		scroll_offset_y = (((LINES * (mw_gl_get_font_height() + 1)) - mw_get_window_client_rect(window_handle).height) * window_scroll_data.scroll_y) /
 				UINT8_MAX;
 
 		/* ignore text above client area */
@@ -111,7 +111,7 @@ void window_scroll_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *d
 		}
 
 		/* ignore text below client area */
-		if (line_y - scroll_offset_y > mw_get_window_client_rect(window_ref).height)
+		if (line_y - scroll_offset_y > mw_get_window_client_rect(window_handle).height)
 		{
 			break;
 		}
@@ -119,7 +119,7 @@ void window_scroll_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *d
 		for (column = 3; column < COLUMNS; column++)
 		{
 			column_x = column * (mw_gl_get_font_width() + 1);
-			scroll_offset_x = (((COLUMNS * (mw_gl_get_font_width() + 1)) - mw_get_window_client_rect(window_ref).width) * window_scroll_data.scroll_x) /
+			scroll_offset_x = (((COLUMNS * (mw_gl_get_font_width() + 1)) - mw_get_window_client_rect(window_handle).width) * window_scroll_data.scroll_x) /
 					UINT8_MAX;
 
 			/* ignore text left of client area */
@@ -129,7 +129,7 @@ void window_scroll_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *d
 			}
 
 			/* ignore text right of client area */
-			if (column_x - scroll_offset_x > mw_get_window_client_rect(window_ref).width)
+			if (column_x - scroll_offset_x > mw_get_window_client_rect(window_handle).width)
 			{
 				break;
 			}
@@ -167,12 +167,12 @@ void window_scroll_message_function(const mw_message_t *message)
 
 	case MW_WINDOW_VERT_SCROLL_BAR_SCROLLED_MESSAGE:
 		window_scroll_data.scroll_y = message->message_data;
-		mw_paint_window_client(message->recipient_id);
+		mw_paint_window_client(message->recipient_handle);
 		break;
 
 	case MW_WINDOW_HORIZ_SCROLL_BAR_SCROLLED_MESSAGE:
 		window_scroll_data.scroll_x = message->message_data;
-		mw_paint_window_client(message->recipient_id);
+		mw_paint_window_client(message->recipient_handle);
 		break;
 
 	default:

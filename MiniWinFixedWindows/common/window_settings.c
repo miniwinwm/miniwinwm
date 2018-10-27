@@ -55,10 +55,10 @@ typedef struct
 *** EXTERNAL VARIABLES ***
 **************************/
 
-extern uint8_t list_box_settings_id;
-extern uint8_t label_settings_id;
-extern uint8_t arrow_settings_up;
-extern uint8_t arrow_settings_down;
+extern mw_handle_t list_box_settings_handle;
+extern mw_handle_t label_settings_handle;
+extern mw_handle_t arrow_settings_up;
+extern mw_handle_t arrow_settings_down;
 extern mw_ui_list_box_data_t list_box_settings_data;
 extern mw_ui_list_box_entry list_box_settings_entries[];
 
@@ -80,7 +80,7 @@ static settings_data_t settings_data;
 *** GLOBAL FUNCTIONS ***
 ***********************/
 
-void window_settings_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_info)
+void window_settings_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_t *draw_info)
 {
 	MW_ASSERT(draw_info, "Null pointer parameter");
 
@@ -91,15 +91,15 @@ void window_settings_paint_function(uint8_t window_ref, const mw_gl_draw_info_t 
 	mw_gl_rectangle(draw_info,
 			0,
 			0,
-			mw_get_window_client_rect(window_ref).width,
-			mw_get_window_client_rect(window_ref).height);
+			mw_get_window_client_rect(window_handle).width,
+			mw_get_window_client_rect(window_handle).height);
 
 	/* blue title bar */
 	mw_gl_set_solid_fill_colour(MW_HAL_LCD_BLUE);
 	mw_gl_rectangle(draw_info,
 			0,
 			0,
-			mw_get_window_client_rect(window_ref).width,
+			mw_get_window_client_rect(window_handle).width,
 			18);
 	mw_gl_set_fg_colour(MW_HAL_LCD_WHITE);
 	mw_gl_set_text_rotation(MW_GL_TEXT_ROTATION_0);
@@ -123,7 +123,7 @@ void window_settings_message_function(const mw_message_t *message)
 
 	case MW_BUTTON_PRESSED_MESSAGE:
 	    /* set window invisible */
-		mw_set_window_visible(message->recipient_id, false);
+		mw_set_window_visible(message->recipient_handle, false);
 
 		/* a window has changed visibility so repaint all */
 		mw_paint_all();
@@ -132,8 +132,8 @@ void window_settings_message_function(const mw_message_t *message)
 	case MW_LIST_BOX_ITEM_PRESSED_MESSAGE:
 		/* list box item pressed */
 		list_box_item_chosen = message->message_data;
-		mw_ui_common_post_pointer_to_control(label_settings_id, list_box_settings_entries[list_box_item_chosen].label);
-		mw_paint_control(label_settings_id);
+		mw_ui_common_post_pointer_to_control(label_settings_handle, list_box_settings_entries[list_box_item_chosen].label);
+		mw_paint_control(label_settings_handle);
 		break;
 
 	case MW_ARROW_PRESSED_MESSAGE:
@@ -154,10 +154,10 @@ void window_settings_message_function(const mw_message_t *message)
 
 			mw_post_message(MW_TRANSFER_DATA_1_MESSAGE,
 					0,
-					list_box_settings_id,
+					list_box_settings_handle,
 					settings_data.lines_to_scroll,
 					MW_CONTROL_MESSAGE);
-			mw_paint_control(list_box_settings_id);
+			mw_paint_control(list_box_settings_handle);
 		}
 		else if (message->message_data == MW_UI_ARROW_DOWN &&
 					settings_data.lines_to_scroll < (list_box_settings_data.number_of_items - list_box_settings_data.number_of_lines))
@@ -176,10 +176,10 @@ void window_settings_message_function(const mw_message_t *message)
 
 			mw_post_message(MW_TRANSFER_DATA_1_MESSAGE,
 					0,
-					list_box_settings_id,
+					list_box_settings_handle,
 					settings_data.lines_to_scroll,
 					MW_CONTROL_MESSAGE);
-			mw_paint_control(list_box_settings_id);
+			mw_paint_control(list_box_settings_handle);
 		}
 		break;
 

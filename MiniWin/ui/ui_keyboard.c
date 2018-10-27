@@ -73,7 +73,7 @@ static mw_util_rect_t invalid_rect;
 *** LOCAL FUNCTION PROTOTYPES ***
 ********************************/
 
-static void keyboard_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *draw_info);
+static void keyboard_paint_function(mw_handle_t control_handle, const mw_gl_draw_info_t *draw_info);
 static void keyboard_message_function(const mw_message_t *message);
 static void process_keypress(const mw_message_t *message);
 
@@ -84,12 +84,12 @@ static void process_keypress(const mw_message_t *message);
 /**
  * Control paint routine, called by window manager.
  *
- * @param control_ref The control identifier in the array of controls
+ * @param control_handle The control identifier in the array of controls
  * @param draw_info Draw info structure describing offset and clip region
  */
-static void keyboard_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *draw_info)
+static void keyboard_paint_function(mw_handle_t control_handle, const mw_gl_draw_info_t *draw_info)
 {
-	mw_ui_keyboard_data_t *this_keyboard = (mw_ui_keyboard_data_t*)mw_get_control_instance_data(control_ref);
+	mw_ui_keyboard_data_t *this_keyboard = (mw_ui_keyboard_data_t*)mw_get_control_instance_data(control_handle);
 	uint8_t row;
 	uint8_t column;
 	mw_hal_lcd_colour_t highlighted_colour;
@@ -121,7 +121,7 @@ static void keyboard_paint_function(uint8_t control_ref, const mw_gl_draw_info_t
 			}
 
 			/* set colour of text according to control enabled state */
-			if (mw_get_control_flags(control_ref) & MW_CONTROL_FLAG_IS_ENABLED)
+			if (mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_IS_ENABLED)
 			{
 				mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 			}
@@ -376,7 +376,7 @@ static void keyboard_paint_function(uint8_t control_ref, const mw_gl_draw_info_t
  */
 static void process_keypress(const mw_message_t *message)
 {
-	mw_ui_keyboard_data_t *this_keyboard = (mw_ui_keyboard_data_t*)mw_get_control_instance_data(message->recipient_id);
+	mw_ui_keyboard_data_t *this_keyboard = (mw_ui_keyboard_data_t*)mw_get_control_instance_data(message->recipient_handle);
 
 	/* check for shift key pressed */
 	if (this_keyboard->key_pressed_row == 2
@@ -428,8 +428,8 @@ static void process_keypress(const mw_message_t *message)
 	{
 		/* post message for keypress */
 		mw_post_message(MW_KEY_PRESSED_MESSAGE,
-				message->recipient_id,
-				mw_get_control_parent_window(message->recipient_id),
+				message->recipient_handle,
+				mw_get_control_parent_window(message->recipient_handle),
 				(uint32_t)keyboards[this_keyboard->keyboard_display][this_keyboard->key_pressed_row][this_keyboard->key_pressed_column],
 				MW_WINDOW_MESSAGE);
 	}
@@ -439,7 +439,7 @@ static void process_keypress(const mw_message_t *message)
 	invalid_rect.y = this_keyboard->key_pressed_row * MW_UI_KEYBOARD_KEY_SIZE;
 	invalid_rect.width = MW_UI_KEYBOARD_KEY_SIZE;
 	invalid_rect.height = MW_UI_KEYBOARD_KEY_SIZE;
-	mw_paint_control_rect(message->recipient_id, &invalid_rect);
+	mw_paint_control_rect(message->recipient_handle, &invalid_rect);
 }
 
 /**
@@ -449,7 +449,7 @@ static void process_keypress(const mw_message_t *message)
  */
 static void keyboard_message_function(const mw_message_t *message)
 {
-	mw_ui_keyboard_data_t *this_keyboard = (mw_ui_keyboard_data_t*)mw_get_control_instance_data(message->recipient_id);
+	mw_ui_keyboard_data_t *this_keyboard = (mw_ui_keyboard_data_t*)mw_get_control_instance_data(message->recipient_handle);
 
 	switch (message->message_id)
 	{
@@ -464,7 +464,7 @@ static void keyboard_message_function(const mw_message_t *message)
 
 	case MW_TOUCH_DRAG_MESSAGE:
 	case MW_TOUCH_HOLD_DOWN_MESSAGE:
-		if (!(mw_get_control_flags(message->recipient_id) & MW_CONTROL_FLAG_IS_ENABLED))
+		if (!(mw_get_control_flags(message->recipient_handle) & MW_CONTROL_FLAG_IS_ENABLED))
 		{
 			break;
 		}
@@ -489,7 +489,7 @@ static void keyboard_message_function(const mw_message_t *message)
 		if (this_keyboard->swap_keyboard)
 		{
 			this_keyboard->swap_keyboard = false;
-			mw_paint_control(message->recipient_id);
+			mw_paint_control(message->recipient_handle);
 		}
 		else
 		{
@@ -498,13 +498,13 @@ static void keyboard_message_function(const mw_message_t *message)
 			invalid_rect.y = this_keyboard->key_pressed_row * MW_UI_KEYBOARD_KEY_SIZE;
 			invalid_rect.width = MW_UI_KEYBOARD_KEY_SIZE;
 			invalid_rect.height = MW_UI_KEYBOARD_KEY_SIZE;
-			mw_paint_control_rect(message->recipient_id, &invalid_rect);
+			mw_paint_control_rect(message->recipient_handle, &invalid_rect);
 		}
 		break;
 
 	case MW_TOUCH_DOWN_MESSAGE:
 		/* handle a touch down event within this control */
-		if (!(mw_get_control_flags(message->recipient_id) & MW_CONTROL_FLAG_IS_ENABLED))
+		if (!(mw_get_control_flags(message->recipient_handle) & MW_CONTROL_FLAG_IS_ENABLED))
 		{
 			break;
 		}
@@ -514,7 +514,7 @@ static void keyboard_message_function(const mw_message_t *message)
 		this_keyboard->key_pressed_column = (message->message_data >> 16) / MW_UI_KEYBOARD_KEY_SIZE;
 
 		this_keyboard->touch_down_time = mw_tick_counter;
-		this_keyboard->timer_handle = mw_set_timer(mw_tick_counter + MW_KEY_DOWN_TIME, message->recipient_id, MW_CONTROL_MESSAGE);
+		this_keyboard->timer_handle = mw_set_timer(mw_tick_counter + MW_KEY_DOWN_TIME, message->recipient_handle, MW_CONTROL_MESSAGE);
 		this_keyboard->is_key_pressed = true;
 		process_keypress(message);
 		break;
@@ -523,7 +523,7 @@ static void keyboard_message_function(const mw_message_t *message)
 		if (this_keyboard->holding_down)
 		{
 			this_keyboard->holding_down = false;
-			this_keyboard->timer_handle = mw_set_timer(mw_tick_counter + MW_KEY_DOWN_TIME, message->recipient_id, MW_CONTROL_MESSAGE);
+			this_keyboard->timer_handle = mw_set_timer(mw_tick_counter + MW_KEY_DOWN_TIME, message->recipient_handle, MW_CONTROL_MESSAGE);
 		}
 		break;
 
@@ -536,9 +536,9 @@ static void keyboard_message_function(const mw_message_t *message)
 *** GLOBAL FUNCTIONS ***
 ***********************/
 
-uint8_t mw_ui_keyboard_add_new(uint16_t x,
+mw_handle_t mw_ui_keyboard_add_new(uint16_t x,
 		uint16_t y,
-		uint8_t parent,
+		mw_handle_t parent,
 		uint32_t flags,
 		mw_ui_keyboard_data_t *keyboard_instance_data)
 {

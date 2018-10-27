@@ -59,7 +59,7 @@ typedef struct
 *** EXTERNAL VARIABLES ***
 **************************/
 
-extern uint8_t button_id;
+extern mw_handle_t button_handle;
 
 /**********************
 *** LOCAL VARIABLES ***
@@ -81,7 +81,7 @@ static window_temp_data_t window_temp_data;
 *** GLOBAL FUNCTIONS ***
 ***********************/
 
-void window_temp_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_info)
+void window_temp_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_t *draw_info)
 {
 	uint8_t i;
 	uint16_t x;
@@ -98,30 +98,30 @@ void window_temp_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *dra
 	mw_gl_rectangle(draw_info,
 			0,
 			0,
-			mw_get_window_client_rect(window_ref).width,
-			mw_get_window_client_rect(window_ref).height);
+			mw_get_window_client_rect(window_handle).width,
+			mw_get_window_client_rect(window_handle).height);
 
 	/* grey borders */
 	mw_gl_set_solid_fill_colour(MW_HAL_LCD_GREY2);
 	mw_gl_rectangle(draw_info,
 			0,
 			18,
-			mw_get_window_client_rect(window_ref).width,
+			mw_get_window_client_rect(window_handle).width,
 			5);
 	mw_gl_rectangle(draw_info,
 			0,
 			18,
 			5,
-			mw_get_window_client_rect(window_ref).height - 18);
+			mw_get_window_client_rect(window_handle).height - 18);
 	mw_gl_rectangle(draw_info,
-			mw_get_window_client_rect(window_ref).width - 5,
+			mw_get_window_client_rect(window_handle).width - 5,
 			18,
 			5,
-			mw_get_window_client_rect(window_ref).height - 18);
+			mw_get_window_client_rect(window_handle).height - 18);
 	mw_gl_rectangle(draw_info,
 			5,
-			mw_get_window_client_rect(window_ref).height - 40,
-			mw_get_window_client_rect(window_ref).width - 10,
+			mw_get_window_client_rect(window_handle).height - 40,
+			mw_get_window_client_rect(window_handle).width - 10,
 			40);
 
 	/* blue title bar */
@@ -129,7 +129,7 @@ void window_temp_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *dra
 	mw_gl_rectangle(draw_info,
 			0,
 			0,
-			mw_get_window_client_rect(window_ref).width,
+			mw_get_window_client_rect(window_handle).width,
 			18);
 	mw_gl_set_fg_colour(MW_HAL_LCD_WHITE);
 	mw_gl_set_bg_transparency(MW_GL_BG_TRANSPARENT);
@@ -322,7 +322,7 @@ void window_temp_message_function(const mw_message_t *message)
 
 	case MW_BUTTON_PRESSED_MESSAGE:
 	    /* set window invisible */
-		mw_set_window_visible(message->recipient_id, false);
+		mw_set_window_visible(message->recipient_handle, false);
 
 		/* a window has changed visibility so repaint all */
 		mw_paint_all();

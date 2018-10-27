@@ -46,17 +46,17 @@ SOFTWARE.
 ***********************/
 
 /* window */
-uint8_t window_gyro_x_id;
-uint8_t window_gyro_y_id;
-uint8_t window_gyro_z_id;
+mw_handle_t window_gyro_x_handle;
+mw_handle_t window_gyro_y_handle;
+mw_handle_t window_gyro_z_handle;
 
 /* control */
-uint8_t button_gyro_x_id;
-uint8_t label_gyro_x_id;
-uint8_t button_gyro_y_id;
-uint8_t label_gyro_y_id;
-uint8_t button_gyro_z_id;
-uint8_t label_gyro_z_id;
+mw_handle_t button_gyro_x_handle;
+mw_handle_t label_gyro_x_handle;
+mw_handle_t button_gyro_y_handle;
+mw_handle_t label_gyro_y_handle;
+mw_handle_t button_gyro_z_handle;
+mw_handle_t label_gyro_z_handle;
 
 /* controls instance data */
 mw_ui_label_data_t label_gyro_x_data;
@@ -105,7 +105,7 @@ void mw_user_init(void)
 	mw_util_rect_t r;
 
 	mw_util_set_rect(&r, 0, 0, 160, 100);
-	window_gyro_x_id = mw_add_window(&r,
+	window_gyro_x_handle = mw_add_window(&r,
 			"Gyro X",
 			window_gyro_x_paint_function,
 			window_gyro_x_message_function,
@@ -116,22 +116,22 @@ void mw_user_init(void)
 			NULL);
 
 	mw_util_safe_strcpy(label_gyro_x_data.label, MW_UI_LABEL_MAX_CHARS, "0");
-	label_gyro_x_id = mw_ui_label_add_new(100,
+	label_gyro_x_handle = mw_ui_label_add_new(100,
 			5,
 			MW_UI_BUTTON_WIDTH,
-			window_gyro_x_id,
+			window_gyro_x_handle,
 			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAGS_LARGE_SIZE,
 			&label_gyro_x_data);
 
 	mw_util_safe_strcpy(button_gyro_x_data.button_label, MW_UI_BUTTON_LABEL_MAX_CHARS, "Zero");
-	button_gyro_x_id = mw_ui_button_add_new(100,
+	button_gyro_x_handle = mw_ui_button_add_new(100,
 			40,
-			window_gyro_x_id,
+			window_gyro_x_handle,
 			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
 			&button_gyro_x_data);
 
 	mw_util_set_rect(&r, 20, 110, 160, 100);
-	window_gyro_y_id = mw_add_window(&r,
+	window_gyro_y_handle = mw_add_window(&r,
 			"Gyro Y",
 			window_gyro_y_paint_function,
 			window_gyro_y_message_function,
@@ -142,22 +142,22 @@ void mw_user_init(void)
 			NULL);
 
 	mw_util_safe_strcpy(label_gyro_y_data.label, MW_UI_LABEL_MAX_CHARS, "0");
-	label_gyro_y_id = mw_ui_label_add_new(100,
+	label_gyro_y_handle = mw_ui_label_add_new(100,
 			5,
 			MW_UI_BUTTON_WIDTH,
-			window_gyro_y_id,
+			window_gyro_y_handle,
 			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAGS_LARGE_SIZE,
 			&label_gyro_y_data);
 
 	mw_util_safe_strcpy(button_gyro_y_data.button_label, MW_UI_BUTTON_LABEL_MAX_CHARS, "Zero");
-	button_gyro_y_id = mw_ui_button_add_new(100,
+	button_gyro_y_handle = mw_ui_button_add_new(100,
 			40,
-			window_gyro_y_id,
+			window_gyro_y_handle,
 			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
 			&button_gyro_y_data);
 
 	mw_util_set_rect(&r, 40, 220, 160, 100);
-	window_gyro_z_id = mw_add_window(&r,
+	window_gyro_z_handle = mw_add_window(&r,
 			"Gyro Z",
 			window_gyro_z_paint_function,
 			window_gyro_z_message_function,
@@ -168,17 +168,17 @@ void mw_user_init(void)
 			NULL);
 
 	mw_util_safe_strcpy(label_gyro_z_data.label, MW_UI_LABEL_MAX_CHARS, "0");
-	label_gyro_z_id = mw_ui_label_add_new(100,
+	label_gyro_z_handle = mw_ui_label_add_new(100,
 			5,
 			MW_UI_BUTTON_WIDTH,
-			window_gyro_z_id,
+			window_gyro_z_handle,
 			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAGS_LARGE_SIZE,
 			&label_gyro_z_data);
 
 	mw_util_safe_strcpy(button_gyro_z_data.button_label, MW_UI_BUTTON_LABEL_MAX_CHARS, "Zero");
-	button_gyro_z_id = mw_ui_button_add_new(100,
+	button_gyro_z_handle = mw_ui_button_add_new(100,
 			40,
-			window_gyro_z_id,
+			window_gyro_z_handle,
 			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
 			&button_gyro_z_data);
 

@@ -55,7 +55,7 @@ SOFTWARE.
 *** LOCAL FUNCTION PROTOTYPES ***
 ********************************/
 
-static void label_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *draw_info);
+static void label_paint_function(mw_handle_t control_handle, const mw_gl_draw_info_t *draw_info);
 static void label_message_function(const mw_message_t *message);
 
 /**********************
@@ -65,12 +65,12 @@ static void label_message_function(const mw_message_t *message);
 /**
  * Control paint routine, called by window manager.
  *
- * @param control_ref The control identifier in the array of controls
+ * @param control_handle The control identifier in the array of controls
  * @param draw_info Draw info structure describing offset and clip region
  */
-static void label_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *draw_info)
+static void label_paint_function(mw_handle_t control_handle, const mw_gl_draw_info_t *draw_info)
 {
-	mw_ui_label_data_t *this_label = (mw_ui_label_data_t*)mw_get_control_instance_data(control_ref);
+	mw_ui_label_data_t *this_label = (mw_ui_label_data_t*)mw_get_control_instance_data(control_handle);
 
     /* draw the background */
 	mw_gl_set_solid_fill_colour(MW_CONTROL_UP_COLOUR);
@@ -81,11 +81,11 @@ static void label_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *d
 	mw_gl_rectangle(draw_info,
 			0,
 			0,
-			mw_get_control_rect(control_ref).width,
-			mw_get_control_rect(control_ref).height);
+			mw_get_control_rect(control_handle).width,
+			mw_get_control_rect(control_handle).height);
 
     /* set label text colour according to enabled state */
-	if (mw_get_control_flags(control_ref) & MW_CONTROL_FLAG_IS_ENABLED)
+	if (mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_IS_ENABLED)
 	{
 		mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 	}
@@ -98,7 +98,7 @@ static void label_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *d
 	mw_gl_set_bg_transparency(MW_GL_BG_TRANSPARENT);    
 	mw_gl_set_text_rotation(MW_GL_TEXT_ROTATION_0);
 
-	if (mw_get_control_flags(control_ref) & MW_CONTROL_FLAGS_LARGE_SIZE)
+	if (mw_get_control_flags(control_handle) & MW_CONTROL_FLAGS_LARGE_SIZE)
 	{
 		mw_gl_set_font(MW_GL_TITLE_FONT);
 		mw_gl_string(draw_info, MW_UI_LABEL_LARGE_X_OFFSET, 1, this_label->label);
@@ -117,7 +117,7 @@ static void label_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *d
  */
 static void label_message_function(const mw_message_t *message)
 {
-	mw_ui_label_data_t *this_label = (mw_ui_label_data_t*)mw_get_control_instance_data(message->recipient_id);
+	mw_ui_label_data_t *this_label = (mw_ui_label_data_t*)mw_get_control_instance_data(message->recipient_handle);
 
 	MW_ASSERT(message, "Null pointer argument");
 
@@ -144,10 +144,10 @@ static void label_message_function(const mw_message_t *message)
 *** GLOBAL FUNCTIONS ***
 ***********************/
 
-uint8_t mw_ui_label_add_new(uint16_t x,
+mw_handle_t mw_ui_label_add_new(uint16_t x,
 		uint16_t y,
 		uint16_t width,
-		uint8_t parent,
+		mw_handle_t parent,
 		uint32_t flags,
 		mw_ui_label_data_t *label_instance_data)
 {

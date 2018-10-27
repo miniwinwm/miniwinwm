@@ -97,7 +97,7 @@ typedef struct
     uint8_t menu_bar_items_count;		/**< Number of items in above array */
     uint8_t menu_bar_selected_item;		/**< The most recently selected menu bar item */
     char title[MW_MAX_TITLE_SIZE + 1];  /**< The window's title in the title bar */
-	mw_handle_t handle;					/**< handle used to refer to this window */
+	mw_handle_t window_handle;			/**< handle used to refer to this window */
 } window_t;
 
 /**
@@ -110,8 +110,8 @@ typedef struct
 	void *instance_data;				/**< Void pointer to control specific data structure containing control specific configuration data per instance */
 	uint16_t control_flags;				/**< All the flags defining a control's description and state */
 	mw_util_rect_t control_rect;        /**< Rect containing coordinates of control's area */
-    uint8_t parent;                     /**< This control's parent window */
-	mw_handle_t handle;					/**< handle used to refer to this control */
+	mw_handle_t parent;                 /**< This control's parent window handle */
+	mw_handle_t control_handle;			/**< handle used to refer to this control */
 } control_t;
 
 /**
@@ -120,9 +120,9 @@ typedef struct
 typedef struct
 {
 	uint32_t next_fire_time;        				/**< the time for the timer to go off in window manager ticks; this is an absolute value, not relative */
-	uint8_t recipient_id;           				/**< the window or control id of the recipient of the timer fired message */
+	mw_handle_t recipient_handle;	 				/**< the window or control handle of the recipient of the timer fired message */
 	mw_message_recipient_type_t recipient_type;   	/**< the type of recipient of timer fired message */
-	mw_handle_t handle;								/**< handle used to refer to this timer */
+	mw_handle_t timer_handle;						/**< handle used to refer to this timer */
 } window_timer_t;
 
 /**
@@ -156,7 +156,7 @@ extern volatile uint32_t mw_tick_counter;
 static window_t mw_all_windows[MW_MAX_WINDOW_COUNT];    	/**< Array of structures describing all the windows */
 static control_t mw_all_controls[MW_MAX_CONTROL_COUNT]; 	/**< Array of structures describing all the controls */
 static window_timer_t mw_all_timers[MW_MAX_TIMER_COUNT];   	/**< Array of structures describing containing information on all the timers */
-static uint8_t window_with_focus = MW_ROOT_WINDOW_ID;		/**< The window at the front with focus receiving touch events within its rect */
+static mw_handle_t window_with_focus_handle;				/**< The window at the front with focus receiving touch events within its rect */
 static int16_t vertical_edges[(MW_MAX_WINDOW_COUNT) * 2];	/**< Scratch area to store array of vertical window edges, used in various places, for window analysis when repainting */
 static int16_t horizontal_edges[(MW_MAX_WINDOW_COUNT) * 2]; /**< Scratch area to store array of horizontal window edges, used in various places, for window analysis when repainting */
 static system_timer_t system_timer;							/**< a timer used by the window manager for its own asynchronous events */
@@ -171,7 +171,8 @@ static uint8_t find_empty_window_slot();
 static void set_window_details(const mw_util_rect_t *rect,
 		char* title,
 		mw_paint_func_p paint_function,
-		uint8_t window_ref,
+		uint8_t window_id,
+		mw_handle_t window_handle,
 		mw_message_func_p message_function,
 		char **menu_bar_items,
 		uint8_t menu_bar_items_count,
@@ -180,74 +181,74 @@ static void set_window_details(const mw_util_rect_t *rect,
 static bool check_window_dimensions(uint16_t new_width,
 		uint16_t new_height,
 		uint16_t flags);
-static void calculate_new_window_size_details(uint8_t window_ref, const mw_util_rect_t *rect);
+static void calculate_new_window_size_details(mw_handle_t window_handle, const mw_util_rect_t *rect);
 
 /* new control functions */
 static uint8_t find_empty_control_slot();
 static void set_control_details(const mw_util_rect_t *rect,
 		mw_paint_func_p paint_func,
-		uint8_t control_ref,
+		mw_handle_t control_handle,
 		mw_message_func_p message_func,
-		uint8_t parent,
+		mw_handle_t parent,
 		uint16_t control_flags,
 		void *instance_data);
 
 /* root window functions */
-static void root_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_info);
+static void root_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_t *draw_info);
 static void root_message_function(const mw_message_t *message);
 
 /* minimized window functions */
-static uint8_t find_icon_number_for_window(uint8_t window_ref);
+static uint8_t find_icon_number_for_window(mw_handle_t window_handle);
 static void find_minimsed_icon_location(uint8_t icon_number, int16_t *x, int16_t *y);
 static bool check_for_restore_touch(int16_t x_touch, int16_t y_touch);
-static void draw_min_restore_window_effect(uint8_t window_ref);
+static void draw_min_restore_window_effect(mw_handle_t window_handle);
 static void draw_minimised_icons(void);
 
 /* find functions */
 static uint8_t find_next_z_order(uint8_t z_order);
 static uint8_t find_highest_z_order();
-static uint8_t find_window_point_is_in(int16_t point_x, int16_t point_y);
-static uint8_t find_control_point_is_in(uint8_t window_ref, int16_t point_x, int16_t point_y);
+static mw_handle_t find_window_point_is_in(int16_t point_x, int16_t point_y);
+static mw_handle_t find_control_point_is_in(mw_handle_t window_handle, int16_t point_x, int16_t point_y);
 static void find_rect_window_intersections(const mw_util_rect_t *r, uint16_t *horiz_edges_count, uint16_t *vert_edges_count);
 static uint8_t find_highest_z_order_at_point(int16_t x, int16_t y);
 static uint8_t find_number_of_displayed_windows();
 static bool find_if_rect_is_completely_on_screen(const mw_util_rect_t *rect);
-static bool find_if_window_is_overlapped(uint8_t window_ref);
+static bool find_if_window_is_overlapped(mw_handle_t window_handle);
 
 /* window frame draw functions */
-static void draw_title_bar(uint8_t window_ref, const mw_gl_draw_info_t *draw_info);
-static void draw_titlebar_text(uint8_t window_ref, const mw_gl_draw_info_t *draw_info);
-static void draw_menu_bar(const mw_gl_draw_info_t *draw_info, uint8_t window_ref);
-static void draw_horizontal_window_scroll_bar(const mw_gl_draw_info_t *draw_info, uint8_t window_ref);
-static void draw_vertical_window_scroll_bar(const mw_gl_draw_info_t *draw_info, uint8_t window_ref);
+static void draw_title_bar(mw_handle_t window_handle, const mw_gl_draw_info_t *draw_info);
+static void draw_titlebar_text(mw_handle_t window_handle, const mw_gl_draw_info_t *draw_info);
+static void draw_menu_bar(const mw_gl_draw_info_t *draw_info, mw_handle_t window_handle);
+static void draw_horizontal_window_scroll_bar(const mw_gl_draw_info_t *draw_info, mw_handle_t window_handle);
+static void draw_vertical_window_scroll_bar(const mw_gl_draw_info_t *draw_info, mw_handle_t window_handle);
 
 /* paint window/client functions */
 static void paint_window_frame_and_client_with_z_order(uint8_t z_order);
-static void do_paint_window_frame(uint8_t window_ref, uint8_t components);
-static void do_paint_window_frame2(uint8_t window_ref, uint8_t components, const mw_util_rect_t *invalid_rect);
-static void do_paint_window_client(uint8_t window_ref);
-static void do_paint_window_client_rect(uint8_t window_ref, const mw_util_rect_t *invalid_rect);
-static void do_paint_window_client2(uint8_t window_ref, const mw_util_rect_t *invalid_rect);
+static void do_paint_window_frame(mw_handle_t window_handle, uint8_t components);
+static void do_paint_window_frame2(mw_handle_t window_handle, uint8_t components, const mw_util_rect_t *invalid_rect);
+static void do_paint_window_client(mw_handle_t window_handle);
+static void do_paint_window_client_rect(mw_handle_t window_handle, const mw_util_rect_t *invalid_rect);
+static void do_paint_window_client2(mw_handle_t window_handle, const mw_util_rect_t *invalid_rect);
 
 /* paint control functions */
-static void paint_all_controls_in_window(uint8_t window_ref);
-static void paint_all_controls_in_window_rect(uint8_t window_ref, const mw_util_rect_t *invalid_rect);
-static void do_paint_control_rect(uint8_t control_ref, const mw_util_rect_t *invalid_rect);
-static void do_paint_control(uint8_t control_ref);
-static void do_paint_control2(uint8_t control_ref, const mw_util_rect_t *invalid_rect);
+static void paint_all_controls_in_window(mw_handle_t window_handle);
+static void paint_all_controls_in_window_rect(mw_handle_t window_handle, const mw_util_rect_t *invalid_rect);
+static void do_paint_control_rect(mw_handle_t control_handle, const mw_util_rect_t *invalid_rect);
+static void do_paint_control(mw_handle_t control_handle);
+static void do_paint_control2(mw_handle_t control_handle, const mw_util_rect_t *invalid_rect);
 
-/* handle control functions */
+/* handle functions */
 static mw_handle_t get_next_handle(void);
-static uint8_t get_timer_id_for_handle(mw_handle_t handle);
-static uint8_t get_window_id_for_handle(mw_handle_t handle);
-static uint8_t get_control_id_for_handle(mw_handle_t handle);
+static uint8_t get_timer_id_for_handle(mw_handle_t timer_handle);
+static uint8_t get_window_id_for_handle(mw_handle_t window_handle);
+static uint8_t get_control_id_for_handle(mw_handle_t control_handle);
 
 /* other functions */
 static window_redimensioning_state_t process_touch_event(void);
 static void do_paint_all();
 static void set_focus(void);
 static void rationalize_z_orders();
-static void draw_redimensioning_window_outline(uint8_t window_ref);
+static void draw_redimensioning_window_outline(mw_handle_t window_handle);
 static void set_system_timer(uint32_t timer_data, system_timer_event_t event, uint32_t fire_time);
 
 /**********************
@@ -257,7 +258,7 @@ static void set_system_timer(uint32_t timer_data, system_timer_event_t event, ui
 /**
  * Find an empty slot in the array of window identifiers for a new window.
  *
- * @return The slot for the new window if one is avaialble or MAX_WINDOW_COUNT if no slot available
+ * @return The slot for the new window if one is available or MAX_WINDOW_COUNT if no slot available
  */
 static uint8_t find_empty_window_slot()
 {
@@ -283,7 +284,8 @@ static uint8_t find_empty_window_slot()
  * @param rect The rect of the window's total area, including border and title bar
  * @param title The text of the title; must not be longer than MAX_TITLE_SIZE
  * @param paint_function Pointer to paint function
- * @param window_ref Position in array of all windows of this window
+ * @param window_id Position in array of all windows of this window
+ * @param window_handle Window's handle
  * @param message_function Pointer to message handling function
  * @param menu_bar_items Pointer to array holding menu bar item text labels
  * @param menu_bar_items_count Number of entries in above array
@@ -293,7 +295,8 @@ static uint8_t find_empty_window_slot()
 static void set_window_details(const mw_util_rect_t *rect,
 		char* title,
 		mw_paint_func_p paint_func,
-		uint8_t window_ref,
+		uint8_t window_id,
+		mw_handle_t window_handle,
 		mw_message_func_p message_func,
 		char **menu_bar_items,
 		uint8_t menu_bar_items_count,
@@ -305,7 +308,8 @@ static void set_window_details(const mw_util_rect_t *rect,
 	MW_ASSERT(title, "Null pointer argument");
 	MW_ASSERT(paint_func, "Null pointer argument");
 	MW_ASSERT(message_func, "Null pointer argument");
-	MW_ASSERT(window_ref < MW_MAX_WINDOW_COUNT, "Illegal window id");
+	MW_ASSERT(window_id < MW_MAX_WINDOW_COUNT, "Bad window handle");
+	MW_ASSERT(window_handle != MW_INVALID_HANDLE, "Illegal handle");
 	if (window_flags & MW_WINDOW_HAS_MENU_BAR)
 	{
 		MW_ASSERT(menu_bar_items, "Null pointer argument");
@@ -314,20 +318,21 @@ static void set_window_details(const mw_util_rect_t *rect,
 	}
 
 	/* copy in all details to this window's struct in the array of all windows */
-	mw_util_safe_strcpy(mw_all_windows[window_ref].title, MW_MAX_TITLE_SIZE, title);
-	mw_all_windows[window_ref].paint_func = paint_func;
-	mw_all_windows[window_ref].message_func = message_func;
-	mw_all_windows[window_ref].window_flags = window_flags | MW_WINDOW_FLAG_IS_USED;
-	mw_all_windows[window_ref].menu_bar_items = menu_bar_items;
-	mw_all_windows[window_ref].menu_bar_items_count = menu_bar_items_count;
-	mw_all_windows[window_ref].menu_bar_item_enables = MW_ALL_ITEMS_ENABLED;
-	mw_all_windows[window_ref].window_flags &= ~MW_WINDOW_MENU_BAR_ITEM_IS_SELECTED;
-	mw_all_windows[window_ref].horiz_scroll_pos = 0;
-	mw_all_windows[window_ref].vert_scroll_pos = 0;
-	mw_all_windows[window_ref].instance_data = instance_data;
+	mw_util_safe_strcpy(mw_all_windows[window_id].title, MW_MAX_TITLE_SIZE, title);
+	mw_all_windows[window_id].paint_func = paint_func;
+	mw_all_windows[window_id].message_func = message_func;
+	mw_all_windows[window_id].window_flags = window_flags | MW_WINDOW_FLAG_IS_USED;
+	mw_all_windows[window_id].menu_bar_items = menu_bar_items;
+	mw_all_windows[window_id].menu_bar_items_count = menu_bar_items_count;
+	mw_all_windows[window_id].menu_bar_item_enables = MW_ALL_ITEMS_ENABLED;
+	mw_all_windows[window_id].window_flags &= ~MW_WINDOW_MENU_BAR_ITEM_IS_SELECTED;
+	mw_all_windows[window_id].horiz_scroll_pos = 0;
+	mw_all_windows[window_id].vert_scroll_pos = 0;
+	mw_all_windows[window_id].window_handle = window_handle;
+	mw_all_windows[window_id].instance_data = instance_data;
 
 	/* calculate client area location and size from the chosen features */
-	calculate_new_window_size_details(window_ref, rect);
+	calculate_new_window_size_details(window_handle, rect);
 }
 
 /**
@@ -426,21 +431,25 @@ static bool check_window_dimensions(uint16_t new_width,
 /**
  * Set a window's client rect from its window rect and border/title bar details
  *
- * @param window_ref The window to set the client rect for
+ * @param window_handle The window to set the client rect for
  * @param rect The window's window rect
  */
-static void calculate_new_window_size_details(uint8_t window_ref, const mw_util_rect_t *rect)
+static void calculate_new_window_size_details(mw_handle_t window_handle, const mw_util_rect_t *rect)
 {
 	uint8_t border_width;
+	uint8_t window_id;
 
 	MW_ASSERT(rect, "Null pointer argument");
-	MW_ASSERT(window_ref < MW_MAX_WINDOW_COUNT, "Illegal window id");
+
+	/* get window id from window handle and check it's in range */
+	window_id = get_window_id_for_handle(window_handle);
+	MW_ASSERT(window_id < MW_MAX_WINDOW_COUNT, "Bad window handle");
 
 	/* set the window rect from that passed in first */
-	memcpy(&(mw_all_windows[window_ref].window_rect), rect, sizeof(mw_util_rect_t));
+	memcpy(&(mw_all_windows[window_id].window_rect), rect, sizeof(mw_util_rect_t));
 
 	/* find out border width; depends on if there is a border */
-	if (mw_all_windows[window_ref].window_flags & MW_WINDOW_FLAG_HAS_BORDER)
+	if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER)
 	{
 		border_width = MW_BORDER_WIDTH;
 	}
@@ -450,45 +459,45 @@ static void calculate_new_window_size_details(uint8_t window_ref, const mw_util_
 	}
 
 	/* set client rect x */
-	mw_all_windows[window_ref].client_rect.x = rect->x + border_width;
+	mw_all_windows[window_id].client_rect.x = rect->x + border_width;
 
 	/* set client rect y */
-	if (mw_all_windows[window_ref].window_flags & MW_WINDOW_FLAG_HAS_TITLE_BAR)
+	if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_TITLE_BAR)
 	{
-		mw_all_windows[window_ref].client_rect.y = rect->y + MW_TITLE_BAR_HEIGHT;
+		mw_all_windows[window_id].client_rect.y = rect->y + MW_TITLE_BAR_HEIGHT;
 	}
 	else
 	{
-		mw_all_windows[window_ref].client_rect.y = rect->y + border_width;
+		mw_all_windows[window_id].client_rect.y = rect->y + border_width;
 	}
-	if (mw_all_windows[window_ref].window_flags & MW_WINDOW_HAS_MENU_BAR)
+	if (mw_all_windows[window_id].window_flags & MW_WINDOW_HAS_MENU_BAR)
 	{
-		mw_all_windows[window_ref].client_rect.y += MW_MENU_BAR_HEIGHT;
+		mw_all_windows[window_id].client_rect.y += MW_MENU_BAR_HEIGHT;
 	}
 
 	/* set client rect width */
-	mw_all_windows[window_ref].client_rect.width = rect->width - 2 * border_width;
-	if (mw_all_windows[window_ref].window_flags & MW_WINDOW_HAS_VERT_SCROLL_BAR)
+	mw_all_windows[window_id].client_rect.width = rect->width - 2 * border_width;
+	if (mw_all_windows[window_id].window_flags & MW_WINDOW_HAS_VERT_SCROLL_BAR)
 	{
-		mw_all_windows[window_ref].client_rect.width -= MW_SCROLL_BAR_NARROW_DIMESION;
+		mw_all_windows[window_id].client_rect.width -= MW_SCROLL_BAR_NARROW_DIMESION;
 	}
 
 	/* set client rect height */
-	if (mw_all_windows[window_ref].window_flags & MW_WINDOW_FLAG_HAS_TITLE_BAR)
+	if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_TITLE_BAR)
 	{
-		mw_all_windows[window_ref].client_rect.height = rect->height - MW_TITLE_BAR_HEIGHT - border_width;
+		mw_all_windows[window_id].client_rect.height = rect->height - MW_TITLE_BAR_HEIGHT - border_width;
 	}
 	else
 	{
-		mw_all_windows[window_ref].client_rect.height = rect->height - 2 * border_width;
+		mw_all_windows[window_id].client_rect.height = rect->height - 2 * border_width;
 	}
-	if (mw_all_windows[window_ref].window_flags & MW_WINDOW_HAS_MENU_BAR)
+	if (mw_all_windows[window_id].window_flags & MW_WINDOW_HAS_MENU_BAR)
 	{
-		mw_all_windows[window_ref].client_rect.height -= MW_MENU_BAR_HEIGHT;
+		mw_all_windows[window_id].client_rect.height -= MW_MENU_BAR_HEIGHT;
 	}
-	if (mw_all_windows[window_ref].window_flags & MW_WINDOW_HAS_HORIZ_SCROLL_BAR)
+	if (mw_all_windows[window_id].window_flags & MW_WINDOW_HAS_HORIZ_SCROLL_BAR)
 	{
-		mw_all_windows[window_ref].client_rect.height -= MW_SCROLL_BAR_NARROW_DIMESION;
+		mw_all_windows[window_id].client_rect.height -= MW_SCROLL_BAR_NARROW_DIMESION;
 	}
 }
 
@@ -518,54 +527,59 @@ static uint8_t find_empty_control_slot()
 /**
  * Set a control's details. This is only called when a control is created.
  *
- * @param rect The rect of the control's area, position relative ti parent window's client area
+ * @param rect The rect of the control's area, position relative to parent window's client area
  * @param paint_function Pointer to paint function
- * @param control_ref Position in array of all controls of this control
+ * @param control_handle Position in array of all controls of this control
  * @param message_function Pointer to message handling function
- * @param parent The window reference of the control's parent window
+ * @param parent The window handle of the control's parent window
  * @param control_flags Flags describing the control and its state
  * @param instance_data Void pointer to control specific data structure containing extra control specific configuration data for this instance
  */
 static void set_control_details(const mw_util_rect_t *rect,
 		mw_paint_func_p paint_func,
-		uint8_t control_ref,
+		mw_handle_t control_handle,
 		mw_message_func_p message_func,
-		uint8_t parent,
+		mw_handle_t parent,
 		uint16_t control_flags,
 		void *instance_data)
 {
+	uint8_t parent_window_id;
+
 	/* check pointers */
 	MW_ASSERT(rect, "Null pointer argument");
 	MW_ASSERT(paint_func, "Null pointer argument");
 	MW_ASSERT(message_func, "Null pointer argument");
-	MW_ASSERT(control_ref < MW_MAX_CONTROL_COUNT, "Illegal control id");
+	MW_ASSERT(control_handle < MW_MAX_CONTROL_COUNT, "Illegal control id");
 	MW_ASSERT(instance_data, "Null pointer argument");
 
+	parent_window_id = get_window_id_for_handle(parent);
+	MW_ASSERT(parent_window_id < MW_MAX_WINDOW_COUNT, "Bad window handle");
+
 	/* copy in all details to this control's structs in the array of all controls */
-	mw_all_controls[control_ref].control_flags = control_flags | MW_CONTROL_FLAG_IS_USED;
-	mw_all_controls[control_ref].paint_func = paint_func;
-	mw_all_controls[control_ref].message_func = message_func;
-	mw_all_controls[control_ref].parent = parent;
-	mw_all_controls[control_ref].instance_data = instance_data;
+	mw_all_controls[control_handle].control_flags = control_flags | MW_CONTROL_FLAG_IS_USED;
+	mw_all_controls[control_handle].paint_func = paint_func;
+	mw_all_controls[control_handle].message_func = message_func;
+	mw_all_controls[control_handle].parent = parent;
+	mw_all_controls[control_handle].instance_data = instance_data;
 
 	/* now make rect's x,y relative to screen rather than window */
-	mw_all_controls[control_ref].control_rect.x = rect->x + mw_all_windows[parent].client_rect.x;
-	mw_all_controls[control_ref].control_rect.y = rect->y + mw_all_windows[parent].client_rect.y;
+	mw_all_controls[control_handle].control_rect.x = rect->x + mw_all_windows[parent_window_id].client_rect.x;
+	mw_all_controls[control_handle].control_rect.y = rect->y + mw_all_windows[parent_window_id].client_rect.y;
 	
 	/* set control rect's width and height */
-	mw_all_controls[control_ref].control_rect.width = rect->width;
-	mw_all_controls[control_ref].control_rect.height = rect->height;
+	mw_all_controls[control_handle].control_rect.width = rect->width;
+	mw_all_controls[control_handle].control_rect.height = rect->height;
 }
 
 /**
  * Root paint function. Calls user root window paint function then performs any system root window paint tasks
  *
- * @param window_ref Always ROOT_WINDOW_ID for root window
+ * @param window_handle Handle of root window
  * @param draw_info Draw info structure describing offset and clip region
  */
-static void root_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_info)
+static void root_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_t *draw_info)
 {
-	MW_ASSERT(window_ref == MW_ROOT_WINDOW_ID, "Expected root window id");
+	MW_ASSERT(mw_all_windows[MW_ROOT_WINDOW_ID].window_handle == window_handle, "Expected root window handle");
 
 	/* call user root window paint */
 	mw_user_root_paint_function(draw_info);
@@ -606,10 +620,10 @@ static void root_message_function(const mw_message_t *message)
  * reference number along rows along the bottom of the root window, working right along
  * each row then by rows up the screen.
  *
- * @param window_ref The window to find the icon number for
+ * @param window_handle The window to find the icon number for
  * @return The icon number
  */
-static uint8_t find_icon_number_for_window(uint8_t window_ref)
+static uint8_t find_icon_number_for_window(mw_handle_t window_handle)
 {
 	uint8_t i;
 	uint8_t icon_number = 0;
@@ -625,7 +639,7 @@ static uint8_t find_icon_number_for_window(uint8_t window_ref)
 			continue;
 		}
 
-		if (i == window_ref)
+		if (mw_all_windows[i].window_handle == window_handle)
 		{
 			break;
 		}
@@ -692,13 +706,13 @@ static bool check_for_restore_touch(int16_t x_touch, int16_t y_touch)
 		if (mw_util_is_point_in_rect(&r, x_touch, y_touch))
 		{
 			/* it is, so now restore the window, starting off by drawing the restore animation effect */
-			draw_min_restore_window_effect(i);
+			draw_min_restore_window_effect(mw_all_windows[i].window_handle);
 			
 			/* clear minimised status for this window */
 			mw_all_windows[i].window_flags &= ~MW_WINDOW_FLAG_IS_MINIMISED;
 			
 			/* restored windows get brought to the font and given focus */
-			mw_bring_window_to_front(i);
+			mw_bring_window_to_front(mw_all_windows[i].window_handle);
 			
 			/* set the system timer to clear the restored window animation effect */
 			set_system_timer(MW_UNUSED_MESSAGE_PARAMETER,
@@ -708,7 +722,7 @@ static bool check_for_restore_touch(int16_t x_touch, int16_t y_touch)
 			/* let the window know that it has been restored */
 			mw_post_message(MW_WINDOW_RESTORED,
 					MW_UNUSED_MESSAGE_PARAMETER,
-					i,
+					mw_all_windows[i].window_handle,
 					MW_UNUSED_MESSAGE_PARAMETER,
 					MW_WINDOW_MESSAGE);
 					
@@ -724,16 +738,24 @@ static bool check_for_restore_touch(int16_t x_touch, int16_t y_touch)
 /**
  * Draw the minimising/restoring effect between a window and an icon.
  *
- * @param window_ref The window that is being minimised or restored
+ * @param window_handle The window that is being minimised or restored
  */
-static void draw_min_restore_window_effect(uint8_t window_ref)
+static void draw_min_restore_window_effect(mw_handle_t window_handle)
 {
 	int16_t x;
 	int16_t y;
-	uint8_t icon_number = find_icon_number_for_window(window_ref);
+	uint8_t icon_number;
+	uint8_t window_id;
 
-	MW_ASSERT(window_ref < MW_MAX_WINDOW_COUNT, "Illegal window id");
+	/* get window id from window handle and check it's in range */
+	window_id = get_window_id_for_handle(window_handle);
+	if (window_id >= MW_MAX_WINDOW_COUNT)
+	{
+		MW_ASSERT(false, "Bad window handle");
+		return;
+	}
 
+	icon_number = find_icon_number_for_window(window_handle);
 	find_minimsed_icon_location(icon_number, &x, &y);
 
 	mw_gl_set_bg_transparency(MW_GL_BG_NOT_TRANSPARENT);
@@ -741,20 +763,20 @@ static void draw_min_restore_window_effect(uint8_t window_ref)
 	mw_gl_set_bg_colour(MW_HAL_LCD_WHITE);
 	mw_gl_set_line(MW_GL_LARGE_DASH_LINE);
 	mw_gl_line(&draw_info_root,
-			mw_all_windows[window_ref].window_rect.x,
-			mw_all_windows[window_ref].window_rect.y,
+			mw_all_windows[window_id].window_rect.x,
+			mw_all_windows[window_id].window_rect.y,
 			x,
 			y);
 	mw_gl_line(&draw_info_root,
-			mw_all_windows[window_ref].window_rect.x + mw_all_windows[window_ref].window_rect.width,
-			mw_all_windows[window_ref].window_rect.y,
+			mw_all_windows[window_id].window_rect.x + mw_all_windows[window_id].window_rect.width,
+			mw_all_windows[window_id].window_rect.y,
 			x + MW_DESKTOP_ICON_WIDTH,
 			y);
 	mw_gl_line(&draw_info_root,
-			mw_all_windows[window_ref].window_rect.x,
-			mw_all_windows[window_ref].window_rect.y,
-			mw_all_windows[window_ref].window_rect.x +  mw_all_windows[window_ref].window_rect.width,
-			mw_all_windows[window_ref].window_rect.y);
+			mw_all_windows[window_id].window_rect.x,
+			mw_all_windows[window_id].window_rect.y,
+			mw_all_windows[window_id].window_rect.x +  mw_all_windows[window_id].window_rect.width,
+			mw_all_windows[window_id].window_rect.y);
 }
 
 /**
@@ -904,11 +926,11 @@ static uint8_t find_highest_z_order()
  *
  * @param touch_x The x coordinate of the touch point
  * @param touch_y The y coordinate of the touch point
- * return The window id
+ * return The window handle
  */
-static uint8_t find_window_point_is_in(int16_t touch_x, int16_t touch_y)
+static mw_handle_t find_window_point_is_in(int16_t touch_x, int16_t touch_y)
 {
-	uint8_t window_to_receive_message = MW_ROOT_WINDOW_ID;
+	uint8_t window_id = MW_ROOT_WINDOW_ID;
 	uint8_t i;
 	uint8_t highest_z_order = 0;
 
@@ -928,35 +950,33 @@ static uint8_t find_window_point_is_in(int16_t touch_x, int16_t touch_y)
 			if (mw_all_windows[i].z_order > highest_z_order)
 			{
 				highest_z_order = mw_all_windows[i].z_order;
-				window_to_receive_message = i;
+				window_id = i;
 			}
 		}
 	}
 
-	return window_to_receive_message;
+	return mw_all_windows[window_id].window_handle;
 }
 
 /**
  * Look at all controls in a window and find which control a specified point is in, if any
  *
- * @param window_ref The window to check controls for
+ * @param window_handle The window to check controls for
  * @param point_x The x coordinate of the point
  * @param point_y The y coordinate of the point
- * @return The control ref if a control was found else MW_MAX_CONTROL_COUNT
+ * @return The control handle if a control was found else MW_MAX_CONTROL_COUNT
  */
-static uint8_t find_control_point_is_in(uint8_t window_ref, int16_t point_x, int16_t point_y)
+static mw_handle_t find_control_point_is_in(mw_handle_t window_handle, int16_t point_x, int16_t point_y)
 {
 	int16_t i;
 	uint8_t control_found = MW_MAX_CONTROL_COUNT;
-
-	MW_ASSERT(window_ref < MW_MAX_WINDOW_COUNT, "Illegal window id");
 
 	/* loop through all controls */
 	for (i = MW_MAX_CONTROL_COUNT - 1; i >= 0; i--)
 	{
 		/* ignore unused controls and controls with a different parent window to that identified above */
 		if (!(mw_all_controls[i].control_flags & MW_CONTROL_FLAG_IS_USED) ||
-				mw_all_controls[i].parent != window_ref)
+				mw_all_controls[i].parent != window_handle)
 		{
 			continue;
 		}
@@ -978,7 +998,7 @@ static uint8_t find_control_point_is_in(uint8_t window_ref, int16_t point_x, int
 /**
  * Fill the horizontal and vertical edges arrays with the edges of a rect and all windows that overlap it
  *
- * @param window_ref The rect under inspection
+ * @param window_handle The rect under inspection
  * @param horiz_edges_count The number of edges found and entered in horizontal edges array
  * @param vert_edges_count The number of edges found and entered in vertical edges array
  * @note The entries are sorted
@@ -1143,7 +1163,12 @@ static void find_rect_window_intersections(const mw_util_rect_t *r, uint16_t *ho
  */
 static uint8_t find_highest_z_order_at_point(int16_t x, int16_t y)
 {
-	return mw_all_windows[find_window_point_is_in(x, y)].z_order;
+	uint8_t window_id;
+
+	window_id = get_window_id_for_handle(find_window_point_is_in(x, y));
+	MW_ASSERT(window_id < MW_MAX_WINDOW_COUNT, "Bad window handle");
+
+	return mw_all_windows[window_id].z_order;
 }
 
 /**
@@ -1173,27 +1198,30 @@ static uint8_t find_number_of_displayed_windows()
 /**
  * Find if a window is overlapped by any other
  *
- * @param window_ref The window to check
+ * @param window_handle The window to check
  * @return true or false
  */
-static bool find_if_window_is_overlapped(uint8_t window_ref)
+static bool find_if_window_is_overlapped(mw_handle_t window_handle)
 {
 	uint8_t i;
+	uint8_t window_id;
 
-	MW_ASSERT(window_ref < MW_MAX_WINDOW_COUNT, "Illegal window id");
+	/* get window id from window handle and check it's in range */
+	window_id = get_window_id_for_handle(window_handle);
+	MW_ASSERT(window_id < MW_MAX_WINDOW_COUNT, "Bad window handle");
 
 	/* iterate through all windows */
 	for (i = 0; i < MW_MAX_WINDOW_COUNT;i++)
 	{
-		if (!(mw_all_windows[window_ref].window_flags & MW_WINDOW_FLAG_IS_USED) ||
-				(!(mw_all_windows[window_ref].window_flags & MW_WINDOW_FLAG_IS_VISIBLE)) ||
-				(mw_all_windows[window_ref].window_flags & MW_WINDOW_FLAG_IS_MINIMISED) ||
-				mw_all_windows[i].z_order < mw_all_windows[window_ref].z_order)
+		if (!(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_USED) ||
+				(!(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_VISIBLE)) ||
+				(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_MINIMISED) ||
+				mw_all_windows[i].z_order < mw_all_windows[window_id].z_order)
 		{
 			continue;
 		}
 
-		if (mw_util_do_rects_coincide(&mw_all_windows[i].window_rect, &mw_all_windows[window_ref].window_rect))
+		if (mw_util_do_rects_coincide(&mw_all_windows[i].window_rect, &mw_all_windows[window_id].window_rect))
 		{
 			return true;
 		}
@@ -1219,23 +1247,31 @@ static bool find_if_rect_is_completely_on_screen(const mw_util_rect_t *rect)
 /**
  * Draw a window's title bar including text
  *
- * @param window_ref Position in array of all windows of this window
+ * @param window_handle Position in array of all windows of this window
  * @param draw_info Reference frame origin coordinates and clip region rect
  */
-static void draw_title_bar(uint8_t window_ref, const mw_gl_draw_info_t *draw_info)
+static void draw_title_bar(mw_handle_t window_handle, const mw_gl_draw_info_t *draw_info)
 {
-	MW_ASSERT(window_ref < MW_MAX_WINDOW_COUNT, "Illegal window id");
+	uint8_t window_id;
+	uint8_t window_with_focus_id;
+
 	MW_ASSERT(draw_info, "Null pointer argument");
 
+	/* get window idss from window handle and check they're in range */
+	window_id = get_window_id_for_handle(window_handle);
+	MW_ASSERT(window_id < MW_MAX_WINDOW_COUNT, "Bad window handle");
+	window_with_focus_id = get_window_id_for_handle(window_with_focus_handle);
+	MW_ASSERT(window_with_focus_id < MW_MAX_WINDOW_COUNT, "Bad window handle");
+
     /* set title bar colour according to focus/modal state */
-	if (window_ref != window_with_focus)
+	if (window_handle != window_with_focus_handle)
 	{
 		/* not focused colour */
 		mw_gl_set_solid_fill_colour(MW_TITLE_BAR_COLOUR_NO_FOCUS);
 	}
 	else
 	{
-		if (mw_all_windows[window_ref].window_flags & MW_WINDOW_IS_MODAL)
+		if (mw_all_windows[window_id].window_flags & MW_WINDOW_IS_MODAL)
 		{
 			/* modal colour */
 			mw_gl_set_solid_fill_colour(MW_TITLE_BAR_COLOUR_MODAL);
@@ -1254,18 +1290,18 @@ static void draw_title_bar(uint8_t window_ref, const mw_gl_draw_info_t *draw_inf
 	mw_gl_rectangle(draw_info,
 			0,
 			0,
-			mw_all_windows[window_ref].window_rect.width,
+			mw_all_windows[window_id].window_rect.width,
 			MW_TITLE_BAR_HEIGHT);
 
 	/* draw the icons if the window has focus and isn't modal */
-	if (window_with_focus == window_ref && !(mw_all_windows[window_with_focus].window_flags & MW_WINDOW_IS_MODAL))
+	if (window_with_focus_handle == window_handle && !(mw_all_windows[window_with_focus_id].window_flags & MW_WINDOW_IS_MODAL))
 	{
 		/* window close icon */
 		mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
-		mw_gl_set_bg_colour(mw_all_windows[window_ref].window_flags & MW_WINDOW_FLAG_CAN_BE_CLOSED ? MW_HAL_LCD_WHITE : MW_HAL_LCD_GREY5);
+		mw_gl_set_bg_colour(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_CAN_BE_CLOSED ? MW_HAL_LCD_WHITE : MW_HAL_LCD_GREY5);
 		mw_gl_set_bg_transparency(MW_GL_BG_NOT_TRANSPARENT);
 		mw_gl_monochrome_bitmap(draw_info,
-				mw_all_windows[window_ref].window_rect.width - MW_TITLE_BAR_ICON_OFFSET,
+				mw_all_windows[window_id].window_rect.width - MW_TITLE_BAR_ICON_OFFSET,
 				2,
 				MW_TITLE_BAR_ICON_SIZE,
 				MW_TITLE_BAR_ICON_SIZE,
@@ -1286,7 +1322,7 @@ static void draw_title_bar(uint8_t window_ref, const mw_gl_draw_info_t *draw_inf
 		mw_gl_set_bg_transparency(MW_GL_BG_NOT_TRANSPARENT);
 		mw_gl_set_bg_colour(MW_HAL_LCD_WHITE);
 		mw_gl_monochrome_bitmap(draw_info,
-				mw_all_windows[window_ref].window_rect.width - (MW_TITLE_BAR_ICON_OFFSET * 2),
+				mw_all_windows[window_id].window_rect.width - (MW_TITLE_BAR_ICON_OFFSET * 2),
 				2,
 				MW_TITLE_BAR_ICON_SIZE,
 				MW_TITLE_BAR_ICON_SIZE,
@@ -1295,43 +1331,49 @@ static void draw_title_bar(uint8_t window_ref, const mw_gl_draw_info_t *draw_inf
 		/* minimise icon */
 		mw_gl_set_bg_colour(MW_HAL_LCD_WHITE);
 		mw_gl_monochrome_bitmap(draw_info,
-				mw_all_windows[window_ref].window_rect.width - (MW_TITLE_BAR_ICON_OFFSET * 3),
+				mw_all_windows[window_id].window_rect.width - (MW_TITLE_BAR_ICON_OFFSET * 3),
 				2,
 				MW_TITLE_BAR_ICON_SIZE,
 				MW_TITLE_BAR_ICON_SIZE,
 				mw_bitmaps_minimise_icon);
 
 		/* only draw the title if there's space remaining */
-		if (mw_all_windows[window_ref].window_rect.width - (MW_TITLE_BAR_ICON_OFFSET * 4) - MW_TITLE_X_OFFSET > mw_gl_get_string_width_pixels(mw_all_windows[window_ref].title))
+		if (mw_all_windows[window_id].window_rect.width - (MW_TITLE_BAR_ICON_OFFSET * 4) - MW_TITLE_X_OFFSET >
+				mw_gl_get_string_width_pixels(mw_all_windows[window_id].title))
 		{
-			draw_titlebar_text(window_ref, draw_info);
+			draw_titlebar_text(window_handle, draw_info);
 		}
 	}
 	else
 	{
 		/* window doesn't have focus, no icons, so always draw the text; set colour according to focus and modality state */				
-		draw_titlebar_text(window_ref, draw_info);
+		draw_titlebar_text(window_handle, draw_info);
 	}
 }
 
 /**
  * Draw title bar text in colour according to window state.
  *
- * @param window_ref Position in array of all windows of this window
+ * @param window_handle Position in array of all windows of this window
  * @param draw_info Reference frame origin coordinates and clip region rect
  */
-static void draw_titlebar_text(uint8_t window_ref, const mw_gl_draw_info_t *draw_info)
+static void draw_titlebar_text(mw_handle_t window_handle, const mw_gl_draw_info_t *draw_info)
 {
-	MW_ASSERT(window_ref < MW_MAX_WINDOW_COUNT, "Illegal window id");
+	uint8_t window_id;
+
 	MW_ASSERT(draw_info, "Null pointer argument");
 
-	if (window_ref != window_with_focus)
+	/* get window id from window handle and check it's in range */
+	window_id = get_window_id_for_handle(window_handle);
+	MW_ASSERT(window_id < MW_MAX_WINDOW_COUNT, "Bad window handle");
+
+	if (window_handle != window_with_focus_handle)
 	{
 		mw_gl_set_fg_colour(MW_TITLE_TEXT_COLOUR_NO_FOCUS);
 	}
 	else
 	{
-		if (mw_all_windows[window_ref].window_flags & MW_WINDOW_IS_MODAL)
+		if (mw_all_windows[window_id].window_flags & MW_WINDOW_IS_MODAL)
 		{
 			mw_gl_set_fg_colour(MW_TITLE_TEXT_COLOUR_MODAL);
 		}
@@ -1344,31 +1386,35 @@ static void draw_titlebar_text(uint8_t window_ref, const mw_gl_draw_info_t *draw
 	mw_gl_set_bg_transparency(MW_GL_BG_TRANSPARENT);
 	mw_gl_set_text_rotation(MW_GL_TEXT_ROTATION_0);
 	mw_gl_set_font(MW_GL_TITLE_FONT);
-	mw_gl_string(draw_info, MW_TITLE_X_OFFSET, MW_TITLE_Y_OFFSET, mw_all_windows[window_ref].title);
+	mw_gl_string(draw_info, MW_TITLE_X_OFFSET, MW_TITLE_Y_OFFSET, mw_all_windows[window_id].title);
 }
 
 /**
  * Draw a menu bar
  *
  * @param draw_info Draw info structure describing offset and clip region
- * @param window_ref The window this menu bar is draw in
+ * @param window_handle The window this menu bar is draw in
  */
-static void draw_menu_bar(const mw_gl_draw_info_t *draw_info, uint8_t window_ref)
+static void draw_menu_bar(const mw_gl_draw_info_t *draw_info, mw_handle_t window_handle)
 {
 	uint16_t next_pos;
 	uint8_t i;
+	uint8_t window_id;
 
 	MW_ASSERT(draw_info, "Null pointer argument");
-	MW_ASSERT(window_ref < MW_MAX_WINDOW_COUNT, "Illegal window id");
+
+	/* get window id from window handle and check it's in range */
+	window_id = get_window_id_for_handle(window_handle);
+	MW_ASSERT(window_id < MW_MAX_WINDOW_COUNT, "Bad window handle");
 
 	mw_gl_set_fill(MW_GL_FILL);
 	mw_gl_set_solid_fill_colour(MW_CONTROL_UP_COLOUR);
 	mw_gl_set_border(MW_GL_BORDER_OFF);
 	mw_gl_clear_pattern();
 	mw_gl_rectangle(draw_info,
-			mw_all_windows[window_ref].client_rect.x - mw_all_windows[window_ref].window_rect.x,
-			mw_all_windows[window_ref].client_rect.y - mw_all_windows[window_ref].window_rect.y - MW_MENU_BAR_HEIGHT,
-			mw_all_windows[window_ref].client_rect.width,
+			mw_all_windows[window_id].client_rect.x - mw_all_windows[window_id].window_rect.x,
+			mw_all_windows[window_id].client_rect.y - mw_all_windows[window_id].window_rect.y - MW_MENU_BAR_HEIGHT,
+			mw_all_windows[window_id].client_rect.width,
 			MW_MENU_BAR_HEIGHT);
 
     /* set up text */
@@ -1378,24 +1424,24 @@ static void draw_menu_bar(const mw_gl_draw_info_t *draw_info, uint8_t window_ref
 
     /* draw each item */
 	next_pos = 0;
-	for (i = 0; i < mw_all_windows[window_ref].menu_bar_items_count; i++)
+	for (i = 0; i < mw_all_windows[window_id].menu_bar_items_count; i++)
 	{
         /* check if this item is selected */
-		if ((mw_all_windows[window_ref].window_flags & MW_WINDOW_MENU_BAR_ITEM_IS_SELECTED) &&
-				mw_all_windows[window_ref].menu_bar_selected_item == i)
+		if ((mw_all_windows[window_id].window_flags & MW_WINDOW_MENU_BAR_ITEM_IS_SELECTED) &&
+				mw_all_windows[window_id].menu_bar_selected_item == i)
 		{
             /* it is so draw rectangle background for this item in control down colour */
 			mw_gl_set_solid_fill_colour(MW_CONTROL_DOWN_COLOUR);
 			mw_gl_rectangle(draw_info,
 					next_pos,
-					mw_all_windows[window_ref].client_rect.y - mw_all_windows[window_ref].window_rect.y - MW_MENU_BAR_HEIGHT,
-					(strlen(mw_all_windows[window_ref].menu_bar_items[i]) + 2) * mw_gl_get_font_width() + 1,
+					mw_all_windows[window_id].client_rect.y - mw_all_windows[window_id].window_rect.y - MW_MENU_BAR_HEIGHT,
+					(strlen(mw_all_windows[window_id].menu_bar_items[i]) + 2) * mw_gl_get_font_width() + 1,
 					MW_MENU_BAR_HEIGHT);
 		}
 
 		/* set up text colour on enabled state - from control and individual items bitfield */
-	    if (mw_all_windows[window_ref].window_flags & MW_WINDOW_MENU_BAR_ENABLED &&
-	    		mw_util_get_bit(mw_all_windows[window_ref].menu_bar_item_enables, i))
+	    if (mw_all_windows[window_id].window_flags & MW_WINDOW_MENU_BAR_ENABLED &&
+	    		mw_util_get_bit(mw_all_windows[window_id].menu_bar_item_enables, i))
 	    {
 	        mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 	    }
@@ -1408,12 +1454,12 @@ static void draw_menu_bar(const mw_gl_draw_info_t *draw_info, uint8_t window_ref
 		mw_gl_string(draw_info,
 				next_pos + mw_gl_get_font_width() + 1,
 				MW_MENU_BAR_LABEL_Y_OFFSET +
-					mw_all_windows[window_ref].client_rect.y -
-					mw_all_windows[window_ref].window_rect.y -
+					mw_all_windows[window_id].client_rect.y -
+					mw_all_windows[window_id].window_rect.y -
 					MW_MENU_BAR_HEIGHT,
-				mw_all_windows[window_ref].menu_bar_items[i]);
+				mw_all_windows[window_id].menu_bar_items[i]);
 
-		next_pos += (strlen(mw_all_windows[window_ref].menu_bar_items[i]) + 2) * (mw_gl_get_font_width() + 1);
+		next_pos += (strlen(mw_all_windows[window_id].menu_bar_items[i]) + 2) * (mw_gl_get_font_width() + 1);
 	}
 }
 
@@ -1421,21 +1467,25 @@ static void draw_menu_bar(const mw_gl_draw_info_t *draw_info, uint8_t window_ref
  * Draw a horizontal window scroll bar
  *
  * @param draw_info Draw info structure describing offset and clip region
- * @param window_ref The window this scroll bar is draw in
+ * @param window_handle The window this scroll bar is draw in
  */
-static void draw_horizontal_window_scroll_bar(const mw_gl_draw_info_t *draw_info, uint8_t window_ref)
+static void draw_horizontal_window_scroll_bar(const mw_gl_draw_info_t *draw_info, mw_handle_t window_handle)
 {
 	int16_t scroll_bar_horiz_slider_left;
+	uint8_t window_id;
 
 	MW_ASSERT(draw_info, "Null pointer argument");
-	MW_ASSERT(window_ref < MW_MAX_WINDOW_COUNT, "Illegal window id");
+
+	/* get window id from window handle and check it's in range */
+	window_id = get_window_id_for_handle(window_handle);
+	MW_ASSERT(window_id < MW_MAX_WINDOW_COUNT, "Bad window handle");
 
 	mw_gl_set_fill(MW_GL_FILL);
 	mw_gl_set_border(MW_GL_BORDER_ON);
 	mw_gl_set_line(MW_GL_SOLID_LINE);
 	mw_gl_clear_pattern();
 	mw_gl_set_solid_fill_colour(MW_CONTROL_UP_COLOUR);
-	if (mw_all_windows[window_ref].window_flags & MW_WINDOWS_HORIZ_SCROLL_BAR_ENABLED)
+	if (mw_all_windows[window_id].window_flags & MW_WINDOWS_HORIZ_SCROLL_BAR_ENABLED)
 	{
 		mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 	}
@@ -1444,27 +1494,27 @@ static void draw_horizontal_window_scroll_bar(const mw_gl_draw_info_t *draw_info
 		mw_gl_set_fg_colour(MW_CONTROL_DISABLED_COLOUR);
 	}
 	mw_gl_rectangle(draw_info,
-			mw_all_windows[window_ref].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0,
-			mw_all_windows[window_ref].window_rect.height -
-				(mw_all_windows[window_ref].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0) -
+			mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0,
+			mw_all_windows[window_id].window_rect.height -
+				(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0) -
 				MW_SCROLL_BAR_NARROW_DIMESION,
-			mw_all_windows[window_ref].client_rect.width,
+			mw_all_windows[window_id].client_rect.width,
 			MW_SCROLL_BAR_NARROW_DIMESION);
 
 	/* there is always space to draw slider */
 	mw_gl_set_solid_fill_colour(MW_CONTROL_DOWN_COLOUR);
 
-	scroll_bar_horiz_slider_left = (mw_all_windows[window_ref].client_rect.width - MW_SCROLL_BAR_SLIDER_SIZE) *
-		mw_all_windows[window_ref].horiz_scroll_pos / UINT8_MAX;
+	scroll_bar_horiz_slider_left = (mw_all_windows[window_id].client_rect.width - MW_SCROLL_BAR_SLIDER_SIZE) *
+		mw_all_windows[window_id].horiz_scroll_pos / UINT8_MAX;
 
-	scroll_bar_horiz_slider_left += (mw_all_windows[window_ref].client_rect.x -
-		mw_all_windows[window_ref].window_rect.x);
+	scroll_bar_horiz_slider_left += (mw_all_windows[window_id].client_rect.x -
+		mw_all_windows[window_id].window_rect.x);
 
 	mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 	mw_gl_rectangle(draw_info,
 			scroll_bar_horiz_slider_left,
-			mw_all_windows[window_ref].window_rect.height -
-				(mw_all_windows[window_ref].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0) -
+			mw_all_windows[window_id].window_rect.height -
+				(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0) -
 				MW_SCROLL_BAR_NARROW_DIMESION,
 			MW_SCROLL_BAR_SLIDER_SIZE,
 			MW_SCROLL_BAR_NARROW_DIMESION);
@@ -1474,56 +1524,60 @@ static void draw_horizontal_window_scroll_bar(const mw_gl_draw_info_t *draw_info
 	mw_gl_vline(draw_info,
 			scroll_bar_horiz_slider_left + 1,
 			2 +
-				mw_all_windows[window_ref].window_rect.height -
-				(mw_all_windows[window_ref].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0) -
+				mw_all_windows[window_id].window_rect.height -
+				(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0) -
 				MW_SCROLL_BAR_NARROW_DIMESION,
-			mw_all_windows[window_ref].window_rect.height -
+			mw_all_windows[window_id].window_rect.height -
 				2 -
-				(mw_all_windows[window_ref].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0));
+				(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0));
 	mw_gl_hline(draw_info,
 			scroll_bar_horiz_slider_left + 1,
 			scroll_bar_horiz_slider_left + MW_SCROLL_BAR_SLIDER_SIZE - 2,
 			1 +
-				mw_all_windows[window_ref].window_rect.height -
-				(mw_all_windows[window_ref].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0) -
+				mw_all_windows[window_id].window_rect.height -
+				(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0) -
 				MW_SCROLL_BAR_NARROW_DIMESION);
 	mw_gl_set_fg_colour(MW_HAL_LCD_GREY7);
 	mw_gl_vline(draw_info,
 			scroll_bar_horiz_slider_left + MW_SCROLL_BAR_SLIDER_SIZE - 2,
 			2 +
-				mw_all_windows[window_ref].window_rect.height -
-				(mw_all_windows[window_ref].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0) -
+				mw_all_windows[window_id].window_rect.height -
+				(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0) -
 				MW_SCROLL_BAR_NARROW_DIMESION,
-			mw_all_windows[window_ref].window_rect.height -
+			mw_all_windows[window_id].window_rect.height -
 				3 -
-				(mw_all_windows[window_ref].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0));
+				(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0));
 	mw_gl_hline(draw_info,
 			scroll_bar_horiz_slider_left + 2,
 			scroll_bar_horiz_slider_left + MW_SCROLL_BAR_SLIDER_SIZE - 2,
-			mw_all_windows[window_ref].window_rect.height -
+			mw_all_windows[window_id].window_rect.height -
 				2 -
-				(mw_all_windows[window_ref].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0));
+				(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0));
 }
 
 /**
  * Draw a vertical window scroll bar
  *
  * @param draw_info Draw info structure describing offset and clip region
- * @param window_ref The window this scroll bar is draw in
+ * @param window_handle The window this scroll bar is draw in
  */
-static void draw_vertical_window_scroll_bar(const mw_gl_draw_info_t *draw_info, uint8_t window_ref)
+static void draw_vertical_window_scroll_bar(const mw_gl_draw_info_t *draw_info, mw_handle_t window_handle)
 {
 	int16_t scroll_bar_horiz_slider_top;
+	uint8_t window_id;
 
 	MW_ASSERT(draw_info, "Null pointer argument");
-	MW_ASSERT(window_ref < MW_MAX_WINDOW_COUNT, "Illegal window id");
+
+	/* get window id from window handle and check it's in range */
+	window_id = get_window_id_for_handle(window_handle);
+	MW_ASSERT(window_id < MW_MAX_WINDOW_COUNT, "Bad window handle");
 
 	mw_gl_set_fill(MW_GL_FILL);
 	mw_gl_set_border(MW_GL_BORDER_ON);
 	mw_gl_set_line(MW_GL_SOLID_LINE);
 	mw_gl_clear_pattern();
 	mw_gl_set_solid_fill_colour(MW_CONTROL_UP_COLOUR);
-	if (mw_all_windows[window_ref].window_flags & MW_WINDOWS_HORIZ_SCROLL_BAR_ENABLED)
+	if (mw_all_windows[window_id].window_flags & MW_WINDOWS_HORIZ_SCROLL_BAR_ENABLED)
 	{
 		mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 	}
@@ -1533,23 +1587,23 @@ static void draw_vertical_window_scroll_bar(const mw_gl_draw_info_t *draw_info, 
 	}
 
 	mw_gl_rectangle(draw_info,
-			(mw_all_windows[window_ref].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0) +
-				mw_all_windows[window_ref].client_rect.width,
-			mw_all_windows[window_ref].client_rect.y - mw_all_windows[window_ref].window_rect.y,
+			(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0) +
+				mw_all_windows[window_id].client_rect.width,
+			mw_all_windows[window_id].client_rect.y - mw_all_windows[window_id].window_rect.y,
 			MW_SCROLL_BAR_NARROW_DIMESION,
-			mw_all_windows[window_ref].client_rect.height);
+			mw_all_windows[window_id].client_rect.height);
 
 	/* there is always space to draw slider */
 	mw_gl_set_solid_fill_colour(MW_CONTROL_DOWN_COLOUR);
 
-	scroll_bar_horiz_slider_top = (mw_all_windows[window_ref].client_rect.height - MW_SCROLL_BAR_SLIDER_SIZE) *
-			mw_all_windows[window_ref].vert_scroll_pos / UINT8_MAX;
+	scroll_bar_horiz_slider_top = (mw_all_windows[window_id].client_rect.height - MW_SCROLL_BAR_SLIDER_SIZE) *
+			mw_all_windows[window_id].vert_scroll_pos / UINT8_MAX;
 
-	scroll_bar_horiz_slider_top += (mw_all_windows[window_ref].client_rect.y - mw_all_windows[window_ref].window_rect.y);
+	scroll_bar_horiz_slider_top += (mw_all_windows[window_id].client_rect.y - mw_all_windows[window_id].window_rect.y);
 
 	mw_gl_rectangle(draw_info,
-			mw_all_windows[window_ref].window_rect.width -
-				(mw_all_windows[window_ref].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0) -
+			mw_all_windows[window_id].window_rect.width -
+				(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0) -
 				MW_SCROLL_BAR_NARROW_DIMESION,
 			scroll_bar_horiz_slider_top,
 			MW_SCROLL_BAR_NARROW_DIMESION,
@@ -1559,36 +1613,36 @@ static void draw_vertical_window_scroll_bar(const mw_gl_draw_info_t *draw_info, 
 	mw_gl_set_fg_colour(MW_HAL_LCD_WHITE);
 	mw_gl_vline(draw_info,
 			2 +
-				mw_all_windows[window_ref].window_rect.width -
-				(mw_all_windows[window_ref].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0) -
+				mw_all_windows[window_id].window_rect.width -
+				(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0) -
 				MW_SCROLL_BAR_NARROW_DIMESION,
 			1 + scroll_bar_horiz_slider_top,
 			scroll_bar_horiz_slider_top + MW_SCROLL_BAR_NARROW_DIMESION - 2);
 	mw_gl_hline(draw_info,
 			2 +
-				mw_all_windows[window_ref].window_rect.width -
-				(mw_all_windows[window_ref].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0) -
+				mw_all_windows[window_id].window_rect.width -
+				(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0) -
 				MW_SCROLL_BAR_NARROW_DIMESION,
-			mw_all_windows[window_ref].window_rect.width -
-				(mw_all_windows[window_ref].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0) -
+			mw_all_windows[window_id].window_rect.width -
+				(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0) -
 				2,
 			scroll_bar_horiz_slider_top + 1);
 	mw_gl_set_fg_colour(MW_HAL_LCD_GREY7);
 	mw_gl_vline(draw_info,
 			MW_SCROLL_BAR_NARROW_DIMESION +
-				mw_all_windows[window_ref].window_rect.width -
-				(mw_all_windows[window_ref].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0) -
+				mw_all_windows[window_id].window_rect.width -
+				(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0) -
 				MW_SCROLL_BAR_NARROW_DIMESION -
 				2,
 				2 + scroll_bar_horiz_slider_top,
 				scroll_bar_horiz_slider_top + MW_SCROLL_BAR_NARROW_DIMESION - 2);
 	mw_gl_hline(draw_info,
 			2 +
-				mw_all_windows[window_ref].window_rect.width -
-				(mw_all_windows[window_ref].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0) -
+				mw_all_windows[window_id].window_rect.width -
+				(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0) -
 				MW_SCROLL_BAR_NARROW_DIMESION,
-			mw_all_windows[window_ref].window_rect.width -
-				(mw_all_windows[window_ref].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0) -
+			mw_all_windows[window_id].window_rect.width -
+				(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0) -
 				2,
 			scroll_bar_horiz_slider_top + MW_SCROLL_BAR_SLIDER_SIZE - 2);
 }
@@ -1600,26 +1654,26 @@ static void draw_vertical_window_scroll_bar(const mw_gl_draw_info_t *draw_info, 
  */
 static void paint_window_frame_and_client_with_z_order(uint8_t z_order)
 {
-	uint8_t window_ref;
+	uint8_t window_id;
 
 	/* iterate through all user windows */
-	for (window_ref = MW_ROOT_WINDOW_ID; window_ref < MW_MAX_WINDOW_COUNT; window_ref++)
+	for (window_id = MW_ROOT_WINDOW_ID; window_id < MW_MAX_WINDOW_COUNT; window_id++)
 	{
 		/* only look at windows that are used */
-		if ((mw_all_windows[window_ref].window_flags & MW_WINDOW_FLAG_IS_VISIBLE) &&
-				(mw_all_windows[window_ref].window_flags & MW_WINDOW_FLAG_IS_USED) &&
-				!(mw_all_windows[window_ref].window_flags & MW_WINDOW_FLAG_IS_MINIMISED))
+		if ((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_VISIBLE) &&
+				(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_USED) &&
+				!(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_MINIMISED))
 		{
 			/* check if next window is required z order */
-			if (mw_all_windows[window_ref].z_order == z_order)
+			if (mw_all_windows[window_id].z_order == z_order)
 			{
 				/* it is so paint it */
-				do_paint_window_frame(window_ref, MW_WINDOW_FRAME_COMPONENT_ALL);
-				do_paint_window_client(window_ref);
-			  	if (window_ref > MW_ROOT_WINDOW_ID)
+				do_paint_window_frame(mw_all_windows[window_id].window_handle, MW_WINDOW_FRAME_COMPONENT_ALL);
+				do_paint_window_client(mw_all_windows[window_id].window_handle);
+			  	if (window_id > MW_ROOT_WINDOW_ID)
 			  	{
 			  		/* paint all the controls; these are always on top of the client area */
-			  		paint_all_controls_in_window(window_ref);
+			  		paint_all_controls_in_window(mw_all_windows[window_id].window_handle);
 			  	}
 				break;
 			}
@@ -1630,11 +1684,11 @@ static void paint_window_frame_and_client_with_z_order(uint8_t z_order)
 /**
  * The first half of the implementation of painting a window frame but not its client area
  *
- * @param window_ref Position in array of all windows of this window
+ * @param window_handle Position in array of all windows of this window
  * @note The first half of the window painting process is identifying the rects the window needs breaking
  *       up into according to the other windows overlapping it
  */
-static void do_paint_window_frame(uint8_t window_ref, uint8_t components)
+static void do_paint_window_frame(mw_handle_t window_handle, uint8_t components)
 {
 	uint16_t vertical_edge_counter;
 	uint16_t horizontal_edge_counter;
@@ -1645,28 +1699,31 @@ static void do_paint_window_frame(uint8_t window_ref, uint8_t components)
 	uint16_t vert_edges_count;
 	mw_util_rect_t rect_current;
 	mw_util_rect_t rect_previous;
+	uint8_t window_id;
 
-	MW_ASSERT(window_ref < MW_MAX_WINDOW_COUNT, "Illegal window id");
+	/* get window id from window handle and check it's in range */
+	window_id = get_window_id_for_handle(window_handle);
+	MW_ASSERT(window_id < MW_MAX_WINDOW_COUNT, "Bad window handle");
 
-    /* check if this window is used, visible and not minimised; if not give up */
-	if (!(mw_all_windows[window_ref].window_flags & MW_WINDOW_FLAG_IS_USED) ||
-			(!(mw_all_windows[window_ref].window_flags & MW_WINDOW_FLAG_IS_VISIBLE)) ||
-			(mw_all_windows[window_ref].window_flags & MW_WINDOW_FLAG_IS_MINIMISED) ||
-			window_ref == MW_ROOT_WINDOW_ID)
+    /* check if this window is used, visible, not root and not minimised; if not give up */
+	if (!(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_USED) ||
+			(!(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_VISIBLE)) ||
+			(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_MINIMISED) ||
+			window_id == MW_ROOT_WINDOW_ID)
 	{
 		return;
 	}
 
 	/* check if this window has focus which means it's at the front; if so and it's completely
 	 * on screen just paint it all */
-	if (window_ref == window_with_focus && find_if_rect_is_completely_on_screen(&mw_all_windows[window_ref].window_rect))
+	if (window_handle == window_with_focus_handle && find_if_rect_is_completely_on_screen(&mw_all_windows[window_id].window_rect))
 	{
-		memcpy(&rect_current, &mw_all_windows[window_ref].window_rect, sizeof(mw_util_rect_t));
-		do_paint_window_frame2(window_ref, components, &rect_current);
+		memcpy(&rect_current, &mw_all_windows[window_id].window_rect, sizeof(mw_util_rect_t));
+		do_paint_window_frame2(window_handle, components, &rect_current);
 	}
 	else
 	{
-		find_rect_window_intersections(&mw_all_windows[window_ref].window_rect, &horiz_edges_count, &vert_edges_count);
+		find_rect_window_intersections(&mw_all_windows[window_id].window_rect, &horiz_edges_count, &vert_edges_count);
 
 		/* iterate through horizontal edges, i.e. row at a time */
 		for (horizontal_edge_counter = 0; horizontal_edge_counter < horiz_edges_count - 1; horizontal_edge_counter++)
@@ -1683,11 +1740,11 @@ static void do_paint_window_frame(uint8_t window_ref, uint8_t components)
 				rect_current.width = (vertical_edges[vertical_edge_counter + 1] - rect_current.x);
 
 				/* find its z order */
-				if (find_highest_z_order_at_point(rect_current.x, rect_current.y) > mw_all_windows[window_ref].z_order)
+				if (find_highest_z_order_at_point(rect_current.x, rect_current.y) > mw_all_windows[window_id].z_order)
 				{
 					if (rect_waiting_to_be_painted)
 					{
-						do_paint_window_frame2(window_ref, components, &rect_previous);
+						do_paint_window_frame2(window_handle, components, &rect_previous);
 						rect_waiting_to_be_painted = false;
 					}
 					continue;
@@ -1707,7 +1764,7 @@ static void do_paint_window_frame(uint8_t window_ref, uint8_t components)
 
 			if (rect_waiting_to_be_painted)
 			{
-				do_paint_window_frame2(window_ref, components,  &rect_previous);
+				do_paint_window_frame2(window_handle, components,  &rect_previous);
 			}
 		}
 	}
@@ -1716,95 +1773,99 @@ static void do_paint_window_frame(uint8_t window_ref, uint8_t components)
 /**
  * The second half of the implementation of painting a window but not its client area
  *
- * @param window_ref Position in array of all windows of this window
+ * @param window_handle Position in array of all windows of this window
  * @param invalid_rect Rect describing the area of the window that will be painted this time
  * @note The second half of the window painting process the painting of the window features excluding
  *       the client area, i.e. title bar and borders. This function is called multiple times with
  *       different clip rects.
  */
-static void do_paint_window_frame2(uint8_t window_ref, uint8_t components, const mw_util_rect_t *invalid_rect)
+static void do_paint_window_frame2(mw_handle_t window_handle, uint8_t components, const mw_util_rect_t *invalid_rect)
 {
 	mw_gl_draw_info_t draw_info;
+	uint8_t window_id;
 
-	MW_ASSERT(window_ref < MW_MAX_WINDOW_COUNT, "Illegal window id");
 	MW_ASSERT(invalid_rect, "Null pointer argument");
 
-	draw_info.clip_rect.x = invalid_rect->x - mw_all_windows[window_ref].window_rect.x;
-	draw_info.clip_rect.y = invalid_rect->y - mw_all_windows[window_ref].window_rect.y;
+	/* get window id from window handle and check it's in range */
+	window_id = get_window_id_for_handle(window_handle);
+	MW_ASSERT(window_id < MW_MAX_WINDOW_COUNT, "Bad window handle");
+
+	draw_info.clip_rect.x = invalid_rect->x - mw_all_windows[window_id].window_rect.x;
+	draw_info.clip_rect.y = invalid_rect->y - mw_all_windows[window_id].window_rect.y;
 	draw_info.clip_rect.width = invalid_rect->width;
 	draw_info.clip_rect.height = invalid_rect->height;
-	draw_info.origin_x = mw_all_windows[window_ref].window_rect.x;
-	draw_info.origin_y = mw_all_windows[window_ref].window_rect.y;
+	draw_info.origin_x = mw_all_windows[window_id].window_rect.x;
+	draw_info.origin_y = mw_all_windows[window_id].window_rect.y;
 
 	/* draw border, fixed width of 1 for now */
-  	if (mw_all_windows[window_ref].window_flags & MW_WINDOW_FLAG_HAS_BORDER &&
+  	if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER &&
   			(components & MW_WINDOW_FRAME_COMPONENT_BORDER))
   	{
   		mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
   		mw_gl_set_line(MW_GL_SOLID_LINE);
 
         /* draw two shorter left/right sides */
-  		if (mw_all_windows[window_ref].window_flags & MW_WINDOW_FLAG_HAS_TITLE_BAR)
+  		if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_TITLE_BAR)
   		{
   			mw_gl_vline(&draw_info,
   					0,
   					MW_TITLE_BAR_HEIGHT,
-  					mw_all_windows[window_ref].window_rect.height - 1);
+  					mw_all_windows[window_id].window_rect.height - 1);
   			mw_gl_vline(&draw_info,
-  					mw_all_windows[window_ref].window_rect.width - 1,
+  					mw_all_windows[window_id].window_rect.width - 1,
   					MW_TITLE_BAR_HEIGHT,
-  					mw_all_windows[window_ref].window_rect.height - 1);
+  					mw_all_windows[window_id].window_rect.height - 1);
   		}
   		else
   		{
             /* draw two full length left/right sides and top line */
             mw_gl_hline(&draw_info,
             		0,
-                    mw_all_windows[window_ref].window_rect.width - 1,
+                    mw_all_windows[window_id].window_rect.width - 1,
                     0);
             mw_gl_vline(&draw_info,
                     0,
                     0,
-                    mw_all_windows[window_ref].window_rect.height - 1);
+                    mw_all_windows[window_id].window_rect.height - 1);
             mw_gl_vline(&draw_info,
-                    mw_all_windows[window_ref].window_rect.width - 1,
+                    mw_all_windows[window_id].window_rect.width - 1,
                     0,
-                    mw_all_windows[window_ref].window_rect.height - 1);
+                    mw_all_windows[window_id].window_rect.height - 1);
   		}
 
   		/* draw bottom line */
 		mw_gl_hline(&draw_info,
 				0,
-				mw_all_windows[window_ref].window_rect.width - 1,
-				mw_all_windows[window_ref].window_rect.height - 1);
+				mw_all_windows[window_id].window_rect.width - 1,
+				mw_all_windows[window_id].window_rect.height - 1);
   	}
 
 	/* draw title bar if this window has one */
-	if (mw_all_windows[window_ref].window_flags & MW_WINDOW_FLAG_HAS_TITLE_BAR &&
+	if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_TITLE_BAR &&
 			(components & MW_WINDOW_FRAME_COMPONENT_TITLE_BAR))
 	{
-		draw_title_bar(window_ref, &draw_info);
+		draw_title_bar(window_handle, &draw_info);
 	}
 
 	/* draw menu bar */
-	if (mw_all_windows[window_ref].window_flags & MW_WINDOW_HAS_MENU_BAR &&
+	if (mw_all_windows[window_id].window_flags & MW_WINDOW_HAS_MENU_BAR &&
 			(components & MW_WINDOW_FRAME_COMPONENT_MENU_BAR))
 	{
-		draw_menu_bar(&draw_info, window_ref);
+		draw_menu_bar(&draw_info, window_handle);
 	}
 
 	/* draw no, 1 or both scroll bars */
-	if ((mw_all_windows[window_ref].window_flags & MW_WINDOW_HAS_HORIZ_SCROLL_BAR) &&
-			(mw_all_windows[window_ref].window_flags & MW_WINDOW_HAS_VERT_SCROLL_BAR))
+	if ((mw_all_windows[window_id].window_flags & MW_WINDOW_HAS_HORIZ_SCROLL_BAR) &&
+			(mw_all_windows[window_id].window_flags & MW_WINDOW_HAS_VERT_SCROLL_BAR))
 	{
 		/* draw horizontal and vertical scroll bars */
 		if (components & MW_WINDOW_FRAME_COMPONENT_HORIZ_SCROLL_BAR)
 		{
-			draw_horizontal_window_scroll_bar(&draw_info, window_ref);
+			draw_horizontal_window_scroll_bar(&draw_info, window_handle);
 		}
 		if (components & MW_WINDOW_FRAME_COMPONENT_VERT_SCROLL_BAR)
 		{
-			draw_vertical_window_scroll_bar(&draw_info, window_ref);
+			draw_vertical_window_scroll_bar(&draw_info, window_handle);
 		}
 
 		/* fill in that little square at bottom right */
@@ -1813,35 +1874,35 @@ static void do_paint_window_frame2(uint8_t window_ref, uint8_t components, const
 		mw_gl_set_border(MW_GL_BORDER_OFF);
 		mw_gl_clear_pattern();
 		mw_gl_rectangle(&draw_info,
-				(mw_all_windows[window_ref].client_rect.x - mw_all_windows[window_ref].window_rect.x) +
-					mw_all_windows[window_ref].client_rect.width,
-				(mw_all_windows[window_ref].client_rect.y - mw_all_windows[window_ref].window_rect.y) +
-					mw_all_windows[window_ref].client_rect.height,
+				(mw_all_windows[window_id].client_rect.x - mw_all_windows[window_id].window_rect.x) +
+					mw_all_windows[window_id].client_rect.width,
+				(mw_all_windows[window_id].client_rect.y - mw_all_windows[window_id].window_rect.y) +
+					mw_all_windows[window_id].client_rect.height,
 				MW_SCROLL_BAR_NARROW_DIMESION,
 				MW_SCROLL_BAR_NARROW_DIMESION);
 	}
-	else if (mw_all_windows[window_ref].window_flags & MW_WINDOW_HAS_HORIZ_SCROLL_BAR &&
+	else if (mw_all_windows[window_id].window_flags & MW_WINDOW_HAS_HORIZ_SCROLL_BAR &&
 				(components & MW_WINDOW_FRAME_COMPONENT_HORIZ_SCROLL_BAR))
 	{
 		/* draw horizontal scroll bar only */
-		draw_horizontal_window_scroll_bar(&draw_info, window_ref);
+		draw_horizontal_window_scroll_bar(&draw_info, window_handle);
 	}
-	else if (mw_all_windows[window_ref].window_flags & MW_WINDOW_HAS_VERT_SCROLL_BAR &&
+	else if (mw_all_windows[window_id].window_flags & MW_WINDOW_HAS_VERT_SCROLL_BAR &&
 				(components & MW_WINDOW_FRAME_COMPONENT_VERT_SCROLL_BAR))
 	{
 		/* draw vertical scroll bar only */
-		draw_vertical_window_scroll_bar(&draw_info, window_ref);
+		draw_vertical_window_scroll_bar(&draw_info, window_handle);
 	}
 }
 
 /**
  * The first half of the implementation of painting a window's client area
  *
- * @param window_ref Position in array of all windows of this window
+ * @param window_handle Position in array of all windows of this window
  * @note The first half of the window painting process is identifying the rects the client area needs breaking
  *       up into according to the other windows overlapping it
  */
-static void do_paint_window_client(uint8_t window_ref)
+static void do_paint_window_client(mw_handle_t window_handle)
 {
 	uint16_t vertical_edge_counter;
 	uint16_t horizontal_edge_counter;
@@ -1852,27 +1913,30 @@ static void do_paint_window_client(uint8_t window_ref)
 	uint16_t vert_edges_count;
 	mw_util_rect_t rect_current;
 	mw_util_rect_t rect_previous;
+	uint8_t window_id;
 
-	MW_ASSERT(window_ref < MW_MAX_WINDOW_COUNT, "Illegal window id");
+	/* get window id from window handle and check it's in range */
+	window_id = get_window_id_for_handle(window_handle);
+	MW_ASSERT(window_id < MW_MAX_WINDOW_COUNT, "Bad window handle");
 
     /* check if this window is used, visible and not minimised; if not give up */
-	if (!(mw_all_windows[window_ref].window_flags & MW_WINDOW_FLAG_IS_USED) ||
-			(!(mw_all_windows[window_ref].window_flags & MW_WINDOW_FLAG_IS_VISIBLE)) ||
-			(mw_all_windows[window_ref].window_flags & MW_WINDOW_FLAG_IS_MINIMISED))
+	if (!(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_USED) ||
+			(!(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_VISIBLE)) ||
+			(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_MINIMISED))
 	{
 		return;
 	}
 
 	/* check if this window has focus which means it's at the front and it's completely on screen;
 	 * if so just paint it all */
-	if (window_ref == window_with_focus && find_if_rect_is_completely_on_screen(&mw_all_windows[window_ref].client_rect))
+	if (window_handle == window_with_focus_handle && find_if_rect_is_completely_on_screen(&mw_all_windows[window_id].client_rect))
 	{
-		memcpy(&rect_current, &mw_all_windows[window_ref].client_rect, sizeof(mw_util_rect_t));
-		do_paint_window_client2(window_ref, &rect_current);
+		memcpy(&rect_current, &mw_all_windows[window_id].client_rect, sizeof(mw_util_rect_t));
+		do_paint_window_client2(window_handle, &rect_current);
 	}
 	else
 	{
-		find_rect_window_intersections(&mw_all_windows[window_ref].client_rect, &horiz_edges_count, &vert_edges_count);
+		find_rect_window_intersections(&mw_all_windows[window_id].client_rect, &horiz_edges_count, &vert_edges_count);
 
 		/* iterate through horizontal edges, i.e. row at a time */
 		for (horizontal_edge_counter = 0; horizontal_edge_counter < horiz_edges_count - 1; horizontal_edge_counter++)
@@ -1889,11 +1953,11 @@ static void do_paint_window_client(uint8_t window_ref)
 				rect_current.width = (vertical_edges[vertical_edge_counter + 1] - rect_current.x);
 
 				/* find its z order */
-				if (find_highest_z_order_at_point(rect_current.x, rect_current.y) > mw_all_windows[window_ref].z_order)
+				if (find_highest_z_order_at_point(rect_current.x, rect_current.y) > mw_all_windows[window_id].z_order)
 				{
 					if (rect_waiting_to_be_painted)
 					{
-						do_paint_window_client2(window_ref, &rect_previous);
+						do_paint_window_client2(window_handle, &rect_previous);
 						rect_waiting_to_be_painted = false;
 					}
 					continue;
@@ -1913,12 +1977,12 @@ static void do_paint_window_client(uint8_t window_ref)
 
 			if (rect_waiting_to_be_painted)
 			{
-				do_paint_window_client2(window_ref, &rect_previous);
+				do_paint_window_client2(window_handle, &rect_previous);
 			}
 		}
 	}
 
-	if (window_ref == MW_ROOT_WINDOW_ID)
+	if (window_handle == mw_all_windows[MW_ROOT_WINDOW_ID].window_handle)
 	{
 		draw_minimised_icons();
 	}
@@ -1927,12 +1991,12 @@ static void do_paint_window_client(uint8_t window_ref)
 /**
  * The first half of the implementation of painting a window's client area but only with a specified rectangle
  *
- * @param window_ref Position in array of all windows of this window
+ * @param window_handle Position in array of all windows of this window
  * @param invalid_rect Rect describing the area of the client that will be painted 
  * @note The first half of the window painting process is identifying the sub-rects the client area rect needs breaking
  *       up into according to the other windows overlapping it
  */
-static void do_paint_window_client_rect(uint8_t window_ref, const mw_util_rect_t *invalid_rect)
+static void do_paint_window_client_rect(mw_handle_t window_handle, const mw_util_rect_t *invalid_rect)
 {
 	uint16_t vertical_edge_counter;
 	uint16_t horizontal_edge_counter;
@@ -1945,15 +2009,19 @@ static void do_paint_window_client_rect(uint8_t window_ref, const mw_util_rect_t
 	mw_util_rect_t rect_previous;
 	mw_util_rect_t invalid_rect_copy;
 	int16_t overlap;
+	uint8_t window_id;
 
-	MW_ASSERT(window_ref < MW_MAX_WINDOW_COUNT, "Illegal window id");
 	MW_ASSERT(invalid_rect, "Null pointer argument");
 
+	/* get window id from window handle and check it's in range */
+	window_id = get_window_id_for_handle(window_handle);
+	MW_ASSERT(window_id < MW_MAX_WINDOW_COUNT, "Bad window handle");
+
     /* check if this window is used, visible and not minimised; if not give up */
-	if (!(mw_all_windows[window_ref].window_flags & MW_WINDOW_FLAG_IS_USED) ||
-			(!(mw_all_windows[window_ref].window_flags & MW_WINDOW_FLAG_IS_VISIBLE)) ||
-			(mw_all_windows[window_ref].window_flags & MW_WINDOW_FLAG_IS_MINIMISED) ||
-			window_ref == MW_ROOT_WINDOW_ID)
+	if (!(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_USED) ||
+			(!(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_VISIBLE)) ||
+			(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_MINIMISED) ||
+			window_id == MW_ROOT_WINDOW_ID)
 	{
 		return;
 	}
@@ -1962,34 +2030,34 @@ static void do_paint_window_client_rect(uint8_t window_ref, const mw_util_rect_t
 	memcpy(&invalid_rect_copy, invalid_rect, sizeof(mw_util_rect_t));
 
 	/* adjust coordinates reference from client area to screen */
-	invalid_rect_copy.x += mw_all_windows[window_ref].client_rect.x;
-	invalid_rect_copy.y += mw_all_windows[window_ref].client_rect.y;
+	invalid_rect_copy.x += mw_all_windows[window_id].client_rect.x;
+	invalid_rect_copy.y += mw_all_windows[window_id].client_rect.y;
 
 	/* check for any areas of the invalid rect outside of the window's client area and if found clip them */
-	if (invalid_rect_copy.x < mw_all_windows[window_ref].client_rect.x)
+	if (invalid_rect_copy.x < mw_all_windows[window_id].client_rect.x)
 	{
-		overlap = mw_all_windows[window_ref].client_rect.x - invalid_rect_copy.x;
-		invalid_rect_copy.x = mw_all_windows[window_ref].client_rect.x;
+		overlap = mw_all_windows[window_id].client_rect.x - invalid_rect_copy.x;
+		invalid_rect_copy.x = mw_all_windows[window_id].client_rect.x;
 		invalid_rect_copy.width -= overlap;
 	}
-	if (invalid_rect_copy.y < mw_all_windows[window_ref].client_rect.y)
+	if (invalid_rect_copy.y < mw_all_windows[window_id].client_rect.y)
 	{
-		overlap = mw_all_windows[window_ref].client_rect.y - invalid_rect_copy.y;
-		invalid_rect_copy.y = mw_all_windows[window_ref].client_rect.y;
+		overlap = mw_all_windows[window_id].client_rect.y - invalid_rect_copy.y;
+		invalid_rect_copy.y = mw_all_windows[window_id].client_rect.y;
 		invalid_rect_copy.height -= overlap;
 	}
-	if (invalid_rect_copy.x + invalid_rect_copy.width > mw_all_windows[window_ref].client_rect.x +
-			mw_all_windows[window_ref].client_rect.width)
+	if (invalid_rect_copy.x + invalid_rect_copy.width > mw_all_windows[window_id].client_rect.x +
+			mw_all_windows[window_id].client_rect.width)
 	{
 		overlap = (invalid_rect_copy.x + invalid_rect_copy.width) -
-				(mw_all_windows[window_ref].client_rect.x + mw_all_windows[window_ref].client_rect.width);
+				(mw_all_windows[window_id].client_rect.x + mw_all_windows[window_id].client_rect.width);
 		invalid_rect_copy.width -= overlap;
 	}
-	if (invalid_rect_copy.y + invalid_rect_copy.height > mw_all_windows[window_ref].client_rect.y + mw_all_windows[window_ref].client_rect.width)
+	if (invalid_rect_copy.y + invalid_rect_copy.height > mw_all_windows[window_id].client_rect.y + mw_all_windows[window_id].client_rect.width)
 	{
 		{
 			overlap = (invalid_rect_copy.y + invalid_rect_copy.height) -
-					(mw_all_windows[window_ref].client_rect.y + mw_all_windows[window_ref].client_rect.height);
+					(mw_all_windows[window_id].client_rect.y + mw_all_windows[window_id].client_rect.height);
 			invalid_rect_copy.height -= overlap;
 		}
 	}
@@ -2002,9 +2070,9 @@ static void do_paint_window_client_rect(uint8_t window_ref, const mw_util_rect_t
 
 	/* check if this window has focus which means it's at the front and it's completely on screen;
 	 * if so just paint the whole invalid rect in one go */
-	if (window_ref == window_with_focus && find_if_rect_is_completely_on_screen(&invalid_rect_copy))
+	if (window_handle == window_with_focus_handle && find_if_rect_is_completely_on_screen(&invalid_rect_copy))
 	{
-		do_paint_window_client2(window_ref, &invalid_rect_copy);
+		do_paint_window_client2(window_handle, &invalid_rect_copy);
 	}
 	else
 	{
@@ -2025,11 +2093,11 @@ static void do_paint_window_client_rect(uint8_t window_ref, const mw_util_rect_t
 				rect_current.width = (vertical_edges[vertical_edge_counter + 1] - rect_current.x);
 
 				/* find its z order */
-				if (find_highest_z_order_at_point(rect_current.x, rect_current.y) > mw_all_windows[window_ref].z_order)
+				if (find_highest_z_order_at_point(rect_current.x, rect_current.y) > mw_all_windows[window_id].z_order)
 				{
 					if (rect_waiting_to_be_painted)
 					{
-						do_paint_window_client2(window_ref, &rect_previous);
+						do_paint_window_client2(window_handle, &rect_previous);
 						rect_waiting_to_be_painted = false;
 					}
 					continue;
@@ -2049,7 +2117,7 @@ static void do_paint_window_client_rect(uint8_t window_ref, const mw_util_rect_t
 
 			if (rect_waiting_to_be_painted)
 			{
-				do_paint_window_client2(window_ref, &rect_previous);
+				do_paint_window_client2(window_handle, &rect_previous);
 			}
 		}
 	}
@@ -2058,31 +2126,35 @@ static void do_paint_window_client_rect(uint8_t window_ref, const mw_util_rect_t
 /**
  * The second half of the implementation of painting a window's client area
  *
- * @param window_ref Position in array of all windows of this window
+ * @param window_handle Position in array of all windows of this window
  * @param invalid_rect Rect describing the area of the client that will be painted this time
  * @note The second half of the client painting process the painting of the window's client area
  *       is performed by calling the window's paint function. This function is called multiple times with
  *       different clip rects.
  */
-static void do_paint_window_client2(uint8_t window_ref, const mw_util_rect_t *invalid_rect)
+static void do_paint_window_client2(mw_handle_t window_handle, const mw_util_rect_t *invalid_rect)
 {
 	mw_gl_draw_info_t client_draw_info;
+	uint8_t window_id;
 
-	MW_ASSERT(window_ref < MW_MAX_CONTROL_COUNT, "Illegal control id");
 	MW_ASSERT(invalid_rect, "Null pointer argument");
 
-	client_draw_info.clip_rect.x = invalid_rect->x - mw_all_windows[window_ref].client_rect.x;
-	client_draw_info.clip_rect.y = invalid_rect->y - mw_all_windows[window_ref].client_rect.y;
+	/* get window id from window handle and check it's in range */
+	window_id = get_window_id_for_handle(window_handle);
+	MW_ASSERT(window_id < MW_MAX_CONTROL_COUNT, "Illegal control id");
+
+	client_draw_info.clip_rect.x = invalid_rect->x - mw_all_windows[window_id].client_rect.x;
+	client_draw_info.clip_rect.y = invalid_rect->y - mw_all_windows[window_id].client_rect.y;
 	client_draw_info.clip_rect.width = invalid_rect->width;
 	client_draw_info.clip_rect.height = invalid_rect->height;
-	client_draw_info.origin_x = mw_all_windows[window_ref].client_rect.x;
-	client_draw_info.origin_y = mw_all_windows[window_ref].client_rect.y;
+	client_draw_info.origin_x = mw_all_windows[window_id].client_rect.x;
+	client_draw_info.origin_y = mw_all_windows[window_id].client_rect.y;
 
 	/* set flag indicating in a client window paint function */
 	in_client_window_paint_function = true;
 
 	/* call client window paint function */
-	mw_all_windows[window_ref].paint_func(window_ref, &client_draw_info);
+	mw_all_windows[window_id].paint_func(window_handle, &client_draw_info);
 
 	/* reset flag indicating in a client window paint function */
 	in_client_window_paint_function = false;
@@ -2091,19 +2163,22 @@ static void do_paint_window_client2(uint8_t window_ref, const mw_util_rect_t *in
 /**
  * Paint all controls in a window.
  *
- * @param window_ref position in array of all windows of this window
+ * @param window_handle Handle of this window
  */
-static void paint_all_controls_in_window(uint8_t window_ref)
+static void paint_all_controls_in_window(mw_handle_t window_handle)
 {
 	uint8_t i;
+	uint8_t window_id;
 
-	MW_ASSERT(window_ref < MW_MAX_WINDOW_COUNT, "Illegal control id");
+	/* get window id from window handle and check it's in range */
+	window_id = get_window_id_for_handle(window_handle);
+	MW_ASSERT(window_id < MW_MAX_WINDOW_COUNT, "Illegal control id");
 
     /* iterate through all controls */
 	for (i = 0; i < MW_MAX_CONTROL_COUNT; i++)
 	{
         /* ignore controls not used, not visible and not belonging to specified window */
-		if (mw_all_controls[i].parent == window_ref &&
+		if (mw_all_controls[i].parent == window_handle &&
 				(mw_all_controls[i].control_flags & MW_CONTROL_FLAG_IS_USED) &&
 				(mw_all_controls[i].control_flags & MW_CONTROL_FLAG_IS_VISIBLE))
 		{
@@ -2115,20 +2190,23 @@ static void paint_all_controls_in_window(uint8_t window_ref)
 /**
  * Paint all controls in a window only within a specified rect.
  *
- * @param window_ref Position in array of all windows of this window
+ * @param window_handle Position in array of all windows of this window
  * @param invalid_rect Rect describing the area of the client that will be painted this time
  */
-static void paint_all_controls_in_window_rect(uint8_t window_ref, const mw_util_rect_t *invalid_rect)
+static void paint_all_controls_in_window_rect(mw_handle_t window_handle, const mw_util_rect_t *invalid_rect)
 {
 	uint8_t i;
+	uint8_t window_id;
 
-	MW_ASSERT(window_ref < MW_MAX_WINDOW_COUNT, "Illegal window id");
+	/* get window id from window handle and check it's in range */
+	window_id = get_window_id_for_handle(window_handle);
+	MW_ASSERT(window_id < MW_MAX_WINDOW_COUNT, "Bad window handle");
 
     /* iterate through all controls */
 	for (i = 0; i < MW_MAX_CONTROL_COUNT; i++)
 	{
         /* ignore controls not used, not visible and not belonging to specified window */
-		if (mw_all_controls[i].parent == window_ref &&
+		if (mw_all_controls[i].parent == window_handle &&
 				(mw_all_controls[i].control_flags & MW_CONTROL_FLAG_IS_USED) &&
 				(mw_all_controls[i].control_flags & MW_CONTROL_FLAG_IS_VISIBLE))
 		{
@@ -2140,12 +2218,12 @@ static void paint_all_controls_in_window_rect(uint8_t window_ref, const mw_util_
 /**
  * The first half of the implementation of painting a control's client area
  *
- * @param control_ref Position in array of all controls of this control
+ * @param control_handle Position in array of all controls of this control
  * @param invalid_rect Rect describing the area of the client that will be painted this time
  * @note The first half of the control painting process is identifying the rects the control's area needs breaking
  *       up into according to the other windows overlapping it
  */
-static void do_paint_control_rect(uint8_t control_ref, const mw_util_rect_t *invalid_rect)
+static void do_paint_control_rect(mw_handle_t control_handle, const mw_util_rect_t *invalid_rect)
 {
 	uint16_t vertical_edge_counter;
 	uint16_t horizontal_edge_counter;
@@ -2157,44 +2235,48 @@ static void do_paint_control_rect(uint8_t control_ref, const mw_util_rect_t *inv
 	mw_util_rect_t rect_current;
 	mw_util_rect_t rect_previous;
 	mw_util_rect_t invalid_rect_copy;
+	uint8_t parent_window_id;
 
-	MW_ASSERT(control_ref < MW_MAX_CONTROL_COUNT, "Illegal control id");
+	MW_ASSERT(control_handle < MW_MAX_CONTROL_COUNT, "Illegal control id");
 	MW_ASSERT(invalid_rect, "Null pointer argument");
 
+	parent_window_id = get_window_id_for_handle(mw_all_controls[control_handle].parent);
+	MW_ASSERT(parent_window_id < MW_MAX_WINDOW_COUNT, "Bad window handle");
+
     /* check if this control is used, visible and not parent window not minimised; if not give up */
-	if (!(mw_all_controls[control_ref].control_flags & MW_CONTROL_FLAG_IS_VISIBLE) ||
-			!(mw_all_controls[control_ref].control_flags & MW_CONTROL_FLAG_IS_USED) ||
-			(mw_all_windows[mw_all_controls[control_ref].parent].window_flags & MW_WINDOW_FLAG_IS_MINIMISED))
+	if (!(mw_all_controls[control_handle].control_flags & MW_CONTROL_FLAG_IS_VISIBLE) ||
+			!(mw_all_controls[control_handle].control_flags & MW_CONTROL_FLAG_IS_USED) ||
+			(mw_all_windows[parent_window_id].window_flags & MW_WINDOW_FLAG_IS_MINIMISED))
 	{
 		return;
 	}
 
-	invalid_rect_copy.x = mw_all_controls[control_ref].control_rect.x + invalid_rect->x;
-	if (invalid_rect_copy.x > mw_all_controls[control_ref].control_rect.x + mw_all_controls[control_ref].control_rect.width)
+	invalid_rect_copy.x = mw_all_controls[control_handle].control_rect.x + invalid_rect->x;
+	if (invalid_rect_copy.x > mw_all_controls[control_handle].control_rect.x + mw_all_controls[control_handle].control_rect.width)
 	{
 		return;
 	}
 
-	invalid_rect_copy.y = mw_all_controls[control_ref].control_rect.y + invalid_rect->y;
-	if (invalid_rect_copy.y > mw_all_controls[control_ref].control_rect.y + mw_all_controls[control_ref].control_rect.height)
+	invalid_rect_copy.y = mw_all_controls[control_handle].control_rect.y + invalid_rect->y;
+	if (invalid_rect_copy.y > mw_all_controls[control_handle].control_rect.y + mw_all_controls[control_handle].control_rect.height)
 	{
 		return;
 	}
 
 	invalid_rect_copy.width = invalid_rect->width;
 	if (invalid_rect_copy.x + invalid_rect_copy.width >
-		mw_all_controls[control_ref].control_rect.x + mw_all_controls[control_ref].control_rect.width)
+		mw_all_controls[control_handle].control_rect.x + mw_all_controls[control_handle].control_rect.width)
 	{
 		invalid_rect_copy.width -= ((invalid_rect_copy.x + invalid_rect_copy.width) -
-									(mw_all_controls[control_ref].control_rect.x + mw_all_controls[control_ref].control_rect.width));
+									(mw_all_controls[control_handle].control_rect.x + mw_all_controls[control_handle].control_rect.width));
 	}
 
 	invalid_rect_copy.height = invalid_rect->height;
 	if (invalid_rect_copy.y + invalid_rect_copy.height >
-		mw_all_controls[control_ref].control_rect.y + mw_all_controls[control_ref].control_rect.height)
+		mw_all_controls[control_handle].control_rect.y + mw_all_controls[control_handle].control_rect.height)
 	{
 		invalid_rect_copy.height -= ((invalid_rect_copy.y + invalid_rect_copy.height) -
-									(mw_all_controls[control_ref].control_rect.y + mw_all_controls[control_ref].control_rect.height));
+									(mw_all_controls[control_handle].control_rect.y + mw_all_controls[control_handle].control_rect.height));
 	}
 
 	find_rect_window_intersections(&invalid_rect_copy, &horiz_edges_count, &vert_edges_count);
@@ -2215,11 +2297,11 @@ static void do_paint_control_rect(uint8_t control_ref, const mw_util_rect_t *inv
 
 			/* find z order of containing window */
 			if (find_highest_z_order_at_point(rect_current.x, rect_current.y) !=
-					mw_all_windows[mw_all_controls[control_ref].parent].z_order)
+					mw_all_windows[parent_window_id].z_order)
 			{
 				if (rect_waiting_to_be_painted)
 				{
-					do_paint_control2(control_ref, &rect_previous);
+					do_paint_control2(control_handle, &rect_previous);
 					rect_waiting_to_be_painted = false;
 				}
 				continue;
@@ -2239,7 +2321,7 @@ static void do_paint_control_rect(uint8_t control_ref, const mw_util_rect_t *inv
 
 		if (rect_waiting_to_be_painted)
 		{
-			do_paint_control2(control_ref, &rect_previous);
+			do_paint_control2(control_handle, &rect_previous);
 		}
 	}
 }
@@ -2247,11 +2329,11 @@ static void do_paint_control_rect(uint8_t control_ref, const mw_util_rect_t *inv
 /**
  * The first half of the implementation of painting a control's client area
  *
- * @param control_ref Position in array of all controls of this control
+ * @param control_handle Position in array of all controls of this control
  * @note The first half of the control painting process is identifying the rects the control's area needs breaking
  *       up into according to the other windows overlapping it
  */
-static void do_paint_control(uint8_t control_ref)
+static void do_paint_control(mw_handle_t control_handle)
 {
 	uint16_t vertical_edge_counter;
 	uint16_t horizontal_edge_counter;
@@ -2262,18 +2344,22 @@ static void do_paint_control(uint8_t control_ref)
 	uint16_t vert_edges_count;
 	mw_util_rect_t rect_current;
 	mw_util_rect_t rect_previous;
+	uint8_t parent_window_id;
 
-	MW_ASSERT(control_ref < MW_MAX_CONTROL_COUNT, "Illegal control id");
+	MW_ASSERT(control_handle < MW_MAX_CONTROL_COUNT, "Illegal control id");
+
+	parent_window_id = get_window_id_for_handle(mw_all_controls[control_handle].parent);
+	MW_ASSERT(parent_window_id < MW_MAX_WINDOW_COUNT, "Bad window handle");
 
     /* check if this control is used, visible and not parent window not minimised; if not give up */
-	if (!(mw_all_controls[control_ref].control_flags & MW_CONTROL_FLAG_IS_VISIBLE) ||
-			!(mw_all_controls[control_ref].control_flags & MW_CONTROL_FLAG_IS_USED) ||
-			(mw_all_windows[mw_all_controls[control_ref].parent].window_flags & MW_WINDOW_FLAG_IS_MINIMISED))
+	if (!(mw_all_controls[control_handle].control_flags & MW_CONTROL_FLAG_IS_VISIBLE) ||
+			!(mw_all_controls[control_handle].control_flags & MW_CONTROL_FLAG_IS_USED) ||
+			(mw_all_windows[parent_window_id].window_flags & MW_WINDOW_FLAG_IS_MINIMISED))
 	{
 		return;
 	}
 
-	find_rect_window_intersections(&mw_all_controls[control_ref].control_rect, &horiz_edges_count, &vert_edges_count);
+	find_rect_window_intersections(&mw_all_controls[control_handle].control_rect, &horiz_edges_count, &vert_edges_count);
 
 	/* iterate through horizontal edges, i.e. row at a time */
 	for (horizontal_edge_counter = 0; horizontal_edge_counter < horiz_edges_count - 1; horizontal_edge_counter++)
@@ -2291,11 +2377,11 @@ static void do_paint_control(uint8_t control_ref)
 
 			/* find z order of containing window */
 			if (find_highest_z_order_at_point(rect_current.x, rect_current.y) !=
-					mw_all_windows[mw_all_controls[control_ref].parent].z_order)
+					mw_all_windows[parent_window_id].z_order)
 			{
 				if (rect_waiting_to_be_painted)
 				{
-					do_paint_control2(control_ref, &rect_previous);
+					do_paint_control2(control_handle, &rect_previous);
 					rect_waiting_to_be_painted = false;
 				}
 				continue;
@@ -2315,7 +2401,7 @@ static void do_paint_control(uint8_t control_ref)
 
 		if (rect_waiting_to_be_painted)
 		{
-			do_paint_control2(control_ref, &rect_previous);
+			do_paint_control2(control_handle, &rect_previous);
 		}
 	}
 }
@@ -2323,33 +2409,34 @@ static void do_paint_control(uint8_t control_ref)
 /**
  * The second half of the implementation of painting a control's client area
  *
- * @param control_ref Position in array of all controls of this control
+ * @param control_handle Position in array of all controls of this control
  * @param invalid_rect Rect describing the area of the client that will be painted this time
  * @note The second half of the client painting process the painting of the control's area
  *       is performed by calling the control's paint function. This function is called multiple times with
  *       different clip rects.
  */
-static void do_paint_control2(uint8_t control_ref, const mw_util_rect_t *invalid_rect)
+static void do_paint_control2(mw_handle_t control_handle, const mw_util_rect_t *invalid_rect)
 {
 	mw_gl_draw_info_t client_draw_info;
-	uint8_t parent_window_ref;
+	uint8_t parent_window_id;
 	int16_t client_area_overspill;
 
-	MW_ASSERT(control_ref < MW_MAX_CONTROL_COUNT, "Illegal control id");
+	MW_ASSERT(control_handle < MW_MAX_CONTROL_COUNT, "Illegal control id");
 	MW_ASSERT(invalid_rect, "Null pointer argument");
 
-	client_draw_info.clip_rect.x = invalid_rect->x - mw_all_controls[control_ref].control_rect.x;
-	client_draw_info.clip_rect.y = invalid_rect->y - mw_all_controls[control_ref].control_rect.y;
+	client_draw_info.clip_rect.x = invalid_rect->x - mw_all_controls[control_handle].control_rect.x;
+	client_draw_info.clip_rect.y = invalid_rect->y - mw_all_controls[control_handle].control_rect.y;
 	client_draw_info.clip_rect.width = invalid_rect->width;
 	client_draw_info.clip_rect.height = invalid_rect->height;
-	client_draw_info.origin_x = mw_all_controls[control_ref].control_rect.x;
-	client_draw_info.origin_y = mw_all_controls[control_ref].control_rect.y;
+	client_draw_info.origin_x = mw_all_controls[control_handle].control_rect.x;
+	client_draw_info.origin_y = mw_all_controls[control_handle].control_rect.y;
 
 	/* control rect paint area is relative to window edges but control must be drawn relative to window client area
 	 * edges so reduce clip width if paint area over-spills border; controls cannot over-spill title bar */
-	parent_window_ref = mw_all_controls[control_ref].parent;
+	parent_window_id = get_window_id_for_handle(mw_all_controls[control_handle].parent);
+	MW_ASSERT(parent_window_id < MW_MAX_WINDOW_COUNT, "Bad window handle");
 	client_area_overspill = (client_draw_info.origin_x + client_draw_info.clip_rect.width) -
-			(mw_all_windows[parent_window_ref].client_rect.x + mw_all_windows[parent_window_ref].client_rect.width);
+			(mw_all_windows[parent_window_id].client_rect.x + mw_all_windows[parent_window_id].client_rect.width);
 
 	/* check for overspill greater than clip rect width as this would mean a negative width to draw */
 	if (client_area_overspill >= client_draw_info.clip_rect.width)
@@ -2365,7 +2452,7 @@ static void do_paint_control2(uint8_t control_ref, const mw_util_rect_t *invalid
 	}
 
 	client_area_overspill = (client_draw_info.origin_y + client_draw_info.clip_rect.height) -
-			(mw_all_windows[parent_window_ref].client_rect.y + mw_all_windows[parent_window_ref].client_rect.height);
+			(mw_all_windows[parent_window_id].client_rect.y + mw_all_windows[parent_window_id].client_rect.height);
 
 	/* check for overspill greater than clip rect height as this would mean a negative height to draw */
 	if (client_area_overspill >= client_draw_info.clip_rect.height)
@@ -2380,7 +2467,7 @@ static void do_paint_control2(uint8_t control_ref, const mw_util_rect_t *invalid
 		client_draw_info.clip_rect.height -= client_area_overspill;
 	}
 
-	mw_all_controls[control_ref].paint_func(control_ref, &client_draw_info);
+	mw_all_controls[control_handle].paint_func(control_handle, &client_draw_info);
 }
 
 /**
@@ -2399,16 +2486,16 @@ static mw_handle_t get_next_handle(void)
 /**
  * Get a timer_id represented by a timer handle
  *
- * @param The timer handle
+ * @param timer_handle The timer handle
  * @return The id of the timer the handle represents
  */
-static uint8_t get_timer_id_for_handle(mw_handle_t handle)
+static uint8_t get_timer_id_for_handle(mw_handle_t timer_handle)
 {
 	uint8_t i;
 
 	for (i = 0; i < MW_MAX_TIMER_COUNT; i++)
 	{
-		if (mw_all_timers[i].handle == handle)
+		if (mw_all_timers[i].timer_handle == timer_handle)
 		{
 			return i;
 		}
@@ -2420,16 +2507,16 @@ static uint8_t get_timer_id_for_handle(mw_handle_t handle)
 /**
  * Get a window_id represented by a window's handle
  *
- * @param The window's handle
+ * @param window_handle The window's handle
  * @return The id of the window the handle represents
  */
-static uint8_t get_window_id_for_handle(mw_handle_t handle)
+static uint8_t get_window_id_for_handle(mw_handle_t window_handle)
 {
 	uint8_t i;
 
 	for (i = 0; i < MW_MAX_WINDOW_COUNT; i++)
 	{
-		if (mw_all_windows[i].handle == handle)
+		if (mw_all_windows[i].window_handle == window_handle)
 		{
 			return i;
 		}
@@ -2441,16 +2528,16 @@ static uint8_t get_window_id_for_handle(mw_handle_t handle)
 /**
  * Get a control_id represented by a control's handle
  *
- * @param The control's handle
+ * @param control_handle The control's handle
  * @return The id of the control the handle represents
  */
-static uint8_t get_control_id_for_handle(mw_handle_t handle)
+static uint8_t get_control_id_for_handle(mw_handle_t control_handle)
 {
 	uint8_t i;
 
 	for (i = 0; i < MW_MAX_CONTROL_COUNT; i++)
 	{
-		if (mw_all_controls[i].handle == handle)
+		if (mw_all_controls[i].control_handle == control_handle)
 		{
 			return i;
 		}
@@ -2468,7 +2555,7 @@ static window_redimensioning_state_t process_touch_event(void)
 {
 	static mw_hal_touch_state_t old_touch_state = MW_HAL_TOUCH_STATE_UP;
 	static window_redimensioning_state_t window_redimensioning_state = WINDOW_NOT_BEING_REDIMENSIONED;
-	static uint8_t window_being_redimensioned;
+	static uint8_t window_being_redimensioned_id;
 	static int16_t touch_x_old;
 	static int16_t touch_y_old;
 	static uint32_t last_process_time = 0;
@@ -2476,7 +2563,7 @@ static window_redimensioning_state_t process_touch_event(void)
 	int16_t touch_y;
 	int16_t difference_x = 0;
 	int16_t difference_y = 0;
-	uint8_t window_to_receive_message = MW_ROOT_WINDOW_ID;
+	uint8_t window_to_receive_message_id;
 	uint8_t control_to_receive_message;
 	int16_t client_x;
 	int16_t client_y;
@@ -2586,12 +2673,14 @@ static window_redimensioning_state_t process_touch_event(void)
 		if (window_redimensioning_state == WINDOW_BEING_MOVED)
 		{
 			/* a window is being moved */
-			mw_reposition_window(window_being_redimensioned,
-					mw_all_windows[window_being_redimensioned].window_rect.x + difference_x,
-					mw_all_windows[window_being_redimensioned].window_rect.y + difference_y);
+			mw_reposition_window(mw_all_windows[window_being_redimensioned_id].window_handle,
+					mw_all_windows[window_being_redimensioned_id].window_rect.x +
+						difference_x,
+					mw_all_windows[window_being_redimensioned_id].window_rect.y +
+						difference_y);
 
 			/* draw the new position as a dashed outline */
-			draw_redimensioning_window_outline(window_being_redimensioned);
+			draw_redimensioning_window_outline(mw_all_windows[window_being_redimensioned_id].window_handle);
 
 			/* touch drag event now consumed */
 			return WINDOW_BEING_MOVED;
@@ -2600,17 +2689,21 @@ static window_redimensioning_state_t process_touch_event(void)
 		if (window_redimensioning_state == WINDOW_BEING_RESIZED)
 		{
 			/* a window is being resized */
-			if (mw_resize_window(window_being_redimensioned,
-					mw_all_windows[window_being_redimensioned].window_rect.width - difference_x,
-					mw_all_windows[window_being_redimensioned].window_rect.height - difference_y))
+			if (mw_resize_window(mw_all_windows[window_being_redimensioned_id].window_handle,
+					mw_all_windows[window_being_redimensioned_id].window_rect.width -
+						difference_x,
+					mw_all_windows[window_being_redimensioned_id].window_rect.height -
+						difference_y))
 			{
 				/* resize was allowed, reposition window as resize from top left causes a window reposition too */
-				mw_reposition_window(window_being_redimensioned,
-						mw_all_windows[window_being_redimensioned].window_rect.x + difference_x,
-						mw_all_windows[window_being_redimensioned].window_rect.y + difference_y);
+				mw_reposition_window(mw_all_windows[window_being_redimensioned_id].window_handle,
+						mw_all_windows[window_being_redimensioned_id].window_rect.x +
+							difference_x,
+						mw_all_windows[window_being_redimensioned_id].window_rect.y +
+							difference_y);
 
 				/* draw the new size and position as a dashed outline */
-				draw_redimensioning_window_outline(window_being_redimensioned);
+				draw_redimensioning_window_outline(mw_all_windows[window_being_redimensioned_id].window_handle);
 			}
 
 			/* touch drag event now consumed */
@@ -2625,10 +2718,11 @@ static window_redimensioning_state_t process_touch_event(void)
 	touch_event = TOUCH_EVENT_NONE;
 
 	/* find window this touch event occurred in */
-	window_to_receive_message = find_window_point_is_in(touch_x, touch_y);
+	window_to_receive_message_id = get_window_id_for_handle(find_window_point_is_in(touch_x, touch_y));
+	MW_ASSERT(window_to_receive_message_id < MW_MAX_WINDOW_COUNT, "Bad window handle");
 
 	/* now send touch message to appropriate window first checking root window */
-	if (window_to_receive_message == MW_ROOT_WINDOW_ID)
+	if (window_to_receive_message_id == MW_ROOT_WINDOW_ID)
 	{
 		/* only send if there's not a modal window showing */
 		if (!mw_is_any_window_modal())
@@ -2636,7 +2730,7 @@ static window_redimensioning_state_t process_touch_event(void)
 			/* touch on root window so send it straight away */
 			mw_post_message(touch_message,
 					MW_UNUSED_MESSAGE_PARAMETER,
-					MW_ROOT_WINDOW_ID,
+					mw_all_windows[MW_ROOT_WINDOW_ID].window_handle,
 					(((uint32_t)touch_x) << 16) | touch_y,
 					MW_WINDOW_MESSAGE);
 		}
@@ -2645,7 +2739,7 @@ static window_redimensioning_state_t process_touch_event(void)
 	}
 
 	/* check if the window the touch was in does not have focus */
-	if (window_to_receive_message != window_with_focus)
+	if (mw_all_windows[window_to_receive_message_id].window_handle != window_with_focus_handle)
 	{
 		/* it doesn't but only give touched window focus if there's not a modal window showing */
 		if (mw_is_any_window_modal())
@@ -2655,25 +2749,25 @@ static window_redimensioning_state_t process_touch_event(void)
 		}
 
 		/* paint frame of window losing focus */
-		mw_paint_window_frame(window_with_focus, MW_WINDOW_FRAME_COMPONENT_ALL);
+		mw_paint_window_frame(window_with_focus_handle, MW_WINDOW_FRAME_COMPONENT_ALL);
 
 		/* find if this window is overlapped now before giving it focus which brings it to the front */
-		is_window_overlapped = find_if_window_is_overlapped(window_to_receive_message);
+		is_window_overlapped = find_if_window_is_overlapped(mw_all_windows[window_to_receive_message_id].window_handle);
 
 		/* bring touched window to front which will give it focus */
-		mw_bring_window_to_front(window_to_receive_message);
+		mw_bring_window_to_front(mw_all_windows[window_to_receive_message_id].window_handle);
 
 		/* paint frame of window gaining focus */
-		mw_paint_window_frame(window_to_receive_message, MW_WINDOW_FRAME_COMPONENT_ALL);
+		mw_paint_window_frame(mw_all_windows[window_to_receive_message_id].window_handle, MW_WINDOW_FRAME_COMPONENT_ALL);
 
 		/* paint client of window gaining focus if it was overlapped by any other window */
 		if (is_window_overlapped)
 		{
-			mw_paint_window_client(window_to_receive_message);
+			mw_paint_window_client(mw_all_windows[window_to_receive_message_id].window_handle);
 		}
 
 		/* check if the touch event should now be passed on to the window */
-		if (!(mw_all_windows[window_to_receive_message].window_flags & MW_WINDOW_TOUCH_FOCUS_AND_EVENT))
+		if (!(mw_all_windows[window_to_receive_message_id].window_flags & MW_WINDOW_TOUCH_FOCUS_AND_EVENT))
 		{
 			/* it shouldn't so this touch event has now been consumed */
 			return window_redimensioning_state;
@@ -2681,27 +2775,27 @@ static window_redimensioning_state_t process_touch_event(void)
 	}
 
 	/* check for touch on border */
-	if (mw_all_windows[window_to_receive_message].window_flags & MW_WINDOW_FLAG_HAS_BORDER)
+	if (mw_all_windows[window_to_receive_message_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER)
 	{
 		/* check for a touch on bottom border */
-		if (touch_y >= mw_all_windows[window_to_receive_message].window_rect.y +
-				mw_all_windows[window_to_receive_message].window_rect.height - MW_BORDER_WIDTH)
+		if (touch_y >= mw_all_windows[window_to_receive_message_id].window_rect.y +
+				mw_all_windows[window_to_receive_message_id].window_rect.height - MW_BORDER_WIDTH)
 		{
 			return window_redimensioning_state;
 		}
 
-		if (mw_all_windows[window_to_receive_message].window_flags & MW_WINDOW_FLAG_HAS_TITLE_BAR)
+		if (mw_all_windows[window_to_receive_message_id].window_flags & MW_WINDOW_FLAG_HAS_TITLE_BAR)
 		{
 			/* check for a touch on left border */
-			if (touch_x < mw_all_windows[window_to_receive_message].window_rect.x + MW_BORDER_WIDTH &&
+			if (touch_x < mw_all_windows[window_to_receive_message_id].window_rect.x + MW_BORDER_WIDTH &&
 					touch_y > MW_TITLE_BAR_HEIGHT)
 			{
 				return window_redimensioning_state;
 			}
 
 			/* check for a touch on right border */
-			if ((touch_x >= mw_all_windows[window_to_receive_message].window_rect.x +
-					mw_all_windows[window_to_receive_message].window_rect.width - MW_BORDER_WIDTH) &&
+			if ((touch_x >= mw_all_windows[window_to_receive_message_id].window_rect.x +
+					mw_all_windows[window_to_receive_message_id].window_rect.width - MW_BORDER_WIDTH) &&
 					touch_y > MW_TITLE_BAR_HEIGHT)
 			{
 				return window_redimensioning_state;
@@ -2710,20 +2804,20 @@ static window_redimensioning_state_t process_touch_event(void)
 		else
 		{
 			/* check for a touch on top border */
-			if (touch_y < mw_all_windows[window_to_receive_message].window_rect.y + MW_BORDER_WIDTH)
+			if (touch_y < mw_all_windows[window_to_receive_message_id].window_rect.y + MW_BORDER_WIDTH)
 			{
 				return window_redimensioning_state;
 			}
 
 			/* check for a touch on left border */
-			if (touch_x < mw_all_windows[window_to_receive_message].window_rect.x + MW_BORDER_WIDTH)
+			if (touch_x < mw_all_windows[window_to_receive_message_id].window_rect.x + MW_BORDER_WIDTH)
 			{
 				return window_redimensioning_state;
 			}
 
 			/* check for a touch on right border */
-			if (touch_x >= mw_all_windows[window_to_receive_message].window_rect.x +
-					mw_all_windows[window_to_receive_message].window_rect.width - MW_BORDER_WIDTH)
+			if (touch_x >= mw_all_windows[window_to_receive_message_id].window_rect.x +
+					mw_all_windows[window_to_receive_message_id].window_rect.width - MW_BORDER_WIDTH)
 			{
 				return window_redimensioning_state;
 			}
@@ -2733,27 +2827,27 @@ static window_redimensioning_state_t process_touch_event(void)
 	/* touch occurred in a window with focus so find out if it occurred in
 	 * dead zone in bottom right corner of window with both scroll bars */
 
-	if ((mw_all_windows[window_to_receive_message].window_flags & MW_WINDOW_HAS_VERT_SCROLL_BAR) &&
-			(mw_all_windows[window_to_receive_message].window_flags & MW_WINDOW_HAS_HORIZ_SCROLL_BAR))
+	if ((mw_all_windows[window_to_receive_message_id].window_flags & MW_WINDOW_HAS_VERT_SCROLL_BAR) &&
+			(mw_all_windows[window_to_receive_message_id].window_flags & MW_WINDOW_HAS_HORIZ_SCROLL_BAR))
 	{
-		if (touch_x > mw_all_windows[window_to_receive_message].client_rect.x +
-				mw_all_windows[window_to_receive_message].client_rect.width &&
-				touch_y > mw_all_windows[window_to_receive_message].client_rect.y +
-								mw_all_windows[window_to_receive_message].client_rect.height)
+		if (touch_x > mw_all_windows[window_to_receive_message_id].client_rect.x +
+				mw_all_windows[window_to_receive_message_id].client_rect.width &&
+				touch_y > mw_all_windows[window_to_receive_message_id].client_rect.y +
+								mw_all_windows[window_to_receive_message_id].client_rect.height)
 		{
 			return window_redimensioning_state;
 		}
 	}
 
 	/* check if touch occurred in vertical scroll bar */
-	if (mw_all_windows[window_to_receive_message].window_flags & MW_WINDOW_HAS_VERT_SCROLL_BAR)
+	if (mw_all_windows[window_to_receive_message_id].window_flags & MW_WINDOW_HAS_VERT_SCROLL_BAR)
 	{
-		if (touch_x > mw_all_windows[window_to_receive_message].client_rect.x +
-				mw_all_windows[window_to_receive_message].client_rect.width &&
-				touch_y >= mw_all_windows[window_to_receive_message].client_rect.y)
+		if (touch_x > mw_all_windows[window_to_receive_message_id].client_rect.x +
+				mw_all_windows[window_to_receive_message_id].client_rect.width &&
+				touch_y >= mw_all_windows[window_to_receive_message_id].client_rect.y)
 		{
 			/* check if scroll bar disabled */
-			if (mw_all_windows[window_to_receive_message].window_flags & MW_WINDOWS_VERT_SCROLL_BAR_ENABLED)
+			if (mw_all_windows[window_to_receive_message_id].window_flags & MW_WINDOWS_VERT_SCROLL_BAR_ENABLED)
 			{
 				/* enabled so post message and redraw scroll bar */
 				if (touch_message == MW_TOUCH_DOWN_MESSAGE || touch_message == MW_TOUCH_DRAG_MESSAGE)
@@ -2762,22 +2856,23 @@ static window_redimensioning_state_t process_touch_event(void)
 					uint8_t new_scroll_position;
 
 					/* scale touch point to middle 90% of scroll bar length */
-					scaled_touch_y = mw_ui_common_scale_scroll_bar_touch_point(mw_all_windows[window_to_receive_message].client_rect.height,
-							touch_y - mw_all_windows[window_to_receive_message].client_rect.y);
+					scaled_touch_y = mw_ui_common_scale_scroll_bar_touch_point(mw_all_windows[window_to_receive_message_id].client_rect.height,
+							touch_y - mw_all_windows[window_to_receive_message_id].client_rect.y);
 
-					new_scroll_position = (uint8_t)(UINT8_MAX * scaled_touch_y / mw_all_windows[window_to_receive_message].client_rect.height);
-					if (new_scroll_position != mw_all_windows[window_to_receive_message].vert_scroll_pos)
+					new_scroll_position = (uint8_t)(UINT8_MAX * scaled_touch_y / mw_all_windows[window_to_receive_message_id].client_rect.height);
+					if (new_scroll_position != mw_all_windows[window_to_receive_message_id].vert_scroll_pos)
 					{
 						/* only repaint if the scroll slider position has changed */
-						mw_all_windows[window_to_receive_message].vert_scroll_pos = new_scroll_position;
+						mw_all_windows[window_to_receive_message_id].vert_scroll_pos = new_scroll_position;
 
 						/* just paint vertical scroll bar */
-						mw_paint_window_frame(window_to_receive_message, MW_WINDOW_FRAME_COMPONENT_VERT_SCROLL_BAR);
+						mw_paint_window_frame(mw_all_windows[window_to_receive_message_id].window_handle,
+								MW_WINDOW_FRAME_COMPONENT_VERT_SCROLL_BAR);
 
 						mw_post_message(MW_WINDOW_VERT_SCROLL_BAR_SCROLLED_MESSAGE,
 								MW_UNUSED_MESSAGE_PARAMETER,
-								window_to_receive_message,
-								mw_all_windows[window_to_receive_message].vert_scroll_pos,
+								mw_all_windows[window_to_receive_message_id].window_handle,
+								mw_all_windows[window_to_receive_message_id].vert_scroll_pos,
 								MW_WINDOW_MESSAGE);
 					}
 				}
@@ -2787,14 +2882,14 @@ static window_redimensioning_state_t process_touch_event(void)
 	}
 
 	/* check if touch occurred in horizontal scroll bar */
-	if (mw_all_windows[window_to_receive_message].window_flags & MW_WINDOW_HAS_HORIZ_SCROLL_BAR)
+	if (mw_all_windows[window_to_receive_message_id].window_flags & MW_WINDOW_HAS_HORIZ_SCROLL_BAR)
 	{
-		if (touch_y > mw_all_windows[window_to_receive_message].client_rect.y +
-				mw_all_windows[window_to_receive_message].client_rect.height &&
-				touch_x >= mw_all_windows[window_to_receive_message].client_rect.x)
+		if (touch_y > mw_all_windows[window_to_receive_message_id].client_rect.y +
+				mw_all_windows[window_to_receive_message_id].client_rect.height &&
+				touch_x >= mw_all_windows[window_to_receive_message_id].client_rect.x)
 		{
 			/* check if scroll bar disabled */
-			if (mw_all_windows[window_to_receive_message].window_flags & MW_WINDOWS_HORIZ_SCROLL_BAR_ENABLED)
+			if (mw_all_windows[window_to_receive_message_id].window_flags & MW_WINDOWS_HORIZ_SCROLL_BAR_ENABLED)
 			{
 				/* enabled so post message and redraw scroll bar */
 				if (touch_message == MW_TOUCH_DOWN_MESSAGE || touch_message == MW_TOUCH_DRAG_MESSAGE)
@@ -2803,22 +2898,23 @@ static window_redimensioning_state_t process_touch_event(void)
 					uint8_t new_scroll_position;
 
 					/* scale touch point to middle 90% of scroll bar length */
-					scaled_touch_x = mw_ui_common_scale_scroll_bar_touch_point(mw_all_windows[window_to_receive_message].client_rect.width,
-							touch_x - mw_all_windows[window_to_receive_message].client_rect.x);
+					scaled_touch_x = mw_ui_common_scale_scroll_bar_touch_point(mw_all_windows[window_to_receive_message_id].client_rect.width,
+							touch_x - mw_all_windows[window_to_receive_message_id].client_rect.x);
 
-					new_scroll_position = (uint8_t)(UINT8_MAX * scaled_touch_x / mw_all_windows[window_to_receive_message].client_rect.width);
-					if (new_scroll_position != mw_all_windows[window_to_receive_message].horiz_scroll_pos)
+					new_scroll_position = (uint8_t)(UINT8_MAX * scaled_touch_x / mw_all_windows[window_to_receive_message_id].client_rect.width);
+					if (new_scroll_position != mw_all_windows[window_to_receive_message_id].horiz_scroll_pos)
 					{
 						/* only repaint if the scroll slider position has changed */
-						mw_all_windows[window_to_receive_message].horiz_scroll_pos = new_scroll_position;
+						mw_all_windows[window_to_receive_message_id].horiz_scroll_pos = new_scroll_position;
 
 						/* just paint horizontal scroll bar */
-						mw_paint_window_frame(window_to_receive_message, MW_WINDOW_FRAME_COMPONENT_HORIZ_SCROLL_BAR);
+						mw_paint_window_frame(mw_all_windows[window_to_receive_message_id].window_handle,
+								MW_WINDOW_FRAME_COMPONENT_HORIZ_SCROLL_BAR);
 
 						mw_post_message(MW_WINDOW_HORIZ_SCROLL_BAR_SCROLLED_MESSAGE,
 								MW_UNUSED_MESSAGE_PARAMETER,
-								window_to_receive_message,
-								mw_all_windows[window_to_receive_message].horiz_scroll_pos,
+								mw_all_windows[window_to_receive_message_id].window_handle,
+								mw_all_windows[window_to_receive_message_id].horiz_scroll_pos,
 								MW_WINDOW_MESSAGE);
 					}
 				}
@@ -2828,11 +2924,11 @@ static window_redimensioning_state_t process_touch_event(void)
 	}
 
 	/* check if touch occurred on menu bar */
-	if (mw_all_windows[window_to_receive_message].window_flags & MW_WINDOW_HAS_MENU_BAR)
+	if (mw_all_windows[window_to_receive_message_id].window_flags & MW_WINDOW_HAS_MENU_BAR)
 	{
-		if (touch_y < mw_all_windows[window_to_receive_message].client_rect.y &&
-				touch_y > (mw_all_windows[window_to_receive_message].client_rect.y - MW_MENU_BAR_HEIGHT) &&
-				(mw_all_windows[window_to_receive_message].window_flags & MW_WINDOW_MENU_BAR_ENABLED))
+		if (touch_y < mw_all_windows[window_to_receive_message_id].client_rect.y &&
+				touch_y > (mw_all_windows[window_to_receive_message_id].client_rect.y - MW_MENU_BAR_HEIGHT) &&
+				(mw_all_windows[window_to_receive_message_id].window_flags & MW_WINDOW_MENU_BAR_ENABLED))
 		{
 			if (touch_message == MW_TOUCH_DOWN_MESSAGE)
 			{
@@ -2840,25 +2936,26 @@ static window_redimensioning_state_t process_touch_event(void)
 				uint16_t next_menu_item_text_left_pos = 0;
 				uint8_t i;
 
-				for (i = 0; i < mw_all_windows[window_to_receive_message].menu_bar_items_count; i++)
+				for (i = 0; i < mw_all_windows[window_to_receive_message_id].menu_bar_items_count; i++)
 				{
 					mw_gl_set_font(MW_GL_FONT_9);	/* needed for getting font width */
-					if ((touch_x - mw_all_windows[window_to_receive_message].client_rect.x) >= next_menu_item_text_left_pos &&
-							(touch_x - mw_all_windows[window_to_receive_message].client_rect.x) <
-								next_menu_item_text_left_pos + (int16_t)(strlen(mw_all_windows[window_to_receive_message].menu_bar_items[i]) + 2) * (mw_gl_get_font_width() + 1))
+					if ((touch_x - mw_all_windows[window_to_receive_message_id].client_rect.x) >= next_menu_item_text_left_pos &&
+							(touch_x - mw_all_windows[window_to_receive_message_id].client_rect.x) <
+								next_menu_item_text_left_pos + (int16_t)(strlen(mw_all_windows[window_to_receive_message_id].menu_bar_items[i]) + 2) * (mw_gl_get_font_width() + 1))
 					{
 						/* check if this particular line is enabled */
-						if (mw_util_get_bit(mw_all_windows[window_to_receive_message].menu_bar_item_enables, i))
+						if (mw_util_get_bit(mw_all_windows[window_to_receive_message_id].menu_bar_item_enables, i))
 						{
 							/* relevant text label found so cache this in window structure */
-							mw_all_windows[window_to_receive_message].window_flags |= MW_WINDOW_MENU_BAR_ITEM_IS_SELECTED;
-							mw_all_windows[window_to_receive_message].menu_bar_selected_item = i;
+							mw_all_windows[window_to_receive_message_id].window_flags |= MW_WINDOW_MENU_BAR_ITEM_IS_SELECTED;
+							mw_all_windows[window_to_receive_message_id].menu_bar_selected_item = i;
 
 							/* just paint menu bar */
-							mw_paint_window_frame(window_to_receive_message, MW_WINDOW_FRAME_COMPONENT_MENU_BAR);
+							mw_paint_window_frame(mw_all_windows[window_to_receive_message_id].window_handle,
+									MW_WINDOW_FRAME_COMPONENT_MENU_BAR);
 
 							/* set system timer to animate menu bar item */
-							set_system_timer(window_to_receive_message,
+							set_system_timer(mw_all_windows[window_to_receive_message_id].window_handle,
 									SYSTEM_TIMER_EVENT_MENU_BAR_REDRAW,
 									mw_tick_counter + MW_CONTROL_DOWN_TIME);
 						}
@@ -2866,7 +2963,7 @@ static window_redimensioning_state_t process_touch_event(void)
 					}
 
 					/* increment the running total of the position of the text labels */
-					next_menu_item_text_left_pos += (strlen(mw_all_windows[window_to_receive_message].menu_bar_items[i]) + 2) * (mw_gl_get_font_width() + 1);
+					next_menu_item_text_left_pos += (strlen(mw_all_windows[window_to_receive_message_id].menu_bar_items[i]) + 2) * (mw_gl_get_font_width() + 1);
 				}
 			}
 
@@ -2875,7 +2972,8 @@ static window_redimensioning_state_t process_touch_event(void)
 	}
 
 	/* find out if it occurred in a control */
-	control_to_receive_message = find_control_point_is_in(window_to_receive_message, touch_x, touch_y);
+	control_to_receive_message = find_control_point_is_in(mw_all_windows[window_to_receive_message_id].window_handle,
+			touch_x, touch_y);
 
 	/* check if touch was identified to have occurred in a control */
 	if (control_to_receive_message != MW_MAX_CONTROL_COUNT)
@@ -2893,73 +2991,75 @@ static window_redimensioning_state_t process_touch_event(void)
 	}
 
 	/* touch event did not occur in a control so check if it occurred in window's title bar */
-	if (touch_y < mw_all_windows[window_to_receive_message].client_rect.y)
+	if (touch_y < mw_all_windows[window_to_receive_message_id].client_rect.y)
 	{
 		/* touch was above client rect */
-		if (mw_all_windows[window_to_receive_message].window_flags & MW_WINDOW_FLAG_HAS_TITLE_BAR)
+		if (mw_all_windows[window_to_receive_message_id].window_flags & MW_WINDOW_FLAG_HAS_TITLE_BAR)
 		{
 			/* touch event occurred on title bar so check if it occurred on close icon */
-			if (touch_x > (mw_all_windows[window_to_receive_message].window_rect.x +
-					mw_all_windows[window_to_receive_message].window_rect.width) - MW_TITLE_BAR_ICON_OFFSET)
+			if (touch_x > (mw_all_windows[window_to_receive_message_id].window_rect.x +
+					mw_all_windows[window_to_receive_message_id].window_rect.width) - MW_TITLE_BAR_ICON_OFFSET)
 			{
 				/* touch event was on close icon; ignore touch if window is modal */
 				if (touch_message == MW_TOUCH_DOWN_MESSAGE  &&
-						!(mw_all_windows[window_to_receive_message].window_flags & MW_WINDOW_IS_MODAL))
+						!(mw_all_windows[window_to_receive_message_id].window_flags & MW_WINDOW_IS_MODAL))
 				{
 					/* it was touch down and window isn't modal so close window if it's allowed */
-					if (mw_all_windows[window_to_receive_message].window_flags & MW_WINDOW_FLAG_CAN_BE_CLOSED)
+					if (mw_all_windows[window_to_receive_message_id].window_flags & MW_WINDOW_FLAG_CAN_BE_CLOSED)
 					{
 						/* it's allowed, close it */
-						mw_remove_window(window_to_receive_message);
+						mw_remove_window(mw_all_windows[window_to_receive_message_id].window_handle);
 						mw_paint_all();
 					}
 				}
 			}
 			/* check if touch occurred on maximise icon */
-			else if (touch_x > (mw_all_windows[window_to_receive_message].window_rect.x +
-					mw_all_windows[window_to_receive_message].window_rect.width) - (2 * MW_TITLE_BAR_ICON_OFFSET))
+			else if (touch_x > (mw_all_windows[window_to_receive_message_id].window_rect.x +
+					mw_all_windows[window_to_receive_message_id].window_rect.width) - (2 * MW_TITLE_BAR_ICON_OFFSET))
 			{
 				/* touch event was on maximise icon; ignore if window is modal */
 				if (touch_message == MW_TOUCH_DOWN_MESSAGE &&
-						!(mw_all_windows[window_to_receive_message].window_flags & MW_WINDOW_IS_MODAL))
+						!(mw_all_windows[window_to_receive_message_id].window_flags & MW_WINDOW_IS_MODAL))
 				{
 					/* it was touch down and window isn't modal so maximise window */
-					mw_resize_window(window_to_receive_message, MW_HAL_LCD_WIDTH, MW_HAL_LCD_HEIGHT);
-					mw_reposition_window(window_to_receive_message, 0, 0);
+					mw_resize_window(mw_all_windows[window_to_receive_message_id].window_handle,
+							MW_HAL_LCD_WIDTH, MW_HAL_LCD_HEIGHT);
+					mw_reposition_window(mw_all_windows[window_to_receive_message_id].window_handle, 0, 0);
 					mw_paint_all();
 				}
 			}
 			/* check if touch occurred on minimise icon */
-			else if (touch_x > (mw_all_windows[window_to_receive_message].window_rect.x +
-					mw_all_windows[window_to_receive_message].window_rect.width) - (3 * MW_TITLE_BAR_ICON_OFFSET))
+			else if (touch_x > (mw_all_windows[window_to_receive_message_id].window_rect.x +
+					mw_all_windows[window_to_receive_message_id].window_rect.width) - (3 * MW_TITLE_BAR_ICON_OFFSET))
 			{
 				/* touch event was on minimise icon; ignore if window is modal */
 				if (touch_message == MW_TOUCH_DOWN_MESSAGE &&
-						!(mw_all_windows[window_to_receive_message].window_flags & MW_WINDOW_IS_MODAL))
+						!(mw_all_windows[window_to_receive_message_id].window_flags & MW_WINDOW_IS_MODAL))
 				{
 					/* if window isn't modal so minimise window */
-					draw_min_restore_window_effect(window_to_receive_message);
-					mw_all_windows[window_to_receive_message].window_flags |= MW_WINDOW_FLAG_IS_MINIMISED;
+					draw_min_restore_window_effect(mw_all_windows[window_to_receive_message_id].window_handle);
+					mw_all_windows[window_to_receive_message_id].window_flags |= MW_WINDOW_FLAG_IS_MINIMISED;
 					set_focus();
 					set_system_timer(MW_UNUSED_MESSAGE_PARAMETER,
 							SYSTEM_TIMER_EVENT_PAINT_ALL,
 							mw_tick_counter + MW_WINDOW_MIN_MAX_EFFECT_TIME);
 					mw_post_message(MW_WINDOW_MINIMISED,
 							MW_UNUSED_MESSAGE_PARAMETER,
-							window_to_receive_message,
+							mw_all_windows[window_to_receive_message_id].window_handle,
 							MW_UNUSED_MESSAGE_PARAMETER,
 							MW_WINDOW_MESSAGE);
 				}
 			}
 			/* check if touch occurred on resize icon */
-			else if (touch_x - mw_all_windows[window_to_receive_message].window_rect.x < MW_TITLE_BAR_ICON_SIZE)
+			else if (touch_x - mw_all_windows[window_to_receive_message_id].window_rect.x < MW_TITLE_BAR_ICON_SIZE)
 			{
 				/* touch event was on resize icon; ignore if window is modal */
-				if (touch_message == MW_TOUCH_DOWN_MESSAGE && !(mw_all_windows[window_to_receive_message].window_flags & MW_WINDOW_IS_MODAL))
+				if (touch_message == MW_TOUCH_DOWN_MESSAGE && !(mw_all_windows[window_to_receive_message_id].window_flags & MW_WINDOW_IS_MODAL))
 				{
 					/* window isn't modal so start resize process */
 					window_redimensioning_state = WINDOW_BEING_RESIZED;
-					window_being_redimensioned = window_to_receive_message;
+					window_being_redimensioned_id = get_window_id_for_handle(mw_all_windows[window_to_receive_message_id].window_handle);
+					MW_ASSERT(window_being_redimensioned_id < MW_MAX_WINDOW_COUNT, "Bad window handle");
 				}
 			}
 			else
@@ -2969,7 +3069,8 @@ static window_redimensioning_state_t process_touch_event(void)
 				{
 					/* touch is elsewhere on title bar so start move process */
 					window_redimensioning_state = WINDOW_BEING_MOVED;
-					window_being_redimensioned = window_to_receive_message;
+					window_being_redimensioned_id = get_window_id_for_handle(mw_all_windows[window_to_receive_message_id].window_handle);
+					MW_ASSERT(window_being_redimensioned_id < MW_MAX_WINDOW_COUNT, "Bad window handle");
 				}
 			}
 		}
@@ -2978,11 +3079,11 @@ static window_redimensioning_state_t process_touch_event(void)
 	}
 
 	/* touch event occurred on client rect */
-	client_x = touch_x - mw_all_windows[window_to_receive_message].client_rect.x;
-	client_y = touch_y - mw_all_windows[window_to_receive_message].client_rect.y;
+	client_x = touch_x - mw_all_windows[window_to_receive_message_id].client_rect.x;
+	client_y = touch_y - mw_all_windows[window_to_receive_message_id].client_rect.y;
 	mw_post_message(touch_message,
 			MW_UNUSED_MESSAGE_PARAMETER,
-			window_to_receive_message,
+			mw_all_windows[window_to_receive_message_id].window_handle,
 			(((uint32_t)client_x) << 16) | client_y,
 			MW_WINDOW_MESSAGE);
 
@@ -3020,7 +3121,7 @@ static void set_focus(void)
 {
 	uint8_t i;
 	uint8_t highest_z_order_found = 0;
-	uint8_t window_with_highest_z_order = MW_ROOT_WINDOW_ID;
+	uint8_t window_with_highest_z_order_id = MW_ROOT_WINDOW_ID;
 
 	/* iterate through all windows */
 	for (i = 0; i < MW_MAX_WINDOW_COUNT; i++)
@@ -3032,14 +3133,14 @@ static void set_focus(void)
 		{
 			/* new highest z order found so save it */
 			highest_z_order_found = mw_all_windows[i].z_order;
-			window_with_highest_z_order = i;
+			window_with_highest_z_order_id = i;
 		}
 	}
 
 	/* send message to window that is going to lose focus */
 	mw_post_message(MW_WINDOW_LOST_FOCUS_MESSAGE,
 			MW_UNUSED_MESSAGE_PARAMETER,
-			window_with_focus,
+			window_with_focus_handle,
 			MW_UNUSED_MESSAGE_PARAMETER,
 			MW_WINDOW_MESSAGE);
 
@@ -3047,7 +3148,7 @@ static void set_focus(void)
 	for (i = 0; i < MW_MAX_CONTROL_COUNT; i++)
 	{
 		/* check that control belongs to the window losing focus */
-		if (mw_all_controls[i].parent == window_with_focus &&
+		if (mw_all_controls[i].parent == window_with_focus_handle &&
 				(mw_all_controls[i].control_flags & MW_CONTROL_FLAG_IS_USED))
 		{
 			mw_post_message(MW_CONTROL_LOST_FOCUS_MESSAGE,
@@ -3058,19 +3159,19 @@ static void set_focus(void)
 		}
 	}
 
-	window_with_focus = window_with_highest_z_order;
+	window_with_focus_handle = mw_all_windows[window_with_highest_z_order_id].window_handle;
 
 	/* send message to window that is going to gain focus*/
 	mw_post_message(MW_WINDOW_GAINED_FOCUS_MESSAGE,
 			MW_UNUSED_MESSAGE_PARAMETER,
-			window_with_focus,
+			window_with_focus_handle,
 			MW_UNUSED_MESSAGE_PARAMETER,
 			MW_WINDOW_MESSAGE);
 
 	/* send message to all controls in the window that parent window gained focus */
 	for (i = 0; i < MW_MAX_CONTROL_COUNT; i++)
 	{
-		if (mw_all_controls[i].parent == window_with_focus &&
+		if (mw_all_controls[i].parent == window_with_focus_handle &&
 				(mw_all_controls[i].control_flags & MW_CONTROL_FLAG_IS_USED))
 		{
 			mw_post_message(MW_CONTROL_GAINED_FOCUS_MESSAGE,
@@ -3129,11 +3230,15 @@ static void rationalize_z_orders(void)
 /**
  * Draw the dashed outline of the window being resized or moved
  *
- * @param window_ref The window to draw the outline of
+ * @param window_handle The window to draw the outline of
  */
-static void draw_redimensioning_window_outline(uint8_t window_ref)
+static void draw_redimensioning_window_outline(mw_handle_t window_handle)
 {
-	MW_ASSERT(window_ref < MW_MAX_WINDOW_COUNT, "Illegal window id");
+	uint8_t window_id;
+
+	/* get window id from window handle and check it's in range */
+	window_id = get_window_id_for_handle(window_handle);
+	MW_ASSERT(window_id < MW_MAX_WINDOW_COUNT, "Bad window handle");
 
 	mw_gl_set_fill(MW_GL_NO_FILL);
 	mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
@@ -3141,10 +3246,10 @@ static void draw_redimensioning_window_outline(uint8_t window_ref)
 	mw_gl_set_line(MW_GL_EQUAL_LARGE_DASH);
 	mw_gl_set_bg_transparency(MW_GL_BG_NOT_TRANSPARENT);
 	mw_gl_rectangle(&draw_info_root,
-			mw_all_windows[window_ref].window_rect.x,
-			mw_all_windows[window_ref].window_rect.y,
-			mw_all_windows[window_ref].window_rect.width,
-			mw_all_windows[window_ref].window_rect.height);
+			mw_all_windows[window_id].window_rect.x,
+			mw_all_windows[window_id].window_rect.y,
+			mw_all_windows[window_id].window_rect.width,
+			mw_all_windows[window_id].window_rect.height);
 }
 
 /**
@@ -3203,6 +3308,7 @@ void mw_init()
 			"",
 			root_paint_function,
 			MW_ROOT_WINDOW_ID,
+			get_next_handle(),
 			root_message_function,
 			NULL,
 			0,
@@ -3211,6 +3317,9 @@ void mw_init()
 
 	/* set root window z order at the bottom */
 	mw_all_windows[MW_ROOT_WINDOW_ID].z_order = MW_ROOT_Z_ORDER;
+
+	/* set root as window with focus */
+	window_with_focus_handle = mw_all_windows[MW_ROOT_WINDOW_ID].window_handle;
 
 	/* mark all user windows unused */
 	for (i = MW_FIRST_USER_WINDOW_ID; i < MW_MAX_WINDOW_COUNT; i++)
@@ -3221,7 +3330,7 @@ void mw_init()
 	/* send root window window created message */
 	mw_post_message(MW_WINDOW_CREATED_MESSAGE,
 			MW_UNUSED_MESSAGE_PARAMETER,
-			MW_ROOT_WINDOW_ID,
+			mw_all_windows[MW_ROOT_WINDOW_ID].window_handle,
 			MW_UNUSED_MESSAGE_PARAMETER,
 			MW_WINDOW_MESSAGE);
 
@@ -3237,7 +3346,7 @@ bool mw_find_if_any_window_slots_free(void)
 	return (find_empty_window_slot() != MW_MAX_WINDOW_COUNT);
 }
 
-uint8_t mw_add_window(mw_util_rect_t *rect,
+mw_handle_t mw_add_window(mw_util_rect_t *rect,
 		char* title,
 		mw_paint_func_p paint_func,
 		mw_message_func_p message_func,
@@ -3252,21 +3361,21 @@ uint8_t mw_add_window(mw_util_rect_t *rect,
 	if (rect == NULL || paint_func == NULL || message_func == NULL || title == NULL)
 	{
 		MW_ASSERT(false, "Null pointer argument");
-		return MW_MAX_WINDOW_COUNT;
+		return MW_INVALID_HANDLE;
 	}
 
 	/* check for being called from within a client window paint function */
 	if (in_client_window_paint_function)
 	{
 		MW_ASSERT(false, "Can't add window in paint function");
-		return MW_MAX_WINDOW_COUNT;
+		return MW_INVALID_HANDLE;
 	}
 
 	/* check optional parameters */
 	if ((window_flags & MW_WINDOW_HAS_MENU_BAR) && (!menu_bar_items || !*menu_bar_items || menu_bar_items_count == 0))
 	{
 		MW_ASSERT(false, "Non-sensical arguments");
-		return MW_MAX_WINDOW_COUNT;
+		return MW_INVALID_HANDLE;
 	}
 
 	/* look for an empty slot in the array of windows */
@@ -3275,14 +3384,14 @@ uint8_t mw_add_window(mw_util_rect_t *rect,
 	{
 		/* no empty slot */	
 		MW_ASSERT(false, "No space to add window");
-		return MW_MAX_WINDOW_COUNT;
+		return MW_INVALID_HANDLE;
 	}
 
 	/* sanity check on width compared to border thickness */
 	if (rect->width < ((window_flags & MW_WINDOW_FLAG_HAS_BORDER) ? (MW_BORDER_WIDTH * 2) + 1 : 1))
 	{
 		MW_ASSERT(false, "Width too small");
-		return MW_MAX_WINDOW_COUNT;
+		return MW_INVALID_HANDLE;
 	}
 
 	/* sanity check dimensions */
@@ -3291,7 +3400,7 @@ uint8_t mw_add_window(mw_util_rect_t *rect,
 			window_flags))
 	{
 		MW_ASSERT(false, "Window too samall");
-		return MW_MAX_WINDOW_COUNT;
+		return MW_INVALID_HANDLE;
 	}
 
 	/* set the new window's details with a z order that will make it the front-most window */
@@ -3299,6 +3408,7 @@ uint8_t mw_add_window(mw_util_rect_t *rect,
    			title,
    			paint_func,
    			new_window_id,
+			get_next_handle(),
    			message_func,
 			menu_bar_items,
 			menu_bar_items_count,
@@ -3306,47 +3416,51 @@ uint8_t mw_add_window(mw_util_rect_t *rect,
 			instance_data);
 
    	/* bring this window to the front */
-   	mw_bring_window_to_front(new_window_id);
+   	mw_bring_window_to_front(mw_all_windows[new_window_id].window_handle);
 
 	/* send window created message to this window's message function */
    	mw_post_message(MW_WINDOW_CREATED_MESSAGE,
    			MW_UNUSED_MESSAGE_PARAMETER,
-   			new_window_id,
+			mw_all_windows[new_window_id].window_handle,
    			MW_UNUSED_MESSAGE_PARAMETER,
    			MW_WINDOW_MESSAGE);
 
-	return new_window_id;
+	return mw_all_windows[new_window_id].window_handle;
 }
 
-void mw_bring_window_to_front(uint8_t window_ref)
+void mw_bring_window_to_front(mw_handle_t window_handle)
 {
 	uint8_t max_existing_z_order;
+	uint8_t window_id;
 
-	/* check that the window id is in range */
-	if (window_ref >= MW_MAX_WINDOW_COUNT)
+	/* get window id from window handle and check it's in range */
+	window_id = get_window_id_for_handle(window_handle);
+	if (window_id >= MW_MAX_WINDOW_COUNT)
 	{
-		MW_ASSERT(false, "Illegal window id");
+		MW_ASSERT(false, "Bad window handle");
 		return;
 	}
 
     /* find the highest existing z order of all used windows */
 	max_existing_z_order = find_highest_z_order();
-    
+
     /* set the z order to the highest value plus 1 */
-	mw_all_windows[window_ref].z_order = max_existing_z_order + 1;
+	mw_all_windows[window_id].z_order = max_existing_z_order + 1;
     
     /* rationalize the z orders as there will now be a gap in the numbers */
 	rationalize_z_orders();
 }
 
-void mw_send_window_to_back(uint8_t window_ref)
+void mw_send_window_to_back(mw_handle_t window_handle)
 {
 	uint8_t i;
+	uint8_t window_id;
 
-	/* check that the window id is in range */
-	if (window_ref >= MW_MAX_WINDOW_COUNT)
+	/* get window id from window handle and check it's in range */
+	window_id = get_window_id_for_handle(window_handle);
+	if (window_id >= MW_MAX_WINDOW_COUNT)
 	{
-		MW_ASSERT(false, "Illegal window id");
+		MW_ASSERT(false, "Bad window handle");
 		return;
 	}
 
@@ -3357,33 +3471,36 @@ void mw_send_window_to_back(uint8_t window_ref)
 	}
     
     /* set this window's z order to minimum */
-	mw_all_windows[window_ref].z_order = MW_MIN_Z_ORDER;
+	mw_all_windows[window_id].z_order = MW_MIN_Z_ORDER;
     
     /* rationalize the z orders as there may now be a gap */
 	rationalize_z_orders();
 }
 
-void mw_set_window_visible(uint8_t window_ref, bool visible)
+void mw_set_window_visible(mw_handle_t window_handle, bool visible)
 {
-	/* check that the window id is in range */
-	if (window_ref >= MW_MAX_WINDOW_COUNT)
+	uint8_t window_id;
+
+	/* get window id from window handle and check it's in range */
+	window_id = get_window_id_for_handle(window_handle);
+	if (window_id >= MW_MAX_WINDOW_COUNT)
 	{
-		MW_ASSERT(false, "Illegal window id");
+		MW_ASSERT(false, "Bad window handle");
 		return;
 	}
 
 	/* ignore if not used */
-	if (!(mw_all_windows[window_ref].window_flags & MW_WINDOW_FLAG_IS_USED))
+	if (!(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_USED))
 	{
 		return;
 	}
 
 	/* ignore if no change */
-	if (visible && (mw_all_windows[window_ref].window_flags & MW_WINDOW_FLAG_IS_VISIBLE))
+	if (visible && (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_VISIBLE))
 	{
 		return;
 	}
-	if (!visible && !(mw_all_windows[window_ref].window_flags & MW_WINDOW_FLAG_IS_VISIBLE))
+	if (!visible && !(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_VISIBLE))
 	{
 		return;
 	}
@@ -3391,19 +3508,19 @@ void mw_set_window_visible(uint8_t window_ref, bool visible)
 	/* set window visibility */
 	if (visible)
 	{
-		mw_all_windows[window_ref].window_flags |= MW_WINDOW_FLAG_IS_VISIBLE;
-		mw_bring_window_to_front(window_ref);
+		mw_all_windows[window_id].window_flags |= MW_WINDOW_FLAG_IS_VISIBLE;
+		mw_bring_window_to_front(window_handle);
 	}
 	else
 	{
-		mw_all_windows[window_ref].window_flags &= ~MW_WINDOW_FLAG_IS_VISIBLE;
+		mw_all_windows[window_id].window_flags &= ~MW_WINDOW_FLAG_IS_VISIBLE;
 		rationalize_z_orders();
 	}
 
 	/* send message to window that visibility has changed */
 	mw_post_message(MW_WINDOW_VISIBILITY_CHANGED,
 			MW_UNUSED_MESSAGE_PARAMETER,
-			window_ref,
+			window_handle,
 			visible,
 			MW_WINDOW_MESSAGE);
 
@@ -3411,26 +3528,29 @@ void mw_set_window_visible(uint8_t window_ref, bool visible)
 	set_focus();
 }
 
-void mw_set_window_minimised(uint8_t window_ref, bool minimised)
+void mw_set_window_minimised(mw_handle_t window_handle, bool minimised)
 {
-	/* check that the window id is in range */
-	if (window_ref >= MW_MAX_WINDOW_COUNT)
+	uint8_t window_id;
+
+	/* get window id from window handle and check it's in range */
+	window_id = get_window_id_for_handle(window_handle);
+	if (window_id >= MW_MAX_WINDOW_COUNT)
 	{
-		MW_ASSERT(false, "Illegal window id");
+		MW_ASSERT(false, "Bad window handle");
 		return;
 	}
 
 	/* ignore if not used or no change */
-	if (mw_all_windows[window_ref].window_flags & MW_WINDOW_FLAG_IS_USED)
+	if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_USED)
 	{
 		/* set window minimised state */
 		if (minimised)
 		{
-			mw_all_windows[window_ref].window_flags |= MW_WINDOW_FLAG_IS_MINIMISED;
+			mw_all_windows[window_id].window_flags |= MW_WINDOW_FLAG_IS_MINIMISED;
 		}
 		else
 		{
-			mw_all_windows[window_ref].window_flags &= ~MW_WINDOW_FLAG_IS_MINIMISED;
+			mw_all_windows[window_id].window_flags &= ~MW_WINDOW_FLAG_IS_MINIMISED;
 		}
 
 		/* update focus */
@@ -3438,27 +3558,29 @@ void mw_set_window_minimised(uint8_t window_ref, bool minimised)
 	}
 }
 
-void mw_reposition_window(uint8_t window_ref, int16_t new_x, int16_t new_y)
+void mw_reposition_window(mw_handle_t window_handle, int16_t new_x, int16_t new_y)
 {
 	mw_util_rect_t r;
 	uint8_t i;
+	uint8_t window_id;
 
-	/* check that the window id is in range */
-	if (window_ref >= MW_MAX_WINDOW_COUNT)
+	/* get window id from window handle and check it's in range */
+	window_id = get_window_id_for_handle(window_handle);
+	if (window_id >= MW_MAX_WINDOW_COUNT)
 	{
-		MW_ASSERT(false, "Illegal window id");
+		MW_ASSERT(false, "Bad window handle");
 		return;
 	}
 	
 	/* check new_x and new_y for being on screen */
-	if (new_x > MW_GL_MAX_X || new_y > MW_GL_MAX_Y || new_x < -mw_all_windows[window_ref].window_rect.width || new_y <  -mw_all_windows[window_ref].window_rect.height)
+	if (new_x > MW_GL_MAX_X || new_y > MW_GL_MAX_Y || new_x < -mw_all_windows[window_id].window_rect.width || new_y <  -mw_all_windows[window_id].window_rect.height)
 	{
 		return;
 	}
 
 	/* fill in a temporary rect with the window's new position details */
-	r.width = mw_all_windows[window_ref].window_rect.width;
-	r.height = mw_all_windows[window_ref].window_rect.height;
+	r.width = mw_all_windows[window_id].window_rect.width;
+	r.height = mw_all_windows[window_id].window_rect.height;
 	r.x = new_x;
 	r.y = new_y;
 
@@ -3466,40 +3588,42 @@ void mw_reposition_window(uint8_t window_ref, int16_t new_x, int16_t new_y)
 	for (i = 0; i < MW_MAX_CONTROL_COUNT; i++)
 	{
 		/* find controls that are used and have this window as parent */
-		if (mw_all_controls[i].parent == window_ref && (mw_all_controls[i].control_flags & MW_CONTROL_FLAG_IS_USED))
+		if (mw_all_controls[i].parent == window_handle && (mw_all_controls[i].control_flags & MW_CONTROL_FLAG_IS_USED))
 		{
 			/* move the control */
-			mw_all_controls[i].control_rect.x += (new_x - mw_all_windows[window_ref].window_rect.x);
-			mw_all_controls[i].control_rect.y += (new_y - mw_all_windows[window_ref].window_rect.y);
+			mw_all_controls[i].control_rect.x += (new_x - mw_all_windows[window_id].window_rect.x);
+			mw_all_controls[i].control_rect.y += (new_y - mw_all_windows[window_id].window_rect.y);
 		}
 	}
 
 	/* update the window's client area */
-	calculate_new_window_size_details(window_ref, &r);
+	calculate_new_window_size_details(window_handle, &r);
 
 	/* send a moved message to the window in case it needs to do anything */
 	mw_post_message(MW_WINDOW_MOVED,
 			MW_UNUSED_MESSAGE_PARAMETER,
-			window_ref,
+			window_handle,
 			MW_UNUSED_MESSAGE_PARAMETER,
 			MW_WINDOW_MESSAGE);
 }
 
-bool mw_resize_window(uint8_t window_ref, uint16_t new_width, uint16_t new_height)
+bool mw_resize_window(mw_handle_t window_handle, uint16_t new_width, uint16_t new_height)
 {
 	mw_util_rect_t r;
+	uint8_t window_id;
 
-	/* check that the window id is in range */
-	if (window_ref >= MW_MAX_WINDOW_COUNT)
+	/* get window id from window handle and check it's in range */
+	window_id = get_window_id_for_handle(window_handle);
+	if (window_id >= MW_MAX_WINDOW_COUNT)
 	{
-		MW_ASSERT(false, "Illegal window id");
+		MW_ASSERT(false, "Bad window handle");
 		return false;
 	}
 
 	/* check the proposed new window dimensions to see if they are sensible */
 	if (!check_window_dimensions(new_width,
 			new_height,
-			mw_all_windows[window_ref].window_flags))
+			mw_all_windows[window_id].window_flags))
 	{
 		return false;
 	}
@@ -3507,25 +3631,25 @@ bool mw_resize_window(uint8_t window_ref, uint16_t new_width, uint16_t new_heigh
 	/* fill in a temporary rect with the window's new position details */
 	r.width = new_width;
 	r.height = new_height;
-	r.x = mw_all_windows[window_ref].window_rect.x;
-	r.y = mw_all_windows[window_ref].window_rect.y;
+	r.x = mw_all_windows[window_id].window_rect.x;
+	r.y = mw_all_windows[window_id].window_rect.y;
 
 	/* this does the setting of the window's new details */
-	calculate_new_window_size_details(window_ref, &r);
+	calculate_new_window_size_details(window_handle, &r);
 
 	/* send a resize message to the window in case it needs to do anything */
 	mw_post_message(MW_WINDOW_RESIZED,
 			MW_UNUSED_MESSAGE_PARAMETER,
-			window_ref,
+			window_handle,
 			((uint32_t)new_width) << 16 | new_height,
 			MW_WINDOW_MESSAGE);
 
 	return true;
 }
 
-uint8_t mw_find_window_with_focus(void)
+mw_handle_t mw_find_window_with_focus(void)
 {
-	return window_with_focus;
+	return window_with_focus_handle;
 }
 
 bool mw_is_any_window_modal(void)
@@ -3545,28 +3669,30 @@ bool mw_is_any_window_modal(void)
 	return false;
 }
 
-void mw_set_window_modal(uint8_t window_ref, bool modal)
+void mw_set_window_modal(mw_handle_t window_handle, bool modal)
 {
 	uint8_t i;
+	uint8_t window_id;
 
-	/* check that the window id is in range */
-	if (window_ref >= MW_MAX_WINDOW_COUNT)
+	/* get window id from window handle and check it's in range */
+	window_id = get_window_id_for_handle(window_handle);
+	if (window_id >= MW_MAX_WINDOW_COUNT)
 	{
-		MW_ASSERT(false, "Illegal window id");
+		MW_ASSERT(false, "Bad window handle");
 		return;
 	}
 
 	if (!modal)
 	{
 		/* set non-modal */
-		mw_all_windows[window_ref].window_flags &= ~MW_WINDOW_IS_MODAL;
+		mw_all_windows[window_id].window_flags &= ~MW_WINDOW_IS_MODAL;
 	}
 	else
 	{
 		/* can't set an invisible unused or minimised window modal */
-		if (!(mw_all_windows[window_ref].window_flags & MW_WINDOW_FLAG_IS_VISIBLE) ||
-				!(mw_all_windows[window_ref].window_flags & MW_WINDOW_FLAG_IS_USED) ||
-				(mw_all_windows[window_ref].window_flags & MW_WINDOW_FLAG_IS_MINIMISED))
+		if (!(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_VISIBLE) ||
+				!(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_USED) ||
+				(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_MINIMISED))
 		{
 			return;
 		}
@@ -3582,92 +3708,104 @@ void mw_set_window_modal(uint8_t window_ref, bool modal)
 		}
 
 		/* this window is allowed to be set modal */
-		mw_all_windows[window_ref].window_flags |= MW_WINDOW_IS_MODAL;
+		mw_all_windows[window_id].window_flags |= MW_WINDOW_IS_MODAL;
 		
 		/* a modal window must be at the front so bring it to the front */
-		mw_bring_window_to_front(window_ref);
+		mw_bring_window_to_front(window_handle);
 	}
 }
 
-void mw_set_menu_bar_enabled_state(uint8_t window_ref, bool enabled)
+void mw_set_menu_bar_enabled_state(mw_handle_t window_handle, bool enabled)
 {
-	/* check that the window id is in range */
-	if (window_ref >= MW_MAX_WINDOW_COUNT)
+	uint8_t window_id;
+
+	/* get window id from window handle and check it's in range */
+	window_id = get_window_id_for_handle(window_handle);
+	if (window_id >= MW_MAX_WINDOW_COUNT)
 	{
-		MW_ASSERT(false, "Illegal window id");
+		MW_ASSERT(false, "Bad window handle");
 		return;
 	}
 
 	if (enabled)
 	{
-		mw_all_windows[window_ref].window_flags |= MW_WINDOW_MENU_BAR_ENABLED;
+		mw_all_windows[window_id].window_flags |= MW_WINDOW_MENU_BAR_ENABLED;
 	}
 	else
 	{
-		mw_all_windows[window_ref].window_flags &= ~MW_WINDOW_MENU_BAR_ENABLED;
+		mw_all_windows[window_id].window_flags &= ~MW_WINDOW_MENU_BAR_ENABLED;
 	}
 }
 
-void mw_set_menu_bar_items_enabled_state(uint8_t window_ref, uint16_t item_enables)
+void mw_set_menu_bar_items_enabled_state(mw_handle_t window_handle, uint16_t item_enables)
 {
-	/* check that the window id is in range */
-	if (window_ref >= MW_MAX_WINDOW_COUNT)
+	uint8_t window_id;
+
+	/* get window id from window handle and check it's in range */
+	window_id = get_window_id_for_handle(window_handle);
+	if (window_id >= MW_MAX_WINDOW_COUNT)
 	{
-		MW_ASSERT(false, "Illegal window id");
+		MW_ASSERT(false, "Bad window handle");
 		return;
 	}
 
-	mw_all_windows[window_ref].menu_bar_item_enables = item_enables;
+	mw_all_windows[window_id].menu_bar_item_enables = item_enables;
 }
 
-void mw_set_window_horiz_scroll_bar_enabled_state(uint8_t window_ref, bool enabled)
+void mw_set_window_horiz_scroll_bar_enabled_state(mw_handle_t window_handle, bool enabled)
 {
-	/* check that the window id is in range */
-	if (window_ref >= MW_MAX_WINDOW_COUNT)
+	uint8_t window_id;
+
+	/* get window id from window handle and check it's in range */
+	window_id = get_window_id_for_handle(window_handle);
+	if (window_id >= MW_MAX_WINDOW_COUNT)
 	{
-		MW_ASSERT(false, "Illegal window id");
+		MW_ASSERT(false, "Bad window handle");
 		return;
 	}
 
 	if (enabled)
 	{
 		/* set enabled */	
-		mw_all_windows[window_ref].window_flags |= MW_WINDOWS_HORIZ_SCROLL_BAR_ENABLED;
+		mw_all_windows[window_id].window_flags |= MW_WINDOWS_HORIZ_SCROLL_BAR_ENABLED;
 	}
 	else
 	{
 		/* set disabled */
-		mw_all_windows[window_ref].window_flags &= ~MW_WINDOWS_HORIZ_SCROLL_BAR_ENABLED;
+		mw_all_windows[window_id].window_flags &= ~MW_WINDOWS_HORIZ_SCROLL_BAR_ENABLED;
 	}
 }
 
-void mw_set_window_vert_scroll_bar_enabled_state(uint8_t window_ref, bool enabled)
+void mw_set_window_vert_scroll_bar_enabled_state(mw_handle_t window_handle, bool enabled)
 {
-	/* check that the window id is in range */
-	if (window_ref >= MW_MAX_WINDOW_COUNT)
+	uint8_t window_id;
+
+	/* get window id from window handle and check it's in range */
+	window_id = get_window_id_for_handle(window_handle);
+	if (window_id >= MW_MAX_WINDOW_COUNT)
 	{
-		MW_ASSERT(false, "Illegal window id");
+		MW_ASSERT(false, "Bad window handle");
 		return;
 	}
 
 	if (enabled)
 	{
 		/* set enabled */
-		mw_all_windows[window_ref].window_flags |= MW_WINDOWS_VERT_SCROLL_BAR_ENABLED;
+		mw_all_windows[window_id].window_flags |= MW_WINDOWS_VERT_SCROLL_BAR_ENABLED;
 	}
 	else
 	{
 		/* set disabled */
-		mw_all_windows[window_ref].window_flags &= ~MW_WINDOWS_VERT_SCROLL_BAR_ENABLED;
+		mw_all_windows[window_id].window_flags &= ~MW_WINDOWS_VERT_SCROLL_BAR_ENABLED;
 	}
 }
 
-void mw_paint_window_frame(uint8_t window_ref, uint8_t components)
+void mw_paint_window_frame(mw_handle_t window_handle, uint8_t components)
 {
-	/* check that the window id is in range */
-	if (window_ref >= MW_MAX_WINDOW_COUNT)
+	/* check that the handle is valid */
+	if (window_handle == 0)
 	{
-		MW_ASSERT(false, "Illegal window id");
+		MW_ASSERT(false, "Illegal handle");
 		return;
 	}
 	
@@ -3675,17 +3813,17 @@ void mw_paint_window_frame(uint8_t window_ref, uint8_t components)
      * it does not do the painting but adds a paint request message to the message queue */
 	mw_post_message(MW_WINDOW_FRAME_PAINT_MESSAGE,
 			MW_UNUSED_MESSAGE_PARAMETER,
-			window_ref,
+			window_handle,
 			components,
 			MW_SYSTEM_MESSAGE);
 }
 
-void mw_paint_window_client(uint8_t window_ref)
+void mw_paint_window_client(mw_handle_t window_handle)
 {
-	/* check that the window id is in range */
-	if (window_ref >= MW_MAX_WINDOW_COUNT)
+	/* check that the handle is valid */
+	if (window_handle == 0)
 	{
-		MW_ASSERT(false, "Illegal window id");
+		MW_ASSERT(false, "Illegal handle");
 		return;
 	}
 	
@@ -3693,12 +3831,12 @@ void mw_paint_window_client(uint8_t window_ref)
      * it does not do the painting but adds a paint request message to the message queue */
 	mw_post_message(MW_WINDOW_CLIENT_PAINT_MESSAGE,
 			MW_UNUSED_MESSAGE_PARAMETER,
-			window_ref,
+			window_handle,
 			MW_UNUSED_MESSAGE_PARAMETER,
 			MW_SYSTEM_MESSAGE);
 }
 
-void mw_paint_window_client_rect(uint8_t window_ref, const mw_util_rect_t *rect)
+void mw_paint_window_client_rect(mw_handle_t window_handle, const mw_util_rect_t *rect)
 {
 	/* check pointer not null */
 	if (!rect)
@@ -3707,10 +3845,10 @@ void mw_paint_window_client_rect(uint8_t window_ref, const mw_util_rect_t *rect)
 		return;
 	}
 
-	/* check window_ref */
-	if (window_ref >= MW_MAX_WINDOW_COUNT || !rect)
+	/* check that the handle is valid */
+	if (window_handle == 0)
 	{
-		MW_ASSERT(false,"Illegal window id");
+		MW_ASSERT(false, "Illegal handle");
 		return;
 	}
 
@@ -3718,24 +3856,26 @@ void mw_paint_window_client_rect(uint8_t window_ref, const mw_util_rect_t *rect)
      * it does not do the painting but adds a paint request message to the message queue */
 	mw_post_message(MW_WINDOW_CLIENT_PAINT_RECT_MESSAGE,
 			MW_UNUSED_MESSAGE_PARAMETER,
-			window_ref,
+			window_handle,
 			(uint32_t)rect,
 			MW_SYSTEM_MESSAGE);
 }
 
-void mw_remove_window(uint8_t window_ref)
+void mw_remove_window(mw_handle_t window_handle)
 {
 	uint8_t i;
+	uint8_t window_id;
 
-	/* check window_ref is in range */
-	if (window_ref >= MW_MAX_WINDOW_COUNT)
+	/* get window id from window handle and check it's in range */
+	window_id = get_window_id_for_handle(window_handle);
+	if (window_id >= MW_MAX_WINDOW_COUNT)
 	{
-		MW_ASSERT(false, "Illegal window id");
+		MW_ASSERT(false, "Bad window handle");
 		return;
 	}
 
 	/* cannot remove root window */
-	if (window_ref == MW_ROOT_WINDOW_ID)
+	if (window_id == MW_ROOT_WINDOW_ID)
 	{
 		MW_ASSERT(false, "Can't remove root window");
 		return;
@@ -3744,7 +3884,7 @@ void mw_remove_window(uint8_t window_ref)
 	/* remove all controls that have this window as a parent */
 	for (i = 0; i < MW_MAX_CONTROL_COUNT; i++)
 	{
-		if (mw_all_controls[i].parent == window_ref)
+		if (mw_all_controls[i].parent == window_handle)
 		{
 			mw_all_controls[i].control_flags &= ~MW_CONTROL_FLAG_IS_USED;
 		}
@@ -3753,52 +3893,76 @@ void mw_remove_window(uint8_t window_ref)
 	/* cancel all outstanding timers for this window */
 	for (i = 0; i < MW_MAX_TIMER_COUNT; i++)
 	{
-		if (mw_all_timers[i].handle != MW_INVALID_HANDLE &&
+		if (mw_all_timers[i].timer_handle != MW_INVALID_HANDLE &&
 				mw_all_timers[i].recipient_type == MW_WINDOW_MESSAGE &&
-				mw_all_timers[i].recipient_id == window_ref)
+				mw_all_timers[i].recipient_handle == window_handle)
 
 		{
 			/* timers are one shot so mark this timer as unused again */
-			mw_all_timers[i].handle = MW_INVALID_HANDLE;
+			mw_all_timers[i].timer_handle = MW_INVALID_HANDLE;
 		}
 	}
+
+	// todo need to cancel timer messages already in message queue
 
 	/* send window removed message to window message function */
    	mw_post_message(MW_WINDOW_REMOVED_MESSAGE,
    			MW_UNUSED_MESSAGE_PARAMETER,
-   			window_ref,
+   			window_handle,
    			MW_UNUSED_MESSAGE_PARAMETER,
    			MW_WINDOW_MESSAGE);
 
 	/* remove this window by marking it as unused */
-	mw_all_windows[window_ref].window_flags &= ~MW_WINDOW_FLAG_IS_USED;
+	mw_all_windows[window_id].window_flags &= ~MW_WINDOW_FLAG_IS_USED;
 
 	/* rationalize the z orders in case they are irrational */
 	rationalize_z_orders();
 }
 
-mw_util_rect_t mw_get_window_client_rect(uint8_t window_ref)
+mw_util_rect_t mw_get_window_client_rect(mw_handle_t window_handle)
 {
 	mw_util_rect_t default_rect = {0, 0, 0, 0};
+	uint8_t window_id;
 
-	if (window_ref >= MW_MAX_WINDOW_COUNT)
+	/* get window id from window handle and check it's in range */
+	window_id = get_window_id_for_handle(window_handle);
+	if (window_id >= MW_MAX_WINDOW_COUNT)
 	{
-		MW_ASSERT(false, "Illegal window id");
+		MW_ASSERT(false, "Bad window handle");
 		return default_rect;
 	}
 
-	return mw_all_windows[window_ref].client_rect;
+	return mw_all_windows[window_id].client_rect;
 }
 
-void *mw_get_window_instance_data(uint8_t window_ref)
+void *mw_get_window_instance_data(mw_handle_t window_handle)
 {
-	if (window_ref >= MW_MAX_WINDOW_COUNT)
+	uint8_t window_id;
+
+	/* get window id from window handle and check it's in range */
+	window_id = get_window_id_for_handle(window_handle);
+	if (window_id >= MW_MAX_WINDOW_COUNT)
 	{
-		MW_ASSERT(false, "Illegal window id");
+		MW_ASSERT(false, "Bad window handle");
 		return NULL;
 	}
 
-	return mw_all_windows[window_ref].instance_data;
+	return mw_all_windows[window_id].instance_data;
+}
+
+void wm_set_window_title(mw_handle_t window_handle, char *title_text)
+{
+	uint8_t window_id;
+
+	/* get window id from window handle and check it's in range */
+	window_id = get_window_id_for_handle(window_handle);
+	if (window_id >= MW_MAX_WINDOW_COUNT)
+	{
+		MW_ASSERT(false, "Bad window handle");
+		return;
+	}
+
+	mw_util_safe_strcpy(mw_all_windows[window_id].title, MW_MAX_TITLE_SIZE, title_text);
 }
 
 bool mw_find_if_any_control_slots_free(void)
@@ -3806,25 +3970,15 @@ bool mw_find_if_any_control_slots_free(void)
 	return (find_empty_control_slot() != MW_MAX_CONTROL_COUNT);
 }
 
-void wm_set_window_title(uint8_t window_ref, char *title_text)
-{
-	if (window_ref >= MW_MAX_WINDOW_COUNT)
-	{
-		MW_ASSERT(false, "Illegal window id");
-		return;
-	}
-
-	mw_util_safe_strcpy(mw_all_windows[window_ref].title, MW_MAX_TITLE_SIZE, title_text);
-}
-
 uint8_t mw_add_control(mw_util_rect_t *rect,
-		uint8_t parent,
+		mw_handle_t parent,
 		mw_paint_func_p paint_func,
 		mw_message_func_p message_func,
 		uint16_t control_flags,
 		void *instance_data)
 {
 	uint8_t new_control_id;
+	uint8_t parent_window_id;
 
 	/* check for null parameters */
 	if (rect == NULL || instance_data == NULL || paint_func == NULL || message_func == NULL)
@@ -3840,8 +3994,16 @@ uint8_t mw_add_control(mw_util_rect_t *rect,
 		return MW_MAX_CONTROL_COUNT;
 	}
 
+	/* get parent window id from window handle and check it's in range */
+	parent_window_id = get_window_id_for_handle(parent);
+	if (parent_window_id >= MW_MAX_WINDOW_COUNT)
+	{
+		MW_ASSERT(false, "Bad window handle");
+		return MW_MAX_CONTROL_COUNT;
+	}
+
 	/* cannot add a control to an unused window or the root window so filter these out */
-	if (!(mw_all_windows[parent].window_flags & MW_WINDOW_FLAG_IS_USED) || parent == MW_ROOT_WINDOW_ID)
+	if (!(mw_all_windows[parent_window_id].window_flags & MW_WINDOW_FLAG_IS_USED) || parent_window_id == MW_ROOT_WINDOW_ID)
 	{
 		MW_ASSERT(false, "Can't add control to unused or root window");
 		return MW_MAX_CONTROL_COUNT;
@@ -3879,7 +4041,7 @@ uint8_t mw_add_control(mw_util_rect_t *rect,
    			MW_UNUSED_MESSAGE_PARAMETER,
    			MW_CONTROL_MESSAGE);
 
-   	if (parent == window_with_focus)
+   	if (parent == window_with_focus_handle)
    	{
    		/* send control a gained focus message if parent window has focus */
    	   	mw_post_message(MW_CONTROL_GAINED_FOCUS_MESSAGE,
@@ -3892,27 +4054,27 @@ uint8_t mw_add_control(mw_util_rect_t *rect,
 	return new_control_id;
 }
 
-void mw_set_control_visible(uint8_t control_ref, bool visible)
+void mw_set_control_visible(mw_handle_t control_handle, bool visible)
 {
 	/* check that the control id is in range */
-	if (control_ref >= MW_MAX_CONTROL_COUNT)
+	if (control_handle >= MW_MAX_CONTROL_COUNT)
 	{
 		MW_ASSERT(false, "Illegal control id");
 		return;
 	}
 
 	/* ignore if not used */
-	if (!(mw_all_controls[control_ref].control_flags & MW_CONTROL_FLAG_IS_USED))
+	if (!(mw_all_controls[control_handle].control_flags & MW_CONTROL_FLAG_IS_USED))
 	{
 		return;
 	}
 
 	/* ignore if no change */
-	if (visible && (mw_all_controls[control_ref].control_flags & MW_CONTROL_FLAG_IS_VISIBLE))
+	if (visible && (mw_all_controls[control_handle].control_flags & MW_CONTROL_FLAG_IS_VISIBLE))
 	{
 		return;
 	}
-	if (!visible && !(mw_all_controls[control_ref].control_flags & MW_CONTROL_FLAG_IS_VISIBLE))
+	if (!visible && !(mw_all_controls[control_handle].control_flags & MW_CONTROL_FLAG_IS_VISIBLE))
 	{
 		return;
 	}
@@ -3920,58 +4082,58 @@ void mw_set_control_visible(uint8_t control_ref, bool visible)
 	if (visible)
 	{
 		/* set visible */
-		mw_all_controls[control_ref].control_flags |= MW_CONTROL_FLAG_IS_VISIBLE;
+		mw_all_controls[control_handle].control_flags |= MW_CONTROL_FLAG_IS_VISIBLE;
 
 		/* post focus gained message to control */
 		mw_post_message(MW_CONTROL_GAINED_FOCUS_MESSAGE,
 				MW_UNUSED_MESSAGE_PARAMETER,
-				control_ref,
+				control_handle,
 				MW_UNUSED_MESSAGE_PARAMETER,
 				MW_CONTROL_MESSAGE);
 	}
 	else
 	{
 		/* set invisible */
-		mw_all_controls[control_ref].control_flags &= ~MW_CONTROL_FLAG_IS_VISIBLE;
+		mw_all_controls[control_handle].control_flags &= ~MW_CONTROL_FLAG_IS_VISIBLE;
 
 		/* post focus lost message to control */
 		mw_post_message(MW_CONTROL_LOST_FOCUS_MESSAGE,
 				MW_UNUSED_MESSAGE_PARAMETER,
-				control_ref,
+				control_handle,
 				MW_UNUSED_MESSAGE_PARAMETER,
 				MW_CONTROL_MESSAGE);
 	}
 }
 
-void mw_set_control_enabled(uint8_t control_ref, bool enabled)
+void mw_set_control_enabled(mw_handle_t control_handle, bool enabled)
 {
 	/* check that the control id is in range */
-	if (control_ref >= MW_MAX_CONTROL_COUNT)
+	if (control_handle >= MW_MAX_CONTROL_COUNT)
 	{
 		MW_ASSERT(false, "Illegal control id");
 		return;
 	}
 
 	/* ignore if control is not used */
-	if (mw_all_controls[control_ref].control_flags & MW_CONTROL_FLAG_IS_USED)
+	if (mw_all_controls[control_handle].control_flags & MW_CONTROL_FLAG_IS_USED)
 	{
 		if (enabled)
 		{
 			/* set enabled */
-			mw_all_controls[control_ref].control_flags |= MW_CONTROL_FLAG_IS_ENABLED;
+			mw_all_controls[control_handle].control_flags |= MW_CONTROL_FLAG_IS_ENABLED;
 		}
 		else
 		{
 			/* set disabled */
-			mw_all_controls[control_ref].control_flags &= ~MW_CONTROL_FLAG_IS_ENABLED;
+			mw_all_controls[control_handle].control_flags &= ~MW_CONTROL_FLAG_IS_ENABLED;
 		}
 	}
 }
 
-void mw_paint_control(uint8_t control_ref)
+void mw_paint_control(mw_handle_t control_handle)
 {
 	/* check that the control id is in range */
-	if (control_ref >= MW_MAX_CONTROL_COUNT)
+	if (control_handle >= MW_MAX_CONTROL_COUNT)
 	{
 		MW_ASSERT(false, "Illegal control id");
 		return;
@@ -3981,15 +4143,15 @@ void mw_paint_control(uint8_t control_ref)
      * it does not do the painting but adds a paint request message to the message queue */
 	mw_post_message(MW_CONTROL_PAINT_MESSAGE,
 			MW_UNUSED_MESSAGE_PARAMETER,
-			control_ref,
+			control_handle,
 			MW_UNUSED_MESSAGE_PARAMETER,
 			MW_SYSTEM_MESSAGE);
 }
 
-void mw_paint_control_rect(uint8_t control_ref, const mw_util_rect_t *rect)
+void mw_paint_control_rect(mw_handle_t control_handle, const mw_util_rect_t *rect)
 {
 	/* check that the control id is in range */
-	if (control_ref >= MW_MAX_CONTROL_COUNT)
+	if (control_handle >= MW_MAX_CONTROL_COUNT)
 	{
 		MW_ASSERT(false, "Illegal control id");
 		return;
@@ -3999,17 +4161,17 @@ void mw_paint_control_rect(uint8_t control_ref, const mw_util_rect_t *rect)
      * it does not do the painting but adds a paint request message to the message queue */
 	mw_post_message(MW_CONTROL_PAINT_RECT_MESSAGE,
 			MW_UNUSED_MESSAGE_PARAMETER,
-			control_ref,
+			control_handle,
 			(uint32_t)rect,
 			MW_SYSTEM_MESSAGE);
 }
 
-void mw_remove_control(uint8_t control_ref)
+void mw_remove_control(mw_handle_t control_handle)
 {
 	uint8_t i;
 
 	/* check that the control id is in range */
-	if (control_ref >= MW_MAX_CONTROL_COUNT)
+	if (control_handle >= MW_MAX_CONTROL_COUNT)
 	{
 		return;
 	}
@@ -4017,74 +4179,74 @@ void mw_remove_control(uint8_t control_ref)
 	/* cancel all outstanding timers for this control */
 	for (i = 0; i < MW_MAX_TIMER_COUNT; i++)
 	{
-		if (mw_all_timers[i].handle != MW_INVALID_HANDLE &&
+		if (mw_all_timers[i].timer_handle != MW_INVALID_HANDLE &&
 				mw_all_timers[i].recipient_type == MW_CONTROL_MESSAGE &&
-				mw_all_timers[i].recipient_id == control_ref)
+				mw_all_timers[i].recipient_handle == control_handle)
 
 		{
 			/* timers are one shot so mark this timer as unused again */
-			mw_all_timers[i].handle = MW_INVALID_HANDLE;
+			mw_all_timers[i].timer_handle = MW_INVALID_HANDLE;
 		}
 	}
 
 	/* post control removed message to control message function */
    	mw_post_message(MW_CONTROL_REMOVED_MESSAGE,
    			MW_UNUSED_MESSAGE_PARAMETER,
-   			control_ref,
+   			control_handle,
    			MW_UNUSED_MESSAGE_PARAMETER,
    			MW_CONTROL_MESSAGE);
 
 	/* remove this control by marking it as unused */
-   	mw_all_controls[control_ref].control_flags &= ~MW_CONTROL_FLAG_IS_USED;
+   	mw_all_controls[control_handle].control_flags &= ~MW_CONTROL_FLAG_IS_USED;
 }
 
-mw_util_rect_t mw_get_control_rect(uint8_t control_ref)
+mw_util_rect_t mw_get_control_rect(mw_handle_t control_handle)
 {
 	mw_util_rect_t default_rect = {0, 0, 0, 0};
 
-	if (control_ref >= MW_MAX_CONTROL_COUNT)
+	if (control_handle >= MW_MAX_CONTROL_COUNT)
 	{
 		MW_ASSERT(false, "Illegal control id");
 		return default_rect;
 	}
 
-	return mw_all_controls[control_ref].control_rect;
+	return mw_all_controls[control_handle].control_rect;
 }
 
-uint8_t mw_get_control_parent_window(uint8_t control_ref)
+mw_handle_t mw_get_control_parent_window(mw_handle_t control_handle)
 {
-	if (control_ref >= MW_MAX_CONTROL_COUNT)
+	if (control_handle >= MW_MAX_CONTROL_COUNT)
 	{
 		MW_ASSERT(false, "Illegal control id");
 		return 0;
 	}
 
-	return mw_all_controls[control_ref].parent;
+	return mw_all_controls[control_handle].parent;
 }
 
-void *mw_get_control_instance_data(uint8_t control_ref)
+void *mw_get_control_instance_data(mw_handle_t control_handle)
 {
-	if (control_ref >= MW_MAX_CONTROL_COUNT)
+	if (control_handle >= MW_MAX_CONTROL_COUNT)
 	{
 		MW_ASSERT(false, "Illegal control id");
 		return NULL;
 	}
 
-	return mw_all_controls[control_ref].instance_data;
+	return mw_all_controls[control_handle].instance_data;
 }
 
-uint16_t mw_get_control_flags(uint8_t control_ref)
+uint16_t mw_get_control_flags(mw_handle_t control_handle)
 {
-	if (control_ref >= MW_MAX_CONTROL_COUNT)
+	if (control_handle >= MW_MAX_CONTROL_COUNT)
 	{
 		MW_ASSERT(false, "Illegal control id");
 		return 0;
 	}
 
-	return mw_all_controls[control_ref].control_flags;
+	return mw_all_controls[control_handle].control_flags;
 }
 
-mw_handle_t mw_set_timer(uint32_t fire_time, uint8_t recipient_id, mw_message_recipient_type_t recipient_type)
+mw_handle_t mw_set_timer(uint32_t fire_time, mw_handle_t recipient_handle, mw_message_recipient_type_t recipient_type)
 {
 	uint8_t i;
 
@@ -4102,28 +4264,28 @@ mw_handle_t mw_set_timer(uint32_t fire_time, uint8_t recipient_id, mw_message_re
 	}
 	
 	/* check that recipient id is in range for recipient type */
-	if (recipient_type == MW_WINDOW_MESSAGE && recipient_id > MW_MAX_WINDOW_COUNT)
+	if (recipient_type == MW_WINDOW_MESSAGE && get_window_id_for_handle(recipient_handle) > MW_MAX_WINDOW_COUNT)
 	{
-		MW_ASSERT(false, "Illegal recipient window id");
+		MW_ASSERT(false, "Bad window handle");
 		return MW_INVALID_HANDLE;
 	}
-	if (recipient_type == MW_CONTROL_MESSAGE && recipient_id > MW_MAX_CONTROL_COUNT)
+	if (recipient_type == MW_CONTROL_MESSAGE && recipient_handle > MW_MAX_CONTROL_COUNT)
 	{
-		MW_ASSERT(false, "Illegal control recipient id");
+		MW_ASSERT(false, "Illegal control id");
 		return MW_INVALID_HANDLE;
 	}	
 
 	for (i = 0; i < MW_MAX_TIMER_COUNT; i++)
 	{
 		/* find an unused slot */
-		if (mw_all_timers[i].handle == MW_INVALID_HANDLE)
+		if (mw_all_timers[i].timer_handle == MW_INVALID_HANDLE)
 		{
 			/* slot found, set details */
 			mw_all_timers[i].next_fire_time = fire_time;
-			mw_all_timers[i].recipient_id = recipient_id;
+			mw_all_timers[i].recipient_handle = recipient_handle;
 			mw_all_timers[i].recipient_type = recipient_type;
-			mw_all_timers[i].handle = get_next_handle();
-			return mw_all_timers[i].handle;
+			mw_all_timers[i].timer_handle = get_next_handle();
+			return mw_all_timers[i].timer_handle;
 		}
 	}
 
@@ -4149,7 +4311,7 @@ void mw_cancel_timer(mw_handle_t timer_handle)
 	if (timer_id != MW_MAX_TIMER_COUNT)
 	{
 		/* a timer for this handle has been found that has this handle so cancel timer by setting its handle invalid */
-		mw_all_timers[timer_id].handle = MW_INVALID_HANDLE;
+		mw_all_timers[timer_id].timer_handle = MW_INVALID_HANDLE;
 		return;
 	}
 
@@ -4170,32 +4332,35 @@ void mw_cancel_timer(mw_handle_t timer_handle)
 	}
 }
 
-void mw_post_message(uint8_t message_id, uint8_t sender_id, uint8_t recipient_id, uint32_t message_data, mw_message_recipient_type_t recipient_type)
+void mw_post_message(uint8_t message_id, mw_handle_t sender_handle, mw_handle_t recipient_handle, uint32_t message_data, mw_message_recipient_type_t recipient_type)
 {
 	mw_message_t new_message;
+	uint8_t recipient_id = MW_ROOT_WINDOW_ID;
 	
-	/* check recipient id for type makes sense */
-	if (recipient_type == MW_WINDOW_MESSAGE && recipient_id >= MW_MAX_WINDOW_COUNT)
+	/* check recipient handle for type makes sense */
+	if (recipient_type == MW_WINDOW_MESSAGE)
 	{
-		MW_ASSERT(false, "Illegal window id");
-		return;
+		recipient_id = get_window_id_for_handle(recipient_handle);
+		MW_ASSERT(recipient_id < MW_MAX_WINDOW_COUNT , "Bad window handle");
 	}
-	if (recipient_type == MW_CONTROL_MESSAGE && recipient_id >= MW_MAX_CONTROL_COUNT)
+	else if (recipient_type == MW_CONTROL_MESSAGE)
 	{
-		MW_ASSERT(false, "Illegal control id");
-		return;
+		recipient_id = recipient_handle;
+		MW_ASSERT(recipient_id < MW_MAX_CONTROL_COUNT, "Bad control handle");
 	}	
 
 	/* fill in the message fields from supplied parameters */
 	new_message.message_id = message_id;
 	new_message.message_data = message_data;
 	new_message.message_recipient_type = recipient_type;
-	new_message.recipient_id = recipient_id;
-	new_message.sender_id = sender_id;
+	new_message.recipient_handle = recipient_handle;
+	new_message.sender_handle = sender_handle;
 
 	/* do not send messages to unused windows */
-	if ((new_message.message_recipient_type == MW_WINDOW_MESSAGE && (mw_all_windows[new_message.recipient_id].window_flags & MW_WINDOW_FLAG_IS_USED)) ||
-		(new_message.message_recipient_type == MW_CONTROL_MESSAGE && (mw_all_controls[new_message.recipient_id].control_flags & MW_CONTROL_FLAG_IS_USED)) ||
+	if ((new_message.message_recipient_type == MW_WINDOW_MESSAGE &&
+			(mw_all_windows[recipient_id].window_flags & MW_WINDOW_FLAG_IS_USED)) ||
+		(new_message.message_recipient_type == MW_CONTROL_MESSAGE &&
+				(mw_all_controls[recipient_id].control_flags & MW_CONTROL_FLAG_IS_USED)) ||
 		new_message.message_recipient_type == MW_SYSTEM_MESSAGE)
 	{
 		/* add this message to the queue */
@@ -4206,6 +4371,7 @@ void mw_post_message(uint8_t message_id, uint8_t sender_id, uint8_t recipient_id
 bool mw_process_message(void)
 {
 	uint8_t i;
+	uint8_t window_id;
 	mw_message_t message;
 	window_redimensioning_state_t redimensioning_window_state;
 
@@ -4223,13 +4389,15 @@ bool mw_process_message(void)
 			{
 			case SYSTEM_TIMER_EVENT_MENU_BAR_REDRAW:
 				/* menu bar item needs drawing as back up */
-				mw_all_windows[system_timer.data].window_flags &= ~MW_WINDOW_MENU_BAR_ITEM_IS_SELECTED;
+				window_id = get_window_id_for_handle(system_timer.data);
+				MW_ASSERT(window_id < MW_MAX_WINDOW_COUNT, "Bad window handle");
+				mw_all_windows[window_id].window_flags &= ~MW_WINDOW_MENU_BAR_ITEM_IS_SELECTED;
 
 				/* menu bar selected event is posted to owning window on up redraw so now post menu bar item select message to owning window */
 				mw_post_message(MW_MENU_BAR_ITEM_PRESSED_MESSAGE,
 						MW_UNUSED_MESSAGE_PARAMETER,
 						system_timer.data,
-						mw_all_windows[system_timer.data].menu_bar_selected_item,
+						mw_all_windows[window_id].menu_bar_selected_item,
 						MW_WINDOW_MESSAGE);
 
 				/* window frame needs repainting to update appearance of menu bar */
@@ -4249,42 +4417,37 @@ bool mw_process_message(void)
 		for (i = 0; i < MW_MAX_TIMER_COUNT; i++)
 		{
 			/* check fire time of this timer to current time */
-			if (mw_all_timers[i].handle != MW_INVALID_HANDLE && mw_tick_counter >= mw_all_timers[i].next_fire_time)
+			if (mw_all_timers[i].timer_handle != MW_INVALID_HANDLE && mw_tick_counter >= mw_all_timers[i].next_fire_time)
 			{
 				/* check recipient type */
 				if (mw_all_timers[i].recipient_type == MW_WINDOW_MESSAGE)
 				{
-					/* check if recipient id is sensible */
-					if (mw_all_timers[i].recipient_id < MW_MAX_WINDOW_COUNT)
+					/* check if recipient handle is sensible */
+					window_id = get_window_id_for_handle(mw_all_timers[i].recipient_handle);
+					MW_ASSERT(window_id < MW_MAX_WINDOW_COUNT, "Bad window handle");
+
+					/* check window is used */
+					if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_USED)
 					{
-						/* check window is used */
-						if (mw_all_windows[mw_all_timers[i].recipient_id].window_flags & MW_WINDOW_FLAG_IS_USED)
-						{
-							mw_post_message(MW_WINDOW_TIMER_MESSAGE,
-									MW_UNUSED_MESSAGE_PARAMETER,
-									mw_all_timers[i].recipient_id,
-									mw_all_timers[i].handle,
-									MW_WINDOW_MESSAGE);
-						}
-					}
-					else
-					{
-						/* bad recipient id */
-						MW_ASSERT(false, "Illegal timer recipient window id");
+						mw_post_message(MW_WINDOW_TIMER_MESSAGE,
+								MW_UNUSED_MESSAGE_PARAMETER,
+								mw_all_timers[i].recipient_handle,
+								mw_all_timers[i].timer_handle,
+								MW_WINDOW_MESSAGE);
 					}
 				}
 				else if (mw_all_timers[i].recipient_type == MW_CONTROL_MESSAGE)
 				{
 					/* check if recipient id is sensible */
-					if (mw_all_timers[i].recipient_id < MW_MAX_CONTROL_COUNT)
+					if (mw_all_timers[i].recipient_handle < MW_MAX_CONTROL_COUNT)
 					{
 						/* check control is used */
-						if (mw_all_controls[mw_all_timers[i].recipient_id].control_flags & MW_CONTROL_FLAG_IS_USED)
+						if (mw_all_controls[mw_all_timers[i].recipient_handle].control_flags & MW_CONTROL_FLAG_IS_USED)
 						{
 							mw_post_message(MW_WINDOW_TIMER_MESSAGE,
 									MW_UNUSED_MESSAGE_PARAMETER,
-									mw_all_timers[i].recipient_id,
-									mw_all_timers[i].handle,
+									mw_all_timers[i].recipient_handle,
+									mw_all_timers[i].timer_handle,
 									MW_CONTROL_MESSAGE);
 						}
 					}
@@ -4301,7 +4464,7 @@ bool mw_process_message(void)
 				}
 
 				/* timers are one shot so mark this timer as unused again */
-				mw_all_timers[i].handle = MW_INVALID_HANDLE;
+				mw_all_timers[i].timer_handle = MW_INVALID_HANDLE;
 			}
 		}
 	}
@@ -4313,13 +4476,17 @@ bool mw_process_message(void)
 		switch (message.message_recipient_type)
 		{
 		case MW_WINDOW_MESSAGE:
-			/* recipient is a window */
-			mw_all_windows[message.recipient_id].message_func(&message);
+			{
+				/* recipient is a window */
+				window_id = get_window_id_for_handle(message.recipient_handle);
+				MW_ASSERT(window_id < MW_MAX_WINDOW_COUNT, "Bad window handle");
+				mw_all_windows[window_id].message_func(&message);
+			}
 			break;
 		
 		case MW_CONTROL_MESSAGE:
 			/* recipient is a control */
-			mw_all_controls[message.recipient_id].message_func(&message);
+			mw_all_controls[message.recipient_handle].message_func(&message);
 			break;
 
 		case MW_SYSTEM_MESSAGE:
@@ -4334,37 +4501,37 @@ bool mw_process_message(void)
 
 			case MW_WINDOW_FRAME_PAINT_MESSAGE:
 				/* paint a single window */
-				do_paint_window_frame(message.recipient_id, message.message_data);
+				do_paint_window_frame(message.recipient_handle, message.message_data);
 				break;
 
 			case MW_WINDOW_CLIENT_PAINT_MESSAGE:
 				/* paint a window's client and contained controls */
-				do_paint_window_client(message.recipient_id);
-			  	if (message.recipient_id > MW_ROOT_WINDOW_ID)
+				do_paint_window_client(message.recipient_handle);
+			  	if (get_window_id_for_handle(message.recipient_handle) > MW_ROOT_WINDOW_ID)
 			  	{
 			  		/* paint all the controls; these are always on top of the client area */
-			  		paint_all_controls_in_window(message.recipient_id);
+			  		paint_all_controls_in_window(message.recipient_handle);
 			  	}
 				break;
 
 			case MW_WINDOW_CLIENT_PAINT_RECT_MESSAGE:
 				/* paint a window's client and contained controls */
-				do_paint_window_client_rect(message.recipient_id, (mw_util_rect_t *)message.message_data);
-			  	if (message.recipient_id > MW_ROOT_WINDOW_ID)
+				do_paint_window_client_rect(message.recipient_handle, (mw_util_rect_t *)message.message_data);
+			  	if (get_window_id_for_handle(message.recipient_handle) > MW_ROOT_WINDOW_ID)
 			  	{
 			  		/* paint all the controls; these are always on top of the client area */
-			  		paint_all_controls_in_window_rect(message.recipient_id, (mw_util_rect_t *)message.message_data);
+			  		paint_all_controls_in_window_rect(message.recipient_handle, (mw_util_rect_t *)message.message_data);
 			  	}
 				break;
 
 			case MW_CONTROL_PAINT_MESSAGE:
 				/* paint a single control */
-				do_paint_control(message.recipient_id);
+				do_paint_control(message.recipient_handle);
 				break;
 
 			case MW_CONTROL_PAINT_RECT_MESSAGE:
 				/* paint a single control's sub-region */
-				do_paint_control_rect(message.recipient_id, (mw_util_rect_t *)message.message_data);
+				do_paint_control_rect(message.recipient_handle, (mw_util_rect_t *)message.message_data);
 				break;
 
 			default:

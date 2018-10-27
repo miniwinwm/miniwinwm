@@ -58,8 +58,8 @@ SOFTWARE.
  * @param y top Coordinate of dialog window
  * @param title Pointer to text displayed in the window title bar
  * @param initial_text The initial text to display when the dialog starts
- * @param response_window_id Window id of the window that the response message is posted to when the dialog is dismissed
- * @return The window id of the window used for the dialog which is only valid while the dialog is showing
+ * @param response_window_handle Handle of the window that the response message is posted to when the dialog is dismissed
+ * @return Handle of the window used for the dialog which is only valid while the dialog is showing
  * @note There must be space in the window array for one new window and space in the control array
  *       for one new control. These resources are released when the dialog is dismissed.
  *       The dialog is created modal and is brought to the front on showing.
@@ -68,11 +68,11 @@ SOFTWARE.
  *
  * @warning Do not call this from a client window paint function. In debug mode it will cause an assert failure.
  */
-uint8_t mw_create_window_dialog_text_entry(uint16_t x,
+ mw_handle_t mw_create_window_dialog_text_entry(uint16_t x,
 		uint16_t y,
 		char *title,
 		char *initial_text,
-		uint8_t response_window_id);
+		mw_handle_t response_window_handle);
 
 #ifdef __cplusplus
 }

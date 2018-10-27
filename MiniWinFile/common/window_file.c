@@ -72,11 +72,11 @@ typedef struct
 *** EXTERNAL VARIABLES ***
 **************************/
 
-extern uint8_t button_open_id;
-extern uint8_t button_set_clock_id;
-extern uint8_t button_create_id;
-extern uint8_t label_time_id;
-extern uint8_t label_date_id;
+extern mw_handle_t button_open_handle;
+extern mw_handle_t button_set_clock_handle;
+extern mw_handle_t button_create_handle;
+extern mw_handle_t label_time_handle;
+extern mw_handle_t label_date_handle;
 extern mw_ui_label_data_t label_time_data;
 extern mw_ui_label_data_t label_date_data;
 extern volatile uint32_t mw_tick_counter;
@@ -139,7 +139,7 @@ static void create_new_file(void)
 static bool add_text_window(char *path_and_filename)
 {
 	mw_util_rect_t r;
-	uint8_t new_window_id;
+	mw_handle_t new_window_handle;
 	uint8_t i;
 	char *filename;
 
@@ -164,10 +164,10 @@ static bool add_text_window(char *path_and_filename)
 
 	for (i = 0; i < TEXT_WINDOW_COUNT; i++)
 	{
-		if (window_file_data.text_windows_data[i].text_window_id == MW_MAX_WINDOW_COUNT)
+		if (window_file_data.text_windows_data[i].text_window_handle == MW_MAX_WINDOW_COUNT)
 		{
 			mw_util_set_rect(&r, 10, 10, 100, 100);
-			new_window_id = mw_add_window(&r,
+			new_window_handle = mw_add_window(&r,
 				filename,
 				window_text_paint_function,
 				window_text_message_function,
@@ -176,14 +176,14 @@ static bool add_text_window(char *path_and_filename)
 				MW_WINDOW_FLAG_HAS_BORDER | MW_WINDOW_FLAG_HAS_TITLE_BAR | MW_WINDOW_FLAG_CAN_BE_CLOSED,
 				(void *)&window_file_data.text_windows_data[i]);
 
-			window_file_data.text_windows_data[i].text_window_id  = new_window_id;
+			window_file_data.text_windows_data[i].text_window_handle  = new_window_handle;
 
 			mw_util_safe_strcpy(window_file_data.text_windows_data[i].path_and_filename_text,
 					MAX_FOLDER_AND_FILENAME_LENGTH,
 					path_and_filename);
 
 			/* removal of the dialog choosing the image file causes a repaint all */
-			mw_set_window_visible(new_window_id, true);
+			mw_set_window_visible(new_window_handle, true);
 
 			return true;
 		}
@@ -201,7 +201,7 @@ static bool add_text_window(char *path_and_filename)
 static bool add_image_window(char *path_and_filename)
 {
 	mw_util_rect_t r;
-	uint8_t new_window_id;
+	mw_handle_t new_window_handle;
 	uint8_t i;
 	char *filename;
 
@@ -226,10 +226,10 @@ static bool add_image_window(char *path_and_filename)
 
 	for (i = 0; i < IMAGE_WINDOW_COUNT; i++)
 	{
-		if (window_file_data.image_windows_data[i].image_window_id == MW_MAX_WINDOW_COUNT)
+		if (window_file_data.image_windows_data[i].image_window_handle == MW_MAX_WINDOW_COUNT)
 		{
 			mw_util_set_rect(&r, 10, 10, 100, 100);
-			new_window_id = mw_add_window(&r,
+			new_window_handle = mw_add_window(&r,
 				filename,
 				window_image_paint_function,
 				window_image_message_function,
@@ -238,14 +238,14 @@ static bool add_image_window(char *path_and_filename)
 				MW_WINDOW_FLAG_HAS_BORDER | MW_WINDOW_FLAG_HAS_TITLE_BAR | MW_WINDOW_FLAG_CAN_BE_CLOSED,
 				(void *)&window_file_data.image_windows_data[i]);
 
-			window_file_data.image_windows_data[i].image_window_id  = new_window_id;
+			window_file_data.image_windows_data[i].image_window_handle  = new_window_handle;
 
 			mw_util_safe_strcpy(window_file_data.image_windows_data[i].path_and_filename_image,
 					MAX_FOLDER_AND_FILENAME_LENGTH,
 					path_and_filename);
 
 			/* removal of the dialog choosing the image file causes a repaint all */
-			mw_set_window_visible(new_window_id, true);
+			mw_set_window_visible(new_window_handle, true);
 
 			return true;
 		}
@@ -258,7 +258,7 @@ static bool add_image_window(char *path_and_filename)
 *** GLOBAL FUNCTIONS ***
 ***********************/
 
-void window_file_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_info)
+void window_file_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_t *draw_info)
 {
 	MW_ASSERT(draw_info, "Null pointer parameter");
 
@@ -270,8 +270,8 @@ void window_file_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *dra
 	mw_gl_rectangle(draw_info,
 			0,
 			0,
-			mw_get_window_client_rect(window_ref).width,
-			mw_get_window_client_rect(window_ref).height);
+			mw_get_window_client_rect(window_handle).width,
+			mw_get_window_client_rect(window_handle).height);
 
 	/* Draw rectangles */
 	mw_gl_set_fill(MW_GL_NO_FILL);
@@ -303,14 +303,14 @@ void window_file_message_function(const mw_message_t *message)
 
 			for (i = 0; i < TEXT_WINDOW_COUNT; i++)
 			{
-				window_file_data.text_windows_data[i].text_window_id = MW_MAX_WINDOW_COUNT;
+				window_file_data.text_windows_data[i].text_window_handle = MW_MAX_WINDOW_COUNT;
 			}
 			for (i = 0; i < IMAGE_WINDOW_COUNT; i++)
 			{
-				window_file_data.image_windows_data[i].image_window_id = MW_MAX_WINDOW_COUNT;
+				window_file_data.image_windows_data[i].image_window_handle = MW_MAX_WINDOW_COUNT;
 			}
 
-			mw_set_timer(mw_tick_counter + 20, message->recipient_id, MW_WINDOW_MESSAGE);
+			mw_set_timer(mw_tick_counter + 20, message->recipient_handle, MW_WINDOW_MESSAGE);
 		}
 		break;
 
@@ -333,15 +333,15 @@ void window_file_message_function(const mw_message_t *message)
 					t.tm_mon,
 					t.tm_year);
 
-			mw_paint_control(label_time_id);
-			mw_paint_control(label_date_id);
+			mw_paint_control(label_time_handle);
+			mw_paint_control(label_date_handle);
 
-			mw_set_timer(mw_tick_counter + 20, message->recipient_id, MW_WINDOW_MESSAGE);
+			mw_set_timer(mw_tick_counter + 20, message->recipient_handle, MW_WINDOW_MESSAGE);
 		}
 		break;
 
 	case MW_BUTTON_PRESSED_MESSAGE:
-		if (message->sender_id == button_open_id)
+		if (message->sender_handle == button_open_handle)
 		{
 			mw_create_window_dialog_file_chooser(70,
 					100,
@@ -349,18 +349,18 @@ void window_file_message_function(const mw_message_t *message)
 					app_get_root_folder_path(),
 					false,
 					false,
-					message->recipient_id);
+					message->recipient_handle);
 		}
-		else if (message->sender_id == button_set_clock_id)
+		else if (message->sender_handle == button_set_clock_handle)
 		{
 			mw_create_window_dialog_time_chooser(70,
 					120,
 					0,
 					0,
 					false,
-					message->recipient_id);
+					message->recipient_handle);
 		}
-		else if (message->sender_id == button_create_id)
+		else if (message->sender_handle == button_create_handle)
 		{
 			mw_create_window_dialog_file_chooser(70,
 					120,
@@ -368,7 +368,7 @@ void window_file_message_function(const mw_message_t *message)
 					app_get_root_folder_path(),
 					true,
 					false,
-					message->recipient_id);
+					message->recipient_handle);
 		}
 		break;
 
@@ -381,7 +381,7 @@ void window_file_message_function(const mw_message_t *message)
 			app_set_time_date(window_file_data.set_time);
 
 			/* enable the create button now time/date set */
-			mw_set_control_enabled(button_create_id, true);
+			mw_set_control_enabled(button_create_handle, true);
 		}
 		break;
 
@@ -398,7 +398,7 @@ void window_file_message_function(const mw_message_t *message)
 					1,
 					2018,
 					false,
-					message->recipient_id);
+					message->recipient_handle);
 		}
 		break;
 
@@ -438,7 +438,7 @@ void window_file_message_function(const mw_message_t *message)
 						"Format not supported.",
 						"OK",
 						false,
-						message->recipient_id);
+						message->recipient_handle);
 			}
 
 			if (format_supported && !window_added)
@@ -451,12 +451,12 @@ void window_file_message_function(const mw_message_t *message)
 						"No more windows.",
 						"OK",
 						false,
-						message->recipient_id);
+						message->recipient_handle);
 			}
 
 			/* repaint this window too as it's lost focus */
-			mw_paint_window_frame(message->recipient_id, MW_WINDOW_FRAME_COMPONENT_ALL);
-			mw_paint_window_client(message->recipient_id);
+			mw_paint_window_frame(message->recipient_handle, MW_WINDOW_FRAME_COMPONENT_ALL);
+			mw_paint_window_client(message->recipient_handle);
 		}
 		break;
 
@@ -467,7 +467,7 @@ void window_file_message_function(const mw_message_t *message)
 			mw_util_safe_strcpy(window_file_data.create_path_and_filename,
 					MAX_FOLDER_AND_FILENAME_LENGTH,
 					(char *)dialog_response->data);
-			mw_create_window_dialog_text_entry(0, 20, "New file name", "", message->recipient_id);
+			mw_create_window_dialog_text_entry(0, 20, "New file name", "", message->recipient_handle);
 		}
 		break;
 
@@ -503,7 +503,7 @@ void window_file_message_function(const mw_message_t *message)
 						"Yes",
 						"No",
 						false,
-						message->recipient_id);
+						message->recipient_handle);
 			}
 			else
 			{
@@ -533,17 +533,17 @@ void window_file_message_function(const mw_message_t *message)
 
 			for (i = 0; i < TEXT_WINDOW_COUNT; i++)
 			{
-				if (message->sender_id == window_file_data.text_windows_data[i].text_window_id)
+				if (message->sender_handle == window_file_data.text_windows_data[i].text_window_handle)
 				{
-					window_file_data.text_windows_data[i].text_window_id = MW_MAX_WINDOW_COUNT;
+					window_file_data.text_windows_data[i].text_window_handle = MW_MAX_WINDOW_COUNT;
 					break;
 				}
 			}
 			for (i = 0; i < IMAGE_WINDOW_COUNT; i++)
 			{
-				if (message->sender_id == window_file_data.image_windows_data[i].image_window_id)
+				if (message->sender_handle == window_file_data.image_windows_data[i].image_window_handle)
 				{
-					window_file_data.image_windows_data[i].image_window_id = MW_MAX_WINDOW_COUNT;
+					window_file_data.image_windows_data[i].image_window_handle = MW_MAX_WINDOW_COUNT;
 					break;
 				}
 			}

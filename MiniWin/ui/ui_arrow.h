@@ -69,7 +69,7 @@ typedef struct
   
 	/* Non-user modifiable fields */
 	bool arrow_down;										/**< set when the arrow is down */
-	uint8_t timer_handle;									/**< used for animation and holding down */
+	mw_handle_t timer_handle;								/**< used for animation and holding down */
 	uint32_t touch_down_time;								/**< time in ticks the arrow was first pressed down */
 } mw_ui_arrow_data_t;
 
@@ -85,10 +85,11 @@ typedef struct
  * @param parent The containing window of this control
  * @param flags General control flags controlling the control
  * @param button_instance_data Instance structure containing button specific data items
+ * @return The new control's handle
  */
-uint8_t mw_ui_arrow_add_new(uint16_t x,
+mw_handle_t mw_ui_arrow_add_new(uint16_t x,
 		uint16_t y,
-		uint8_t parent,
+		mw_handle_t parent,
 		uint32_t flags,
 		mw_ui_arrow_data_t *button_instance_data);
 

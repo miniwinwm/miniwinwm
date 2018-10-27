@@ -54,7 +54,7 @@ SOFTWARE.
 *** EXTERNAL VARIABLES ***
 **************************/
 
-extern uint8_t window_file_id;
+extern mw_handle_t window_file_handle;
 
 /**********************
 *** LOCAL VARIABLES ***
@@ -74,7 +74,7 @@ static uint8_t bitmap_buffer[BITMAP_TRASFER_BUFFER_SIZE * MW_GL_BITMAP_BYTES_PER
 *** GLOBAL FUNCTIONS ***
 ***********************/
 
-void window_image_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_info)
+void window_image_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_t *draw_info)
 {
 	uint32_t file_size;
 	uint16_t client_width;
@@ -100,11 +100,11 @@ void window_image_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *dr
 	mw_gl_rectangle(draw_info,
 			0,
 			0,
-			mw_get_window_client_rect(window_ref).width,
-			mw_get_window_client_rect(window_ref).height);
+			mw_get_window_client_rect(window_handle).width,
+			mw_get_window_client_rect(window_handle).height);
 
 	/* get this window instance data pointer and check for not null */
-	image_window_data = (image_window_data_t *)mw_get_window_instance_data(window_ref);
+	image_window_data = (image_window_data_t *)mw_get_window_instance_data(window_handle);
 	if (image_window_data == NULL)
 	{
 		MW_ASSERT(false, "Couldn't find window instance data");
@@ -112,8 +112,8 @@ void window_image_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *dr
 	}
 
 	success = false;
-	client_width = mw_get_window_client_rect(window_ref).width;
-	client_height = mw_get_window_client_rect(window_ref).height;
+	client_width = mw_get_window_client_rect(window_handle).width;
+	client_height = mw_get_window_client_rect(window_handle).height;
 	if (app_file_open(image_window_data->path_and_filename_image))
 	{
 		file_size = app_file_size();
@@ -194,16 +194,16 @@ void window_image_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *dr
 	{
 		/* get a warning dialog displayed */
 		mw_post_message(MW_USER_1_MESSAGE,
-				window_ref,
-				window_ref,
+				window_handle,
+				window_handle,
 				0,
 				MW_WINDOW_MESSAGE);
 
 		/* close this window to prevent continuous repaints and let file window know */
-		mw_remove_window(window_ref);
+		mw_remove_window(window_handle);
 		mw_post_message(MW_TRANSFER_DATA_1_MESSAGE,
-				window_ref,
-				window_file_id,
+				window_handle,
+				window_file_handle,
 				0,
 				MW_WINDOW_MESSAGE);
 	}
@@ -217,8 +217,8 @@ void window_image_message_function(const mw_message_t *message)
 	{
 	case MW_WINDOW_REMOVED_MESSAGE:
 		mw_post_message(MW_TRANSFER_DATA_1_MESSAGE,
-				message->recipient_id,
-				window_file_id,
+				message->recipient_handle,
+				window_file_handle,
 				0,
 				MW_WINDOW_MESSAGE);
 		break;

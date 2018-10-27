@@ -76,7 +76,7 @@ static window_drag_data_t window_drag_data;
 *** GLOBAL FUNCTIONS ***
 ***********************/
 
-void window_drag_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_info)
+void window_drag_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_t *draw_info)
 {
 	uint8_t p;
 	uint8_t i;
@@ -92,8 +92,8 @@ void window_drag_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *dra
 	mw_gl_rectangle(draw_info,
 			0,
 			0,
-			mw_get_window_client_rect(window_ref).width,
-			mw_get_window_client_rect(window_ref).height);
+			mw_get_window_client_rect(window_handle).width,
+			mw_get_window_client_rect(window_handle).height);
 
 	if (window_drag_data.next_point == 0)
 	{
@@ -154,7 +154,7 @@ void window_drag_message_function(const mw_message_t *message)
 		{
 			window_drag_data.next_point = 0;
 		}
-		mw_paint_window_client(message->recipient_id);
+		mw_paint_window_client(message->recipient_handle);
 		break;
 
 	default:

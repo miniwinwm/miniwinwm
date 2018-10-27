@@ -55,7 +55,7 @@ SOFTWARE.
 *** LOCAL FUNCTION PROTOTYPES ***
 ********************************/
 
-static void scroll_bar_horiz_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *draw_info);
+static void scroll_bar_horiz_paint_function(mw_handle_t control_handle, const mw_gl_draw_info_t *draw_info);
 static void scroll_bar_horiz_message_function(const mw_message_t *message);
 
 /**********************
@@ -65,17 +65,17 @@ static void scroll_bar_horiz_message_function(const mw_message_t *message);
 /**
  * Control paint routine, called by window manager.
  *
- * @param control_ref The control identifier in the array of controls
+ * @param control_handle The control identifier in the array of controls
  * @param draw_info Draw info structure describing offset and clip region
  */
-static void scroll_bar_horiz_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *draw_info)
+static void scroll_bar_horiz_paint_function(mw_handle_t control_handle, const mw_gl_draw_info_t *draw_info)
 {
-	mw_ui_scroll_bar_horiz_data_t *this_scroll_bar_horiz = (mw_ui_scroll_bar_horiz_data_t*)mw_get_control_instance_data(control_ref);
+	mw_ui_scroll_bar_horiz_data_t *this_scroll_bar_horiz = (mw_ui_scroll_bar_horiz_data_t*)mw_get_control_instance_data(control_handle);
 	uint16_t scroll_bar_horiz_slider_left;
 	uint16_t narrow_dimension;
 	uint16_t slider_size;
 
-	if (mw_get_control_flags(control_ref) & MW_CONTROL_FLAGS_LARGE_SIZE)
+	if (mw_get_control_flags(control_handle) & MW_CONTROL_FLAGS_LARGE_SIZE)
 	{
 		narrow_dimension = MW_SCROLL_BAR_LARGE_NARROW_DIMESION;
 		slider_size = MW_SCROLL_BAR_LARGE_SLIDER_SIZE;
@@ -87,8 +87,8 @@ static void scroll_bar_horiz_paint_function(uint8_t control_ref, const mw_gl_dra
 	}
 
 	/* check if there's enough parent client rect height to draw the bar */
-	if (mw_get_window_client_rect(mw_get_control_parent_window(control_ref)).height > narrow_dimension &&
-			mw_get_window_client_rect(mw_get_control_parent_window(control_ref)).width > slider_size)
+	if (mw_get_window_client_rect(mw_get_control_parent_window(control_handle)).height > narrow_dimension &&
+			mw_get_window_client_rect(mw_get_control_parent_window(control_handle)).width > slider_size)
 	{
 		/* draw the bar */
 		mw_gl_set_fill(MW_GL_FILL);
@@ -96,7 +96,7 @@ static void scroll_bar_horiz_paint_function(uint8_t control_ref, const mw_gl_dra
 		mw_gl_set_line(MW_GL_SOLID_LINE);
 		mw_gl_clear_pattern();
 		mw_gl_set_solid_fill_colour(MW_CONTROL_UP_COLOUR);
-		if (mw_get_control_flags(control_ref) & MW_CONTROL_FLAG_IS_ENABLED)
+		if (mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_IS_ENABLED)
 		{
 			mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 		}
@@ -107,10 +107,10 @@ static void scroll_bar_horiz_paint_function(uint8_t control_ref, const mw_gl_dra
 		mw_gl_rectangle(draw_info,
 				0,
 				0,
-				mw_get_control_rect(control_ref).width,
+				mw_get_control_rect(control_handle).width,
 				narrow_dimension);
 
-		scroll_bar_horiz_slider_left = (mw_get_control_rect(control_ref).width - slider_size) *
+		scroll_bar_horiz_slider_left = (mw_get_control_rect(control_handle).width - slider_size) *
 				this_scroll_bar_horiz->scroll_position / UINT8_MAX;
 
 		mw_gl_set_solid_fill_colour(MW_CONTROL_DOWN_COLOUR);
@@ -150,7 +150,7 @@ static void scroll_bar_horiz_paint_function(uint8_t control_ref, const mw_gl_dra
  */
 static void scroll_bar_horiz_message_function(const mw_message_t *message)
 {
-	mw_ui_scroll_bar_horiz_data_t *this_scroll_bar_horiz = (mw_ui_scroll_bar_horiz_data_t*)mw_get_control_instance_data(message->recipient_id);
+	mw_ui_scroll_bar_horiz_data_t *this_scroll_bar_horiz = (mw_ui_scroll_bar_horiz_data_t*)mw_get_control_instance_data(message->recipient_handle);
 	int16_t touch_x;
 	uint8_t new_scroll_position;
 
@@ -171,24 +171,24 @@ static void scroll_bar_horiz_message_function(const mw_message_t *message)
 	case MW_TOUCH_DOWN_MESSAGE:
 	case MW_TOUCH_DRAG_MESSAGE:
 		/* respond to a down or drag event by recalulating the new slider position from the touch coordinate */
-		if (mw_get_control_flags(message->recipient_id) & MW_CONTROL_FLAG_IS_ENABLED)
+		if (mw_get_control_flags(message->recipient_handle) & MW_CONTROL_FLAG_IS_ENABLED)
 		{
 			touch_x = (int16_t)(message->message_data >> 16);
 
 			/* scale touch point to middle 90% of scroll bar length */
-			touch_x = mw_ui_common_scale_scroll_bar_touch_point(mw_get_control_rect(message->recipient_id).width, touch_x);
+			touch_x = mw_ui_common_scale_scroll_bar_touch_point(mw_get_control_rect(message->recipient_handle).width, touch_x);
 
-			new_scroll_position = (uint8_t)(UINT8_MAX * touch_x / (uint32_t)mw_get_control_rect(message->recipient_id).width);
+			new_scroll_position = (uint8_t)(UINT8_MAX * touch_x / (uint32_t)mw_get_control_rect(message->recipient_handle).width);
 			if (new_scroll_position != this_scroll_bar_horiz->scroll_position)
 			{
 				/* only repaint if the scroll slider position has changed */
 				this_scroll_bar_horiz->scroll_position = new_scroll_position;
-				mw_paint_control(message->recipient_id);
+				mw_paint_control(message->recipient_handle);
 
 				/* post the control response message */
 				mw_post_message(MW_CONTROL_HORIZ_SCROLL_BAR_SCROLLED_MESSAGE,
-						message->recipient_id,
-						mw_get_control_parent_window(message->recipient_id),
+						message->recipient_handle,
+						mw_get_control_parent_window(message->recipient_handle),
 						this_scroll_bar_horiz->scroll_position,
 						MW_WINDOW_MESSAGE);
 			}
@@ -204,10 +204,10 @@ static void scroll_bar_horiz_message_function(const mw_message_t *message)
 *** GLOBAL FUNCTIONS ***
 ***********************/
 
-uint8_t mw_ui_scroll_bar_horiz_add_new(uint16_t x,
+mw_handle_t mw_ui_scroll_bar_horiz_add_new(uint16_t x,
 		uint16_t y,
 		uint16_t width,
-		uint8_t parent,
+		mw_handle_t parent,
 		uint32_t flags,
 		mw_ui_scroll_bar_horiz_data_t *scroll_bar_horiz_instance_data)
 {

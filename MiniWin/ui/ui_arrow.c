@@ -67,7 +67,7 @@ static int16_t shape_y[ARROW_POINTS];
 *** LOCAL FUNCTION PROTOTYPES ***
 ********************************/
 
-static void arrow_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *draw_info);
+static void arrow_paint_function(mw_handle_t control_handle, const mw_gl_draw_info_t *draw_info);
 static void arrow_message_function(const mw_message_t *message);
 
 /**********************
@@ -77,12 +77,12 @@ static void arrow_message_function(const mw_message_t *message);
 /**
  * Control paint routine, called by window manager.
  *
- * @param control_ref The control identifier in the array of controls
+ * @param control_handle The control identifier in the array of controls
  * @param draw_info Draw info structure describing offset and clip region
  */
-static void arrow_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *draw_info)
+static void arrow_paint_function(mw_handle_t control_handle, const mw_gl_draw_info_t *draw_info)
 {
-	mw_ui_arrow_data_t *this_arrow = (mw_ui_arrow_data_t*)mw_get_control_instance_data(control_ref);
+	mw_ui_arrow_data_t *this_arrow = (mw_ui_arrow_data_t*)mw_get_control_instance_data(control_handle);
 	uint16_t arrow_size;
 	uint16_t arrow_offset;
 	mw_hal_lcd_colour_t highlighted_colour;
@@ -107,8 +107,8 @@ static void arrow_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *d
 	mw_gl_rectangle(draw_info,
 			0,
 			0,
-			mw_get_control_rect(control_ref).width,
-			mw_get_control_rect(control_ref).height);
+			mw_get_control_rect(control_handle).width,
+			mw_get_control_rect(control_handle).height);
 
 	if (this_arrow->arrow_down)
 	{
@@ -122,13 +122,13 @@ static void arrow_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *d
 	}
 
 	mw_gl_set_fg_colour(highlighted_colour);
-	mw_gl_vline(draw_info, 1, 1, mw_get_control_rect(control_ref).height - 2);
-	mw_gl_hline(draw_info, 1, mw_get_control_rect(control_ref).width - 2, 1);
+	mw_gl_vline(draw_info, 1, 1, mw_get_control_rect(control_handle).height - 2);
+	mw_gl_hline(draw_info, 1, mw_get_control_rect(control_handle).width - 2, 1);
 	mw_gl_set_fg_colour(lowlighted_colour);
-	mw_gl_vline(draw_info, mw_get_control_rect(control_ref).width - 2, 1, mw_get_control_rect(control_ref).height - 2);
-	mw_gl_hline(draw_info, 1, mw_get_control_rect(control_ref).width - 2, mw_get_control_rect(control_ref).height - 2);
+	mw_gl_vline(draw_info, mw_get_control_rect(control_handle).width - 2, 1, mw_get_control_rect(control_handle).height - 2);
+	mw_gl_hline(draw_info, 1, mw_get_control_rect(control_handle).width - 2, mw_get_control_rect(control_handle).height - 2);
 
-	if (mw_get_control_flags(control_ref) & MW_CONTROL_FLAGS_LARGE_SIZE)
+	if (mw_get_control_flags(control_handle) & MW_CONTROL_FLAGS_LARGE_SIZE)
 	{
 		memcpy(shape_x, shape_large_x_const, sizeof(shape_x));
 		memcpy(shape_y, shape_large_y_const, sizeof(shape_y));
@@ -151,7 +151,7 @@ static void arrow_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *d
 		arrow_offset = arrow_size / 2;
 	}
 
-	if (mw_get_control_flags(control_ref) & MW_CONTROL_FLAG_IS_ENABLED)
+	if (mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_IS_ENABLED)
 	{
 		mw_gl_set_solid_fill_colour(MW_HAL_LCD_BLACK);
 	}
@@ -179,7 +179,7 @@ static void arrow_paint_function(uint8_t control_ref, const mw_gl_draw_info_t *d
  */
 static void arrow_message_function(const mw_message_t *message)
 {
-	mw_ui_arrow_data_t *this_arrow = (mw_ui_arrow_data_t*)mw_get_control_instance_data(message->recipient_id);
+	mw_ui_arrow_data_t *this_arrow = (mw_ui_arrow_data_t*)mw_get_control_instance_data(message->recipient_handle);
 
 	MW_ASSERT(message, "Null pointer argument");
 
@@ -194,22 +194,22 @@ static void arrow_message_function(const mw_message_t *message)
 		/* set arrow pressed to false, send the control response message and repaint the control */
 		this_arrow->arrow_down = false;
 		mw_post_message(MW_ARROW_PRESSED_MESSAGE,
-				message->recipient_id,
-				mw_get_control_parent_window(message->recipient_id),
+				message->recipient_handle,
+				mw_get_control_parent_window(message->recipient_handle),
 				this_arrow->mw_ui_arrow_direction,
 				MW_WINDOW_MESSAGE);
-		mw_paint_control(message->recipient_id);
+		mw_paint_control(message->recipient_handle);
 		break;
 
 	case MW_TOUCH_DRAG_MESSAGE:
 	case MW_TOUCH_HOLD_DOWN_MESSAGE:
 		mw_cancel_timer(this_arrow->timer_handle);
-		this_arrow->timer_handle = mw_set_timer(mw_tick_counter + MW_CONTROL_DOWN_TIME, message->recipient_id, MW_CONTROL_MESSAGE);
+		this_arrow->timer_handle = mw_set_timer(mw_tick_counter + MW_CONTROL_DOWN_TIME, message->recipient_handle, MW_CONTROL_MESSAGE);
 		if (mw_tick_counter - this_arrow->touch_down_time > MW_HOLD_DOWN_DELAY_TICKS)
 		{
 			mw_post_message(MW_ARROW_PRESSED_MESSAGE,
-					message->recipient_id,
-					mw_get_control_parent_window(message->recipient_id),
+					message->recipient_handle,
+					mw_get_control_parent_window(message->recipient_handle),
 					this_arrow->mw_ui_arrow_direction,
 					MW_WINDOW_MESSAGE);
 		}
@@ -217,11 +217,11 @@ static void arrow_message_function(const mw_message_t *message)
 
 	case MW_TOUCH_DOWN_MESSAGE:
 		/* handle a touch down event within this control */	
-		if (mw_get_control_flags(message->recipient_id) & MW_CONTROL_FLAG_IS_ENABLED)
+		if (mw_get_control_flags(message->recipient_handle) & MW_CONTROL_FLAG_IS_ENABLED)
 		{
-			this_arrow->timer_handle = mw_set_timer(mw_tick_counter + MW_CONTROL_DOWN_TIME, message->recipient_id, MW_CONTROL_MESSAGE);
+			this_arrow->timer_handle = mw_set_timer(mw_tick_counter + MW_CONTROL_DOWN_TIME, message->recipient_handle, MW_CONTROL_MESSAGE);
 			this_arrow->arrow_down = true;
-			mw_paint_control(message->recipient_id);
+			mw_paint_control(message->recipient_handle);
 			this_arrow->touch_down_time = mw_tick_counter;
 		}
 		break;
@@ -235,9 +235,9 @@ static void arrow_message_function(const mw_message_t *message)
 *** GLOBAL FUNCTIONS ***
 ***********************/
 
-uint8_t mw_ui_arrow_add_new(uint16_t x,
+mw_handle_t mw_ui_arrow_add_new(uint16_t x,
 		uint16_t y,
-		uint8_t parent,
+		mw_handle_t parent,
 		uint32_t flags,
 		mw_ui_arrow_data_t *arrow_instance_data)
 {

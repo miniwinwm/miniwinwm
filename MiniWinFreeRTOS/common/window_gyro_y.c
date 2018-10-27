@@ -62,8 +62,8 @@ typedef struct
 *** EXTERNAL VARIABLES ***
 **************************/
 
-extern uint8_t button_gyro_y_id;
-extern uint8_t label_gyro_y_id;
+extern mw_handle_t button_gyro_y_handle;
+extern mw_handle_t label_gyro_y_handle;
 extern MessageBufferHandle_t gyro_y_message_buffer;
 extern volatile uint32_t mw_tick_counter;
 
@@ -85,7 +85,7 @@ static window_gyro_y_data_t window_gyro_y_data;
 *** GLOBAL FUNCTIONS ***
 ***********************/
 
-void window_gyro_y_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_info)
+void window_gyro_y_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_t *draw_info)
 {
 	static int16_t shape_x[SHAPE_POINTS];
 	uint16_t offset_adjusted_angle;
@@ -100,8 +100,8 @@ void window_gyro_y_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *d
 	mw_gl_rectangle(draw_info,
 			0,
 			0,
-			mw_get_window_client_rect(window_ref).width,
-			mw_get_window_client_rect(window_ref).height);
+			mw_get_window_client_rect(window_handle).width,
+			mw_get_window_client_rect(window_handle).height);
 
 	/* draw angle arrow */
 	offset_adjusted_angle = gyro_util_rationalize_angle(window_gyro_y_data.angle - window_gyro_y_data.angle_offset);
@@ -130,7 +130,7 @@ void window_gyro_y_message_function(const mw_message_t *message)
 		window_gyro_y_data.angle_offset = 0;
 		window_gyro_y_data.angle = 0;
 		window_gyro_y_data.previous_drawn_angle = 0;
-		mw_set_timer(mw_tick_counter + MW_TICKS_PER_SECOND / 4, message->recipient_id, MW_WINDOW_MESSAGE);
+		mw_set_timer(mw_tick_counter + MW_TICKS_PER_SECOND / 4, message->recipient_handle, MW_WINDOW_MESSAGE);
 		break;
 
 	case MW_BUTTON_PRESSED_MESSAGE:
@@ -161,15 +161,15 @@ void window_gyro_y_message_function(const mw_message_t *message)
 					window_gyro_y_data.previous_drawn_angle = offset_adjusted_angle;
 
 					sprintf(window_gyro_y_data.text_transfer_buffer, "%d", (int)offset_adjusted_angle);
-					mw_ui_common_post_pointer_to_control(label_gyro_y_id, window_gyro_y_data.text_transfer_buffer);
-					mw_paint_control(label_gyro_y_id);
+					mw_ui_common_post_pointer_to_control(label_gyro_y_handle, window_gyro_y_data.text_transfer_buffer);
+					mw_paint_control(label_gyro_y_handle);
 
-					mw_paint_window_client_rect(message->recipient_id, &arrow_rect);
+					mw_paint_window_client_rect(message->recipient_handle, &arrow_rect);
 				}
 			}
 
 			/* reset timer */
-			mw_set_timer(mw_tick_counter + MW_TICKS_PER_SECOND / 4, message->recipient_id, MW_WINDOW_MESSAGE);
+			mw_set_timer(mw_tick_counter + MW_TICKS_PER_SECOND / 4, message->recipient_handle, MW_WINDOW_MESSAGE);
 		}
 		break;
 

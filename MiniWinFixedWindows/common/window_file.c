@@ -63,11 +63,11 @@ typedef struct
 *** EXTERNAL VARIABLES ***
 **************************/
 
-extern uint8_t button_2_id;
-extern uint8_t list_box_file_id;
-extern uint8_t label_file_id;
-extern uint8_t arrow_file_up_id;
-extern uint8_t arrow_file_down_id;
+extern mw_handle_t button_2_handle;
+extern mw_handle_t list_box_file_handle;
+extern mw_handle_t label_file_handle;
+extern mw_handle_t arrow_file_up_handle;
+extern mw_handle_t arrow_file_down_handle;
 extern mw_ui_list_box_data_t list_box_file_data;
 extern mw_ui_list_box_entry list_box_file_entries_root[];
 extern mw_ui_list_box_entry list_box_file_entries_images[];
@@ -94,7 +94,7 @@ static file_data_t file_data;
 *** GLOBAL FUNCTIONS ***
 ***********************/
 
-void window_file_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_info)
+void window_file_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_t *draw_info)
 {
 	MW_ASSERT(draw_info, "Null pointer parameter");
 
@@ -105,15 +105,15 @@ void window_file_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *dra
 	mw_gl_rectangle(draw_info,
 			0,
 			0,
-			mw_get_window_client_rect(window_ref).width,
-			mw_get_window_client_rect(window_ref).height);
+			mw_get_window_client_rect(window_handle).width,
+			mw_get_window_client_rect(window_handle).height);
 
 	/* blue title bar */
 	mw_gl_set_solid_fill_colour(MW_HAL_LCD_BLUE);
 	mw_gl_rectangle(draw_info,
 			0,
 			0,
-			mw_get_window_client_rect(window_ref).width,
+			mw_get_window_client_rect(window_handle).width,
 			18);
 	mw_gl_set_fg_colour(MW_HAL_LCD_WHITE);
 	mw_gl_set_text_rotation(MW_GL_TEXT_ROTATION_0);
@@ -137,28 +137,28 @@ void window_file_message_function(const mw_message_t *message)
 		if (message->message_data)
 		{
 			/* visibility gained */
-			mw_ui_common_post_pointer_to_control(label_file_id, "");
-			mw_paint_control(label_file_id);
+			mw_ui_common_post_pointer_to_control(label_file_handle, "");
+			mw_paint_control(label_file_handle);
 
 			file_data.lines_to_scroll = 0;
 			file_data.folder_shown = ROOT_FOLDER;
 			list_box_file_data.list_box_entries = list_box_file_entries_root;
 			list_box_file_data.number_of_items = list_box_file_entries_root_count;
-			mw_set_control_enabled(arrow_file_up_id, false);
+			mw_set_control_enabled(arrow_file_up_handle, false);
 			if (list_box_file_data.number_of_lines < list_box_file_data.number_of_items)
 			{
-				mw_set_control_enabled(arrow_file_down_id, true);
+				mw_set_control_enabled(arrow_file_down_handle, true);
 			}
 			else
 			{
-				mw_set_control_enabled(arrow_file_down_id, false);
+				mw_set_control_enabled(arrow_file_down_handle, false);
 			}
 		}
 		break;
 
 	case MW_BUTTON_PRESSED_MESSAGE:
 	    /* set window invisible */
-		mw_set_window_visible(message->recipient_id, false);
+		mw_set_window_visible(message->recipient_handle, false);
 
 		/* a window has changed visibility so repaint all */
 		mw_paint_all();
@@ -169,8 +169,8 @@ void window_file_message_function(const mw_message_t *message)
 		item_chosen = message->message_data;
 
 		/* update label with text of item chosen */
-		mw_ui_common_post_pointer_to_control(label_file_id, list_box_file_data.list_box_entries[item_chosen].label);
-		mw_paint_control(label_file_id);
+		mw_ui_common_post_pointer_to_control(label_file_handle, list_box_file_data.list_box_entries[item_chosen].label);
+		mw_paint_control(label_file_handle);
 
 		/* check if a folder has been chosen and if so update the list control to show new contents */
 		folder_changed = false;
@@ -203,19 +203,19 @@ void window_file_message_function(const mw_message_t *message)
 		if (folder_changed)
 		{
 			file_data.lines_to_scroll = 0;
-			mw_paint_control(list_box_file_id);
+			mw_paint_control(list_box_file_handle);
 
-			mw_set_control_enabled(arrow_file_up_id, false);
+			mw_set_control_enabled(arrow_file_up_handle, false);
 			if (list_box_file_data.number_of_lines < list_box_file_data.number_of_items)
 			{
-				mw_set_control_enabled(arrow_file_down_id, true);
+				mw_set_control_enabled(arrow_file_down_handle, true);
 			}
 			else
 			{
-				mw_set_control_enabled(arrow_file_down_id, false);
+				mw_set_control_enabled(arrow_file_down_handle, false);
 			}
-			mw_paint_control(arrow_file_up_id);
-			mw_paint_control(arrow_file_down_id);
+			mw_paint_control(arrow_file_up_handle);
+			mw_paint_control(arrow_file_down_handle);
 		}
 		break;
 
@@ -228,19 +228,19 @@ void window_file_message_function(const mw_message_t *message)
 
 			if (file_data.lines_to_scroll == 0)
 			{
-				mw_set_control_enabled(arrow_file_up_id, false);
-				mw_paint_control(arrow_file_up_id);
+				mw_set_control_enabled(arrow_file_up_handle, false);
+				mw_paint_control(arrow_file_up_handle);
 			}
 
-			mw_set_control_enabled(arrow_file_down_id, true);
-			mw_paint_control(arrow_file_down_id);
+			mw_set_control_enabled(arrow_file_down_handle, true);
+			mw_paint_control(arrow_file_down_handle);
 
 			mw_post_message(MW_TRANSFER_DATA_1_MESSAGE,
 					0,
-					list_box_file_id,
+					list_box_file_handle,
 					file_data.lines_to_scroll,
 					MW_CONTROL_MESSAGE);
-			mw_paint_control(list_box_file_id);
+			mw_paint_control(list_box_file_handle);
 		}
 		else if (message->message_data == MW_UI_ARROW_DOWN &&
 					file_data.lines_to_scroll < (list_box_file_data.number_of_items - list_box_file_data.number_of_lines))
@@ -250,19 +250,19 @@ void window_file_message_function(const mw_message_t *message)
 
 			if (file_data.lines_to_scroll == list_box_file_data.number_of_items - list_box_file_data.number_of_lines)
 			{
-				mw_set_control_enabled(arrow_file_down_id, false);
-				mw_paint_control(arrow_file_down_id);
+				mw_set_control_enabled(arrow_file_down_handle, false);
+				mw_paint_control(arrow_file_down_handle);
 			}
 
-			mw_set_control_enabled(arrow_file_up_id, true);
-			mw_paint_control(arrow_file_up_id);
+			mw_set_control_enabled(arrow_file_up_handle, true);
+			mw_paint_control(arrow_file_up_handle);
 
 			mw_post_message(MW_TRANSFER_DATA_1_MESSAGE,
 					0,
-					list_box_file_id,
+					list_box_file_handle,
 					file_data.lines_to_scroll,
 					MW_CONTROL_MESSAGE);
-			mw_paint_control(list_box_file_id);
+			mw_paint_control(list_box_file_handle);
 		}
 		break;
 

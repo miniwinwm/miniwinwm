@@ -53,13 +53,13 @@ typedef struct
 	mw_ui_list_box_entry file_entries[FILE_LIST_BOX_MAX_ENTRIES]; 	/**< the storage for the folder entries data the list box shows; an entry contains pointers; icons and labels must exist elsewhere */
 	char folder_path[MAX_FOLDER_AND_FILENAME_LENGTH + 1];			/**< path to most recently chosen folder, and path and file name when dialog dismissed */
 	uint8_t folder_depth;											/**< root is zero, increments for every sub-folder */
-	uint8_t button_ok_id;											/**< Control id of ok button */
-	uint8_t button_cancel_id;										/**< Control id of cancel button */
-	uint8_t list_box_file_id;										/**< Control id of list box for folders and files */
-	uint8_t arrow_file_up_id;										/**< Control id of up arrow */
-	uint8_t arrow_file_down_id;										/**< Control id of down arrow */
-	uint8_t arrow_file_back_id;										/**< Control id of back arrow, to parent folder */
-	uint8_t label_choice_id;										/**< Control id of choice label */
+	mw_handle_t button_ok_handle;									/**< Control handle of ok button */
+	mw_handle_t button_cancel_handle;								/**< Control handle of cancel button */
+	mw_handle_t list_box_file_handle;								/**< Control handle of list box for folders and files */
+	mw_handle_t arrow_file_up_handle;								/**< Control handle of up arrow */
+	mw_handle_t arrow_file_down_handle;								/**< Control handle of down arrow */
+	mw_handle_t arrow_file_back_handle;								/**< Control handle of back arrow, to parent folder */
+	mw_handle_t label_choice_handle;								/**< Control handle of choice label */
 	bool folders_only;												/**< If to show folders only */
 	mw_ui_list_box_data_t list_box_file_data;						/**< Instance data of list box */
 	mw_ui_arrow_data_t arrow_up_file_data;							/**< Instance data of up arrow */
@@ -70,7 +70,7 @@ typedef struct
 	mw_ui_label_data_t label_choice_data;							/**< Instance data of choice data */
 	char *message;													/**< Text to display in dialog */
 	bool large_size;												/**< True for large size false for standard size */
-	uint8_t response_window_id;										/**< Window id to send response message to */
+	mw_handle_t response_window_handle;								/**< Handle to send response message to */
 	mw_dialog_response_t mw_dialog_response;						/**< Dialog response structure */
 } mw_dialog_file_chooser_data_t;
 
@@ -100,7 +100,7 @@ static mw_dialog_file_chooser_data_t mw_dialog_file_chooser_data;
 
 static void remove_resources(void);
 static void update_folder_entries(bool folders_only);
-static void mw_dialog_file_chooser_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_info);
+static void mw_dialog_file_chooser_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_t *draw_info);
 static void mw_dialog_file_chooser_message_function(const mw_message_t *message);
 static uint8_t get_folder_depth(char *path);
 
@@ -144,14 +144,14 @@ static uint8_t get_folder_depth(char *path)
  */
 static void remove_resources(void)
 {
-	mw_remove_control(mw_dialog_file_chooser_data.arrow_file_up_id);
-	mw_remove_control(mw_dialog_file_chooser_data.arrow_file_down_id);
-	mw_remove_control(mw_dialog_file_chooser_data.arrow_file_back_id);
-	mw_remove_control(mw_dialog_file_chooser_data.list_box_file_id);
-	mw_remove_control(mw_dialog_file_chooser_data.button_ok_id);
-	mw_remove_control(mw_dialog_file_chooser_data.button_cancel_id);
-	mw_remove_control(mw_dialog_file_chooser_data.label_choice_id);
-	mw_remove_window(mw_dialog_file_chooser_data.mw_dialog_response.window_id);
+	mw_remove_control(mw_dialog_file_chooser_data.arrow_file_up_handle);
+	mw_remove_control(mw_dialog_file_chooser_data.arrow_file_down_handle);
+	mw_remove_control(mw_dialog_file_chooser_data.arrow_file_back_handle);
+	mw_remove_control(mw_dialog_file_chooser_data.list_box_file_handle);
+	mw_remove_control(mw_dialog_file_chooser_data.button_ok_handle);
+	mw_remove_control(mw_dialog_file_chooser_data.button_cancel_handle);
+	mw_remove_control(mw_dialog_file_chooser_data.label_choice_handle);
+	mw_remove_window(mw_dialog_file_chooser_data.mw_dialog_response.window_handle);
 }
 
 /**
@@ -182,36 +182,36 @@ static void update_folder_entries(bool folders_only)
 
 	if (mw_dialog_file_chooser_data.list_box_file_data.number_of_lines < mw_dialog_file_chooser_data.list_box_file_data.number_of_items)
 	{
-		mw_set_control_enabled(mw_dialog_file_chooser_data.arrow_file_down_id, true);
+		mw_set_control_enabled(mw_dialog_file_chooser_data.arrow_file_down_handle, true);
 	}
 	else
 	{
-		mw_set_control_enabled(mw_dialog_file_chooser_data.arrow_file_down_id, false);
+		mw_set_control_enabled(mw_dialog_file_chooser_data.arrow_file_down_handle, false);
 	}
 
 	if (mw_dialog_file_chooser_data.folder_depth == 0)
 	{
-		mw_set_control_enabled(mw_dialog_file_chooser_data.arrow_file_back_id, false);
+		mw_set_control_enabled(mw_dialog_file_chooser_data.arrow_file_back_handle, false);
 	}
 	else
 	{
-		mw_set_control_enabled(mw_dialog_file_chooser_data.arrow_file_back_id, true);
+		mw_set_control_enabled(mw_dialog_file_chooser_data.arrow_file_back_handle, true);
 	}
 
-	mw_paint_control(mw_dialog_file_chooser_data.arrow_file_up_id);
-	mw_paint_control(mw_dialog_file_chooser_data.arrow_file_down_id);
-	mw_paint_control(mw_dialog_file_chooser_data.arrow_file_back_id);
-	mw_paint_control(mw_dialog_file_chooser_data.list_box_file_id);
+	mw_paint_control(mw_dialog_file_chooser_data.arrow_file_up_handle);
+	mw_paint_control(mw_dialog_file_chooser_data.arrow_file_down_handle);
+	mw_paint_control(mw_dialog_file_chooser_data.arrow_file_back_handle);
+	mw_paint_control(mw_dialog_file_chooser_data.list_box_file_handle);
 }
 
 /**
  * Window paint routine, called by window manager.
  *
- * @param window_ref The window identifier in the array of windows
+ * @param window_handle The window identifier in the array of windows
  * @param draw_info Draw info structure describing offset and clip region
  * @note Do not call this directly from user code
  */
-static void mw_dialog_file_chooser_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_info)
+static void mw_dialog_file_chooser_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_t *draw_info)
 {
 	mw_gl_set_fill(MW_GL_FILL);
 	mw_gl_set_solid_fill_colour(MW_HAL_LCD_WHITE);
@@ -220,8 +220,8 @@ static void mw_dialog_file_chooser_paint_function(uint8_t window_ref, const mw_g
 	mw_gl_rectangle(draw_info,
 			0,
 			0,
-			mw_get_window_client_rect(window_ref).width,
-			mw_get_window_client_rect(window_ref).height);
+			mw_get_window_client_rect(window_handle).width,
+			mw_get_window_client_rect(window_handle).height);
 }
 
 /**
@@ -247,13 +247,13 @@ static void mw_dialog_file_chooser_message_function(const mw_message_t *message)
 			/* remove all controls and window */
 			remove_resources();
 
-			if (message->sender_id == mw_dialog_file_chooser_data.button_cancel_id)
+			if (message->sender_handle == mw_dialog_file_chooser_data.button_cancel_handle)
 			{
 				/* post cancel response to receiving window */
 				mw_dialog_file_chooser_data.mw_dialog_response.data = MW_UNUSED_MESSAGE_PARAMETER;
 				mw_post_message(MW_DIALOG_FILE_CHOOSER_CANCEL_MESSAGE,
 						MW_UNUSED_MESSAGE_PARAMETER,
-						mw_dialog_file_chooser_data.response_window_id,
+						mw_dialog_file_chooser_data.response_window_handle,
 						(uint32_t)&mw_dialog_file_chooser_data.mw_dialog_response,
 						MW_WINDOW_MESSAGE);
 			}
@@ -266,7 +266,7 @@ static void mw_dialog_file_chooser_message_function(const mw_message_t *message)
 					mw_dialog_file_chooser_data.mw_dialog_response.data = (uint32_t)mw_dialog_file_chooser_data.folder_path;
 					mw_post_message(MW_DIALOG_FILE_CHOOSER_FOLDER_OK_MESSAGE,
 							MW_UNUSED_MESSAGE_PARAMETER,
-							mw_dialog_file_chooser_data.response_window_id,
+							mw_dialog_file_chooser_data.response_window_handle,
 							(uint32_t)&mw_dialog_file_chooser_data.mw_dialog_response,
 							MW_WINDOW_MESSAGE);
 				}
@@ -288,7 +288,7 @@ static void mw_dialog_file_chooser_message_function(const mw_message_t *message)
 					mw_dialog_file_chooser_data.mw_dialog_response.data = (uint32_t)mw_dialog_file_chooser_data.folder_path;
 					mw_post_message(MW_DIALOG_FILE_CHOOSER_FILE_OK_MESSAGE,
 							MW_UNUSED_MESSAGE_PARAMETER,
-							mw_dialog_file_chooser_data.response_window_id,
+							mw_dialog_file_chooser_data.response_window_handle,
 							(uint32_t)&mw_dialog_file_chooser_data.mw_dialog_response,
 							MW_WINDOW_MESSAGE);
 				}
@@ -308,19 +308,19 @@ static void mw_dialog_file_chooser_message_function(const mw_message_t *message)
 
 			if (mw_dialog_file_chooser_data.lines_to_scroll == 0)
 			{
-				mw_set_control_enabled(mw_dialog_file_chooser_data.arrow_file_up_id, false);
-				mw_paint_control(mw_dialog_file_chooser_data.arrow_file_up_id);
+				mw_set_control_enabled(mw_dialog_file_chooser_data.arrow_file_up_handle, false);
+				mw_paint_control(mw_dialog_file_chooser_data.arrow_file_up_handle);
 			}
 
-			mw_set_control_enabled(mw_dialog_file_chooser_data.arrow_file_down_id, true);
-			mw_paint_control(mw_dialog_file_chooser_data.arrow_file_down_id);
+			mw_set_control_enabled(mw_dialog_file_chooser_data.arrow_file_down_handle, true);
+			mw_paint_control(mw_dialog_file_chooser_data.arrow_file_down_handle);
 
 			mw_post_message(MW_TRANSFER_DATA_1_MESSAGE,
 					0,
-					mw_dialog_file_chooser_data.list_box_file_id,
+					mw_dialog_file_chooser_data.list_box_file_handle,
 					mw_dialog_file_chooser_data.lines_to_scroll,
 					MW_CONTROL_MESSAGE);
-			mw_paint_control(mw_dialog_file_chooser_data.list_box_file_id);
+			mw_paint_control(mw_dialog_file_chooser_data.list_box_file_handle);
 		}
 		else if (message->message_data == MW_UI_ARROW_DOWN &&
 				mw_dialog_file_chooser_data.lines_to_scroll <
@@ -334,19 +334,19 @@ static void mw_dialog_file_chooser_message_function(const mw_message_t *message)
 					mw_dialog_file_chooser_data.list_box_file_data.number_of_items -
 					mw_dialog_file_chooser_data.list_box_file_data.number_of_lines)
 			{
-				mw_set_control_enabled(mw_dialog_file_chooser_data.arrow_file_down_id, false);
-				mw_paint_control(mw_dialog_file_chooser_data.arrow_file_down_id);
+				mw_set_control_enabled(mw_dialog_file_chooser_data.arrow_file_down_handle, false);
+				mw_paint_control(mw_dialog_file_chooser_data.arrow_file_down_handle);
 			}
 
-			mw_set_control_enabled(mw_dialog_file_chooser_data.arrow_file_up_id, true);
-			mw_paint_control(mw_dialog_file_chooser_data.arrow_file_up_id);
+			mw_set_control_enabled(mw_dialog_file_chooser_data.arrow_file_up_handle, true);
+			mw_paint_control(mw_dialog_file_chooser_data.arrow_file_up_handle);
 
 			mw_post_message(MW_TRANSFER_DATA_1_MESSAGE,
 					0,
-					mw_dialog_file_chooser_data.list_box_file_id,
+					mw_dialog_file_chooser_data.list_box_file_handle,
 					mw_dialog_file_chooser_data.lines_to_scroll,
 					MW_CONTROL_MESSAGE);
-			mw_paint_control(mw_dialog_file_chooser_data.list_box_file_id);
+			mw_paint_control(mw_dialog_file_chooser_data.list_box_file_handle);
 		}
 		else if (message->message_data == MW_UI_ARROW_LEFT)
 		{
@@ -363,9 +363,9 @@ static void mw_dialog_file_chooser_message_function(const mw_message_t *message)
 			if (mw_dialog_file_chooser_data.folders_only)
 			{
 				/* update label with folder chosen */
-				mw_ui_common_post_pointer_to_control(mw_dialog_file_chooser_data.label_choice_id,
+				mw_ui_common_post_pointer_to_control(mw_dialog_file_chooser_data.label_choice_handle,
 						mw_dialog_file_chooser_data.folder_path);
-				mw_paint_control(mw_dialog_file_chooser_data.label_choice_id);
+				mw_paint_control(mw_dialog_file_chooser_data.label_choice_handle);
 			}
 		}
 		break;
@@ -404,16 +404,16 @@ static void mw_dialog_file_chooser_message_function(const mw_message_t *message)
 				if (mw_dialog_file_chooser_data.folders_only)
 				{
 					/* update label with folder chosen */
-					mw_ui_common_post_pointer_to_control(mw_dialog_file_chooser_data.label_choice_id,
+					mw_ui_common_post_pointer_to_control(mw_dialog_file_chooser_data.label_choice_handle,
 							mw_dialog_file_chooser_data.folder_path);
 				}
 				else
 				{
 					/* update label with file not chosen */
-					mw_ui_common_post_pointer_to_control(mw_dialog_file_chooser_data.label_choice_id,
+					mw_ui_common_post_pointer_to_control(mw_dialog_file_chooser_data.label_choice_handle,
 							"No File");
 				}
-				mw_paint_control(mw_dialog_file_chooser_data.label_choice_id);
+				mw_paint_control(mw_dialog_file_chooser_data.label_choice_handle);
 			}
 			else if ((mw_dialog_file_chooser_data.list_box_file_data.list_box_entries[item_chosen].icon ==
 					mw_bitmaps_file_icon_large && mw_dialog_file_chooser_data.large_size) ||
@@ -421,9 +421,9 @@ static void mw_dialog_file_chooser_message_function(const mw_message_t *message)
 					mw_bitmaps_file_icon_small && !mw_dialog_file_chooser_data.large_size))
 			{
 				/* file chosen, update label with name of file chosen */
-				mw_ui_common_post_pointer_to_control(mw_dialog_file_chooser_data.label_choice_id,
+				mw_ui_common_post_pointer_to_control(mw_dialog_file_chooser_data.label_choice_handle,
 						mw_dialog_file_chooser_data.list_box_file_data.list_box_entries[item_chosen].label);
-				mw_paint_control(mw_dialog_file_chooser_data.label_choice_id);
+				mw_paint_control(mw_dialog_file_chooser_data.label_choice_handle);
 			}
 		}
 		break;
@@ -437,13 +437,13 @@ static void mw_dialog_file_chooser_message_function(const mw_message_t *message)
 *** GLOBAL FUNCTIONS ***
 ***********************/
 
-uint8_t mw_create_window_dialog_file_chooser(uint16_t x,
+mw_handle_t mw_create_window_dialog_file_chooser(uint16_t x,
 		uint16_t y,
 		char *title,
 		char *start_path,
 		bool folders_only,
 		bool large_size,
-		uint8_t response_window_id)
+		mw_handle_t response_window_handle)
 {
 	mw_util_rect_t rect;
 	uint8_t i;
@@ -478,14 +478,14 @@ uint8_t mw_create_window_dialog_file_chooser(uint16_t x,
 	}
 
 	mw_dialog_file_chooser_data.large_size = large_size;
-	mw_dialog_file_chooser_data.response_window_id = response_window_id;
+	mw_dialog_file_chooser_data.response_window_handle = response_window_handle;
 	rect.x = x;
 	rect.y = y;
 
 	/* save folders_only flag */
 	mw_dialog_file_chooser_data.folders_only = folders_only;
 
-	mw_dialog_file_chooser_data.mw_dialog_response.window_id = mw_add_window(&rect,
+	mw_dialog_file_chooser_data.mw_dialog_response.window_handle = mw_add_window(&rect,
 			title,
 			mw_dialog_file_chooser_paint_function,
 			mw_dialog_file_chooser_message_function,
@@ -496,7 +496,7 @@ uint8_t mw_create_window_dialog_file_chooser(uint16_t x,
 			NULL);
 
 	/* check if window could be created */
-	if (mw_dialog_file_chooser_data.mw_dialog_response.window_id == MW_MAX_WINDOW_COUNT)
+	if (mw_dialog_file_chooser_data.mw_dialog_response.window_handle == MW_MAX_WINDOW_COUNT)
 	{
 		/* it couldn't so exit */
 		return MW_MAX_WINDOW_COUNT;
@@ -530,105 +530,105 @@ uint8_t mw_create_window_dialog_file_chooser(uint16_t x,
 	/* create controls */
 	if (large_size)
 	{
-		mw_dialog_file_chooser_data.arrow_file_up_id = mw_ui_arrow_add_new(182,
+		mw_dialog_file_chooser_data.arrow_file_up_handle = mw_ui_arrow_add_new(182,
 				5,
-				mw_dialog_file_chooser_data.mw_dialog_response.window_id,
+				mw_dialog_file_chooser_data.mw_dialog_response.window_handle,
 				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAGS_LARGE_SIZE,
 				&mw_dialog_file_chooser_data.arrow_up_file_data);
 
-		mw_dialog_file_chooser_data.arrow_file_down_id = mw_ui_arrow_add_new(182,
+		mw_dialog_file_chooser_data.arrow_file_down_handle = mw_ui_arrow_add_new(182,
 				112,
-				mw_dialog_file_chooser_data.mw_dialog_response.window_id,
+				mw_dialog_file_chooser_data.mw_dialog_response.window_handle,
 				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAGS_LARGE_SIZE,
 				&mw_dialog_file_chooser_data.arrow_down_file_data);
 
-		mw_dialog_file_chooser_data.arrow_file_back_id = mw_ui_arrow_add_new(182,
+		mw_dialog_file_chooser_data.arrow_file_back_handle = mw_ui_arrow_add_new(182,
 				58,
-				mw_dialog_file_chooser_data.mw_dialog_response.window_id,
+				mw_dialog_file_chooser_data.mw_dialog_response.window_handle,
 				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAGS_LARGE_SIZE,
 				&mw_dialog_file_chooser_data.arrow_back_file_data);
 
-		mw_dialog_file_chooser_data.list_box_file_id = mw_ui_list_box_add_new(5,
+		mw_dialog_file_chooser_data.list_box_file_handle = mw_ui_list_box_add_new(5,
 				5,
 				170,
-				mw_dialog_file_chooser_data.mw_dialog_response.window_id,
+				mw_dialog_file_chooser_data.mw_dialog_response.window_handle,
 				MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAGS_LARGE_SIZE,
 				&mw_dialog_file_chooser_data.list_box_file_data);
 
-		mw_dialog_file_chooser_data.button_ok_id = mw_ui_button_add_new(5,
+		mw_dialog_file_chooser_data.button_ok_handle = mw_ui_button_add_new(5,
 				175,
-				mw_dialog_file_chooser_data.mw_dialog_response.window_id,
+				mw_dialog_file_chooser_data.mw_dialog_response.window_handle,
 				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAGS_LARGE_SIZE,
 				&mw_dialog_file_chooser_data.button_ok_data);
 
-		mw_dialog_file_chooser_data.button_cancel_id = mw_ui_button_add_new(112,
+		mw_dialog_file_chooser_data.button_cancel_handle = mw_ui_button_add_new(112,
 				175,
-				mw_dialog_file_chooser_data.mw_dialog_response.window_id,
+				mw_dialog_file_chooser_data.mw_dialog_response.window_handle,
 				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAGS_LARGE_SIZE,
 				&mw_dialog_file_chooser_data.button_cancel_data);
 
-		mw_dialog_file_chooser_data.label_choice_id = mw_ui_label_add_new(5,
+		mw_dialog_file_chooser_data.label_choice_handle = mw_ui_label_add_new(5,
 				150,
 				209,
-				mw_dialog_file_chooser_data.mw_dialog_response.window_id,
+				mw_dialog_file_chooser_data.mw_dialog_response.window_handle,
 				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAGS_LARGE_SIZE,
 				&mw_dialog_file_chooser_data.label_choice_data);
 	}
 	else
 	{
-		mw_dialog_file_chooser_data.arrow_file_up_id = mw_ui_arrow_add_new(130,
+		mw_dialog_file_chooser_data.arrow_file_up_handle = mw_ui_arrow_add_new(130,
 				5,
-				mw_dialog_file_chooser_data.mw_dialog_response.window_id,
+				mw_dialog_file_chooser_data.mw_dialog_response.window_handle,
 				MW_CONTROL_FLAG_IS_VISIBLE,
 				&mw_dialog_file_chooser_data.arrow_up_file_data);
 
-		mw_dialog_file_chooser_data.arrow_file_down_id = mw_ui_arrow_add_new(130,
+		mw_dialog_file_chooser_data.arrow_file_down_handle = mw_ui_arrow_add_new(130,
 				59,
-				mw_dialog_file_chooser_data.mw_dialog_response.window_id,
+				mw_dialog_file_chooser_data.mw_dialog_response.window_handle,
 				MW_CONTROL_FLAG_IS_VISIBLE,
 				&mw_dialog_file_chooser_data.arrow_down_file_data);
 
-		mw_dialog_file_chooser_data.arrow_file_back_id = mw_ui_arrow_add_new(130,
+		mw_dialog_file_chooser_data.arrow_file_back_handle = mw_ui_arrow_add_new(130,
 				31,
-				mw_dialog_file_chooser_data.mw_dialog_response.window_id,
+				mw_dialog_file_chooser_data.mw_dialog_response.window_handle,
 				MW_CONTROL_FLAG_IS_VISIBLE,
 				&mw_dialog_file_chooser_data.arrow_back_file_data);
 
-		mw_dialog_file_chooser_data.list_box_file_id = mw_ui_list_box_add_new(5,
+		mw_dialog_file_chooser_data.list_box_file_handle = mw_ui_list_box_add_new(5,
 				5,
 				120,
-				mw_dialog_file_chooser_data.mw_dialog_response.window_id,
+				mw_dialog_file_chooser_data.mw_dialog_response.window_handle,
 				MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_IS_VISIBLE,
 				&mw_dialog_file_chooser_data.list_box_file_data);
 
-		mw_dialog_file_chooser_data.button_ok_id = mw_ui_button_add_new(5,
+		mw_dialog_file_chooser_data.button_ok_handle = mw_ui_button_add_new(5,
 				97,
-				mw_dialog_file_chooser_data.mw_dialog_response.window_id,
+				mw_dialog_file_chooser_data.mw_dialog_response.window_handle,
 				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
 				&mw_dialog_file_chooser_data.button_ok_data);
 
-		mw_dialog_file_chooser_data.button_cancel_id = mw_ui_button_add_new(95,
+		mw_dialog_file_chooser_data.button_cancel_handle = mw_ui_button_add_new(95,
 				97,
-				mw_dialog_file_chooser_data.mw_dialog_response.window_id,
+				mw_dialog_file_chooser_data.mw_dialog_response.window_handle,
 				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
 				&mw_dialog_file_chooser_data.button_cancel_data);
 
-		mw_dialog_file_chooser_data.label_choice_id = mw_ui_label_add_new(5,
+		mw_dialog_file_chooser_data.label_choice_handle = mw_ui_label_add_new(5,
 				80,
 				142,
-				mw_dialog_file_chooser_data.mw_dialog_response.window_id,
+				mw_dialog_file_chooser_data.mw_dialog_response.window_handle,
 				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
 				&mw_dialog_file_chooser_data.label_choice_data);
 	}
 
 	/* check if controls could be created */
-	if (mw_dialog_file_chooser_data.arrow_file_up_id == MW_MAX_CONTROL_COUNT ||
-			mw_dialog_file_chooser_data.arrow_file_down_id == MW_MAX_CONTROL_COUNT ||
-			mw_dialog_file_chooser_data.arrow_file_back_id == MW_MAX_CONTROL_COUNT ||
-			mw_dialog_file_chooser_data.list_box_file_id == MW_MAX_CONTROL_COUNT ||
-			mw_dialog_file_chooser_data.button_ok_id == MW_MAX_CONTROL_COUNT ||
-			mw_dialog_file_chooser_data.button_cancel_id == MW_MAX_CONTROL_COUNT ||
-			mw_dialog_file_chooser_data.label_choice_id == MW_MAX_CONTROL_COUNT)
+	if (mw_dialog_file_chooser_data.arrow_file_up_handle == MW_MAX_CONTROL_COUNT ||
+			mw_dialog_file_chooser_data.arrow_file_down_handle == MW_MAX_CONTROL_COUNT ||
+			mw_dialog_file_chooser_data.arrow_file_back_handle == MW_MAX_CONTROL_COUNT ||
+			mw_dialog_file_chooser_data.list_box_file_handle == MW_MAX_CONTROL_COUNT ||
+			mw_dialog_file_chooser_data.button_ok_handle == MW_MAX_CONTROL_COUNT ||
+			mw_dialog_file_chooser_data.button_cancel_handle == MW_MAX_CONTROL_COUNT ||
+			mw_dialog_file_chooser_data.label_choice_handle == MW_MAX_CONTROL_COUNT)
 	{
 		/* remove all controls and window */
 		remove_resources();
@@ -653,10 +653,10 @@ uint8_t mw_create_window_dialog_file_chooser(uint16_t x,
 	mw_dialog_file_chooser_data.list_box_file_data.number_of_items = 0;
 
 	/* this window needs painting; it is coming up at the front so paint only this one */
-	mw_paint_window_frame(mw_dialog_file_chooser_data.mw_dialog_response.window_id, MW_WINDOW_FRAME_COMPONENT_ALL);
-	mw_paint_window_client(mw_dialog_file_chooser_data.mw_dialog_response.window_id);
+	mw_paint_window_frame(mw_dialog_file_chooser_data.mw_dialog_response.window_handle, MW_WINDOW_FRAME_COMPONENT_ALL);
+	mw_paint_window_client(mw_dialog_file_chooser_data.mw_dialog_response.window_handle);
 
-	return mw_dialog_file_chooser_data.mw_dialog_response.window_id;
+	return mw_dialog_file_chooser_data.mw_dialog_response.window_handle;
 }
 
 #endif

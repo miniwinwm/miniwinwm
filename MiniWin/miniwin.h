@@ -218,11 +218,11 @@ typedef struct mw_message_tag mw_message_t;
 /**
  * Function signature definition for the paint function that every window and control must implement
  *
- * @param window_ref The window/control id of the window/control being painted in the paint function
+ * @param window_handle The window/control handle of the window/control being painted in the paint function
  * @param draw_info Draw info structure describing offset and clip region
  * @note Do not call this directly from user code
  */
-typedef void (*mw_paint_func_p)(uint8_t window_ref, const mw_gl_draw_info_t *draw_info);
+typedef void (*mw_paint_func_p)(mw_handle_t window_handle, const mw_gl_draw_info_t *draw_info);
 
 /**
  * Function signature definition for the message handling function that every window and control must implement
@@ -237,8 +237,8 @@ typedef void (*mw_message_func_p)(const mw_message_t *user_message);
  */
 typedef struct mw_message_tag
 {
-	uint8_t sender_id;					/**< Identifier of sender of message, not always used  */
-	uint8_t recipient_id;               /**< Identifier of recipient of message, not always used */
+	mw_handle_t sender_handle;			/**< Handle of sender of message, not always used  */
+	mw_handle_t recipient_handle;       /**< Handle of recipient of message, not always used */
 	mw_message_id_t message_id;       	/**< Identifier of the message; this is a system identifier or a user defined identifier */
 	mw_message_recipient_type_t message_recipient_type;        /**< Type of recipient this message is for */
 	uint32_t message_data;              /**< Data value passed to recipient with a message; this is message specific and may be a pointer */
@@ -315,7 +315,7 @@ bool mw_find_if_any_window_slots_free(void);
  * Add a new window. This can be called in mw_user_init for windows that exist
  * for the lifetime of the application or later for windows which come and go.
  * There must be space statically allocated to create the new window. Returns
- * new window reference number or MAX_WINDOW_COUNT if there is an error.
+ * new window reference number or MW_INVALID_HANDLE if there is an error.
  *
  * @param rect The rect of the window's total area, including border and title bar
  * @param title The window title as shown in title bar
@@ -325,10 +325,10 @@ bool mw_find_if_any_window_slots_free(void);
  * @param menu_bar_items_count Number of entries in above array
  * @param window_flags The new window's description and state flags
  * @param instance_data Optional pointer to any extra window data that is instance specific, can be NULL if no instance data
- * @return The new window id if created or MAX_WINDOW_COUNT if it could not be created
+ * @return The new window handle if created or MW_INVALID_HANDLE if it could not be created
  * @warning Do not call from within any paint function
  */
-uint8_t mw_add_window(mw_util_rect_t *rect,
+mw_handle_t mw_add_window(mw_util_rect_t *rect,
 		char* title,
 		mw_paint_func_p paint_func,
 		mw_message_func_p message_func,
@@ -340,70 +340,70 @@ uint8_t mw_add_window(mw_util_rect_t *rect,
 /**
  * Bring a window to the front giving it the highest Z order of all windows.
  *
- * @param window_ref Position in array of all windows of this window
+ * @param window_handle Position in array of all windows of this window
  * @note It is up to the user to issue appropriate paint messages (window frame and
  *       client area) to get the window repainted
  */
-void mw_bring_window_to_front(uint8_t window_ref);
+void mw_bring_window_to_front(mw_handle_t window_handle);
 
 /**
  * Send a window to the back giving it the lowest Z order of all windows.
  *
- * @param window_ref Position in array of all windows of this window
+ * @param window_handle Position in array of all windows of this window
  * @note It is up to the user to issue a paint all message to get windows repainted that
  * 		 have beenexposed by sending this window to the back
  */
-void mw_send_window_to_back(uint8_t window_ref);
+void mw_send_window_to_back(mw_handle_t window_handle);
 
 /**
  *  Set a window's visibility if it is used. If set visible it is given focus and brought
  *  to the front of other showing windows.
  *
- * @param window_ref Position in array of all windows of this window
+ * @param window_handle Position in array of all windows of this window
  * @param visible true or false
  * @note It is up to the user to issue the appropriate window paint messages (paint all
  *       if a window is made invisible or paint window frame and client area if made
  *       visible.
  */
-void mw_set_window_visible(uint8_t window_ref, bool visible);
+void mw_set_window_visible(mw_handle_t window_handle, bool visible);
 
 /**
  * Set a window minimised if it is used.
  *
- * @param window_ref Position in array of all windows of this window
+ * @param window_handle Position in array of all windows of this window
  * @param minimised true or false
  * @note It is up to the user to issue the appropriate window paint messages (paint all
  *       if a window is mainimized or paint window frame and client area if restored
  */
-void mw_set_window_minimised(uint8_t window_ref, bool minimised);
+void mw_set_window_minimised(mw_handle_t window_handle, bool minimised);
 
 /**
  * Reposition a window. All contained controls' client areas updated automatically.
  *
- * @param window_ref Position in array of all windows of this window
+ * @param window_handle Position in array of all windows of this window
  * @param new_x The new x position of the left edge of the window
  * @param new_y The new y position of the top edge of the window
  * @note It is up to the user to issue a paint all message
  */
-void mw_reposition_window(uint8_t window_ref, int16_t new_x, int16_t new_y);
+void mw_reposition_window(mw_handle_t window_handle, int16_t new_x, int16_t new_y);
 
 /**
  * Resize a window. All contained controls' client areas updated automatically.
  *
- * @param window_ref Position in array of all windows of this window
+ * @param window_handle Position in array of all windows of this window
  * @param new_width The new width of the window
  * @param new_height The new height of the window
  * @return If the resize was successful
  * @note It is up to the user to issue a paint all message
  */
-bool mw_resize_window(uint8_t window_ref, uint16_t new_width, uint16_t new_height);
+bool mw_resize_window(mw_handle_t window_handle, uint16_t new_width, uint16_t new_height);
 
 /**
  * Find the window with focus. This is the visible window with the highest Z order.
  *
- * @return The window ref of the window.
+ * @return The window handle of the window.
  */
-uint8_t mw_find_window_with_focus(void);
+mw_handle_t mw_find_window_with_focus(void);
 
 /**
  * Return if any user window is currently modal.
@@ -418,97 +418,105 @@ bool mw_is_any_window_modal(void);
  * be closed or minimised. If any window is currently modal this call is ignored. Call ignored for unused,
  * minimised or invisible windows. A model window has a different title bar colour set in miniwin_config.h.
  *
- * @param window_ref Position in array of all windows of this window
+ * @param window_handle Position in array of all windows of this window
  * @param modal true to set modal, false to set non-modal
  * @note Some means of setting the window non-modal again must be implemented, usually a button in the
  *       window. A modal window cannot be closed from a title bar icon.
  */
-void mw_set_window_modal(uint8_t window_ref, bool modal);
+void mw_set_window_modal(mw_handle_t window_handle, bool modal);
 
 /**
  * Set a menu bar enabled or disabled for a window
  *
- * @param window_ref The window containing the menu bar
+ * @param window_handle The window containing the menu bar
  * @param enabled The new state
  */
-void mw_set_menu_bar_enabled_state(uint8_t window_ref, bool enabled);
+void mw_set_menu_bar_enabled_state(mw_handle_t window_handle, bool enabled);
 
 /**
  * Set menu bar's individual items enabled or disabled
  *
- * @param window_ref The window containing the menu bar
+ * @param window_handle The window containing the menu bar
  * @param item_enables Bit field containing the states, msb is first menu ar item, 1 is enabled, 0 is disabled
  * @note Maximum of 16 items in a menu bar.
  */
-void mw_set_menu_bar_items_enabled_state(uint8_t window_ref, uint16_t item_enables);
+void mw_set_menu_bar_items_enabled_state(mw_handle_t window_handle, uint16_t item_enables);
 
 /**
  * Set a window horizontal scroll bar enabled or disabled
  *
- * @param window_ref The window containing the scroll bar
+ * @param window_handle The window containing the scroll bar
  * @param enabled The new state
  */
-void mw_set_window_horiz_scroll_bar_enabled_state(uint8_t window_ref, bool enabled);
+void mw_set_window_horiz_scroll_bar_enabled_state(mw_handle_t window_handle, bool enabled);
 
 /**
  * Set a window vertical scroll bar enabled or disabled
  *
- * @param window_ref The window containing the scroll bar
+ * @param window_handle The window containing the scroll bar
  * @param enabled The new state
  */
-void mw_set_window_vert_scroll_bar_enabled_state(uint8_t window_ref, bool enabled);
+void mw_set_window_vert_scroll_bar_enabled_state(mw_handle_t window_handle, bool enabled);
 
 /**
  * Add a message to the message queue to get a window frame painted. This
  * paints the borders, title bar, menu bar and scroll bars.
  *
- * @param window_ref Position in array of all windows of this window
+ * @param window_handle Position in array of all windows of this window
  * @param components The constituent components of a window frame to be painted
  */
-void mw_paint_window_frame(uint8_t window_ref, uint8_t components);
+void mw_paint_window_frame(mw_handle_t window_handle, uint8_t components);
 
 /**
  * Add a message to the message queue to get a window's client area and contained controls painted.
  * This is useful when you know that the window is at the front and has focus and the borders and title
  * bar do not need repainting.
  *
- * @param window_ref Position in array of all windows of this window
+ * @param window_handle Position in array of all windows of this window
  */
-void mw_paint_window_client(uint8_t window_ref);
+void mw_paint_window_client(mw_handle_t window_handle);
 
 /**
  * Add a message to the message queue to get a specified part of a window's client area and contained controls painted.
  * This is useful when you know that the window is at the front and has focus and the borders and title
  * bar do not need repainting.
  *
- * @param window_ref Position in array of all windows of this window
+ * @param window_handle Position in array of all windows of this window
  * @param rect The area to be repainted in window client coordinates
  * @note The rect pointed to by rect must be persistent and not a local variable of the calling function
  */
-void mw_paint_window_client_rect(uint8_t window_ref, const mw_util_rect_t *rect);
+void mw_paint_window_client_rect(mw_handle_t window_handle, const mw_util_rect_t *rect);
 
 /**
  * Remove a window and all its controls if it has any.
  *
- * @param window_ref Position in array of all windows of this window
+ * @param window_handle Position in array of all windows of this window
  */
-void mw_remove_window(uint8_t window_ref);
+void mw_remove_window(mw_handle_t window_handle);
 
 /**
  * Get a window's client area rect
  *
- * @param window_ref The window to get the rect for
+ * @param window_handle The window to get the rect for
  * @return The returned rect
  */
-mw_util_rect_t mw_get_window_client_rect(uint8_t window_ref);
+mw_util_rect_t mw_get_window_client_rect(mw_handle_t window_handle);
 
 /**
  * Get a window's instance_data data pointer
  *
- * @param window_ref The window to get the instance data pointer for
+ * @param window_handle The window to get the instance data pointer for
  * @return The returned instance_data data pointer
  */
-void *mw_get_window_instance_data(uint8_t window_ref);
+void *mw_get_window_instance_data(mw_handle_t window_handle);
+
+/**
+ * Set the window's title bar text
+ *
+ * @param window_handle the window to set the title bar text for
+ * @param title_text the new title bar text
+ */
+void wm_set_window_title(mw_handle_t window_handle, char *title_text);
 
 /**
  * Find if there are any free control slots in array of controls
@@ -518,18 +526,10 @@ void *mw_get_window_instance_data(uint8_t window_ref);
 bool mw_find_if_any_control_slots_free(void);
 
 /**
- * Set the window's title bar text
- *
- * @param window_ref the window to set the title bar text for
- * @param title_text the new title bar text
- */
-void wm_set_window_title(uint8_t window_ref, char *title_text);
-
-/**
  * Add a new control to a window. Returns new control reference number or MAX_WINDOW_COUNT if there is an error.
  *
  * @param rect The rect of the control's area
- * @param parent The window reference of the control's parent window
+ * @param parent The window handle of the control's parent window
  * @param paint_func Pointer to paint function
  * @param message_func Pointer to message handling function
  * @param control_flags Flags describing the control and its state
@@ -537,7 +537,7 @@ void wm_set_window_title(uint8_t window_ref, char *title_text);
  * @return The new control id if created or MAX_CONTROL_COUNT if it could not be created
  */
 uint8_t mw_add_control(mw_util_rect_t *rect,
-		uint8_t parent,
+		mw_handle_t parent,
 		mw_paint_func_p paint_func,
 		mw_message_func_p message_func,
 		uint16_t control_flags,
@@ -546,73 +546,73 @@ uint8_t mw_add_control(mw_util_rect_t *rect,
 /**
  * Set a control visible if it is used
  *
- * @param control_ref Position in array of all controls of this control.
+ * @param control_handle Position in array of all controls of this control.
  * @param visible True or false
  */
-void mw_set_control_visible(uint8_t control_ref, bool visible);
+void mw_set_control_visible(mw_handle_t control_handle, bool visible);
 
 /**
  * Set a control enabled if it is used
  *
- * @param control_ref Position in array of all controls of this control.
+ * @param control_handle Position in array of all controls of this control.
  * @param enabled True or false
  */
-void mw_set_control_enabled(uint8_t control_ref, bool enabled);
+void mw_set_control_enabled(mw_handle_t control_handle, bool enabled);
 
 /**
  * Add a message to the message queue to get a control painted.
  *
- * @param control_ref Position in array of all controls of this control
+ * @param control_handle Position in array of all controls of this control
  */
-void mw_paint_control(uint8_t control_ref);
+void mw_paint_control(mw_handle_t control_handle);
 
 /**
  * Add a message to the message queue to get a specified part of a control's client area painted.
  *
- * @param control_ref Position in array of all controls of this control
+ * @param control_handle Position in array of all controls of this control
  * @param rect The area to be repainted in control client coordinates
  * @note The rect pointed to by rect must be persistent and not a local variable of the calling function
  */
-void mw_paint_control_rect(uint8_t control_ref, const mw_util_rect_t *rect);
+void mw_paint_control_rect(mw_handle_t control_handle, const mw_util_rect_t *rect);
 
 /**
  * Remove a control.
  *
- * @param control_ref Position in array of all controls of this control
+ * @param control_handle Position in array of all controls of this control
  */
-void mw_remove_control(uint8_t control_ref);
+void mw_remove_control(mw_handle_t control_handle);
 
 /**
  * Get a control's rect
  *
- * @param control_ref The control to get the rect for
+ * @param control_handle The control to get the rect for
  * @return The returned rect
  */
-mw_util_rect_t mw_get_control_rect(uint8_t control_ref);
+mw_util_rect_t mw_get_control_rect(mw_handle_t control_handle);
 
 /**
  * Get a control's parent window ref
  *
- * @param control_ref The control to get the parent for
- * @return The returned parent's window id
+ * @param control_handle The control to get the parent for
+ * @return The returned parent's window handle
  */
-uint8_t mw_get_control_parent_window(uint8_t control_ref);
+mw_handle_t mw_get_control_parent_window(mw_handle_t control_handle);
 
 /**
  * Get a control's instance_data data pointer
  *
- * @param control_ref The control to get the instance data pointer for
+ * @param control_handle The control to get the instance data pointer for
  * @return The returned instance_data data pointer
  */
-void *mw_get_control_instance_data(uint8_t control_ref);
+void *mw_get_control_instance_data(mw_handle_t control_handle);
 
 /**
  * Get a control's flags bitfield
  *
- * @param control_ref The control to get the flags bitfield for
+ * @param control_handle The control to get the flags bitfield for
  * @return The returned flags bitfield
  */
-uint16_t mw_get_control_flags(uint8_t control_ref);
+uint16_t mw_get_control_flags(mw_handle_t control_handle);
 
 /**
  * Find if there are any free control slots in array of controls
@@ -625,11 +625,11 @@ bool mw_find_if_any_control_slots_free(void);
  * Set a timer if there is space for it in the array of timers.
  *
  * @param fire_time The time in window manager ticks for the timer to timeout; this is an absolute time, not relative
- * @param recipient_id The position in the array of windows or controls of the recipient window or control
+ * @param recipient_handle The handle of the recipient window or control
  * @param recipient_type If the recipient is a window or a conreol
  * @return The new handle if the timer could be set or MW_INVALID_HANDLE if it could not be set
  */
-mw_handle_t mw_set_timer(uint32_t fire_time, uint8_t recipient_id, mw_message_recipient_type_t recipient_type);
+mw_handle_t mw_set_timer(uint32_t fire_time, mw_handle_t recipient_handle, mw_message_recipient_type_t recipient_type);
 
 /**
  * Cancel a previously set timer.
@@ -645,12 +645,12 @@ void mw_cancel_timer(mw_handle_t timer_handle);
  * asynchronously.
  *
  * @param message_id The message id of the message to create
- * @param sender_id The message id of the sender
- * @param recipient_id The recipient id for the message
+ * @param sender_handle The message hadle of the sender
+ * @param recipient_handle The recipient handle for the message
  * @param message_data 32 bit field of general purpose data; can be a pointer
  * @param recipient_type Recipient type of message, window, control or system
  */
-void mw_post_message(uint8_t message_id, uint8_t sender_id, uint8_t recipient_id, uint32_t message_data, mw_message_recipient_type_t recipient_type);
+void mw_post_message(uint8_t message_id, mw_handle_t sender_handle, mw_handle_t recipient_handle, uint32_t message_data, mw_message_recipient_type_t recipient_type);
 
 /**
  * Process the next message in the message queue. This function must be called frequently to enable user interface responsiveness.

@@ -51,14 +51,14 @@ SOFTWARE.
 
 /* windows */
 
-uint8_t window_file_id;
+mw_handle_t window_file_handle;
 
 /* controls */
-uint8_t button_open_id;
-uint8_t button_set_clock_id;
-uint8_t button_create_id;
-uint8_t label_time_id;
-uint8_t label_date_id;
+mw_handle_t button_open_handle;
+mw_handle_t button_set_clock_handle;
+mw_handle_t button_create_handle;
+mw_handle_t label_time_handle;
+mw_handle_t label_date_handle;
 
 /* controls instance data */
 mw_ui_button_data_t button_open_data;
@@ -102,7 +102,7 @@ void mw_user_init(void)
 	mw_util_rect_t r;
 
 	mw_util_set_rect(&r, 15, 70, 162, 128);
-	window_file_id = mw_add_window(&r,
+	window_file_handle = mw_add_window(&r,
 			"File Demo",
 			window_file_paint_function,
 			window_file_message_function,
@@ -112,43 +112,43 @@ void mw_user_init(void)
 			NULL);
 
 	mw_util_safe_strcpy(button_open_data.button_label, MW_UI_BUTTON_LABEL_MAX_CHARS, "Open");
-	button_open_id = mw_ui_button_add_new(20,
+	button_open_handle = mw_ui_button_add_new(20,
 			75,
-			window_file_id,
+			window_file_handle,
 			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
 			&button_open_data);
 
 	mw_util_safe_strcpy(button_set_clock_data.button_label, MW_UI_BUTTON_LABEL_MAX_CHARS, "Set");
-	button_set_clock_id = mw_ui_button_add_new(95,
+	button_set_clock_handle = mw_ui_button_add_new(95,
 			25,
-			window_file_id,
+			window_file_handle,
 			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
 			&button_set_clock_data);
 
 	mw_util_safe_strcpy(button_create_data.button_label, MW_UI_BUTTON_LABEL_MAX_CHARS, "Create");
-	button_create_id = mw_ui_button_add_new(90,
+	button_create_handle = mw_ui_button_add_new(90,
 			75,
-			window_file_id,
+			window_file_handle,
 			MW_CONTROL_FLAG_IS_VISIBLE,
 			&button_create_data);
 
 	mw_util_safe_strcpy(label_time_data.label,
 			MW_UI_LABEL_MAX_CHARS,
 			"Waiting...");
-	label_time_id = mw_ui_label_add_new(10,
+	label_time_handle = mw_ui_label_add_new(10,
 			20,
 			70,
-			window_file_id,
+			window_file_handle,
 			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
 			&label_time_data);
 
 	mw_util_safe_strcpy(label_date_data.label,
 			MW_UI_LABEL_MAX_CHARS,
 			"Waiting...");
-	label_date_id = mw_ui_label_add_new(10,
+	label_date_handle = mw_ui_label_add_new(10,
 			35,
 			70,
-			window_file_id,
+			window_file_handle,
 			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
 			&label_date_data);
 

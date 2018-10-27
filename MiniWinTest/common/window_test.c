@@ -64,13 +64,13 @@ typedef struct
 **************************/
 
 extern volatile uint32_t mw_tick_counter;
-extern uint8_t window_ok_cancel_id;
-extern uint8_t label_1_id;
-extern uint8_t progress_bar_1_id;
-extern uint8_t list_box_1_id;
-extern uint8_t check_box_1_id;
-extern uint8_t scroll_bar_vert_1_id;
-extern uint8_t list_box_3_id;
+extern mw_handle_t window_ok_cancel_handle;
+extern mw_handle_t label_1_handle;
+extern mw_handle_t progress_bar_1_handle;
+extern mw_handle_t list_box_1_handle;
+extern mw_handle_t check_box_1_handle;
+extern mw_handle_t scroll_bar_vert_1_handle;
+extern mw_handle_t list_box_3_handle;
 extern mw_ui_scroll_bar_vert_data_t scroll_bar_vert_1_data;
 extern mw_ui_scroll_bar_vert_data_t scroll_bar_vert_2_data;
 extern mw_ui_scroll_bar_horiz_data_t scroll_bar_horiz_1_data;
@@ -94,7 +94,7 @@ static window_test_data_t window_test_data;
 *** GLOBAL FUNCTIONS ***
 ***********************/
 
-void window_test_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *draw_info)
+void window_test_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_t *draw_info)
 {
 	MW_ASSERT(draw_info, "Null pointer parameter");
 
@@ -105,8 +105,8 @@ void window_test_paint_function(uint8_t window_ref, const mw_gl_draw_info_t *dra
 	mw_gl_rectangle(draw_info,
 			0,
 			0,
-			mw_get_window_client_rect(window_ref).width,
-			mw_get_window_client_rect(window_ref).height);
+			mw_get_window_client_rect(window_handle).width,
+			mw_get_window_client_rect(window_handle).height);
 	mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 	if(window_test_data.draw_circle)
 	{
@@ -127,7 +127,7 @@ void window_test_message_function(const mw_message_t *message)
 		window_test_data.lines_to_scroll = 0;
 		window_test_data.draw_circle = false;
 		window_test_data.i = 0;
-		mw_set_timer(mw_tick_counter + MW_TICKS_PER_SECOND, message->recipient_id, MW_WINDOW_MESSAGE);
+		mw_set_timer(mw_tick_counter + MW_TICKS_PER_SECOND, message->recipient_handle, MW_WINDOW_MESSAGE);
 		break;
 
 	case MW_TOUCH_DOWN_MESSAGE:
@@ -136,13 +136,13 @@ void window_test_message_function(const mw_message_t *message)
 		window_test_data.draw_circle = true;
 
 		/* remove pop up list box if visible */
-		if (mw_get_control_flags(list_box_1_id) & MW_CONTROL_FLAG_IS_VISIBLE)
+		if (mw_get_control_flags(list_box_1_handle) & MW_CONTROL_FLAG_IS_VISIBLE)
 		{
-			mw_set_control_visible(list_box_1_id, false);
-			mw_set_menu_bar_enabled_state(message->recipient_id, true);
-			mw_paint_window_frame(message->recipient_id, MW_WINDOW_FRAME_COMPONENT_MENU_BAR);
+			mw_set_control_visible(list_box_1_handle, false);
+			mw_set_menu_bar_enabled_state(message->recipient_handle, true);
+			mw_paint_window_frame(message->recipient_handle, MW_WINDOW_FRAME_COMPONENT_MENU_BAR);
 		}
-		mw_paint_window_client(message->recipient_id);
+		mw_paint_window_client(message->recipient_handle);
 		break;
 
 	case MW_MENU_BAR_ITEM_PRESSED_MESSAGE:
@@ -150,25 +150,25 @@ void window_test_message_function(const mw_message_t *message)
 		if (message->message_data == 1)
 		{
 			/* second item in menu bar pressed so set pop up list box visible */
-			mw_set_control_visible(list_box_1_id, true);
+			mw_set_control_visible(list_box_1_handle, true);
 
 			/* disable menu bar while list box is showing */
-			mw_set_menu_bar_enabled_state(message->recipient_id, false);
+			mw_set_menu_bar_enabled_state(message->recipient_handle, false);
 
 			/* repaint the affected control and window frame */
-			mw_paint_control(list_box_1_id);
-			mw_paint_window_frame(message->recipient_id, MW_WINDOW_FRAME_COMPONENT_MENU_BAR);
+			mw_paint_control(list_box_1_handle);
+			mw_paint_window_frame(message->recipient_handle, MW_WINDOW_FRAME_COMPONENT_MENU_BAR);
 		}
 		else if (message->message_data == 2)
 		{
-			wm_set_window_title(message->recipient_id, "Changed");
-			mw_paint_window_frame(message->recipient_id, MW_WINDOW_FRAME_COMPONENT_TITLE_BAR);
+			wm_set_window_title(message->recipient_handle, "Changed");
+			mw_paint_window_frame(message->recipient_handle, MW_WINDOW_FRAME_COMPONENT_TITLE_BAR);
 		}
 		break;
 
 	case MW_CHECKBOX_STATE_CHANGE_MESSAGE:
 		/* a check box state has changed */
-		if (message->sender_id == check_box_1_id)
+		if (message->sender_handle == check_box_1_handle)
 		{
 			if (message->message_data)
 			{
@@ -181,35 +181,35 @@ void window_test_message_function(const mw_message_t *message)
 						"Ok",
 						"Cancel",
 						false,
-						message->recipient_id);
+						message->recipient_handle);
 			}
 		}
 		break;
 
 	case MW_LIST_BOX_ITEM_PRESSED_MESSAGE:
 		/* pop up list box item pressed */
-		if (message->sender_id == list_box_1_id)
+		if (message->sender_handle == list_box_1_handle)
 		{
 			if (message->message_data == 0)
 			{
-				mw_send_window_to_back(message->recipient_id);
+				mw_send_window_to_back(message->recipient_handle);
 				mw_paint_all();
 			}
-			mw_set_control_visible(list_box_1_id, false);
-			mw_set_menu_bar_enabled_state(message->recipient_id, true);
-			mw_paint_window_frame(message->recipient_id, MW_WINDOW_FRAME_COMPONENT_MENU_BAR);
-			mw_paint_window_client(message->recipient_id);
+			mw_set_control_visible(list_box_1_handle, false);
+			mw_set_menu_bar_enabled_state(message->recipient_handle, true);
+			mw_paint_window_frame(message->recipient_handle, MW_WINDOW_FRAME_COMPONENT_MENU_BAR);
+			mw_paint_window_client(message->recipient_handle);
 		}
 		break;
 
 	case MW_CONTROL_HORIZ_SCROLL_BAR_SCROLLED_MESSAGE:
 		/* horizontal scroll bar scrolled */
 		mw_post_message(MW_TRANSFER_DATA_1_MESSAGE,
-				message->recipient_id,
-				scroll_bar_vert_1_id,
+				message->recipient_handle,
+				scroll_bar_vert_1_handle,
 				scroll_bar_horiz_1_data.scroll_position,
 				MW_CONTROL_MESSAGE);
-		mw_paint_control(scroll_bar_vert_1_id);
+		mw_paint_control(scroll_bar_vert_1_handle);
 		break;
 
 	case MW_CONTROL_VERT_SCROLL_BAR_SCROLLED_MESSAGE:
@@ -219,10 +219,10 @@ void window_test_message_function(const mw_message_t *message)
 				UINT8_MAX;
 		mw_post_message(MW_TRANSFER_DATA_1_MESSAGE,
 				0,
-				list_box_3_id,
+				list_box_3_handle,
 				window_test_data.lines_to_scroll,
 				MW_CONTROL_MESSAGE);
-		mw_paint_control(list_box_3_id);
+		mw_paint_control(list_box_3_handle);
 		break;
 
 	case MW_WINDOW_TIMER_MESSAGE:
@@ -232,11 +232,11 @@ void window_test_message_function(const mw_message_t *message)
 			window_test_data.i = 0;
 		}
 		sprintf(window_test_data.transfer_buffer, "%d", window_test_data.i);
-		mw_ui_common_post_pointer_to_control(label_1_id, window_test_data.transfer_buffer);
-		mw_ui_common_post_number_to_control(progress_bar_1_id, window_test_data.i);
-		mw_paint_control(label_1_id);
-		mw_paint_control(progress_bar_1_id);
-		mw_set_timer(mw_tick_counter + MW_TICKS_PER_SECOND, message->recipient_id, MW_WINDOW_MESSAGE);
+		mw_ui_common_post_pointer_to_control(label_1_handle, window_test_data.transfer_buffer);
+		mw_ui_common_post_number_to_control(progress_bar_1_handle, window_test_data.i);
+		mw_paint_control(label_1_handle);
+		mw_paint_control(progress_bar_1_handle);
+		mw_set_timer(mw_tick_counter + MW_TICKS_PER_SECOND, message->recipient_handle, MW_WINDOW_MESSAGE);
 		break;
 
 	default:

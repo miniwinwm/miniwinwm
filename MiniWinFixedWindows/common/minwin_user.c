@@ -92,30 +92,30 @@ const uint8_t list_box_file_entries_docs_count = (sizeof(list_box_file_entries_d
 ***********************/
 
 /* windows */
-uint8_t window_help_icon_id;
-uint8_t window_file_icon_id;
-uint8_t window_file_id;
-uint8_t window_date_icon_id;
-uint8_t window_time_icon_id;
-uint8_t window_settings_icon_id;
-uint8_t window_settings_id;
-uint8_t window_temp_icon_id;
-uint8_t window_temp_id;
+mw_handle_t window_help_icon_handle;
+mw_handle_t window_file_icon_handle;
+mw_handle_t window_file_handle;
+mw_handle_t window_date_icon_handle;
+mw_handle_t window_time_icon_handle;
+mw_handle_t window_settings_icon_handle;
+mw_handle_t window_settings_handle;
+mw_handle_t window_temp_icon_handle;
+mw_handle_t window_temp_handle;
 
 /* controls */
-uint8_t button_temp_back_id;
-uint8_t button_settings_ok_id;
-uint8_t check_box_settings_id;
-uint8_t radio_button_settings_id;
-uint8_t list_box_settings_id;
-uint8_t label_settings_id;
-uint8_t arrow_settings_up;
-uint8_t arrow_settings_down;
-uint8_t list_box_file_id;
-uint8_t arrow_file_up_id;
-uint8_t arrow_file_down_id;
-uint8_t label_file_id;
-uint8_t button_file_ok_id;
+mw_handle_t button_temp_back_handle;
+mw_handle_t button_settings_ok_handle;
+mw_handle_t check_box_settings_handle;
+mw_handle_t radio_button_settings_handle;
+mw_handle_t list_box_settings_handle;
+mw_handle_t label_settings_handle;
+mw_handle_t arrow_settings_up;
+mw_handle_t arrow_settings_down;
+mw_handle_t list_box_file_handle;
+mw_handle_t arrow_file_up_handle;
+mw_handle_t arrow_file_down_handle;
+mw_handle_t label_file_handle;
+mw_handle_t button_file_ok_handle;
 
 /* controls instance data */
 mw_ui_button_data_t button_temp_back_data;
@@ -168,7 +168,7 @@ void mw_user_init(void)
 
 	/* create date icon window with no title bar or border */
 	mw_util_set_rect(&r, 10, 1, 104, 104);
-	window_date_icon_id = mw_add_window(&r,
+	window_date_icon_handle = mw_add_window(&r,
 			"",
 			window_date_icon_paint_function,
 			window_date_icon_message_function,
@@ -179,7 +179,7 @@ void mw_user_init(void)
 
 	/* create time icon window with no title bar or border */
 	mw_util_set_rect(&r, 125, 1, 104, 104);
-	window_time_icon_id = mw_add_window(&r,
+	window_time_icon_handle = mw_add_window(&r,
 			"",
 			window_time_icon_paint_function,
 			window_time_icon_message_function,
@@ -190,7 +190,7 @@ void mw_user_init(void)
 
 	/* create temperature icon window with no title bar or border */
 	mw_util_set_rect(&r, 10, 107, 104, 104);
-	window_temp_icon_id = mw_add_window(&r,
+	window_temp_icon_handle = mw_add_window(&r,
 			"",
 			window_temp_icon_paint_function,
 			window_temp_icon_message_function,
@@ -201,7 +201,7 @@ void mw_user_init(void)
 
 	/* create settings icon window with no title bar or border */
 	mw_util_set_rect(&r, 125, 107, 104, 104);
-	window_settings_icon_id = mw_add_window(&r,
+	window_settings_icon_handle = mw_add_window(&r,
 			"",
 			window_settings_icon_paint_function,
 			window_settings_icon_message_function,
@@ -212,7 +212,7 @@ void mw_user_init(void)
 
 	/* create file icon window with no title bar or border */
 	mw_util_set_rect(&r, 10, 213, 104, 104);
-	window_file_icon_id = mw_add_window(&r,
+	window_file_icon_handle = mw_add_window(&r,
 			"",
 			window_file_icon_paint_function,
 			window_file_icon_message_function,
@@ -223,7 +223,7 @@ void mw_user_init(void)
 
 	/* create help icon window with no title bar or border */
 	mw_util_set_rect(&r, 125, 213, 104, 104);
-	window_help_icon_id = mw_add_window(&r,
+	window_help_icon_handle = mw_add_window(&r,
 			"",
 			window_help_icon_paint_function,
 			window_help_icon_message_function,
@@ -234,7 +234,7 @@ void mw_user_init(void)
 
 	/* create temperature graphs window */
 	mw_util_set_rect(&r, 0, 0, 240, 320);
-	window_temp_id = mw_add_window(&r,
+	window_temp_handle = mw_add_window(&r,
 			"",
 			window_temp_paint_function,
 			window_temp_message_function,
@@ -245,15 +245,15 @@ void mw_user_init(void)
 
 	/* create temperature graph window back button */
 	mw_util_safe_strcpy(button_temp_back_data.button_label, MW_UI_BUTTON_LABEL_MAX_CHARS, "BACK");
-	button_temp_back_id = mw_ui_button_add_new(70,
+	button_temp_back_handle = mw_ui_button_add_new(70,
 			285,
-			window_temp_id,
+			window_temp_handle,
 			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAGS_LARGE_SIZE,
 			&button_temp_back_data);
 
 	/* create settings window */
 	mw_util_set_rect(&r, 0, 0, 240, 320);
-	window_settings_id = mw_add_window(&r,
+	window_settings_handle = mw_add_window(&r,
 			"",
 			window_settings_paint_function,
 			window_settings_message_function,
@@ -264,35 +264,35 @@ void mw_user_init(void)
 
 	/* create settings window ok button */
 	mw_util_safe_strcpy(button_settings_ok_data.button_label, MW_UI_BUTTON_LABEL_MAX_CHARS, "OK");
-	button_settings_ok_id = mw_ui_button_add_new(70,
+	button_settings_ok_handle = mw_ui_button_add_new(70,
 			285,
-			window_settings_id,
+			window_settings_handle,
 			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAGS_LARGE_SIZE,
 			&button_settings_ok_data);
 
 	/* create settings window check box */
 	mw_util_safe_strcpy(check_box_settings_ok_data.label, MW_UI_CHECK_BOX_LABEL_MAX_CHARS, "GMT");
-	check_box_settings_id = mw_ui_check_box_add_new(20,
+	check_box_settings_handle = mw_ui_check_box_add_new(20,
 			30,
-			window_settings_id,
+			window_settings_handle,
 			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAGS_LARGE_SIZE,
 			&check_box_settings_ok_data);
 
 	/* create settings window radio buttons */
 	radio_button_settings_data.number_of_items = RADIO_BUTTON_ITEMS_COUNT;
 	radio_button_settings_data.radio_button_labels = (char **)radio_button_labels;
-	radio_button_settings_id = mw_ui_radio_button_add_new(20,
+	radio_button_settings_handle = mw_ui_radio_button_add_new(20,
 			70,
-			window_settings_id,
+			window_settings_handle,
 			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAGS_LARGE_SIZE,
 			&radio_button_settings_data);
 
 	/* create settings window label */
 	mw_util_safe_strcpy(label_settings_data.label, MW_UI_LABEL_MAX_CHARS, "Period: Not set");
-	label_settings_id = mw_ui_label_add_new(20,
+	label_settings_handle = mw_ui_label_add_new(20,
 			160,
 			110,
-			window_settings_id,
+			window_settings_handle,
 			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAGS_LARGE_SIZE,
 			&label_settings_data);
 
@@ -301,30 +301,30 @@ void mw_user_init(void)
 	list_box_settings_data.number_of_items = LIST_BOX_SETTINGS_ITEMS_COUNT;
 	list_box_settings_data.list_box_entries = list_box_settings_entries;
 	list_box_settings_data.line_enables = MW_ALL_ITEMS_ENABLED;
-	list_box_settings_id = mw_ui_list_box_add_new(20,
+	list_box_settings_handle = mw_ui_list_box_add_new(20,
 			180,
 			138,
-			window_settings_id,
+			window_settings_handle,
 			MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_IS_VISIBLE  | MW_CONTROL_FLAGS_LARGE_SIZE,
 			&list_box_settings_data);
 
 	arrow_up_settings_data.mw_ui_arrow_direction = MW_UI_ARROW_UP;
 	arrow_settings_up = mw_ui_arrow_add_new(180,
 			180,
-			window_settings_id,
+			window_settings_handle,
 			MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAGS_LARGE_SIZE,
 			&arrow_up_settings_data);
 
 	arrow_down_settings_data.mw_ui_arrow_direction = MW_UI_ARROW_DOWN;
 	arrow_settings_down = mw_ui_arrow_add_new(180,
 			232,
-			window_settings_id,
+			window_settings_handle,
 			MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAGS_LARGE_SIZE,
 			&arrow_down_settings_data);
 
 	/* create file window */
 	mw_util_set_rect(&r, 0, 0, 240, 320);
-	window_file_id = mw_add_window(&r,
+	window_file_handle = mw_add_window(&r,
 			"",
 			window_file_paint_function,
 			window_file_message_function,
@@ -335,18 +335,18 @@ void mw_user_init(void)
 
 	/* create file window ok button */
 	mw_util_safe_strcpy(button_file_ok_data.button_label, MW_UI_BUTTON_LABEL_MAX_CHARS, "OK");
-	button_file_ok_id = mw_ui_button_add_new(70,
+	button_file_ok_handle = mw_ui_button_add_new(70,
 			285,
-			window_file_id,
+			window_file_handle,
 			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAGS_LARGE_SIZE,
 			&button_file_ok_data);
 
 	/* create file window label */
 	mw_util_safe_strcpy(label_file_data.label, MW_UI_LABEL_MAX_CHARS, "File: Not set");
-	label_file_id = mw_ui_label_add_new(20,
+	label_file_handle = mw_ui_label_add_new(20,
 			160,
 			110,
-			window_file_id,
+			window_file_handle,
 			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAGS_LARGE_SIZE,
 			&label_file_data);
 
@@ -355,24 +355,24 @@ void mw_user_init(void)
 	list_box_file_data.number_of_items = list_box_file_entries_root_count;
 	list_box_file_data.list_box_entries = list_box_file_entries_root;
 	list_box_file_data.line_enables = MW_ALL_ITEMS_ENABLED;
-	list_box_file_id = mw_ui_list_box_add_new(20,
+	list_box_file_handle = mw_ui_list_box_add_new(20,
 			180,
 			138,
-			window_file_id,
+			window_file_handle,
 			MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_IS_VISIBLE  | MW_CONTROL_FLAGS_LARGE_SIZE,
 			&list_box_file_data);
 
 	arrow_up_file_data.mw_ui_arrow_direction = MW_UI_ARROW_UP;
-	arrow_file_up_id = mw_ui_arrow_add_new(180,
+	arrow_file_up_handle = mw_ui_arrow_add_new(180,
 			180,
-			window_file_id,
+			window_file_handle,
 			MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAGS_LARGE_SIZE,
 			&arrow_up_file_data);
 
 	arrow_down_file_data.mw_ui_arrow_direction = MW_UI_ARROW_DOWN;
-	arrow_file_down_id = mw_ui_arrow_add_new(180,
+	arrow_file_down_handle = mw_ui_arrow_add_new(180,
 			232,
-			window_file_id,
+			window_file_handle,
 			MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAGS_LARGE_SIZE,
 			&arrow_down_file_data);
 

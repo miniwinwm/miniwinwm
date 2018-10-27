@@ -58,21 +58,21 @@ SOFTWARE.
  * @param start_date_month month of year of date to show on startup, 1 to 12
  * @param start_date_year year of date to show on startup, 4 digit format
  * @param large_size true for large size controls/text, false for small
- * @param response_window_id window id of the window that the response message is posted to when the dialog is dismissed
- * @return the window id of the window used for the dialog which is only valid while the dialog is showing
+ * @param response_window_handle Handle of the window that the response message is posted to when the dialog is dismissed
+ * @return the window handle of the window used for the dialog which is only valid while the dialog is showing
  * @note There must be space in the window array for one new window and space in the control array
  *       for one new control. These resources are released when the dialog is dismissed.
  *       The dialog is created modal and is brought to the front on showing.
  *       The dialog must fit entirely on the screen or else it will not be created.
  * @warning Do not call this from a client window paint function. In debug mode it will cause an assert failure.
  */
-uint8_t mw_create_window_dialog_date_chooser(uint16_t x,
+ mw_handle_t mw_create_window_dialog_date_chooser(uint16_t x,
 		uint16_t y,
 		uint8_t start_date_date,
 		uint8_t start_date_month,
 		uint16_t start_date_year,
 		bool large_size,
-		uint8_t response_window_id);
+		mw_handle_t response_window_handle);
 
 #ifdef __cplusplus
 }
