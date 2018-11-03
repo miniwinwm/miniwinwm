@@ -69,7 +69,7 @@ extern const uint8_t mw_bitmaps_folder_icon_small[];
 static FATFS usb_disk_fatfs;  										/**< File system object for USB Disk logical drive */
 static char usb_path[4];     										/**< USB Disk logical drive path */
 static MSC_ApplicationTypeDef application_state = APPLICATION_IDLE;	/**< USB host state machine state variable */
-static FIL file_handle;													/**< File to access */
+static FIL file_handle;												/**< File to access */
 static RTC_HandleTypeDef rtc_handle;								/**< Driver handle for RTC */
 
 /********************************

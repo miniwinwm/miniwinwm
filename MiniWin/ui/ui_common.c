@@ -66,9 +66,10 @@ SOFTWARE.
 
 void mw_ui_common_post_number_to_control(mw_handle_t control_handle, uint32_t number)
 {
-	if (control_handle >= MW_MAX_CONTROL_COUNT)
+	/* check handle for not being invalid handle */
+	if (!mw_is_control_handle_valid(control_handle))
 	{
-		MW_ASSERT(false, "Invalid control id");
+		MW_ASSERT(false, "Invalid control handle");
 		return;
 	}
 
@@ -81,15 +82,17 @@ void mw_ui_common_post_number_to_control(mw_handle_t control_handle, uint32_t nu
 
 void mw_ui_common_post_pointer_to_control(mw_handle_t control_handle, void *pointer)
 {
+	/* check pointer for non-null */
 	if (!pointer)
 	{
 		MW_ASSERT(false, "Null pointer argument");
 		return;
 	}
 
-	if (control_handle >= MW_MAX_CONTROL_COUNT)
+	/* check handle for not being invalid handle */
+	if (!mw_is_control_handle_valid(control_handle))
 	{
-		if (control_handle >= MW_MAX_CONTROL_COUNT)
+		MW_ASSERT(false, "Invalid control handle");
 		return;
 	}
 

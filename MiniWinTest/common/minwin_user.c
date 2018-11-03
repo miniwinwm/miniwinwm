@@ -47,9 +47,8 @@ static const char *menu_bar_labels[] = {"Cat", "Dog", "Gnu"};
 static const char *radio_button_labels[] = {"Elk", "Ant", "Hog"};
 #define RADIO_BUTTON_1_ITEMS_COUNT			(sizeof(radio_button_labels)/sizeof(char *))
 static const mw_ui_list_box_entry list_box_1_labels[] = {
-		{"Aardvark", NULL},
-		{"Heffalump", NULL},
-		{"Dingbat", NULL}};
+		{"To back", NULL},
+		{"Disabled", NULL}};
 #define LIST_BOX_1_ITEMS_COUNT				(sizeof(list_box_1_labels)/sizeof(mw_ui_list_box_entry))
 static const mw_ui_list_box_entry list_box_2_labels[] = {
 		{"Line", NULL},
@@ -86,6 +85,7 @@ mw_handle_t window_paint_rect_handle;
 
 /* controls */
 mw_handle_t check_box_1_handle;
+mw_handle_t button_1_handle;
 mw_handle_t radio_button_1_handle;
 mw_handle_t scroll_bar_vert_1_handle;
 mw_handle_t scroll_bar_vert_2_handle;
@@ -95,9 +95,18 @@ mw_handle_t progress_bar_1_handle;
 mw_handle_t list_box_1_handle;
 mw_handle_t list_box_2_handle;
 mw_handle_t list_box_3_handle;
+mw_handle_t check_box_1_large_handle;
+mw_handle_t button_1_large_handle;
+mw_handle_t radio_button_1_large_handle;
+mw_handle_t scroll_bar_vert_1_large_handle;
+mw_handle_t scroll_bar_vert_2_large_handle;
+mw_handle_t scroll_bar_horiz_1_large_handle;
+mw_handle_t label_1_large_handle;
+mw_handle_t list_box_3_large_handle;
 
 /* controls instance data */
 mw_ui_check_box_data_t check_box_1_data;
+mw_ui_button_data_t button_1_data;
 mw_ui_radio_button_data_t radio_button_1_data;
 mw_ui_list_box_data_t list_box_1_data;
 mw_ui_label_data_t label_1_data;
@@ -107,6 +116,14 @@ mw_ui_list_box_data_t list_box_3_data;
 mw_ui_scroll_bar_vert_data_t scroll_bar_vert_1_data;
 mw_ui_scroll_bar_vert_data_t scroll_bar_vert_2_data;
 mw_ui_scroll_bar_horiz_data_t scroll_bar_horiz_1_data;
+mw_ui_check_box_data_t check_box_1_large_data;
+mw_ui_button_data_t button_1_large_data;
+mw_ui_radio_button_data_t radio_button_1_large_data;
+mw_ui_label_data_t label_1_large_data;
+mw_ui_list_box_data_t list_box_3_large_data;
+mw_ui_scroll_bar_vert_data_t scroll_bar_vert_1_large_data;
+mw_ui_scroll_bar_vert_data_t scroll_bar_vert_2_large_data;
+mw_ui_scroll_bar_horiz_data_t scroll_bar_horiz_1_large_data;
 
 /*************************
 *** EXTERNAL VARIABLES ***
@@ -162,7 +179,7 @@ void mw_user_init(void)
 	while (mw_process_message());
 
 	/* create the new ui test window */
-	mw_util_set_rect(&r, 10, 10, 220, 250);
+	mw_util_set_rect(&r, 0, 10, 220, 140);
 	window_test_handle = mw_add_window(&r,
 			"Test 2",
 			window_test_paint_function,
@@ -176,16 +193,40 @@ void mw_user_init(void)
 	mw_set_menu_bar_items_enabled_state(window_test_handle, mw_util_change_bit(MW_ALL_ITEMS_ENABLED, 0, false));
 
 	/* create a check box control and add it to the ui test window */
-	mw_util_safe_strcpy(check_box_1_data.label, MW_UI_CHECK_BOX_LABEL_MAX_CHARS, "CHECKER");	
+	mw_util_safe_strcpy(check_box_1_data.label, MW_UI_CHECK_BOX_LABEL_MAX_CHARS, "Check");
 	check_box_1_handle = mw_ui_check_box_add_new(10,
 			40,
 			window_test_handle,
 			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
 			&check_box_1_data);
 
+	/* create a large check box control and add it to the ui test window */
+	mw_util_safe_strcpy(check_box_1_large_data.label, MW_UI_CHECK_BOX_LABEL_MAX_CHARS, "Check");
+	check_box_1_large_handle = mw_ui_check_box_add_new(30,
+			235,
+			window_test_handle,
+			MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAGS_LARGE_SIZE,
+			&check_box_1_large_data);
+
+	/* create a button control and add it to the ui test window */
+	mw_util_safe_strcpy(button_1_data.button_label, MW_UI_BUTTON_LABEL_MAX_CHARS, "Go Big");
+	button_1_handle = mw_ui_button_add_new(140,
+			80,
+			window_test_handle,
+			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
+			&button_1_data);
+
+	/* create a large button control and add it to the ui test window */
+	mw_util_safe_strcpy(button_1_large_data.button_label, MW_UI_BUTTON_LABEL_MAX_CHARS, "Go Small");
+	button_1_large_handle = mw_ui_button_add_new(130,
+			235,
+			window_test_handle,
+			MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAGS_LARGE_SIZE,
+			&button_1_large_data);
+
 	/* create a new progress bar control and add it to the ui test window */
 	progress_bar_1_data.progress_percent = 0;
-	progress_bar_1_handle = mw_ui_progress_bar_add_new(70,
+	progress_bar_1_handle = mw_ui_progress_bar_add_new(10,
 			5,
 			100,
 			10,
@@ -196,11 +237,20 @@ void mw_user_init(void)
 	/* create a new radio buttons control and add it to the ui test window */
 	radio_button_1_data.number_of_items = RADIO_BUTTON_1_ITEMS_COUNT;
 	radio_button_1_data.radio_button_labels = (char **)radio_button_labels;
-	radio_button_1_handle = mw_ui_radio_button_add_new(160,
-			40,
+	radio_button_1_handle = mw_ui_radio_button_add_new(150,
+			10,
 			window_test_handle,
 			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
 			&radio_button_1_data);
+
+	/* create a new large radio buttons control and add it to the ui test window */
+	radio_button_1_large_data.number_of_items = RADIO_BUTTON_1_ITEMS_COUNT;
+	radio_button_1_large_data.radio_button_labels = (char **)radio_button_labels;
+	radio_button_1_large_handle = mw_ui_radio_button_add_new(10,
+			125,
+			window_test_handle,
+			MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAGS_LARGE_SIZE,
+			&radio_button_1_large_data);
 
 	/* create a new list box control and add it to the ui test window, y position to be directly under the menu bar, control invisible for now */
 	list_box_1_data.number_of_lines = LIST_BOX_1_ITEMS_COUNT;
@@ -214,14 +264,23 @@ void mw_user_init(void)
 			MW_CONTROL_FLAG_IS_ENABLED,
 			&list_box_1_data);
 
-	/* create a new label control and add it to the ui test window */
+	/* create a label control and add it to the ui test window */
 	mw_util_safe_strcpy(label_1_data.label, MW_UI_LABEL_MAX_CHARS, "0");
-	label_1_handle = mw_ui_label_add_new(180,
+	label_1_handle = mw_ui_label_add_new(120,
 			5,
 			20,
 			window_test_handle,
 			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
 			&label_1_data);
+
+	/* create a large label control and add it to the ui test window */
+	mw_util_safe_strcpy(label_1_large_data.label, MW_UI_LABEL_MAX_CHARS, "0");
+	label_1_large_handle = mw_ui_label_add_new(175,
+			5,
+			20,
+			window_test_handle,
+			MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAGS_LARGE_SIZE,
+			&label_1_large_data);
 
 	/* create a new horizontal scroll bar */
 	scroll_bar_horiz_1_handle = mw_ui_scroll_bar_horiz_add_new(10,
@@ -231,33 +290,69 @@ void mw_user_init(void)
 			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
 			&scroll_bar_horiz_1_data);
 
+	/* create a new large horizontal scroll bar */
+	scroll_bar_horiz_1_large_handle = mw_ui_scroll_bar_horiz_add_new(80,
+			195,
+			150,
+			window_test_handle,
+			MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAGS_LARGE_SIZE,
+			&scroll_bar_horiz_1_large_data);
+
 	/* create a new vertical scroll bar */
-	scroll_bar_vert_1_handle = mw_ui_scroll_bar_vert_add_new(200,
-			140,
+	scroll_bar_vert_1_handle = mw_ui_scroll_bar_vert_add_new(195,
+			10,
 			50,
 			window_test_handle,
 			MW_CONTROL_FLAG_IS_VISIBLE,
-			&scroll_bar_vert_1_data);
+			&scroll_bar_vert_1_large_data);
+
+	/* create a new large vertical scroll bar */
+	scroll_bar_vert_1_large_handle = mw_ui_scroll_bar_vert_add_new(205,
+			10,
+			170,
+			window_test_handle,
+			MW_CONTROL_FLAGS_LARGE_SIZE,
+			&scroll_bar_vert_1_large_data);
 
 	/* create a new list box control and add it to the ui test window */
 	list_box_3_data.number_of_lines = 3;
 	list_box_3_data.number_of_items = LIST_BOX_3_ITEMS_COUNT;
 	list_box_3_data.list_box_entries = list_box_3_labels;
 	list_box_3_data.line_enables = MW_ALL_ITEMS_ENABLED;
-	list_box_3_handle = mw_ui_list_box_add_new(75,
-			25,
+	list_box_3_handle = mw_ui_list_box_add_new(60,
+			30,
 			68,
 			window_test_handle,
 			MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_IS_VISIBLE,
 			&list_box_3_data);
 
-	/* create a new vertical scroll bar */
-	scroll_bar_vert_2_handle = mw_ui_scroll_bar_vert_add_new(142,
-			25,
-			MW_UI_LIST_BOX_ROW_HEIGHT * 3,
+	/* create a new large list box control and add it to the ui test window */
+	list_box_3_large_data.number_of_lines = 3;
+	list_box_3_large_data.number_of_items = LIST_BOX_3_ITEMS_COUNT;
+	list_box_3_large_data.list_box_entries = list_box_3_labels;
+	list_box_3_large_data.line_enables = MW_ALL_ITEMS_ENABLED;
+	list_box_3_large_handle = mw_ui_list_box_add_new(10,
+			30,
+			130,
+			window_test_handle,
+			MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAGS_LARGE_SIZE,
+			&list_box_3_large_data);
+
+	/* create a new vertical scroll bar for the list box*/
+	scroll_bar_vert_2_handle = mw_ui_scroll_bar_vert_add_new(127,
+			30,
+			MW_UI_LIST_BOX_ROW_HEIGHT * list_box_3_data.number_of_lines,
 			window_test_handle,
 			MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_IS_VISIBLE,
 			&scroll_bar_vert_2_data);
+
+	/* create a new large vertical scroll bar for the large list box*/
+	scroll_bar_vert_2_large_handle = mw_ui_scroll_bar_vert_add_new(139,
+			30,
+			MW_UI_LIST_BOX_LARGE_ROW_HEIGHT * list_box_3_large_data.number_of_lines,
+			window_test_handle,
+			MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAGS_LARGE_SIZE,
+			&scroll_bar_vert_2_large_data);
 
 	/* process waiting messages to reduce queue contents */
 	while (mw_process_message());

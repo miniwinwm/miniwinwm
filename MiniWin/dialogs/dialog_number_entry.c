@@ -63,7 +63,7 @@ typedef struct
 	mw_handle_t response_window_handle;			/**< Window handle to send response message to */
 	mw_dialog_response_t mw_dialog_response;	/**< Dialog response structure */
 	bool draw_cursor;							/**< if to draw cursor this timer tick or not */
-	mw_util_rect_t cursor_rect;					/**< rect of cursor in window coordinates */
+	mw_util_rect_t cursor_rect;					/**< Rect of cursor in window coordinates */
 } mw_dialog_number_entry_data_t;
 
 /***********************
@@ -281,7 +281,7 @@ static void mw_dialog_number_entry_message_function(const mw_message_t *message)
 		}
 		break;
 
-	case MW_WINDOW_TIMER_MESSAGE:
+	case MW_TIMER_MESSAGE:
 		mw_dialog_number_entry_data.draw_cursor = !mw_dialog_number_entry_data.draw_cursor;
 		mw_paint_window_client_rect(message->recipient_handle, &mw_dialog_number_entry_data.cursor_rect);
 		mw_set_timer(mw_tick_counter + MW_CURSOR_PERIOD_TICKS, message->recipient_handle, MW_WINDOW_MESSAGE);
@@ -405,14 +405,14 @@ mw_handle_t mw_create_window_dialog_number_entry(uint16_t x,
 	if (!title)
 	{
 		MW_ASSERT(false, "Null pointer argument");
-		return MW_MAX_WINDOW_COUNT;
+		return MW_INVALID_HANDLE;
 	}
 
 	/* check negative/initial number sanity */
 	if (!enable_negative && initial_number < 0)
 	{
 		MW_ASSERT(false, "Nonsense arguments");
-		return MW_MAX_WINDOW_COUNT;
+		return MW_INVALID_HANDLE;
 	}
 
 	if (large_size)
@@ -432,17 +432,17 @@ mw_handle_t mw_create_window_dialog_number_entry(uint16_t x,
 	/* check start position */
 	if (x + rect.width > MW_ROOT_WIDTH)
 	{
-		return MW_MAX_WINDOW_COUNT;
+		return MW_INVALID_HANDLE;
 	}
 	if (y + rect.height > MW_ROOT_HEIGHT)
 	{
-		return MW_MAX_WINDOW_COUNT;
+		return MW_INVALID_HANDLE;
 	}
 
 	/* check no modal windows already showing */
 	if (mw_is_any_window_modal())
 	{
-		return MW_MAX_WINDOW_COUNT;
+		return MW_INVALID_HANDLE;
 	}
 
 	mw_dialog_number_entry_data.response_window_handle = response_window_handle;
@@ -458,10 +458,10 @@ mw_handle_t mw_create_window_dialog_number_entry(uint16_t x,
 			NULL);
 
 	/* check if window could be created */
-	if (mw_dialog_number_entry_data.mw_dialog_response.window_handle == MW_MAX_WINDOW_COUNT)
+	if (mw_dialog_number_entry_data.mw_dialog_response.window_handle == MW_INVALID_HANDLE)
 	{
 		/* it couldn't so exit */
-		return MW_MAX_WINDOW_COUNT;
+		return MW_INVALID_HANDLE;
 	}
 
 	/* set controls instance data */
@@ -514,14 +514,14 @@ mw_handle_t mw_create_window_dialog_number_entry(uint16_t x,
 	}
 
 	/* check if controls could be created */
-	if (mw_dialog_number_entry_data.keypad_handle == MW_MAX_CONTROL_COUNT ||
-		mw_dialog_number_entry_data.button_ok_handle == MW_MAX_CONTROL_COUNT ||
-		mw_dialog_number_entry_data.button_cancel_handle == MW_MAX_CONTROL_COUNT)
+	if (mw_dialog_number_entry_data.keypad_handle == MW_INVALID_HANDLE ||
+		mw_dialog_number_entry_data.button_ok_handle == MW_INVALID_HANDLE ||
+		mw_dialog_number_entry_data.button_cancel_handle == MW_INVALID_HANDLE)
 	{
 		/* remove all controls and window */
 		remove_resources();
 
-		return MW_MAX_WINDOW_COUNT;
+		return MW_INVALID_HANDLE;
 	}
 
 	/* set initial value which comes as number but is converted to string, minus sign (if minus) stored separately */

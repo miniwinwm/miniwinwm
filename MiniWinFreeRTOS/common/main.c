@@ -80,21 +80,21 @@ static StaticTask_t gyro_task_handle;
 *** LOCAL FUNCTION PROTOTYPES ***
 ********************************/
 
-/*
+/**
  * Thread function of main thread
  *
  * @param parameters Thread parameters, if any
  */
 static void main_thread(void *parameters);
 
-/*
+/**
  * Thread function to run window manager
  *
  * @param parameters Thread parameters, if any
  */
 static void miniwin_thread(void *parameters);
 
-/*
+/**
  * Thread function to run gyro sensor
  *
  * @param parameters Thread parameters, if any
@@ -189,6 +189,10 @@ int main(void)
 
 /**
  * FreeRTOS memory allocation for idle task
+ *
+ * @param ppxIdleTaskTCBBuffer Pointer to pointer of idle task TCB
+ * @param ppxIdleTaskStackBuffer Pointer to pointer of idle task stack
+ * @param pulIdleTaskStackSize Pointer to idle task stack size
  */
 void vApplicationGetIdleTaskMemory(StaticTask_t **ppxIdleTaskTCBBuffer,
 		StackType_t **ppxIdleTaskStackBuffer,
@@ -204,6 +208,10 @@ void vApplicationGetIdleTaskMemory(StaticTask_t **ppxIdleTaskTCBBuffer,
 
 /**
  * FreeRTOS memory allocation for timer task
+ *
+ * @param ppxIdleTaskTCBBuffer Pointer to pointer of timer task TCB
+ * @param ppxIdleTaskStackBuffer Pointer to pointer of timer task stack
+ * @param pulIdleTaskStackSize Pointer to timer task stack size
  */
 void vApplicationGetTimerTaskMemory(StaticTask_t **ppxTimerTaskTCBBuffer,
 		StackType_t **ppxTimerTaskStackBuffer,

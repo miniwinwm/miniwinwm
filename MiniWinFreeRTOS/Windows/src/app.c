@@ -62,18 +62,18 @@ static uint32_t desktop_height;
 *** LOCAL FUNCTION PROTOTYPES ***
 ********************************/
 
-/**
- * Get the screen maximum coordinates
- *
- * @param Pointer to placeholder for screen width
- * @param Pointer to placeholder for screen height
- */
 static void GetDesktopResolution(uint32_t *width, uint32_t *height);
 
 /**********************
 *** LOCAL FUNCTIONS ***
 **********************/
 
+/**
+ * Get the screen maximum coordinates
+ *
+ * @param width Pointer to placeholder for screen width
+ * @param height Pointer to placeholder for screen height
+ */
 static void GetDesktopResolution(uint32_t *width, uint32_t *height)
 {
    RECT desktop;

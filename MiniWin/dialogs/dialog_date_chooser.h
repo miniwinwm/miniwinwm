@@ -52,14 +52,14 @@ SOFTWARE.
 /**
  * Create a dynamic time chooser dialog window.
  *
- * @param x left coordinate of dialog window
- * @param y top coordinate of dialog window
- * @param start_date_date date of month of date to show on startup, 1 to 31
- * @param start_date_month month of year of date to show on startup, 1 to 12
- * @param start_date_year year of date to show on startup, 4 digit format
+ * @param x Left coordinate of dialog window
+ * @param y Top coordinate of dialog window
+ * @param start_date_date Date of month of date to show on startup, 1 to 31
+ * @param start_date_month Month of year of date to show on startup, 1 to 12
+ * @param start_date_year Year of date to show on startup, 4 digit format
  * @param large_size true for large size controls/text, false for small
  * @param response_window_handle Handle of the window that the response message is posted to when the dialog is dismissed
- * @return the window handle of the window used for the dialog which is only valid while the dialog is showing
+ * @return The window handle of the window used for the dialog which is only valid while the dialog is showing
  * @note There must be space in the window array for one new window and space in the control array
  *       for one new control. These resources are released when the dialog is dismissed.
  *       The dialog is created modal and is brought to the front on showing.

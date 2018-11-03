@@ -70,7 +70,7 @@ typedef struct
 	uint16_t current_date_year;						/**< Current year in dialog xxxx */
 	uint8_t current_date_month;						/**< Current month in dialog 1-12 */
 	uint8_t current_date_date;						/**< Current date in dialog 1-31 */
-	bool large_size;								/**< True for large size false for standard size */
+	bool large_size;								/**< true for large size false for standard size */
 	mw_handle_t response_window_handle;				/**< Window handle to send response message to */
 	mw_dialog_response_t mw_dialog_response;		/**< Dialog response structure */
 } mw_dialog_date_chooser_data_t;
@@ -124,7 +124,7 @@ static void remove_resources(void)
  *
  * @param month 1-12
  * @param year 0-99
- * @return the days in the month
+ * @return The days in the month
  */
 static uint8_t get_max_date_for_month_and_year(uint8_t month, uint16_t year)
 {
@@ -394,7 +394,7 @@ mw_handle_t mw_create_window_dialog_date_chooser(uint16_t x,
 			start_date_month > 12 || start_date_month == 0 ||
 			start_date_date == 0 || start_date_date > get_max_date_for_month_and_year(start_date_month, start_date_year))
 	{
-		return MW_MAX_WINDOW_COUNT;
+		return MW_INVALID_HANDLE;
 	}
 	mw_dialog_date_chooser_data.current_date_year = start_date_year;
 	mw_dialog_date_chooser_data.current_date_month = start_date_month;
@@ -415,17 +415,17 @@ mw_handle_t mw_create_window_dialog_date_chooser(uint16_t x,
 	/* check start position */
 	if (x + rect.width > MW_ROOT_WIDTH)
 	{
-		return MW_MAX_WINDOW_COUNT;
+		return MW_INVALID_HANDLE;
 	}
 	if (y + rect.height > MW_ROOT_HEIGHT)
 	{
-		return MW_MAX_WINDOW_COUNT;
+		return MW_INVALID_HANDLE;
 	}
 
 	/* check no modal windows already showing */
 	if (mw_is_any_window_modal())
 	{
-		return MW_MAX_WINDOW_COUNT;
+		return MW_INVALID_HANDLE;
 	}
 
 	mw_dialog_date_chooser_data.large_size = large_size;
@@ -444,10 +444,10 @@ mw_handle_t mw_create_window_dialog_date_chooser(uint16_t x,
 			NULL);
 
 	/* check if window could be created */
-	if (mw_dialog_date_chooser_data.mw_dialog_response.window_handle == MW_MAX_WINDOW_COUNT)
+	if (mw_dialog_date_chooser_data.mw_dialog_response.window_handle == MW_INVALID_HANDLE)
 	{
 		/* it couldn't so exit */
-		return MW_MAX_WINDOW_COUNT;
+		return MW_INVALID_HANDLE;
 	}
 
 	/* set controls data */
@@ -563,19 +563,19 @@ mw_handle_t mw_create_window_dialog_date_chooser(uint16_t x,
 				&mw_dialog_date_chooser_data.arrow_year_down_data);
 	}
 
-	if (mw_dialog_date_chooser_data.button_ok_handle == MW_MAX_CONTROL_COUNT ||
-			mw_dialog_date_chooser_data.button_cancel_handle == MW_MAX_CONTROL_COUNT ||
-			mw_dialog_date_chooser_data.arrow_year_up_handle == MW_MAX_CONTROL_COUNT ||
-			mw_dialog_date_chooser_data.arrow_year_down_handle == MW_MAX_CONTROL_COUNT ||
-			mw_dialog_date_chooser_data.arrow_month_up_handle == MW_MAX_CONTROL_COUNT ||
-			mw_dialog_date_chooser_data.arrow_month_down_handle == MW_MAX_CONTROL_COUNT ||
-			mw_dialog_date_chooser_data.arrow_date_up_handle == MW_MAX_CONTROL_COUNT ||
-			mw_dialog_date_chooser_data.arrow_date_down_handle == MW_MAX_CONTROL_COUNT)
+	if (mw_dialog_date_chooser_data.button_ok_handle == MW_INVALID_HANDLE ||
+			mw_dialog_date_chooser_data.button_cancel_handle == MW_INVALID_HANDLE ||
+			mw_dialog_date_chooser_data.arrow_year_up_handle == MW_INVALID_HANDLE ||
+			mw_dialog_date_chooser_data.arrow_year_down_handle == MW_INVALID_HANDLE ||
+			mw_dialog_date_chooser_data.arrow_month_up_handle == MW_INVALID_HANDLE ||
+			mw_dialog_date_chooser_data.arrow_month_down_handle == MW_INVALID_HANDLE ||
+			mw_dialog_date_chooser_data.arrow_date_up_handle == MW_INVALID_HANDLE ||
+			mw_dialog_date_chooser_data.arrow_date_down_handle == MW_INVALID_HANDLE)
 	{
 		/* remove all controls and window */
 		remove_resources();
 
-		return MW_MAX_WINDOW_COUNT;
+		return MW_INVALID_HANDLE;
 	}
 
 	/* set arrow enable states appropriately */

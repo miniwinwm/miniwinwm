@@ -27,7 +27,7 @@
 								<option id="com.atollic.truestudio.common_options.target.fpucore.1054108080" name="FPU" superClass="com.atollic.truestudio.common_options.target.fpucore" value="com.atollic.truestudio.common_options.target.fpucore.fpv4-sp-d16" valueType="enumerated"/>
 								<option id="com.atollic.truestudio.common_options.target.fpu.585258748" name="Floating point" superClass="com.atollic.truestudio.common_options.target.fpu" value="com.atollic.truestudio.common_options.target.fpu.hard" valueType="enumerated"/>
 								<option id="com.atollic.truestudio.as.symbols.defined.705784712" name="Defined symbols" superClass="com.atollic.truestudio.as.symbols.defined"/>
-								<option id="com.atollic.truestudio.as.general.incpath.1999557443" name="Include path" superClass="com.atollic.truestudio.as.general.incpath" valueType="includePath"/>
+								<option id="com.atollic.truestudio.as.general.incpath.1999557443" name="Include path" superClass="com.atollic.truestudio.as.general.incpath"/>
 								<inputType id="com.atollic.truestudio.as.input.983142988" name="Input" superClass="com.atollic.truestudio.as.input"/>
 							</tool>
 							<tool id="com.atollic.truestudio.exe.debug.toolchain.gcc.1238860197" name="C Compiler" superClass="com.atollic.truestudio.exe.debug.toolchain.gcc">
@@ -111,6 +111,20 @@
 							<tool id="com.atollic.truestudio.exe.debug.toolchain.secoutput.2070959571" name="Other" superClass="com.atollic.truestudio.exe.debug.toolchain.secoutput"/>
 						</toolChain>
 					</folderInfo>
+					<folderInfo id="com.atollic.truestudio.exe.debug.2147054002.1363116889" name="/" resourcePath="MiniWin/hal/linux">
+						<toolChain id="com.atollic.truestudio.exe.debug.toolchain.1374756494" name="Atollic ARM Tools" superClass="com.atollic.truestudio.exe.debug.toolchain" unusedChildren="">
+							<option id="com.atollic.truestudio.general.runtimelib.1765791251.567802941" name="Runtime Library" superClass="com.atollic.truestudio.general.runtimelib.1765791251"/>
+							<option id="com.atollic.truestudio.toolchain_options.mcu.1667298638.21087753" name="Microcontroller" superClass="com.atollic.truestudio.toolchain_options.mcu.1667298638"/>
+							<option id="com.atollic.truestudio.toolchain_options.vendor.1316884526.1832948842" name="Vendor name" superClass="com.atollic.truestudio.toolchain_options.vendor.1316884526"/>
+							<tool id="com.atollic.truestudio.exe.debug.toolchain.as.145827705" name="Assembler" superClass="com.atollic.truestudio.exe.debug.toolchain.as.1594145477"/>
+							<tool id="com.atollic.truestudio.exe.debug.toolchain.gcc.1296671044" name="C Compiler" superClass="com.atollic.truestudio.exe.debug.toolchain.gcc.1238860197"/>
+							<tool id="com.atollic.truestudio.exe.debug.toolchain.ld.1021709743" name="C Linker" superClass="com.atollic.truestudio.exe.debug.toolchain.ld.69849188"/>
+							<tool id="com.atollic.truestudio.exe.debug.toolchain.gpp.1143754169" name="C++ Compiler" superClass="com.atollic.truestudio.exe.debug.toolchain.gpp.174572582"/>
+							<tool id="com.atollic.truestudio.exe.debug.toolchain.ldcc.1444514017" name="C++ Linker" superClass="com.atollic.truestudio.exe.debug.toolchain.ldcc.1896632458"/>
+							<tool id="com.atollic.truestudio.ar.base.1752764347" name="Archiver" superClass="com.atollic.truestudio.ar.base.1641915898"/>
+							<tool id="com.atollic.truestudio.exe.debug.toolchain.secoutput.1268327449" name="Other" superClass="com.atollic.truestudio.exe.debug.toolchain.secoutput.2070959571"/>
+						</toolChain>
+					</folderInfo>
 					<folderInfo id="com.atollic.truestudio.exe.debug.2147054002.1084279832" name="/" resourcePath="MiniWin/hal/windows">
 						<toolChain id="com.atollic.truestudio.exe.debug.toolchain.1820894606" name="Atollic ARM Tools" superClass="com.atollic.truestudio.exe.debug.toolchain" unusedChildren="">
 							<option id="com.atollic.truestudio.general.runtimelib.1765791251.1601068994" name="Runtime Library" superClass="com.atollic.truestudio.general.runtimelib.1765791251"/>
@@ -132,7 +146,7 @@
 					</folderInfo>
 					<sourceEntries>
 						<entry excluding="BSP/Middlewares/FreeRTOS/CMSIS_RTOS|BSP/Middlewares/FreeRTOS/portable/MemMang/heap_4.c|BSP/Middlewares/FreeRTOS/portable/MemMang/heap_2.c|BSP/Middlewares/FreeRTOS/portable/MemMang/heap_3.c|BSP/Middlewares/FreeRTOS/portable/MemMang/heap_5.c|BSP/Middlewares/FreeRTOS/portable/MemMang/heap_1.c|common|MiniWin" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
-						<entry excluding="hal/windows|hal/stm32f407|user/minwin_user.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="MiniWin"/>
+						<entry excluding="hal/linux|hal/windows|hal/stm32f407|user/minwin_user.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="MiniWin"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="common"/>
 					</sourceEntries>
 				</configuration>

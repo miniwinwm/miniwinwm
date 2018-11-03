@@ -52,13 +52,13 @@ SOFTWARE.
 /**
  * Create a dynamic dialog window with two buttons.
  *
- * @param x left coordinate of dialog window
- * @param y top coordinate of dialog window
- * @param width width of dialog window
- * @param title pointer to text displayed in the window title bar
- * @param message pointer to the message displayed in the window
- * @param button_1_label pointer to the text of the left button's label
- * @param button_2_label pointer to the text of the right button's label
+ * @param x Left coordinate of dialog window
+ * @param y Top coordinate of dialog window
+ * @param width Width of dialog window
+ * @param title Pointer to text displayed in the window title bar
+ * @param message Pointer to the message displayed in the window
+ * @param button_1_label Pointer to the text of the left button's label
+ * @param button_2_label Pointer to the text of the right button's label
  * @param large_size true for large size controls/text, false for small
  * @param response_window_handle Handle of the window that the response message is posted to when the dialog is dismissed
  * @return Handle of the window used for the dialog which is only valid while the dialog is showing

@@ -74,16 +74,16 @@ SOFTWARE.
 typedef struct
 {
 	/* User modifiable fields */
-	uint8_t number_of_lines;				/**< number of lines displayed in the list box */
-	uint8_t number_of_items;				/**< number of items in the list box */
-	const mw_ui_list_box_entry *list_box_entries;	/**< array of list box entries containing labels & icon pointers */
-	uint16_t line_enables;					/**< bit field of which lines are enabled/disabled; lsb is top line, 1 is enabled */
+	uint8_t number_of_lines;						/**< Number of lines displayed in the list box */
+	uint8_t number_of_items;						/**< Number of items in the list box */
+	const mw_ui_list_box_entry *list_box_entries;	/**< Array of list box entries containing labels & icon pointers */
+	uint16_t line_enables;							/**< Bit field of which lines are enabled/disabled; lsb is top line, 1 is enabled */
 
 	/* Non-user modifiable fields */
-	uint8_t selection;						/**< the currently selected line */
-	bool line_is_selected;					/**< a line is currently selected */
-	uint16_t touch_down_y_position;			/**< the last down down position */
-	uint8_t lines_to_scroll;				/**< the number of entries down to start showing entries */
+	uint8_t selection;								/**< The currently selected line */
+	bool line_is_selected;							/**< A line is currently selected */
+	uint16_t touch_down_y_position;					/**< The last down down position */
+	uint8_t lines_to_scroll;						/**< The number of entries down to start showing entries */
 } mw_ui_list_box_data_t;
 
 /***************************

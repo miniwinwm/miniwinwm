@@ -309,7 +309,7 @@ static void keypad_message_function(const mw_message_t *message)
 		}
 		break;
 
-	case MW_WINDOW_TIMER_MESSAGE:
+	case MW_TIMER_MESSAGE:
 		/* set key pressed to false */
 		this_keypad->is_key_pressed = false;
 

@@ -177,7 +177,7 @@ mw_handle_t mw_create_window_dialog_one_button(uint16_t x,
 	if (!title || !message || !button_label)
 	{
 		MW_ASSERT(false, "Null pointer argument");
-		return MW_MAX_WINDOW_COUNT;
+		return MW_INVALID_HANDLE;
 	}
 
 	/* check width */
@@ -185,7 +185,7 @@ mw_handle_t mw_create_window_dialog_one_button(uint16_t x,
 	{
 		if (width < MW_UI_BUTTON_LARGE_WIDTH + 2 * MW_BORDER_WIDTH)
 		{
-			return MW_MAX_WINDOW_COUNT;
+			return MW_INVALID_HANDLE;
 		}
 		rect.height = 95;
 	}
@@ -193,7 +193,7 @@ mw_handle_t mw_create_window_dialog_one_button(uint16_t x,
 	{
 		if (width < MW_UI_BUTTON_WIDTH + 2 * MW_BORDER_WIDTH)
 		{
-			return MW_MAX_WINDOW_COUNT;
+			return MW_INVALID_HANDLE;
 		}
 		rect.height = 75;
 	}
@@ -201,17 +201,17 @@ mw_handle_t mw_create_window_dialog_one_button(uint16_t x,
 	/* check start position */
 	if (width > MW_ROOT_WIDTH || x + width > MW_ROOT_WIDTH)
 	{
-		return MW_MAX_WINDOW_COUNT;
+		return MW_INVALID_HANDLE;
 	}
 	if (y + rect.height > MW_ROOT_HEIGHT)
 	{
-		return MW_MAX_WINDOW_COUNT;
+		return MW_INVALID_HANDLE;
 	}
 
 	/* check no modal windows already showing */
 	if (mw_is_any_window_modal())
 	{
-		return MW_MAX_WINDOW_COUNT;
+		return MW_INVALID_HANDLE;
 	}
 
 	mw_dialog_one_button_data.large_size = large_size;
@@ -232,10 +232,10 @@ mw_handle_t mw_create_window_dialog_one_button(uint16_t x,
 			NULL);
 
 	/* check if window could be created */
-	if (mw_dialog_one_button_data.mw_dialog_response.window_handle == MW_MAX_WINDOW_COUNT)
+	if (mw_dialog_one_button_data.mw_dialog_response.window_handle == MW_INVALID_HANDLE)
 	{
 		/* it couldn't so exit */
-		return MW_MAX_WINDOW_COUNT;
+		return MW_INVALID_HANDLE;
 	}
 
 	/* get window client rect width */
@@ -264,12 +264,12 @@ mw_handle_t mw_create_window_dialog_one_button(uint16_t x,
 	}
 
 	/* check if button could be created */
-	if (mw_dialog_one_button_data.button_open_handle == MW_MAX_CONTROL_COUNT)
+	if (mw_dialog_one_button_data.button_open_handle == MW_INVALID_HANDLE)
 	{
 		/* remove all controls and window */
 		remove_resources();
 
-		return MW_MAX_WINDOW_COUNT;
+		return MW_INVALID_HANDLE;
 	}
 
 	/* this window needs painting; it is coming up at the front so paint only this one */

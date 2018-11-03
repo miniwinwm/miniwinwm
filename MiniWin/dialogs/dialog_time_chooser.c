@@ -304,7 +304,7 @@ mw_handle_t mw_create_window_dialog_time_chooser(uint16_t x,
 	/* check the start time */
 	if (start_time_hour > 23 || start_time_minute > 59)
 	{
-		return MW_MAX_WINDOW_COUNT;
+		return MW_INVALID_HANDLE;
 	}
 	mw_dialog_time_chooser_data.current_time_hours = start_time_hour;
 	mw_dialog_time_chooser_data.current_time_mins = start_time_minute;
@@ -324,17 +324,17 @@ mw_handle_t mw_create_window_dialog_time_chooser(uint16_t x,
 	/* check start position */
 	if (x + rect.width > MW_ROOT_WIDTH)
 	{
-		return MW_MAX_WINDOW_COUNT;
+		return MW_INVALID_HANDLE;
 	}
 	if (y + rect.height > MW_ROOT_HEIGHT)
 	{
-		return MW_MAX_WINDOW_COUNT;
+		return MW_INVALID_HANDLE;
 	}
 
 	/* check no modal windows already showing */
 	if (mw_is_any_window_modal())
 	{
-		return MW_MAX_WINDOW_COUNT;
+		return MW_INVALID_HANDLE;
 	}
 
 	mw_dialog_time_chooser_data.large_size = large_size;
@@ -353,10 +353,10 @@ mw_handle_t mw_create_window_dialog_time_chooser(uint16_t x,
 			NULL);
 
 	/* check if window could be created */
-	if (mw_dialog_time_chooser_data.mw_dialog_response.window_handle == MW_MAX_WINDOW_COUNT)
+	if (mw_dialog_time_chooser_data.mw_dialog_response.window_handle == MW_INVALID_HANDLE)
 	{
 		/* it couldn't so exit */
-		return MW_MAX_WINDOW_COUNT;
+		return MW_INVALID_HANDLE;
 	}
 
 	/* set controls data */
@@ -446,17 +446,17 @@ mw_handle_t mw_create_window_dialog_time_chooser(uint16_t x,
 				&mw_dialog_time_chooser_data.arrow_minute_down_data);
 	}
 
-	if (mw_dialog_time_chooser_data.button_ok_handle == MW_MAX_CONTROL_COUNT ||
-			mw_dialog_time_chooser_data.button_cancel_handle == MW_MAX_CONTROL_COUNT ||
-			mw_dialog_time_chooser_data.arrow_hour_up_handle == MW_MAX_CONTROL_COUNT ||
-			mw_dialog_time_chooser_data.arrow_hour_down_handle == MW_MAX_CONTROL_COUNT ||
-			mw_dialog_time_chooser_data.arrow_minute_up_handle == MW_MAX_CONTROL_COUNT ||
-			mw_dialog_time_chooser_data.arrow_minute_down_handle == MW_MAX_CONTROL_COUNT)
+	if (mw_dialog_time_chooser_data.button_ok_handle == MW_INVALID_HANDLE ||
+			mw_dialog_time_chooser_data.button_cancel_handle == MW_INVALID_HANDLE ||
+			mw_dialog_time_chooser_data.arrow_hour_up_handle == MW_INVALID_HANDLE ||
+			mw_dialog_time_chooser_data.arrow_hour_down_handle == MW_INVALID_HANDLE ||
+			mw_dialog_time_chooser_data.arrow_minute_up_handle == MW_INVALID_HANDLE ||
+			mw_dialog_time_chooser_data.arrow_minute_down_handle == MW_INVALID_HANDLE)
 	{
 		/* remove all controls and window */
 		remove_resources();
 
-		return MW_MAX_WINDOW_COUNT;
+		return MW_INVALID_HANDLE;
 	}
 
 	/* set arrow enable states appropriately */

@@ -81,7 +81,7 @@ SOFTWARE.
 *** TYPES ***
 ************/
 
-typedef uint32_t mw_hal_lcd_colour_t;      		/**< int type that can hold the display driver's colour depth */
+typedef uint32_t mw_hal_lcd_colour_t;      		/**< Integer type that can hold the display driver's colour depth */
 
 /***************************
 *** FUNCTIONS PROTOTYPES ***
@@ -158,7 +158,7 @@ void mw_hal_lcd_monochrome_bitmap_clip(int16_t image_start_x,
  * @param clip_start_y The top edge of the clip rect
  * @param clip_width The width of the clip rect
  * @param clip_height The height of the clip rect
- * @param data the image data
+ * @param data The image data
  * @note The image is not clipped to the screen, only to the clip rect; the clip rect must already provide screen clipping.
  */
 void mw_hal_lcd_colour_bitmap_clip(int16_t image_start_x,

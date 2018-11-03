@@ -67,14 +67,14 @@ void app_main_loop_process(void);
 /**
  * Find all the entries in the folder of the given path
  *
- * @param path pointer to path text. Path separators are '/'. Must not end in '/' apart from root.
- * @param list_box_settings_entries the returned entries data which has the text and an icon filled in for each entry
+ * @param path Pointer to path text. Path separators are '/'. Must not end in '/' apart from root.
+ * @param list_box_settings_entries The returned entries data which has the text and an icon filled in for each entry
  * @param folders_only If true find only folders
- * @param max_entries the maximum number of entries to look for
+ * @param max_entries The maximum number of entries to look for
  * @param file_entry_icon Pointer to the icon to use for a file entry
  * @param folder_entry_icon Pointer to the icon to use for a folder entry
- * @return the number of entries found
- * @note this function is required if MW_DIALOG_FILE_CHOOSER is defined
+ * @return The number of entries found
+ * @note This function is required if MW_DIALOG_FILE_CHOOSER is defined
  */
 uint8_t find_folder_entries(char *path,
 		mw_ui_list_box_entry *list_box_settings_entries,
@@ -87,14 +87,14 @@ uint8_t find_folder_entries(char *path,
  * Accessor to the root folder path which comes from the FatFS module and is stored in
  * app source file
  *
- * @return pointer to the root path
+ * @return Pointer to the root path
  */
 char *app_get_root_folder_path(void);
 
 /**
  * Open an input file for reading
  *
- * @param path_and_filename the path and name of the file to open
+ * @param path_and_filename The path and name of the file to open
  * @return true if opened else false
  */
 bool app_file_open(char *path_and_filename);
@@ -102,7 +102,7 @@ bool app_file_open(char *path_and_filename);
 /**
  * Create an output file for writing
  *
- * @param path_and_filename the path and name of the file to create
+ * @param path_and_filename The path and name of the file to create
  * @return true if created else false
  */
 bool app_file_create(char *path_and_filename);
@@ -110,21 +110,21 @@ bool app_file_create(char *path_and_filename);
 /**
  * Gets the size of the opened file
  *
- * @return size in bytes
+ * @return Size in bytes
  */
 uint32_t app_file_size(void);
 
 /**
  * Read a single byte from a file
  *
- * @return the byte read
+ * @return The byte read
  */
 uint8_t app_file_getc(void);
 
 /**
  * Seek to a position in a file
  *
- * @param position position from start
+ * @param Position position from start
  * @return 0 if success otherwise non-zero
  */
 uint32_t app_file_seek(uint32_t position);
@@ -132,16 +132,16 @@ uint32_t app_file_seek(uint32_t position);
 /**
  * Read from open file
  *
- * @param buffer destination buffer to read in to
- * @param count number of bytes to read
+ * @param buffer Destination buffer to read in to
+ * @param count Number of bytes to read
  */
 void app_file_read(uint8_t *buffer, uint32_t count);
 
 /**
  * Write to open file
  *
- * @param buffer buffer containing bytes to write
- * @param count number of bytes to write
+ * @param buffer Buffer containing bytes to write
+ * @param count Number of bytes to write
  */
 void app_file_write(uint8_t *buffer, uint32_t count);
 
@@ -160,7 +160,7 @@ struct tm app_get_time_date(void);
 /**
  * Set the date and time from hardware
  *
- * @param tm, The date and time, year in xxxx format, date 1-31, month 1-12
+ * @param tm The date and time, year in xxxx format, date 1-31, month 1-12
  */
 void app_set_time_date(struct tm tm);
 

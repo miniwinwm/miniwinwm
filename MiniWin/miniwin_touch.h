@@ -66,7 +66,7 @@ mw_hal_touch_state_t mw_touch_get_display_touch(uint16_t* x, uint16_t* y);
  * Run the touch screen calibration procedure. This plots 3 crosses on the screen that the user needs to touch.
  * The results are returned in the MATRIX structure which the caller then needs to store in non-vol memory.
  *
- * @param matrixPtr A pointer to a MATRIX structure calculated and subsequently used by the screen calibration module
+ * @param matrixPtr Pointer to a MATRIX structure calculated and subsequently used by the screen calibration module
  */
 void mw_touch_calibrate(MATRIX *matrixPtr);
 

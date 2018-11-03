@@ -190,7 +190,7 @@ static void arrow_message_function(const mw_message_t *message)
 		this_arrow->arrow_down = false;
 		break;
 
-	case MW_WINDOW_TIMER_MESSAGE:
+	case MW_TIMER_MESSAGE:
 		/* set arrow pressed to false, send the control response message and repaint the control */
 		this_arrow->arrow_down = false;
 		mw_post_message(MW_ARROW_PRESSED_MESSAGE,

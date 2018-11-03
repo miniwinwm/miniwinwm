@@ -48,7 +48,7 @@ SOFTWARE.
  * System define constants that must not be changed 
  */
 #define MW_BORDER_WIDTH 						1               					/**< Width of a window border */
-#define MW_TITLE_BAR_HEIGHT 					(MW_GL_TITLE_FONT_HEIGHT + 2)  /**< Height of a window's title bar which should be greater than MW_LARGE_CHARACTER_HEIGHT */
+#define MW_TITLE_BAR_HEIGHT 					(MW_GL_TITLE_FONT_HEIGHT + 2)       /**< Height of a window's title bar which should be greater than MW_LARGE_CHARACTER_HEIGHT */
 #define MW_TITLE_X_OFFSET						18									/**< Title text x offset in title bar */
 #define MW_TITLE_Y_OFFSET						2									/**< Title text y offset in title bar */
 #define MW_USER_MESSAGE_BASE					50      							/**< User messages can be defined from this base value upwards */
@@ -126,17 +126,8 @@ typedef enum
 	/* Messages posted by the window manager */
 	MW_WINDOW_CREATED_MESSAGE,						/**< Message send to window as soon as it is created and before it is painted */
 	MW_WINDOW_REMOVED_MESSAGE,						/**< Message sent to window just before it is removed */
-	MW_CONTROL_CREATED_MESSAGE,						/**< Message send to control as soon as it is created and before it is painted */
-	MW_CONTROL_REMOVED_MESSAGE,			       		/**< Message sent to control just before it is removed */
-	MW_TOUCH_DOWN_MESSAGE,					       	/**< Message sent to a window or control when it receives a touch down event */
-	MW_TOUCH_HOLD_DOWN_MESSAGE,					    /**< Message sent to a window or control when it receives a touch hold down event */
-	MW_TOUCH_UP_MESSAGE,					       	/**< Message sent to a window or control when it receives a touch up event */
-	MW_TOUCH_DRAG_MESSAGE,							/**< Message sent to a window or control when it receives a drag event */
-	MW_WINDOW_TIMER_MESSAGE,				       	/**< Message sent to a window or control when a timer has expired */
 	MW_WINDOW_GAINED_FOCUS_MESSAGE,					/**< Message sent to a window when it gains focus */
 	MW_WINDOW_LOST_FOCUS_MESSAGE,			 		/**< Message sent to a window when it loses focus */
-	MW_CONTROL_GAINED_FOCUS_MESSAGE,				/**< Message sent to all controls in a window when parent window gains focus or control made visible */
-	MW_CONTROL_LOST_FOCUS_MESSAGE,					/**< Message sent to all controls in a window when parent window loses focus or control made invisible */
 	MW_WINDOW_RESIZED,								/**< Message to a window when it has been resized */
 	MW_WINDOW_MOVED,								/**< Message to a window when it has been moved */
 	MW_WINDOW_MINIMISED,							/**< Message to a window when it has been minimised */
@@ -144,7 +135,17 @@ typedef enum
 	MW_WINDOW_VISIBILITY_CHANGED,					/**< Message to a window when its visibility has changed */
 	MW_WINDOW_VERT_SCROLL_BAR_SCROLLED_MESSAGE,		/**< Message to a window when a window vertical scroll bar has been scrolled */
 	MW_WINDOW_HORIZ_SCROLL_BAR_SCROLLED_MESSAGE,	/**< Message to a window when a window horizontal scroll bar has been scrolled */
+	MW_CONTROL_CREATED_MESSAGE,						/**< Message send to control as soon as it is created and before it is painted */
+	MW_CONTROL_REMOVED_MESSAGE,			       		/**< Message sent to control just before it is removed */
+	MW_CONTROL_GAINED_FOCUS_MESSAGE,				/**< Message sent to all controls in a window when parent window gains focus or control made visible */
+	MW_CONTROL_VISIBILITY_CHANGED,					/**< Message to a control when its visibility has changed */
+	MW_CONTROL_LOST_FOCUS_MESSAGE,					/**< Message sent to all controls in a window when parent window loses focus or control made invisible */
+	MW_TOUCH_DOWN_MESSAGE,					       	/**< Message sent to a window or control when it receives a touch down event */
+	MW_TOUCH_HOLD_DOWN_MESSAGE,					    /**< Message sent to a window or control when it receives a touch hold down event */
+	MW_TOUCH_UP_MESSAGE,					       	/**< Message sent to a window or control when it receives a touch up event */
+	MW_TOUCH_DRAG_MESSAGE,							/**< Message sent to a window or control when it receives a drag event */
 	MW_MENU_BAR_ITEM_PRESSED_MESSAGE,				/**< Response message from a menu bar that an item has been pressed */
+	MW_TIMER_MESSAGE,				      		 	/**< Message sent to a window or control when a timer has expired */
 	
 	/* Messages posted by controls in response to user interface input */
 	MW_BUTTON_PRESSED_MESSAGE,						/**< Response message from a button that it has been pressed */
@@ -297,7 +298,7 @@ void mw_user_root_message_function(const mw_message_t *message);
  * Initialize the window manager. This initialize all the drivers, create the
  * root window and calls wm_user_init. This function needs to be called before
  * any messages are posted or processed. This function is usually called from
- * your application’s main function, or MiniWin thread first call if running in
+ * your application's main function, or MiniWin thread first call if running in
  * a thread.
  */
 void mw_init();
@@ -336,6 +337,14 @@ mw_handle_t mw_add_window(mw_util_rect_t *rect,
 		uint8_t menu_bar_items_count,
 		uint32_t window_flags,
 		void *instance_data);
+
+/**
+ * Test if a window handle is valid and represents a valid window
+ *
+ * @param window_handle The handle to test
+ * @return true if valid else false
+ */
+bool mw_is_window_handle_valid(mw_handle_t window_handle);
 
 /**
  * Bring a window to the front giving it the highest Z order of all windows.
@@ -511,10 +520,18 @@ mw_util_rect_t mw_get_window_client_rect(mw_handle_t window_handle);
 void *mw_get_window_instance_data(mw_handle_t window_handle);
 
 /**
+ * Get a window's flags bitfield
+ *
+ * @param window_handle Handle of the window to get flags bitfield for.
+ * @return The returned flags bitfield
+ */
+uint16_t mw_get_window_flags(mw_handle_t window_handle);
+
+/**
  * Set the window's title bar text
  *
- * @param window_handle the window to set the title bar text for
- * @param title_text the new title bar text
+ * @param window_handle The window to set the title bar text for
+ * @param title_text The new title bar text
  */
 void wm_set_window_title(mw_handle_t window_handle, char *title_text);
 
@@ -534,9 +551,9 @@ bool mw_find_if_any_control_slots_free(void);
  * @param message_func Pointer to message handling function
  * @param control_flags Flags describing the control and its state
  * @param instance_data void Pointer to control specific data structure containing extra control specific configuration data for this instance
- * @return The new control id if created or MAX_CONTROL_COUNT if it could not be created
+ * @return The new control handle if created or MW_INVALID_HANDLE if it could not be created
  */
-uint8_t mw_add_control(mw_util_rect_t *rect,
+mw_handle_t mw_add_control(mw_util_rect_t *rect,
 		mw_handle_t parent,
 		mw_paint_func_p paint_func,
 		mw_message_func_p message_func,
@@ -544,32 +561,40 @@ uint8_t mw_add_control(mw_util_rect_t *rect,
 		void *instance_data);
 
 /**
+ * Test if a control handle is valid and represents a valid control
+ *
+ * @param control_handle The handle to test
+ * @return true if valid else false
+ */
+bool mw_is_control_handle_valid(mw_handle_t control_handle);
+
+/**
  * Set a control visible if it is used
  *
- * @param control_handle Position in array of all controls of this control.
- * @param visible True or false
+ * @param control_handle Handle of this control.
+ * @param visible true or false
  */
 void mw_set_control_visible(mw_handle_t control_handle, bool visible);
 
 /**
  * Set a control enabled if it is used
  *
- * @param control_handle Position in array of all controls of this control.
- * @param enabled True or false
+ * @param control_handle Handle of this control.
+ * @param enabled true or false
  */
 void mw_set_control_enabled(mw_handle_t control_handle, bool enabled);
 
 /**
  * Add a message to the message queue to get a control painted.
  *
- * @param control_handle Position in array of all controls of this control
+ * @param control_handle Handle of this control.
  */
 void mw_paint_control(mw_handle_t control_handle);
 
 /**
  * Add a message to the message queue to get a specified part of a control's client area painted.
  *
- * @param control_handle Position in array of all controls of this control
+ * @param control_handle Handle of this control.
  * @param rect The area to be repainted in control client coordinates
  * @note The rect pointed to by rect must be persistent and not a local variable of the calling function
  */
@@ -578,14 +603,14 @@ void mw_paint_control_rect(mw_handle_t control_handle, const mw_util_rect_t *rec
 /**
  * Remove a control.
  *
- * @param control_handle Position in array of all controls of this control
+ * @param control_handle Handle of this control.
  */
 void mw_remove_control(mw_handle_t control_handle);
 
 /**
  * Get a control's rect
  *
- * @param control_handle The control to get the rect for
+ * @param control_handle Handle of the control to get rect for.
  * @return The returned rect
  */
 mw_util_rect_t mw_get_control_rect(mw_handle_t control_handle);
@@ -593,7 +618,7 @@ mw_util_rect_t mw_get_control_rect(mw_handle_t control_handle);
 /**
  * Get a control's parent window ref
  *
- * @param control_handle The control to get the parent for
+ * @param control_handle Handle of the control to get parent of.
  * @return The returned parent's window handle
  */
 mw_handle_t mw_get_control_parent_window(mw_handle_t control_handle);
@@ -601,7 +626,7 @@ mw_handle_t mw_get_control_parent_window(mw_handle_t control_handle);
 /**
  * Get a control's instance_data data pointer
  *
- * @param control_handle The control to get the instance data pointer for
+ * @param control_handle Handle of the control to get instance data for.
  * @return The returned instance_data data pointer
  */
 void *mw_get_control_instance_data(mw_handle_t control_handle);
@@ -609,7 +634,7 @@ void *mw_get_control_instance_data(mw_handle_t control_handle);
 /**
  * Get a control's flags bitfield
  *
- * @param control_handle The control to get the flags bitfield for
+ * @param control_handle Handle of the control to get flags bitfield for.
  * @return The returned flags bitfield
  */
 uint16_t mw_get_control_flags(mw_handle_t control_handle);
@@ -667,7 +692,7 @@ void mw_paint_all();
 /**
  * Show a busy string as defined in minwin_user.h when a long process is locking the user interface
  *
- * @param show True to show message, false to stop showing it
+ * @param show true to show message, false to stop showing it
  */
 void mw_show_busy(bool show);
 

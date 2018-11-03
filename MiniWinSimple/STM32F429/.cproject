@@ -107,6 +107,20 @@
 							<tool id="com.atollic.truestudio.exe.debug.toolchain.secoutput.2070959571" name="Other" superClass="com.atollic.truestudio.exe.debug.toolchain.secoutput"/>
 						</toolChain>
 					</folderInfo>
+					<folderInfo id="com.atollic.truestudio.exe.debug.2147054002.1973788315" name="/" resourcePath="MiniWin/hal/linux">
+						<toolChain id="com.atollic.truestudio.exe.debug.toolchain.83577053" name="Atollic ARM Tools" superClass="com.atollic.truestudio.exe.debug.toolchain" unusedChildren="">
+							<option id="com.atollic.truestudio.general.runtimelib.1765791251.798674277" name="Runtime Library" superClass="com.atollic.truestudio.general.runtimelib.1765791251"/>
+							<option id="com.atollic.truestudio.toolchain_options.mcu.1667298638.1079995920" name="Microcontroller" superClass="com.atollic.truestudio.toolchain_options.mcu.1667298638"/>
+							<option id="com.atollic.truestudio.toolchain_options.vendor.1316884526.739303275" name="Vendor name" superClass="com.atollic.truestudio.toolchain_options.vendor.1316884526"/>
+							<tool id="com.atollic.truestudio.exe.debug.toolchain.as.1836063821" name="Assembler" superClass="com.atollic.truestudio.exe.debug.toolchain.as.1594145477"/>
+							<tool id="com.atollic.truestudio.exe.debug.toolchain.gcc.2118163374" name="C Compiler" superClass="com.atollic.truestudio.exe.debug.toolchain.gcc.1238860197"/>
+							<tool id="com.atollic.truestudio.exe.debug.toolchain.ld.1919692575" name="C Linker" superClass="com.atollic.truestudio.exe.debug.toolchain.ld.69849188"/>
+							<tool id="com.atollic.truestudio.exe.debug.toolchain.gpp.1109636450" name="C++ Compiler" superClass="com.atollic.truestudio.exe.debug.toolchain.gpp.174572582"/>
+							<tool id="com.atollic.truestudio.exe.debug.toolchain.ldcc.324735522" name="C++ Linker" superClass="com.atollic.truestudio.exe.debug.toolchain.ldcc.1896632458"/>
+							<tool id="com.atollic.truestudio.ar.base.759283740" name="Archiver" superClass="com.atollic.truestudio.ar.base.1641915898"/>
+							<tool id="com.atollic.truestudio.exe.debug.toolchain.secoutput.701509815" name="Other" superClass="com.atollic.truestudio.exe.debug.toolchain.secoutput.2070959571"/>
+						</toolChain>
+					</folderInfo>
 					<folderInfo id="com.atollic.truestudio.exe.debug.2147054002.1084279832" name="/" resourcePath="MiniWin/hal/windows">
 						<toolChain id="com.atollic.truestudio.exe.debug.toolchain.1820894606" name="Atollic ARM Tools" superClass="com.atollic.truestudio.exe.debug.toolchain" unusedChildren="">
 							<option id="com.atollic.truestudio.general.runtimelib.1765791251.1601068994" name="Runtime Library" superClass="com.atollic.truestudio.general.runtimelib.1765791251"/>
@@ -128,7 +142,7 @@
 					</folderInfo>
 					<sourceEntries>
 						<entry excluding="common|MiniWin" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
-						<entry excluding="hal/windows|hal/stm32f407|user/minwin_user.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="MiniWin"/>
+						<entry excluding="hal/linux|hal/windows|hal/stm32f407|user/minwin_user.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="MiniWin"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="common"/>
 					</sourceEntries>
 				</configuration>

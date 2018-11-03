@@ -52,12 +52,12 @@ SOFTWARE.
 /**
  * Create a dynamic dialog window with one button.
  *
- * @param x left coordinate of dialog window
- * @param y top coordinate of dialog window
+ * @param x Left coordinate of dialog window
+ * @param y Top coordinate of dialog window
  * @param width width of dialog window
- * @param title pointer to text displayed in the window title bar
- * @param message pointer to the message displayed in the window
- * @param button_label pointer to the text of the button's label
+ * @param title Pointer to text displayed in the window title bar
+ * @param message Pointer to the message displayed in the window
+ * @param button_label Pointer to the text of the button's label
  * @param large_size true for large size controls/text, false for small
  * @param response_window_handle Handle of the window that the response message is posted to when the dialog is dismissed
  * @return Handle of the window used for the dialog which is only valid while the dialog is showing

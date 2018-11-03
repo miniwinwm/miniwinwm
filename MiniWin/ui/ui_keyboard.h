@@ -68,13 +68,13 @@ typedef struct
   	/* User modifiable fields */ 
   
     /* Non-user modifiable fields */ 
-	bool is_key_pressed;						/**< if a key is currently pressed */
-	bool swap_keyboard;							/**< if the keyboard needs swapping on next key up timer event */
-	uint8_t	key_pressed_row;					/**< the currently pressed key row */
-	uint8_t	key_pressed_column;					/**< the currently pressed key column */
-	keyboard_display_t keyboard_display;		/**< the keyboard to display */
-	mw_handle_t timer_handle;					/**< timer handle for animations and hold down repeat timeout */
-	uint32_t touch_down_time;					/**< time in ticks a key was first pressed down */
+	bool is_key_pressed;						/**< If a key is currently pressed */
+	bool swap_keyboard;							/**< If the keyboard needs swapping on next key up timer event */
+	uint8_t	key_pressed_row;					/**< The currently pressed key row */
+	uint8_t	key_pressed_column;					/**< The currently pressed key column */
+	keyboard_display_t keyboard_display;		/**< The keyboard to display */
+	mw_handle_t timer_handle;					/**< Timer handle for animations and hold down repeat timeout */
+	uint32_t touch_down_time;					/**< Time in ticks a key was first pressed down */
 	bool holding_down;							/**< true when holding down a key */
 } mw_ui_keyboard_data_t;
 

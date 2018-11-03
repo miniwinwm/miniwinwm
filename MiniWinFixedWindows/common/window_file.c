@@ -47,15 +47,15 @@ SOFTWARE.
  */
 typedef enum
 {
-	ROOT_FOLDER,							/**< root folder on show */
-	FOLDER_IMAGES,						/**< images folder shown */
-	FOLDER_DOCS							/**< documents folder shown */
+	ROOT_FOLDER,						/**< Root folder on show */
+	FOLDER_IMAGES,						/**< Images folder shown */
+	FOLDER_DOCS							/**< Documents folder shown */
 } folder_shown_t;
 
 typedef struct
 {
-	uint8_t lines_to_scroll;				/**< number of lines folder list box is scrolled */
-	folder_shown_t folder_shown;		/**< the current folder on display in the list box */
+	uint8_t lines_to_scroll;			/**< Number of lines folder list box is scrolled */
+	folder_shown_t folder_shown;		/**< The current folder on display in the list box */
 } file_data_t;
 
 

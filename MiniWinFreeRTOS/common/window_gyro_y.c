@@ -53,8 +53,8 @@ static const mw_util_rect_t arrow_rect = {13, 13, 54, 54};			/**< Clip region fo
 typedef struct
 {
 	int16_t angle;					/**< Last received angle */
-	char text_transfer_buffer[10];	/**< Buffer to hole label text */
-	int16_t angle_offset;			/**< Offset are using zero button */
+	char text_transfer_buffer[10];	/**< Buffer for label text */
+	int16_t angle_offset;			//**< Offset set using zero button */
 	int16_t previous_drawn_angle;	/**< The previous angle shown on the display */
 } window_gyro_y_data_t;
 
@@ -137,7 +137,7 @@ void window_gyro_y_message_function(const mw_message_t *message)
 		window_gyro_y_data.angle_offset = window_gyro_y_data.angle;
 		break;
 
-	case MW_WINDOW_TIMER_MESSAGE:
+	case MW_TIMER_MESSAGE:
 		{
 			float angle;
 			size_t bytes;

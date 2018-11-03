@@ -188,7 +188,7 @@ static void button_message_function(const mw_message_t *message)
 		this_button->button_down = false;
 		break;
 
-	case MW_WINDOW_TIMER_MESSAGE:
+	case MW_TIMER_MESSAGE:
 		/* set button pressed to false, send the control response message and repaint the control */	
 		this_button->button_down = false;
 		mw_post_message(MW_BUTTON_PRESSED_MESSAGE,

@@ -141,7 +141,7 @@ void window_yield_message_function(const mw_message_t *message)
 		}
 		break;
 
-	case MW_WINDOW_TIMER_MESSAGE:
+	case MW_TIMER_MESSAGE:
 		window_yield_data.timer_running = false;
 		mw_paint_window_client(message->recipient_handle);
 		for (i = 0; i < 10; i++)

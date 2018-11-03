@@ -52,7 +52,8 @@ typedef struct
 	bool draw_circle;				/**< If the screen has been touched and need to draw the circle */
 	uint8_t i;						/**< Value shown in label and progress bar progress */
 	char transfer_buffer[10];		/**< Buffer to transfer data to label */
-	uint8_t lines_to_scroll;		/**< number of lines list box is scrolled */
+	uint8_t lines_to_scroll;		/**< Number of lines list box is scrolled */
+	bool large_controls;			/**< If to show large controls */
 } window_test_data_t;
 
 /***********************
@@ -64,17 +65,32 @@ typedef struct
 **************************/
 
 extern volatile uint32_t mw_tick_counter;
-extern mw_handle_t window_ok_cancel_handle;
 extern mw_handle_t label_1_handle;
 extern mw_handle_t progress_bar_1_handle;
 extern mw_handle_t list_box_1_handle;
 extern mw_handle_t check_box_1_handle;
+extern mw_handle_t button_1_handle;
 extern mw_handle_t scroll_bar_vert_1_handle;
+extern mw_handle_t scroll_bar_vert_2_handle;
+extern mw_handle_t scroll_bar_horiz_1_handle;
 extern mw_handle_t list_box_3_handle;
+extern mw_handle_t radio_button_1_handle;
+extern mw_handle_t check_box_1_large_handle;
+extern mw_handle_t button_1_large_handle;
+extern mw_handle_t radio_button_1_large_handle;
+extern mw_handle_t scroll_bar_vert_1_large_handle;
+extern mw_handle_t scroll_bar_vert_2_large_handle;
+extern mw_handle_t scroll_bar_horiz_1_large_handle;
+extern mw_handle_t label_1_large_handle;
+extern mw_handle_t list_box_3_large_handle;
 extern mw_ui_scroll_bar_vert_data_t scroll_bar_vert_1_data;
 extern mw_ui_scroll_bar_vert_data_t scroll_bar_vert_2_data;
 extern mw_ui_scroll_bar_horiz_data_t scroll_bar_horiz_1_data;
 extern mw_ui_list_box_data_t list_box_3_data;
+extern mw_ui_scroll_bar_vert_data_t scroll_bar_vert_1_large_data;
+extern mw_ui_scroll_bar_vert_data_t scroll_bar_vert_2_large_data;
+extern mw_ui_scroll_bar_horiz_data_t scroll_bar_horiz_1_large_data;
+extern mw_ui_list_box_data_t list_box_3_large_data;
 
 /**********************
 *** LOCAL VARIABLES ***
@@ -127,6 +143,7 @@ void window_test_message_function(const mw_message_t *message)
 		window_test_data.lines_to_scroll = 0;
 		window_test_data.draw_circle = false;
 		window_test_data.i = 0;
+		window_test_data.large_controls = false;
 		mw_set_timer(mw_tick_counter + MW_TICKS_PER_SECOND, message->recipient_handle, MW_WINDOW_MESSAGE);
 		break;
 
@@ -143,6 +160,62 @@ void window_test_message_function(const mw_message_t *message)
 			mw_paint_window_frame(message->recipient_handle, MW_WINDOW_FRAME_COMPONENT_MENU_BAR);
 		}
 		mw_paint_window_client(message->recipient_handle);
+		mw_paint_window_frame(message->recipient_handle, MW_WINDOW_FRAME_COMPONENT_TITLE_BAR);
+		break;
+
+	case MW_BUTTON_PRESSED_MESSAGE:
+		window_test_data.large_controls = !window_test_data.large_controls;
+
+		if (window_test_data.large_controls)
+		{
+			mw_resize_window(message->recipient_handle, 240, 310);
+
+			/* set all standard sized controls invisible and large controls visible */
+			mw_set_control_visible(label_1_handle, false);
+			mw_set_control_visible(list_box_3_handle, false);
+			mw_set_control_visible(check_box_1_handle, false);
+			mw_set_control_visible(button_1_handle, false);
+			mw_set_control_visible(scroll_bar_vert_1_handle, false);
+			mw_set_control_visible(scroll_bar_vert_2_handle, false);
+			mw_set_control_visible(scroll_bar_horiz_1_handle, false);
+			mw_set_control_visible(radio_button_1_handle, false);
+
+			mw_set_control_visible(label_1_large_handle, true);
+			mw_set_control_visible(list_box_3_large_handle, true);
+			mw_set_control_visible(check_box_1_large_handle, true);
+			mw_set_control_visible(button_1_large_handle, true);
+			mw_set_control_visible(scroll_bar_vert_1_large_handle, true);
+			mw_set_control_visible(scroll_bar_vert_2_large_handle, true);
+			mw_set_control_visible(scroll_bar_horiz_1_large_handle, true);
+			mw_set_control_visible(radio_button_1_large_handle, true);
+		}
+		else
+		{
+			mw_resize_window(message->recipient_handle, 220, 140);
+
+			/* set all standard sized controls visible and large controls invisible */
+			mw_set_control_visible(label_1_handle, true);
+			mw_set_control_visible(list_box_3_handle, true);
+			mw_set_control_visible(check_box_1_handle, true);
+			mw_set_control_visible(button_1_handle, true);
+			mw_set_control_visible(scroll_bar_vert_1_handle, true);
+			mw_set_control_visible(scroll_bar_vert_2_handle, true);
+			mw_set_control_visible(scroll_bar_horiz_1_handle, true);
+			mw_set_control_visible(radio_button_1_handle, true);
+
+			mw_set_control_visible(label_1_large_handle, false);
+			mw_set_control_visible(list_box_3_large_handle, false);
+			mw_set_control_visible(check_box_1_large_handle, false);
+			mw_set_control_visible(button_1_large_handle, false);
+			mw_set_control_visible(scroll_bar_vert_1_large_handle, false);
+			mw_set_control_visible(scroll_bar_vert_2_large_handle, false);
+			mw_set_control_visible(scroll_bar_horiz_1_large_handle, false);
+			mw_set_control_visible(radio_button_1_large_handle, false);
+		}
+
+
+		/* repaint everything as window sizes have changed */
+		mw_paint_all();
 		break;
 
 	case MW_MENU_BAR_ITEM_PRESSED_MESSAGE:
@@ -155,8 +228,13 @@ void window_test_message_function(const mw_message_t *message)
 			/* disable menu bar while list box is showing */
 			mw_set_menu_bar_enabled_state(message->recipient_handle, false);
 
-			/* repaint the affected control and window frame */
-			mw_paint_control(list_box_1_handle);
+			/* hide the progress bar while the pop up list box is showing as it is overlapped by the pop up list box */
+			mw_set_control_visible(progress_bar_1_handle, false);
+
+			/* repaint the window client as controls have changed */
+			mw_paint_window_client(message->recipient_handle);
+
+			/* repaint frame to update the menu bar */
 			mw_paint_window_frame(message->recipient_handle, MW_WINDOW_FRAME_COMPONENT_MENU_BAR);
 		}
 		else if (message->message_data == 2)
@@ -184,6 +262,22 @@ void window_test_message_function(const mw_message_t *message)
 						message->recipient_handle);
 			}
 		}
+		else if (message->sender_handle == check_box_1_large_handle)
+		{
+			if (message->message_data)
+			{
+				/* create a pop up 2 button dialog */
+				mw_create_window_dialog_two_button(5,
+						25,
+						220,
+						"Title",
+						"This is a message",
+						"Ok",
+						"Cancel",
+						true,
+						message->recipient_handle);
+			}
+		}
 		break;
 
 	case MW_LIST_BOX_ITEM_PRESSED_MESSAGE:
@@ -195,7 +289,13 @@ void window_test_message_function(const mw_message_t *message)
 				mw_send_window_to_back(message->recipient_handle);
 				mw_paint_all();
 			}
+			/* re-show the progress bar when pop up list box gone */
+			mw_set_control_visible(progress_bar_1_handle, true);
+
+			/* hide the pop up list box */
 			mw_set_control_visible(list_box_1_handle, false);
+
+			/* re-enable menu */
 			mw_set_menu_bar_enabled_state(message->recipient_handle, true);
 			mw_paint_window_frame(message->recipient_handle, MW_WINDOW_FRAME_COMPONENT_MENU_BAR);
 			mw_paint_window_client(message->recipient_handle);
@@ -204,37 +304,72 @@ void window_test_message_function(const mw_message_t *message)
 
 	case MW_CONTROL_HORIZ_SCROLL_BAR_SCROLLED_MESSAGE:
 		/* horizontal scroll bar scrolled */
-		mw_post_message(MW_TRANSFER_DATA_1_MESSAGE,
-				message->recipient_handle,
-				scroll_bar_vert_1_handle,
-				scroll_bar_horiz_1_data.scroll_position,
-				MW_CONTROL_MESSAGE);
-		mw_paint_control(scroll_bar_vert_1_handle);
+		if (window_test_data.large_controls)
+		{
+			mw_post_message(MW_TRANSFER_DATA_1_MESSAGE,
+					message->recipient_handle,
+					scroll_bar_vert_1_large_handle,
+					scroll_bar_horiz_1_large_data.scroll_position,
+					MW_CONTROL_MESSAGE);
+			mw_paint_control(scroll_bar_vert_1_large_handle);
+		}
+		else
+		{
+			mw_post_message(MW_TRANSFER_DATA_1_MESSAGE,
+					message->recipient_handle,
+					scroll_bar_vert_1_handle,
+					scroll_bar_horiz_1_data.scroll_position,
+					MW_CONTROL_MESSAGE);
+			mw_paint_control(scroll_bar_vert_1_handle);
+		}
 		break;
 
 	case MW_CONTROL_VERT_SCROLL_BAR_SCROLLED_MESSAGE:
 		/* vertical scroll bar scrolled */
-		window_test_data.lines_to_scroll = (scroll_bar_vert_2_data.scroll_position *
-				(list_box_3_data.number_of_items - list_box_3_data.number_of_lines)) /
-				UINT8_MAX;
-		mw_post_message(MW_TRANSFER_DATA_1_MESSAGE,
-				0,
-				list_box_3_handle,
-				window_test_data.lines_to_scroll,
-				MW_CONTROL_MESSAGE);
-		mw_paint_control(list_box_3_handle);
+		if (message->sender_handle == scroll_bar_vert_2_handle)
+		{
+			window_test_data.lines_to_scroll = (scroll_bar_vert_2_data.scroll_position *
+					(list_box_3_data.number_of_items - list_box_3_data.number_of_lines)) /
+					UINT8_MAX;
+			mw_post_message(MW_TRANSFER_DATA_1_MESSAGE,
+					0,
+					list_box_3_handle,
+					window_test_data.lines_to_scroll,
+					MW_CONTROL_MESSAGE);
+			mw_paint_control(list_box_3_handle);
+		}
+		else if (message->sender_handle == scroll_bar_vert_2_large_handle)
+		{
+			window_test_data.lines_to_scroll = (scroll_bar_vert_2_large_data.scroll_position *
+					(list_box_3_large_data.number_of_items - list_box_3_large_data.number_of_lines)) /
+					UINT8_MAX;
+			mw_post_message(MW_TRANSFER_DATA_1_MESSAGE,
+					0,
+					list_box_3_large_handle,
+					window_test_data.lines_to_scroll,
+					MW_CONTROL_MESSAGE);
+			mw_paint_control(list_box_3_large_handle);
+		}
 		break;
 
-	case MW_WINDOW_TIMER_MESSAGE:
+	case MW_TIMER_MESSAGE:
 		window_test_data.i++;
 		if (window_test_data.i > 100)
 		{
 			window_test_data.i = 0;
 		}
 		sprintf(window_test_data.transfer_buffer, "%d", window_test_data.i);
-		mw_ui_common_post_pointer_to_control(label_1_handle, window_test_data.transfer_buffer);
+		if (window_test_data.large_controls)
+		{
+			mw_ui_common_post_pointer_to_control(label_1_large_handle, window_test_data.transfer_buffer);
+			mw_paint_control(label_1_large_handle);
+		}
+		else
+		{
+			mw_ui_common_post_pointer_to_control(label_1_handle, window_test_data.transfer_buffer);
+			mw_paint_control(label_1_handle);
+		}
 		mw_ui_common_post_number_to_control(progress_bar_1_handle, window_test_data.i);
-		mw_paint_control(label_1_handle);
 		mw_paint_control(progress_bar_1_handle);
 		mw_set_timer(mw_tick_counter + MW_TICKS_PER_SECOND, message->recipient_handle, MW_WINDOW_MESSAGE);
 		break;

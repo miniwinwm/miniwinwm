@@ -138,17 +138,17 @@ typedef uint16_t mw_gl_pattern_t[16];
  */
 typedef struct
 {
-	mw_hal_lcd_colour_t fg_colour;          /**< foreground colour for text and line drawing */
-	mw_hal_lcd_colour_t bg_colour;          /**< background colour for text and line drawing */
-	mw_hal_lcd_colour_t solid_fill_colour;  /**< solid fill colour for filled shapes */
-	mw_gl_line_t line;                      /**< line style */
-	mw_gl_pattern_t pattern;                /**< pattern fill definition - 16x16 bits */
-	mw_gl_border_t border;                  /**< whether to plot a border on shapes that are filled */
-	mw_gl_fill_t fill;                      /**< whether to fill a shape with solid colour or pattern */
-	uint8_t pattern_set;                    /**< whether a pattern has been set and used. If not set, fill will be solid colour */
-	mw_gl_bg_transparent_t bg_transparent;  /**< whether to clear the background of text or draw transparently */
-	mw_gl_font_t font;						/**< the current font in use */
-	mw_gl_text_rotation_t text_rotation;	/**< the current text rotation */
+	mw_hal_lcd_colour_t fg_colour;          /**< Foreground colour for text and line drawing */
+	mw_hal_lcd_colour_t bg_colour;          /**< Background colour for text and line drawing */
+	mw_hal_lcd_colour_t solid_fill_colour;  /**< Solid fill colour for filled shapes */
+	mw_gl_line_t line;                      /**< Line style */
+	mw_gl_pattern_t pattern;                /**< Pattern fill definition - 16x16 bits */
+	mw_gl_border_t border;                  /**< Whether to plot a border on shapes that are filled */
+	mw_gl_fill_t fill;                      /**< Whether to fill a shape with solid colour or pattern */
+	uint8_t pattern_set;                    /**< Whether a pattern has been set and used. If not set, fill will be solid colour */
+	mw_gl_bg_transparent_t bg_transparent;  /**< Whether to clear the background of text or draw transparently */
+	mw_gl_font_t font;						/**< The current font in use */
+	mw_gl_text_rotation_t text_rotation;	/**< The current text rotation */
 } mw_gl_gc_t;
 
 /**
@@ -159,9 +159,9 @@ typedef struct
  */
 typedef struct
 {
-	int16_t origin_x;                   /**< x coordinate of origin of reference frame */
-	int16_t origin_y;                   /**< y coordinate of origin of reference frame */
-	mw_util_rect_t clip_rect;           /**< clip rect that will be applied to points requested to be plotted, in coordinates relative to offset_x, offset_y */
+	int16_t origin_x;                   /**< X coordinate of origin of reference frame */
+	int16_t origin_y;                   /**< Y coordinate of origin of reference frame */
+	mw_util_rect_t clip_rect;           /**< Clip rect that will be applied to points requested to be plotted, in coordinates relative to offset_x, offset_y */
 } mw_gl_draw_info_t;
 
 /***************************

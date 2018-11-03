@@ -67,7 +67,7 @@ void app_main_loop_process(void);
 /**
  * Get the gyroscope accumulated readings
  *
- * @return the cumulative readings in degrees
+ * @return The cumulative readings in degrees
  */
 float *app_get_gyro_readings(void);
 

@@ -36,8 +36,8 @@ SOFTWARE.
 *** CONSTANTS ***
 ****************/
 
-#define CS_ON								(HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, GPIO_PIN_RESET))  /**< touch screen digitizer chip select off */
-#define CS_OFF 								(HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, GPIO_PIN_SET)) 	/**< touch screen digitizer chip select on */
+#define CS_ON								(HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, GPIO_PIN_RESET))  /**< Touch screen digitizer chip select off */
+#define CS_OFF 								(HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, GPIO_PIN_SET)) 	/**< Touch screen digitizer chip select on */
 #define MW_HAL_TOUCH_READ_POINTS_COUNT		10														/**< Number of samples to take to reduce noise */
 
 /************
@@ -71,8 +71,8 @@ static uint8_t spi_transfer(uint8_t byte);
 /**
  * Transfer a byte to the touch screen SPI interface and return the 2 byte response
  *
- * @param byte: The byte to send
- * @return: The response
+ * @param byte The byte to send
+ * @return The response
  */
 static uint8_t spi_transfer(uint8_t byte)
 {

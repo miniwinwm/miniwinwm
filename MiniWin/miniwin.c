@@ -52,11 +52,11 @@ const mw_gl_draw_info_t draw_info_root = {0, 0, {0, 0, MW_HAL_LCD_WIDTH, MW_HAL_
  */
 typedef enum
 {
-	TOUCH_EVENT_DOWN,       						/**< a touch down event has occurred */
-	TOUCH_EVENT_UP,         						/**< a touch up event has occurred */
-	TOUCH_EVENT_DRAG,								/**< a drag event has occurred */
-	TOUCH_EVENT_HOLD_DOWN,							/**< a hold down event has occurred */
-	TOUCH_EVENT_NONE        						/**< no touch event outstanding */
+	TOUCH_EVENT_DOWN,       						/**< A touch down event has occurred */
+	TOUCH_EVENT_UP,         						/**< A touch up event has occurred */
+	TOUCH_EVENT_DRAG,								/**< A drag event has occurred */
+	TOUCH_EVENT_HOLD_DOWN,							/**< A hold down event has occurred */
+	TOUCH_EVENT_NONE        						/**< No touch event outstanding */
 } touch_event_t;
 
 /**
@@ -64,9 +64,9 @@ typedef enum
  */
 typedef enum
 {
-	WINDOW_BEING_RESIZED,							/**< window is in process of being resized */
-	WINDOW_BEING_MOVED,								/**< window in the process of being moved */
-	WINDOW_NOT_BEING_REDIMENSIONED					/**< neither of the above */
+	WINDOW_BEING_RESIZED,							/**< Window is in process of being resized */
+	WINDOW_BEING_MOVED,								/**< Window in the process of being moved */
+	WINDOW_NOT_BEING_REDIMENSIONED					/**< Neither of the above */
 } window_redimensioning_state_t;
 
 /**
@@ -88,6 +88,7 @@ typedef struct
     mw_message_func_p message_func;     /**< Pointer to window message handler function */
     uint32_t window_flags;				/**< All the flags defining a window's description and state */
 	void *instance_data;				/**< Optional void pointer to window specific data structure containing window instance specific data */
+	mw_handle_t window_handle;			/**< handle used to refer to this window */
 	mw_util_rect_t window_rect;         /**< Rect containing coordinates of window including title bar and border if present */
 	mw_util_rect_t client_rect;         /**< Rect containing coordinates of window's client area */
 	uint16_t menu_bar_item_enables;		/**< Bitfield of individual enable flags for menu bar items */
@@ -97,7 +98,6 @@ typedef struct
     uint8_t menu_bar_items_count;		/**< Number of items in above array */
     uint8_t menu_bar_selected_item;		/**< The most recently selected menu bar item */
     char title[MW_MAX_TITLE_SIZE + 1];  /**< The window's title in the title bar */
-	mw_handle_t window_handle;			/**< handle used to refer to this window */
 } window_t;
 
 /**
@@ -108,10 +108,10 @@ typedef struct
     mw_paint_func_p paint_func;         /**< Pointer to control paint function */
     mw_message_func_p message_func;     /**< Pointer to control message handler function */
 	void *instance_data;				/**< Void pointer to control specific data structure containing control specific configuration data per instance */
-	uint16_t control_flags;				/**< All the flags defining a control's description and state */
 	mw_util_rect_t control_rect;        /**< Rect containing coordinates of control's area */
-	mw_handle_t parent;                 /**< This control's parent window handle */
+	mw_handle_t parent_handle;          /**< This control's parent window handle */
 	mw_handle_t control_handle;			/**< handle used to refer to this control */
+	uint16_t control_flags;				/**< All the flags defining a control's description and state */
 } control_t;
 
 /**
@@ -119,10 +119,10 @@ typedef struct
  */
 typedef struct
 {
-	uint32_t next_fire_time;        				/**< the time for the timer to go off in window manager ticks; this is an absolute value, not relative */
-	mw_handle_t recipient_handle;	 				/**< the window or control handle of the recipient of the timer fired message */
-	mw_message_recipient_type_t recipient_type;   	/**< the type of recipient of timer fired message */
-	mw_handle_t timer_handle;						/**< handle used to refer to this timer */
+	uint32_t next_fire_time;        				/**< The time for the timer to go off in window manager ticks; this is an absolute value, not relative */
+	mw_handle_t recipient_handle;	 				/**< The window or control handle of the recipient of the timer fired message */
+	mw_handle_t timer_handle;						/**< Handle used to refer to this timer */
+	mw_message_recipient_type_t recipient_type;   	/**< The type of recipient of timer fired message */
 } window_timer_t;
 
 /**
@@ -130,9 +130,9 @@ typedef struct
  */
 typedef struct
 {
-	uint32_t next_fire_time;        				/**< the time for the timer to go off in window manager ticks; this is an absolute value, not relative */
-	system_timer_event_t system_timer_event;		/**< the operation to execute when timer fires */
-	uint32_t data;									/**< any extra data to specify the operation */
+	uint32_t next_fire_time;        				/**< The time for the timer to go off in window manager ticks; this is an absolute value, not relative */
+	uint32_t data;									/**< Any extra data to specify the operation */
+	system_timer_event_t system_timer_event;		/**< The operation to execute when timer fires */
 } system_timer_t;
 
 /***********************
@@ -159,8 +159,8 @@ static window_timer_t mw_all_timers[MW_MAX_TIMER_COUNT];   	/**< Array of struct
 static mw_handle_t window_with_focus_handle;				/**< The window at the front with focus receiving touch events within its rect */
 static int16_t vertical_edges[(MW_MAX_WINDOW_COUNT) * 2];	/**< Scratch area to store array of vertical window edges, used in various places, for window analysis when repainting */
 static int16_t horizontal_edges[(MW_MAX_WINDOW_COUNT) * 2]; /**< Scratch area to store array of horizontal window edges, used in various places, for window analysis when repainting */
-static system_timer_t system_timer;							/**< a timer used by the window manager for its own asynchronous events */
-static bool in_client_window_paint_function;				/**< set true when calling a client window paint function, false after exiting the client window paint function */
+static system_timer_t system_timer;							/**< A timer used by the window manager for its own asynchronous events */
+static bool in_client_window_paint_function;				/**< Set true when calling a client window paint function, false after exiting the client window paint function */
 
 /********************************
 *** LOCAL FUNCTION PROTOTYPES ***
@@ -187,9 +187,10 @@ static void calculate_new_window_size_details(mw_handle_t window_handle, const m
 static uint8_t find_empty_control_slot();
 static void set_control_details(const mw_util_rect_t *rect,
 		mw_paint_func_p paint_func,
+		uint8_t control_id,
 		mw_handle_t control_handle,
 		mw_message_func_p message_func,
-		mw_handle_t parent,
+		mw_handle_t parent_handle,
 		uint16_t control_flags,
 		void *instance_data);
 
@@ -303,7 +304,7 @@ static void set_window_details(const mw_util_rect_t *rect,
 		uint16_t window_flags,
 		void *instance_data)
 {
-	/* check pointers */
+	/* check arguments */
 	MW_ASSERT(rect, "Null pointer argument");
 	MW_ASSERT(title, "Null pointer argument");
 	MW_ASSERT(paint_func, "Null pointer argument");
@@ -341,17 +342,17 @@ static void set_window_details(const mw_util_rect_t *rect,
  * @param new_width The proposed new window width
  * @param new_height The proposed new window height 
  * @param flags The flags used when creating the window that contain its options
- * @return True if allowed else false 
+ * @return true if allowed else false 
  */
 static bool check_window_dimensions(uint16_t new_width,
 		uint16_t new_height,
 		uint16_t flags)
 {
-	uint16_t window_minimum_width;
-	uint16_t window_minimum_height;
+	/* starting values for width and height is 1 pixel */
+	uint16_t window_minimum_width = 1;
+	uint16_t window_minimum_height = 1;
 
-	/* starting point for minimum window width is 1 pixel */
-	window_minimum_width = 1;
+	/* if a title bar is specified there must be space for the icons */
 	if (flags & MW_WINDOW_FLAG_HAS_TITLE_BAR)
 	{
 		/* if a title bar is present then minimum width must give space for the title bar icons */
@@ -374,8 +375,7 @@ static bool check_window_dimensions(uint16_t new_width,
 		}
 	}
 
-	/* starting point for minimum window height is 1 pixel */
-	window_minimum_height = 1;
+	/* check for a border first when calculating minimum height */
 	if (flags & MW_WINDOW_FLAG_HAS_BORDER)
 	{
 		/* has border */
@@ -445,7 +445,7 @@ static void calculate_new_window_size_details(mw_handle_t window_handle, const m
 	window_id = get_window_id_for_handle(window_handle);
 	MW_ASSERT(window_id < MW_MAX_WINDOW_COUNT, "Bad window handle");
 
-	/* set the window rect from that passed in first */
+	/* set the window rect from that passed in */
 	memcpy(&(mw_all_windows[window_id].window_rect), rect, sizeof(mw_util_rect_t));
 
 	/* find out border width; depends on if there is a border */
@@ -533,42 +533,45 @@ static uint8_t find_empty_control_slot()
  * @param message_function Pointer to message handling function
  * @param parent The window handle of the control's parent window
  * @param control_flags Flags describing the control and its state
- * @param instance_data Void pointer to control specific data structure containing extra control specific configuration data for this instance
+ * @param instance_data void pointer to control specific data structure containing extra control specific configuration data for this instance
  */
 static void set_control_details(const mw_util_rect_t *rect,
 		mw_paint_func_p paint_func,
+		uint8_t control_id,
 		mw_handle_t control_handle,
 		mw_message_func_p message_func,
-		mw_handle_t parent,
+		mw_handle_t parent_handle,
 		uint16_t control_flags,
 		void *instance_data)
 {
 	uint8_t parent_window_id;
 
-	/* check pointers */
+	/* check arguments */
 	MW_ASSERT(rect, "Null pointer argument");
 	MW_ASSERT(paint_func, "Null pointer argument");
 	MW_ASSERT(message_func, "Null pointer argument");
-	MW_ASSERT(control_handle < MW_MAX_CONTROL_COUNT, "Illegal control id");
+	MW_ASSERT(control_id < MW_MAX_CONTROL_COUNT, "Illegal control id");
 	MW_ASSERT(instance_data, "Null pointer argument");
 
-	parent_window_id = get_window_id_for_handle(parent);
+	/* get parent window id from parent window handle and check it's in range */
+	parent_window_id = get_window_id_for_handle(parent_handle);
 	MW_ASSERT(parent_window_id < MW_MAX_WINDOW_COUNT, "Bad window handle");
 
 	/* copy in all details to this control's structs in the array of all controls */
-	mw_all_controls[control_handle].control_flags = control_flags | MW_CONTROL_FLAG_IS_USED;
-	mw_all_controls[control_handle].paint_func = paint_func;
-	mw_all_controls[control_handle].message_func = message_func;
-	mw_all_controls[control_handle].parent = parent;
-	mw_all_controls[control_handle].instance_data = instance_data;
+	mw_all_controls[control_id].control_flags = control_flags | MW_CONTROL_FLAG_IS_USED;
+	mw_all_controls[control_id].paint_func = paint_func;
+	mw_all_controls[control_id].message_func = message_func;
+	mw_all_controls[control_id].parent_handle = parent_handle;
+	mw_all_controls[control_id].instance_data = instance_data;
+	mw_all_controls[control_id].control_handle = control_handle;
 
 	/* now make rect's x,y relative to screen rather than window */
-	mw_all_controls[control_handle].control_rect.x = rect->x + mw_all_windows[parent_window_id].client_rect.x;
-	mw_all_controls[control_handle].control_rect.y = rect->y + mw_all_windows[parent_window_id].client_rect.y;
+	mw_all_controls[control_id].control_rect.x = rect->x + mw_all_windows[parent_window_id].client_rect.x;
+	mw_all_controls[control_id].control_rect.y = rect->y + mw_all_windows[parent_window_id].client_rect.y;
 	
 	/* set control rect's width and height */
-	mw_all_controls[control_handle].control_rect.width = rect->width;
-	mw_all_controls[control_handle].control_rect.height = rect->height;
+	mw_all_controls[control_id].control_rect.width = rect->width;
+	mw_all_controls[control_id].control_rect.height = rect->height;
 }
 
 /**
@@ -654,8 +657,8 @@ static uint8_t find_icon_number_for_window(mw_handle_t window_handle)
  * Find the icon location on the desktop for icon number next starting at 0
  *
  * @param icon_number The icon number to look for
- * @param X the returned left edge of the icon
- * @param Y the returned top edge of the icon
+ * @param x The returned left edge of the icon
+ * @param y The returned top edge of the icon
  */
 static void find_minimsed_icon_location(uint8_t icon_number, int16_t *x, int16_t *y)
 {
@@ -793,7 +796,7 @@ static void draw_minimised_icons(void)
 	uint16_t vertical_edge_counter;
 	mw_gl_draw_info_t draw_info;
 
-	/* set unchanging values of icon rect */
+	/* set constant values of icon rect */
 	r.width = MW_DESKTOP_ICON_WIDTH;
 	r.height = MW_DESKTOP_ICON_HEIGHT;
 
@@ -926,7 +929,7 @@ static uint8_t find_highest_z_order()
  *
  * @param touch_x The x coordinate of the touch point
  * @param touch_y The y coordinate of the touch point
- * return The window handle
+ * @return The window handle
  */
 static mw_handle_t find_window_point_is_in(int16_t touch_x, int16_t touch_y)
 {
@@ -969,14 +972,14 @@ static mw_handle_t find_window_point_is_in(int16_t touch_x, int16_t touch_y)
 static mw_handle_t find_control_point_is_in(mw_handle_t window_handle, int16_t point_x, int16_t point_y)
 {
 	int16_t i;
-	uint8_t control_found = MW_MAX_CONTROL_COUNT;
+	mw_handle_t control_found = MW_INVALID_HANDLE;
 
 	/* loop through all controls */
 	for (i = MW_MAX_CONTROL_COUNT - 1; i >= 0; i--)
 	{
 		/* ignore unused controls and controls with a different parent window to that identified above */
 		if (!(mw_all_controls[i].control_flags & MW_CONTROL_FLAG_IS_USED) ||
-				mw_all_controls[i].parent != window_handle)
+				mw_all_controls[i].parent_handle != window_handle)
 		{
 			continue;
 		}
@@ -987,7 +990,7 @@ static mw_handle_t find_control_point_is_in(mw_handle_t window_handle, int16_t p
 				(mw_all_controls[i].control_flags & MW_CONTROL_FLAG_IS_ENABLED))
 		{
 			/* a control has been identified that this touch message occurred in */
-			control_found = i;
+			control_found = mw_all_controls[i].control_handle;
 			break;
 		}
 	}
@@ -1397,7 +1400,7 @@ static void draw_titlebar_text(mw_handle_t window_handle, const mw_gl_draw_info_
  */
 static void draw_menu_bar(const mw_gl_draw_info_t *draw_info, mw_handle_t window_handle)
 {
-	uint16_t next_pos;
+	uint16_t next_pos = 0;
 	uint8_t i;
 	uint8_t window_id;
 
@@ -1423,7 +1426,6 @@ static void draw_menu_bar(const mw_gl_draw_info_t *draw_info, mw_handle_t window
 	mw_gl_set_text_rotation(MW_GL_TEXT_ROTATION_0);
 
     /* draw each item */
-	next_pos = 0;
 	for (i = 0; i < mw_all_windows[window_id].menu_bar_items_count; i++)
 	{
         /* check if this item is selected */
@@ -2178,11 +2180,11 @@ static void paint_all_controls_in_window(mw_handle_t window_handle)
 	for (i = 0; i < MW_MAX_CONTROL_COUNT; i++)
 	{
         /* ignore controls not used, not visible and not belonging to specified window */
-		if (mw_all_controls[i].parent == window_handle &&
+		if (mw_all_controls[i].parent_handle == window_handle &&
 				(mw_all_controls[i].control_flags & MW_CONTROL_FLAG_IS_USED) &&
 				(mw_all_controls[i].control_flags & MW_CONTROL_FLAG_IS_VISIBLE))
 		{
-			do_paint_control(i);
+			do_paint_control(mw_all_controls[i].control_handle);
 		}
 	}
 }
@@ -2206,11 +2208,11 @@ static void paint_all_controls_in_window_rect(mw_handle_t window_handle, const m
 	for (i = 0; i < MW_MAX_CONTROL_COUNT; i++)
 	{
         /* ignore controls not used, not visible and not belonging to specified window */
-		if (mw_all_controls[i].parent == window_handle &&
+		if (mw_all_controls[i].parent_handle == window_handle &&
 				(mw_all_controls[i].control_flags & MW_CONTROL_FLAG_IS_USED) &&
 				(mw_all_controls[i].control_flags & MW_CONTROL_FLAG_IS_VISIBLE))
 		{
-			do_paint_control_rect(i, invalid_rect);
+			do_paint_control_rect(mw_all_controls[i].control_handle, invalid_rect);
 		}
 	}
 }
@@ -2236,47 +2238,55 @@ static void do_paint_control_rect(mw_handle_t control_handle, const mw_util_rect
 	mw_util_rect_t rect_previous;
 	mw_util_rect_t invalid_rect_copy;
 	uint8_t parent_window_id;
+	uint8_t control_id;
 
-	MW_ASSERT(control_handle < MW_MAX_CONTROL_COUNT, "Illegal control id");
 	MW_ASSERT(invalid_rect, "Null pointer argument");
 
-	parent_window_id = get_window_id_for_handle(mw_all_controls[control_handle].parent);
+	/* get control id from control handle and check it's in range */
+	control_id = get_control_id_for_handle(control_handle);
+	if (control_id >= MW_MAX_CONTROL_COUNT)
+	{
+		MW_ASSERT(false, "Bad control handle");
+		return;
+	}
+
+	parent_window_id = get_window_id_for_handle(mw_all_controls[control_id].parent_handle);
 	MW_ASSERT(parent_window_id < MW_MAX_WINDOW_COUNT, "Bad window handle");
 
     /* check if this control is used, visible and not parent window not minimised; if not give up */
-	if (!(mw_all_controls[control_handle].control_flags & MW_CONTROL_FLAG_IS_VISIBLE) ||
-			!(mw_all_controls[control_handle].control_flags & MW_CONTROL_FLAG_IS_USED) ||
-			(mw_all_windows[parent_window_id].window_flags & MW_WINDOW_FLAG_IS_MINIMISED))
+	if (!(mw_all_controls[control_id].control_flags & MW_CONTROL_FLAG_IS_VISIBLE) ||
+			!(mw_all_controls[control_id].control_flags & MW_CONTROL_FLAG_IS_USED) ||
+			(mw_all_windows[control_id].window_flags & MW_WINDOW_FLAG_IS_MINIMISED))
 	{
 		return;
 	}
 
-	invalid_rect_copy.x = mw_all_controls[control_handle].control_rect.x + invalid_rect->x;
-	if (invalid_rect_copy.x > mw_all_controls[control_handle].control_rect.x + mw_all_controls[control_handle].control_rect.width)
+	invalid_rect_copy.x = mw_all_controls[control_id].control_rect.x + invalid_rect->x;
+	if (invalid_rect_copy.x > mw_all_controls[control_id].control_rect.x + mw_all_controls[control_id].control_rect.width)
 	{
 		return;
 	}
 
-	invalid_rect_copy.y = mw_all_controls[control_handle].control_rect.y + invalid_rect->y;
-	if (invalid_rect_copy.y > mw_all_controls[control_handle].control_rect.y + mw_all_controls[control_handle].control_rect.height)
+	invalid_rect_copy.y = mw_all_controls[control_id].control_rect.y + invalid_rect->y;
+	if (invalid_rect_copy.y > mw_all_controls[control_id].control_rect.y + mw_all_controls[control_id].control_rect.height)
 	{
 		return;
 	}
 
 	invalid_rect_copy.width = invalid_rect->width;
 	if (invalid_rect_copy.x + invalid_rect_copy.width >
-		mw_all_controls[control_handle].control_rect.x + mw_all_controls[control_handle].control_rect.width)
+		mw_all_controls[control_id].control_rect.x + mw_all_controls[control_id].control_rect.width)
 	{
 		invalid_rect_copy.width -= ((invalid_rect_copy.x + invalid_rect_copy.width) -
-									(mw_all_controls[control_handle].control_rect.x + mw_all_controls[control_handle].control_rect.width));
+									(mw_all_controls[control_id].control_rect.x + mw_all_controls[control_id].control_rect.width));
 	}
 
 	invalid_rect_copy.height = invalid_rect->height;
 	if (invalid_rect_copy.y + invalid_rect_copy.height >
-		mw_all_controls[control_handle].control_rect.y + mw_all_controls[control_handle].control_rect.height)
+		mw_all_controls[control_id].control_rect.y + mw_all_controls[control_id].control_rect.height)
 	{
 		invalid_rect_copy.height -= ((invalid_rect_copy.y + invalid_rect_copy.height) -
-									(mw_all_controls[control_handle].control_rect.y + mw_all_controls[control_handle].control_rect.height));
+									(mw_all_controls[control_id].control_rect.y + mw_all_controls[control_id].control_rect.height));
 	}
 
 	find_rect_window_intersections(&invalid_rect_copy, &horiz_edges_count, &vert_edges_count);
@@ -2345,21 +2355,28 @@ static void do_paint_control(mw_handle_t control_handle)
 	mw_util_rect_t rect_current;
 	mw_util_rect_t rect_previous;
 	uint8_t parent_window_id;
+	uint8_t control_id;
 
-	MW_ASSERT(control_handle < MW_MAX_CONTROL_COUNT, "Illegal control id");
+	/* get control id from control handle and check it's in range */
+	control_id = get_control_id_for_handle(control_handle);
+	if (control_id >= MW_MAX_CONTROL_COUNT)
+	{
+		MW_ASSERT(false, "Bad control handle");
+		return;
+	}
 
-	parent_window_id = get_window_id_for_handle(mw_all_controls[control_handle].parent);
+	parent_window_id = get_window_id_for_handle(mw_all_controls[control_id].parent_handle);
 	MW_ASSERT(parent_window_id < MW_MAX_WINDOW_COUNT, "Bad window handle");
 
     /* check if this control is used, visible and not parent window not minimised; if not give up */
-	if (!(mw_all_controls[control_handle].control_flags & MW_CONTROL_FLAG_IS_VISIBLE) ||
-			!(mw_all_controls[control_handle].control_flags & MW_CONTROL_FLAG_IS_USED) ||
+	if (!(mw_all_controls[control_id].control_flags & MW_CONTROL_FLAG_IS_VISIBLE) ||
+			!(mw_all_controls[control_id].control_flags & MW_CONTROL_FLAG_IS_USED) ||
 			(mw_all_windows[parent_window_id].window_flags & MW_WINDOW_FLAG_IS_MINIMISED))
 	{
 		return;
 	}
 
-	find_rect_window_intersections(&mw_all_controls[control_handle].control_rect, &horiz_edges_count, &vert_edges_count);
+	find_rect_window_intersections(&mw_all_controls[control_id].control_rect, &horiz_edges_count, &vert_edges_count);
 
 	/* iterate through horizontal edges, i.e. row at a time */
 	for (horizontal_edge_counter = 0; horizontal_edge_counter < horiz_edges_count - 1; horizontal_edge_counter++)
@@ -2420,20 +2437,28 @@ static void do_paint_control2(mw_handle_t control_handle, const mw_util_rect_t *
 	mw_gl_draw_info_t client_draw_info;
 	uint8_t parent_window_id;
 	int16_t client_area_overspill;
+	uint8_t control_id;
 
-	MW_ASSERT(control_handle < MW_MAX_CONTROL_COUNT, "Illegal control id");
 	MW_ASSERT(invalid_rect, "Null pointer argument");
 
-	client_draw_info.clip_rect.x = invalid_rect->x - mw_all_controls[control_handle].control_rect.x;
-	client_draw_info.clip_rect.y = invalid_rect->y - mw_all_controls[control_handle].control_rect.y;
+	/* get control id from control handle and check it's in range */
+	control_id = get_control_id_for_handle(control_handle);
+	if (control_id >= MW_MAX_CONTROL_COUNT)
+	{
+		MW_ASSERT(false, "Bad control handle");
+		return;
+	}
+
+	client_draw_info.clip_rect.x = invalid_rect->x - mw_all_controls[control_id].control_rect.x;
+	client_draw_info.clip_rect.y = invalid_rect->y - mw_all_controls[control_id].control_rect.y;
 	client_draw_info.clip_rect.width = invalid_rect->width;
 	client_draw_info.clip_rect.height = invalid_rect->height;
-	client_draw_info.origin_x = mw_all_controls[control_handle].control_rect.x;
-	client_draw_info.origin_y = mw_all_controls[control_handle].control_rect.y;
+	client_draw_info.origin_x = mw_all_controls[control_id].control_rect.x;
+	client_draw_info.origin_y = mw_all_controls[control_id].control_rect.y;
 
 	/* control rect paint area is relative to window edges but control must be drawn relative to window client area
 	 * edges so reduce clip width if paint area over-spills border; controls cannot over-spill title bar */
-	parent_window_id = get_window_id_for_handle(mw_all_controls[control_handle].parent);
+	parent_window_id = get_window_id_for_handle(mw_all_controls[control_id].parent_handle);
 	MW_ASSERT(parent_window_id < MW_MAX_WINDOW_COUNT, "Bad window handle");
 	client_area_overspill = (client_draw_info.origin_x + client_draw_info.clip_rect.width) -
 			(mw_all_windows[parent_window_id].client_rect.x + mw_all_windows[parent_window_id].client_rect.width);
@@ -2467,7 +2492,7 @@ static void do_paint_control2(mw_handle_t control_handle, const mw_util_rect_t *
 		client_draw_info.clip_rect.height -= client_area_overspill;
 	}
 
-	mw_all_controls[control_handle].paint_func(control_handle, &client_draw_info);
+	mw_all_controls[control_id].paint_func(control_handle, &client_draw_info);
 }
 
 /**
@@ -2487,11 +2512,16 @@ static mw_handle_t get_next_handle(void)
  * Get a timer_id represented by a timer handle
  *
  * @param timer_handle The timer handle
- * @return The id of the timer the handle represents
+ * @return The id of the timer the handle represents or MW_MAX_TIMER_COUNT if it does not represent a timer
  */
 static uint8_t get_timer_id_for_handle(mw_handle_t timer_handle)
 {
 	uint8_t i;
+
+	if (timer_handle == MW_INVALID_HANDLE)
+	{
+		return MW_MAX_TIMER_COUNT;
+	}
 
 	for (i = 0; i < MW_MAX_TIMER_COUNT; i++)
 	{
@@ -2508,11 +2538,16 @@ static uint8_t get_timer_id_for_handle(mw_handle_t timer_handle)
  * Get a window_id represented by a window's handle
  *
  * @param window_handle The window's handle
- * @return The id of the window the handle represents
+ * @return The id of the window the handle represents or MAX_WINDOW_COUNT if it does not represent a window
  */
 static uint8_t get_window_id_for_handle(mw_handle_t window_handle)
 {
 	uint8_t i;
+
+	if (window_handle == MW_INVALID_HANDLE)
+	{
+		return MW_MAX_WINDOW_COUNT;
+	}
 
 	for (i = 0; i < MW_MAX_WINDOW_COUNT; i++)
 	{
@@ -2529,11 +2564,16 @@ static uint8_t get_window_id_for_handle(mw_handle_t window_handle)
  * Get a control_id represented by a control's handle
  *
  * @param control_handle The control's handle
- * @return The id of the control the handle represents
+ * @return The id of the control the handle represents or MAX_CONTROL_COUNT if it does not represent a control
  */
 static uint8_t get_control_id_for_handle(mw_handle_t control_handle)
 {
 	uint8_t i;
+
+	if (control_handle == MW_INVALID_HANDLE)
+	{
+		return MW_MAX_CONTROL_COUNT;
+	}
 
 	for (i = 0; i < MW_MAX_CONTROL_COUNT; i++)
 	{
@@ -2564,7 +2604,7 @@ static window_redimensioning_state_t process_touch_event(void)
 	int16_t difference_x = 0;
 	int16_t difference_y = 0;
 	uint8_t window_to_receive_message_id;
-	uint8_t control_to_receive_message;
+	uint8_t control_to_receive_message_id;
 	int16_t client_x;
 	int16_t client_y;
 	uint8_t touch_message;
@@ -2972,19 +3012,19 @@ static window_redimensioning_state_t process_touch_event(void)
 	}
 
 	/* find out if it occurred in a control */
-	control_to_receive_message = find_control_point_is_in(mw_all_windows[window_to_receive_message_id].window_handle,
-			touch_x, touch_y);
+	control_to_receive_message_id = get_control_id_for_handle(
+			find_control_point_is_in(mw_all_windows[window_to_receive_message_id].window_handle, touch_x, touch_y));
 
 	/* check if touch was identified to have occurred in a control */
-	if (control_to_receive_message != MW_MAX_CONTROL_COUNT)
+	if (control_to_receive_message_id < MW_MAX_CONTROL_COUNT)
 	{
 		/* touch occurred in a control so send touch message to that control */
-		client_x = touch_x - mw_all_controls[control_to_receive_message].control_rect.x;
-		client_y = touch_y - mw_all_controls[control_to_receive_message].control_rect.y;
+		client_x = touch_x - mw_all_controls[control_to_receive_message_id].control_rect.x;
+		client_y = touch_y - mw_all_controls[control_to_receive_message_id].control_rect.y;
 
 		mw_post_message(touch_message,
 				MW_UNUSED_MESSAGE_PARAMETER,
-				control_to_receive_message,
+				mw_all_controls[control_to_receive_message_id].control_handle,
 				(((uint32_t)client_x) << 16) | client_y,
 				MW_CONTROL_MESSAGE);
 		return window_redimensioning_state;
@@ -3148,12 +3188,12 @@ static void set_focus(void)
 	for (i = 0; i < MW_MAX_CONTROL_COUNT; i++)
 	{
 		/* check that control belongs to the window losing focus */
-		if (mw_all_controls[i].parent == window_with_focus_handle &&
+		if (mw_all_controls[i].parent_handle == window_with_focus_handle &&
 				(mw_all_controls[i].control_flags & MW_CONTROL_FLAG_IS_USED))
 		{
 			mw_post_message(MW_CONTROL_LOST_FOCUS_MESSAGE,
 					MW_UNUSED_MESSAGE_PARAMETER,
-					i,
+					mw_all_controls[i].control_handle,
 					MW_UNUSED_MESSAGE_PARAMETER,
 					MW_CONTROL_MESSAGE);
 		}
@@ -3171,12 +3211,12 @@ static void set_focus(void)
 	/* send message to all controls in the window that parent window gained focus */
 	for (i = 0; i < MW_MAX_CONTROL_COUNT; i++)
 	{
-		if (mw_all_controls[i].parent == window_with_focus_handle &&
+		if (mw_all_controls[i].parent_handle == window_with_focus_handle &&
 				(mw_all_controls[i].control_flags & MW_CONTROL_FLAG_IS_USED))
 		{
 			mw_post_message(MW_CONTROL_GAINED_FOCUS_MESSAGE,
 					MW_UNUSED_MESSAGE_PARAMETER,
-					i,
+					mw_all_controls[i].control_handle,
 					MW_UNUSED_MESSAGE_PARAMETER,
 					MW_CONTROL_MESSAGE);
 		}
@@ -3428,6 +3468,26 @@ mw_handle_t mw_add_window(mw_util_rect_t *rect,
 	return mw_all_windows[new_window_id].window_handle;
 }
 
+bool mw_is_window_handle_valid(mw_handle_t window_handle)
+{
+	uint8_t i;
+
+	if (window_handle == MW_INVALID_HANDLE)
+	{
+		return false;
+	}
+
+	for (i = 0; i < MW_MAX_WINDOW_COUNT; i++)
+	{
+		if (mw_all_windows[i].window_handle == window_handle)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
 void mw_bring_window_to_front(mw_handle_t window_handle)
 {
 	uint8_t max_existing_z_order;
@@ -3588,7 +3648,7 @@ void mw_reposition_window(mw_handle_t window_handle, int16_t new_x, int16_t new_
 	for (i = 0; i < MW_MAX_CONTROL_COUNT; i++)
 	{
 		/* find controls that are used and have this window as parent */
-		if (mw_all_controls[i].parent == window_handle && (mw_all_controls[i].control_flags & MW_CONTROL_FLAG_IS_USED))
+		if (mw_all_controls[i].parent_handle == window_handle && (mw_all_controls[i].control_flags & MW_CONTROL_FLAG_IS_USED))
 		{
 			/* move the control */
 			mw_all_controls[i].control_rect.x += (new_x - mw_all_windows[window_id].window_rect.x);
@@ -3802,10 +3862,10 @@ void mw_set_window_vert_scroll_bar_enabled_state(mw_handle_t window_handle, bool
 
 void mw_paint_window_frame(mw_handle_t window_handle, uint8_t components)
 {
-	/* check that the handle is valid */
-	if (window_handle == 0)
+	/* check window handle is valid */
+	if (get_window_id_for_handle(window_handle) >= MW_MAX_WINDOW_COUNT)
 	{
-		MW_ASSERT(false, "Illegal handle");
+		MW_ASSERT(false, "Bad window handle");
 		return;
 	}
 	
@@ -3820,10 +3880,10 @@ void mw_paint_window_frame(mw_handle_t window_handle, uint8_t components)
 
 void mw_paint_window_client(mw_handle_t window_handle)
 {
-	/* check that the handle is valid */
-	if (window_handle == 0)
+	/* check window handle is valid */
+	if (get_window_id_for_handle(window_handle) >= MW_MAX_WINDOW_COUNT)
 	{
-		MW_ASSERT(false, "Illegal handle");
+		MW_ASSERT(false, "Bad window handle");
 		return;
 	}
 	
@@ -3845,10 +3905,10 @@ void mw_paint_window_client_rect(mw_handle_t window_handle, const mw_util_rect_t
 		return;
 	}
 
-	/* check that the handle is valid */
-	if (window_handle == 0)
+	/* check window handle is valid */
+	if (get_window_id_for_handle(window_handle) >= MW_MAX_WINDOW_COUNT)
 	{
-		MW_ASSERT(false, "Illegal handle");
+		MW_ASSERT(false, "Bad window handle");
 		return;
 	}
 
@@ -3865,6 +3925,7 @@ void mw_remove_window(mw_handle_t window_handle)
 {
 	uint8_t i;
 	uint8_t window_id;
+	mw_message_t *message;
 
 	/* get window id from window handle and check it's in range */
 	window_id = get_window_id_for_handle(window_handle);
@@ -3884,7 +3945,7 @@ void mw_remove_window(mw_handle_t window_handle)
 	/* remove all controls that have this window as a parent */
 	for (i = 0; i < MW_MAX_CONTROL_COUNT; i++)
 	{
-		if (mw_all_controls[i].parent == window_handle)
+		if (mw_all_controls[i].parent_handle == window_handle)
 		{
 			mw_all_controls[i].control_flags &= ~MW_CONTROL_FLAG_IS_USED;
 		}
@@ -3903,7 +3964,23 @@ void mw_remove_window(mw_handle_t window_handle)
 		}
 	}
 
-	// todo need to cancel timer messages already in message queue
+	/* cancel timer messages already in message queue */
+	for (i = 0; i < MW_MESSAGE_QUEUE_SIZE; i++)
+	{
+		message = mw_message_queue_get_ref_to_item_at_position(i);
+		MW_ASSERT(message, "Null message found in queue");
+
+		if (message)
+		{
+			if (message->message_id == MW_TIMER_MESSAGE &&
+					message->message_recipient_type == MW_WINDOW_MESSAGE &&
+					message->recipient_handle == window_handle)
+			{
+				/* this leaves the message in the message queue but marks it as to be ignored when the message is processed */
+				message->message_recipient_type = MW_CANCELLED_MESSAGE;
+			}
+		}
+	}
 
 	/* send window removed message to window message function */
    	mw_post_message(MW_WINDOW_REMOVED_MESSAGE,
@@ -3950,6 +4027,21 @@ void *mw_get_window_instance_data(mw_handle_t window_handle)
 	return mw_all_windows[window_id].instance_data;
 }
 
+uint16_t mw_get_window_flags(mw_handle_t window_handle)
+{
+	uint8_t window_id;
+
+	/* get window id from window handle and check it's in range */
+	window_id = get_window_id_for_handle(window_handle);
+	if (window_id >= MW_MAX_WINDOW_COUNT)
+	{
+		MW_ASSERT(false, "Bad window handle");
+		return 0;
+	}
+
+	return mw_all_windows[window_id].window_flags;
+}
+
 void wm_set_window_title(mw_handle_t window_handle, char *title_text)
 {
 	uint8_t window_id;
@@ -3970,15 +4062,15 @@ bool mw_find_if_any_control_slots_free(void)
 	return (find_empty_control_slot() != MW_MAX_CONTROL_COUNT);
 }
 
-uint8_t mw_add_control(mw_util_rect_t *rect,
-		mw_handle_t parent,
+mw_handle_t mw_add_control(mw_util_rect_t *rect,
+		mw_handle_t parent_handle,
 		mw_paint_func_p paint_func,
 		mw_message_func_p message_func,
 		uint16_t control_flags,
 		void *instance_data)
 {
 	uint8_t new_control_id;
-	uint8_t parent_window_id;
+	mw_handle_t parent_window_id;
 
 	/* check for null parameters */
 	if (rect == NULL || instance_data == NULL || paint_func == NULL || message_func == NULL)
@@ -3995,7 +4087,7 @@ uint8_t mw_add_control(mw_util_rect_t *rect,
 	}
 
 	/* get parent window id from window handle and check it's in range */
-	parent_window_id = get_window_id_for_handle(parent);
+	parent_window_id = get_window_id_for_handle(parent_handle);
 	if (parent_window_id >= MW_MAX_WINDOW_COUNT)
 	{
 		MW_ASSERT(false, "Bad window handle");
@@ -4029,52 +4121,76 @@ uint8_t mw_add_control(mw_util_rect_t *rect,
    	set_control_details(rect,
    			paint_func,
    			new_control_id,
+			get_next_handle(),
    			message_func,
-   			parent,
+			parent_handle,
    			control_flags,
 			instance_data);
 
 	/* send control created message to this control's message function */
    	mw_post_message(MW_CONTROL_CREATED_MESSAGE,
    			MW_UNUSED_MESSAGE_PARAMETER,
-   			new_control_id,
+			mw_all_controls[new_control_id].control_handle,
    			MW_UNUSED_MESSAGE_PARAMETER,
    			MW_CONTROL_MESSAGE);
 
-   	if (parent == window_with_focus_handle)
+   	if (parent_handle == window_with_focus_handle)
    	{
    		/* send control a gained focus message if parent window has focus */
    	   	mw_post_message(MW_CONTROL_GAINED_FOCUS_MESSAGE,
    	   			MW_UNUSED_MESSAGE_PARAMETER,
-   	   			new_control_id,
+				mw_all_controls[new_control_id].control_handle,
    	   			MW_UNUSED_MESSAGE_PARAMETER,
    	   			MW_CONTROL_MESSAGE);
    	}
 
-	return new_control_id;
+	return mw_all_controls[new_control_id].control_handle;
+}
+
+bool mw_is_control_handle_valid(mw_handle_t control_handle)
+{
+	uint8_t i;
+
+	if (control_handle == MW_INVALID_HANDLE)
+	{
+		return false;
+	}
+
+	for (i = 0; i < MW_MAX_CONTROL_COUNT; i++)
+	{
+		if (mw_all_controls[i].control_handle == control_handle)
+		{
+			return true;
+		}
+	}
+
+	return false;
 }
 
 void mw_set_control_visible(mw_handle_t control_handle, bool visible)
 {
-	/* check that the control id is in range */
-	if (control_handle >= MW_MAX_CONTROL_COUNT)
+	uint8_t control_id;
+
+	/* get control id from control handle and check it's in range */
+	control_id = get_control_id_for_handle(control_handle);
+	if (control_id >= MW_MAX_CONTROL_COUNT)
 	{
-		MW_ASSERT(false, "Illegal control id");
+		MW_ASSERT(false, "Bad control handle");
 		return;
 	}
 
 	/* ignore if not used */
-	if (!(mw_all_controls[control_handle].control_flags & MW_CONTROL_FLAG_IS_USED))
+	if (!(mw_all_controls[control_id].control_flags & MW_CONTROL_FLAG_IS_USED))
 	{
 		return;
 	}
 
 	/* ignore if no change */
-	if (visible && (mw_all_controls[control_handle].control_flags & MW_CONTROL_FLAG_IS_VISIBLE))
+	if (visible && (mw_all_controls[control_id].control_flags & MW_CONTROL_FLAG_IS_VISIBLE))
 	{
 		return;
 	}
-	if (!visible && !(mw_all_controls[control_handle].control_flags & MW_CONTROL_FLAG_IS_VISIBLE))
+	if (!visible && !(mw_all_controls[control_id].control_flags & MW_CONTROL_FLAG_IS_VISIBLE))
 	{
 		return;
 	}
@@ -4082,60 +4198,56 @@ void mw_set_control_visible(mw_handle_t control_handle, bool visible)
 	if (visible)
 	{
 		/* set visible */
-		mw_all_controls[control_handle].control_flags |= MW_CONTROL_FLAG_IS_VISIBLE;
-
-		/* post focus gained message to control */
-		mw_post_message(MW_CONTROL_GAINED_FOCUS_MESSAGE,
-				MW_UNUSED_MESSAGE_PARAMETER,
-				control_handle,
-				MW_UNUSED_MESSAGE_PARAMETER,
-				MW_CONTROL_MESSAGE);
+		mw_all_controls[control_id].control_flags |= MW_CONTROL_FLAG_IS_VISIBLE;
 	}
 	else
 	{
 		/* set invisible */
-		mw_all_controls[control_handle].control_flags &= ~MW_CONTROL_FLAG_IS_VISIBLE;
-
-		/* post focus lost message to control */
-		mw_post_message(MW_CONTROL_LOST_FOCUS_MESSAGE,
-				MW_UNUSED_MESSAGE_PARAMETER,
-				control_handle,
-				MW_UNUSED_MESSAGE_PARAMETER,
-				MW_CONTROL_MESSAGE);
+		mw_all_controls[control_id].control_flags &= ~MW_CONTROL_FLAG_IS_VISIBLE;
 	}
+
+	/* post visibility state message to control */
+	mw_post_message(MW_CONTROL_VISIBILITY_CHANGED,
+			MW_UNUSED_MESSAGE_PARAMETER,
+			control_handle,
+			visible,
+			MW_CONTROL_MESSAGE);
 }
 
 void mw_set_control_enabled(mw_handle_t control_handle, bool enabled)
 {
-	/* check that the control id is in range */
-	if (control_handle >= MW_MAX_CONTROL_COUNT)
+	uint8_t control_id;
+
+	/* get control id from control handle and check it's in range */
+	control_id = get_control_id_for_handle(control_handle);
+	if (control_id >= MW_MAX_CONTROL_COUNT)
 	{
-		MW_ASSERT(false, "Illegal control id");
+		MW_ASSERT(false, "Bad control handle");
 		return;
 	}
 
 	/* ignore if control is not used */
-	if (mw_all_controls[control_handle].control_flags & MW_CONTROL_FLAG_IS_USED)
+	if (mw_all_controls[control_id].control_flags & MW_CONTROL_FLAG_IS_USED)
 	{
 		if (enabled)
 		{
 			/* set enabled */
-			mw_all_controls[control_handle].control_flags |= MW_CONTROL_FLAG_IS_ENABLED;
+			mw_all_controls[control_id].control_flags |= MW_CONTROL_FLAG_IS_ENABLED;
 		}
 		else
 		{
 			/* set disabled */
-			mw_all_controls[control_handle].control_flags &= ~MW_CONTROL_FLAG_IS_ENABLED;
+			mw_all_controls[control_id].control_flags &= ~MW_CONTROL_FLAG_IS_ENABLED;
 		}
 	}
 }
 
 void mw_paint_control(mw_handle_t control_handle)
 {
-	/* check that the control id is in range */
-	if (control_handle >= MW_MAX_CONTROL_COUNT)
+	/* check control handle is valid */
+	if (get_control_id_for_handle(control_handle) >= MW_MAX_CONTROL_COUNT)
 	{
-		MW_ASSERT(false, "Illegal control id");
+		MW_ASSERT(false, "Bad control handle");
 		return;
 	}
 	
@@ -4150,10 +4262,10 @@ void mw_paint_control(mw_handle_t control_handle)
 
 void mw_paint_control_rect(mw_handle_t control_handle, const mw_util_rect_t *rect)
 {
-	/* check that the control id is in range */
-	if (control_handle >= MW_MAX_CONTROL_COUNT)
+	/* check control handle is valid */
+	if (get_control_id_for_handle(control_handle) >= MW_MAX_CONTROL_COUNT)
 	{
-		MW_ASSERT(false, "Illegal control id");
+		MW_ASSERT(false, "Bad control handle");
 		return;
 	}
 
@@ -4169,10 +4281,14 @@ void mw_paint_control_rect(mw_handle_t control_handle, const mw_util_rect_t *rec
 void mw_remove_control(mw_handle_t control_handle)
 {
 	uint8_t i;
+	mw_message_t *message;
+	uint8_t control_id;
 
-	/* check that the control id is in range */
-	if (control_handle >= MW_MAX_CONTROL_COUNT)
+	/* get control id from control handle and check it's in range */
+	control_id = get_control_id_for_handle(control_handle);
+	if (control_id >= MW_MAX_CONTROL_COUNT)
 	{
+		MW_ASSERT(false, "Bad control handle");
 		return;
 	}
 
@@ -4189,6 +4305,24 @@ void mw_remove_control(mw_handle_t control_handle)
 		}
 	}
 
+	/* cancel timer messages already in message queue */
+	for (i = 0; i < MW_MESSAGE_QUEUE_SIZE; i++)
+	{
+		message = mw_message_queue_get_ref_to_item_at_position(i);
+		MW_ASSERT(message, "Null message found in queue");
+
+		if (message)
+		{
+			if (message->message_id == MW_TIMER_MESSAGE &&
+					message->message_recipient_type == MW_CONTROL_MESSAGE &&
+					message->recipient_handle == control_handle)
+			{
+				/* this leaves the message in the message queue but marks it as to be ignored when the message is processed */
+				message->message_recipient_type = MW_CANCELLED_MESSAGE;
+			}
+		}
+	}
+
 	/* post control removed message to control message function */
    	mw_post_message(MW_CONTROL_REMOVED_MESSAGE,
    			MW_UNUSED_MESSAGE_PARAMETER,
@@ -4197,53 +4331,68 @@ void mw_remove_control(mw_handle_t control_handle)
    			MW_CONTROL_MESSAGE);
 
 	/* remove this control by marking it as unused */
-   	mw_all_controls[control_handle].control_flags &= ~MW_CONTROL_FLAG_IS_USED;
+   	mw_all_controls[control_id].control_flags &= ~MW_CONTROL_FLAG_IS_USED;
 }
 
 mw_util_rect_t mw_get_control_rect(mw_handle_t control_handle)
 {
 	mw_util_rect_t default_rect = {0, 0, 0, 0};
+	uint8_t control_id;
 
-	if (control_handle >= MW_MAX_CONTROL_COUNT)
+	/* get control id from control handle and check it's in range */
+	control_id = get_control_id_for_handle(control_handle);
+	if (control_id >= MW_MAX_CONTROL_COUNT)
 	{
-		MW_ASSERT(false, "Illegal control id");
+		MW_ASSERT(false, "Bad control handle");
 		return default_rect;
 	}
 
-	return mw_all_controls[control_handle].control_rect;
+	return mw_all_controls[control_id].control_rect;
 }
 
 mw_handle_t mw_get_control_parent_window(mw_handle_t control_handle)
 {
-	if (control_handle >= MW_MAX_CONTROL_COUNT)
+	uint8_t control_id;
+
+	/* get control id from control handle and check it's in range */
+	control_id = get_control_id_for_handle(control_handle);
+	if (control_id >= MW_MAX_CONTROL_COUNT)
 	{
-		MW_ASSERT(false, "Illegal control id");
-		return 0;
+		MW_ASSERT(false, "Bad control handle");
+		return MW_INVALID_HANDLE;
 	}
 
-	return mw_all_controls[control_handle].parent;
+	return mw_all_controls[control_id].parent_handle;
 }
 
 void *mw_get_control_instance_data(mw_handle_t control_handle)
 {
-	if (control_handle >= MW_MAX_CONTROL_COUNT)
+	uint8_t control_id;
+
+	/* get control id from control handle and check it's in range */
+	control_id = get_control_id_for_handle(control_handle);
+	if (control_id >= MW_MAX_CONTROL_COUNT)
 	{
-		MW_ASSERT(false, "Illegal control id");
+		MW_ASSERT(false, "Bad control handle");
 		return NULL;
 	}
 
-	return mw_all_controls[control_handle].instance_data;
+	return mw_all_controls[control_id].instance_data;
 }
 
 uint16_t mw_get_control_flags(mw_handle_t control_handle)
 {
-	if (control_handle >= MW_MAX_CONTROL_COUNT)
+	uint8_t control_id;
+
+	/* get control id from control handle and check it's in range */
+	control_id = get_control_id_for_handle(control_handle);
+	if (control_id >= MW_MAX_CONTROL_COUNT)
 	{
-		MW_ASSERT(false, "Illegal control id");
+		MW_ASSERT(false, "Bad control handle");
 		return 0;
 	}
 
-	return mw_all_controls[control_handle].control_flags;
+	return mw_all_controls[control_id].control_flags;
 }
 
 mw_handle_t mw_set_timer(uint32_t fire_time, mw_handle_t recipient_handle, mw_message_recipient_type_t recipient_type)
@@ -4269,7 +4418,7 @@ mw_handle_t mw_set_timer(uint32_t fire_time, mw_handle_t recipient_handle, mw_me
 		MW_ASSERT(false, "Bad window handle");
 		return MW_INVALID_HANDLE;
 	}
-	if (recipient_type == MW_CONTROL_MESSAGE && recipient_handle > MW_MAX_CONTROL_COUNT)
+	if (recipient_type == MW_CONTROL_MESSAGE && get_control_id_for_handle(recipient_handle) > MW_MAX_CONTROL_COUNT)
 	{
 		MW_ASSERT(false, "Illegal control id");
 		return MW_INVALID_HANDLE;
@@ -4323,7 +4472,7 @@ void mw_cancel_timer(mw_handle_t timer_handle)
 
 		if (message)
 		{
-			if (message->message_id == MW_WINDOW_TIMER_MESSAGE && message->message_data == timer_handle)
+			if (message->message_id == MW_TIMER_MESSAGE && message->message_data == timer_handle)
 			{
 				/* this leaves the message in the message queue but marks it as to be ignored when the message is processed */
 				message->message_recipient_type = MW_CANCELLED_MESSAGE;
@@ -4345,7 +4494,7 @@ void mw_post_message(uint8_t message_id, mw_handle_t sender_handle, mw_handle_t 
 	}
 	else if (recipient_type == MW_CONTROL_MESSAGE)
 	{
-		recipient_id = recipient_handle;
+		recipient_id = get_control_id_for_handle(recipient_handle);;
 		MW_ASSERT(recipient_id < MW_MAX_CONTROL_COUNT, "Bad control handle");
 	}	
 
@@ -4372,6 +4521,7 @@ bool mw_process_message(void)
 {
 	uint8_t i;
 	uint8_t window_id;
+	uint8_t control_id;
 	mw_message_t message;
 	window_redimensioning_state_t redimensioning_window_state;
 
@@ -4426,25 +4576,31 @@ bool mw_process_message(void)
 					window_id = get_window_id_for_handle(mw_all_timers[i].recipient_handle);
 					MW_ASSERT(window_id < MW_MAX_WINDOW_COUNT, "Bad window handle");
 
-					/* check window is used */
-					if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_USED)
+					if (window_id < MW_MAX_WINDOW_COUNT)
 					{
-						mw_post_message(MW_WINDOW_TIMER_MESSAGE,
-								MW_UNUSED_MESSAGE_PARAMETER,
-								mw_all_timers[i].recipient_handle,
-								mw_all_timers[i].timer_handle,
-								MW_WINDOW_MESSAGE);
+						/* check window is used */
+						if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_USED)
+						{
+							mw_post_message(MW_TIMER_MESSAGE,
+									MW_UNUSED_MESSAGE_PARAMETER,
+									mw_all_timers[i].recipient_handle,
+									mw_all_timers[i].timer_handle,
+									MW_WINDOW_MESSAGE);
+						}
 					}
 				}
 				else if (mw_all_timers[i].recipient_type == MW_CONTROL_MESSAGE)
 				{
 					/* check if recipient id is sensible */
-					if (mw_all_timers[i].recipient_handle < MW_MAX_CONTROL_COUNT)
+					control_id = get_control_id_for_handle(mw_all_timers[i].recipient_handle);
+					MW_ASSERT(control_id < MW_MAX_CONTROL_COUNT, "Bad window handle");
+
+					if (control_id < MW_MAX_CONTROL_COUNT)
 					{
 						/* check control is used */
-						if (mw_all_controls[mw_all_timers[i].recipient_handle].control_flags & MW_CONTROL_FLAG_IS_USED)
+						if (mw_all_controls[control_id].control_flags & MW_CONTROL_FLAG_IS_USED)
 						{
-							mw_post_message(MW_WINDOW_TIMER_MESSAGE,
+							mw_post_message(MW_TIMER_MESSAGE,
 									MW_UNUSED_MESSAGE_PARAMETER,
 									mw_all_timers[i].recipient_handle,
 									mw_all_timers[i].timer_handle,
@@ -4476,17 +4632,17 @@ bool mw_process_message(void)
 		switch (message.message_recipient_type)
 		{
 		case MW_WINDOW_MESSAGE:
-			{
-				/* recipient is a window */
-				window_id = get_window_id_for_handle(message.recipient_handle);
-				MW_ASSERT(window_id < MW_MAX_WINDOW_COUNT, "Bad window handle");
-				mw_all_windows[window_id].message_func(&message);
-			}
+			/* recipient is a window */
+			window_id = get_window_id_for_handle(message.recipient_handle);
+			MW_ASSERT(window_id < MW_MAX_WINDOW_COUNT, "Bad window handle");
+			mw_all_windows[window_id].message_func(&message);
 			break;
 		
 		case MW_CONTROL_MESSAGE:
 			/* recipient is a control */
-			mw_all_controls[message.recipient_handle].message_func(&message);
+			control_id = get_control_id_for_handle(message.recipient_handle);
+			MW_ASSERT(control_id < MW_MAX_CONTROL_COUNT, "Bad control handle");
+			mw_all_controls[control_id].message_func(&message);
 			break;
 
 		case MW_SYSTEM_MESSAGE:

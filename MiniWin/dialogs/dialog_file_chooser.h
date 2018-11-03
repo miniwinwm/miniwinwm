@@ -59,9 +59,9 @@ SOFTWARE.
  * @param title Pointer to text displayed in the window title bar
  * @param start_path Path of folder to open when dialog displays, folders separated by '/' and path not to end in a '/' except for root folder
  * @param folders_only If to show folders only, not files, so user can only choose a folder
- * @param large_size True for large size controls/text, false for small
- * @param response_window_handle handle of the window that the response message is posted to when the dialog is dismissed
- * @return the handle of the window used for the dialog which is only valid while the dialog is showing
+ * @param large_size true for large size controls/text, false for small
+ * @param response_window_handle Handle of the window that the response message is posted to when the dialog is dismissed
+ * @return The handle of the window used for the dialog which is only valid while the dialog is showing
  * @note There must be space in the window array for one new window and space in the control array
  *       for one new control. These resources are released when the dialog is dismissed.
  *       The dialog is created modal and is brought to the front on showing.

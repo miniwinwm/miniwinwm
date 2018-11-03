@@ -316,7 +316,7 @@ static void list_box_message_function(const mw_message_t *message)
 		this_list_box->lines_to_scroll = message->message_data;
 		break;
 
-	case MW_WINDOW_TIMER_MESSAGE:
+	case MW_TIMER_MESSAGE:
 		/* set line pressed to false, send the control response message and repaint the control */		
 		this_list_box->line_is_selected = false;
 		mw_post_message(MW_LIST_BOX_ITEM_PRESSED_MESSAGE,

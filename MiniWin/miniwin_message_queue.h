@@ -53,8 +53,8 @@ SOFTWARE.
 /**
  * Insert a message at the tail of the message queue
  *
- * @param incoming_message  The message to insert
- * @return True if there was space and the message was inserted else false
+ * @param incoming_message The message to insert
+ * @return true if there was space and the message was inserted else false
  */
 bool mw_message_queue_insert(const mw_message_t *incoming_message);
 
@@ -62,7 +62,7 @@ bool mw_message_queue_insert(const mw_message_t *incoming_message);
  * Remove the message at the head of the message queue
  *
  * @param outgoing_message Pointer to a message structure to copy in the removed message
- * @return True if there was a message else false
+ * @return true if there was a message else false
  */
 bool mw_message_queue_remove(mw_message_t *outgoing_message);
 

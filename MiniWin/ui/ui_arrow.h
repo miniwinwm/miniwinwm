@@ -65,12 +65,12 @@ SOFTWARE.
 typedef struct
 {
 	/* User modifiable fields */
-	mw_ui_arrow_direction_t mw_ui_arrow_direction;			/**< direction of arrow */
+	mw_ui_arrow_direction_t mw_ui_arrow_direction;			/**< Direction of arrow */
   
 	/* Non-user modifiable fields */
-	bool arrow_down;										/**< set when the arrow is down */
-	mw_handle_t timer_handle;								/**< used for animation and holding down */
-	uint32_t touch_down_time;								/**< time in ticks the arrow was first pressed down */
+	bool arrow_down;										/**< Set when the arrow is down */
+	mw_handle_t timer_handle;								/**< Used for animation and holding down */
+	uint32_t touch_down_time;								/**< Time in ticks the arrow was first pressed down */
 } mw_ui_arrow_data_t;
 
 /***************************

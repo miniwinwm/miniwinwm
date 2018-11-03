@@ -76,7 +76,7 @@ mw_hal_touch_state_t mw_hal_touch_get_state();
  *
  * @param x The returned x coordinate as a raw digitiser reading
  * @param y The returned y coordinate as a raw digitiser reading
- * @return True if a successful touch down reading was made else false
+ * @return true if a successful touch down reading was made else false
  */
 bool mw_hal_touch_get_point(uint16_t* x, uint16_t* y);
 

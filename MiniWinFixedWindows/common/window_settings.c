@@ -47,7 +47,7 @@ SOFTWARE.
  */
 typedef struct
 {
-	uint8_t lines_to_scroll;		/**< number of lines list box is scrolled */
+	uint8_t lines_to_scroll;		/**< Number of lines list box is scrolled */
 } settings_data_t;
 
 

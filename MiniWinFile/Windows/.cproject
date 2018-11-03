@@ -47,9 +47,19 @@
 							<tool id="cdt.managedbuild.tool.gnu.cpp.linker.mingw.exe.debug.1318759316" name="C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.mingw.exe.debug"/>
 						</toolChain>
 					</folderInfo>
+					<folderInfo id="cdt.managedbuild.config.gnu.mingw.exe.debug.488528513.1107774066" name="/" resourcePath="MiniWin/hal/linux">
+						<toolChain id="cdt.managedbuild.toolchain.gnu.mingw.exe.debug.1886137805" name="Atollic PC Tools" superClass="cdt.managedbuild.toolchain.gnu.mingw.exe.debug" unusedChildren="">
+							<tool id="cdt.managedbuild.tool.gnu.assembler.mingw.exe.debug.1205426289" name="Assembler" superClass="cdt.managedbuild.tool.gnu.assembler.mingw.exe.debug.1366490066"/>
+							<tool id="cdt.managedbuild.tool.gnu.archiver.mingw.base.1212096958" name="Archiver" superClass="cdt.managedbuild.tool.gnu.archiver.mingw.base.1395773831"/>
+							<tool id="cdt.managedbuild.tool.gnu.c.compiler.mingw.exe.debug.1801514052" name="C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.mingw.exe.debug.1685953327"/>
+							<tool id="cdt.managedbuild.tool.gnu.c.linker.mingw.exe.debug.497105941" name="C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.mingw.exe.debug.2066289076"/>
+							<tool id="cdt.managedbuild.tool.gnu.cpp.compiler.mingw.exe.debug.1565186357" name="C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.mingw.exe.debug.1644998599"/>
+							<tool id="cdt.managedbuild.tool.gnu.cpp.linker.mingw.exe.debug.361097806" name="C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.mingw.exe.debug.1318759316"/>
+						</toolChain>
+					</folderInfo>
 					<sourceEntries>
 						<entry excluding="MiniWin|common" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
-						<entry excluding="hal/stm32f429|hal/stm32f407|user/minwin_user.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="MiniWin"/>
+						<entry excluding="hal/linux|hal/stm32f429|hal/stm32f407|user/minwin_user.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="MiniWin"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="common"/>
 					</sourceEntries>
 				</configuration>
@@ -68,5 +78,9 @@
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
 	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
-	<storageModule moduleId="refreshScope"/>
+	<storageModule moduleId="refreshScope" versionNumber="2">
+		<configuration configurationName="Debug">
+			<resource resourceType="PROJECT" workspacePath="/MiniWinFile_Windows"/>
+		</configuration>
+	</storageModule>
 </cproject>

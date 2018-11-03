@@ -54,9 +54,9 @@ SOFTWARE.
 /**
  * Create a dynamic dialog window with one button.
  *
- * @param x left coordinate of dialog window
- * @param y top coordinate of dialog window
- * @param title pointer to text displayed in the window title bar
+ * @param x Left coordinate of dialog window
+ * @param y Top coordinate of dialog window
+ * @param title Pointer to text displayed in the window title bar
  * @param enable_negative If the negative sign is enabled on the keypad
  * @param initial_number The number to show the dialog with at start-up
  * @param large_size If to create the dialog at large size

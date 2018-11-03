@@ -42,9 +42,9 @@ SOFTWARE.
 
 typedef struct
 {
-	uint16_t circle_x;			/**< x coordinate of where to draw circle */
-	uint16_t circle_y;			/**< y coordinate of where to draw circle */
-	bool draw_circle;			/**< if to draw circle */
+	uint16_t circle_x;			/**< X coordinate of where to draw circle */
+	uint16_t circle_y;			/**< Y coordinate of where to draw circle */
+	bool draw_circle;			/**< If to draw circle */
 } window_simple_data_t;
 
 /*************************

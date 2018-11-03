@@ -49,10 +49,10 @@ SOFTWARE.
  */
 typedef struct
 {
-	uint8_t lines_to_scroll;										/**< number of lines list box is scrolled */
-	mw_ui_list_box_entry file_entries[FILE_LIST_BOX_MAX_ENTRIES]; 	/**< the storage for the folder entries data the list box shows; an entry contains pointers; icons and labels must exist elsewhere */
-	char folder_path[MAX_FOLDER_AND_FILENAME_LENGTH + 1];			/**< path to most recently chosen folder, and path and file name when dialog dismissed */
-	uint8_t folder_depth;											/**< root is zero, increments for every sub-folder */
+	uint8_t lines_to_scroll;										/**< Number of lines list box is scrolled */
+	mw_ui_list_box_entry file_entries[FILE_LIST_BOX_MAX_ENTRIES]; 	/**< The storage for the folder entries data the list box shows; an entry contains pointers; icons and labels must exist elsewhere */
+	char folder_path[MAX_FOLDER_AND_FILENAME_LENGTH + 1];			/**< Path to most recently chosen folder, and path and file name when dialog dismissed */
+	uint8_t folder_depth;											/**< Root is zero, increments for every sub-folder */
 	mw_handle_t button_ok_handle;									/**< Control handle of ok button */
 	mw_handle_t button_cancel_handle;								/**< Control handle of cancel button */
 	mw_handle_t list_box_file_handle;								/**< Control handle of list box for folders and files */
@@ -112,7 +112,7 @@ static uint8_t get_folder_depth(char *path);
  * Get the depth of a folder
  *
  * @param path The path to analyse
- * @return the folder depth
+ * @return The folder depth
  */
 static uint8_t get_folder_depth(char *path)
 {
@@ -157,7 +157,7 @@ static void remove_resources(void)
 /**
  * Update the list box with the current folder's entries
  *
- * @param folders_only True if to search for folders only
+ * @param folders_only true if to search for folders only
  */
 static void update_folder_entries(bool folders_only)
 {
@@ -452,7 +452,7 @@ mw_handle_t mw_create_window_dialog_file_chooser(uint16_t x,
 	if (!title)
 	{
 		MW_ASSERT(false, "Null pointer argument");
-		return MW_MAX_WINDOW_COUNT;
+		return MW_INVALID_HANDLE;
 	}
 
 	/* set width & height */
@@ -470,11 +470,11 @@ mw_handle_t mw_create_window_dialog_file_chooser(uint16_t x,
 	/* check start position */
 	if (rect.width > MW_ROOT_WIDTH || x + rect.width > MW_ROOT_WIDTH)
 	{
-		return MW_MAX_WINDOW_COUNT;
+		return MW_INVALID_HANDLE;
 	}
 	if (y + rect.height > MW_ROOT_HEIGHT)
 	{
-		return MW_MAX_WINDOW_COUNT;
+		return MW_INVALID_HANDLE;
 	}
 
 	mw_dialog_file_chooser_data.large_size = large_size;
@@ -496,10 +496,10 @@ mw_handle_t mw_create_window_dialog_file_chooser(uint16_t x,
 			NULL);
 
 	/* check if window could be created */
-	if (mw_dialog_file_chooser_data.mw_dialog_response.window_handle == MW_MAX_WINDOW_COUNT)
+	if (mw_dialog_file_chooser_data.mw_dialog_response.window_handle == MW_INVALID_HANDLE)
 	{
 		/* it couldn't so exit */
-		return MW_MAX_WINDOW_COUNT;
+		return MW_INVALID_HANDLE;
 	}
 
 	/* set controls' data */
@@ -622,18 +622,18 @@ mw_handle_t mw_create_window_dialog_file_chooser(uint16_t x,
 	}
 
 	/* check if controls could be created */
-	if (mw_dialog_file_chooser_data.arrow_file_up_handle == MW_MAX_CONTROL_COUNT ||
-			mw_dialog_file_chooser_data.arrow_file_down_handle == MW_MAX_CONTROL_COUNT ||
-			mw_dialog_file_chooser_data.arrow_file_back_handle == MW_MAX_CONTROL_COUNT ||
-			mw_dialog_file_chooser_data.list_box_file_handle == MW_MAX_CONTROL_COUNT ||
-			mw_dialog_file_chooser_data.button_ok_handle == MW_MAX_CONTROL_COUNT ||
-			mw_dialog_file_chooser_data.button_cancel_handle == MW_MAX_CONTROL_COUNT ||
-			mw_dialog_file_chooser_data.label_choice_handle == MW_MAX_CONTROL_COUNT)
+	if (mw_dialog_file_chooser_data.arrow_file_up_handle == MW_INVALID_HANDLE ||
+			mw_dialog_file_chooser_data.arrow_file_down_handle == MW_INVALID_HANDLE ||
+			mw_dialog_file_chooser_data.arrow_file_back_handle == MW_INVALID_HANDLE ||
+			mw_dialog_file_chooser_data.list_box_file_handle == MW_INVALID_HANDLE ||
+			mw_dialog_file_chooser_data.button_ok_handle == MW_INVALID_HANDLE ||
+			mw_dialog_file_chooser_data.button_cancel_handle == MW_INVALID_HANDLE ||
+			mw_dialog_file_chooser_data.label_choice_handle == MW_INVALID_HANDLE)
 	{
 		/* remove all controls and window */
 		remove_resources();
 
-		return MW_MAX_WINDOW_COUNT;
+		return MW_INVALID_HANDLE;
 	}
 
 	mw_dialog_file_chooser_data.lines_to_scroll = 0;

@@ -26,8 +26,8 @@
 								<option id="com.atollic.truestudio.common_options.target.instr_set.656451507" name="Instruction set" superClass="com.atollic.truestudio.common_options.target.instr_set" value="com.atollic.truestudio.common_options.target.instr_set.thumb2" valueType="enumerated"/>
 								<option id="com.atollic.truestudio.common_options.target.fpucore.836755440" name="FPU" superClass="com.atollic.truestudio.common_options.target.fpucore" value="com.atollic.truestudio.common_options.target.fpucore.fpv4-sp-d16" valueType="enumerated"/>
 								<option id="com.atollic.truestudio.common_options.target.fpu.1485957829" name="Floating point" superClass="com.atollic.truestudio.common_options.target.fpu" value="com.atollic.truestudio.common_options.target.fpu.hard" valueType="enumerated"/>
-								<option id="com.atollic.truestudio.as.symbols.defined.509541865" name="Defined symbols" superClass="com.atollic.truestudio.as.symbols.defined" valueType="definedSymbols"/>
-								<option id="com.atollic.truestudio.as.general.incpath.1115562399" name="Include path" superClass="com.atollic.truestudio.as.general.incpath" valueType="includePath"/>
+								<option id="com.atollic.truestudio.as.symbols.defined.509541865" name="Defined symbols" superClass="com.atollic.truestudio.as.symbols.defined"/>
+								<option id="com.atollic.truestudio.as.general.incpath.1115562399" name="Include path" superClass="com.atollic.truestudio.as.general.incpath"/>
 								<inputType id="com.atollic.truestudio.as.input.678037915" name="Input" superClass="com.atollic.truestudio.as.input"/>
 							</tool>
 							<tool id="com.atollic.truestudio.exe.debug.toolchain.gcc.830102759" name="C Compiler" superClass="com.atollic.truestudio.exe.debug.toolchain.gcc">
@@ -105,9 +105,23 @@
 							<tool id="com.atollic.truestudio.exe.debug.toolchain.secoutput.1520612110" name="Other" superClass="com.atollic.truestudio.exe.debug.toolchain.secoutput"/>
 						</toolChain>
 					</folderInfo>
+					<folderInfo id="com.atollic.truestudio.exe.debug.2055808883.1723723938" name="/" resourcePath="MiniWin/hal/linux">
+						<toolChain id="com.atollic.truestudio.exe.debug.toolchain.1687981488" name="Atollic ARM Tools" superClass="com.atollic.truestudio.exe.debug.toolchain" unusedChildren="">
+							<option id="com.atollic.truestudio.general.runtimelib.242599318.170908574" name="Runtime Library" superClass="com.atollic.truestudio.general.runtimelib.242599318"/>
+							<option id="com.atollic.truestudio.toolchain_options.mcu.1858931412.1454440573" name="Microcontroller" superClass="com.atollic.truestudio.toolchain_options.mcu.1858931412"/>
+							<option id="com.atollic.truestudio.toolchain_options.vendor.1095213803.669404733" name="Vendor name" superClass="com.atollic.truestudio.toolchain_options.vendor.1095213803"/>
+							<tool id="com.atollic.truestudio.exe.debug.toolchain.as.149752955" name="Assembler" superClass="com.atollic.truestudio.exe.debug.toolchain.as.1045569123"/>
+							<tool id="com.atollic.truestudio.exe.debug.toolchain.gcc.1157208976" name="C Compiler" superClass="com.atollic.truestudio.exe.debug.toolchain.gcc.830102759"/>
+							<tool id="com.atollic.truestudio.exe.debug.toolchain.ld.54994759" name="C Linker" superClass="com.atollic.truestudio.exe.debug.toolchain.ld.510323011"/>
+							<tool id="com.atollic.truestudio.exe.debug.toolchain.gpp.1336137870" name="C++ Compiler" superClass="com.atollic.truestudio.exe.debug.toolchain.gpp.512349889"/>
+							<tool id="com.atollic.truestudio.exe.debug.toolchain.ldcc.617235133" name="C++ Linker" superClass="com.atollic.truestudio.exe.debug.toolchain.ldcc.1090941922"/>
+							<tool id="com.atollic.truestudio.ar.base.758546779" name="Archiver" superClass="com.atollic.truestudio.ar.base.1363900621"/>
+							<tool id="com.atollic.truestudio.exe.debug.toolchain.secoutput.605625676" name="Other" superClass="com.atollic.truestudio.exe.debug.toolchain.secoutput.1520612110"/>
+						</toolChain>
+					</folderInfo>
 					<sourceEntries>
-						<entry excluding="MiniWin|common" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name=""/>
-						<entry excluding="user/minwin_user.c|hal/windows|hal/stm32f429" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="MiniWin"/>
+						<entry excluding="MiniWin|common" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="hal/linux|user/minwin_user.c|hal/windows|hal/stm32f429" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="MiniWin"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="common"/>
 					</sourceEntries>
 				</configuration>
@@ -119,7 +133,11 @@
 		<project id="MiniWinSimple_STM32F407.com.atollic.truestudio.exe.756848276" name="Executable" projectType="com.atollic.truestudio.exe"/>
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
-	<storageModule moduleId="refreshScope"/>
+	<storageModule moduleId="refreshScope" versionNumber="2">
+		<configuration configurationName="Debug">
+			<resource resourceType="PROJECT" workspacePath="/MiniWinSimple_STM32F407"/>
+		</configuration>
+	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
 	<storageModule moduleId="scannerConfiguration">
 		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>

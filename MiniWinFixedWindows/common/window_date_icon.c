@@ -112,7 +112,7 @@ void window_date_icon_message_function(const mw_message_t *message)
 		mw_paint_window_client(message->recipient_handle);
 		break;
 
-	case MW_WINDOW_TIMER_MESSAGE:
+	case MW_TIMER_MESSAGE:
 		window_date_icon_data.touch_down = false;
 		mw_paint_window_client(message->recipient_handle);
 		break;

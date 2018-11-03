@@ -65,29 +65,29 @@ typedef struct
 /**
  * Set details of a rect structure.
  *
- * @param r: Pointer to rect structure 
- * @param x: X value to put in rect structure
- * @param y: Y value to put in rect structure
- * @param width: Width value to put in rect structure
- * @param height: Height value to put in rect structure
+ * @param r Pointer to rect structure 
+ * @param x X value to put in rect structure
+ * @param y Y value to put in rect structure
+ * @param width Width value to put in rect structure
+ * @param height Height value to put in rect structure
  */
 void mw_util_set_rect(mw_util_rect_t *r, int16_t x, int16_t y, uint16_t width, uint16_t height);
 
 /**
  * Determines if a point is in a rect.
  *
- * @param r: The rect
- * @param x: The x coordinate of the point
- * @param y: The y coordinate of the point
- * @return: True if in else false
+ * @param r The rect
+ * @param x The x coordinate of the point
+ * @param y The y coordinate of the point
+ * @return true if in else false
  */
 bool mw_util_is_point_in_rect(const mw_util_rect_t *r, int16_t x, int16_t y);
 
 /**
  * Tests if there is any overlap between 2 rects
  *
- * @param a first rect to check
- * @param b second rect to check
+ * @param a First rect to check
+ * @param b Second rect to check
  * @return true if the 2 rects overlap at all else false
  */
 bool mw_util_do_rects_coincide(const mw_util_rect_t *a, const mw_util_rect_t *b);
@@ -97,7 +97,7 @@ bool mw_util_do_rects_coincide(const mw_util_rect_t *a, const mw_util_rect_t *b)
  *
  * @param a Rect a
  * @param b Rect b
- * @return True if a completely obscures b else false
+ * @return true if a completely obscures b else false
  */
 bool mw_util_does_rect_a_obscure_rect_b(const mw_util_rect_t *a, const mw_util_rect_t *b);
 
@@ -151,17 +151,17 @@ int mw_util_compare_int16_t(const void *a, const void *b);
 
 /**
  * Finds the file name extension following a . in a file name.
- * @param filename the full file name
- * @return the extension excluding the ., or an empty string if no . found, or the full file name if it begins with a .
- * @note never returns null
+ * @param filename The full file name
+ * @return The extension excluding the ., or an empty string if no . found, or the full file name if it begins with a .
+ * @note Never returns null
  */
 const char *mw_util_get_filename_ext(const char *filename);
 
 /**
  * Case insensitive string compare
  *
- * @param a first string to compare
- * @param b second string to compare
+ * @param a First string to compare
+ * @param b Second string to compare
  * @return < 0 if a less than b, > 0 if a greater than b or 0 if a and b equal (apart from case)
  */
 int32_t mw_util_strcicmp(char const *a, char const *b);

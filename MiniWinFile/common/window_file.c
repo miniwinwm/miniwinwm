@@ -58,8 +58,8 @@ SOFTWARE.
  */
 typedef struct
 {
-	text_window_data_t text_windows_data[TEXT_WINDOW_COUNT];				/**< array of window data structures for text windows */
-	image_window_data_t image_windows_data[IMAGE_WINDOW_COUNT];				/**< array of window data structures for image windows */
+	text_window_data_t text_windows_data[TEXT_WINDOW_COUNT];				/**< Array of window data structures for text windows */
+	image_window_data_t image_windows_data[IMAGE_WINDOW_COUNT];				/**< Array of window data structures for image windows */
 	struct tm set_time;														/**< Time/date from dialogs to send to hardware clock */
 	char create_path_and_filename[MAX_FOLDER_AND_FILENAME_LENGTH + 1];		/**< Path and file name for file to create */
 } window_file_data_t;
@@ -314,7 +314,7 @@ void window_file_message_function(const mw_message_t *message)
 		}
 		break;
 
-	case MW_WINDOW_TIMER_MESSAGE:
+	case MW_TIMER_MESSAGE:
 		{
 			struct tm t;
 

@@ -82,21 +82,21 @@ bool mw_settings_is_calibrated(void);
 /**
  * Set the touch screen calibrated flag in the local memory copy of the settings. This does not affect or save the settings in non-vol storage.
  *
- * @param calibrated true If calibrated else false
+ * @param calibrated true if calibrated else false
  */
 void mw_settings_set_calibrated(bool calibrated);
 
 /**
  * Get a pointer to the touch screen calibration matrix.
  *
- * @return a pointer to the touch screen calibration matrix from memory. Settings must have been loaded from non-vol storage first.
+ * @return Pointer to the touch screen calibration matrix from memory. Settings must have been loaded from non-vol storage first.
  */
 MATRIX *mw_settings_get_calibration_matrix(void);
 
 /**
  * Set the touch screen calibration matrix in the local memory copy of the settings. This does not affect or save the settings in non-vol storage.
  *
- * @param new_calibration_matrix A pointer to a filled in touch screen calibration matrix. Ownership not taken.
+ * @param new_calibration_matrix Pointer to a filled in touch screen calibration matrix. Ownership not taken.
  */
 void mw_settings_set_calibration_matrix(const MATRIX *new_calibration_matrix);
 

@@ -52,12 +52,12 @@ SOFTWARE.
 /**
  * Create a dynamic time chooser dialog window.
  *
- * @param x left coordinate of dialog window
- * @param y top coordinate of dialog window
- * @param start_time_hour start time hour to show when dialog is displayed
- * @param start_time_minute start time minute to show when dialog is displayed
+ * @param x Left coordinate of dialog window
+ * @param y Top coordinate of dialog window
+ * @param start_time_hour Start time hour to show when dialog is displayed
+ * @param start_time_minute Start time minute to show when dialog is displayed
  * @param large_size true for large size controls/text, false for small
- * @param response_window_handle handle of the window that the response message is posted to when the dialog is dismissed
+ * @param response_window_handle Handle of the window that the response message is posted to when the dialog is dismissed
  * @return Handle of the window used for the dialog which is only valid while the dialog is showing
  * @note There must be space in the window array for one new window and space in the control array
  *       for one new control. These resources are released when the dialog is dismissed.
