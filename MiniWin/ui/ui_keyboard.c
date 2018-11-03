@@ -431,6 +431,7 @@ static void process_keypress(const mw_message_t *message)
 				message->recipient_handle,
 				mw_get_control_parent_window(message->recipient_handle),
 				(uint32_t)keyboards[this_keyboard->keyboard_display][this_keyboard->key_pressed_row][this_keyboard->key_pressed_column],
+				MW_UNUSED_MESSAGE_PARAMETER,
 				MW_WINDOW_MESSAGE);
 	}
 

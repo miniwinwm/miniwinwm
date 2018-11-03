@@ -132,7 +132,12 @@ void window_settings_message_function(const mw_message_t *message)
 	case MW_LIST_BOX_ITEM_PRESSED_MESSAGE:
 		/* list box item pressed */
 		list_box_item_chosen = message->message_data;
-		mw_ui_common_post_pointer_to_control(label_settings_handle, list_box_settings_entries[list_box_item_chosen].label);
+		mw_post_message(MW_LABEL_SET_LABEL_TEXT_MESSAGE,
+				message->recipient_handle,
+				label_settings_handle,
+				MW_UNUSED_MESSAGE_PARAMETER,
+				(void *)list_box_settings_entries[list_box_item_chosen].label,
+				MW_CONTROL_MESSAGE);
 		mw_paint_control(label_settings_handle);
 		break;
 
@@ -152,10 +157,11 @@ void window_settings_message_function(const mw_message_t *message)
 			mw_set_control_enabled(arrow_settings_down, true);
 			mw_paint_control(arrow_settings_down);
 
-			mw_post_message(MW_TRANSFER_DATA_1_MESSAGE,
-					0,
+			mw_post_message(MW_LIST_BOX_LINES_TO_SCROLL_MESSAGE,
+					MW_UNUSED_MESSAGE_PARAMETER,
 					list_box_settings_handle,
 					settings_data.lines_to_scroll,
+					MW_UNUSED_MESSAGE_PARAMETER,
 					MW_CONTROL_MESSAGE);
 			mw_paint_control(list_box_settings_handle);
 		}
@@ -174,10 +180,11 @@ void window_settings_message_function(const mw_message_t *message)
 			mw_set_control_enabled(arrow_settings_up, true);
 			mw_paint_control(arrow_settings_up);
 
-			mw_post_message(MW_TRANSFER_DATA_1_MESSAGE,
-					0,
+			mw_post_message(MW_LIST_BOX_LINES_TO_SCROLL_MESSAGE,
+					MW_UNUSED_MESSAGE_PARAMETER,
 					list_box_settings_handle,
 					settings_data.lines_to_scroll,
+					MW_UNUSED_MESSAGE_PARAMETER,
 					MW_CONTROL_MESSAGE);
 			mw_paint_control(list_box_settings_handle);
 		}

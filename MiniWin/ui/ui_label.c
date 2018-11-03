@@ -123,11 +123,11 @@ static void label_message_function(const mw_message_t *message)
 
 	switch (message->message_id)
 	{
-	case MW_TRANSFER_DATA_1_PTR_MESSAGE:
-		/* handle a transfer data pointer message, which contains new label text */
-		if (message->message_data)
+	case MW_LABEL_SET_LABEL_TEXT_MESSAGE:
+		/* message pointer field contains pointer to new text */
+		if (message->message_pointer)
 		{
-			mw_util_safe_strcpy(this_label->label, MW_UI_LABEL_MAX_CHARS, (char *)message->message_data);
+			mw_util_safe_strcpy(this_label->label, MW_UI_LABEL_MAX_CHARS, (char *)message->message_pointer);
 		}
 		else
 		{

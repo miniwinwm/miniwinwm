@@ -69,6 +69,7 @@ extern mw_handle_t label_1_handle;
 extern mw_handle_t progress_bar_1_handle;
 extern mw_handle_t list_box_1_handle;
 extern mw_handle_t check_box_1_handle;
+extern mw_handle_t arrow_1_handle;
 extern mw_handle_t button_1_handle;
 extern mw_handle_t scroll_bar_vert_1_handle;
 extern mw_handle_t scroll_bar_vert_2_handle;
@@ -76,6 +77,7 @@ extern mw_handle_t scroll_bar_horiz_1_handle;
 extern mw_handle_t list_box_3_handle;
 extern mw_handle_t radio_button_1_handle;
 extern mw_handle_t check_box_1_large_handle;
+extern mw_handle_t arrow_1_large_handle;
 extern mw_handle_t button_1_large_handle;
 extern mw_handle_t radio_button_1_large_handle;
 extern mw_handle_t scroll_bar_vert_1_large_handle;
@@ -179,6 +181,7 @@ void window_test_message_function(const mw_message_t *message)
 			mw_set_control_visible(scroll_bar_vert_2_handle, false);
 			mw_set_control_visible(scroll_bar_horiz_1_handle, false);
 			mw_set_control_visible(radio_button_1_handle, false);
+			mw_set_control_visible(arrow_1_handle, false);
 
 			mw_set_control_visible(label_1_large_handle, true);
 			mw_set_control_visible(list_box_3_large_handle, true);
@@ -188,6 +191,7 @@ void window_test_message_function(const mw_message_t *message)
 			mw_set_control_visible(scroll_bar_vert_2_large_handle, true);
 			mw_set_control_visible(scroll_bar_horiz_1_large_handle, true);
 			mw_set_control_visible(radio_button_1_large_handle, true);
+			mw_set_control_visible(arrow_1_large_handle, true);
 		}
 		else
 		{
@@ -202,6 +206,7 @@ void window_test_message_function(const mw_message_t *message)
 			mw_set_control_visible(scroll_bar_vert_2_handle, true);
 			mw_set_control_visible(scroll_bar_horiz_1_handle, true);
 			mw_set_control_visible(radio_button_1_handle, true);
+			mw_set_control_visible(arrow_1_handle, true);
 
 			mw_set_control_visible(label_1_large_handle, false);
 			mw_set_control_visible(list_box_3_large_handle, false);
@@ -211,6 +216,7 @@ void window_test_message_function(const mw_message_t *message)
 			mw_set_control_visible(scroll_bar_vert_2_large_handle, false);
 			mw_set_control_visible(scroll_bar_horiz_1_large_handle, false);
 			mw_set_control_visible(radio_button_1_large_handle, false);
+			mw_set_control_visible(arrow_1_large_handle, false);
 		}
 
 
@@ -306,19 +312,21 @@ void window_test_message_function(const mw_message_t *message)
 		/* horizontal scroll bar scrolled */
 		if (window_test_data.large_controls)
 		{
-			mw_post_message(MW_TRANSFER_DATA_1_MESSAGE,
+			mw_post_message(MW_SCROLL_BAR_SET_SCROLL_MESSAGE,
 					message->recipient_handle,
 					scroll_bar_vert_1_large_handle,
 					scroll_bar_horiz_1_large_data.scroll_position,
+					MW_UNUSED_MESSAGE_PARAMETER,
 					MW_CONTROL_MESSAGE);
 			mw_paint_control(scroll_bar_vert_1_large_handle);
 		}
 		else
 		{
-			mw_post_message(MW_TRANSFER_DATA_1_MESSAGE,
+			mw_post_message(MW_SCROLL_BAR_SET_SCROLL_MESSAGE,
 					message->recipient_handle,
 					scroll_bar_vert_1_handle,
 					scroll_bar_horiz_1_data.scroll_position,
+					MW_UNUSED_MESSAGE_PARAMETER,
 					MW_CONTROL_MESSAGE);
 			mw_paint_control(scroll_bar_vert_1_handle);
 		}
@@ -331,10 +339,11 @@ void window_test_message_function(const mw_message_t *message)
 			window_test_data.lines_to_scroll = (scroll_bar_vert_2_data.scroll_position *
 					(list_box_3_data.number_of_items - list_box_3_data.number_of_lines)) /
 					UINT8_MAX;
-			mw_post_message(MW_TRANSFER_DATA_1_MESSAGE,
-					0,
+			mw_post_message(MW_LIST_BOX_LINES_TO_SCROLL_MESSAGE,
+					MW_UNUSED_MESSAGE_PARAMETER,
 					list_box_3_handle,
 					window_test_data.lines_to_scroll,
+					MW_UNUSED_MESSAGE_PARAMETER,
 					MW_CONTROL_MESSAGE);
 			mw_paint_control(list_box_3_handle);
 		}
@@ -343,10 +352,11 @@ void window_test_message_function(const mw_message_t *message)
 			window_test_data.lines_to_scroll = (scroll_bar_vert_2_large_data.scroll_position *
 					(list_box_3_large_data.number_of_items - list_box_3_large_data.number_of_lines)) /
 					UINT8_MAX;
-			mw_post_message(MW_TRANSFER_DATA_1_MESSAGE,
-					0,
+			mw_post_message(MW_LIST_BOX_LINES_TO_SCROLL_MESSAGE,
+					MW_UNUSED_MESSAGE_PARAMETER,
 					list_box_3_large_handle,
 					window_test_data.lines_to_scroll,
+					MW_UNUSED_MESSAGE_PARAMETER,
 					MW_CONTROL_MESSAGE);
 			mw_paint_control(list_box_3_large_handle);
 		}
@@ -361,15 +371,34 @@ void window_test_message_function(const mw_message_t *message)
 		sprintf(window_test_data.transfer_buffer, "%d", window_test_data.i);
 		if (window_test_data.large_controls)
 		{
-			mw_ui_common_post_pointer_to_control(label_1_large_handle, window_test_data.transfer_buffer);
+			mw_post_message(MW_LABEL_SET_LABEL_TEXT_MESSAGE,
+					message->recipient_handle,
+					label_1_large_handle,
+					MW_UNUSED_MESSAGE_PARAMETER,
+					(void *)window_test_data.transfer_buffer,
+					MW_CONTROL_MESSAGE);
+
 			mw_paint_control(label_1_large_handle);
 		}
 		else
 		{
-			mw_ui_common_post_pointer_to_control(label_1_handle, window_test_data.transfer_buffer);
+			mw_post_message(MW_LABEL_SET_LABEL_TEXT_MESSAGE,
+					message->recipient_handle,
+					label_1_handle,
+					MW_UNUSED_MESSAGE_PARAMETER,
+					(void *)window_test_data.transfer_buffer,
+					MW_CONTROL_MESSAGE);
+
 			mw_paint_control(label_1_handle);
 		}
-		mw_ui_common_post_number_to_control(progress_bar_1_handle, window_test_data.i);
+
+		mw_post_message(MW_PROGRESS_BAR_SET_PROGRESS_MESSAGE,
+				message->recipient_handle,
+				progress_bar_1_handle,
+				window_test_data.i,
+				MW_UNUSED_MESSAGE_PARAMETER,
+				MW_CONTROL_MESSAGE);
+
 		mw_paint_control(progress_bar_1_handle);
 		mw_set_timer(mw_tick_counter + MW_TICKS_PER_SECOND, message->recipient_handle, MW_WINDOW_MESSAGE);
 		break;

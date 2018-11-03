@@ -196,15 +196,17 @@ void window_image_paint_function(mw_handle_t window_handle, const mw_gl_draw_inf
 		mw_post_message(MW_USER_1_MESSAGE,
 				window_handle,
 				window_handle,
-				0,
+				MW_UNUSED_MESSAGE_PARAMETER,
+				MW_UNUSED_MESSAGE_PARAMETER,
 				MW_WINDOW_MESSAGE);
 
 		/* close this window to prevent continuous repaints and let file window know */
 		mw_remove_window(window_handle);
-		mw_post_message(MW_TRANSFER_DATA_1_MESSAGE,
+		mw_post_message(MW_WINDOW_EXTERNAL_WINDOW_REMOVED,
 				window_handle,
 				window_file_handle,
-				0,
+				MW_UNUSED_MESSAGE_PARAMETER,
+				MW_UNUSED_MESSAGE_PARAMETER,
 				MW_WINDOW_MESSAGE);
 	}
 }
@@ -216,10 +218,11 @@ void window_image_message_function(const mw_message_t *message)
 	switch (message->message_id)
 	{
 	case MW_WINDOW_REMOVED_MESSAGE:
-		mw_post_message(MW_TRANSFER_DATA_1_MESSAGE,
+		mw_post_message(MW_WINDOW_EXTERNAL_WINDOW_REMOVED,
 				message->recipient_handle,
 				window_file_handle,
-				0,
+				MW_UNUSED_MESSAGE_PARAMETER,
+				MW_UNUSED_MESSAGE_PARAMETER,
 				MW_WINDOW_MESSAGE);
 		break;
 

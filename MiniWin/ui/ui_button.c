@@ -195,6 +195,7 @@ static void button_message_function(const mw_message_t *message)
 				message->recipient_handle,
 				mw_get_control_parent_window(message->recipient_handle),
 				MW_UNUSED_MESSAGE_PARAMETER,
+				MW_UNUSED_MESSAGE_PARAMETER,
 				MW_WINDOW_MESSAGE);
 		mw_paint_control(message->recipient_handle);
 		break;

@@ -161,7 +161,12 @@ void window_gyro_y_message_function(const mw_message_t *message)
 					window_gyro_y_data.previous_drawn_angle = offset_adjusted_angle;
 
 					sprintf(window_gyro_y_data.text_transfer_buffer, "%d", (int)offset_adjusted_angle);
-					mw_ui_common_post_pointer_to_control(label_gyro_y_handle, window_gyro_y_data.text_transfer_buffer);
+					mw_post_message(MW_LABEL_SET_LABEL_TEXT_MESSAGE,
+							message->recipient_handle,
+							label_gyro_y_handle,
+							MW_UNUSED_MESSAGE_PARAMETER,
+							(void *)window_gyro_y_data.text_transfer_buffer,
+							MW_CONTROL_MESSAGE);
 					mw_paint_control(label_gyro_y_handle);
 
 					mw_paint_window_client_rect(message->recipient_handle, &arrow_rect);

@@ -135,6 +135,7 @@ typedef enum
 	MW_WINDOW_VISIBILITY_CHANGED,					/**< Message to a window when its visibility has changed */
 	MW_WINDOW_VERT_SCROLL_BAR_SCROLLED_MESSAGE,		/**< Message to a window when a window vertical scroll bar has been scrolled */
 	MW_WINDOW_HORIZ_SCROLL_BAR_SCROLLED_MESSAGE,	/**< Message to a window when a window horizontal scroll bar has been scrolled */
+	MW_WINDOW_EXTERNAL_WINDOW_REMOVED,				/**< Message to a window when another window has been removed that is not the window receiving the message */
 	MW_CONTROL_CREATED_MESSAGE,						/**< Message send to control as soon as it is created and before it is painted */
 	MW_CONTROL_REMOVED_MESSAGE,			       		/**< Message sent to control just before it is removed */
 	MW_CONTROL_GAINED_FOCUS_MESSAGE,				/**< Message sent to all controls in a window when parent window gains focus or control made visible */
@@ -156,6 +157,14 @@ typedef enum
 	MW_CONTROL_HORIZ_SCROLL_BAR_SCROLLED_MESSAGE,	/**< Response message from a horizontal control scroll bar that it has been scrolled */
 	MW_ARROW_PRESSED_MESSAGE,						/**< Response message from a arrow that it has been pressed */
 	MW_KEY_PRESSED_MESSAGE,							/**< ASCII value of key pressed, can be backspace \b */
+
+	/* Messages posted to controls from user code*/
+	MW_LABEL_SET_LABEL_TEXT_MESSAGE,				/**< Set the label's text by passing a pointer to a character buffer */
+	MW_CHECK_BOX_SET_CHECKED_STATE_MESSAGE,			/**< Set a check box's checked state */
+	MW_PROGRESS_BAR_SET_PROGRESS_MESSAGE,			/**< Set a progress bar's progress level as a percentage */
+	MW_SCROLL_BAR_SET_SCROLL_MESSAGE,				/**< Set a scroll bar's scroll position, 0 = minimum, 255 = maximum */
+	MW_LIST_BOX_LINES_TO_SCROLL_MESSAGE,			/**< How many lines to scroll a list box in list box entry lines, 0 = no scroll */
+	MW_RADIO_BUTTON_SET_SELECTED_MESSAGE,			/**< Which radio button to set as selected, zero based */
 
 	/* Messages posted by standard dialogs */
 	MW_DIALOG_ONE_BUTTON_DISMISSED_MESSAGE,			/**< One button dialog has been dismissed */
@@ -179,16 +188,6 @@ typedef enum
 	MW_WINDOW_CLIENT_PAINT_RECT_MESSAGE,			/**< System message to call a window's client area paint rect function */
 	MW_CONTROL_PAINT_MESSAGE,				      	/**< System message to call a control's paint function */
 	MW_CONTROL_PAINT_RECT_MESSAGE, 					/**< System message to call a control's paint rect function */
-	MW_TRANSFER_DATA_1_MESSAGE,						/**< Message to a window or control to send data in the data parameter; the window or control must know the format */
-	MW_TRANSFER_DATA_2_MESSAGE,						/**< Message to a window or control to send data in the data parameter; the window or control must know the format */
-	MW_TRANSFER_DATA_3_MESSAGE,						/**< Message to a window or control to send data in the data parameter; the window or control must know the format */
-	MW_TRANSFER_DATA_4_MESSAGE,						/**< Message to a window or control to send data in the data parameter; the window or control must know the format */
-	MW_TRANSFER_DATA_5_MESSAGE,						/**< Message to a window or control to send data in the data parameter; the window or control must know the format */
-	MW_TRANSFER_DATA_1_PTR_MESSAGE,					/**< Message to a window or control that the data message parameter contains a pointer to data; the window or control must know the format */
-	MW_TRANSFER_DATA_2_PTR_MESSAGE,					/**< Message to a window or control that the data message parameter contains a pointer to data; the window or control must know the format */
-	MW_TRANSFER_DATA_3_PTR_MESSAGE,					/**< Message to a window or control that the data message parameter contains a pointer to data; the window or control must know the format */
-	MW_TRANSFER_DATA_4_PTR_MESSAGE,					/**< Message to a window or control that the data message parameter contains a pointer to data; the window or control must know the format */
-	MW_TRANSFER_DATA_5_PTR_MESSAGE,					/**< Message to a window or control that the data message parameter contains a pointer to data; the window or control must know the format */
 	MW_USER_1_MESSAGE,								/**< Message to a window for any user-defined purpose */
 	MW_USER_2_MESSAGE,								/**< Message to a window for any user-defined purpose */
 	MW_USER_3_MESSAGE,								/**< Message to a window for any user-defined purpose */
@@ -242,7 +241,8 @@ typedef struct mw_message_tag
 	mw_handle_t recipient_handle;       /**< Handle of recipient of message, not always used */
 	mw_message_id_t message_id;       	/**< Identifier of the message; this is a system identifier or a user defined identifier */
 	mw_message_recipient_type_t message_recipient_type;        /**< Type of recipient this message is for */
-	uint32_t message_data;              /**< Data value passed to recipient with a message; this is message specific and may be a pointer */
+	uint32_t message_data;              /**< Data value passed to recipient with a message; this is message specific and can be used for anything */
+	void *message_pointer;				/**< Pointer value passed to recipient with a message; this pointer is message specific and can be used for anything */
 } mw_message_t;
 
 /***************************
@@ -672,10 +672,16 @@ void mw_cancel_timer(mw_handle_t timer_handle);
  * @param message_id The message id of the message to create
  * @param sender_handle The message hadle of the sender
  * @param recipient_handle The recipient handle for the message
- * @param message_data 32 bit field of general purpose data; can be a pointer
+ * @param message_data 32 bit field of general purpose data
+ * @param message_pointer Pointer field to a general purpose pointer
  * @param recipient_type Recipient type of message, window, control or system
  */
-void mw_post_message(uint8_t message_id, mw_handle_t sender_handle, mw_handle_t recipient_handle, uint32_t message_data, mw_message_recipient_type_t recipient_type);
+void mw_post_message(uint8_t message_id,
+		mw_handle_t sender_handle,
+		mw_handle_t recipient_handle,
+		uint32_t message_data,
+		void *message_pointer,
+		mw_message_recipient_type_t recipient_type);
 
 /**
  * Process the next message in the message queue. This function must be called frequently to enable user interface responsiveness.

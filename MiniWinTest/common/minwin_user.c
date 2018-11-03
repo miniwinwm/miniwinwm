@@ -85,6 +85,7 @@ mw_handle_t window_paint_rect_handle;
 
 /* controls */
 mw_handle_t check_box_1_handle;
+mw_handle_t arrow_1_handle;
 mw_handle_t button_1_handle;
 mw_handle_t radio_button_1_handle;
 mw_handle_t scroll_bar_vert_1_handle;
@@ -96,6 +97,7 @@ mw_handle_t list_box_1_handle;
 mw_handle_t list_box_2_handle;
 mw_handle_t list_box_3_handle;
 mw_handle_t check_box_1_large_handle;
+mw_handle_t arrow_1_large_handle;
 mw_handle_t button_1_large_handle;
 mw_handle_t radio_button_1_large_handle;
 mw_handle_t scroll_bar_vert_1_large_handle;
@@ -106,6 +108,7 @@ mw_handle_t list_box_3_large_handle;
 
 /* controls instance data */
 mw_ui_check_box_data_t check_box_1_data;
+mw_ui_arrow_data_t arrow_1_data;
 mw_ui_button_data_t button_1_data;
 mw_ui_radio_button_data_t radio_button_1_data;
 mw_ui_list_box_data_t list_box_1_data;
@@ -117,6 +120,7 @@ mw_ui_scroll_bar_vert_data_t scroll_bar_vert_1_data;
 mw_ui_scroll_bar_vert_data_t scroll_bar_vert_2_data;
 mw_ui_scroll_bar_horiz_data_t scroll_bar_horiz_1_data;
 mw_ui_check_box_data_t check_box_1_large_data;
+mw_ui_arrow_data_t arrow_1_large_data;
 mw_ui_button_data_t button_1_large_data;
 mw_ui_radio_button_data_t radio_button_1_large_data;
 mw_ui_label_data_t label_1_large_data;
@@ -195,7 +199,7 @@ void mw_user_init(void)
 	/* create a check box control and add it to the ui test window */
 	mw_util_safe_strcpy(check_box_1_data.label, MW_UI_CHECK_BOX_LABEL_MAX_CHARS, "Check");
 	check_box_1_handle = mw_ui_check_box_add_new(10,
-			40,
+			20,
 			window_test_handle,
 			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
 			&check_box_1_data);
@@ -207,6 +211,20 @@ void mw_user_init(void)
 			window_test_handle,
 			MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAGS_LARGE_SIZE,
 			&check_box_1_large_data);
+
+	arrow_1_data.mw_ui_arrow_direction = MW_UI_ARROW_DOWN;
+	arrow_1_handle = mw_ui_arrow_add_new(10,
+			50,
+			window_test_handle,
+			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
+			&arrow_1_data);
+
+	arrow_1_large_data.mw_ui_arrow_direction = MW_UI_ARROW_DOWN;
+	arrow_1_large_handle = mw_ui_arrow_add_new(80,
+			125,
+			window_test_handle,
+			MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAGS_LARGE_SIZE,
+			&arrow_1_large_data);
 
 	/* create a button control and add it to the ui test window */
 	mw_util_safe_strcpy(button_1_data.button_label, MW_UI_BUTTON_LABEL_MAX_CHARS, "Go Big");
@@ -239,6 +257,7 @@ void mw_user_init(void)
 	radio_button_1_data.radio_button_labels = (char **)radio_button_labels;
 	radio_button_1_handle = mw_ui_radio_button_add_new(150,
 			10,
+			60,
 			window_test_handle,
 			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
 			&radio_button_1_data);
@@ -248,6 +267,7 @@ void mw_user_init(void)
 	radio_button_1_large_data.radio_button_labels = (char **)radio_button_labels;
 	radio_button_1_large_handle = mw_ui_radio_button_add_new(10,
 			125,
+			60,
 			window_test_handle,
 			MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAGS_LARGE_SIZE,
 			&radio_button_1_large_data);

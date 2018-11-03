@@ -137,7 +137,12 @@ void window_file_message_function(const mw_message_t *message)
 		if (message->message_data)
 		{
 			/* visibility gained */
-			mw_ui_common_post_pointer_to_control(label_file_handle, "");
+			mw_post_message(MW_LABEL_SET_LABEL_TEXT_MESSAGE,
+					message->recipient_handle,
+					label_file_handle,
+					MW_UNUSED_MESSAGE_PARAMETER,
+					(void *)"",
+					MW_CONTROL_MESSAGE);
 			mw_paint_control(label_file_handle);
 
 			file_data.lines_to_scroll = 0;
@@ -169,7 +174,12 @@ void window_file_message_function(const mw_message_t *message)
 		item_chosen = message->message_data;
 
 		/* update label with text of item chosen */
-		mw_ui_common_post_pointer_to_control(label_file_handle, list_box_file_data.list_box_entries[item_chosen].label);
+		mw_post_message(MW_LABEL_SET_LABEL_TEXT_MESSAGE,
+				message->recipient_handle,
+				label_file_handle,
+				MW_UNUSED_MESSAGE_PARAMETER,
+				(void *)list_box_file_data.list_box_entries[item_chosen].label,
+				MW_CONTROL_MESSAGE);
 		mw_paint_control(label_file_handle);
 
 		/* check if a folder has been chosen and if so update the list control to show new contents */
@@ -235,10 +245,11 @@ void window_file_message_function(const mw_message_t *message)
 			mw_set_control_enabled(arrow_file_down_handle, true);
 			mw_paint_control(arrow_file_down_handle);
 
-			mw_post_message(MW_TRANSFER_DATA_1_MESSAGE,
-					0,
+			mw_post_message(MW_LIST_BOX_LINES_TO_SCROLL_MESSAGE,
+					MW_UNUSED_MESSAGE_PARAMETER,
 					list_box_file_handle,
 					file_data.lines_to_scroll,
+					MW_UNUSED_MESSAGE_PARAMETER,
 					MW_CONTROL_MESSAGE);
 			mw_paint_control(list_box_file_handle);
 		}
@@ -257,10 +268,11 @@ void window_file_message_function(const mw_message_t *message)
 			mw_set_control_enabled(arrow_file_up_handle, true);
 			mw_paint_control(arrow_file_up_handle);
 
-			mw_post_message(MW_TRANSFER_DATA_1_MESSAGE,
-					0,
+			mw_post_message(MW_LIST_BOX_LINES_TO_SCROLL_MESSAGE,
+					MW_UNUSED_MESSAGE_PARAMETER,
 					list_box_file_handle,
 					file_data.lines_to_scroll,
+					MW_UNUSED_MESSAGE_PARAMETER,
 					MW_CONTROL_MESSAGE);
 			mw_paint_control(list_box_file_handle);
 		}

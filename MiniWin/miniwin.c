@@ -727,6 +727,7 @@ static bool check_for_restore_touch(int16_t x_touch, int16_t y_touch)
 					MW_UNUSED_MESSAGE_PARAMETER,
 					mw_all_windows[i].window_handle,
 					MW_UNUSED_MESSAGE_PARAMETER,
+					MW_UNUSED_MESSAGE_PARAMETER,
 					MW_WINDOW_MESSAGE);
 					
 			/* this touch point has now been consumed so won't be passed on to user root message function */
@@ -1260,7 +1261,7 @@ static void draw_title_bar(mw_handle_t window_handle, const mw_gl_draw_info_t *d
 
 	MW_ASSERT(draw_info, "Null pointer argument");
 
-	/* get window idss from window handle and check they're in range */
+	/* get window id's from window handle and check they're in range */
 	window_id = get_window_id_for_handle(window_handle);
 	MW_ASSERT(window_id < MW_MAX_WINDOW_COUNT, "Bad window handle");
 	window_with_focus_id = get_window_id_for_handle(window_with_focus_handle);
@@ -2772,6 +2773,7 @@ static window_redimensioning_state_t process_touch_event(void)
 					MW_UNUSED_MESSAGE_PARAMETER,
 					mw_all_windows[MW_ROOT_WINDOW_ID].window_handle,
 					(((uint32_t)touch_x) << 16) | touch_y,
+					MW_UNUSED_MESSAGE_PARAMETER,
 					MW_WINDOW_MESSAGE);
 		}
 
@@ -2913,6 +2915,7 @@ static window_redimensioning_state_t process_touch_event(void)
 								MW_UNUSED_MESSAGE_PARAMETER,
 								mw_all_windows[window_to_receive_message_id].window_handle,
 								mw_all_windows[window_to_receive_message_id].vert_scroll_pos,
+								MW_UNUSED_MESSAGE_PARAMETER,
 								MW_WINDOW_MESSAGE);
 					}
 				}
@@ -2955,6 +2958,7 @@ static window_redimensioning_state_t process_touch_event(void)
 								MW_UNUSED_MESSAGE_PARAMETER,
 								mw_all_windows[window_to_receive_message_id].window_handle,
 								mw_all_windows[window_to_receive_message_id].horiz_scroll_pos,
+								MW_UNUSED_MESSAGE_PARAMETER,
 								MW_WINDOW_MESSAGE);
 					}
 				}
@@ -3026,6 +3030,7 @@ static window_redimensioning_state_t process_touch_event(void)
 				MW_UNUSED_MESSAGE_PARAMETER,
 				mw_all_controls[control_to_receive_message_id].control_handle,
 				(((uint32_t)client_x) << 16) | client_y,
+				MW_UNUSED_MESSAGE_PARAMETER,
 				MW_CONTROL_MESSAGE);
 		return window_redimensioning_state;
 	}
@@ -3087,6 +3092,7 @@ static window_redimensioning_state_t process_touch_event(void)
 							MW_UNUSED_MESSAGE_PARAMETER,
 							mw_all_windows[window_to_receive_message_id].window_handle,
 							MW_UNUSED_MESSAGE_PARAMETER,
+							MW_UNUSED_MESSAGE_PARAMETER,
 							MW_WINDOW_MESSAGE);
 				}
 			}
@@ -3125,6 +3131,7 @@ static window_redimensioning_state_t process_touch_event(void)
 			MW_UNUSED_MESSAGE_PARAMETER,
 			mw_all_windows[window_to_receive_message_id].window_handle,
 			(((uint32_t)client_x) << 16) | client_y,
+			MW_UNUSED_MESSAGE_PARAMETER,
 			MW_WINDOW_MESSAGE);
 
 	return window_redimensioning_state;
@@ -3182,6 +3189,7 @@ static void set_focus(void)
 			MW_UNUSED_MESSAGE_PARAMETER,
 			window_with_focus_handle,
 			MW_UNUSED_MESSAGE_PARAMETER,
+			MW_UNUSED_MESSAGE_PARAMETER,
 			MW_WINDOW_MESSAGE);
 
 	/* send message to all controls in the window that parent window lost focus */
@@ -3195,6 +3203,7 @@ static void set_focus(void)
 					MW_UNUSED_MESSAGE_PARAMETER,
 					mw_all_controls[i].control_handle,
 					MW_UNUSED_MESSAGE_PARAMETER,
+					MW_UNUSED_MESSAGE_PARAMETER,
 					MW_CONTROL_MESSAGE);
 		}
 	}
@@ -3205,6 +3214,7 @@ static void set_focus(void)
 	mw_post_message(MW_WINDOW_GAINED_FOCUS_MESSAGE,
 			MW_UNUSED_MESSAGE_PARAMETER,
 			window_with_focus_handle,
+			MW_UNUSED_MESSAGE_PARAMETER,
 			MW_UNUSED_MESSAGE_PARAMETER,
 			MW_WINDOW_MESSAGE);
 
@@ -3217,6 +3227,7 @@ static void set_focus(void)
 			mw_post_message(MW_CONTROL_GAINED_FOCUS_MESSAGE,
 					MW_UNUSED_MESSAGE_PARAMETER,
 					mw_all_controls[i].control_handle,
+					MW_UNUSED_MESSAGE_PARAMETER,
 					MW_UNUSED_MESSAGE_PARAMETER,
 					MW_CONTROL_MESSAGE);
 		}
@@ -3372,6 +3383,7 @@ void mw_init()
 			MW_UNUSED_MESSAGE_PARAMETER,
 			mw_all_windows[MW_ROOT_WINDOW_ID].window_handle,
 			MW_UNUSED_MESSAGE_PARAMETER,
+			MW_UNUSED_MESSAGE_PARAMETER,
 			MW_WINDOW_MESSAGE);
 
 	/* initialise client window painting flag */
@@ -3463,6 +3475,7 @@ mw_handle_t mw_add_window(mw_util_rect_t *rect,
    			MW_UNUSED_MESSAGE_PARAMETER,
 			mw_all_windows[new_window_id].window_handle,
    			MW_UNUSED_MESSAGE_PARAMETER,
+			MW_UNUSED_MESSAGE_PARAMETER,
    			MW_WINDOW_MESSAGE);
 
 	return mw_all_windows[new_window_id].window_handle;
@@ -3582,6 +3595,7 @@ void mw_set_window_visible(mw_handle_t window_handle, bool visible)
 			MW_UNUSED_MESSAGE_PARAMETER,
 			window_handle,
 			visible,
+			MW_UNUSED_MESSAGE_PARAMETER,
 			MW_WINDOW_MESSAGE);
 
 	/* update focus */
@@ -3664,6 +3678,7 @@ void mw_reposition_window(mw_handle_t window_handle, int16_t new_x, int16_t new_
 			MW_UNUSED_MESSAGE_PARAMETER,
 			window_handle,
 			MW_UNUSED_MESSAGE_PARAMETER,
+			MW_UNUSED_MESSAGE_PARAMETER,
 			MW_WINDOW_MESSAGE);
 }
 
@@ -3702,6 +3717,7 @@ bool mw_resize_window(mw_handle_t window_handle, uint16_t new_width, uint16_t ne
 			MW_UNUSED_MESSAGE_PARAMETER,
 			window_handle,
 			((uint32_t)new_width) << 16 | new_height,
+			MW_UNUSED_MESSAGE_PARAMETER,
 			MW_WINDOW_MESSAGE);
 
 	return true;
@@ -3875,6 +3891,7 @@ void mw_paint_window_frame(mw_handle_t window_handle, uint8_t components)
 			MW_UNUSED_MESSAGE_PARAMETER,
 			window_handle,
 			components,
+			MW_UNUSED_MESSAGE_PARAMETER,
 			MW_SYSTEM_MESSAGE);
 }
 
@@ -3892,6 +3909,7 @@ void mw_paint_window_client(mw_handle_t window_handle)
 	mw_post_message(MW_WINDOW_CLIENT_PAINT_MESSAGE,
 			MW_UNUSED_MESSAGE_PARAMETER,
 			window_handle,
+			MW_UNUSED_MESSAGE_PARAMETER,
 			MW_UNUSED_MESSAGE_PARAMETER,
 			MW_SYSTEM_MESSAGE);
 }
@@ -3917,7 +3935,8 @@ void mw_paint_window_client_rect(mw_handle_t window_handle, const mw_util_rect_t
 	mw_post_message(MW_WINDOW_CLIENT_PAINT_RECT_MESSAGE,
 			MW_UNUSED_MESSAGE_PARAMETER,
 			window_handle,
-			(uint32_t)rect,
+			MW_UNUSED_MESSAGE_PARAMETER,
+			(void *)rect,
 			MW_SYSTEM_MESSAGE);
 }
 
@@ -3987,6 +4006,7 @@ void mw_remove_window(mw_handle_t window_handle)
    			MW_UNUSED_MESSAGE_PARAMETER,
    			window_handle,
    			MW_UNUSED_MESSAGE_PARAMETER,
+			MW_UNUSED_MESSAGE_PARAMETER,
    			MW_WINDOW_MESSAGE);
 
 	/* remove this window by marking it as unused */
@@ -4132,6 +4152,7 @@ mw_handle_t mw_add_control(mw_util_rect_t *rect,
    			MW_UNUSED_MESSAGE_PARAMETER,
 			mw_all_controls[new_control_id].control_handle,
    			MW_UNUSED_MESSAGE_PARAMETER,
+			MW_UNUSED_MESSAGE_PARAMETER,
    			MW_CONTROL_MESSAGE);
 
    	if (parent_handle == window_with_focus_handle)
@@ -4141,6 +4162,7 @@ mw_handle_t mw_add_control(mw_util_rect_t *rect,
    	   			MW_UNUSED_MESSAGE_PARAMETER,
 				mw_all_controls[new_control_id].control_handle,
    	   			MW_UNUSED_MESSAGE_PARAMETER,
+				MW_UNUSED_MESSAGE_PARAMETER,
    	   			MW_CONTROL_MESSAGE);
    	}
 
@@ -4211,6 +4233,7 @@ void mw_set_control_visible(mw_handle_t control_handle, bool visible)
 			MW_UNUSED_MESSAGE_PARAMETER,
 			control_handle,
 			visible,
+			MW_UNUSED_MESSAGE_PARAMETER,
 			MW_CONTROL_MESSAGE);
 }
 
@@ -4257,6 +4280,7 @@ void mw_paint_control(mw_handle_t control_handle)
 			MW_UNUSED_MESSAGE_PARAMETER,
 			control_handle,
 			MW_UNUSED_MESSAGE_PARAMETER,
+			MW_UNUSED_MESSAGE_PARAMETER,
 			MW_SYSTEM_MESSAGE);
 }
 
@@ -4274,7 +4298,8 @@ void mw_paint_control_rect(mw_handle_t control_handle, const mw_util_rect_t *rec
 	mw_post_message(MW_CONTROL_PAINT_RECT_MESSAGE,
 			MW_UNUSED_MESSAGE_PARAMETER,
 			control_handle,
-			(uint32_t)rect,
+			MW_UNUSED_MESSAGE_PARAMETER,
+			(void *)rect,
 			MW_SYSTEM_MESSAGE);
 }
 
@@ -4328,6 +4353,7 @@ void mw_remove_control(mw_handle_t control_handle)
    			MW_UNUSED_MESSAGE_PARAMETER,
    			control_handle,
    			MW_UNUSED_MESSAGE_PARAMETER,
+			MW_UNUSED_MESSAGE_PARAMETER,
    			MW_CONTROL_MESSAGE);
 
 	/* remove this control by marking it as unused */
@@ -4481,7 +4507,12 @@ void mw_cancel_timer(mw_handle_t timer_handle)
 	}
 }
 
-void mw_post_message(uint8_t message_id, mw_handle_t sender_handle, mw_handle_t recipient_handle, uint32_t message_data, mw_message_recipient_type_t recipient_type)
+void mw_post_message(uint8_t message_id,
+		mw_handle_t sender_handle,
+		mw_handle_t recipient_handle,
+		uint32_t message_data,
+		void *message_pointer,
+		mw_message_recipient_type_t recipient_type)
 {
 	mw_message_t new_message;
 	uint8_t recipient_id = MW_ROOT_WINDOW_ID;
@@ -4504,6 +4535,7 @@ void mw_post_message(uint8_t message_id, mw_handle_t sender_handle, mw_handle_t 
 	new_message.message_recipient_type = recipient_type;
 	new_message.recipient_handle = recipient_handle;
 	new_message.sender_handle = sender_handle;
+	new_message.message_pointer = message_pointer;
 
 	/* do not send messages to unused windows */
 	if ((new_message.message_recipient_type == MW_WINDOW_MESSAGE &&
@@ -4548,6 +4580,7 @@ bool mw_process_message(void)
 						MW_UNUSED_MESSAGE_PARAMETER,
 						system_timer.data,
 						mw_all_windows[window_id].menu_bar_selected_item,
+						MW_UNUSED_MESSAGE_PARAMETER,
 						MW_WINDOW_MESSAGE);
 
 				/* window frame needs repainting to update appearance of menu bar */
@@ -4585,6 +4618,7 @@ bool mw_process_message(void)
 									MW_UNUSED_MESSAGE_PARAMETER,
 									mw_all_timers[i].recipient_handle,
 									mw_all_timers[i].timer_handle,
+									MW_UNUSED_MESSAGE_PARAMETER,
 									MW_WINDOW_MESSAGE);
 						}
 					}
@@ -4604,6 +4638,7 @@ bool mw_process_message(void)
 									MW_UNUSED_MESSAGE_PARAMETER,
 									mw_all_timers[i].recipient_handle,
 									mw_all_timers[i].timer_handle,
+									MW_UNUSED_MESSAGE_PARAMETER,
 									MW_CONTROL_MESSAGE);
 						}
 					}
@@ -4672,11 +4707,11 @@ bool mw_process_message(void)
 
 			case MW_WINDOW_CLIENT_PAINT_RECT_MESSAGE:
 				/* paint a window's client and contained controls */
-				do_paint_window_client_rect(message.recipient_handle, (mw_util_rect_t *)message.message_data);
+				do_paint_window_client_rect(message.recipient_handle, (mw_util_rect_t *)message.message_pointer);
 			  	if (get_window_id_for_handle(message.recipient_handle) > MW_ROOT_WINDOW_ID)
 			  	{
 			  		/* paint all the controls; these are always on top of the client area */
-			  		paint_all_controls_in_window_rect(message.recipient_handle, (mw_util_rect_t *)message.message_data);
+			  		paint_all_controls_in_window_rect(message.recipient_handle, (mw_util_rect_t *)message.message_pointer);
 			  	}
 				break;
 
@@ -4687,7 +4722,7 @@ bool mw_process_message(void)
 
 			case MW_CONTROL_PAINT_RECT_MESSAGE:
 				/* paint a single control's sub-region */
-				do_paint_control_rect(message.recipient_handle, (mw_util_rect_t *)message.message_data);
+				do_paint_control_rect(message.recipient_handle, (mw_util_rect_t *)message.message_pointer);
 				break;
 
 			default:
@@ -4717,6 +4752,7 @@ void mw_paint_all()
     /* this is the public interface to getting all windows painted;
      * it does not do the painting but adds a paint request message to the message queue */
 	mw_post_message(MW_WINDOW_PAINT_ALL_MESSAGE,
+			MW_UNUSED_MESSAGE_PARAMETER,
 			MW_UNUSED_MESSAGE_PARAMETER,
 			MW_UNUSED_MESSAGE_PARAMETER,
 			MW_UNUSED_MESSAGE_PARAMETER,

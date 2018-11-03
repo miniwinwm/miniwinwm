@@ -250,6 +250,7 @@ static void process_keypress(const mw_message_t *message)
 				message->recipient_handle,
 				mw_get_control_parent_window(message->recipient_handle),
 				(uint32_t)key_codes[(this_keypad->key_pressed_row * 3) + this_keypad->key_pressed_column],
+				MW_UNUSED_MESSAGE_PARAMETER,
 				MW_WINDOW_MESSAGE);
 
 		/* repaint pressed key area only */

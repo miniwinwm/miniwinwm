@@ -163,7 +163,7 @@ static void check_box_message_function(const mw_message_t *message)
 		this_check_box->checked = false;
 		break;
 		
-	case MW_TRANSFER_DATA_1_MESSAGE:
+	case MW_CHECK_BOX_SET_CHECKED_STATE_MESSAGE:
 		/* handle a transfer data message, which contains new number */
 		this_check_box->checked = message->message_data & 0x01;
 		break;
@@ -178,6 +178,7 @@ static void check_box_message_function(const mw_message_t *message)
 					message->recipient_handle,
 					mw_get_control_parent_window(message->recipient_handle),
 					this_check_box->checked,
+					MW_UNUSED_MESSAGE_PARAMETER,
 					MW_WINDOW_MESSAGE);
 		}
 		break;

@@ -52,12 +52,6 @@ SOFTWARE.
  *** TYPES ***
  ************/
 
- typedef struct
- {
-	 uint32_t window_handle;	/**< The handle of the window that the dialog was created in */
-	 uint32_t data;				/**< Response message data, can be numerical or pointer */
- } mw_dialog_response_t;
-
 /***************************
 *** FUNCTIONS PROTOTYPES ***
 ***************************/

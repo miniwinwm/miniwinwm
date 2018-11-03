@@ -312,7 +312,7 @@ static void list_box_message_function(const mw_message_t *message)
 		this_list_box->lines_to_scroll = 0;
 		break;
 
-	case MW_TRANSFER_DATA_1_MESSAGE:
+	case MW_LIST_BOX_LINES_TO_SCROLL_MESSAGE:
 		this_list_box->lines_to_scroll = message->message_data;
 		break;
 
@@ -323,6 +323,7 @@ static void list_box_message_function(const mw_message_t *message)
 				message->recipient_handle,
 				mw_get_control_parent_window(message->recipient_handle),
 				this_list_box->selection,
+				MW_UNUSED_MESSAGE_PARAMETER,
 				MW_WINDOW_MESSAGE);
 		mw_paint_control(message->recipient_handle);
 		break;
@@ -364,7 +365,7 @@ mw_handle_t mw_ui_list_box_add_new(uint16_t x,
 
 	if (list_box_instance_data == NULL)
 	{
-		return MW_MAX_CONTROL_COUNT;
+		return MW_INVALID_HANDLE;
 	}
 
 	if (flags & MW_CONTROL_FLAGS_LARGE_SIZE)
@@ -372,7 +373,7 @@ mw_handle_t mw_ui_list_box_add_new(uint16_t x,
 		/* check for a sensible width */
 		if (width < MW_UI_LIST_BOX_LARGE_MIN_WIDTH)
 		{
-			return MW_MAX_CONTROL_COUNT;
+			return MW_INVALID_HANDLE;
 		}
 
 		mw_util_set_rect(&r,
@@ -386,7 +387,7 @@ mw_handle_t mw_ui_list_box_add_new(uint16_t x,
 		/* check for a sensible width */
 		if (width < MW_UI_LIST_BOX_MIN_WIDTH)
 		{
-			return MW_MAX_CONTROL_COUNT;
+			return MW_INVALID_HANDLE;
 		}
 
 		mw_util_set_rect(&r,

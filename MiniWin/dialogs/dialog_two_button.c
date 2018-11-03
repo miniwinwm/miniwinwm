@@ -49,15 +49,14 @@ SOFTWARE.
  */
 typedef struct
 {
-	mw_handle_t button_1_handle;				/**< Handle of left button */
-	mw_handle_t button_2_handle;				/**< Handle of right button */
-	mw_ui_button_data_t button_1_data;			/**< Instance data of left button */
-	mw_ui_button_data_t button_2_data;			/**< Instance data of right button */
-	char *message;								/**< Text to display in dialog */
-	bool large_size;							/**< True for large size false for standard size */
-	mw_handle_t response_window_handle;			/**< Window handle to send response message to */
-	mw_dialog_response_t mw_dialog_response;	/**< Dialog response structure */
-
+	mw_handle_t button_1_handle;					/**< Handle of left button */
+	mw_handle_t button_2_handle;					/**< Handle of right button */
+	mw_handle_t response_window_handle;				/**< Window handle to send response message to */
+	mw_handle_t two_button_dialog_window_handle;	/**< Handle of two button dialog window */
+	mw_ui_button_data_t button_1_data;				/**< Instance data of left button */
+	mw_ui_button_data_t button_2_data;				/**< Instance data of right button */
+	char *message;									/**< Text to display in dialog */
+	bool large_size;								/**< True for large size false for standard size */
 } mw_dialog_two_button_data_t;
 
 /***********************
@@ -93,7 +92,7 @@ static void remove_resources(void)
 {
 	mw_remove_control(mw_dialog_two_button_data.button_1_handle);
 	mw_remove_control(mw_dialog_two_button_data.button_2_handle);
-	mw_remove_window(mw_dialog_two_button_data.mw_dialog_response.window_handle);
+	mw_remove_window(mw_dialog_two_button_data.two_button_dialog_window_handle);
 }
 
 /**
@@ -161,11 +160,11 @@ static void mw_dialog_two_button_message_function(const mw_message_t *message)
 			}
 
 			/* post response to receiving window */
-			mw_dialog_two_button_data.mw_dialog_response.data = button_pressed;
 			mw_post_message(MW_DIALOG_TWO_BUTTONS_DISMISSED_MESSAGE,
 					MW_UNUSED_MESSAGE_PARAMETER,
 					mw_dialog_two_button_data.response_window_handle,
-					(uint32_t)&mw_dialog_two_button_data.mw_dialog_response,
+					(uint32_t)button_pressed,
+					MW_UNUSED_MESSAGE_PARAMETER,
 					MW_WINDOW_MESSAGE);
 
 			/* a window has changed visibility so repaint all */
@@ -230,6 +229,12 @@ mw_handle_t mw_create_window_dialog_two_button(uint16_t x,
 		return MW_INVALID_HANDLE;
 	}
 
+	/* check response window handle */
+	if (!mw_is_window_handle_valid(response_window_handle))
+	{
+		return MW_INVALID_HANDLE;
+	}
+
 	mw_dialog_two_button_data.large_size = large_size;
 	mw_dialog_two_button_data.message = message;
 	mw_dialog_two_button_data.response_window_handle = response_window_handle;
@@ -237,7 +242,7 @@ mw_handle_t mw_create_window_dialog_two_button(uint16_t x,
 	rect.y = y;
 	rect.width = width;
 
-	mw_dialog_two_button_data.mw_dialog_response.window_handle = mw_add_window(&rect,
+	mw_dialog_two_button_data.two_button_dialog_window_handle = mw_add_window(&rect,
 			title,
 			mw_dialog_two_button_paint_function,
 			mw_dialog_two_button_message_function,
@@ -248,14 +253,14 @@ mw_handle_t mw_create_window_dialog_two_button(uint16_t x,
 			NULL);
 
 	/* check if window could be created */
-	if (mw_dialog_two_button_data.mw_dialog_response.window_handle == MW_INVALID_HANDLE)
+	if (mw_dialog_two_button_data.two_button_dialog_window_handle == MW_INVALID_HANDLE)
 	{
 		/* it couldn't so exit */
 		return MW_INVALID_HANDLE;
 	}
 
 	/* get window client rect width */
-	window_client_width = mw_get_window_client_rect(mw_dialog_two_button_data.mw_dialog_response.window_handle).width;
+	window_client_width = mw_get_window_client_rect(mw_dialog_two_button_data.two_button_dialog_window_handle).width;
 
 	/* set controls data */
 	mw_util_safe_strcpy(mw_dialog_two_button_data.button_1_data.button_label,
@@ -268,14 +273,14 @@ mw_handle_t mw_create_window_dialog_two_button(uint16_t x,
 		mw_dialog_two_button_data.button_1_handle = mw_ui_button_add_new(
 				(window_client_width - BUTTON_LARGE_GAP) / 2 - MW_UI_BUTTON_LARGE_WIDTH,
 				35,
-				mw_dialog_two_button_data.mw_dialog_response.window_handle,
+				mw_dialog_two_button_data.two_button_dialog_window_handle,
 				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAGS_LARGE_SIZE,
 				&mw_dialog_two_button_data.button_1_data);
 
 		mw_dialog_two_button_data.button_2_handle = mw_ui_button_add_new(
 				(window_client_width / 2) + BUTTON_LARGE_GAP / 2,
 				35,
-				mw_dialog_two_button_data.mw_dialog_response.window_handle,
+				mw_dialog_two_button_data.two_button_dialog_window_handle,
 				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAGS_LARGE_SIZE,
 				&mw_dialog_two_button_data.button_2_data);
 	}
@@ -284,14 +289,14 @@ mw_handle_t mw_create_window_dialog_two_button(uint16_t x,
 		mw_dialog_two_button_data.button_1_handle = mw_ui_button_add_new(
 				(window_client_width - BUTTON_GAP) / 2 - MW_UI_BUTTON_WIDTH,
 				30,
-				mw_dialog_two_button_data.mw_dialog_response.window_handle,
+				mw_dialog_two_button_data.two_button_dialog_window_handle,
 				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
 				&mw_dialog_two_button_data.button_1_data);
 
 		mw_dialog_two_button_data.button_2_handle = mw_ui_button_add_new(
 				(window_client_width / 2) + BUTTON_GAP / 2,
 				30,
-				mw_dialog_two_button_data.mw_dialog_response.window_handle,
+				mw_dialog_two_button_data.two_button_dialog_window_handle,
 				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
 				&mw_dialog_two_button_data.button_2_data);
 	}
@@ -307,9 +312,9 @@ mw_handle_t mw_create_window_dialog_two_button(uint16_t x,
 	}
 
 	/* this window needs painting; it is coming up at the front so paint only this one */
-	mw_paint_window_frame(mw_dialog_two_button_data.mw_dialog_response.window_handle, MW_WINDOW_FRAME_COMPONENT_ALL);
-	mw_paint_window_client(mw_dialog_two_button_data.mw_dialog_response.window_handle);
+	mw_paint_window_frame(mw_dialog_two_button_data.two_button_dialog_window_handle, MW_WINDOW_FRAME_COMPONENT_ALL);
+	mw_paint_window_client(mw_dialog_two_button_data.two_button_dialog_window_handle);
 
-	return mw_dialog_two_button_data.mw_dialog_response.window_handle;
+	return mw_dialog_two_button_data.two_button_dialog_window_handle;
 }
 

@@ -197,6 +197,7 @@ static void arrow_message_function(const mw_message_t *message)
 				message->recipient_handle,
 				mw_get_control_parent_window(message->recipient_handle),
 				this_arrow->mw_ui_arrow_direction,
+				MW_UNUSED_MESSAGE_PARAMETER,
 				MW_WINDOW_MESSAGE);
 		mw_paint_control(message->recipient_handle);
 		break;
@@ -211,6 +212,7 @@ static void arrow_message_function(const mw_message_t *message)
 					message->recipient_handle,
 					mw_get_control_parent_window(message->recipient_handle),
 					this_arrow->mw_ui_arrow_direction,
+					MW_UNUSED_MESSAGE_PARAMETER,
 					MW_WINDOW_MESSAGE);
 		}
 		break;

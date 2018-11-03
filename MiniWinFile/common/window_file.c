@@ -93,7 +93,7 @@ static window_file_data_t window_file_data;
 
 static bool add_text_window(char *path_and_filename);
 static bool add_image_window(char *path_and_filename);
-static void create_new_file(void);
+static void create_new_file(mw_handle_t response_window_handle);
 
 /**********************
 *** LOCAL FUNCTIONS ***
@@ -102,7 +102,7 @@ static void create_new_file(void);
 /**
  * Create a new text file and add some text
  */
-static void create_new_file(void)
+static void create_new_file(mw_handle_t response_window_handle)
 {
 	if (app_file_create(window_file_data.create_path_and_filename))
 	{
@@ -115,7 +115,7 @@ static void create_new_file(void)
 				"File created successfully",
 				"Ok",
 				false,
-				MW_UNUSED_MESSAGE_PARAMETER);
+				response_window_handle);
 	}
 	else
 	{
@@ -126,7 +126,7 @@ static void create_new_file(void)
 				"Could not create file",
 				"Ok",
 				false,
-				MW_UNUSED_MESSAGE_PARAMETER);
+				response_window_handle);
 	}
 }
 
@@ -164,7 +164,7 @@ static bool add_text_window(char *path_and_filename)
 
 	for (i = 0; i < TEXT_WINDOW_COUNT; i++)
 	{
-		if (window_file_data.text_windows_data[i].text_window_handle == MW_MAX_WINDOW_COUNT)
+		if (window_file_data.text_windows_data[i].text_window_handle == MW_INVALID_HANDLE)
 		{
 			mw_util_set_rect(&r, 10, 10, 100, 100);
 			new_window_handle = mw_add_window(&r,
@@ -226,7 +226,7 @@ static bool add_image_window(char *path_and_filename)
 
 	for (i = 0; i < IMAGE_WINDOW_COUNT; i++)
 	{
-		if (window_file_data.image_windows_data[i].image_window_handle == MW_MAX_WINDOW_COUNT)
+		if (window_file_data.image_windows_data[i].image_window_handle == MW_INVALID_HANDLE)
 		{
 			mw_util_set_rect(&r, 10, 10, 100, 100);
 			new_window_handle = mw_add_window(&r,
@@ -303,11 +303,11 @@ void window_file_message_function(const mw_message_t *message)
 
 			for (i = 0; i < TEXT_WINDOW_COUNT; i++)
 			{
-				window_file_data.text_windows_data[i].text_window_handle = MW_MAX_WINDOW_COUNT;
+				window_file_data.text_windows_data[i].text_window_handle = MW_INVALID_HANDLE;
 			}
 			for (i = 0; i < IMAGE_WINDOW_COUNT; i++)
 			{
-				window_file_data.image_windows_data[i].image_window_handle = MW_MAX_WINDOW_COUNT;
+				window_file_data.image_windows_data[i].image_window_handle = MW_INVALID_HANDLE;
 			}
 
 			mw_set_timer(mw_tick_counter + 20, message->recipient_handle, MW_WINDOW_MESSAGE);
@@ -374,10 +374,9 @@ void window_file_message_function(const mw_message_t *message)
 
 	case MW_DIALOG_DATE_CHOOSER_OK_MESSAGE:
 		{
-			mw_dialog_response_t *dialog_response = (mw_dialog_response_t *)message->message_data;
-			window_file_data.set_time.tm_mday = (int)(dialog_response->data & 0xff);
-			window_file_data.set_time.tm_mon = (int)((dialog_response->data >> 8) & 0xff);
-			window_file_data.set_time.tm_year = (int)(dialog_response->data >> 16);
+			window_file_data.set_time.tm_mday = (int)(message->message_data & 0xff);
+			window_file_data.set_time.tm_mon = (int)((message->message_data >> 8) & 0xff);
+			window_file_data.set_time.tm_year = (int)(message->message_data >> 16);
 			app_set_time_date(window_file_data.set_time);
 
 			/* enable the create button now time/date set */
@@ -387,10 +386,9 @@ void window_file_message_function(const mw_message_t *message)
 
 	case MW_DIALOG_TIME_CHOOSER_OK_MESSAGE:
 		{
-			mw_dialog_response_t *dialog_response = (mw_dialog_response_t *)message->message_data;
 			window_file_data.set_time.tm_sec = 0;
-			window_file_data.set_time.tm_hour = (int)(dialog_response->data >> 8);
-			window_file_data.set_time.tm_min = (int)(dialog_response->data & 0xff);
+			window_file_data.set_time.tm_hour = (int)(message->message_data >> 8);
+			window_file_data.set_time.tm_min = (int)(message->message_data & 0xff);
 
 			mw_create_window_dialog_date_chooser(70,
 					100,
@@ -404,14 +402,13 @@ void window_file_message_function(const mw_message_t *message)
 
 	case MW_DIALOG_FILE_CHOOSER_FILE_OK_MESSAGE:
 		{
-			mw_dialog_response_t *dialog_response = (mw_dialog_response_t *)message->message_data;
 			const char *extension;
 			bool window_added;
 			bool format_supported;
 			char *open_path_and_filename;
 
 			/* get the item chosen path and file name from message */
-			open_path_and_filename = (char *)dialog_response->data;
+			open_path_and_filename = (char *)message->message_pointer;
 
 			/* get filename extension */
 			extension = mw_util_get_filename_ext(open_path_and_filename);
@@ -462,19 +459,15 @@ void window_file_message_function(const mw_message_t *message)
 
 	case MW_DIALOG_FILE_CHOOSER_FOLDER_OK_MESSAGE:
 		{
-			mw_dialog_response_t *dialog_response = (mw_dialog_response_t *)message->message_data;
-
 			mw_util_safe_strcpy(window_file_data.create_path_and_filename,
 					MAX_FOLDER_AND_FILENAME_LENGTH,
-					(char *)dialog_response->data);
+					(char *)message->message_pointer);
 			mw_create_window_dialog_text_entry(0, 20, "New file name", "", message->recipient_handle);
 		}
 		break;
 
 	case MW_DIALOG_TEXT_ENTRY_OK_MESSAGE:
 		{
-			mw_dialog_response_t *dialog_response = (mw_dialog_response_t *)message->message_data;
-
 			/* add trailing / to path if it isn't there */
 			if (window_file_data.create_path_and_filename[strlen(window_file_data.create_path_and_filename) - 1] != '/')
 			{
@@ -486,7 +479,7 @@ void window_file_message_function(const mw_message_t *message)
 			/* add file name */
 			mw_util_safe_strcat(window_file_data.create_path_and_filename,
 					MAX_FOLDER_AND_FILENAME_LENGTH,
-					(char *)dialog_response->data);
+					(char *)message->message_pointer);
 
 			/* attempt to open file for reading to see if it's there */
 			if (app_file_open(window_file_data.create_path_and_filename))
@@ -508,25 +501,23 @@ void window_file_message_function(const mw_message_t *message)
 			else
 			{
 				/* create the new file */
-				create_new_file();
+				create_new_file(message->recipient_handle);
 			}
 		}
 		break;
 
 	case MW_DIALOG_TWO_BUTTONS_DISMISSED_MESSAGE:
 		{
-			mw_dialog_response_t *dialog_response = (mw_dialog_response_t *)message->message_data;
-
 			/* check response from dialog asking if to overwrite existing file when creating a new one */
-			if (dialog_response->data == 0)
+			if (message->message_data == 0)
 			{
 				/* left button is yes response so create file */
-				create_new_file();
+				create_new_file(message->recipient_handle);
 			}
 		}
 		break;
 
-	case MW_TRANSFER_DATA_1_MESSAGE:
+	case MW_WINDOW_EXTERNAL_WINDOW_REMOVED:
 		/* a pop up window has been closed */
 		{
 			uint8_t i;
@@ -535,7 +526,7 @@ void window_file_message_function(const mw_message_t *message)
 			{
 				if (message->sender_handle == window_file_data.text_windows_data[i].text_window_handle)
 				{
-					window_file_data.text_windows_data[i].text_window_handle = MW_MAX_WINDOW_COUNT;
+					window_file_data.text_windows_data[i].text_window_handle = MW_INVALID_HANDLE;
 					break;
 				}
 			}
@@ -543,7 +534,7 @@ void window_file_message_function(const mw_message_t *message)
 			{
 				if (message->sender_handle == window_file_data.image_windows_data[i].image_window_handle)
 				{
-					window_file_data.image_windows_data[i].image_window_handle = MW_MAX_WINDOW_COUNT;
+					window_file_data.image_windows_data[i].image_window_handle = MW_INVALID_HANDLE;
 					break;
 				}
 			}

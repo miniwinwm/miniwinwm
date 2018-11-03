@@ -47,13 +47,11 @@ SOFTWARE.
 #define MW_UI_RADIO_BUTTON_HEIGHT				(MW_UI_RADIO_BUTTON_BOX_SIZE + 3)
 #define MW_UI_RADIO_BUTTON_LABEL_X_OFFSET		(MW_UI_RADIO_BUTTON_BOX_SIZE + 3)
 #define MW_UI_RADIO_BUTTON_LABEL_Y_OFFSET		4
-#define MW_UI_RADIO_BUTTON_WIDTH				98
 
 #define MW_UI_RADIO_BUTTON_LARGE_BOX_SIZE		30
 #define MW_UI_RADIO_BUTTON_LARGE_HEIGHT			(MW_UI_RADIO_BUTTON_LARGE_BOX_SIZE + 7)
 #define MW_UI_RADIO_BUTTON_LARGE_LABEL_X_OFFSET	(MW_UI_RADIO_BUTTON_LARGE_BOX_SIZE + 7)
 #define MW_UI_RADIO_BUTTON_LARGE_LABEL_Y_OFFSET	8
-#define MW_UI_RADIO_BUTTON_LARGE_WIDTH			196
 
 /************
 *** TYPES ***
@@ -65,8 +63,8 @@ SOFTWARE.
 typedef struct
 {
   /* User modifiable fields */
-	uint8_t number_of_items;			/**< number of radio_buttons in the group */  
 	char **radio_button_labels;			/**< array of strings of labels shown to the right of each radio_button */
+	uint8_t number_of_items;			/**< number of radio_buttons in the group */  
 
   /* Non-user modifiable fields */  
 	uint8_t selected_radio_button;		/**< the currently selected radio_button */
@@ -81,6 +79,7 @@ typedef struct
  *
  * @param x The x coordinate of the control relative to parent window client area
  * @param y The y coordinate of the control relative to parent window client area
+ * @param width The width of the control including the labels
  * @param parent The containing window of this control
  * @param flags General control flags controlling the control
  * @param radio_button_instance_data Instance structure containing radio button specific data items
@@ -88,6 +87,7 @@ typedef struct
  */
 mw_handle_t mw_ui_radio_button_add_new(uint16_t x,
 		uint16_t y,
+		uint16_t width,
 		mw_handle_t parent,
 		uint32_t flags,
 		mw_ui_radio_button_data_t *radio_button_instance_data);

@@ -49,8 +49,8 @@ typedef struct
 	uint16_t x[10];						/**< X coordinate of all circle positions this time  */
 	uint16_t y[10];						/**< Y coordinate of all circle positions this time  */
 	uint8_t r[10];						/**< Radius of all circles this time  */
-	mw_hal_lcd_colour_t c[10];			/**< Colour of all circles this time */
 	bool timer_running;
+	mw_hal_lcd_colour_t c[10];			/**< Colour of all circles this time */
 } window_yield_data_t;
 
 /***********************

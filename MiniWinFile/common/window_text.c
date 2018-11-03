@@ -140,10 +140,11 @@ void window_text_message_function(const mw_message_t *message)
 	switch (message->message_id)
 	{
 	case MW_WINDOW_REMOVED_MESSAGE:
-		mw_post_message(MW_TRANSFER_DATA_1_MESSAGE,
+		mw_post_message(MW_WINDOW_EXTERNAL_WINDOW_REMOVED,
 				message->recipient_handle,
 				window_file_handle,
-				0,
+				MW_UNUSED_MESSAGE_PARAMETER,
+				MW_UNUSED_MESSAGE_PARAMETER,
 				MW_WINDOW_MESSAGE);
 		break;
 

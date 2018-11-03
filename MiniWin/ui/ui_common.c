@@ -64,45 +64,6 @@ SOFTWARE.
 *** GLOBAL FUNCTIONS ***
 ***********************/
 
-void mw_ui_common_post_number_to_control(mw_handle_t control_handle, uint32_t number)
-{
-	/* check handle for not being invalid handle */
-	if (!mw_is_control_handle_valid(control_handle))
-	{
-		MW_ASSERT(false, "Invalid control handle");
-		return;
-	}
-
-	mw_post_message(MW_TRANSFER_DATA_1_MESSAGE,
-			0,
-			control_handle,
-			number,
-			MW_CONTROL_MESSAGE);
-}
-
-void mw_ui_common_post_pointer_to_control(mw_handle_t control_handle, void *pointer)
-{
-	/* check pointer for non-null */
-	if (!pointer)
-	{
-		MW_ASSERT(false, "Null pointer argument");
-		return;
-	}
-
-	/* check handle for not being invalid handle */
-	if (!mw_is_control_handle_valid(control_handle))
-	{
-		MW_ASSERT(false, "Invalid control handle");
-		return;
-	}
-
-	mw_post_message(MW_TRANSFER_DATA_1_PTR_MESSAGE,
-			0,
-			control_handle,
-			(uint32_t)pointer,
-			MW_CONTROL_MESSAGE);
-}
-
 uint16_t mw_ui_common_scale_scroll_bar_touch_point(uint16_t scroll_bar_length, int16_t touch_point)
 {
 	touch_point -= MW_SCROLL_BAR_SLIDER_SIZE / 2;

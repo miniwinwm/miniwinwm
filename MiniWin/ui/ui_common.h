@@ -59,21 +59,6 @@ SOFTWARE.
 /***************************
 *** FUNCTIONS PROTOTYPES ***
 ***************************/
-/**
- * Post a number value to a control in a message.
- *
- * @param control_handle The handle of the control
- * @param number The number
- */
-void mw_ui_common_post_number_to_control(mw_handle_t control_handle, uint32_t number);
-
-/**
- * Post a pointer value to a control in a message.
- *
- * @param control_handle The handle of the control
- * @param pointer The pointer
- */
-void mw_ui_common_post_pointer_to_control(mw_handle_t control_handle, void *pointer);
 
 /**
  * Scale a scroll bar touch point from the full width as it appears on the screen

@@ -130,7 +130,7 @@ static void progress_bar_message_function(const mw_message_t *message)
 
 	switch (message->message_id)
 	{
-	case MW_TRANSFER_DATA_1_MESSAGE:
+	case MW_PROGRESS_BAR_SET_PROGRESS_MESSAGE:
 		/* handle a transfer data message, which contains new progress_bar progress */
 		this_progress_bar->progress_percent = message->message_data;
 		break;
@@ -157,7 +157,7 @@ mw_handle_t mw_ui_progress_bar_add_new(uint16_t x,
 	if (height < 3 || width < 3)
 	{
 		MW_ASSERT(false, "Height too small");
-		return MW_MAX_CONTROL_COUNT;
+		return MW_INVALID_HANDLE;
 	}
 
 	mw_util_set_rect(&r, x, y, width, height);

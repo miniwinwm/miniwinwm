@@ -206,7 +206,7 @@ static void radio_button_message_function(const mw_message_t *message)
 		this_radio_radio_button->selected_radio_button = 0;
 		break;
 		
-	case MW_TRANSFER_DATA_1_MESSAGE:
+	case MW_RADIO_BUTTON_SET_SELECTED_MESSAGE:
 		/* handle a transfer data message, which contains new position */
 		if (message->message_data < this_radio_radio_button->number_of_items)
 		{
@@ -226,6 +226,7 @@ static void radio_button_message_function(const mw_message_t *message)
 					message->recipient_handle,
 					mw_get_control_parent_window(message->recipient_handle),
 					this_radio_radio_button->selected_radio_button,
+					MW_UNUSED_MESSAGE_PARAMETER,
 					MW_WINDOW_MESSAGE);
 			mw_paint_control(message->recipient_handle);
 		}
@@ -242,6 +243,7 @@ static void radio_button_message_function(const mw_message_t *message)
 
 mw_handle_t mw_ui_radio_button_add_new(uint16_t x,
 		uint16_t y,
+		uint16_t width,
 		mw_handle_t parent,
 		uint32_t flags,
 		mw_ui_radio_button_data_t *radio_button_instance_data)
@@ -250,16 +252,24 @@ mw_handle_t mw_ui_radio_button_add_new(uint16_t x,
 
 	if (radio_button_instance_data == NULL)
 	{
-		return MW_MAX_CONTROL_COUNT;
+		return MW_INVALID_HANDLE;
 	}
 
 	if (flags & MW_CONTROL_FLAGS_LARGE_SIZE)
 	{
-		mw_util_set_rect(&r, x, y, MW_UI_RADIO_BUTTON_LARGE_WIDTH, MW_UI_RADIO_BUTTON_LARGE_HEIGHT * radio_button_instance_data->number_of_items);
+		if (width < MW_UI_RADIO_BUTTON_LARGE_HEIGHT)
+		{
+			return MW_INVALID_HANDLE;
+		}
+		mw_util_set_rect(&r, x, y, width, MW_UI_RADIO_BUTTON_LARGE_HEIGHT * radio_button_instance_data->number_of_items);
 	}
 	else
 	{
-		mw_util_set_rect(&r, x, y, MW_UI_RADIO_BUTTON_WIDTH, MW_UI_RADIO_BUTTON_HEIGHT * radio_button_instance_data->number_of_items);
+		if (width < MW_UI_RADIO_BUTTON_HEIGHT)
+		{
+			return MW_INVALID_HANDLE;
+		}
+		mw_util_set_rect(&r, x, y, width, MW_UI_RADIO_BUTTON_HEIGHT * radio_button_instance_data->number_of_items);
 	}
 
 	return mw_add_control(&r,

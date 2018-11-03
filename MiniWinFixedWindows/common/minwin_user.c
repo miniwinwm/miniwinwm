@@ -283,6 +283,7 @@ void mw_user_init(void)
 	radio_button_settings_data.radio_button_labels = (char **)radio_button_labels;
 	radio_button_settings_handle = mw_ui_radio_button_add_new(20,
 			70,
+			100,
 			window_settings_handle,
 			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAGS_LARGE_SIZE,
 			&radio_button_settings_data);

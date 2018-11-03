@@ -163,7 +163,7 @@ static void scroll_bar_horiz_message_function(const mw_message_t *message)
 		this_scroll_bar_horiz->scroll_position = 0;
 		break;
 		
-	case MW_TRANSFER_DATA_1_MESSAGE:
+	case MW_SCROLL_BAR_SET_SCROLL_MESSAGE:
 		/* handle a transfer data message, which contains new position */
 		this_scroll_bar_horiz->scroll_position  = (uint8_t)message->message_data;
 		break;
@@ -190,6 +190,7 @@ static void scroll_bar_horiz_message_function(const mw_message_t *message)
 						message->recipient_handle,
 						mw_get_control_parent_window(message->recipient_handle),
 						this_scroll_bar_horiz->scroll_position,
+						MW_UNUSED_MESSAGE_PARAMETER,
 						MW_WINDOW_MESSAGE);
 			}
 		}

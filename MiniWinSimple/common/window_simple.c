@@ -128,7 +128,12 @@ void window_simple_message_function(const mw_message_t *message)
 		break;
 
 	case MW_DIALOG_ONE_BUTTON_DISMISSED_MESSAGE:
-		mw_ui_common_post_pointer_to_control(label_handle, "Hello world!");
+		mw_post_message(MW_LABEL_SET_LABEL_TEXT_MESSAGE,
+				message->recipient_handle,
+				label_handle,
+				MW_UNUSED_MESSAGE_PARAMETER,
+				(void *)"Hello world!",
+				MW_CONTROL_MESSAGE);
 		mw_paint_control(label_handle);
 		break;
 

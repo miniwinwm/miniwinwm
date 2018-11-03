@@ -60,10 +60,10 @@ typedef struct
 	bool is_key_pressed;						/**< If a key is currently pressed */
 	uint8_t	key_pressed_row;					/**< The currently pressed key */
 	uint8_t	key_pressed_column;					/**< The currently pressed key */
-	uint8_t key_size;							/**< Size of individual key depending on if large size or standard size */
 	mw_handle_t timer_handle;					/**< Timer handle for animations and hold down repeat timeout */
 	uint32_t touch_down_time;					/**< Time in ticks a key was first pressed down */
 	bool holding_down;							/**< true when holding down a key */
+	uint8_t key_size;							/**< Size of individual key depending on if large size or standard size */
 } mw_ui_keypad_data_t;
 
 /***************************
