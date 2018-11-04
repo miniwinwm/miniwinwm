@@ -93,7 +93,7 @@ static void keypad_paint_function(mw_handle_t control_handle, const mw_gl_draw_i
 	uint8_t bitmap_offset;
 	uint8_t c;
 
-	if (mw_get_control_flags(control_handle) & MW_CONTROL_FLAGS_LARGE_SIZE)
+	if (mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_LARGE_SIZE)
 	{
 		key_size = MW_UI_KEYPAD_KEY_LARGE_SIZE;
 		mw_gl_set_font(MW_GL_TITLE_FONT);
@@ -280,7 +280,7 @@ static void keypad_message_function(const mw_message_t *message)
 		this_keypad->is_key_pressed = false;
 		this_keypad->holding_down = false;
 		this_keypad->timer_handle = MW_INVALID_HANDLE;
-		if (mw_get_control_flags(message->recipient_handle) & MW_CONTROL_FLAGS_LARGE_SIZE)
+		if (mw_get_control_flags(message->recipient_handle) & MW_CONTROL_FLAG_LARGE_SIZE)
 		{
 			this_keypad->key_size = MW_UI_KEYPAD_KEY_LARGE_SIZE;
 		}
@@ -365,7 +365,7 @@ mw_handle_t mw_ui_keypad_add_new(uint16_t x,
 {
 	mw_util_rect_t r;
 
-	if (flags & MW_CONTROL_FLAGS_LARGE_SIZE)
+	if (flags & MW_CONTROL_FLAG_LARGE_SIZE)
 	{
 		mw_util_set_rect(&r, x, y, MW_UI_KEYPAD_KEY_LARGE_SIZE * 3, MW_UI_KEYPAD_KEY_LARGE_SIZE * 4);
 	}

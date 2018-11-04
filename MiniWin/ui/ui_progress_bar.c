@@ -162,7 +162,7 @@ mw_handle_t mw_ui_progress_bar_add_new(uint16_t x,
 
 	mw_util_set_rect(&r, x, y, width, height);
 
-	/* no account taken of the MW_CONTROL_FLAGS_LARGE_SIZE flag as user sets required size of this control */
+	/* no account taken of the MW_CONTROL_FLAG_LARGE_SIZE flag as user sets required size of this control */
 
 	return mw_add_control(&r,
 			parent,

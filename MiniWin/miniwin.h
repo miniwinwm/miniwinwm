@@ -36,7 +36,7 @@ SOFTWARE.
 ***************/
 
 #include <stdint.h>
-#include "user/minwin_config.h"
+#include <user/miniwin_config.h>
 #include <miniwin_debug.h>
 #include "gl/gl.h"
 
@@ -47,58 +47,60 @@ SOFTWARE.
 /**
  * System define constants that must not be changed 
  */
-#define MW_BORDER_WIDTH 						1               					/**< Width of a window border */
-#define MW_TITLE_BAR_HEIGHT 					(MW_GL_TITLE_FONT_HEIGHT + 2)       /**< Height of a window's title bar which should be greater than MW_LARGE_CHARACTER_HEIGHT */
-#define MW_TITLE_X_OFFSET						18									/**< Title text x offset in title bar */
-#define MW_TITLE_Y_OFFSET						2									/**< Title text y offset in title bar */
-#define MW_USER_MESSAGE_BASE					50      							/**< User messages can be defined from this base value upwards */
-#define MW_ROOT_Z_ORDER 						0       							/**< Root z order is always the lowest */
-#define MW_MIN_Z_ORDER 							1       							/**< Lowest window z order */
-#define MW_MAX_Z_ORDER 							0xff    							/**< The highest possible value of z order */
-#define MW_ROOT_WINDOW_ID 						0       							/**< This window always exists and is created on initialisation */
-#define MW_FIRST_USER_WINDOW_ID 				(MW_ROOT_WINDOW_ID + 1)      		/**< User window identifiers are from this value upwards */
-#define MW_TITLE_BAR_ICON_SIZE					14									/**< Size of icons, which are square */
-#define MW_TITLE_BAR_ICON_OFFSET				16									/**< Distance between each title bar icon */
-#define MW_DESKTOP_ICONS_PER_ROW				4           						/**< Number of icons of minimized windows to show across bottom of screen */
-#define MW_DESKTOP_ICON_WIDTH					(MW_HAL_LCD_WIDTH / MW_DESKTOP_ICONS_PER_ROW)	/**< Number of icons across desktop */
-#define MW_DESKTOP_ICON_HEIGHT					18									/**< Height of desktop minimised icons */
-#define MW_UNUSED_MESSAGE_PARAMETER				0									/**< To indicate that a parameter to post message is unused rather than zero */
-#define MW_ALL_ITEMS_ENABLED					0xffff								/**< All items in a control that can have individual items enabled are enabled */
-#define MW_ALL_ITEMS_DISABLED					0									/**< All items in a control that can have individual items enabled are disabled */
-#define MW_SCROLL_BAR_NARROW_DIMESION			12									/**< Width of vertical scroll bar, height of horizontal */
-#define MW_SCROLL_BAR_SLIDER_SIZE				MW_SCROLL_BAR_NARROW_DIMESION       /**< Length of scroll bar slider */
-#define MW_SCROLL_BAR_LARGE_NARROW_DIMESION		24									/**< Width of large vertical scroll bar, height of large horizontal */
-#define MW_SCROLL_BAR_LARGE_SLIDER_SIZE			MW_SCROLL_BAR_LARGE_NARROW_DIMESION /**< Length of large scroll bar slider */
-#define MW_MENU_BAR_HEIGHT						14									/**< Menu bar height */
-#define MW_MENU_BAR_LABEL_Y_OFFSET				3               					/**< Gap between top edge of menu bar and text */
-#define MW_INVALID_HANDLE						0									/**< Invalid handle, returned when a resource cannot be allocated */
+#define MW_BORDER_WIDTH 							1               					/**< Width of a window border */
+#define MW_TITLE_BAR_HEIGHT 						(MW_GL_TITLE_FONT_HEIGHT + 2)       /**< Height of a window's title bar which should be greater than MW_LARGE_CHARACTER_HEIGHT */
+#define MW_TITLE_X_OFFSET							18									/**< Title text x offset in title bar of normal window */
+#define MW_MODAL_TITLE_X_OFFSET						2									/**< Title text x offset in title bar of modal window */
+#define MW_TITLE_Y_OFFSET							2									/**< Title text y offset in title bar */
+#define MW_USER_MESSAGE_BASE						50      							/**< User messages can be defined from this base value upwards */
+#define MW_ROOT_Z_ORDER 							0       							/**< Root z order is always the lowest */
+#define MW_MIN_Z_ORDER 								1       							/**< Lowest window z order */
+#define MW_MAX_Z_ORDER 								0xff    							/**< The highest possible value of z order */
+#define MW_ROOT_WINDOW_ID 							0       							/**< This window always exists and is created on initialisation */
+#define MW_FIRST_USER_WINDOW_ID 					(MW_ROOT_WINDOW_ID + 1)      		/**< User window identifiers are from this value upwards */
+#define MW_TITLE_BAR_ICON_SIZE						14									/**< Size of icons, which are square */
+#define MW_TITLE_BAR_ICON_OFFSET					16									/**< Distance between each title bar icon */
+#define MW_DESKTOP_ICONS_PER_ROW					4           						/**< Number of icons of minimized windows to show across bottom of screen */
+#define MW_DESKTOP_ICON_WIDTH						(MW_HAL_LCD_WIDTH / MW_DESKTOP_ICONS_PER_ROW)	/**< Number of icons across desktop */
+#define MW_DESKTOP_ICON_HEIGHT						18									/**< Height of desktop minimised icons */
+#define MW_UNUSED_MESSAGE_PARAMETER					0									/**< To indicate that a parameter to post message is unused rather than zero */
+#define MW_ALL_ITEMS_ENABLED						0xffff								/**< All items in a control that can have individual items enabled are enabled */
+#define MW_ALL_ITEMS_DISABLED						0									/**< All items in a control that can have individual items enabled are disabled */
+#define MW_SCROLL_BAR_NARROW_DIMESION				12									/**< Width of vertical scroll bar, height of horizontal */
+#define MW_SCROLL_BAR_SLIDER_SIZE					MW_SCROLL_BAR_NARROW_DIMESION       /**< Length of scroll bar slider */
+#define MW_SCROLL_BAR_LARGE_NARROW_DIMESION			24									/**< Width of large vertical scroll bar, height of large horizontal */
+#define MW_SCROLL_BAR_LARGE_SLIDER_SIZE				MW_SCROLL_BAR_LARGE_NARROW_DIMESION /**< Length of large scroll bar slider */
+#define MW_MENU_BAR_HEIGHT							14									/**< Menu bar height */
+#define MW_MENU_BAR_LABEL_Y_OFFSET					3               					/**< Gap between top edge of menu bar and text */
+#define MW_INVALID_HANDLE							0									/**< Invalid handle, returned when a resource cannot be allocated */
 
  /**
  * Window option and state flags
  */
-#define MW_WINDOW_FLAG_HAS_BORDER				0x00000001	/**< Indicates that a window is to be drawn with a border */
-#define MW_WINDOW_FLAG_HAS_TITLE_BAR			0x00000002	/**< Indicates that a window is to be drawn with a title bar */
-#define MW_WINDOW_FLAG_CAN_BE_CLOSED			0x00000004	/**< Indicates that a window can be closed */
-#define MW_WINDOW_FLAG_IS_VISIBLE				0x00000008	/**< Indicates that a window is visible */
-#define MW_WINDOW_FLAG_IS_MINIMISED				0x00000010	/**< Indicates that a window is minimised */
-#define MW_WINDOW_FLAG_IS_USED					0x00000020	/**< Indicates that a window is used */
-#define MW_WINDOW_IS_MODAL						0x00000040	/**< Indicates that a window is currently modal */
-#define MW_WINDOW_HAS_VERT_SCROLL_BAR			0x00000080  /**< Indicates that a window has a vertical scroll bar */
-#define MW_WINDOW_HAS_HORIZ_SCROLL_BAR			0x00000100  /**< Indicates that a window has a horizontal scroll bar */
-#define MW_WINDOW_HAS_MENU_BAR					0x00000200  /**< Indicates that a window has a menu bar */
-#define MW_WINDOW_MENU_BAR_ENABLED				0x00000400	/**< Indicates that a menu bar, if existing, is enabled */
-#define MW_WINDOW_MENU_BAR_ITEM_IS_SELECTED		0x00000800 	/**< Indicates that a menu bar, if existing, has an item selected */
-#define MW_WINDOWS_VERT_SCROLL_BAR_ENABLED		0x00001000	/**< Indicates that a vertical scroll bar, if existing, is enabled */
-#define MW_WINDOWS_HORIZ_SCROLL_BAR_ENABLED		0x00002000	/**< Indicates that a horizontal scroll bar, if existing, is enabled */
-#define MW_WINDOW_TOUCH_FOCUS_AND_EVENT			0x00004000	/**< Indicates that a touch in a non-focused window gives it focus and generates a touch down event */
+#define MW_WINDOW_FLAG_HAS_BORDER					0x00000001	/**< Indicates that a window is to be drawn with a border */
+#define MW_WINDOW_FLAG_HAS_TITLE_BAR				0x00000002	/**< Indicates that a window is to be drawn with a title bar */
+#define MW_WINDOW_FLAG_CAN_BE_CLOSED				0x00000004	/**< Indicates that a window can be closed */
+#define MW_WINDOW_FLAG_IS_VISIBLE					0x00000008	/**< Indicates that a window is visible */
+#define MW_WINDOW_FLAG_IS_MINIMISED					0x00000010	/**< Indicates that a window is minimised */
+#define MW_WINDOW_FLAG_IS_USED						0x00000020	/**< Indicates that a window is used */
+#define MW_WINDOW_FLAG_IS_MODAL						0x00000040	/**< Indicates that a window is currently modal */
+#define MW_WINDOW_FLAG_HAS_VERT_SCROLL_BAR			0x00000080  /**< Indicates that a window has a vertical scroll bar */
+#define MW_WINDOW_FLAG_HAS_HORIZ_SCROLL_BAR			0x00000100  /**< Indicates that a window has a horizontal scroll bar */
+#define MW_WINDOW_FLAG_HAS_MENU_BAR					0x00000200  /**< Indicates that a window has a menu bar */
+#define MW_WINDOW_FLAG_MENU_BAR_ENABLED				0x00000400	/**< Indicates that a menu bar, if existing, is enabled */
+#define MW_WINDOW_FLAG_MENU_BAR_ITEM_IS_SELECTED	0x00000800 	/**< Indicates that a menu bar, if existing, has an item selected */
+#define MW_WINDOWS_FLAG_VERT_SCROLL_BAR_ENABLED		0x00001000	/**< Indicates that a vertical scroll bar, if existing, is enabled */
+#define MW_WINDOWS_FLAG_HORIZ_SCROLL_BAR_ENABLED	0x00002000	/**< Indicates that a horizontal scroll bar, if existing, is enabled */
+#define MW_WINDOW_FLAG_TOUCH_FOCUS_AND_EVENT		0x00004000	/**< Indicates that a touch in a non-focused window gives it focus and generates a touch down event */
+#define MW_WINDOW_FLAG_LARGE_SIZE					0x00008000	/**< Indicates that a window's menu bar and scroll bars are to be drawn large sized */
 
 /**
  * Control option and state flags
  */
-#define MW_CONTROL_FLAG_IS_VISIBLE				0x0001	/**< Indicates that a control is visible */
-#define MW_CONTROL_FLAG_IS_ENABLED				0x0002	/**< Indicates that a control is enabled */
-#define MW_CONTROL_FLAG_IS_USED					0x0004 	/**< Indicates that a control is used */
-#define MW_CONTROL_FLAGS_LARGE_SIZE				0x0008	/**< Indicates that a control is to be drawn large size */
+#define MW_CONTROL_FLAG_IS_VISIBLE					0x0001	/**< Indicates that a control is visible */
+#define MW_CONTROL_FLAG_IS_ENABLED					0x0002	/**< Indicates that a control is enabled */
+#define MW_CONTROL_FLAG_IS_USED						0x0004 	/**< Indicates that a control is used */
+#define MW_CONTROL_FLAG_LARGE_SIZE					0x0008	/**< Indicates that a control is to be drawn large size */
 
 /**
  * Bitfields representing window frame components required to be redrawm

@@ -83,7 +83,7 @@ static void radio_button_paint_function(mw_handle_t control_handle, const mw_gl_
 	mw_gl_set_text_rotation(MW_GL_TEXT_ROTATION_0);
 
 	/* set size dependent values */
-	if (mw_get_control_flags(control_handle) & MW_CONTROL_FLAGS_LARGE_SIZE)
+	if (mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_LARGE_SIZE)
 	{
 		height = MW_UI_RADIO_BUTTON_LARGE_HEIGHT;
 		box_size = MW_UI_RADIO_BUTTON_LARGE_BOX_SIZE;
@@ -109,7 +109,7 @@ static void radio_button_paint_function(mw_handle_t control_handle, const mw_gl_
 		}
 
 		/* check size this control is being drawn at and draw appropriate text*/
-		if (mw_get_control_flags(control_handle) & MW_CONTROL_FLAGS_LARGE_SIZE)
+		if (mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_LARGE_SIZE)
 		{
 			/* draw the label text */
 			mw_gl_string(draw_info,
@@ -190,7 +190,7 @@ static void radio_button_message_function(const mw_message_t *message)
 	MW_ASSERT(message, "Null pointer argument");
 
 	/* set size dependent values */
-	if (mw_get_control_flags(message->recipient_handle) & MW_CONTROL_FLAGS_LARGE_SIZE)
+	if (mw_get_control_flags(message->recipient_handle) & MW_CONTROL_FLAG_LARGE_SIZE)
 	{
 		height = MW_UI_RADIO_BUTTON_LARGE_HEIGHT;
 	}
@@ -255,7 +255,7 @@ mw_handle_t mw_ui_radio_button_add_new(uint16_t x,
 		return MW_INVALID_HANDLE;
 	}
 
-	if (flags & MW_CONTROL_FLAGS_LARGE_SIZE)
+	if (flags & MW_CONTROL_FLAG_LARGE_SIZE)
 	{
 		if (width < MW_UI_RADIO_BUTTON_LARGE_HEIGHT)
 		{

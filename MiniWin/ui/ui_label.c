@@ -98,7 +98,7 @@ static void label_paint_function(mw_handle_t control_handle, const mw_gl_draw_in
 	mw_gl_set_bg_transparency(MW_GL_BG_TRANSPARENT);    
 	mw_gl_set_text_rotation(MW_GL_TEXT_ROTATION_0);
 
-	if (mw_get_control_flags(control_handle) & MW_CONTROL_FLAGS_LARGE_SIZE)
+	if (mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_LARGE_SIZE)
 	{
 		mw_gl_set_font(MW_GL_TITLE_FONT);
 		mw_gl_string(draw_info, MW_UI_LABEL_LARGE_X_OFFSET, 1, this_label->label);
@@ -153,7 +153,7 @@ mw_handle_t mw_ui_label_add_new(uint16_t x,
 {
 	mw_util_rect_t r;
 
-	if (flags & MW_CONTROL_FLAGS_LARGE_SIZE)
+	if (flags & MW_CONTROL_FLAG_LARGE_SIZE)
 	{
 		mw_util_set_rect(&r, x, y, width, MW_UI_LABEL_LARGE_HEIGHT);
 	}

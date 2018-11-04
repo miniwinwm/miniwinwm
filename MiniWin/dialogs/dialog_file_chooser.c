@@ -516,7 +516,7 @@ mw_handle_t mw_create_window_dialog_file_chooser(uint16_t x,
 			NULL,
 			0,
 			MW_WINDOW_FLAG_HAS_BORDER | MW_WINDOW_FLAG_HAS_TITLE_BAR |
-					MW_WINDOW_FLAG_IS_VISIBLE | MW_WINDOW_IS_MODAL,
+					MW_WINDOW_FLAG_IS_VISIBLE | MW_WINDOW_FLAG_IS_MODAL,
 			NULL);
 
 	/* check if window could be created */
@@ -557,45 +557,45 @@ mw_handle_t mw_create_window_dialog_file_chooser(uint16_t x,
 		mw_dialog_file_chooser_data.arrow_file_up_handle = mw_ui_arrow_add_new(182,
 				5,
 				mw_dialog_file_chooser_data.file_chooser_dialog_window_handle,
-				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAGS_LARGE_SIZE,
+				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_LARGE_SIZE,
 				&mw_dialog_file_chooser_data.arrow_up_file_data);
 
 		mw_dialog_file_chooser_data.arrow_file_down_handle = mw_ui_arrow_add_new(182,
 				112,
 				mw_dialog_file_chooser_data.file_chooser_dialog_window_handle,
-				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAGS_LARGE_SIZE,
+				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_LARGE_SIZE,
 				&mw_dialog_file_chooser_data.arrow_down_file_data);
 
 		mw_dialog_file_chooser_data.arrow_file_back_handle = mw_ui_arrow_add_new(182,
 				58,
 				mw_dialog_file_chooser_data.file_chooser_dialog_window_handle,
-				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAGS_LARGE_SIZE,
+				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_LARGE_SIZE,
 				&mw_dialog_file_chooser_data.arrow_back_file_data);
 
 		mw_dialog_file_chooser_data.list_box_file_handle = mw_ui_list_box_add_new(5,
 				5,
 				170,
 				mw_dialog_file_chooser_data.file_chooser_dialog_window_handle,
-				MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAGS_LARGE_SIZE,
+				MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_LARGE_SIZE,
 				&mw_dialog_file_chooser_data.list_box_file_data);
 
 		mw_dialog_file_chooser_data.button_ok_handle = mw_ui_button_add_new(5,
 				175,
 				mw_dialog_file_chooser_data.file_chooser_dialog_window_handle,
-				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAGS_LARGE_SIZE,
+				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_LARGE_SIZE,
 				&mw_dialog_file_chooser_data.button_ok_data);
 
 		mw_dialog_file_chooser_data.button_cancel_handle = mw_ui_button_add_new(112,
 				175,
 				mw_dialog_file_chooser_data.file_chooser_dialog_window_handle,
-				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAGS_LARGE_SIZE,
+				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_LARGE_SIZE,
 				&mw_dialog_file_chooser_data.button_cancel_data);
 
 		mw_dialog_file_chooser_data.label_choice_handle = mw_ui_label_add_new(5,
 				150,
 				209,
 				mw_dialog_file_chooser_data.file_chooser_dialog_window_handle,
-				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAGS_LARGE_SIZE,
+				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_LARGE_SIZE,
 				&mw_dialog_file_chooser_data.label_choice_data);
 	}
 	else

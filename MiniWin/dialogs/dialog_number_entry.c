@@ -113,24 +113,27 @@ static void remove_resources(void)
  */
 static uint16_t get_cursor_x_coordinate(void)
 {
-	uint8_t characters_displayed;
-
-	characters_displayed = strlen(mw_dialog_number_entry_data.number_buffer);
-	if (mw_dialog_number_entry_data.is_negative)
-	{
-		characters_displayed++;
-	}
+	uint16_t pixel_length;
+	uint16_t offset;
 
 	if (mw_dialog_number_entry_data.large_size)
 	{
-		mw_gl_set_font(MW_GL_FONT_16);
-		return (49 + characters_displayed * (mw_gl_get_font_width() + 1));
+		mw_gl_set_font(MW_GL_TITLE_FONT);
+		offset = 58;
 	}
 	else
 	{
 		mw_gl_set_font(MW_GL_FONT_9);
-		return (26 + characters_displayed * (mw_gl_get_font_width() + 1));
+		offset = 27;
 	}
+
+	pixel_length = mw_gl_get_string_width_pixels(mw_dialog_number_entry_data.number_buffer);
+	if (mw_dialog_number_entry_data.is_negative)
+	{
+		pixel_length += mw_gl_get_string_width_pixels("-");
+	}
+
+	return pixel_length + offset;
 }
 
 /**
@@ -156,46 +159,48 @@ static void mw_dialog_number_entry_paint_function(mw_handle_t window_handle, con
 	mw_gl_set_line(MW_GL_SOLID_LINE);
 	mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 	mw_gl_set_solid_fill_colour(MW_CONTROL_UP_COLOUR);
+	mw_gl_set_bg_transparency(MW_GL_BG_TRANSPARENT);
+	mw_gl_set_text_rotation(MW_GL_TEXT_ROTATION_0);
 
 	if (mw_dialog_number_entry_data.large_size)
 	{
 		/* draw the box the number is displayed in */
-		mw_gl_rectangle(draw_info, 48, 3, 130, 18);
+		mw_gl_rectangle(draw_info, 54, 3, 120, 20);
 
 		/* draw 3d effect */
 		mw_gl_set_fg_colour(MW_HAL_LCD_WHITE);
 		mw_gl_vline(draw_info,
-				49,
+				55,
 				4,
-				19);
+				21);
 		mw_gl_hline(draw_info,
-				49,
-				176,
+				55,
+				172,
 				4);
 		mw_gl_set_fg_colour(MW_HAL_LCD_GREY7);
 		mw_gl_vline(draw_info,
-				176,
+				172,
 				4,
-				19);
+				21);
 		mw_gl_hline(draw_info,
-				49,
-				176,
-				19);
+				55,
+				172,
+				21);
 
 		/* draw the number */
-		mw_gl_set_font(MW_GL_FONT_16);
+		mw_gl_set_font(MW_GL_TITLE_FONT);
 		mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 
 		if (mw_dialog_number_entry_data.is_negative && strcmp(mw_dialog_number_entry_data.number_buffer, "0") !=0)
 		{
 			/* draw negative sign and number */
-			mw_gl_character(draw_info, 50, 6, '-');
-			mw_gl_string(draw_info, 50 + mw_gl_get_font_width() + 1, 6, mw_dialog_number_entry_data.number_buffer);
+			mw_gl_character(draw_info, 58, 6, '-');
+			mw_gl_string(draw_info, 58 + mw_gl_get_string_width_pixels("-"), 6, mw_dialog_number_entry_data.number_buffer);
 		}
 		else
 		{
 			/* draw number only */
-			mw_gl_string(draw_info, 50, 6, mw_dialog_number_entry_data.number_buffer);
+			mw_gl_string(draw_info, 58, 6, mw_dialog_number_entry_data.number_buffer);
 		}
 	}
 	else
@@ -460,7 +465,7 @@ mw_handle_t mw_create_window_dialog_number_entry(uint16_t x,
 			NULL,
 			0,
 			MW_WINDOW_FLAG_HAS_BORDER | MW_WINDOW_FLAG_HAS_TITLE_BAR |
-					MW_WINDOW_FLAG_IS_VISIBLE | MW_WINDOW_IS_MODAL,
+					MW_WINDOW_FLAG_IS_VISIBLE | MW_WINDOW_FLAG_IS_MODAL,
 			NULL);
 
 	/* check if window could be created */
@@ -483,19 +488,19 @@ mw_handle_t mw_create_window_dialog_number_entry(uint16_t x,
 		mw_dialog_number_entry_data.keypad_handle = mw_ui_keypad_add_new(54,
 				25,
 				mw_dialog_number_entry_data.number_entry_dialog_window_handle,
-				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAGS_LARGE_SIZE,
+				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_LARGE_SIZE,
 				&mw_dialog_number_entry_data.mw_ui_keypad_data);
 
 		mw_dialog_number_entry_data.button_ok_handle = mw_ui_button_add_new(10,
 				191,
 				mw_dialog_number_entry_data.number_entry_dialog_window_handle,
-				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAGS_LARGE_SIZE,
+				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_LARGE_SIZE,
 				&mw_dialog_number_entry_data.button_ok_data);
 
 		mw_dialog_number_entry_data.button_cancel_handle = mw_ui_button_add_new(118,
 				191,
 				mw_dialog_number_entry_data.number_entry_dialog_window_handle,
-				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAGS_LARGE_SIZE,
+				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_LARGE_SIZE,
 				&mw_dialog_number_entry_data.button_cancel_data);
 	}
 	else

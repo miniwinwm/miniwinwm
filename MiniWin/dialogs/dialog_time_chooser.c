@@ -355,7 +355,7 @@ mw_handle_t mw_create_window_dialog_time_chooser(uint16_t x,
 			NULL,
 			0,
 			MW_WINDOW_FLAG_HAS_BORDER | MW_WINDOW_FLAG_HAS_TITLE_BAR |
-					MW_WINDOW_FLAG_IS_VISIBLE | MW_WINDOW_IS_MODAL,
+					MW_WINDOW_FLAG_IS_VISIBLE | MW_WINDOW_FLAG_IS_MODAL,
 			NULL);
 
 	/* check if window could be created */
@@ -380,37 +380,37 @@ mw_handle_t mw_create_window_dialog_time_chooser(uint16_t x,
 		mw_dialog_time_chooser_data.button_ok_handle = mw_ui_button_add_new(5,
 				170,
 				mw_dialog_time_chooser_data.time_chooser_dialog_window_handle,
-				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAGS_LARGE_SIZE,
+				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_LARGE_SIZE,
 				&mw_dialog_time_chooser_data.button_ok_data);
 
 		mw_dialog_time_chooser_data.button_cancel_handle = mw_ui_button_add_new(120,
 				170,
 				mw_dialog_time_chooser_data.time_chooser_dialog_window_handle,
-				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAGS_LARGE_SIZE,
+				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_LARGE_SIZE,
 				&mw_dialog_time_chooser_data.button_cancel_data);
 
 		mw_dialog_time_chooser_data.arrow_hour_up_handle = mw_ui_arrow_add_new(186,
 				10,
 				mw_dialog_time_chooser_data.time_chooser_dialog_window_handle,
-				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAGS_LARGE_SIZE,
+				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_LARGE_SIZE,
 				&mw_dialog_time_chooser_data.arrow_hour_up_data);
 
 		mw_dialog_time_chooser_data.arrow_hour_down_handle = mw_ui_arrow_add_new(186,
 				50,
 				mw_dialog_time_chooser_data.time_chooser_dialog_window_handle,
-				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAGS_LARGE_SIZE,
+				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_LARGE_SIZE,
 				&mw_dialog_time_chooser_data.arrow_hour_down_data);
 
 		mw_dialog_time_chooser_data.arrow_minute_up_handle = mw_ui_arrow_add_new(186,
 				90,
 				mw_dialog_time_chooser_data.time_chooser_dialog_window_handle,
-				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAGS_LARGE_SIZE,
+				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_LARGE_SIZE,
 				&mw_dialog_time_chooser_data.arrow_minute_up_data);
 
 		mw_dialog_time_chooser_data.arrow_minute_down_handle = mw_ui_arrow_add_new(186,
 				130,
 				mw_dialog_time_chooser_data.time_chooser_dialog_window_handle,
-				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAGS_LARGE_SIZE,
+				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_LARGE_SIZE,
 				&mw_dialog_time_chooser_data.arrow_minute_down_data);
 	}
 	else

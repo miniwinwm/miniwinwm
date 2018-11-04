@@ -133,7 +133,7 @@ static void button_paint_function(mw_handle_t control_handle, const mw_gl_draw_i
 	}
 
 	/* get the text width */
-	if (mw_get_control_flags(control_handle) & MW_CONTROL_FLAGS_LARGE_SIZE)
+	if (mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_LARGE_SIZE)
 	{
 		mw_gl_set_font(MW_GL_TITLE_FONT);
 		text_width = mw_gl_get_string_width_pixels(this_button->button_label);
@@ -147,7 +147,7 @@ static void button_paint_function(mw_handle_t control_handle, const mw_gl_draw_i
 
 	if (this_button->button_down)
 	{
-		if (mw_get_control_flags(control_handle) & MW_CONTROL_FLAGS_LARGE_SIZE)
+		if (mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_LARGE_SIZE)
 		{
 			mw_gl_string(draw_info, text_x + 2, 11, this_button->button_label);
 		}
@@ -158,7 +158,7 @@ static void button_paint_function(mw_handle_t control_handle, const mw_gl_draw_i
 	}
 	else
 	{
-		if (mw_get_control_flags(control_handle) & MW_CONTROL_FLAGS_LARGE_SIZE)
+		if (mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_LARGE_SIZE)
 		{
 			mw_gl_string(draw_info, text_x, 9, this_button->button_label);
 		}
@@ -227,7 +227,7 @@ mw_handle_t mw_ui_button_add_new(uint16_t x,
 {
 	mw_util_rect_t r;
 
-	if (flags & MW_CONTROL_FLAGS_LARGE_SIZE)
+	if (flags & MW_CONTROL_FLAG_LARGE_SIZE)
 	{
 		mw_util_set_rect(&r, x, y, MW_UI_BUTTON_LARGE_WIDTH, MW_UI_BUTTON_LARGE_HEIGHT);
 	}

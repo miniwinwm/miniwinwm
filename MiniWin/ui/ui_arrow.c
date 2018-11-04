@@ -128,7 +128,7 @@ static void arrow_paint_function(mw_handle_t control_handle, const mw_gl_draw_in
 	mw_gl_vline(draw_info, mw_get_control_rect(control_handle).width - 2, 1, mw_get_control_rect(control_handle).height - 2);
 	mw_gl_hline(draw_info, 1, mw_get_control_rect(control_handle).width - 2, mw_get_control_rect(control_handle).height - 2);
 
-	if (mw_get_control_flags(control_handle) & MW_CONTROL_FLAGS_LARGE_SIZE)
+	if (mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_LARGE_SIZE)
 	{
 		memcpy(shape_x, shape_large_x_const, sizeof(shape_x));
 		memcpy(shape_y, shape_large_y_const, sizeof(shape_y));
@@ -245,7 +245,7 @@ mw_handle_t mw_ui_arrow_add_new(uint16_t x,
 {
 	mw_util_rect_t r;
 
-	if (flags & MW_CONTROL_FLAGS_LARGE_SIZE)
+	if (flags & MW_CONTROL_FLAG_LARGE_SIZE)
 	{
 		mw_util_set_rect(&r, x, y, MW_UI_ARROW_LARGE_SIZE + 1, MW_UI_ARROW_LARGE_SIZE + 1);
 	}

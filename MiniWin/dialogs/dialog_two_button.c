@@ -249,7 +249,7 @@ mw_handle_t mw_create_window_dialog_two_button(uint16_t x,
 			NULL,
 			0,
 			MW_WINDOW_FLAG_HAS_BORDER | MW_WINDOW_FLAG_HAS_TITLE_BAR |
-					MW_WINDOW_FLAG_IS_VISIBLE | MW_WINDOW_IS_MODAL,
+					MW_WINDOW_FLAG_IS_VISIBLE | MW_WINDOW_FLAG_IS_MODAL,
 			NULL);
 
 	/* check if window could be created */
@@ -274,14 +274,14 @@ mw_handle_t mw_create_window_dialog_two_button(uint16_t x,
 				(window_client_width - BUTTON_LARGE_GAP) / 2 - MW_UI_BUTTON_LARGE_WIDTH,
 				35,
 				mw_dialog_two_button_data.two_button_dialog_window_handle,
-				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAGS_LARGE_SIZE,
+				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_LARGE_SIZE,
 				&mw_dialog_two_button_data.button_1_data);
 
 		mw_dialog_two_button_data.button_2_handle = mw_ui_button_add_new(
 				(window_client_width / 2) + BUTTON_LARGE_GAP / 2,
 				35,
 				mw_dialog_two_button_data.two_button_dialog_window_handle,
-				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAGS_LARGE_SIZE,
+				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_LARGE_SIZE,
 				&mw_dialog_two_button_data.button_2_data);
 	}
 	else

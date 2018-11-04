@@ -162,6 +162,8 @@ static void mw_dialog_text_entry_paint_function(mw_handle_t window_handle, const
 
 	/* draw the text */
 	mw_gl_set_font(MW_GL_FONT_9);
+	mw_gl_set_text_rotation(MW_GL_TEXT_ROTATION_0);
+	mw_gl_set_bg_transparency(MW_GL_BG_TRANSPARENT);
 	mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 
 	/* draw text */
@@ -368,7 +370,7 @@ mw_handle_t mw_create_window_dialog_text_entry(uint16_t x,
 			NULL,
 			0,
 			MW_WINDOW_FLAG_HAS_BORDER | MW_WINDOW_FLAG_HAS_TITLE_BAR |
-					MW_WINDOW_FLAG_IS_VISIBLE | MW_WINDOW_IS_MODAL,
+					MW_WINDOW_FLAG_IS_VISIBLE | MW_WINDOW_FLAG_IS_MODAL,
 			NULL);
 
 	/* check if window could be created */

@@ -79,7 +79,7 @@ static void list_box_paint_function(mw_handle_t control_handle, const mw_gl_draw
 	uint16_t icon_x_offset;
 	uint16_t text_x_offset;
 
-	if (mw_get_control_flags(control_handle) & MW_CONTROL_FLAGS_LARGE_SIZE)
+	if (mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_LARGE_SIZE)
 	{
 		mw_gl_set_font(MW_GL_TITLE_FONT);
 		row_height = MW_UI_LIST_BOX_LARGE_ROW_HEIGHT;
@@ -178,7 +178,7 @@ static void list_box_paint_function(mw_handle_t control_handle, const mw_gl_draw
 		}
 
 		/* draw the item label text and icon */
-		if (mw_get_control_flags(control_handle) & MW_CONTROL_FLAGS_LARGE_SIZE)
+		if (mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_LARGE_SIZE)
 		{
 			/* large text and icon */
 			/* check if there is an icon on this row */
@@ -295,7 +295,7 @@ static void list_box_message_function(const mw_message_t *message)
 
 	MW_ASSERT(message, "Null pointer argument");
 
-	if (mw_get_control_flags(message->recipient_handle) & MW_CONTROL_FLAGS_LARGE_SIZE)
+	if (mw_get_control_flags(message->recipient_handle) & MW_CONTROL_FLAG_LARGE_SIZE)
 	{
 		row_height = MW_UI_LIST_BOX_LARGE_ROW_HEIGHT;
 	}
@@ -368,7 +368,7 @@ mw_handle_t mw_ui_list_box_add_new(uint16_t x,
 		return MW_INVALID_HANDLE;
 	}
 
-	if (flags & MW_CONTROL_FLAGS_LARGE_SIZE)
+	if (flags & MW_CONTROL_FLAG_LARGE_SIZE)
 	{
 		/* check for a sensible width */
 		if (width < MW_UI_LIST_BOX_LARGE_MIN_WIDTH)

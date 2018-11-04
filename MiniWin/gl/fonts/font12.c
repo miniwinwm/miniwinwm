@@ -86,6 +86,8 @@
 //  Font data for Courier New 12pt
 // 
 
+#ifdef MW_FONT_12_INCLUDED
+
 const uint8_t Font12_Table[] = 
 {
 	// @0 ' ' (7 pixels wide)
@@ -1424,6 +1426,8 @@ const sFONT Font12 = {
   7, /* Width */
   12, /* Height */
 };
+
+#endif
 
 /**
   * @}

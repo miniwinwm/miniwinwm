@@ -191,7 +191,7 @@ void mw_user_init(void)
 			(char **)menu_bar_labels,
 			MENU_BAR_1_ITEMS_COUNT,
 			MW_WINDOW_FLAG_HAS_BORDER | MW_WINDOW_FLAG_HAS_TITLE_BAR | MW_WINDOW_FLAG_IS_VISIBLE |
-				MW_WINDOW_HAS_MENU_BAR | MW_WINDOW_MENU_BAR_ENABLED,
+				MW_WINDOW_FLAG_HAS_MENU_BAR | MW_WINDOW_FLAG_MENU_BAR_ENABLED,
 			NULL);
 
 	mw_set_menu_bar_items_enabled_state(window_test_handle, mw_util_change_bit(MW_ALL_ITEMS_ENABLED, 0, false));
@@ -209,7 +209,7 @@ void mw_user_init(void)
 	check_box_1_large_handle = mw_ui_check_box_add_new(30,
 			235,
 			window_test_handle,
-			MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAGS_LARGE_SIZE,
+			MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_LARGE_SIZE,
 			&check_box_1_large_data);
 
 	arrow_1_data.mw_ui_arrow_direction = MW_UI_ARROW_DOWN;
@@ -223,7 +223,7 @@ void mw_user_init(void)
 	arrow_1_large_handle = mw_ui_arrow_add_new(80,
 			125,
 			window_test_handle,
-			MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAGS_LARGE_SIZE,
+			MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_LARGE_SIZE,
 			&arrow_1_large_data);
 
 	/* create a button control and add it to the ui test window */
@@ -239,7 +239,7 @@ void mw_user_init(void)
 	button_1_large_handle = mw_ui_button_add_new(130,
 			235,
 			window_test_handle,
-			MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAGS_LARGE_SIZE,
+			MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_LARGE_SIZE,
 			&button_1_large_data);
 
 	/* create a new progress bar control and add it to the ui test window */
@@ -269,7 +269,7 @@ void mw_user_init(void)
 			125,
 			60,
 			window_test_handle,
-			MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAGS_LARGE_SIZE,
+			MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_LARGE_SIZE,
 			&radio_button_1_large_data);
 
 	/* create a new list box control and add it to the ui test window, y position to be directly under the menu bar, control invisible for now */
@@ -299,7 +299,7 @@ void mw_user_init(void)
 			5,
 			20,
 			window_test_handle,
-			MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAGS_LARGE_SIZE,
+			MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_LARGE_SIZE,
 			&label_1_large_data);
 
 	/* create a new horizontal scroll bar */
@@ -315,7 +315,7 @@ void mw_user_init(void)
 			195,
 			150,
 			window_test_handle,
-			MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAGS_LARGE_SIZE,
+			MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_LARGE_SIZE,
 			&scroll_bar_horiz_1_large_data);
 
 	/* create a new vertical scroll bar */
@@ -331,7 +331,7 @@ void mw_user_init(void)
 			10,
 			170,
 			window_test_handle,
-			MW_CONTROL_FLAGS_LARGE_SIZE,
+			MW_CONTROL_FLAG_LARGE_SIZE,
 			&scroll_bar_vert_1_large_data);
 
 	/* create a new list box control and add it to the ui test window */
@@ -355,7 +355,7 @@ void mw_user_init(void)
 			30,
 			130,
 			window_test_handle,
-			MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAGS_LARGE_SIZE,
+			MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_LARGE_SIZE,
 			&list_box_3_large_data);
 
 	/* create a new vertical scroll bar for the list box*/
@@ -371,7 +371,7 @@ void mw_user_init(void)
 			30,
 			MW_UI_LIST_BOX_LARGE_ROW_HEIGHT * list_box_3_large_data.number_of_lines,
 			window_test_handle,
-			MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAGS_LARGE_SIZE,
+			MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_LARGE_SIZE,
 			&scroll_bar_vert_2_large_data);
 
 	/* process waiting messages to reduce queue contents */
@@ -404,8 +404,8 @@ void mw_user_init(void)
 			0,
 			MW_WINDOW_FLAG_HAS_BORDER | MW_WINDOW_FLAG_HAS_TITLE_BAR |
 				MW_WINDOW_FLAG_CAN_BE_CLOSED | MW_WINDOW_FLAG_IS_VISIBLE |
-				MW_WINDOW_HAS_VERT_SCROLL_BAR | MW_WINDOW_HAS_HORIZ_SCROLL_BAR |
-				MW_WINDOWS_VERT_SCROLL_BAR_ENABLED | MW_WINDOWS_HORIZ_SCROLL_BAR_ENABLED |
+				MW_WINDOW_FLAG_HAS_VERT_SCROLL_BAR | MW_WINDOW_FLAG_HAS_HORIZ_SCROLL_BAR |
+				MW_WINDOWS_FLAG_VERT_SCROLL_BAR_ENABLED | MW_WINDOWS_FLAG_HORIZ_SCROLL_BAR_ENABLED |
 				MW_WINDOW_FLAG_IS_MINIMISED,
 			NULL);
 

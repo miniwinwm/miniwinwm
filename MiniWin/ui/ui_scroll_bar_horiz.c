@@ -75,7 +75,7 @@ static void scroll_bar_horiz_paint_function(mw_handle_t control_handle, const mw
 	uint16_t narrow_dimension;
 	uint16_t slider_size;
 
-	if (mw_get_control_flags(control_handle) & MW_CONTROL_FLAGS_LARGE_SIZE)
+	if (mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_LARGE_SIZE)
 	{
 		narrow_dimension = MW_SCROLL_BAR_LARGE_NARROW_DIMESION;
 		slider_size = MW_SCROLL_BAR_LARGE_SLIDER_SIZE;
@@ -214,7 +214,7 @@ mw_handle_t mw_ui_scroll_bar_horiz_add_new(uint16_t x,
 {
 	mw_util_rect_t r;
 
-	if (flags & MW_CONTROL_FLAGS_LARGE_SIZE)
+	if (flags & MW_CONTROL_FLAG_LARGE_SIZE)
 	{
 		mw_util_set_rect(&r, x, y, width, MW_SCROLL_BAR_LARGE_NARROW_DIMESION);
 	}

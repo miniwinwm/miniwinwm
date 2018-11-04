@@ -30,7 +30,8 @@ SOFTWARE.
 
 #include <string.h>
 #include <math.h>
-#include <miniwin_debug.h>
+#include "user/miniwin_config.h"
+#include "miniwin_debug.h"
 #include "hal/hal_delay.h"
 #include "gl/gl.h"
 #include "gl/fonts/fonts.h"
@@ -1071,19 +1072,27 @@ static const uint8_t *get_font_data(void)
 	case MW_GL_FONT_9:
 		return Font9.table;
 
+#ifdef MW_FONT_12_INCLUDED
 	case MW_GL_FONT_12:
 		return Font12.table;
+#endif
 
+#ifdef MW_FONT_16_INCLUDED
 	case MW_GL_FONT_16:
 		return Font16.table;
+#endif
 
+#ifdef MW_FONT_20_INCLUDED
 	case MW_GL_FONT_20:
 		return Font20.table;
+#endif
 
+#ifdef MW_FONT_24_INCLUDED
 	case MW_GL_FONT_24:
 		return Font24.table;
+#endif
 
-	case MW_GL_TITLE_FONT:
+	default:
 		return NULL;
 	}
 
@@ -1161,6 +1170,26 @@ void mw_gl_set_bg_transparency(mw_gl_bg_transparent_t bg_transparent)
 
 void mw_gl_set_font(mw_gl_font_t font)
 {
+#ifndef MW_FONT_12_INCLUDED
+	MW_ASSERT(font != MW_GL_FONT_12, "Font not included");
+#endif
+
+#ifndef MW_FONT_16_INCLUDED
+	MW_ASSERT(font != MW_GL_FONT_16, "Font not included");
+#endif
+
+#ifndef MW_FONT_20_INCLUDED
+	MW_ASSERT(font != MW_GL_FONT_20, "Font not included");
+#endif
+
+#ifndef MW_FONT_20_INCLUDED
+	MW_ASSERT(font != MW_GL_FONT_20, "Font not included");
+#endif
+
+#ifndef MW_FONT_24_INCLUDED
+	MW_ASSERT(font != MW_GL_FONT_24, "Font not included");
+#endif
+
 	MW_ASSERT(font == MW_GL_FONT_9 ||
 			font == MW_GL_FONT_12 ||
 			font == MW_GL_FONT_16 ||
@@ -1184,19 +1213,27 @@ uint8_t mw_gl_get_font_width(void)
 	case MW_GL_FONT_9:
 		return Font9.Width;
 
+#ifdef MW_FONT_12_INCLUDED
 	case MW_GL_FONT_12:
 		return Font12.Width;
+#endif
 
+#ifdef MW_FONT_16_INCLUDED
 	case MW_GL_FONT_16:
 		return Font16.Width;
+#endif
 
+#ifdef MW_FONT_20_INCLUDED
 	case MW_GL_FONT_20:
 		return Font20.Width;
+#endif
 
+#ifdef MW_FONT_24_INCLUDED
 	case MW_GL_FONT_24:
 		return Font24.Width;
+#endif
 
-	case MW_GL_TITLE_FONT:
+	default:
 		return 0;
 	}
 
@@ -1210,20 +1247,31 @@ uint8_t mw_gl_get_font_height(void)
 	case MW_GL_FONT_9:
 		return Font9.Height;
 
+#ifdef MW_FONT_12_INCLUDED
 	case MW_GL_FONT_12:
 		return Font12.Height;
+#endif
 
+#ifdef MW_FONT_16_INCLUDED
 	case MW_GL_FONT_16:
 		return Font16.Height;
+#endif
 
+#ifdef MW_FONT_20_INCLUDED
 	case MW_GL_FONT_20:
 		return Font20.Height;
+#endif
 
+#ifdef MW_FONT_24_INCLUDED
 	case MW_GL_FONT_24:
 		return Font24.Height;
+#endif
 
 	case MW_GL_TITLE_FONT:
 		return MW_GL_TITLE_FONT_HEIGHT;
+
+	default:
+		return 0;
 	}
 
 	return 0;

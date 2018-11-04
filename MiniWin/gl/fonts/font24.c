@@ -82,6 +82,9 @@
 /** @defgroup FONTS_Private_Variables
   * @{
   */
+
+#ifdef MW_FONT_24_INCLUDED
+
 const uint8_t Font24_Table [] = 
 {
 	// @0 ' ' (17 pixels wide)
@@ -2560,6 +2563,8 @@ const sFONT Font24 = {
   17, /* Width */
   24, /* Height */
 };
+
+#endif
 
 /**
   * @}

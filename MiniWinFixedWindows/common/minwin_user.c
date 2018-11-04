@@ -174,7 +174,7 @@ void mw_user_init(void)
 			window_date_icon_message_function,
 			NULL,
 			0,
-			MW_WINDOW_FLAG_IS_VISIBLE | MW_WINDOW_TOUCH_FOCUS_AND_EVENT,
+			MW_WINDOW_FLAG_IS_VISIBLE | MW_WINDOW_FLAG_TOUCH_FOCUS_AND_EVENT,
 			NULL);
 
 	/* create time icon window with no title bar or border */
@@ -185,7 +185,7 @@ void mw_user_init(void)
 			window_time_icon_message_function,
 			NULL,
 			0,
-			MW_WINDOW_FLAG_IS_VISIBLE | MW_WINDOW_TOUCH_FOCUS_AND_EVENT,
+			MW_WINDOW_FLAG_IS_VISIBLE | MW_WINDOW_FLAG_TOUCH_FOCUS_AND_EVENT,
 			NULL);
 
 	/* create temperature icon window with no title bar or border */
@@ -196,7 +196,7 @@ void mw_user_init(void)
 			window_temp_icon_message_function,
 			NULL,
 			0,
-			MW_WINDOW_FLAG_IS_VISIBLE | MW_WINDOW_TOUCH_FOCUS_AND_EVENT,
+			MW_WINDOW_FLAG_IS_VISIBLE | MW_WINDOW_FLAG_TOUCH_FOCUS_AND_EVENT,
 			NULL);
 
 	/* create settings icon window with no title bar or border */
@@ -207,7 +207,7 @@ void mw_user_init(void)
 			window_settings_icon_message_function,
 			NULL,
 			0,
-			MW_WINDOW_FLAG_IS_VISIBLE | MW_WINDOW_TOUCH_FOCUS_AND_EVENT,
+			MW_WINDOW_FLAG_IS_VISIBLE | MW_WINDOW_FLAG_TOUCH_FOCUS_AND_EVENT,
 			NULL);
 
 	/* create file icon window with no title bar or border */
@@ -218,7 +218,7 @@ void mw_user_init(void)
 			window_file_icon_message_function,
 			NULL,
 			0,
-			MW_WINDOW_FLAG_IS_VISIBLE | MW_WINDOW_TOUCH_FOCUS_AND_EVENT,
+			MW_WINDOW_FLAG_IS_VISIBLE | MW_WINDOW_FLAG_TOUCH_FOCUS_AND_EVENT,
 			NULL);
 
 	/* create help icon window with no title bar or border */
@@ -229,7 +229,7 @@ void mw_user_init(void)
 			window_help_icon_message_function,
 			NULL,
 			0,
-			MW_WINDOW_FLAG_IS_VISIBLE | MW_WINDOW_TOUCH_FOCUS_AND_EVENT,
+			MW_WINDOW_FLAG_IS_VISIBLE | MW_WINDOW_FLAG_TOUCH_FOCUS_AND_EVENT,
 			NULL);
 
 	/* create temperature graphs window */
@@ -248,7 +248,7 @@ void mw_user_init(void)
 	button_temp_back_handle = mw_ui_button_add_new(70,
 			285,
 			window_temp_handle,
-			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAGS_LARGE_SIZE,
+			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_LARGE_SIZE,
 			&button_temp_back_data);
 
 	/* create settings window */
@@ -267,7 +267,7 @@ void mw_user_init(void)
 	button_settings_ok_handle = mw_ui_button_add_new(70,
 			285,
 			window_settings_handle,
-			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAGS_LARGE_SIZE,
+			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_LARGE_SIZE,
 			&button_settings_ok_data);
 
 	/* create settings window check box */
@@ -275,7 +275,7 @@ void mw_user_init(void)
 	check_box_settings_handle = mw_ui_check_box_add_new(20,
 			30,
 			window_settings_handle,
-			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAGS_LARGE_SIZE,
+			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_LARGE_SIZE,
 			&check_box_settings_ok_data);
 
 	/* create settings window radio buttons */
@@ -285,7 +285,7 @@ void mw_user_init(void)
 			70,
 			100,
 			window_settings_handle,
-			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAGS_LARGE_SIZE,
+			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_LARGE_SIZE,
 			&radio_button_settings_data);
 
 	/* create settings window label */
@@ -294,7 +294,7 @@ void mw_user_init(void)
 			160,
 			110,
 			window_settings_handle,
-			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAGS_LARGE_SIZE,
+			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_LARGE_SIZE,
 			&label_settings_data);
 
 	/* create a list box */
@@ -306,21 +306,21 @@ void mw_user_init(void)
 			180,
 			138,
 			window_settings_handle,
-			MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_IS_VISIBLE  | MW_CONTROL_FLAGS_LARGE_SIZE,
+			MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_IS_VISIBLE  | MW_CONTROL_FLAG_LARGE_SIZE,
 			&list_box_settings_data);
 
 	arrow_up_settings_data.mw_ui_arrow_direction = MW_UI_ARROW_UP;
 	arrow_settings_up = mw_ui_arrow_add_new(180,
 			180,
 			window_settings_handle,
-			MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAGS_LARGE_SIZE,
+			MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_LARGE_SIZE,
 			&arrow_up_settings_data);
 
 	arrow_down_settings_data.mw_ui_arrow_direction = MW_UI_ARROW_DOWN;
 	arrow_settings_down = mw_ui_arrow_add_new(180,
 			232,
 			window_settings_handle,
-			MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAGS_LARGE_SIZE,
+			MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_LARGE_SIZE,
 			&arrow_down_settings_data);
 
 	/* create file window */
@@ -339,7 +339,7 @@ void mw_user_init(void)
 	button_file_ok_handle = mw_ui_button_add_new(70,
 			285,
 			window_file_handle,
-			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAGS_LARGE_SIZE,
+			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_LARGE_SIZE,
 			&button_file_ok_data);
 
 	/* create file window label */
@@ -348,7 +348,7 @@ void mw_user_init(void)
 			160,
 			110,
 			window_file_handle,
-			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAGS_LARGE_SIZE,
+			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_LARGE_SIZE,
 			&label_file_data);
 
 	/* create a list box for folder listing */
@@ -360,21 +360,21 @@ void mw_user_init(void)
 			180,
 			138,
 			window_file_handle,
-			MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_IS_VISIBLE  | MW_CONTROL_FLAGS_LARGE_SIZE,
+			MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_IS_VISIBLE  | MW_CONTROL_FLAG_LARGE_SIZE,
 			&list_box_file_data);
 
 	arrow_up_file_data.mw_ui_arrow_direction = MW_UI_ARROW_UP;
 	arrow_file_up_handle = mw_ui_arrow_add_new(180,
 			180,
 			window_file_handle,
-			MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAGS_LARGE_SIZE,
+			MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_LARGE_SIZE,
 			&arrow_up_file_data);
 
 	arrow_down_file_data.mw_ui_arrow_direction = MW_UI_ARROW_DOWN;
 	arrow_file_down_handle = mw_ui_arrow_add_new(180,
 			232,
 			window_file_handle,
-			MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAGS_LARGE_SIZE,
+			MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_LARGE_SIZE,
 			&arrow_down_file_data);
 
 	mw_paint_all();

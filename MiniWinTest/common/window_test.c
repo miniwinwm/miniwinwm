@@ -403,6 +403,29 @@ void window_test_message_function(const mw_message_t *message)
 		mw_set_timer(mw_tick_counter + MW_TICKS_PER_SECOND, message->recipient_handle, MW_WINDOW_MESSAGE);
 		break;
 
+	case MW_ARROW_PRESSED_MESSAGE:
+		if (window_test_data.large_controls)
+		{
+			 mw_create_window_dialog_number_entry(10,
+					50,
+					"Number entry",
+					true,
+					-53,
+					true,
+					message->recipient_handle);
+		}
+		else
+		{
+			 mw_create_window_dialog_number_entry(10,
+					50,
+					"Number entry",
+					false,
+					53,
+					false,
+					message->recipient_handle);
+		}
+		break;
+
 	default:
 		break;
 	}

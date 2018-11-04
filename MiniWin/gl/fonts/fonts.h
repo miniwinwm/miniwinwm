@@ -45,6 +45,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include <stdint.h>
+#include "user/miniwin_config.h"
 
 /** @addtogroup Utilities
   * @{

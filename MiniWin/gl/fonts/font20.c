@@ -84,6 +84,9 @@
   */
 
 // Character bitmaps for Courier New 15pt
+
+#ifdef MW_FONT_20_INCLUDED
+
 const uint8_t Font20_Table[] = 
 {
 	// @0 ' ' (14 pixels wide)
@@ -2183,6 +2186,8 @@ const sFONT Font20 = {
   14, /* Width */
   20, /* Height */
 };
+
+#endif
 
 /**
   * @}

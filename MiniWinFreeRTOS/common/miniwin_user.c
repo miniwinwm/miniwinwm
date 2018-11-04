@@ -120,7 +120,7 @@ void mw_user_init(void)
 			5,
 			MW_UI_BUTTON_WIDTH,
 			window_gyro_x_handle,
-			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAGS_LARGE_SIZE,
+			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_LARGE_SIZE,
 			&label_gyro_x_data);
 
 	mw_util_safe_strcpy(button_gyro_x_data.button_label, MW_UI_BUTTON_LABEL_MAX_CHARS, "Zero");
@@ -146,7 +146,7 @@ void mw_user_init(void)
 			5,
 			MW_UI_BUTTON_WIDTH,
 			window_gyro_y_handle,
-			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAGS_LARGE_SIZE,
+			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_LARGE_SIZE,
 			&label_gyro_y_data);
 
 	mw_util_safe_strcpy(button_gyro_y_data.button_label, MW_UI_BUTTON_LABEL_MAX_CHARS, "Zero");
@@ -172,7 +172,7 @@ void mw_user_init(void)
 			5,
 			MW_UI_BUTTON_WIDTH,
 			window_gyro_z_handle,
-			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAGS_LARGE_SIZE,
+			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_LARGE_SIZE,
 			&label_gyro_z_data);
 
 	mw_util_safe_strcpy(button_gyro_z_data.button_label, MW_UI_BUTTON_LABEL_MAX_CHARS, "Zero");

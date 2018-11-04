@@ -89,7 +89,7 @@ static void check_box_paint_function(mw_handle_t control_handle, const mw_gl_dra
 	mw_gl_set_bg_transparency(MW_GL_BG_TRANSPARENT);
 	mw_gl_set_text_rotation(MW_GL_TEXT_ROTATION_0);
 
-    if (mw_get_control_flags(control_handle) & MW_CONTROL_FLAGS_LARGE_SIZE)
+    if (mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_LARGE_SIZE)
     {
     	height = MW_UI_CHECK_BOX_LARGE_HEIGHT;
 
@@ -134,7 +134,7 @@ static void check_box_paint_function(mw_handle_t control_handle, const mw_gl_dra
 		mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 		mw_gl_set_bg_transparency(MW_GL_BG_TRANSPARENT);
 
-	    if (mw_get_control_flags(control_handle) & MW_CONTROL_FLAGS_LARGE_SIZE)
+	    if (mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_LARGE_SIZE)
 	    {
 	    	mw_gl_monochrome_bitmap(draw_info, 2, 2, 24, 24, mw_bitmaps_tick_large);
 	    }
@@ -200,7 +200,7 @@ mw_handle_t mw_ui_check_box_add_new(uint16_t x,
 {
 	mw_util_rect_t r;
 
-	if (flags & MW_CONTROL_FLAGS_LARGE_SIZE)
+	if (flags & MW_CONTROL_FLAG_LARGE_SIZE)
 	{
 		mw_util_set_rect(&r, x, y, MW_UI_CHECK_BOX_LARGE_WIDTH, MW_UI_CHECK_BOX_LARGE_HEIGHT);
 	}
