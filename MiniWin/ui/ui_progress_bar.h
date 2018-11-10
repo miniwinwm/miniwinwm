@@ -69,7 +69,7 @@ typedef struct
  * @param y The y coordinate of the control relative to parent window client area
  * @param width Width of progress bar containing box
  * @param height Height of progress bar containing box
- * @param parent The containing window of this control
+ * @param parent_handle The containing window of this control
  * @param flags General control flags controlling the control
  * @param progress_bar_instance_data Instance structure containing progress bar specific data items
  * @note No account taken of the MW_CONTROL_FLAG_LARGE_SIZE flag as user sets required size of this control
@@ -79,7 +79,7 @@ mw_handle_t mw_ui_progress_bar_add_new(uint16_t x,
 		uint16_t y,
 		uint16_t width,
 		uint16_t height,
-		mw_handle_t parent,
+		mw_handle_t parent_handle,
 		uint32_t flags,
 		mw_ui_progress_bar_data_t *progress_bar_instance_data);
 

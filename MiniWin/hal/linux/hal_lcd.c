@@ -73,7 +73,7 @@ extern GC graphical_context;
 void mw_hal_lcd_init(void)
 {
 	/* allow time for connection to XServer */
-	usleep(250000);
+	sleep(1);
 }
 
 void mw_hal_lcd_pixel(int16_t x, int16_t y, mw_hal_lcd_colour_t colour)

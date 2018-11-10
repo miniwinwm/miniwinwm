@@ -100,8 +100,6 @@ void app_init(void)
 		CWBackPixel,
 		&frame_attributes);
 
-	XSelectInput(display, frame_window, ExposureMask | StructureNotifyMask);
-
 	graphical_context = XCreateGC( display, frame_window, 0, 0 );
 
 	XMapWindow(display, frame_window);

@@ -374,7 +374,7 @@ static void mw_dialog_number_entry_message_function(const mw_message_t *message)
 							1 + strlen(mw_dialog_number_entry_data.number_buffer));
 					mw_dialog_number_entry_data.number_buffer[0] = '-';
 				}
-				mw_post_message(MW_DIALOG_FILE_CHOOSER_FILE_OK_MESSAGE,
+				mw_post_message(MW_DIALOG_NUMBER_ENTRY_OK_MESSAGE,
 						MW_UNUSED_MESSAGE_PARAMETER,
 						mw_dialog_number_entry_data.response_window_handle,
 						MW_UNUSED_MESSAGE_PARAMETER,

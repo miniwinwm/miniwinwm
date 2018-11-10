@@ -54,7 +54,7 @@ typedef struct
 {
 	int16_t angle;					/**< Last received angle */
 	char text_transfer_buffer[10];	/**< Buffer for label text */
-	int16_t angle_offset;			//**< Offset set using zero button */
+	int16_t angle_offset;			/**< Offset set using zero button */
 	int16_t previous_drawn_angle;	/**< The previous angle shown on the display */
 } window_gyro_y_data_t;
 

@@ -224,7 +224,7 @@ static void radio_button_message_function(const mw_message_t *message)
 			/* send control response message */
 			mw_post_message(MW_RADIO_BUTTON_ITEM_SELECTED_MESSAGE,
 					message->recipient_handle,
-					mw_get_control_parent_window(message->recipient_handle),
+					mw_get_control_parent_window_handle(message->recipient_handle),
 					this_radio_radio_button->selected_radio_button,
 					MW_UNUSED_MESSAGE_PARAMETER,
 					MW_WINDOW_MESSAGE);
@@ -244,7 +244,7 @@ static void radio_button_message_function(const mw_message_t *message)
 mw_handle_t mw_ui_radio_button_add_new(uint16_t x,
 		uint16_t y,
 		uint16_t width,
-		mw_handle_t parent,
+		mw_handle_t parent_handle,
 		uint32_t flags,
 		mw_ui_radio_button_data_t *radio_button_instance_data)
 {
@@ -273,7 +273,7 @@ mw_handle_t mw_ui_radio_button_add_new(uint16_t x,
 	}
 
 	return mw_add_control(&r,
-			parent,
+			parent_handle,
 			radio_button_paint_function,
 			radio_button_message_function,
 			flags,

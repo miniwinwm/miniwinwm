@@ -74,7 +74,7 @@ typedef struct
  * @param x The x coordinate of the control relative to parent window client area
  * @param y The y coordinate of the control relative to parent window client area
  * @param width Width of label containing box
- * @param parent The containing window of this control
+ * @param parent_handle The containing window of this control
  * @param flags General control flags controlling the control
  * @param label_instance_data Instance structure containing label specific data items
  * @return The new control's handle
@@ -82,7 +82,7 @@ typedef struct
 mw_handle_t mw_ui_label_add_new(uint16_t x,
 		uint16_t y,
 		uint16_t width,
-		mw_handle_t parent,
+		mw_handle_t parent_handle,
 		uint32_t flags,
 		mw_ui_label_data_t *label_instance_data);
 

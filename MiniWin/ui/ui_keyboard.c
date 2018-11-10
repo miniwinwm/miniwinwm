@@ -429,7 +429,7 @@ static void process_keypress(const mw_message_t *message)
 		/* post message for keypress */
 		mw_post_message(MW_KEY_PRESSED_MESSAGE,
 				message->recipient_handle,
-				mw_get_control_parent_window(message->recipient_handle),
+				mw_get_control_parent_window_handle(message->recipient_handle),
 				(uint32_t)keyboards[this_keyboard->keyboard_display][this_keyboard->key_pressed_row][this_keyboard->key_pressed_column],
 				MW_UNUSED_MESSAGE_PARAMETER,
 				MW_WINDOW_MESSAGE);
@@ -539,7 +539,7 @@ static void keyboard_message_function(const mw_message_t *message)
 
 mw_handle_t mw_ui_keyboard_add_new(uint16_t x,
 		uint16_t y,
-		mw_handle_t parent,
+		mw_handle_t parent_handle,
 		uint32_t flags,
 		mw_ui_keyboard_data_t *keyboard_instance_data)
 {
@@ -548,7 +548,7 @@ mw_handle_t mw_ui_keyboard_add_new(uint16_t x,
 	mw_util_set_rect(&r, x, y, MW_UI_KEYBOARD_WIDTH, MW_UI_KEYBOARD_HEIGHT);
 
 	return mw_add_control(&r,
-			parent,
+			parent_handle,
 			keyboard_paint_function,
 			keyboard_message_function,
 			flags,

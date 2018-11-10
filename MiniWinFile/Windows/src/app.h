@@ -42,7 +42,6 @@ SOFTWARE.
 *** CONSTANTS ***
 ****************/
 
-#define MW_DIALOG_FILE_CHOOSER							/**< File chooser dialog is optional and is only built if this is defined */
 #define MAX_FILENAME_LENGTH					12			/**< Maximum length of a file name in eight dot three format */
 #define MAX_FOLDER_AND_FILENAME_LENGTH		MAX_PATH	/**< Maximum length of a file name and its path */
 

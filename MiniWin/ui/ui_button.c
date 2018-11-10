@@ -193,7 +193,7 @@ static void button_message_function(const mw_message_t *message)
 		this_button->button_down = false;
 		mw_post_message(MW_BUTTON_PRESSED_MESSAGE,
 				message->recipient_handle,
-				mw_get_control_parent_window(message->recipient_handle),
+				mw_get_control_parent_window_handle(message->recipient_handle),
 				MW_UNUSED_MESSAGE_PARAMETER,
 				MW_UNUSED_MESSAGE_PARAMETER,
 				MW_WINDOW_MESSAGE);
@@ -221,7 +221,7 @@ static void button_message_function(const mw_message_t *message)
 
 mw_handle_t mw_ui_button_add_new(uint16_t x,
 		uint16_t y,
-		mw_handle_t parent,
+		mw_handle_t parent_handle,
 		uint32_t flags,
 		mw_ui_button_data_t *button_instance_data)
 {
@@ -237,7 +237,7 @@ mw_handle_t mw_ui_button_add_new(uint16_t x,
 	}
 
 	return mw_add_control(&r,
-			parent,
+			parent_handle,
 			button_paint_function,
 			button_message_function,
 			flags,

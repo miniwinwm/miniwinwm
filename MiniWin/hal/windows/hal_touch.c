@@ -148,20 +148,24 @@ mw_hal_touch_state_t mw_hal_touch_get_state(void)
 
 	GetNumberOfConsoleInputEvents(hStdin, &lpcNumberOfEvents);
 
-	if (lpcNumberOfEvents > 0)
+	while (lpcNumberOfEvents > 0)
 	{
-		ReadConsoleInput(hStdin,
-		                irInBuf,
-		                1,
-		                &cNumRead);
-	}
+		{
+			ReadConsoleInput(hStdin,
+							irInBuf,
+							1,
+							&cNumRead);
+		}
 
-	switch(irInBuf[0].EventType)
-	{
-		case MOUSE_EVENT:
-			MouseEventProc(irInBuf[0].Event.MouseEvent);
-			break;
-	};
+		switch(irInBuf[0].EventType)
+		{
+			case MOUSE_EVENT:
+				MouseEventProc(irInBuf[0].Event.MouseEvent);
+				break;
+		};
+
+		lpcNumberOfEvents--;
+	}
 
 	if (mouse_down)
 	{

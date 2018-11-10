@@ -82,14 +82,14 @@ typedef struct
  *
  * @param x The x coordinate of the control relative to parent window client area
  * @param y The y coordinate of the control relative to parent window client area
- * @param parent The containing window of this control
+ * @param parent_handle The containing window of this control
  * @param flags General control flags controlling the control
  * @param button_instance_data Instance structure containing button specific data items
  * @return The new control's handle
  */
 mw_handle_t mw_ui_arrow_add_new(uint16_t x,
 		uint16_t y,
-		mw_handle_t parent,
+		mw_handle_t parent_handle,
 		uint32_t flags,
 		mw_ui_arrow_data_t *button_instance_data);
 

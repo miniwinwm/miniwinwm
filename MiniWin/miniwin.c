@@ -348,32 +348,28 @@ static bool check_window_dimensions(uint16_t new_width,
 		uint16_t new_height,
 		uint16_t flags)
 {
-	/* starting values for width and height is 1 pixel */
-	uint16_t window_minimum_width = 1;
-	uint16_t window_minimum_height = 1;
+	uint16_t menu_bar_height;
+	uint16_t scroll_bar_narrow_dimension;
+	uint16_t scroll_bar_slider_size;
+	uint16_t window_minimum_height;
+	uint16_t window_minimum_width;
 
-	/* if a title bar is specified there must be space for the icons */
-	if (flags & MW_WINDOW_FLAG_HAS_TITLE_BAR)
+	/* get menu bar height, scroll bar narrow dimension and scroll bar slider size depending on large flag */
+	if (flags & MW_WINDOW_FLAG_LARGE_SIZE)
 	{
-		/* if a title bar is present then minimum width must give space for the title bar icons */
-		window_minimum_width = (MW_TITLE_BAR_ICON_OFFSET * 4 + 1);
+		menu_bar_height = MW_LARGE_MENU_BAR_HEIGHT;
+		scroll_bar_slider_size = MW_SCROLL_BAR_LARGE_SLIDER_SIZE;
+		scroll_bar_narrow_dimension = MW_SCROLL_BAR_LARGE_NARROW_DIMENSION;
 	}
 	else
 	{
-		/* no title bar present */
-		if (flags & MW_WINDOW_FLAG_HAS_BORDER)
-		{
-			/* border present so add twice border width */
-			window_minimum_width += (MW_BORDER_WIDTH * 2);
-		}
-		
-		/* check for vertical scroll bar */ 
-		if (flags & MW_WINDOW_FLAG_HAS_VERT_SCROLL_BAR)
-		{
-			/* vertical scroll bar present so add scroll bar width */
-			window_minimum_width += MW_SCROLL_BAR_NARROW_DIMESION;
-		}
+		menu_bar_height = MW_MENU_BAR_HEIGHT;
+		scroll_bar_slider_size = MW_SCROLL_BAR_SLIDER_SIZE;
+		scroll_bar_narrow_dimension = MW_SCROLL_BAR_NARROW_DIMENSION;
 	}
+
+	/* starting height is 1 pixel */
+	window_minimum_height = 1;
 
 	/* check for a border first when calculating minimum height */
 	if (flags & MW_WINDOW_FLAG_HAS_BORDER)
@@ -400,18 +396,65 @@ static bool check_window_dimensions(uint16_t new_width,
 		}
 	}
 	
-	/* check for horizontal scroll bar */
-	if (flags & MW_WINDOW_FLAG_HAS_HORIZ_SCROLL_BAR)
-	{
-		/* horizontal scroll bar present so add scroll bar height */
-		window_minimum_height += MW_SCROLL_BAR_NARROW_DIMESION;
-	}
-	
 	/* check for menu bar */
 	if (flags & MW_WINDOW_FLAG_HAS_MENU_BAR)
 	{
 		/* menu bar present so add its height */
-		window_minimum_height += MW_MENU_BAR_HEIGHT;
+		window_minimum_height += menu_bar_height;
+	}
+
+	/* check for scroll bars */
+	if (flags & MW_WINDOW_FLAG_HAS_HORIZ_SCROLL_BAR && flags & MW_WINDOW_FLAG_HAS_VERT_SCROLL_BAR)
+	{
+		/* both scroll bars present so add scroll bar narrow dimension and slider size*/
+		window_minimum_height += (scroll_bar_narrow_dimension + scroll_bar_slider_size);
+	}
+	else if (flags & MW_WINDOW_FLAG_HAS_VERT_SCROLL_BAR)
+	{
+		/* only vert scroll bar present so add slider size */
+		window_minimum_height += (scroll_bar_slider_size);
+	}
+	else if (flags & MW_WINDOW_FLAG_HAS_HORIZ_SCROLL_BAR)
+	{
+		/* only horiz scroll bar present so add scroll bar narrow dimension */
+		window_minimum_height += (scroll_bar_narrow_dimension);
+	}
+
+	/* starting width is 1 pixel */
+	window_minimum_width = 1;
+
+	/* check for border present */
+	if (flags & MW_WINDOW_FLAG_HAS_BORDER)
+	{
+		/* border present so add twice border width */
+		window_minimum_width += (MW_BORDER_WIDTH * 2);
+	}
+
+	/* check for scroll bars */
+	if (flags & MW_WINDOW_FLAG_HAS_HORIZ_SCROLL_BAR && flags & MW_WINDOW_FLAG_HAS_VERT_SCROLL_BAR)
+	{
+		/* both scroll bars present so add scroll bar narrow dimension and slider size*/
+		window_minimum_width += (scroll_bar_narrow_dimension + scroll_bar_slider_size);
+	}
+	else if (flags & MW_WINDOW_FLAG_HAS_HORIZ_SCROLL_BAR)
+	{
+		/* only horiz scroll bar present so add slider size */
+		window_minimum_width += (scroll_bar_slider_size);
+	}
+	else if (flags & MW_WINDOW_FLAG_HAS_VERT_SCROLL_BAR)
+	{
+		/* only vert scroll bar present so add scroll bar narrow dimension */
+		window_minimum_width += (scroll_bar_narrow_dimension);
+	}
+
+	/* if a title bar is specified there must be space for the icons but title bar width is in parallel with the
+	 * other width giving features, so use which of the two (title bar or previously calculated width) is bigger */
+	if (flags & MW_WINDOW_FLAG_HAS_TITLE_BAR)
+	{
+		if (window_minimum_width < (MW_TITLE_BAR_ICON_OFFSET * 4 + 1))
+		{
+			window_minimum_width = (MW_TITLE_BAR_ICON_OFFSET * 4 + 1);
+		}
 	}
 
 	/* now check the new dimensions with the minimums allowed */
@@ -436,8 +479,10 @@ static bool check_window_dimensions(uint16_t new_width,
  */
 static void calculate_new_window_size_details(mw_handle_t window_handle, const mw_util_rect_t *rect)
 {
-	uint8_t border_width;
+	uint16_t border_width;
 	uint8_t window_id;
+	uint16_t menu_bar_height;
+	uint16_t scroll_bar_narrow_dimension;
 
 	MW_ASSERT(rect, "Null pointer argument");
 
@@ -447,6 +492,26 @@ static void calculate_new_window_size_details(mw_handle_t window_handle, const m
 
 	/* set the window rect from that passed in */
 	memcpy(&(mw_all_windows[window_id].window_rect), rect, sizeof(mw_util_rect_t));
+
+	/* get menu bar height depending on large flag */
+	if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_LARGE_SIZE)
+	{
+		menu_bar_height = MW_LARGE_MENU_BAR_HEIGHT;
+	}
+	else
+	{
+		menu_bar_height = MW_MENU_BAR_HEIGHT;
+	}
+
+	/* get scroll bar narrow dimension depending on if large window flag set */
+	if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_LARGE_SIZE)
+	{
+		scroll_bar_narrow_dimension = MW_SCROLL_BAR_LARGE_NARROW_DIMENSION;
+	}
+	else
+	{
+		scroll_bar_narrow_dimension = MW_SCROLL_BAR_NARROW_DIMENSION;
+	}
 
 	/* find out border width; depends on if there is a border */
 	if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER)
@@ -472,14 +537,14 @@ static void calculate_new_window_size_details(mw_handle_t window_handle, const m
 	}
 	if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_MENU_BAR)
 	{
-		mw_all_windows[window_id].client_rect.y += MW_MENU_BAR_HEIGHT;
+		mw_all_windows[window_id].client_rect.y += menu_bar_height;
 	}
 
 	/* set client rect width */
 	mw_all_windows[window_id].client_rect.width = rect->width - 2 * border_width;
 	if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_VERT_SCROLL_BAR)
 	{
-		mw_all_windows[window_id].client_rect.width -= MW_SCROLL_BAR_NARROW_DIMESION;
+		mw_all_windows[window_id].client_rect.width -= scroll_bar_narrow_dimension;
 	}
 
 	/* set client rect height */
@@ -493,11 +558,11 @@ static void calculate_new_window_size_details(mw_handle_t window_handle, const m
 	}
 	if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_MENU_BAR)
 	{
-		mw_all_windows[window_id].client_rect.height -= MW_MENU_BAR_HEIGHT;
+		mw_all_windows[window_id].client_rect.height -= menu_bar_height;
 	}
 	if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_HORIZ_SCROLL_BAR)
 	{
-		mw_all_windows[window_id].client_rect.height -= MW_SCROLL_BAR_NARROW_DIMESION;
+		mw_all_windows[window_id].client_rect.height -= scroll_bar_narrow_dimension;
 	}
 }
 
@@ -1411,6 +1476,8 @@ static void draw_menu_bar(const mw_gl_draw_info_t *draw_info, mw_handle_t window
 	uint16_t next_pos = 0;
 	uint8_t i;
 	uint8_t window_id;
+	uint16_t menu_bar_height;
+	uint16_t selected_text_offset;
 
 	MW_ASSERT(draw_info, "Null pointer argument");
 
@@ -1418,20 +1485,33 @@ static void draw_menu_bar(const mw_gl_draw_info_t *draw_info, mw_handle_t window
 	window_id = get_window_id_for_handle(window_handle);
 	MW_ASSERT(window_id < MW_MAX_WINDOW_COUNT, "Bad window handle");
 
+	if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_LARGE_SIZE)
+	{
+		menu_bar_height = MW_LARGE_MENU_BAR_HEIGHT;
+	    mw_gl_set_font(MW_GL_TITLE_FONT);
+	}
+	else
+	{
+		menu_bar_height = MW_MENU_BAR_HEIGHT;
+	    mw_gl_set_font(MW_GL_FONT_9);
+	}
+
 	mw_gl_set_fill(MW_GL_FILL);
 	mw_gl_set_solid_fill_colour(MW_CONTROL_UP_COLOUR);
 	mw_gl_set_border(MW_GL_BORDER_OFF);
 	mw_gl_clear_pattern();
 	mw_gl_rectangle(draw_info,
 			mw_all_windows[window_id].client_rect.x - mw_all_windows[window_id].window_rect.x,
-			mw_all_windows[window_id].client_rect.y - mw_all_windows[window_id].window_rect.y - MW_MENU_BAR_HEIGHT,
+			mw_all_windows[window_id].client_rect.y - mw_all_windows[window_id].window_rect.y - menu_bar_height,
 			mw_all_windows[window_id].client_rect.width,
-			MW_MENU_BAR_HEIGHT);
+			menu_bar_height);
 
     /* set up text */
 	mw_gl_set_bg_transparency(MW_GL_BG_TRANSPARENT);
-    mw_gl_set_font(MW_GL_FONT_9);
 	mw_gl_set_text_rotation(MW_GL_TEXT_ROTATION_0);
+
+	/* set up line style */
+	mw_gl_set_line(MW_GL_SOLID_LINE);
 
     /* draw each item */
 	for (i = 0; i < mw_all_windows[window_id].menu_bar_items_count; i++)
@@ -1444,9 +1524,39 @@ static void draw_menu_bar(const mw_gl_draw_info_t *draw_info, mw_handle_t window
 			mw_gl_set_solid_fill_colour(MW_CONTROL_DOWN_COLOUR);
 			mw_gl_rectangle(draw_info,
 					next_pos,
-					mw_all_windows[window_id].client_rect.y - mw_all_windows[window_id].window_rect.y - MW_MENU_BAR_HEIGHT,
-					(strlen(mw_all_windows[window_id].menu_bar_items[i]) + 2) * mw_gl_get_font_width() + 1,
-					MW_MENU_BAR_HEIGHT);
+					mw_all_windows[window_id].client_rect.y - mw_all_windows[window_id].window_rect.y - menu_bar_height,
+					mw_gl_get_string_width_pixels(mw_all_windows[window_id].menu_bar_items[i]) + mw_gl_get_string_width_pixels("  "),
+					menu_bar_height);
+
+			mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
+			mw_gl_vline(draw_info,
+					next_pos,
+					mw_all_windows[window_id].client_rect.y - mw_all_windows[window_id].window_rect.y - menu_bar_height,
+					mw_all_windows[window_id].client_rect.y - mw_all_windows[window_id].window_rect.y - 1);
+
+			mw_gl_hline(draw_info,
+					next_pos,
+					next_pos + mw_gl_get_string_width_pixels(mw_all_windows[window_id].menu_bar_items[i]) + mw_gl_get_string_width_pixels("  ") - 1,
+					mw_all_windows[window_id].client_rect.y - mw_all_windows[window_id].window_rect.y - menu_bar_height);
+
+			mw_gl_set_fg_colour(MW_HAL_LCD_WHITE);
+			mw_gl_vline(draw_info,
+					next_pos + mw_gl_get_string_width_pixels(mw_all_windows[window_id].menu_bar_items[i]) + mw_gl_get_string_width_pixels("  ") - 1,
+					mw_all_windows[window_id].client_rect.y - mw_all_windows[window_id].window_rect.y - menu_bar_height,
+					mw_all_windows[window_id].client_rect.y - mw_all_windows[window_id].window_rect.y - 1);
+
+			mw_gl_hline(draw_info,
+					next_pos,
+					next_pos + mw_gl_get_string_width_pixels(mw_all_windows[window_id].menu_bar_items[i]) + mw_gl_get_string_width_pixels("  ") - 1,
+					mw_all_windows[window_id].client_rect.y - mw_all_windows[window_id].window_rect.y - 1);
+
+			/* set the selected text offset to make it appear pressed down */
+			selected_text_offset = 1;
+		}
+		else
+		{
+			/* set the selected text offset to make it appear normal */
+			selected_text_offset = 0;
 		}
 
 		/* set up text colour on enabled state - from control and individual items bitfield */
@@ -1462,14 +1572,13 @@ static void draw_menu_bar(const mw_gl_draw_info_t *draw_info, mw_handle_t window
 
         /* draw the menu item text */
 		mw_gl_string(draw_info,
-				next_pos + mw_gl_get_font_width() + 1,
-				MW_MENU_BAR_LABEL_Y_OFFSET +
+				selected_text_offset + next_pos + mw_gl_get_string_width_pixels(" "),
+				selected_text_offset + MW_MENU_BAR_LABEL_Y_OFFSET +
 					mw_all_windows[window_id].client_rect.y -
 					mw_all_windows[window_id].window_rect.y -
-					MW_MENU_BAR_HEIGHT,
+					menu_bar_height,
 				mw_all_windows[window_id].menu_bar_items[i]);
-
-		next_pos += (strlen(mw_all_windows[window_id].menu_bar_items[i]) + 2) * (mw_gl_get_font_width() + 1);
+		next_pos += mw_gl_get_string_width_pixels(mw_all_windows[window_id].menu_bar_items[i]) + mw_gl_get_string_width_pixels("  ");
 	}
 }
 
@@ -1482,6 +1591,8 @@ static void draw_menu_bar(const mw_gl_draw_info_t *draw_info, mw_handle_t window
 static void draw_horizontal_window_scroll_bar(const mw_gl_draw_info_t *draw_info, mw_handle_t window_handle)
 {
 	int16_t scroll_bar_horiz_slider_left;
+	uint16_t scroll_bar_narrow_dimension;
+	uint16_t scroll_bar_slider_size;
 	uint8_t window_id;
 
 	MW_ASSERT(draw_info, "Null pointer argument");
@@ -1489,6 +1600,18 @@ static void draw_horizontal_window_scroll_bar(const mw_gl_draw_info_t *draw_info
 	/* get window id from window handle and check it's in range */
 	window_id = get_window_id_for_handle(window_handle);
 	MW_ASSERT(window_id < MW_MAX_WINDOW_COUNT, "Bad window handle");
+
+	/* get scroll bar narrow dimension and slider size depending on if large window flag set */
+	if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_LARGE_SIZE)
+	{
+		scroll_bar_narrow_dimension = MW_SCROLL_BAR_LARGE_NARROW_DIMENSION;
+		scroll_bar_slider_size = MW_SCROLL_BAR_LARGE_SLIDER_SIZE;
+	}
+	else
+	{
+		scroll_bar_narrow_dimension = MW_SCROLL_BAR_NARROW_DIMENSION;
+		scroll_bar_slider_size = MW_SCROLL_BAR_SLIDER_SIZE;
+	}
 
 	mw_gl_set_fill(MW_GL_FILL);
 	mw_gl_set_border(MW_GL_BORDER_ON);
@@ -1503,18 +1626,19 @@ static void draw_horizontal_window_scroll_bar(const mw_gl_draw_info_t *draw_info
 	{
 		mw_gl_set_fg_colour(MW_CONTROL_DISABLED_COLOUR);
 	}
+
 	mw_gl_rectangle(draw_info,
 			mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0,
 			mw_all_windows[window_id].window_rect.height -
 				(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0) -
-				MW_SCROLL_BAR_NARROW_DIMESION,
+				scroll_bar_narrow_dimension,
 			mw_all_windows[window_id].client_rect.width,
-			MW_SCROLL_BAR_NARROW_DIMESION);
+			scroll_bar_narrow_dimension);
 
 	/* there is always space to draw slider */
 	mw_gl_set_solid_fill_colour(MW_CONTROL_DOWN_COLOUR);
 
-	scroll_bar_horiz_slider_left = (mw_all_windows[window_id].client_rect.width - MW_SCROLL_BAR_SLIDER_SIZE) *
+	scroll_bar_horiz_slider_left = (mw_all_windows[window_id].client_rect.width - scroll_bar_slider_size) *
 		mw_all_windows[window_id].horiz_scroll_pos / UINT8_MAX;
 
 	scroll_bar_horiz_slider_left += (mw_all_windows[window_id].client_rect.x -
@@ -1525,9 +1649,9 @@ static void draw_horizontal_window_scroll_bar(const mw_gl_draw_info_t *draw_info
 			scroll_bar_horiz_slider_left,
 			mw_all_windows[window_id].window_rect.height -
 				(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0) -
-				MW_SCROLL_BAR_NARROW_DIMESION,
-			MW_SCROLL_BAR_SLIDER_SIZE,
-			MW_SCROLL_BAR_NARROW_DIMESION);
+				scroll_bar_narrow_dimension,
+			scroll_bar_slider_size,
+			scroll_bar_narrow_dimension);
 
 	/* draw 3D effect */
 	mw_gl_set_fg_colour(MW_HAL_LCD_WHITE);
@@ -1536,30 +1660,30 @@ static void draw_horizontal_window_scroll_bar(const mw_gl_draw_info_t *draw_info
 			2 +
 				mw_all_windows[window_id].window_rect.height -
 				(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0) -
-				MW_SCROLL_BAR_NARROW_DIMESION,
+				scroll_bar_narrow_dimension,
 			mw_all_windows[window_id].window_rect.height -
 				2 -
 				(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0));
 	mw_gl_hline(draw_info,
 			scroll_bar_horiz_slider_left + 1,
-			scroll_bar_horiz_slider_left + MW_SCROLL_BAR_SLIDER_SIZE - 2,
+			scroll_bar_horiz_slider_left + scroll_bar_slider_size - 2,
 			1 +
 				mw_all_windows[window_id].window_rect.height -
 				(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0) -
-				MW_SCROLL_BAR_NARROW_DIMESION);
+				scroll_bar_narrow_dimension);
 	mw_gl_set_fg_colour(MW_HAL_LCD_GREY7);
 	mw_gl_vline(draw_info,
-			scroll_bar_horiz_slider_left + MW_SCROLL_BAR_SLIDER_SIZE - 2,
+			scroll_bar_horiz_slider_left + scroll_bar_slider_size - 2,
 			2 +
 				mw_all_windows[window_id].window_rect.height -
 				(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0) -
-				MW_SCROLL_BAR_NARROW_DIMESION,
+				scroll_bar_narrow_dimension,
 			mw_all_windows[window_id].window_rect.height -
 				3 -
 				(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0));
 	mw_gl_hline(draw_info,
 			scroll_bar_horiz_slider_left + 2,
-			scroll_bar_horiz_slider_left + MW_SCROLL_BAR_SLIDER_SIZE - 2,
+			scroll_bar_horiz_slider_left + scroll_bar_slider_size - 2,
 			mw_all_windows[window_id].window_rect.height -
 				2 -
 				(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0));
@@ -1574,6 +1698,8 @@ static void draw_horizontal_window_scroll_bar(const mw_gl_draw_info_t *draw_info
 static void draw_vertical_window_scroll_bar(const mw_gl_draw_info_t *draw_info, mw_handle_t window_handle)
 {
 	int16_t scroll_bar_horiz_slider_top;
+	uint16_t scroll_bar_narrow_dimension;
+	uint16_t scroll_bar_slider_size;
 	uint8_t window_id;
 
 	MW_ASSERT(draw_info, "Null pointer argument");
@@ -1581,6 +1707,18 @@ static void draw_vertical_window_scroll_bar(const mw_gl_draw_info_t *draw_info, 
 	/* get window id from window handle and check it's in range */
 	window_id = get_window_id_for_handle(window_handle);
 	MW_ASSERT(window_id < MW_MAX_WINDOW_COUNT, "Bad window handle");
+
+	/* get scroll bar narrow dimension and slider size depending on if large windo flag set */
+	if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_LARGE_SIZE)
+	{
+		scroll_bar_narrow_dimension = MW_SCROLL_BAR_LARGE_NARROW_DIMENSION;
+		scroll_bar_slider_size = MW_SCROLL_BAR_LARGE_SLIDER_SIZE;
+	}
+	else
+	{
+		scroll_bar_narrow_dimension = MW_SCROLL_BAR_NARROW_DIMENSION;
+		scroll_bar_slider_size = MW_SCROLL_BAR_SLIDER_SIZE;
+	}
 
 	mw_gl_set_fill(MW_GL_FILL);
 	mw_gl_set_border(MW_GL_BORDER_ON);
@@ -1600,13 +1738,13 @@ static void draw_vertical_window_scroll_bar(const mw_gl_draw_info_t *draw_info, 
 			(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0) +
 				mw_all_windows[window_id].client_rect.width,
 			mw_all_windows[window_id].client_rect.y - mw_all_windows[window_id].window_rect.y,
-			MW_SCROLL_BAR_NARROW_DIMESION,
+			scroll_bar_narrow_dimension,
 			mw_all_windows[window_id].client_rect.height);
 
 	/* there is always space to draw slider */
 	mw_gl_set_solid_fill_colour(MW_CONTROL_DOWN_COLOUR);
 
-	scroll_bar_horiz_slider_top = (mw_all_windows[window_id].client_rect.height - MW_SCROLL_BAR_SLIDER_SIZE) *
+	scroll_bar_horiz_slider_top = (mw_all_windows[window_id].client_rect.height - scroll_bar_slider_size) *
 			mw_all_windows[window_id].vert_scroll_pos / UINT8_MAX;
 
 	scroll_bar_horiz_slider_top += (mw_all_windows[window_id].client_rect.y - mw_all_windows[window_id].window_rect.y);
@@ -1614,10 +1752,10 @@ static void draw_vertical_window_scroll_bar(const mw_gl_draw_info_t *draw_info, 
 	mw_gl_rectangle(draw_info,
 			mw_all_windows[window_id].window_rect.width -
 				(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0) -
-				MW_SCROLL_BAR_NARROW_DIMESION,
+				scroll_bar_narrow_dimension,
 			scroll_bar_horiz_slider_top,
-			MW_SCROLL_BAR_NARROW_DIMESION,
-			MW_SCROLL_BAR_SLIDER_SIZE);
+			scroll_bar_narrow_dimension,
+			scroll_bar_slider_size);
 
 	/* draw 3D effect */
 	mw_gl_set_fg_colour(MW_HAL_LCD_WHITE);
@@ -1625,36 +1763,36 @@ static void draw_vertical_window_scroll_bar(const mw_gl_draw_info_t *draw_info, 
 			2 +
 				mw_all_windows[window_id].window_rect.width -
 				(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0) -
-				MW_SCROLL_BAR_NARROW_DIMESION,
+				scroll_bar_narrow_dimension,
 			1 + scroll_bar_horiz_slider_top,
-			scroll_bar_horiz_slider_top + MW_SCROLL_BAR_NARROW_DIMESION - 2);
+			scroll_bar_horiz_slider_top + scroll_bar_narrow_dimension - 2);
 	mw_gl_hline(draw_info,
 			2 +
 				mw_all_windows[window_id].window_rect.width -
 				(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0) -
-				MW_SCROLL_BAR_NARROW_DIMESION,
+				scroll_bar_narrow_dimension,
 			mw_all_windows[window_id].window_rect.width -
 				(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0) -
 				2,
 			scroll_bar_horiz_slider_top + 1);
 	mw_gl_set_fg_colour(MW_HAL_LCD_GREY7);
 	mw_gl_vline(draw_info,
-			MW_SCROLL_BAR_NARROW_DIMESION +
+			scroll_bar_narrow_dimension +
 				mw_all_windows[window_id].window_rect.width -
 				(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0) -
-				MW_SCROLL_BAR_NARROW_DIMESION -
+				scroll_bar_narrow_dimension -
 				2,
 				2 + scroll_bar_horiz_slider_top,
-				scroll_bar_horiz_slider_top + MW_SCROLL_BAR_NARROW_DIMESION - 2);
+				scroll_bar_horiz_slider_top + scroll_bar_narrow_dimension - 2);
 	mw_gl_hline(draw_info,
 			2 +
 				mw_all_windows[window_id].window_rect.width -
 				(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0) -
-				MW_SCROLL_BAR_NARROW_DIMESION,
+				scroll_bar_narrow_dimension,
 			mw_all_windows[window_id].window_rect.width -
 				(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0) -
 				2,
-			scroll_bar_horiz_slider_top + MW_SCROLL_BAR_SLIDER_SIZE - 2);
+			scroll_bar_horiz_slider_top + scroll_bar_slider_size - 2);
 }
 
 /**
@@ -1793,6 +1931,7 @@ static void do_paint_window_frame2(mw_handle_t window_handle, uint8_t components
 {
 	mw_gl_draw_info_t draw_info;
 	uint8_t window_id;
+	uint16_t scroll_bar_narrow_dimension;
 
 	MW_ASSERT(invalid_rect, "Null pointer argument");
 
@@ -1879,6 +2018,14 @@ static void do_paint_window_frame2(mw_handle_t window_handle, uint8_t components
 		}
 
 		/* fill in that little square at bottom right */
+		if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_LARGE_SIZE)
+		{
+			scroll_bar_narrow_dimension = MW_SCROLL_BAR_LARGE_NARROW_DIMENSION;
+		}
+		else
+		{
+			scroll_bar_narrow_dimension = MW_SCROLL_BAR_NARROW_DIMENSION;
+		}
 		mw_gl_set_fill(MW_GL_FILL);
 		mw_gl_set_solid_fill_colour(MW_CONTROL_DOWN_COLOUR);
 		mw_gl_set_border(MW_GL_BORDER_OFF);
@@ -1888,8 +2035,8 @@ static void do_paint_window_frame2(mw_handle_t window_handle, uint8_t components
 					mw_all_windows[window_id].client_rect.width,
 				(mw_all_windows[window_id].client_rect.y - mw_all_windows[window_id].window_rect.y) +
 					mw_all_windows[window_id].client_rect.height,
-				MW_SCROLL_BAR_NARROW_DIMESION,
-				MW_SCROLL_BAR_NARROW_DIMESION);
+				scroll_bar_narrow_dimension,
+				scroll_bar_narrow_dimension);
 	}
 	else if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_HORIZ_SCROLL_BAR &&
 				(components & MW_WINDOW_FRAME_COMPONENT_HORIZ_SCROLL_BAR))
@@ -2989,10 +3136,20 @@ static window_redimensioning_state_t process_touch_event(void)
 
 				for (i = 0; i < mw_all_windows[window_to_receive_message_id].menu_bar_items_count; i++)
 				{
-					mw_gl_set_font(MW_GL_FONT_9);	/* needed for getting font width */
+					/* setting font needed for getting font width */
+					if (mw_all_windows[window_to_receive_message_id].window_flags & MW_WINDOW_FLAG_LARGE_SIZE)
+					{
+					    mw_gl_set_font(MW_GL_TITLE_FONT);
+					}
+					else
+					{
+					    mw_gl_set_font(MW_GL_FONT_9);
+					}
 					if ((touch_x - mw_all_windows[window_to_receive_message_id].client_rect.x) >= next_menu_item_text_left_pos &&
 							(touch_x - mw_all_windows[window_to_receive_message_id].client_rect.x) <
-								next_menu_item_text_left_pos + (int16_t)(strlen(mw_all_windows[window_to_receive_message_id].menu_bar_items[i]) + 2) * (mw_gl_get_font_width() + 1))
+								next_menu_item_text_left_pos + mw_gl_get_string_width_pixels(mw_all_windows[window_to_receive_message_id].menu_bar_items[i]) +
+									mw_gl_get_string_width_pixels("  "))
+
 					{
 						/* check if this particular line is enabled */
 						if (mw_util_get_bit(mw_all_windows[window_to_receive_message_id].menu_bar_item_enables, i))
@@ -3014,7 +3171,7 @@ static window_redimensioning_state_t process_touch_event(void)
 					}
 
 					/* increment the running total of the position of the text labels */
-					next_menu_item_text_left_pos += (strlen(mw_all_windows[window_to_receive_message_id].menu_bar_items[i]) + 2) * (mw_gl_get_font_width() + 1);
+					next_menu_item_text_left_pos += mw_gl_get_string_width_pixels(mw_all_windows[window_to_receive_message_id].menu_bar_items[i]) + mw_gl_get_string_width_pixels("  ");
 				}
 			}
 
@@ -3417,7 +3574,7 @@ bool mw_find_if_any_window_slots_free(void)
 }
 
 mw_handle_t mw_add_window(mw_util_rect_t *rect,
-		char* title,
+		char *title,
 		mw_paint_func_p paint_func,
 		mw_message_func_p message_func,
 		char **menu_bar_items,
@@ -3426,13 +3583,6 @@ mw_handle_t mw_add_window(mw_util_rect_t *rect,
 		void *instance_data)
 {
 	uint8_t new_window_id;
-
-	/* check for large size - currently not supported */
-	if (window_flags & MW_WINDOW_FLAG_LARGE_SIZE)
-	{
-		MW_ASSERT(false, "Large size windows not yet supported");
-		return MW_INVALID_HANDLE;
-	}
 
 	/* check compulsory parameters */
 	if (rect == NULL || paint_func == NULL || message_func == NULL || title == NULL)
@@ -4401,7 +4551,7 @@ mw_util_rect_t mw_get_control_rect(mw_handle_t control_handle)
 	return mw_all_controls[control_id].control_rect;
 }
 
-mw_handle_t mw_get_control_parent_window(mw_handle_t control_handle)
+mw_handle_t mw_get_control_parent_window_handle(mw_handle_t control_handle)
 {
 	uint8_t control_id;
 

@@ -30,7 +30,7 @@ SOFTWARE.
 
 #include <miniwin.h>
 #include <miniwin_debug.h>
-#include <user/miniwin_config.h>
+#include <user/miniwin_config_template.h>
 
 /****************
 *** CONSTANTS ***

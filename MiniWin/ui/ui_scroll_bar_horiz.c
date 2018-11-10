@@ -77,18 +77,18 @@ static void scroll_bar_horiz_paint_function(mw_handle_t control_handle, const mw
 
 	if (mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_LARGE_SIZE)
 	{
-		narrow_dimension = MW_SCROLL_BAR_LARGE_NARROW_DIMESION;
+		narrow_dimension = MW_SCROLL_BAR_LARGE_NARROW_DIMENSION;
 		slider_size = MW_SCROLL_BAR_LARGE_SLIDER_SIZE;
 	}
 	else
 	{
-		narrow_dimension = MW_SCROLL_BAR_NARROW_DIMESION;
+		narrow_dimension = MW_SCROLL_BAR_NARROW_DIMENSION;
 		slider_size = MW_SCROLL_BAR_SLIDER_SIZE;
 	}
 
 	/* check if there's enough parent client rect height to draw the bar */
-	if (mw_get_window_client_rect(mw_get_control_parent_window(control_handle)).height > narrow_dimension &&
-			mw_get_window_client_rect(mw_get_control_parent_window(control_handle)).width > slider_size)
+	if (mw_get_window_client_rect(mw_get_control_parent_window_handle(control_handle)).height > narrow_dimension &&
+			mw_get_window_client_rect(mw_get_control_parent_window_handle(control_handle)).width > slider_size)
 	{
 		/* draw the bar */
 		mw_gl_set_fill(MW_GL_FILL);
@@ -188,7 +188,7 @@ static void scroll_bar_horiz_message_function(const mw_message_t *message)
 				/* post the control response message */
 				mw_post_message(MW_CONTROL_HORIZ_SCROLL_BAR_SCROLLED_MESSAGE,
 						message->recipient_handle,
-						mw_get_control_parent_window(message->recipient_handle),
+						mw_get_control_parent_window_handle(message->recipient_handle),
 						this_scroll_bar_horiz->scroll_position,
 						MW_UNUSED_MESSAGE_PARAMETER,
 						MW_WINDOW_MESSAGE);
@@ -208,7 +208,7 @@ static void scroll_bar_horiz_message_function(const mw_message_t *message)
 mw_handle_t mw_ui_scroll_bar_horiz_add_new(uint16_t x,
 		uint16_t y,
 		uint16_t width,
-		mw_handle_t parent,
+		mw_handle_t parent_handle,
 		uint32_t flags,
 		mw_ui_scroll_bar_horiz_data_t *scroll_bar_horiz_instance_data)
 {
@@ -216,15 +216,15 @@ mw_handle_t mw_ui_scroll_bar_horiz_add_new(uint16_t x,
 
 	if (flags & MW_CONTROL_FLAG_LARGE_SIZE)
 	{
-		mw_util_set_rect(&r, x, y, width, MW_SCROLL_BAR_LARGE_NARROW_DIMESION);
+		mw_util_set_rect(&r, x, y, width, MW_SCROLL_BAR_LARGE_NARROW_DIMENSION);
 	}
 	else
 	{
-		mw_util_set_rect(&r, x, y, width, MW_SCROLL_BAR_NARROW_DIMESION);
+		mw_util_set_rect(&r, x, y, width, MW_SCROLL_BAR_NARROW_DIMENSION);
 	}
 
 	return mw_add_control(&r,
-			parent,
+			parent_handle,
 			scroll_bar_horiz_paint_function,
 			scroll_bar_horiz_message_function,
 			flags,

@@ -148,7 +148,7 @@ mw_handle_t mw_ui_progress_bar_add_new(uint16_t x,
 		uint16_t y,
 		uint16_t width,
 		uint16_t height,
-		mw_handle_t parent,
+		mw_handle_t parent_handle,
 		uint32_t flags,
 		mw_ui_progress_bar_data_t *progress_bar_instance_data)
 {
@@ -165,7 +165,7 @@ mw_handle_t mw_ui_progress_bar_add_new(uint16_t x,
 	/* no account taken of the MW_CONTROL_FLAG_LARGE_SIZE flag as user sets required size of this control */
 
 	return mw_add_control(&r,
-			parent,
+			parent_handle,
 			progress_bar_paint_function,
 			progress_bar_message_function,
 			flags,

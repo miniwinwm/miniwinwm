@@ -95,7 +95,7 @@
 								<option id="com.atollic.truestudio.common_options.target.instr_set.1897315565" name="Instruction set" superClass="com.atollic.truestudio.common_options.target.instr_set" value="com.atollic.truestudio.common_options.target.instr_set.thumb2" valueType="enumerated"/>
 								<option id="com.atollic.truestudio.common_options.target.fpu.1844006132" name="Floating point" superClass="com.atollic.truestudio.common_options.target.fpu" value="com.atollic.truestudio.common_options.target.fpu.hard" valueType="enumerated"/>
 								<option id="com.atollic.truestudio.common_options.target.fpucore.1906664903" name="FPU" superClass="com.atollic.truestudio.common_options.target.fpucore" value="com.atollic.truestudio.common_options.target.fpucore.fpv4-sp-d16" valueType="enumerated"/>
-								<option id="com.atollic.truestudio.as.general.incpath.1416123299" name="Include path" superClass="com.atollic.truestudio.as.general.incpath"/>
+								<option id="com.atollic.truestudio.as.general.incpath.1416123299" name="Include path" superClass="com.atollic.truestudio.as.general.incpath" valueType="includePath"/>
 								<inputType id="com.atollic.truestudio.as.input.40751779" name="Input" superClass="com.atollic.truestudio.as.input"/>
 							</tool>
 							<tool id="com.atollic.truestudio.exe.debug.toolchain.gcc.135371874" name="C Compiler" superClass="com.atollic.truestudio.exe.debug.toolchain.gcc">
@@ -115,6 +115,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/BSP/CMSIS}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/BSP/Middlewares/FatFs}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/common}&quot;"/>
 								</option>
 								<option id="com.atollic.truestudio.gcc.symbols.defined.728380513" name="Defined symbols" superClass="com.atollic.truestudio.gcc.symbols.defined" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="USE_HAL_DRIVER"/>
@@ -190,8 +191,13 @@
 							<option id="com.atollic.truestudio.general.runtimelib.1992110017.153688442" name="Runtime Library" superClass="com.atollic.truestudio.general.runtimelib.1992110017"/>
 							<option id="com.atollic.truestudio.toolchain_options.mcu.97268930.2076695182" name="Microcontroller" superClass="com.atollic.truestudio.toolchain_options.mcu.97268930"/>
 							<option id="com.atollic.truestudio.toolchain_options.vendor.1431736636.1304219647" name="Vendor name" superClass="com.atollic.truestudio.toolchain_options.vendor.1431736636"/>
-							<tool id="com.atollic.truestudio.exe.debug.toolchain.as.1176633006" name="Assembler" superClass="com.atollic.truestudio.exe.debug.toolchain.as.2146890453"/>
-							<tool id="com.atollic.truestudio.exe.debug.toolchain.gcc.230931471" name="C Compiler" superClass="com.atollic.truestudio.exe.debug.toolchain.gcc.135371874"/>
+							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="com.atollic.truestudio.exe.debug.toolchain.platform" isAbstract="false" name="Debug platform" osList="all" superClass="com.atollic.truestudio.exe.debug.toolchain.platform"/>
+							<tool id="com.atollic.truestudio.exe.debug.toolchain.as.1176633006" name="Assembler" superClass="com.atollic.truestudio.exe.debug.toolchain.as.2146890453">
+								<inputType id="com.atollic.truestudio.as.input.1962390541" name="Input" superClass="com.atollic.truestudio.as.input"/>
+							</tool>
+							<tool id="com.atollic.truestudio.exe.debug.toolchain.gcc.230931471" name="C Compiler" superClass="com.atollic.truestudio.exe.debug.toolchain.gcc.135371874">
+								<inputType id="com.atollic.truestudio.gcc.input.643769074" superClass="com.atollic.truestudio.gcc.input"/>
+							</tool>
 							<tool id="com.atollic.truestudio.exe.debug.toolchain.ld.1971301845" name="C Linker" superClass="com.atollic.truestudio.exe.debug.toolchain.ld.168153942"/>
 							<tool id="com.atollic.truestudio.exe.debug.toolchain.gpp.1487704153" name="C++ Compiler" superClass="com.atollic.truestudio.exe.debug.toolchain.gpp.1788952884"/>
 							<tool id="com.atollic.truestudio.exe.debug.toolchain.ldcc.1938041368" name="C++ Linker" superClass="com.atollic.truestudio.exe.debug.toolchain.ldcc.1078698073"/>

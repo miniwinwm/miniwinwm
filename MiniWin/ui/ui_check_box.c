@@ -176,7 +176,7 @@ static void check_box_message_function(const mw_message_t *message)
 			mw_paint_control(message->recipient_handle);
 			mw_post_message(MW_CHECKBOX_STATE_CHANGE_MESSAGE,
 					message->recipient_handle,
-					mw_get_control_parent_window(message->recipient_handle),
+					mw_get_control_parent_window_handle(message->recipient_handle),
 					this_check_box->checked,
 					MW_UNUSED_MESSAGE_PARAMETER,
 					MW_WINDOW_MESSAGE);
@@ -194,7 +194,7 @@ static void check_box_message_function(const mw_message_t *message)
 
 mw_handle_t mw_ui_check_box_add_new(uint16_t x,
 		uint16_t y,
-		mw_handle_t parent,
+		mw_handle_t parent_handle,
 		uint32_t flags,
 		mw_ui_check_box_data_t *check_box_instance_data)
 {
@@ -210,7 +210,7 @@ mw_handle_t mw_ui_check_box_add_new(uint16_t x,
 	}
 
 	return mw_add_control(&r,
-			parent,
+			parent_handle,
 			check_box_paint_function,
 			check_box_message_function,
 			flags,

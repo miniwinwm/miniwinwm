@@ -155,7 +155,7 @@ static void list_box_paint_function(mw_handle_t control_handle, const mw_gl_draw
 					1,
 					mw_get_control_rect(control_handle).width - 2,
 					row_height * i + 1);
-			mw_gl_set_fg_colour(MW_HAL_LCD_GREY2);
+			mw_gl_set_fg_colour(MW_HAL_LCD_WHITE);
 			mw_gl_vline(draw_info,
 					mw_get_control_rect(control_handle).width - 3,
 					row_height * i + 1,
@@ -321,7 +321,7 @@ static void list_box_message_function(const mw_message_t *message)
 		this_list_box->line_is_selected = false;
 		mw_post_message(MW_LIST_BOX_ITEM_PRESSED_MESSAGE,
 				message->recipient_handle,
-				mw_get_control_parent_window(message->recipient_handle),
+				mw_get_control_parent_window_handle(message->recipient_handle),
 				this_list_box->selection,
 				MW_UNUSED_MESSAGE_PARAMETER,
 				MW_WINDOW_MESSAGE);
@@ -357,7 +357,7 @@ static void list_box_message_function(const mw_message_t *message)
 mw_handle_t mw_ui_list_box_add_new(uint16_t x,
 		uint16_t y,
 		uint16_t width,
-		mw_handle_t parent,
+		mw_handle_t parent_handle,
 		uint32_t flags,
 		mw_ui_list_box_data_t *list_box_instance_data)
 {
@@ -398,7 +398,7 @@ mw_handle_t mw_ui_list_box_add_new(uint16_t x,
 	}
 
 	return mw_add_control(&r,
-			parent,
+			parent_handle,
 			list_box_paint_function,
 			list_box_message_function,
 			flags,

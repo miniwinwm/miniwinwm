@@ -66,7 +66,7 @@ typedef struct
  * @param x The x coordinate of the control relative to parent window client area
  * @param y The y coordinate of the control relative to parent window client area
  * @param width Width of scroll bar containing box
- * @param parent The containing window of this control
+ * @param parent_handle The containing window of this control
  * @param flags General control flags controlling the control
  * @param scroll_bar_horiz_instance_data Instance structure containing horizontal scroll bar specific data items
  * @return The new control's handle
@@ -74,7 +74,7 @@ typedef struct
 mw_handle_t mw_ui_scroll_bar_horiz_add_new(uint16_t x,
 		uint16_t y,
 		uint16_t width,
-		mw_handle_t parent,
+		mw_handle_t parent_handle,
 		uint32_t flags,
 		mw_ui_scroll_bar_horiz_data_t *scroll_bar_horiz_instance_data);
 

@@ -43,6 +43,8 @@ SOFTWARE.
 *** GLOBAL VARIABLES ***
 ***********************/
 
+XEvent event;
+
 /*************************
 *** EXTERNAL VARIABLES ***
 **************************/
@@ -80,6 +82,10 @@ bool mw_hal_touch_get_point(uint16_t* x, uint16_t* y)
     Window child_win;
 	Window root_win;
 
+	if (XCheckMaskEvent(display, KeyPressMask, &event))
+	{
+    	XNextEvent(display, &event);
+    }
     XQueryPointer(display, frame_window, &child_win, &root_win, &root_x, &root_y, &win_x, &win_y, &mask);
 
     if (mask == 256)

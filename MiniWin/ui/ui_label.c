@@ -147,7 +147,7 @@ static void label_message_function(const mw_message_t *message)
 mw_handle_t mw_ui_label_add_new(uint16_t x,
 		uint16_t y,
 		uint16_t width,
-		mw_handle_t parent,
+		mw_handle_t parent_handle,
 		uint32_t flags,
 		mw_ui_label_data_t *label_instance_data)
 {
@@ -163,7 +163,7 @@ mw_handle_t mw_ui_label_add_new(uint16_t x,
 	}
 
 	return mw_add_control(&r,
-			parent,
+			parent_handle,
 			label_paint_function,
 			label_message_function,
 			flags,

@@ -195,7 +195,7 @@ static void arrow_message_function(const mw_message_t *message)
 		this_arrow->arrow_down = false;
 		mw_post_message(MW_ARROW_PRESSED_MESSAGE,
 				message->recipient_handle,
-				mw_get_control_parent_window(message->recipient_handle),
+				mw_get_control_parent_window_handle(message->recipient_handle),
 				this_arrow->mw_ui_arrow_direction,
 				MW_UNUSED_MESSAGE_PARAMETER,
 				MW_WINDOW_MESSAGE);
@@ -210,7 +210,7 @@ static void arrow_message_function(const mw_message_t *message)
 		{
 			mw_post_message(MW_ARROW_PRESSED_MESSAGE,
 					message->recipient_handle,
-					mw_get_control_parent_window(message->recipient_handle),
+					mw_get_control_parent_window_handle(message->recipient_handle),
 					this_arrow->mw_ui_arrow_direction,
 					MW_UNUSED_MESSAGE_PARAMETER,
 					MW_WINDOW_MESSAGE);
@@ -239,7 +239,7 @@ static void arrow_message_function(const mw_message_t *message)
 
 mw_handle_t mw_ui_arrow_add_new(uint16_t x,
 		uint16_t y,
-		mw_handle_t parent,
+		mw_handle_t parent_handle,
 		uint32_t flags,
 		mw_ui_arrow_data_t *arrow_instance_data)
 {
@@ -255,7 +255,7 @@ mw_handle_t mw_ui_arrow_add_new(uint16_t x,
 	}
 
 	return mw_add_control(&r,
-			parent,
+			parent_handle,
 			arrow_paint_function,
 			arrow_message_function,
 			flags,

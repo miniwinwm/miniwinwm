@@ -45,7 +45,7 @@ SOFTWARE.
 #ifdef NDEBUG
 #define MW_ASSERT(test)
 #else
-#define MW_ASSERT(expression, message) mw_debug_print_assert(expression,__func__, __LINE__, message)
+#define MW_ASSERT(expression, message) mw_debug_print_assert(expression, __func__, __LINE__, message)
 #endif
 
 /************

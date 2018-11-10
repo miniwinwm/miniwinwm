@@ -30,7 +30,7 @@ SOFTWARE.
 
 #include <string.h>
 #include <math.h>
-#include "user/miniwin_config.h"
+#include <user/miniwin_config_template.h>
 #include "miniwin_debug.h"
 #include "hal/hal_delay.h"
 #include "gl/gl.h"
