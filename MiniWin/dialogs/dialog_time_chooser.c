@@ -55,7 +55,7 @@ typedef struct
 	mw_handle_t arrow_hour_up_handle;				/**< Control handle of hour up button */
 	mw_handle_t arrow_hour_down_handle;				/**< Control handle of hour down button */
 	mw_handle_t arrow_minute_down_handle;			/**< Control handle of minute down button */
-	mw_handle_t response_window_handle;				/**< Window handle to send response message to */
+	mw_handle_t owner_window_handle;				/**< Window handle to send response message to */
 	mw_handle_t time_chooser_dialog_window_handle;	/**< Window handle to time chooser dialog */
 	mw_handle_t arrow_minute_up_handle;				/**< Control handle of minute up button */
 	mw_ui_button_data_t button_ok_data;				/**< Instance data of ok button */
@@ -257,7 +257,7 @@ static void mw_dialog_time_chooser_message_function(const mw_message_t *message)
 			/* post ok response to receiving window */
 			mw_post_message(MW_DIALOG_TIME_CHOOSER_OK_MESSAGE,
 					MW_UNUSED_MESSAGE_PARAMETER,
-					mw_dialog_time_chooser_data.response_window_handle,
+					mw_dialog_time_chooser_data.owner_window_handle,
 					(uint32_t)(mw_dialog_time_chooser_data.current_time_hours << 8 |
 						mw_dialog_time_chooser_data.current_time_mins),
 					MW_UNUSED_MESSAGE_PARAMETER,
@@ -268,7 +268,7 @@ static void mw_dialog_time_chooser_message_function(const mw_message_t *message)
 			/* post cancel response to receiving window */
 			mw_post_message(MW_DIALOG_TIME_CHOOSER_CANCEL_MESSAGE,
 					MW_UNUSED_MESSAGE_PARAMETER,
-					mw_dialog_time_chooser_data.response_window_handle,
+					mw_dialog_time_chooser_data.owner_window_handle,
 					MW_UNUSED_MESSAGE_PARAMETER,
 					MW_UNUSED_MESSAGE_PARAMETER,
 					MW_WINDOW_MESSAGE);
@@ -296,10 +296,9 @@ mw_handle_t mw_create_window_dialog_time_chooser(uint16_t x,
 		uint8_t start_time_hour,
 		uint8_t start_time_minute,
 		bool large_size,
-		mw_handle_t response_window_handle)
+		mw_handle_t owner_window_handle)
 {
 	mw_util_rect_t rect;
-
 
 	/* check the start time */
 	if (start_time_hour > 23 || start_time_minute > 59)
@@ -337,14 +336,14 @@ mw_handle_t mw_create_window_dialog_time_chooser(uint16_t x,
 		return MW_INVALID_HANDLE;
 	}
 
-	/* check response window handle */
-	if (!mw_is_window_handle_valid(response_window_handle))
+	/* check parent window handle */
+	if (!mw_is_window_handle_valid(owner_window_handle))
 	{
 		return MW_INVALID_HANDLE;
 	}
 
 	mw_dialog_time_chooser_data.large_size = large_size;
-	mw_dialog_time_chooser_data.response_window_handle = response_window_handle;
+	mw_dialog_time_chooser_data.owner_window_handle = owner_window_handle;
 	rect.x = x;
 	rect.y = y;
 
@@ -468,9 +467,12 @@ mw_handle_t mw_create_window_dialog_time_chooser(uint16_t x,
 	/* set arrow enable states appropriately */
 	update_arrow_enable_states();
 
-	/* a window has changed visibility so repaint all */
-	mw_paint_all();
+	/* owner window needs its title bar redrawing */
+	mw_paint_window_frame(owner_window_handle, MW_WINDOW_FRAME_COMPONENT_TITLE_BAR);
+
+	/* this window needs painting; it is coming up at the front so paint only this one */
+	mw_paint_window_frame(mw_dialog_time_chooser_data.time_chooser_dialog_window_handle, MW_WINDOW_FRAME_COMPONENT_ALL);
+	mw_paint_window_client(mw_dialog_time_chooser_data.time_chooser_dialog_window_handle);
 
 	return mw_dialog_time_chooser_data.time_chooser_dialog_window_handle;
 }
-

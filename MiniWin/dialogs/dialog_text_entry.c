@@ -51,7 +51,7 @@ typedef struct
 	mw_handle_t keyboard_handle;					/**< Keyboard control handle */
 	mw_handle_t button_ok_handle;					/**< Control handle of ok button */
 	mw_handle_t button_cancel_handle;				/**< Control handle of cancel button */
-	mw_handle_t response_window_handle;				 /**< Window handle to send response message to */
+	mw_handle_t owner_window_handle;				 /**< Window handle to send response message to */
 	mw_handle_t text_entry_dialog_window_handle;	/**< Handle of text entry dialog window */
 	mw_util_rect_t cursor_rect;						/**< Rect of cursor in window coordinates */
 	mw_ui_button_data_t button_ok_data;				/**< Instance data of ok button */
@@ -276,6 +276,11 @@ static void mw_dialog_text_entry_message_function(const mw_message_t *message)
 				}
 			}
 
+			/* update enabled state of ok button */
+			mw_set_control_enabled(mw_dialog_text_entry_data.button_ok_handle, strlen(mw_dialog_text_entry_data.text_buffer) > 0);
+			mw_paint_control(mw_dialog_text_entry_data.button_ok_handle);
+
+			/* repaint cursor */
 			mw_dialog_text_entry_data.cursor_rect.x = get_cursor_x_coordinate();
 			mw_paint_window_client_rect(message->recipient_handle, &text_display_rect);
 		}
@@ -290,7 +295,7 @@ static void mw_dialog_text_entry_message_function(const mw_message_t *message)
 			/* post cancel response to receiving window */
 			mw_post_message(MW_DIALOG_TEXT_ENTRY_CANCEL_MESSAGE,
 					MW_UNUSED_MESSAGE_PARAMETER,
-					mw_dialog_text_entry_data.response_window_handle,
+					mw_dialog_text_entry_data.owner_window_handle,
 					MW_UNUSED_MESSAGE_PARAMETER,
 					MW_UNUSED_MESSAGE_PARAMETER,
 					MW_WINDOW_MESSAGE);
@@ -300,7 +305,7 @@ static void mw_dialog_text_entry_message_function(const mw_message_t *message)
 			/* post ok response to receiving window */
 			mw_post_message(MW_DIALOG_TEXT_ENTRY_OK_MESSAGE,
 					MW_UNUSED_MESSAGE_PARAMETER,
-					mw_dialog_text_entry_data.response_window_handle,
+					mw_dialog_text_entry_data.owner_window_handle,
 					MW_UNUSED_MESSAGE_PARAMETER,
 					(void *)mw_dialog_text_entry_data.text_buffer,
 					MW_WINDOW_MESSAGE);
@@ -323,7 +328,7 @@ mw_handle_t mw_create_window_dialog_text_entry(uint16_t x,
 		uint16_t y,
 		char *title,
 		char *initial_text,
-		mw_handle_t response_window_handle)
+		mw_handle_t owner_window_handle)
 {
 	mw_util_rect_t rect;
 
@@ -354,12 +359,12 @@ mw_handle_t mw_create_window_dialog_text_entry(uint16_t x,
 	}
 
 	/* check response window handle */
-	if (!mw_is_window_handle_valid(response_window_handle))
+	if (!mw_is_window_handle_valid(owner_window_handle))
 	{
 		return MW_INVALID_HANDLE;
 	}
 
-	mw_dialog_text_entry_data.response_window_handle = response_window_handle;
+	mw_dialog_text_entry_data.owner_window_handle = owner_window_handle;
 	rect.x = x;
 	rect.y = y;
 
@@ -396,7 +401,7 @@ mw_handle_t mw_create_window_dialog_text_entry(uint16_t x,
 	mw_dialog_text_entry_data.button_ok_handle = mw_ui_button_add_new(25,
 			90,
 			mw_dialog_text_entry_data.text_entry_dialog_window_handle,
-			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
+			MW_CONTROL_FLAG_IS_VISIBLE,
 			&mw_dialog_text_entry_data.button_ok_data);
 
 	mw_dialog_text_entry_data.button_cancel_handle = mw_ui_button_add_new(156,
@@ -418,6 +423,9 @@ mw_handle_t mw_create_window_dialog_text_entry(uint16_t x,
 
 	/* set initial text */
 	mw_util_safe_strcpy(mw_dialog_text_entry_data.text_buffer, MW_DIALOG_MAX_TEXT_LENGTH + 1, initial_text);
+
+	/* owner window needs its title bar redrawing */
+	mw_paint_window_frame(owner_window_handle, MW_WINDOW_FRAME_COMPONENT_TITLE_BAR);
 
 	/* this window needs painting; it is coming up at the front so paint only this one */
 	mw_paint_window_frame(mw_dialog_text_entry_data.text_entry_dialog_window_handle, MW_WINDOW_FRAME_COMPONENT_ALL);

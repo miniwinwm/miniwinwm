@@ -60,7 +60,7 @@ SOFTWARE.
  * @param enable_negative If the negative sign is enabled on the keypad
  * @param initial_number The number to show the dialog with at start-up
  * @param large_size If to create the dialog at large size
- * @param response_window_handle Handle of the window that the response message is posted to when the dialog is dismissed
+ * @param owner_window_handle Handle of the window that created this dialog and to which the response will be sent
  * @return Handle of the window used for the dialog which is only valid while the dialog is showing
  * @note There must be space in the window array for one new window and space in the control array
  *       for one new control. These resources are released when the dialog is dismissed.
@@ -77,7 +77,7 @@ SOFTWARE.
 		bool enable_negative,
 		int32_t initial_number,
 		bool large_size,
-		mw_handle_t response_window_handle);
+		mw_handle_t owner_window_handle);
 
 #ifdef __cplusplus
 }

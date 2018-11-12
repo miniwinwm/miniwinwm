@@ -30,6 +30,7 @@
 								<option id="com.atollic.pctools.gnu.c.compiler.option.include.paths.36190373" name="Include paths (-I)" superClass="com.atollic.pctools.gnu.c.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MiniWinSimple_Linux/src}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MiniWinSimple_Linux/MiniWin}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MiniWinSimple_Linux/common}&quot;"/>
 								</option>
 								<inputType id="com.atollic.managedbuild.pctools.gnu.c.compiler.input.1416853047" superClass="com.atollic.managedbuild.pctools.gnu.c.compiler.input"/>
 							</tool>

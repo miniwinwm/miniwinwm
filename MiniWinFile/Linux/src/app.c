@@ -199,6 +199,11 @@ uint8_t find_folder_entries(char* path,
 			if (directory_entry->d_type == DT_REG)
 			{
 				/* it is a file */
+				if (folders_only)
+				{
+					continue;
+				}
+
 	            list_box_settings_entries[i].icon = file_entry_icon;
 	            mw_util_safe_strcpy(list_box_settings_entries[i].label, MAX_FILENAME_LENGTH + 1, directory_entry->d_name);
 				i++;
@@ -206,10 +211,6 @@ uint8_t find_folder_entries(char* path,
 			else if (directory_entry->d_type == DT_DIR)
 			{
 				/* it is a folder */
-				if (folders_only)
-				{
-					continue;
-				}
 				if (strcmp(directory_entry->d_name, ".") == 0)
 				{
 					continue;

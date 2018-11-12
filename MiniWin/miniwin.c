@@ -1033,7 +1033,7 @@ static mw_handle_t find_window_point_is_in(int16_t touch_x, int16_t touch_y)
  * @param window_handle The window to check controls for
  * @param point_x The x coordinate of the point
  * @param point_y The y coordinate of the point
- * @return The control handle if a control was found else MW_MAX_CONTROL_COUNT
+ * @return The control handle if a control was found else MW_INVALID_HANDLE
  */
 static mw_handle_t find_control_point_is_in(mw_handle_t window_handle, int16_t point_x, int16_t point_y)
 {
@@ -1050,10 +1050,9 @@ static mw_handle_t find_control_point_is_in(mw_handle_t window_handle, int16_t p
 			continue;
 		}
 
-		/* check next control's rect, enabled and visibility */
+		/* check next control's rect and visibility */
 		if (mw_util_is_point_in_rect(&mw_all_controls[i].control_rect, point_x, point_y) &&
-				(mw_all_controls[i].control_flags & MW_CONTROL_FLAG_IS_VISIBLE) &&
-				(mw_all_controls[i].control_flags & MW_CONTROL_FLAG_IS_ENABLED))
+				(mw_all_controls[i].control_flags & MW_CONTROL_FLAG_IS_VISIBLE))
 		{
 			/* a control has been identified that this touch message occurred in */
 			control_found = mw_all_controls[i].control_handle;
@@ -1455,7 +1454,7 @@ static void draw_titlebar_text(mw_handle_t window_handle, const mw_gl_draw_info_
 	mw_gl_set_bg_transparency(MW_GL_BG_TRANSPARENT);
 	mw_gl_set_text_rotation(MW_GL_TEXT_ROTATION_0);
 	mw_gl_set_font(MW_GL_TITLE_FONT);
-	if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_MODAL)
+	if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_MODAL || window_handle != window_with_focus_handle)
 	{
 		mw_gl_string(draw_info, MW_MODAL_TITLE_X_OFFSET, MW_TITLE_Y_OFFSET, mw_all_windows[window_id].title);
 	}
@@ -3186,16 +3185,21 @@ static window_redimensioning_state_t process_touch_event(void)
 	/* check if touch was identified to have occurred in a control */
 	if (control_to_receive_message_id < MW_MAX_CONTROL_COUNT)
 	{
-		/* touch occurred in a control so send touch message to that control */
-		client_x = touch_x - mw_all_controls[control_to_receive_message_id].control_rect.x;
-		client_y = touch_y - mw_all_controls[control_to_receive_message_id].control_rect.y;
+		/* only send message to control if it is enabled */
+		if (mw_all_controls[control_to_receive_message_id].control_flags & MW_CONTROL_FLAG_IS_ENABLED)
+		{
+			/* touch occurred in a control so send touch message to that control */
+			client_x = touch_x - mw_all_controls[control_to_receive_message_id].control_rect.x;
+			client_y = touch_y - mw_all_controls[control_to_receive_message_id].control_rect.y;
 
-		mw_post_message(touch_message,
-				MW_UNUSED_MESSAGE_PARAMETER,
-				mw_all_controls[control_to_receive_message_id].control_handle,
-				(((uint32_t)client_x) << 16) | client_y,
-				MW_UNUSED_MESSAGE_PARAMETER,
-				MW_CONTROL_MESSAGE);
+			mw_post_message(touch_message,
+					MW_UNUSED_MESSAGE_PARAMETER,
+					mw_all_controls[control_to_receive_message_id].control_handle,
+					(((uint32_t)client_x) << 16) | client_y,
+					MW_UNUSED_MESSAGE_PARAMETER,
+					MW_CONTROL_MESSAGE);
+		}
+
 		return window_redimensioning_state;
 	}
 

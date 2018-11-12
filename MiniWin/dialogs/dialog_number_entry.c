@@ -54,7 +54,7 @@ typedef struct
 	mw_handle_t keypad_handle;						/**< Keypad control handle */
 	mw_handle_t button_ok_handle;					/**< Control handle of ok button */
 	mw_handle_t button_cancel_handle;				/**< Control handle of cancel button */
-	mw_handle_t response_window_handle;				/**< Window handle to send response message to */
+	mw_handle_t owner_window_handle;				/**< Window handle to send response message to */
 	mw_handle_t number_entry_dialog_window_handle;	/**< Handle of number entry dialog window */
 	mw_util_rect_t cursor_rect;						/**< Rect of cursor in window coordinates */
 	mw_ui_keypad_data_t mw_ui_keypad_data;			/**< Keypad control instance data */
@@ -358,7 +358,7 @@ static void mw_dialog_number_entry_message_function(const mw_message_t *message)
 				/* post cancel response to receiving window */
 				mw_post_message(MW_DIALOG_NUMBER_ENTRY_CANCEL_MESSAGE,
 						MW_UNUSED_MESSAGE_PARAMETER,
-						mw_dialog_number_entry_data.response_window_handle,
+						mw_dialog_number_entry_data.owner_window_handle,
 						MW_UNUSED_MESSAGE_PARAMETER,
 						MW_UNUSED_MESSAGE_PARAMETER,
 						MW_WINDOW_MESSAGE);
@@ -376,7 +376,7 @@ static void mw_dialog_number_entry_message_function(const mw_message_t *message)
 				}
 				mw_post_message(MW_DIALOG_NUMBER_ENTRY_OK_MESSAGE,
 						MW_UNUSED_MESSAGE_PARAMETER,
-						mw_dialog_number_entry_data.response_window_handle,
+						mw_dialog_number_entry_data.owner_window_handle,
 						MW_UNUSED_MESSAGE_PARAMETER,
 						(void *)mw_dialog_number_entry_data.number_buffer,
 						MW_WINDOW_MESSAGE);
@@ -402,7 +402,7 @@ mw_handle_t mw_create_window_dialog_number_entry(uint16_t x,
 		bool enable_negative,
 		int32_t initial_number,
 		bool large_size,
-		mw_handle_t response_window_handle)
+		mw_handle_t owner_window_handle)
 {
 	mw_util_rect_t rect;
 
@@ -451,12 +451,12 @@ mw_handle_t mw_create_window_dialog_number_entry(uint16_t x,
 	}
 
 	/* check response window handle */
-	if (!mw_is_window_handle_valid(response_window_handle))
+	if (!mw_is_window_handle_valid(owner_window_handle))
 	{
 		return MW_INVALID_HANDLE;
 	}
 
-	mw_dialog_number_entry_data.response_window_handle = response_window_handle;
+	mw_dialog_number_entry_data.owner_window_handle = owner_window_handle;
 
 	mw_dialog_number_entry_data.number_entry_dialog_window_handle = mw_add_window(&rect,
 			title,
@@ -543,6 +543,9 @@ mw_handle_t mw_create_window_dialog_number_entry(uint16_t x,
 	}
 	sprintf(mw_dialog_number_entry_data.number_buffer, "%u", (unsigned int)initial_number);
 	mw_dialog_number_entry_data.large_size = large_size;
+
+	/* owner window needs its title bar redrawing */
+	mw_paint_window_frame(owner_window_handle, MW_WINDOW_FRAME_COMPONENT_TITLE_BAR);
 
 	/* this window needs painting; it is coming up at the front so paint only this one */
 	mw_paint_window_frame(mw_dialog_number_entry_data.number_entry_dialog_window_handle, MW_WINDOW_FRAME_COMPONENT_ALL);

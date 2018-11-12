@@ -30,8 +30,9 @@
 								<option id="com.atollic.pctools.gnu.c.compiler.option.include.paths.705432951" name="Include paths (-I)" superClass="com.atollic.pctools.gnu.c.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MiniWinFile_Linux/src}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MiniWinFile_Linux/MiniWin}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MiniWinFile_Linux/common}&quot;"/>
 								</option>
-								<option id="com.atollic.pctools.gnu.c.compiler.option.preprocessor.def.symbols.1863000500" name="Defined symbols (-D)" superClass="com.atollic.pctools.gnu.c.compiler.option.preprocessor.def.symbols" useByScannerDiscovery="false" valueType="definedSymbols"/>
+								<option id="com.atollic.pctools.gnu.c.compiler.option.preprocessor.def.symbols.1863000500" name="Defined symbols (-D)" superClass="com.atollic.pctools.gnu.c.compiler.option.preprocessor.def.symbols" useByScannerDiscovery="false"/>
 								<inputType id="com.atollic.managedbuild.pctools.gnu.c.compiler.input.721889946" superClass="com.atollic.managedbuild.pctools.gnu.c.compiler.input"/>
 							</tool>
 							<tool id="com.atollic.managedbuild.pctools.gnu.c.linker.exe.debug.972017829" name="C Linker" superClass="com.atollic.managedbuild.pctools.gnu.c.linker.exe.debug">

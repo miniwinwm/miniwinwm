@@ -58,7 +58,7 @@ SOFTWARE.
  * @param start_date_month Month of year of date to show on startup, 1 to 12
  * @param start_date_year Year of date to show on startup, 4 digit format
  * @param large_size true for large size controls/text, false for small
- * @param response_window_handle Handle of the window that the response message is posted to when the dialog is dismissed
+ * @param owner_window_handle Handle of the window that created this dialog and to which the response will be sent
  * @return The window handle of the window used for the dialog which is only valid while the dialog is showing
  * @note There must be space in the window array for one new window and space in the control array
  *       for one new control. These resources are released when the dialog is dismissed.
@@ -72,7 +72,7 @@ SOFTWARE.
 		uint8_t start_date_month,
 		uint16_t start_date_year,
 		bool large_size,
-		mw_handle_t response_window_handle);
+		mw_handle_t owner_window_handle);
 
 #ifdef __cplusplus
 }

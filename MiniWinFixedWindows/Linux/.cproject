@@ -30,6 +30,7 @@
 								<option id="com.atollic.pctools.gnu.c.compiler.option.include.paths.306579457" name="Include paths (-I)" superClass="com.atollic.pctools.gnu.c.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MiniWinFixedWindows_Linux/src}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MiniWinFixedWindows_Linux/MiniWin}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MiniWinFixedWindows_Linux/common}&quot;"/>
 								</option>
 								<inputType id="com.atollic.managedbuild.pctools.gnu.c.compiler.input.659784726" superClass="com.atollic.managedbuild.pctools.gnu.c.compiler.input"/>
 							</tool>
@@ -48,16 +49,6 @@
 							<tool id="com.atollic.managedbuild.pctools.gnu.assembler.exe.debug.1782337968" name="Assembler" superClass="com.atollic.managedbuild.pctools.gnu.assembler.exe.debug">
 								<inputType id="com.atollic.managedbuild.pctools.gnu.assembler.input.1496233800" superClass="com.atollic.managedbuild.pctools.gnu.assembler.input"/>
 							</tool>
-						</toolChain>
-					</folderInfo>
-					<folderInfo id="com.atollic.managedbuild.pctools.config.gnu.exe.debug.1056447566.1130047537" name="/" resourcePath="MiniWin/hal/windows">
-						<toolChain id="com.atollic.managedbuild.pctoolschain.gnu.exe.debug.826545958" name="Atollic Linux PC Tools" superClass="com.atollic.managedbuild.pctoolschain.gnu.exe.debug" unusedChildren="">
-							<tool id="com.atollic.managedbuild.pctools.gnu.archiver.base.1823049904" name="Archiver" superClass="com.atollic.managedbuild.pctools.gnu.archiver.base.926165558"/>
-							<tool id="com.atollic.managedbuild.pctools.gnu.cpp.compiler.exe.debug.904080948" name="C++ Compiler" superClass="com.atollic.managedbuild.pctools.gnu.cpp.compiler.exe.debug.1597546975"/>
-							<tool id="com.atollic.managedbuild.pctools.gnu.c.compiler.exe.debug.1190949370" name="C Compiler" superClass="com.atollic.managedbuild.pctools.gnu.c.compiler.exe.debug.1446559075"/>
-							<tool id="com.atollic.managedbuild.pctools.gnu.c.linker.exe.debug.2102213143" name="C Linker" superClass="com.atollic.managedbuild.pctools.gnu.c.linker.exe.debug.98097386"/>
-							<tool id="com.atollic.managedbuild.pctools.gnu.cpp.linker.exe.debug.606657756" name="C++ Linker" superClass="com.atollic.managedbuild.pctools.gnu.cpp.linker.exe.debug.1526880817"/>
-							<tool id="com.atollic.managedbuild.pctools.gnu.assembler.exe.debug.1049521357" name="Assembler" superClass="com.atollic.managedbuild.pctools.gnu.assembler.exe.debug.1782337968"/>
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>

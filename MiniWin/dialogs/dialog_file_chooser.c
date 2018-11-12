@@ -56,7 +56,7 @@ typedef struct
 	mw_handle_t arrow_file_down_handle;								/**< Control handle of down arrow */
 	mw_handle_t arrow_file_back_handle;								/**< Control handle of back arrow, to parent folder */
 	mw_handle_t label_choice_handle;								/**< Control handle of choice label */
-	mw_handle_t response_window_handle;								/**< Handle to send response message to */
+	mw_handle_t owner_window_handle;								/**< Handle to send response message to */
 	mw_handle_t file_chooser_dialog_window_handle;					/**< Handle of file chooser dialog window */
 	uint8_t lines_to_scroll;										/**< Number of lines list box is scrolled */
 	uint8_t folder_depth;											/**< Root is zero, increments for every sub-folder */
@@ -252,7 +252,7 @@ static void mw_dialog_file_chooser_message_function(const mw_message_t *message)
 				/* post cancel response to receiving window */
 				mw_post_message(MW_DIALOG_FILE_CHOOSER_CANCEL_MESSAGE,
 						MW_UNUSED_MESSAGE_PARAMETER,
-						mw_dialog_file_chooser_data.response_window_handle,
+						mw_dialog_file_chooser_data.owner_window_handle,
 						MW_UNUSED_MESSAGE_PARAMETER,
 						MW_UNUSED_MESSAGE_PARAMETER,
 						MW_WINDOW_MESSAGE);
@@ -265,7 +265,7 @@ static void mw_dialog_file_chooser_message_function(const mw_message_t *message)
 					/* post folder ok response to receiving window */
 					mw_post_message(MW_DIALOG_FILE_CHOOSER_FOLDER_OK_MESSAGE,
 							MW_UNUSED_MESSAGE_PARAMETER,
-							mw_dialog_file_chooser_data.response_window_handle,
+							mw_dialog_file_chooser_data.owner_window_handle,
 							MW_UNUSED_MESSAGE_PARAMETER,
 							(void *)mw_dialog_file_chooser_data.folder_path,
 							MW_WINDOW_MESSAGE);
@@ -280,6 +280,7 @@ static void mw_dialog_file_chooser_message_function(const mw_message_t *message)
 								"/");
 					}
 
+					/* add the file name */
 					mw_util_safe_strcat(mw_dialog_file_chooser_data.folder_path,
 							MAX_FOLDER_AND_FILENAME_LENGTH,
 							mw_dialog_file_chooser_data.list_box_file_data.list_box_entries[mw_dialog_file_chooser_data.list_box_file_data.selection].label);
@@ -287,7 +288,7 @@ static void mw_dialog_file_chooser_message_function(const mw_message_t *message)
 					/* post file ok response to receiving window */
 					mw_post_message(MW_DIALOG_FILE_CHOOSER_FILE_OK_MESSAGE,
 							MW_UNUSED_MESSAGE_PARAMETER,
-							mw_dialog_file_chooser_data.response_window_handle,
+							mw_dialog_file_chooser_data.owner_window_handle,
 							MW_UNUSED_MESSAGE_PARAMETER,
 							(void *)mw_dialog_file_chooser_data.folder_path,
 							MW_WINDOW_MESSAGE);
@@ -373,6 +374,17 @@ static void mw_dialog_file_chooser_message_function(const mw_message_t *message)
 						MW_CONTROL_MESSAGE);
 				mw_paint_control(mw_dialog_file_chooser_data.label_choice_handle);
 			}
+
+			/* new folder so grey out ok button and reset label if choosing a file */
+			if (!mw_dialog_file_chooser_data.folders_only)
+			{
+				mw_set_control_enabled(mw_dialog_file_chooser_data.button_ok_handle, false);
+				mw_paint_control(mw_dialog_file_chooser_data.button_ok_handle);
+				mw_util_safe_strcpy(mw_dialog_file_chooser_data.label_choice_data.label,
+						MW_UI_LABEL_MAX_CHARS,
+						"No File");
+				mw_paint_control(mw_dialog_file_chooser_data.label_choice_handle);
+			}
 		}
 		break;
 
@@ -386,6 +398,17 @@ static void mw_dialog_file_chooser_message_function(const mw_message_t *message)
 					(mw_dialog_file_chooser_data.list_box_file_data.list_box_entries[item_chosen].icon ==
 					mw_bitmaps_folder_icon_small && !mw_dialog_file_chooser_data.large_size))
 			{
+				/* new folder so grey out ok button and reset label if choosing a file */
+				if (!mw_dialog_file_chooser_data.folders_only)
+				{
+					mw_util_safe_strcpy(mw_dialog_file_chooser_data.label_choice_data.label,
+							MW_UI_LABEL_MAX_CHARS,
+							"No File");
+					mw_paint_control(mw_dialog_file_chooser_data.label_choice_handle);
+					mw_set_control_enabled(mw_dialog_file_chooser_data.button_ok_handle, false);
+					mw_paint_control(mw_dialog_file_chooser_data.button_ok_handle);
+				}
+
 				/* change folder to list_box_file_data.list_box_entries[item_chosen].label
 				 * create new folder path by adding / and then the sub-folder name, but don't add /
 				 * to root folder path as it ends in / already
@@ -434,6 +457,10 @@ static void mw_dialog_file_chooser_message_function(const mw_message_t *message)
 					(mw_dialog_file_chooser_data.list_box_file_data.list_box_entries[item_chosen].icon ==
 					mw_bitmaps_file_icon_small && !mw_dialog_file_chooser_data.large_size))
 			{
+				/* new file chosen so enable ok button */
+				mw_set_control_enabled(mw_dialog_file_chooser_data.button_ok_handle, true);
+				mw_paint_control(mw_dialog_file_chooser_data.button_ok_handle);
+
 				/* file chosen, update label with name of file chosen */
 				mw_post_message(MW_LABEL_SET_LABEL_TEXT_MESSAGE,
 						message->recipient_handle,
@@ -461,7 +488,7 @@ mw_handle_t mw_create_window_dialog_file_chooser(uint16_t x,
 		char *start_path,
 		bool folders_only,
 		bool large_size,
-		mw_handle_t response_window_handle)
+		mw_handle_t owner_window_handle)
 {
 	mw_util_rect_t rect;
 	uint8_t i;
@@ -496,13 +523,13 @@ mw_handle_t mw_create_window_dialog_file_chooser(uint16_t x,
 	}
 
 	/* check response window handle */
-	if (!mw_is_window_handle_valid(response_window_handle))
+	if (!mw_is_window_handle_valid(owner_window_handle))
 	{
 		return MW_INVALID_HANDLE;
 	}
 
 	mw_dialog_file_chooser_data.large_size = large_size;
-	mw_dialog_file_chooser_data.response_window_handle = response_window_handle;
+	mw_dialog_file_chooser_data.owner_window_handle = owner_window_handle;
 	rect.x = x;
 	rect.y = y;
 
@@ -628,7 +655,7 @@ mw_handle_t mw_create_window_dialog_file_chooser(uint16_t x,
 		mw_dialog_file_chooser_data.button_ok_handle = mw_ui_button_add_new(5,
 				97,
 				mw_dialog_file_chooser_data.file_chooser_dialog_window_handle,
-				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
+				MW_CONTROL_FLAG_IS_VISIBLE,
 				&mw_dialog_file_chooser_data.button_ok_data);
 
 		mw_dialog_file_chooser_data.button_cancel_handle = mw_ui_button_add_new(95,
@@ -675,6 +702,15 @@ mw_handle_t mw_create_window_dialog_file_chooser(uint16_t x,
 	/* set list box entries pointer to windows entries array and entry count to 0 */
 	mw_dialog_file_chooser_data.list_box_file_data.list_box_entries = mw_dialog_file_chooser_data.file_entries;
 	mw_dialog_file_chooser_data.list_box_file_data.number_of_items = 0;
+
+	/* set up enabled state of ok button, always enabled if choosing a folder */
+	if (folders_only)
+	{
+		mw_set_control_enabled(mw_dialog_file_chooser_data.button_ok_handle, true);
+	}
+
+	/* owner window needs its title bar redrawing */
+	mw_paint_window_frame(owner_window_handle, MW_WINDOW_FRAME_COMPONENT_TITLE_BAR);
 
 	/* this window needs painting; it is coming up at the front so paint only this one */
 	mw_paint_window_frame(mw_dialog_file_chooser_data.file_chooser_dialog_window_handle, MW_WINDOW_FRAME_COMPONENT_ALL);

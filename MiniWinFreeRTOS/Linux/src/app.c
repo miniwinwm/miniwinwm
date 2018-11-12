@@ -38,8 +38,6 @@ SOFTWARE.
 *** CONSTANTS ***
 ****************/
 
-#define CAPS_LOCK 	2
-#define NUM_LOCK 	16
 #define SCROLL_LOCK 1
 
 /************
@@ -121,10 +119,7 @@ static void setLeds(int32_t leds)
     XKeyboardControl values;
 
     values.led_mode = leds & SCROLL_LOCK ? LedModeOn : LedModeOff;
-    values.led = 3;
     XChangeKeyboardControl(display, KBLedMode, &values);
-    XkbLockModifiers(display, XkbUseCoreKbd, CAPS_LOCK | NUM_LOCK, leds & (CAPS_LOCK | NUM_LOCK));
-    XFlush(display);
 }
 
 void app_main_loop_process(void)

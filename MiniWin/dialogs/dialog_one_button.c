@@ -47,7 +47,7 @@ SOFTWARE.
 typedef struct
 {
 	mw_handle_t button_handle;						/**< Control handle of button */
-	mw_handle_t response_window_handle;				/**< Window handle to send response message to */
+	mw_handle_t owner_window_handle;				/**< Window handle to send response message to */
 	mw_handle_t one_button_dialog_window_handle;	/**< Handle of one button dialog window */
 	char *message;									/**< Text to display in dialog */
 	mw_ui_button_data_t button_data;				/**< Instance data of button */
@@ -143,7 +143,7 @@ static void mw_dialog_one_button_message_function(const mw_message_t *message)
 		/* post response to receiving window */
 		mw_post_message(MW_DIALOG_ONE_BUTTON_DISMISSED_MESSAGE,
 				MW_UNUSED_MESSAGE_PARAMETER,
-				mw_dialog_one_button_data.response_window_handle,
+				mw_dialog_one_button_data.owner_window_handle,
 				MW_UNUSED_MESSAGE_PARAMETER,
 				MW_UNUSED_MESSAGE_PARAMETER,
 				MW_WINDOW_MESSAGE);
@@ -168,7 +168,7 @@ mw_handle_t mw_create_window_dialog_one_button(uint16_t x,
 		char *message,
 		char *button_label,
 		bool large_size,
-		mw_handle_t response_window_handle)
+		mw_handle_t owner_window_handle)
 {
 	mw_util_rect_t rect;
 	uint16_t window_client_width;
@@ -215,14 +215,14 @@ mw_handle_t mw_create_window_dialog_one_button(uint16_t x,
 	}
 
 	/* check response window handle */
-	if (!mw_is_window_handle_valid(response_window_handle))
+	if (!mw_is_window_handle_valid(owner_window_handle))
 	{
 		return MW_INVALID_HANDLE;
 	}
 
 	mw_dialog_one_button_data.large_size = large_size;
 	mw_dialog_one_button_data.message = message;
-	mw_dialog_one_button_data.response_window_handle = response_window_handle;
+	mw_dialog_one_button_data.owner_window_handle = owner_window_handle;
 	rect.x = x;
 	rect.y = y;
 	rect.width = width;
@@ -277,6 +277,9 @@ mw_handle_t mw_create_window_dialog_one_button(uint16_t x,
 
 		return MW_INVALID_HANDLE;
 	}
+
+	/* owner window needs its title bar redrawing */
+	mw_paint_window_frame(owner_window_handle, MW_WINDOW_FRAME_COMPONENT_TITLE_BAR);
 
 	/* this window needs painting; it is coming up at the front so paint only this one */
 	mw_paint_window_frame(mw_dialog_one_button_data.one_button_dialog_window_handle, MW_WINDOW_FRAME_COMPONENT_ALL);

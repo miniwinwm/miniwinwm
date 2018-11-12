@@ -57,7 +57,7 @@ SOFTWARE.
  * @param start_time_hour Start time hour to show when dialog is displayed
  * @param start_time_minute Start time minute to show when dialog is displayed
  * @param large_size true for large size controls/text, false for small
- * @param response_window_handle Handle of the window that the response message is posted to when the dialog is dismissed
+ * @param owner_window_handle Handle of the window that created this dialog and to which the response will be sent
  * @return Handle of the window used for the dialog which is only valid while the dialog is showing
  * @note There must be space in the window array for one new window and space in the control array
  *       for one new control. These resources are released when the dialog is dismissed.
@@ -70,7 +70,7 @@ SOFTWARE.
 		uint8_t start_time_hour,
 		uint8_t start_time_minute,
 		bool large_size,
-		mw_handle_t response_window_handle);
+		mw_handle_t owner_window_handle);
 
 #ifdef __cplusplus
 }

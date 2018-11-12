@@ -60,7 +60,7 @@ SOFTWARE.
  * @param button_1_label Pointer to the text of the left button's label
  * @param button_2_label Pointer to the text of the right button's label
  * @param large_size true for large size controls/text, false for small
- * @param response_window_handle Handle of the window that the response message is posted to when the dialog is dismissed
+ * @param owner_window_handle Handle of the window that created this dialog and to which the response will be sent
  * @return Handle of the window used for the dialog which is only valid while the dialog is showing
  * @note There must be space in the window array for one new window and space in the control array
  *       for one new control. These resources are released when the dialog is dismissed.
@@ -78,7 +78,7 @@ SOFTWARE.
 		char *button_1_label,
 		char *button_2_label,
 		bool large_size,
-		mw_handle_t response_window_handle);
+		mw_handle_t owner_window_handle);
 
 #ifdef __cplusplus
 }
