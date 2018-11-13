@@ -28,9 +28,9 @@ SOFTWARE.
 *** INCLUDES ***
 ***************/
 
-#include <miniwin_debug.h>
-#include <miniwin_settings.h>
-#include <miniwin_touch.h>
+#include "miniwin_debug.h"
+#include "miniwin_settings.h"
+#include "miniwin_touch.h"
 #include "hal/hal_lcd.h"
 #include "hal/hal_touch.h"
 #include "hal/hal_delay.h"

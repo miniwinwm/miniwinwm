@@ -28,10 +28,10 @@ SOFTWARE.
 *** INCLUDES ***
 ***************/
 
-#include <miniwin.h>
-#include <miniwin_debug.h>
-#include <miniwin_settings.h>
 #include <string.h>
+#include "miniwin.h"
+#include "miniwin_debug.h"
+#include "miniwin_settings.h"
 #include "hal/hal_non_vol.h"
 
 /****************

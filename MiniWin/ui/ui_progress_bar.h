@@ -35,7 +35,7 @@ SOFTWARE.
 *** INCLUDES ***
 ***************/
 
-#include <miniwin.h>
+#include "miniwin.h"
 
 /****************
 *** CONSTANTS ***

@@ -28,11 +28,11 @@ SOFTWARE.
 *** INCLUDES ***
 ***************/
 
-#include <miniwin.h>
-#include <miniwin_message_queue.h>
-#include <miniwin_settings.h>
-#include <miniwin_touch.h>
 #include <string.h>
+#include "miniwin.h"
+#include "miniwin_message_queue.h"
+#include "miniwin_settings.h"
+#include "miniwin_touch.h"
 #include "hal/hal_init.h"
 #include "hal/hal_touch.h"
 #include "ui/ui_common.h"

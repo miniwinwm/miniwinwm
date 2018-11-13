@@ -72,22 +72,12 @@ static mw_dialog_one_button_data_t mw_dialog_one_button_data;
 *** LOCAL FUNCTION PROTOTYPES ***
 ********************************/
 
-static void remove_resources(void);
 static void mw_dialog_one_button_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_t *draw_info);
 static void mw_dialog_one_button_message_function(const mw_message_t *message);
 
 /**********************
 *** LOCAL FUNCTIONS ***
 **********************/
-
-/**
- * Remove this dialog window and all controls
- */
-static void remove_resources(void)
-{
-	mw_remove_control(mw_dialog_one_button_data.button_handle);
-	mw_remove_window(mw_dialog_one_button_data.one_button_dialog_window_handle);
-}
 
 /**
  * Window paint routine, called by window manager.
@@ -138,7 +128,7 @@ static void mw_dialog_one_button_message_function(const mw_message_t *message)
 	{
 	case MW_BUTTON_PRESSED_MESSAGE:
 		/* remove all controls and window */
-		remove_resources();
+		mw_remove_window(mw_dialog_one_button_data.one_button_dialog_window_handle);
 
 		/* post response to receiving window */
 		mw_post_message(MW_DIALOG_ONE_BUTTON_DISMISSED_MESSAGE,
@@ -273,7 +263,7 @@ mw_handle_t mw_create_window_dialog_one_button(uint16_t x,
 	if (mw_dialog_one_button_data.button_handle == MW_INVALID_HANDLE)
 	{
 		/* remove all controls and window */
-		remove_resources();
+		mw_remove_window(mw_dialog_one_button_data.one_button_dialog_window_handle);
 
 		return MW_INVALID_HANDLE;
 	}

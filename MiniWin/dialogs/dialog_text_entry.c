@@ -82,7 +82,6 @@ static mw_dialog_text_entry_data_t mw_dialog_text_entry_data;
 *** LOCAL FUNCTION PROTOTYPES ***
 ********************************/
 
-static void remove_resources(void);
 static uint16_t get_cursor_x_coordinate(void);
 static void mw_dialog_text_entry_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_t *draw_info);
 static void mw_dialog_text_entry_message_function(const mw_message_t *message);
@@ -90,17 +89,6 @@ static void mw_dialog_text_entry_message_function(const mw_message_t *message);
 /**********************
 *** LOCAL FUNCTIONS ***
 **********************/
-
-/**
- * Remove this dialog window and all controls
- */
-static void remove_resources(void)
-{
-	mw_remove_control(mw_dialog_text_entry_data.keyboard_handle);
-	mw_remove_control(mw_dialog_text_entry_data.button_ok_handle);
-	mw_remove_control(mw_dialog_text_entry_data.button_cancel_handle);
-	mw_remove_window(mw_dialog_text_entry_data.text_entry_dialog_window_handle);
-}
 
 /**
  * Gets the cursor x coordinate from its position
@@ -288,7 +276,7 @@ static void mw_dialog_text_entry_message_function(const mw_message_t *message)
 
 	case MW_BUTTON_PRESSED_MESSAGE:
 		/* remove all controls and window */
-		remove_resources();
+		mw_remove_window(mw_dialog_text_entry_data.text_entry_dialog_window_handle);
 
 		if (message->sender_handle == mw_dialog_text_entry_data.button_cancel_handle)
 		{
@@ -416,7 +404,7 @@ mw_handle_t mw_create_window_dialog_text_entry(uint16_t x,
 			mw_dialog_text_entry_data.button_cancel_handle == MW_INVALID_HANDLE)
 	{
 		/* remove all controls and window */
-		remove_resources();
+		mw_remove_window(mw_dialog_text_entry_data.text_entry_dialog_window_handle);
 
 		return MW_INVALID_HANDLE;
 	}

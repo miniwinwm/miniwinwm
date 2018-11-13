@@ -28,8 +28,8 @@ SOFTWARE.
 *** INCLUDES ***
 ***************/
 
-#include <miniwin.h>
 #include <stdio.h>
+#include "miniwin.h"
 #include "dialogs/dialog_common.h"
 #include "gl/gl.h"
 #include "app.h"

@@ -93,7 +93,6 @@ static mw_dialog_date_chooser_data_t mw_dialog_date_chooser_data;
 *** LOCAL FUNCTION PROTOTYPES ***
 ********************************/
 
-static void remove_resources(void);
 static void update_arrow_enable_states(void);
 static uint8_t get_max_date_for_month_and_year(uint8_t month, uint16_t year);
 static void mw_dialog_date_chooser_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_t *draw_info);
@@ -102,22 +101,6 @@ static void mw_dialog_date_chooser_message_function(const mw_message_t *message)
 /**********************
 *** LOCAL FUNCTIONS ***
 **********************/
-
-/**
- * Remove this dialog window and all controls
- */
-static void remove_resources(void)
-{
-	mw_remove_control(mw_dialog_date_chooser_data.button_ok_handle);
-	mw_remove_control(mw_dialog_date_chooser_data.button_ok_handle);
-	mw_remove_control(mw_dialog_date_chooser_data.arrow_year_up_handle);
-	mw_remove_control(mw_dialog_date_chooser_data.arrow_year_down_handle);
-	mw_remove_control(mw_dialog_date_chooser_data.arrow_month_up_handle);
-	mw_remove_control(mw_dialog_date_chooser_data.arrow_month_down_handle);
-	mw_remove_control(mw_dialog_date_chooser_data.arrow_date_up_handle);
-	mw_remove_control(mw_dialog_date_chooser_data.arrow_date_down_handle);
-	mw_remove_window(mw_dialog_date_chooser_data.date_chooser_dialog_window_handle);
-}
 
 /**
  * Get the number of days in a month for a given year
@@ -337,7 +320,7 @@ static void mw_dialog_date_chooser_message_function(const mw_message_t *message)
 
 	case MW_BUTTON_PRESSED_MESSAGE:
 		/* remove all controls and window */
-		remove_resources();
+		mw_remove_window(mw_dialog_date_chooser_data.date_chooser_dialog_window_handle);
 
 		if (message->sender_handle == mw_dialog_date_chooser_data.button_ok_handle)
 		{
@@ -579,7 +562,7 @@ mw_handle_t mw_create_window_dialog_date_chooser(uint16_t x,
 			mw_dialog_date_chooser_data.arrow_date_down_handle == MW_INVALID_HANDLE)
 	{
 		/* remove all controls and window */
-		remove_resources();
+		mw_remove_window(mw_dialog_date_chooser_data.date_chooser_dialog_window_handle);
 
 		return MW_INVALID_HANDLE;
 	}

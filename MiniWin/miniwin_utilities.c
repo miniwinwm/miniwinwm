@@ -28,11 +28,11 @@ SOFTWARE.
 *** INCLUDES ***
 ***************/
 
-#include <miniwin_debug.h>
-#include <miniwin_utilities.h>
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include "miniwin_debug.h"
+#include "miniwin_utilities.h"
 
 /****************
 *** CONSTANTS ***

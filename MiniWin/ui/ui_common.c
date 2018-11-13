@@ -28,9 +28,8 @@ SOFTWARE.
 *** INCLUDES ***
 ***************/
 
-#include <miniwin.h>
-#include <miniwin_debug.h>
-#include <user/miniwin_config_template.h>
+#include "miniwin.h"
+#include "miniwin_debug.h"
 
 /****************
 *** CONSTANTS ***
