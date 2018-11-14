@@ -90,8 +90,8 @@ SOFTWARE.
 #define MW_WINDOW_FLAG_HAS_MENU_BAR					0x00000200  /**< Indicates that a window has a menu bar */
 #define MW_WINDOW_FLAG_MENU_BAR_ENABLED				0x00000400	/**< Indicates that a menu bar, if existing, is enabled */
 #define MW_WINDOW_FLAG_MENU_BAR_ITEM_IS_SELECTED	0x00000800 	/**< Indicates that a menu bar, if existing, has an item selected */
-#define MW_WINDOWS_FLAG_VERT_SCROLL_BAR_ENABLED		0x00001000	/**< Indicates that a vertical scroll bar, if existing, is enabled */
-#define MW_WINDOWS_FLAG_HORIZ_SCROLL_BAR_ENABLED	0x00002000	/**< Indicates that a horizontal scroll bar, if existing, is enabled */
+#define MW_WINDOW_FLAG_VERT_SCROLL_BAR_ENABLED		0x00001000	/**< Indicates that a vertical scroll bar, if existing, is enabled */
+#define MW_WINDOW_FLAG_HORIZ_SCROLL_BAR_ENABLED		0x00002000	/**< Indicates that a horizontal scroll bar, if existing, is enabled */
 #define MW_WINDOW_FLAG_TOUCH_FOCUS_AND_EVENT		0x00004000	/**< Indicates that a touch in a non-focused window gives it focus and generates a touch down event */
 #define MW_WINDOW_FLAG_LARGE_SIZE					0x00008000	/**< Indicates that a window's menu bar and scroll bars are to be drawn large sized */
 

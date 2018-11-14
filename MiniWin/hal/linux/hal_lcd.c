@@ -78,9 +78,11 @@ void mw_hal_lcd_init(void)
 
 void mw_hal_lcd_pixel(int16_t x, int16_t y, mw_hal_lcd_colour_t colour)
 {
+	XLockDisplay(display);
 	XSetForeground(display, graphical_context,  colour);
 	XDrawPoint(display, frame_window, graphical_context, x, y);
 	XFlush(display);
+	XUnlockDisplay(display);
 }
 
 void mw_hal_lcd_filled_rectangle(int16_t start_x,
@@ -89,10 +91,12 @@ void mw_hal_lcd_filled_rectangle(int16_t start_x,
 		uint16_t height,
 		mw_hal_lcd_colour_t colour)
 {
+	XLockDisplay(display);
 	XSetForeground(display, graphical_context, colour);
 	XSetFillStyle(display, graphical_context, FillSolid);
 	XFillRectangle(display, frame_window, graphical_context, start_x, start_y, width, height);
 	XFlush(display);
+	XUnlockDisplay(display);
 }
 
 void mw_hal_lcd_colour_bitmap_clip(int16_t image_start_x,

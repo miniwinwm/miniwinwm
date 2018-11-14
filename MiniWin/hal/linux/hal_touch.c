@@ -82,11 +82,10 @@ bool mw_hal_touch_get_point(uint16_t* x, uint16_t* y)
     Window child_win;
 	Window root_win;
 
-	if (XCheckMaskEvent(display, KeyPressMask, &event))
-	{
-    	XNextEvent(display, &event);
-    }
+	XLockDisplay(display);
+	XCheckMaskEvent(display, KeyPressMask, &event);
     XQueryPointer(display, frame_window, &child_win, &root_win, &root_x, &root_y, &win_x, &win_y, &mask);
+	XUnlockDisplay(display);
 
     if (mask == 256)
     {

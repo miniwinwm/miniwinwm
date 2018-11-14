@@ -65,12 +65,18 @@ SOFTWARE.
 
 int main(void)
 {
+	/* initialize non-miniwin parts of the application */
 	app_init();
+
+	/* initialize miniwin */
 	mw_init();
 
 	while(true)
 	{
+		/* do non-miniwin parts of application main loop processing */
     	app_main_loop_process();
+
+    	/* do miniwin message processing */
 		mw_process_message();
 	}
 }

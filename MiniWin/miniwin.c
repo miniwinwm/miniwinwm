@@ -1617,7 +1617,7 @@ static void draw_horizontal_window_scroll_bar(const mw_gl_draw_info_t *draw_info
 	mw_gl_set_line(MW_GL_SOLID_LINE);
 	mw_gl_clear_pattern();
 	mw_gl_set_solid_fill_colour(MW_CONTROL_UP_COLOUR);
-	if (mw_all_windows[window_id].window_flags & MW_WINDOWS_FLAG_HORIZ_SCROLL_BAR_ENABLED)
+	if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HORIZ_SCROLL_BAR_ENABLED)
 	{
 		mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 	}
@@ -1724,7 +1724,7 @@ static void draw_vertical_window_scroll_bar(const mw_gl_draw_info_t *draw_info, 
 	mw_gl_set_line(MW_GL_SOLID_LINE);
 	mw_gl_clear_pattern();
 	mw_gl_set_solid_fill_colour(MW_CONTROL_UP_COLOUR);
-	if (mw_all_windows[window_id].window_flags & MW_WINDOWS_FLAG_HORIZ_SCROLL_BAR_ENABLED)
+	if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HORIZ_SCROLL_BAR_ENABLED)
 	{
 		mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 	}
@@ -3042,7 +3042,7 @@ static window_redimensioning_state_t process_touch_event(void)
 				touch_y >= mw_all_windows[window_to_receive_message_id].client_rect.y)
 		{
 			/* check if scroll bar disabled */
-			if (mw_all_windows[window_to_receive_message_id].window_flags & MW_WINDOWS_FLAG_VERT_SCROLL_BAR_ENABLED)
+			if (mw_all_windows[window_to_receive_message_id].window_flags & MW_WINDOW_FLAG_VERT_SCROLL_BAR_ENABLED)
 			{
 				/* enabled so post message and redraw scroll bar */
 				if (touch_message == MW_TOUCH_DOWN_MESSAGE || touch_message == MW_TOUCH_DRAG_MESSAGE)
@@ -3085,7 +3085,7 @@ static window_redimensioning_state_t process_touch_event(void)
 				touch_x >= mw_all_windows[window_to_receive_message_id].client_rect.x)
 		{
 			/* check if scroll bar disabled */
-			if (mw_all_windows[window_to_receive_message_id].window_flags & MW_WINDOWS_FLAG_HORIZ_SCROLL_BAR_ENABLED)
+			if (mw_all_windows[window_to_receive_message_id].window_flags & MW_WINDOW_FLAG_HORIZ_SCROLL_BAR_ENABLED)
 			{
 				/* enabled so post message and redraw scroll bar */
 				if (touch_message == MW_TOUCH_DOWN_MESSAGE || touch_message == MW_TOUCH_DRAG_MESSAGE)
@@ -4022,12 +4022,12 @@ void mw_set_window_horiz_scroll_bar_enabled_state(mw_handle_t window_handle, boo
 	if (enabled)
 	{
 		/* set enabled */	
-		mw_all_windows[window_id].window_flags |= MW_WINDOWS_FLAG_HORIZ_SCROLL_BAR_ENABLED;
+		mw_all_windows[window_id].window_flags |= MW_WINDOW_FLAG_HORIZ_SCROLL_BAR_ENABLED;
 	}
 	else
 	{
 		/* set disabled */
-		mw_all_windows[window_id].window_flags &= ~MW_WINDOWS_FLAG_HORIZ_SCROLL_BAR_ENABLED;
+		mw_all_windows[window_id].window_flags &= ~MW_WINDOW_FLAG_HORIZ_SCROLL_BAR_ENABLED;
 	}
 }
 
@@ -4046,12 +4046,12 @@ void mw_set_window_vert_scroll_bar_enabled_state(mw_handle_t window_handle, bool
 	if (enabled)
 	{
 		/* set enabled */
-		mw_all_windows[window_id].window_flags |= MW_WINDOWS_FLAG_VERT_SCROLL_BAR_ENABLED;
+		mw_all_windows[window_id].window_flags |= MW_WINDOW_FLAG_VERT_SCROLL_BAR_ENABLED;
 	}
 	else
 	{
 		/* set disabled */
-		mw_all_windows[window_id].window_flags &= ~MW_WINDOWS_FLAG_VERT_SCROLL_BAR_ENABLED;
+		mw_all_windows[window_id].window_flags &= ~MW_WINDOW_FLAG_VERT_SCROLL_BAR_ENABLED;
 	}
 }
 

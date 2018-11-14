@@ -116,10 +116,12 @@ static void main_thread(void *parameters)
 
 static void miniwin_thread(void *parameters)
 {
+	/* initialize miniwin */
 	mw_init();
 
 	while (true)
 	{
+    	/* do miniwin message processing */
 		mw_process_message();
 		vTaskDelay(10);
 	}
@@ -159,6 +161,7 @@ static void gyro_thread(void *parameters)
 
 int main(void)
 {
+	/* initialize non-miniwin parts of the application */
 	app_init();
 
 	/* initialise the message buffers to send gyro reading data from gyro thread to gyro windows */

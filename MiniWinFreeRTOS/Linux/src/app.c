@@ -82,6 +82,7 @@ void app_init(void)
 	static int depth;
 	static XSetWindowAttributes frame_attributes;
 
+	XInitThreads();
 	display = XOpenDisplay(NULL);
 	visual = DefaultVisual(display, 0);
 	depth  = DefaultDepth(display, 0);
@@ -116,10 +117,12 @@ void app_init(void)
  */
 static void setLeds(int32_t leds)
 {
-    XKeyboardControl values;
+	XKeyboardControl values;
 
+	XLockDisplay(display);
     values.led_mode = leds & SCROLL_LOCK ? LedModeOn : LedModeOff;
     XChangeKeyboardControl(display, KBLedMode, &values);
+	XUnlockDisplay(display);
 }
 
 void app_main_loop_process(void)
