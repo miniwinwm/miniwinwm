@@ -814,7 +814,7 @@ void mw_bring_window_to_front(mw_handle_t window_handle);
  *
  * @param window_handle Position in array of all windows of this window
  * @note It is up to the user to issue a paint all message to get windows repainted that
- * 		 have beenexposed by sending this window to the back
+ * 		 have been exposed by sending this window to the back
  */
 void mw_send_window_to_back(mw_handle_t window_handle);
 

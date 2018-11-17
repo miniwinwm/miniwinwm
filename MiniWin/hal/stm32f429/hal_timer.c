@@ -28,7 +28,7 @@ SOFTWARE.
 *** INCLUDES ***
 ***************/
 
-#include <miniwin.h>
+#include "miniwin.h"
 #include "stm32f4xx_hal.h"
 
 /****************

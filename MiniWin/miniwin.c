@@ -1707,7 +1707,7 @@ static void draw_vertical_window_scroll_bar(const mw_gl_draw_info_t *draw_info, 
 	window_id = get_window_id_for_handle(window_handle);
 	MW_ASSERT(window_id < MW_MAX_WINDOW_COUNT, "Bad window handle");
 
-	/* get scroll bar narrow dimension and slider size depending on if large windo flag set */
+	/* get scroll bar narrow dimension and slider size depending on if large window flag set */
 	if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_LARGE_SIZE)
 	{
 		scroll_bar_narrow_dimension = MW_SCROLL_BAR_LARGE_NARROW_DIMENSION;
@@ -1724,7 +1724,7 @@ static void draw_vertical_window_scroll_bar(const mw_gl_draw_info_t *draw_info, 
 	mw_gl_set_line(MW_GL_SOLID_LINE);
 	mw_gl_clear_pattern();
 	mw_gl_set_solid_fill_colour(MW_CONTROL_UP_COLOUR);
-	if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HORIZ_SCROLL_BAR_ENABLED)
+	if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_VERT_SCROLL_BAR_ENABLED)
 	{
 		mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 	}

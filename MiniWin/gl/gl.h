@@ -37,7 +37,7 @@ SOFTWARE.
 
 #include "miniwin_utilities.h"
 #include "hal/hal_lcd.h"
-#include "gl/fonts/fonts.h"
+#include "gl/fonts/bitmapped/fonts.h"
 
 /****************
 *** CONSTANTS ***
@@ -69,6 +69,9 @@ typedef enum
 	MW_GL_BORDER_OFF,                  /**< No border drawn on shape */
 	MW_GL_BORDER_ON                    /**< Draw border on shape */
 } mw_gl_border_t;
+
+/* forward declare rle font struct */
+struct mf_rlefont_s;
 
 /**
  * Enum of fill values for shapes
@@ -111,6 +114,17 @@ typedef enum
 	MW_GL_TEXT_ROTATION_180,				/** 180 degrees text rotation */
 	MW_GL_TEXT_ROTATION_270					/** 270 degrees text rotation */
 } mw_gl_text_rotation_t;
+
+/**
+ * Enum of true type font rendering justifications
+ */
+typedef enum
+{
+	MW_GL_TT_LEFT_JUSTIFIED,				/** Left justified true type font rendering */
+	MW_GL_TT_CENTRE_JUSTIFIED,				/** Centre justified true type font rendering */
+	MW_GL_TT_RIGHT_JUSTIFIED,				/** Right justified true type font rendering */
+	MW_GL_TT_FULLY_JUSTIFIED				/** Fully justified true type font rendering */
+} mw_gl_tt_font_justification_t;
 
 /**
  * Enum of line styles. These need to be 16 bits.
@@ -485,6 +499,37 @@ void mw_gl_colour_bitmap(const mw_gl_draw_info_t *draw_info,
 		uint16_t image_data_width_pixels,
 		uint16_t image_data_height_pixels,
 		const uint8_t *image_data);
+
+/**
+ * Render justified true type text in a box
+ *
+ * @param draw_info Reference frame origin coordinates and clip region rect
+ * @param text_rect The rect in the window's client area that the text is to be rendered into
+ * @param justification The justification to use when rendering the text
+ * @param rle_font The true type font to use
+ * @param tt_text The text to render
+ * @param vert_scroll How many pixel lines to scroll the text up
+ */
+void mw_gl_tt_render_text(const mw_gl_draw_info_t *draw_info,
+		mw_util_rect_t *text_rect,
+		mw_gl_tt_font_justification_t justification,
+		const struct mf_rlefont_s *rle_font,
+		const char *tt_text,
+		uint16_t vert_scroll_pixels);
+
+/**
+ * Calculate the number of vertical pixels that would be used when rendering justified true type text in a box
+ *
+ * @param width The width of the box that the text would be rendered in
+ * @param justification The text justification that would be used by the rendering
+ * @param rle_font The run-length encoded true type font data
+ * @param tt_text Pointer to the text
+ * @return The number of pixel lines to render the text
+ */
+uint16_t mw_gl_tt_get_render_text_lines(uint16_t width,
+		mw_gl_tt_font_justification_t justification,
+		const struct mf_rlefont_s *rle_font,
+		const char *tt_text);
 
 #ifdef __cplusplus
 }

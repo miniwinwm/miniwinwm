@@ -28,8 +28,8 @@ SOFTWARE.
 *** INCLUDES ***
 ***************/
 
-#include <miniwin.h>
 #include <string.h>
+#include "miniwin.h"
 #include "window_drag.h"
 #include "window_gl.h"
 #include "window_scroll.h"

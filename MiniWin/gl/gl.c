@@ -33,7 +33,8 @@ SOFTWARE.
 #include "miniwin_debug.h"
 #include "hal/hal_delay.h"
 #include "gl/gl.h"
-#include "gl/fonts/fonts.h"
+#include "gl/fonts/bitmapped/fonts.h"
+#include "gl/fonts/truetype/mcufont/mcufont.h"
 
 /****************
 *** CONSTANTS ***
@@ -48,6 +49,26 @@ SOFTWARE.
 *** TYPES ***
 ************/
 
+/**
+ * Struct to hold true type drawing info as the rendering procedure descends through its stack.
+ */
+typedef struct
+{
+	const mw_gl_draw_info_t *draw_info;				/**< Draw info structure to be passed on to pixel plotting routine */
+    const struct mf_font_s *font;					/**< Run-length encoded font structure to use for text rendering */
+    mw_util_rect_t bounding_box;					/**< The bounding box to render the text in to */
+    uint16_t bottom;								/**< Bottom line in pixels of bounding box, y + height */
+    uint8_t fg_red;									/**< Foreground colour to plot text, red component */
+    uint8_t fg_green;								/**< Foreground colour to plot text, green component */
+    uint8_t fg_blue;								/**< Foreground colour to plot text, blue component */
+    uint8_t bg_red;									/**< Background colour to plot text, red component */
+    uint8_t bg_green;								/**< Background colour to plot text, green component */
+    uint8_t bg_blue;								/**< Background colour to plot text, blue component */
+    mw_gl_tt_font_justification_t justification;	/**< Rendering justification used */
+    uint16_t rendered_line_count;					/**< How many lines in pixels that have been rendered so far */
+    uint16_t vert_scroll_pixels;					/**< How many pixel lines to scroll the text up */
+} tt_font_state_t;
+
 /***********************
 *** GLOBAL VARIABLES ***
 ***********************/
@@ -56,7 +77,7 @@ SOFTWARE.
 *** EXTERNAL VARIABLES ***
 **************************/
 
-extern const uint16_t mw_title_font_positions[];   	/**< positions of start of character data of proportional fonts */
+extern const uint16_t mw_title_font_positions[];   	/**< Positions of start of character data of proportional fonts */
 extern const uint8_t mw_title_font_bitmap[];      	/**< 16 high proportional title font, widths vary */
 extern const sFONT Font9;							/**< Information structure for font */
 extern const sFONT Font12;							/**< Information structure for font */
@@ -68,7 +89,7 @@ extern const sFONT Font24;							/**< Information structure for font */
 *** LOCAL VARIABLES ***
 **********************/
 
-static mw_gl_gc_t gc;                       		/**< the graphics context used to hold all the settings used by the plotting routines */
+static mw_gl_gc_t gc;                       		/**< The graphics context used to hold all the settings used by the plotting routines */
 
 /********************************
 *** LOCAL FUNCTION PROTOTYPES ***
@@ -88,6 +109,10 @@ static void draw_character_180_degrees(const mw_gl_draw_info_t *draw_info, int16
 static void draw_character_270_degrees(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y, char c);
 static void title_font_string(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y, const char *s);
 static const uint8_t *get_font_data(void);
+static void tt_pixel_callback(int16_t x, int16_t y, uint8_t count, uint8_t alpha, void *state);
+static uint8_t tt_character_callback(int16_t x, int16_t y, mf_char character, void *state);
+static bool tt_line_callback(mf_str line, uint16_t count, void *state);
+static bool tt_dummy_line_callback(mf_str line, uint16_t count, void *state);
 
 /**********************
 *** LOCAL FUNCTIONS ***
@@ -1096,6 +1121,174 @@ static const uint8_t *get_font_data(void)
 	}
 
 	return NULL;
+}
+
+/**
+ * Draw alpha blended true type font pixels
+ *
+ * @param x The x coordinate of the left most pixel
+ * @param y The y coordinate of all the pixels
+ * @param count The number of pixels to draw
+ * @alpha Alpha blending value between background colour and foreground colour
+ * @param state Pointer to font rendering state structure
+ */
+static void tt_pixel_callback(int16_t x, int16_t y, uint8_t count, uint8_t alpha, void *state)
+{
+	uint8_t alpha_red;
+	uint8_t alpha_green;
+	uint8_t alpha_blue;
+
+	/* get tt font rendering state */
+	tt_font_state_t *tt_font_state = (tt_font_state_t *)state;
+
+	/* check y value is still in box */
+    if ((int16_t)(y - tt_font_state->vert_scroll_pixels) >= (int16_t)tt_font_state->bottom)
+    {
+    	return;
+    }
+
+    if ((int16_t)(y - tt_font_state->vert_scroll_pixels) < 0)
+    {
+    	return;
+    }
+
+	/* calculate alpha blended colour values */
+	alpha_red = ((tt_font_state->fg_red * alpha) + (tt_font_state->bg_red * (255 - alpha))) / 255;
+	alpha_green = ((tt_font_state->fg_green * alpha) + (tt_font_state->bg_green * (255 - alpha))) / 255;
+	alpha_blue = ((tt_font_state->fg_blue * alpha) + (tt_font_state->bg_blue * (255 - alpha))) / 255;
+
+    /* do all pixels */
+	y = y - tt_font_state->vert_scroll_pixels;
+    while (count--)
+    {
+    	/* set pixel colour with this value */
+    	mw_gl_set_fg_colour((alpha_red << 16) + (alpha_green << 8) + alpha_blue);
+
+    	/* draw pixel */
+        mw_gl_fg_pixel(tt_font_state->draw_info, x, y);
+
+        /* move on to next pixel */
+        x++;
+    }
+}
+
+
+/**
+ * Draw a true type font character
+ *
+ * @param x The x position of the left edge of the character to render
+ * @param y The x position of the top edge of the character to render
+ * @param character The character to plot
+ * @param state Pointer to font rendering state structure
+ */
+static uint8_t tt_character_callback(int16_t x, int16_t y, mf_char character, void *state)
+{
+	/* get tt font rendering state */
+	tt_font_state_t *tt_font_state = (tt_font_state_t *)state;
+
+	/* render the character */
+    return mf_render_character(tt_font_state->font, x, y, character, tt_pixel_callback, state);
+}
+
+
+/**
+ * Draw a true type font justified line
+ *
+ * @param line Pointer to start of the text to render in this line
+ * @param count Number of characters to render in this line
+ * @param state Pointer to font rendering state structure
+ * @return true if rendering should stop as reached bottom of box, else false to continue rendering next line
+ */
+static bool tt_line_callback(mf_str line, uint16_t count, void *state)
+{
+	/* get tt font rendering state */
+	tt_font_state_t *tt_font_state = (tt_font_state_t *)state;
+
+	/* draw background for this line, gc already set up */
+	mw_gl_rectangle(tt_font_state->draw_info,
+			tt_font_state->bounding_box.x,
+			tt_font_state->bounding_box.y,
+			tt_font_state->bounding_box.width,
+			tt_font_state->font->line_height);
+
+	/* now check justification */
+    if (tt_font_state->justification == MW_GL_TT_FULLY_JUSTIFIED)
+    {
+		mf_render_justified(tt_font_state->font,
+				tt_font_state->bounding_box.x,
+				tt_font_state->bounding_box.y,
+				tt_font_state->bounding_box.width,
+				line,
+				count,
+				tt_character_callback,
+				state);
+    }
+    else if (tt_font_state->justification == MW_GL_TT_LEFT_JUSTIFIED)
+    {
+    	mf_render_aligned(tt_font_state->font,
+    			tt_font_state->bounding_box.x,
+				tt_font_state->bounding_box.y,
+				MF_ALIGN_LEFT,
+    			line,
+    			count,
+				tt_character_callback,
+    			state);
+    }
+    else if (tt_font_state->justification == MW_GL_TT_RIGHT_JUSTIFIED)
+    {
+    	mf_render_aligned(tt_font_state->font,
+    			tt_font_state->bounding_box.x + tt_font_state->bounding_box.width,
+				tt_font_state->bounding_box.y,
+				MF_ALIGN_RIGHT,
+    			line,
+    			count,
+				tt_character_callback,
+    			state);
+    }
+    else if (tt_font_state->justification == MW_GL_TT_CENTRE_JUSTIFIED)
+    {
+    	mf_render_aligned(tt_font_state->font,
+    			tt_font_state->bounding_box.x + (tt_font_state->bounding_box.width / 2),
+				tt_font_state->bounding_box.y,
+				MF_ALIGN_CENTER,
+    			line,
+    			count,
+				tt_character_callback,
+    			state);
+    }
+    else
+    {
+    	MW_ASSERT(false, "Invalid justification");
+    }
+
+    /* move next y value on by font height */
+    tt_font_state->bounding_box.y += tt_font_state->font->line_height;
+
+    /* check if y value is still in the text box */
+    if (tt_font_state->bounding_box.y - tt_font_state->vert_scroll_pixels > tt_font_state->bottom)
+    {
+    	return false;
+    }
+
+	return true;
+}
+
+/**
+ * Do a dummy draw of a true type font justified line and increment line counter
+ *
+ * @param line The text to dummy render in this line
+ * @param count Unused
+ * @param state Pointer to font rendering state structure
+ */
+static bool tt_dummy_line_callback(mf_str line, uint16_t count, void *state)
+{
+	/* get tt font rendering state */
+	tt_font_state_t *tt_font_state = (tt_font_state_t *)state;
+
+    /* increment line count */
+    tt_font_state->rendered_line_count++;
+
+	return true;
 }
 
 /***********************
@@ -2231,4 +2424,90 @@ void mw_gl_colour_bitmap(const mw_gl_draw_info_t *draw_info,
 			draw_info->clip_rect.width,
 			draw_info->clip_rect.height,
 			image_data);
+}
+
+void mw_gl_tt_render_text(const mw_gl_draw_info_t *draw_info,
+		mw_util_rect_t *text_rect,
+		mw_gl_tt_font_justification_t justification,
+		const struct mf_rlefont_s *rle_font,
+		const char *tt_text,
+		uint16_t vert_scroll_pixels)
+{
+	mw_gl_gc_t *gc = mw_gl_get_gc();
+	tt_font_state_t tt_font_state;
+
+	/* check parameters */
+	if (!draw_info || !rle_font || !tt_text || !text_rect)
+	{
+		MW_ASSERT(false, "Null pointer argument");
+		return;
+	}
+
+	/* set up tt font rendering state from parameters */
+	tt_font_state.font = &rle_font->font;
+	tt_font_state.draw_info = draw_info;
+	memcpy(&tt_font_state.bounding_box, text_rect, sizeof(mw_util_rect_t));
+	tt_font_state.bottom = text_rect->y + text_rect->height;
+	tt_font_state.justification = justification;
+	tt_font_state.vert_scroll_pixels = vert_scroll_pixels;
+
+	/* set up alpha blending values */
+	tt_font_state.fg_red = (gc->fg_colour & 0xff0000) >> 16;
+	tt_font_state.fg_green = (gc->fg_colour & 0xff00) >> 8;
+	tt_font_state.fg_blue = gc->fg_colour & 0xff;
+	tt_font_state.bg_red = (gc->bg_colour & 0xff0000) >> 16;
+	tt_font_state.bg_green = (gc->bg_colour & 0xff00) >> 8;
+	tt_font_state.bg_blue = gc->bg_colour & 0xff;
+
+	/* set up gc for drawing background in line draw callback */
+	mw_gl_set_solid_fill_colour(gc->bg_colour);
+	mw_gl_clear_pattern();
+	mw_gl_set_fill(MW_GL_FILL);
+	mw_gl_set_border(MW_GL_BORDER_OFF);
+
+	/* render tt text */
+	mf_wordwrap(tt_font_state.font,
+			text_rect->width,
+			tt_text,
+			tt_line_callback,
+			&tt_font_state);
+}
+
+uint16_t mw_gl_tt_get_render_text_lines(uint16_t width,
+		mw_gl_tt_font_justification_t justification,
+		const struct mf_rlefont_s *rle_font,
+		const char *tt_text)
+{
+	tt_font_state_t tt_font_state;
+
+	/* check parameters */
+	if (!rle_font || !tt_text)
+	{
+		MW_ASSERT(false, "Null pointer argument");
+		return 0;
+	}
+
+    if (justification != MW_GL_TT_FULLY_JUSTIFIED &&
+    		justification != MW_GL_TT_LEFT_JUSTIFIED &&
+			justification != MW_GL_TT_RIGHT_JUSTIFIED &&
+			justification != MW_GL_TT_CENTRE_JUSTIFIED)
+    {
+    	MW_ASSERT(false, "Invalid justification");
+    	return 0;
+    }
+
+	/* set up tt font rendering state from parameters */
+	tt_font_state.font = &rle_font->font;
+	tt_font_state.bounding_box.width = width;
+	tt_font_state.justification = justification;
+	tt_font_state.rendered_line_count = 0;
+
+	/* dummy render tt text */
+	mf_wordwrap(tt_font_state.font,
+			width,
+			tt_text,
+			tt_dummy_line_callback,
+			&tt_font_state);
+
+	return tt_font_state.rendered_line_count * tt_font_state.font->line_height;
 }

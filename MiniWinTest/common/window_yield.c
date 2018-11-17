@@ -28,8 +28,8 @@ SOFTWARE.
 *** INCLUDES ***
 ***************/
 
-#include <miniwin.h>
 #include <stdlib.h>
+#include "miniwin.h"
 
 /****************
 *** CONSTANTS ***
