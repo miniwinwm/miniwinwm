@@ -37,6 +37,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "fonts.h"
+#include "miniwin_config.h"
 
 /** @addtogroup Utilities
   * @{

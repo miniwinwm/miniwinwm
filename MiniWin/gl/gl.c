@@ -31,6 +31,7 @@ SOFTWARE.
 #include <string.h>
 #include <math.h>
 #include "miniwin_debug.h"
+#include "miniwin_config.h"
 #include "hal/hal_delay.h"
 #include "gl/gl.h"
 #include "gl/fonts/bitmapped/fonts.h"
@@ -67,6 +68,7 @@ typedef struct
     mw_gl_tt_font_justification_t justification;	/**< Rendering justification used */
     uint16_t rendered_line_count;					/**< How many lines in pixels that have been rendered so far */
     uint16_t vert_scroll_pixels;					/**< How many pixel lines to scroll the text up */
+	bool bw_font;									/**< If the font was created with bw parameter (no anti-aliasing) */
 } tt_font_state_t;
 
 /***********************
@@ -109,8 +111,9 @@ static void draw_character_180_degrees(const mw_gl_draw_info_t *draw_info, int16
 static void draw_character_270_degrees(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y, char c);
 static void title_font_string(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y, const char *s);
 static const uint8_t *get_font_data(void);
-static void tt_pixel_callback(int16_t x, int16_t y, uint8_t count, uint8_t alpha, void *state);
+static void tt_pixel_callback_anti_aliasing(int16_t x, int16_t y, uint8_t count, uint8_t alpha, void *state);
 static uint8_t tt_character_callback(int16_t x, int16_t y, mf_char character, void *state);
+static void tt_pixel_callback_no_anti_aliasing(int16_t x, int16_t y, uint8_t count, uint8_t alpha, void *state);
 static bool tt_line_callback(mf_str line, uint16_t count, void *state);
 static bool tt_dummy_line_callback(mf_str line, uint16_t count, void *state);
 
@@ -1124,7 +1127,7 @@ static const uint8_t *get_font_data(void)
 }
 
 /**
- * Draw alpha blended true type font pixels
+ * Draw alpha blended true type font pixels with anti-aliasing
  *
  * @param x The x coordinate of the left most pixel
  * @param y The y coordinate of all the pixels
@@ -1132,7 +1135,7 @@ static const uint8_t *get_font_data(void)
  * @alpha Alpha blending value between background colour and foreground colour
  * @param state Pointer to font rendering state structure
  */
-static void tt_pixel_callback(int16_t x, int16_t y, uint8_t count, uint8_t alpha, void *state)
+static void tt_pixel_callback_anti_aliasing(int16_t x, int16_t y, uint8_t count, uint8_t alpha, void *state)
 {
 	uint8_t alpha_red;
 	uint8_t alpha_green;
@@ -1152,13 +1155,14 @@ static void tt_pixel_callback(int16_t x, int16_t y, uint8_t count, uint8_t alpha
     	return;
     }
 
+    /* do all pixels */
+	y = y - tt_font_state->vert_scroll_pixels;
+
 	/* calculate alpha blended colour values */
 	alpha_red = ((tt_font_state->fg_red * alpha) + (tt_font_state->bg_red * (255 - alpha))) / 255;
 	alpha_green = ((tt_font_state->fg_green * alpha) + (tt_font_state->bg_green * (255 - alpha))) / 255;
 	alpha_blue = ((tt_font_state->fg_blue * alpha) + (tt_font_state->bg_blue * (255 - alpha))) / 255;
 
-    /* do all pixels */
-	y = y - tt_font_state->vert_scroll_pixels;
     while (count--)
     {
     	/* set pixel colour with this value */
@@ -1186,10 +1190,54 @@ static uint8_t tt_character_callback(int16_t x, int16_t y, mf_char character, vo
 	/* get tt font rendering state */
 	tt_font_state_t *tt_font_state = (tt_font_state_t *)state;
 
-	/* render the character */
-    return mf_render_character(tt_font_state->font, x, y, character, tt_pixel_callback, state);
+	/* render the character with anti-aliasing */
+	if (tt_font_state->bw_font)
+	{
+		return mf_render_character(tt_font_state->font, x, y, character, tt_pixel_callback_no_anti_aliasing, state);
+	}
+	else
+	{
+		return mf_render_character(tt_font_state->font, x, y, character, tt_pixel_callback_anti_aliasing, state);
+	}
 }
 
+/**
+ * Draw a monochrome true type font pixels without anti-aliasing
+ *
+ * @param x The x coordinate of the left most pixel
+ * @param y The y coordinate of all the pixels
+ * @param count The number of pixels to draw
+ * @alpha Alpha blending value between background colour and foreground colour
+ * @param state Pointer to font rendering state structure
+ */
+static void tt_pixel_callback_no_anti_aliasing(int16_t x, int16_t y, uint8_t count, uint8_t alpha, void *state)
+{
+	/* get tt font rendering state */
+	tt_font_state_t *tt_font_state = (tt_font_state_t *)state;
+
+	/* check y value is still in box */
+    if ((int16_t)(y - tt_font_state->vert_scroll_pixels) >= (int16_t)tt_font_state->bottom)
+    {
+    	return;
+    }
+
+    if ((int16_t)(y - tt_font_state->vert_scroll_pixels) < 0)
+    {
+    	return;
+    }
+
+    /* do all pixels */
+	y = y - tt_font_state->vert_scroll_pixels;
+
+    while (count--)
+    {
+    	/* draw pixel */
+        mw_gl_fg_pixel(tt_font_state->draw_info, x, y);
+
+        /* move on to next pixel */
+        x++;
+    }
+}
 
 /**
  * Draw a true type font justified line
@@ -2430,6 +2478,7 @@ void mw_gl_tt_render_text(const mw_gl_draw_info_t *draw_info,
 		mw_util_rect_t *text_rect,
 		mw_gl_tt_font_justification_t justification,
 		const struct mf_rlefont_s *rle_font,
+		bool bw_font,
 		const char *tt_text,
 		uint16_t vert_scroll_pixels)
 {
@@ -2450,14 +2499,18 @@ void mw_gl_tt_render_text(const mw_gl_draw_info_t *draw_info,
 	tt_font_state.bottom = text_rect->y + text_rect->height;
 	tt_font_state.justification = justification;
 	tt_font_state.vert_scroll_pixels = vert_scroll_pixels;
+	tt_font_state.bw_font = bw_font;
 
 	/* set up alpha blending values */
-	tt_font_state.fg_red = (gc->fg_colour & 0xff0000) >> 16;
-	tt_font_state.fg_green = (gc->fg_colour & 0xff00) >> 8;
-	tt_font_state.fg_blue = gc->fg_colour & 0xff;
-	tt_font_state.bg_red = (gc->bg_colour & 0xff0000) >> 16;
-	tt_font_state.bg_green = (gc->bg_colour & 0xff00) >> 8;
-	tt_font_state.bg_blue = gc->bg_colour & 0xff;
+	if (!bw_font)
+	{
+		tt_font_state.fg_red = (gc->fg_colour & 0xff0000) >> 16;
+		tt_font_state.fg_green = (gc->fg_colour & 0xff00) >> 8;
+		tt_font_state.fg_blue = gc->fg_colour & 0xff;
+		tt_font_state.bg_red = (gc->bg_colour & 0xff0000) >> 16;
+		tt_font_state.bg_green = (gc->bg_colour & 0xff00) >> 8;
+		tt_font_state.bg_blue = gc->bg_colour & 0xff;
+	}
 
 	/* set up gc for drawing background in line draw callback */
 	mw_gl_set_solid_fill_colour(gc->bg_colour);

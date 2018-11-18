@@ -2758,6 +2758,7 @@ static window_redimensioning_state_t process_touch_event(void)
 	int16_t difference_x = 0;
 	int16_t difference_y = 0;
 	uint8_t window_to_receive_message_id;
+	static uint8_t window_to_receive_previous_message_id;
 	uint8_t control_to_receive_message_id;
 	int16_t client_x;
 	int16_t client_y;
@@ -2911,8 +2912,16 @@ static window_redimensioning_state_t process_touch_event(void)
 	/* mark the touch event as consumed as it has been translated into a touch message type now */
 	touch_event = TOUCH_EVENT_NONE;
 
-	/* find window this touch event occurred in */
-	window_to_receive_message_id = get_window_id_for_handle(find_window_point_is_in(touch_x, touch_y));
+	/* find window this touch event occurred in, but only change window on a touch down */
+	if (touch_message != MW_TOUCH_DOWN_MESSAGE)
+	{
+		window_to_receive_message_id = window_to_receive_previous_message_id;
+	}
+	else
+	{
+		window_to_receive_message_id = get_window_id_for_handle(find_window_point_is_in(touch_x, touch_y));
+		window_to_receive_previous_message_id = window_to_receive_message_id;
+	}
 	MW_ASSERT(window_to_receive_message_id < MW_MAX_WINDOW_COUNT, "Bad window handle");
 
 	/* now send touch message to appropriate window first checking root window */

@@ -53,6 +53,7 @@ SOFTWARE.
 	/* User-modifiable values */
  	const char *text;								/**< Pointer to the text to draw in the window */
  	const struct mf_rlefont_s *rle_font;			/**< Pointer to run-length encoded true type font structure */
+ 	bool bw_font;									/**< If the font was created as a black and white font */
  	mw_hal_lcd_colour_t fg_colour;					/**< Text foreground colour */
  	mw_hal_lcd_colour_t bg_colour;					/**< Text background colour */
  	mw_gl_tt_font_justification_t justification;	/**< Text justification */

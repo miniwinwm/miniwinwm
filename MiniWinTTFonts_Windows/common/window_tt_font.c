@@ -109,14 +109,12 @@ void window_tt_font_paint_function(mw_handle_t window_handle, const mw_gl_draw_i
 
 	mw_gl_set_fg_colour(window_tt_font_data->fg_colour);
 	mw_gl_set_bg_colour(window_tt_font_data->bg_colour);
-	text_rect.x = 0;
-	text_rect.y = 0;
-	text_rect.width = window_client_rect.width;
-	text_rect.height = window_client_rect.height;
+	mw_util_set_rect(&text_rect, 0, 0, window_client_rect.width, window_client_rect.height);
 	mw_gl_tt_render_text(draw_info,
 			&text_rect,
 			window_tt_font_data->justification,
 			window_tt_font_data->rle_font,
+			window_tt_font_data->bw_font,
 			window_tt_font_data->text,
 			window_tt_font_data->vert_scroll_pixels);
 

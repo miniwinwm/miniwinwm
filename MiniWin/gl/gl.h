@@ -507,6 +507,7 @@ void mw_gl_colour_bitmap(const mw_gl_draw_info_t *draw_info,
  * @param text_rect The rect in the window's client area that the text is to be rendered into
  * @param justification The justification to use when rendering the text
  * @param rle_font The true type font to use
+ * @param bw_font true if the font is created black and white for no anti-aliasing, false if created colour for anti-aliasing
  * @param tt_text The text to render
  * @param vert_scroll How many pixel lines to scroll the text up
  */
@@ -514,6 +515,7 @@ void mw_gl_tt_render_text(const mw_gl_draw_info_t *draw_info,
 		mw_util_rect_t *text_rect,
 		mw_gl_tt_font_justification_t justification,
 		const struct mf_rlefont_s *rle_font,
+		bool bw_font,
 		const char *tt_text,
 		uint16_t vert_scroll_pixels);
 

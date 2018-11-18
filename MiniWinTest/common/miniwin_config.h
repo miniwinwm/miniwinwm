@@ -78,10 +78,10 @@ SOFTWARE.
 #define MW_HOLD_DOWN_DELAY_TICKS			10						/**< Time in ticks that a ui control starts repeating if held down */
 
 /* Fonts */
-#define MW_FONT_12_INCLUDED											/**< Comment this in to include Courier 12 point font or out to exclude it */
-#define MW_FONT_16_INCLUDED											/**< Comment this in to include Courier 16 point font or out to exclude it */
-#define MW_FONT_20_INCLUDED											/**< Comment this in to include Courier 20 point font or out to exclude it */
-#define MW_FONT_24_INCLUDED											/**< Comment this in to include Courier 24 point font or out to exclude it */
+#define MW_FONT_12_INCLUDED					1						/**< Comment this in to include Courier 12 point font or out to exclude it */
+#define MW_FONT_16_INCLUDED					1						/**< Comment this in to include Courier 16 point font or out to exclude it */
+#define MW_FONT_20_INCLUDED					1						/**< Comment this in to include Courier 20 point font or out to exclude it */
+#define MW_FONT_24_INCLUDED					1						/**< Comment this in to include Courier 24 point font or out to exclude it */
 
 /* Dialogs */
 /* #define MW_DIALOG_FILE_CHOOSER */								/**< File chooser dialog is optional and is only built if this is defined */
