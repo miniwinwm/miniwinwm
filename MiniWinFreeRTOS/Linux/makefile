@@ -9,17 +9,20 @@ SRCS := $(wildcard src/*.c) \
 	$(wildcard ../../MiniWin/ui/*.c) \
 	$(wildcard ../../MiniWin/dialogs/*.c) \
 	$(wildcard ../../MiniWin/gl/*.c) \
-	$(wildcard ../../MiniWin/gl/fonts/*.c) \
+	$(wildcard ../../MiniWin/gl/fonts/bitmapped/*.c) \
+	$(wildcard ../../MiniWin/gl/fonts/truetype/*.c) \
+	$(wildcard ../../MiniWin/gl/fonts/truetype/mcufont/*.c) \
 	$(wildcard BSP/*.c)
 
 CC = gcc
-CFLAGS = -I../../MiniWin -Isrc -IBSP -I../common -g -Wall
+CFLAGS = -I../../MiniWin -I../../MiniWin/gl/fonts/truetype/mcufont -Isrc -I../common -IBSP -g -Wall
 OBJECTS := $(SRCS:.c=.o)
 LIBS = -lX11 -lm -lpthread
 
 all: ${OBJECTS}
-	${CC} ${OBJECTS} ${LIBS} -o ${BINARY}
+	${CC} $(CFLAGS) ${OBJECTS} ${LIBS} -o ${BINARY}
 	
 clean:
-	rm ${BINARY} 
 	rm $(OBJECTS)
+	rm ${BINARY} 
+

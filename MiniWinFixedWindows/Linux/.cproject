@@ -31,6 +31,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MiniWinFixedWindows_Linux/src}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MiniWinFixedWindows_Linux/MiniWin}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MiniWinFixedWindows_Linux/common}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MiniWinFixedWindows_Linux/MiniWin/gl/fonts/truetype/mcufont}&quot;"/>
 								</option>
 								<inputType id="com.atollic.managedbuild.pctools.gnu.c.compiler.input.659784726" superClass="com.atollic.managedbuild.pctools.gnu.c.compiler.input"/>
 							</tool>

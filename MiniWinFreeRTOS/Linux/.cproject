@@ -32,6 +32,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MiniWinFreeRTOS_Linux/common}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MiniWinFreeRTOS_Linux/src}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MiniWinFreeRTOS_Linux/BSP}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MiniWinFreeRTOS_Linux/MiniWin/gl/fonts/truetype/mcufont}&quot;"/>
 								</option>
 								<inputType id="com.atollic.managedbuild.pctools.gnu.c.compiler.input.302693632" superClass="com.atollic.managedbuild.pctools.gnu.c.compiler.input"/>
 							</tool>

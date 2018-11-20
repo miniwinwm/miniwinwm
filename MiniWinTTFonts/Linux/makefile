@@ -1,4 +1,4 @@
-BINARY = MiniWinSimple
+BINARY = MiniWinTTFonts
 
 SRCS := $(wildcard src/*.c) \
 	$(wildcard ../common/*.c) \
@@ -20,7 +20,7 @@ LIBS = -lX11 -lm -lpthread
 
 all: ${OBJECTS}
 	${CC} $(CFLAGS) ${OBJECTS} ${LIBS} -o ${BINARY}
-	
+
 clean:
 	rm $(OBJECTS)
 	rm ${BINARY} 

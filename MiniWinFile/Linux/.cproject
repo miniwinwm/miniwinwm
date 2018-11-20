@@ -31,6 +31,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MiniWinFile_Linux/src}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MiniWinFile_Linux/MiniWin}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MiniWinFile_Linux/common}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MiniWinFile_Linux/MiniWin/gl/fonts/truetype/mcufont}&quot;"/>
 								</option>
 								<option id="com.atollic.pctools.gnu.c.compiler.option.preprocessor.def.symbols.1863000500" name="Defined symbols (-D)" superClass="com.atollic.pctools.gnu.c.compiler.option.preprocessor.def.symbols" useByScannerDiscovery="false"/>
 								<inputType id="com.atollic.managedbuild.pctools.gnu.c.compiler.input.721889946" superClass="com.atollic.managedbuild.pctools.gnu.c.compiler.input"/>
