@@ -1,5 +1,3 @@
-# libfreetype6-dev must be installed, use this command: apt-get install libfreetype6-dev
-
 $(info ************ libfreetype6-dev must be installed ************)
 $(info ************ Use this command: apt-get install libfreetype6-dev ************)
 
@@ -29,11 +27,10 @@ OBJS += encode_rlefont.o optimize_rlefont.o export_rlefont.o
 # bwfont export format
 OBJS += export_bwfont.o
 
-
 all: mcufont
 
 clean:
-	rm -f mcufont $(OBJS)
+	rm -f mcufont $(OBJS) main.o
 
 mcufont: main.o $(OBJS)
 	g++ $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
