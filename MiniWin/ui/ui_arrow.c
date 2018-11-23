@@ -259,5 +259,6 @@ mw_handle_t mw_ui_arrow_add_new(uint16_t x,
 			arrow_paint_function,
 			arrow_message_function,
 			flags,
-			arrow_instance_data);
+			arrow_instance_data,
+			MW_UI_CONTROL_ARROW_TYPE);
 }

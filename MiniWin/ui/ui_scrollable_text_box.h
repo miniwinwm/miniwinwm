@@ -24,8 +24,8 @@ SOFTWARE.
 
 */
 
-#ifndef UI_CHECK_BOX_H
-#define UI_CHECK_BOX_H
+#ifndef _UI_SCROLLABLE_TEXT_BOX_H
+#define _UI_SCROLLABLE_TEXT_BOX_H
 
 #ifdef __cplusplus
  extern "C" {
@@ -36,58 +36,50 @@ SOFTWARE.
 ***************/
 
 #include "miniwin.h"
+#include "mcufont.h"
 
 /****************
 *** CONSTANTS ***
 ****************/
 
-#define MW_UI_CHECK_BOX_LABEL_MAX_CHARS			10
-
-#define MW_UI_CHECK_BOX_WIDTH					85
-#define MW_UI_CHECK_BOX_HEIGHT					15
-#define MW_UI_CHECK_BOX_LABEL_X_OFFSET			(MW_UI_CHECK_BOX_HEIGHT + 3)
-#define MW_UI_CHECK_BOX_LABEL_Y_OFFSET			4
-
-#define MW_UI_CHECK_BOX_LARGE_WIDTH				170
-#define MW_UI_CHECK_BOX_LARGE_HEIGHT			30
-#define MW_UI_CHECK_BOX_LARGE_LABEL_X_OFFSET	(MW_UI_CHECK_BOX_LARGE_HEIGHT + 7)
-#define MW_UI_CHECK_BOX_LARGE_LABEL_Y_OFFSET	8
-
-/************
+ /************
 *** TYPES ***
 ************/
 
 /**
- * Instance data structure for checkbox ui component
+ * Instance data structure for scrollable_text_box ui component
  */
 typedef struct
 {
 	/* User modifiable fields */
-	char label[MW_UI_CHECK_BOX_LABEL_MAX_CHARS + 1];	/**< text of label shown to right of check box */
-  
+	const struct mf_rlefont_s *tt_font;
+	mw_gl_tt_font_justification_t justification;
+	const char *text;
+	mw_hal_lcd_colour_t fg_colour;
+	mw_hal_lcd_colour_t bg_colour;
+
 	/* Non-user modifiable fields */
-	bool checked;										/**< if the check box is checked */  
-} mw_ui_check_box_data_t;
+	uint16_t scroll_position;
+	uint16_t text_height_pixels;
+} mw_ui_scrollable_text_box_data_t;
 
 /***************************
 *** FUNCTIONS PROTOTYPES ***
 ***************************/
 
 /**
- * Add a check box control to a window
+ * Add a scrollable_text_box control to a window
  *
- * @param x The x coordinate of the control relative to parent window client area
- * @param y The y coordinate of the control relative to parent window client area
+ * @param control_rect The bounding box of the rect containing this text box
  * @param parent_handle The containing window of this control
  * @param flags General control flags controlling the control
- * @param check_box_instance_data Instance structure containing check box specific data items
+ * @param scrollable_text_box_instance_data Instance structure containing scrollable_text_box specific data items
  * @return The new control's handle
  */
-mw_handle_t mw_ui_check_box_add_new(uint16_t x,
-		uint16_t y,
+mw_handle_t mw_ui_scrollable_text_box_add_new(mw_util_rect_t *control_rect,
 		mw_handle_t parent_handle,
 		uint32_t flags,
-		mw_ui_check_box_data_t *check_box_instance_data);
+		mw_ui_scrollable_text_box_data_t *scrollable_text_box_instance_data);
 
 #ifdef __cplusplus
 }

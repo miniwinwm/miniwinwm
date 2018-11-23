@@ -114,7 +114,6 @@ void window_tt_font_paint_function(mw_handle_t window_handle, const mw_gl_draw_i
 			&text_rect,
 			window_tt_font_data->justification,
 			window_tt_font_data->rle_font,
-			window_tt_font_data->bw_font,
 			window_tt_font_data->text,
 			window_tt_font_data->vert_scroll_pixels);
 

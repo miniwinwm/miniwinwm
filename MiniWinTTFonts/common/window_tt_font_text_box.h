@@ -24,8 +24,8 @@ SOFTWARE.
 
 */
 
-#ifndef UI_CHECK_BOX_H
-#define UI_CHECK_BOX_H
+#ifndef _WINDOW_TT_FONT_TEXT_BOX_H
+#define _WINDOW_TT_FONT_TEXT_BOX_H
 
 #ifdef __cplusplus
  extern "C" {
@@ -41,53 +41,40 @@ SOFTWARE.
 *** CONSTANTS ***
 ****************/
 
-#define MW_UI_CHECK_BOX_LABEL_MAX_CHARS			10
-
-#define MW_UI_CHECK_BOX_WIDTH					85
-#define MW_UI_CHECK_BOX_HEIGHT					15
-#define MW_UI_CHECK_BOX_LABEL_X_OFFSET			(MW_UI_CHECK_BOX_HEIGHT + 3)
-#define MW_UI_CHECK_BOX_LABEL_Y_OFFSET			4
-
-#define MW_UI_CHECK_BOX_LARGE_WIDTH				170
-#define MW_UI_CHECK_BOX_LARGE_HEIGHT			30
-#define MW_UI_CHECK_BOX_LARGE_LABEL_X_OFFSET	(MW_UI_CHECK_BOX_LARGE_HEIGHT + 7)
-#define MW_UI_CHECK_BOX_LARGE_LABEL_Y_OFFSET	8
-
 /************
 *** TYPES ***
 ************/
 
-/**
- * Instance data structure for checkbox ui component
- */
-typedef struct
-{
-	/* User modifiable fields */
-	char label[MW_UI_CHECK_BOX_LABEL_MAX_CHARS + 1];	/**< text of label shown to right of check box */
-  
-	/* Non-user modifiable fields */
-	bool checked;										/**< if the check box is checked */  
-} mw_ui_check_box_data_t;
+ /**
+  * Window instance data for each true type font window
+  */
+ typedef struct
+ {
+	/* User-modifiable values */
+
+ 	/* Non user-modifiable values */
+ } window_tt_font_text_box_data_t;
 
 /***************************
 *** FUNCTIONS PROTOTYPES ***
 ***************************/
 
 /**
- * Add a check box control to a window
+ * Window paint routine, called by window manager.
  *
- * @param x The x coordinate of the control relative to parent window client area
- * @param y The y coordinate of the control relative to parent window client area
- * @param parent_handle The containing window of this control
- * @param flags General control flags controlling the control
- * @param check_box_instance_data Instance structure containing check box specific data items
- * @return The new control's handle
+ * @param window_handle The window identifier in the array of windows
+ * @param draw_info Draw info structure describing offset and clip region
+ * @note Do not call this directly from user code
  */
-mw_handle_t mw_ui_check_box_add_new(uint16_t x,
-		uint16_t y,
-		mw_handle_t parent_handle,
-		uint32_t flags,
-		mw_ui_check_box_data_t *check_box_instance_data);
+void window_tt_font_text_box_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_t *draw_info);
+
+/**
+ * Window message handler called by the window manager.
+ *
+ * @param message The message to be processed
+ * @note Do not call this directly from user code
+ */
+void window_tt_font_text_box_message_function(const mw_message_t *message);
 
 #ifdef __cplusplus
 }

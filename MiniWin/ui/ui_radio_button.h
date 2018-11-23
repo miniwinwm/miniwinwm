@@ -62,11 +62,11 @@ SOFTWARE.
  */
 typedef struct
 {
-  /* User modifiable fields */
+	/* User modifiable fields */
 	char **radio_button_labels;			/**< array of strings of labels shown to the right of each radio_button */
 	uint8_t number_of_items;			/**< number of radio_buttons in the group */  
 
-  /* Non-user modifiable fields */  
+	/* Non-user modifiable fields */
 	uint8_t selected_radio_button;		/**< the currently selected radio_button */
 } mw_ui_radio_button_data_t;
 

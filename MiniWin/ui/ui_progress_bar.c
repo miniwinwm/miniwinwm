@@ -169,5 +169,6 @@ mw_handle_t mw_ui_progress_bar_add_new(uint16_t x,
 			progress_bar_paint_function,
 			progress_bar_message_function,
 			flags,
-			progress_bar_instance_data);
+			progress_bar_instance_data,
+			MW_UI_CONTROL_PROGRESS_BAR_TYPE);
 }

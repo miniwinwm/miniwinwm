@@ -52,10 +52,10 @@ SOFTWARE.
  */
 typedef struct
 {
-  /* User modifiable fields */  
+	/* User modifiable fields */
 	uint8_t progress_percent;				/**< The progress as a percentage */
   
-  /* Non-user modifiable fields */   
+	/* Non-user modifiable fields */
 } mw_ui_progress_bar_data_t;
 
 /***************************

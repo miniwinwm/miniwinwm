@@ -50,7 +50,6 @@ SOFTWARE.
 ***********************/
 
 /* windows */
-
 mw_handle_t window_file_handle;
 
 /* controls */
@@ -60,16 +59,16 @@ mw_handle_t button_create_handle;
 mw_handle_t label_time_handle;
 mw_handle_t label_date_handle;
 
-/* controls instance data */
-mw_ui_button_data_t button_open_data;
-mw_ui_button_data_t button_set_clock_data;
-mw_ui_button_data_t button_create_data;
-mw_ui_label_data_t label_time_data;
-mw_ui_label_data_t label_date_data;
-
 /**********************
 *** LOCAL VARIABLES ***
 **********************/
+
+/* controls instance data */
+static mw_ui_button_data_t button_open_data;
+static mw_ui_button_data_t button_set_clock_data;
+static mw_ui_button_data_t button_create_data;
+static mw_ui_label_data_t label_time_data;
+static mw_ui_label_data_t label_date_data;
 
 /********************************
 *** LOCAL FUNCTION PROTOTYPES ***

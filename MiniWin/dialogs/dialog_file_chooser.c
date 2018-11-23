@@ -300,7 +300,7 @@ static void mw_dialog_file_chooser_message_function(const mw_message_t *message)
 			mw_set_control_enabled(mw_dialog_file_chooser_data.arrow_file_down_handle, true);
 			mw_paint_control(mw_dialog_file_chooser_data.arrow_file_down_handle);
 
-			mw_post_message(MW_LIST_BOX_LINES_TO_SCROLL_MESSAGE,
+			mw_post_message(MW_LIST_BOX_SCROLL_BAR_POSITION_MESSAGE,
 					0,
 					mw_dialog_file_chooser_data.list_box_file_handle,
 					mw_dialog_file_chooser_data.lines_to_scroll,
@@ -327,7 +327,7 @@ static void mw_dialog_file_chooser_message_function(const mw_message_t *message)
 			mw_set_control_enabled(mw_dialog_file_chooser_data.arrow_file_up_handle, true);
 			mw_paint_control(mw_dialog_file_chooser_data.arrow_file_up_handle);
 
-			mw_post_message(MW_LIST_BOX_LINES_TO_SCROLL_MESSAGE,
+			mw_post_message(MW_LIST_BOX_SCROLL_BAR_POSITION_MESSAGE,
 					0,
 					mw_dialog_file_chooser_data.list_box_file_handle,
 					mw_dialog_file_chooser_data.lines_to_scroll,

@@ -50,9 +50,9 @@ SOFTWARE.
  */
 typedef struct
 {
-  /* User modifiable fields */  
+	/* User modifiable fields */
   
-  /* Non-user modifiable fields */    
+	/* Non-user modifiable fields */
 	uint8_t scroll_position;			/**< the scroll position as a proportion of 0xff */  
 } mw_ui_scroll_bar_horiz_data_t;
 

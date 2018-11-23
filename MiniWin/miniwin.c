@@ -112,6 +112,7 @@ typedef struct
 	mw_handle_t parent_handle;          /**< This control's parent window handle */
 	mw_handle_t control_handle;			/**< handle used to refer to this control */
 	uint16_t control_flags;				/**< All the flags defining a control's description and state */
+	mw_ui_control_type_t control_type;	/**< The type of this control */
 } control_t;
 
 /**
@@ -192,7 +193,8 @@ static void set_control_details(const mw_util_rect_t *rect,
 		mw_message_func_p message_func,
 		mw_handle_t parent_handle,
 		uint16_t control_flags,
-		void *instance_data);
+		void *instance_data,
+		mw_ui_control_type_t control_type);
 
 /* root window functions */
 static void root_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_t *draw_info);
@@ -599,6 +601,7 @@ static uint8_t find_empty_control_slot()
  * @param parent The window handle of the control's parent window
  * @param control_flags Flags describing the control and its state
  * @param instance_data void pointer to control specific data structure containing extra control specific configuration data for this instance
+ * @param control_type This control's type
  */
 static void set_control_details(const mw_util_rect_t *rect,
 		mw_paint_func_p paint_func,
@@ -607,7 +610,8 @@ static void set_control_details(const mw_util_rect_t *rect,
 		mw_message_func_p message_func,
 		mw_handle_t parent_handle,
 		uint16_t control_flags,
-		void *instance_data)
+		void *instance_data,
+		mw_ui_control_type_t control_type)
 {
 	uint8_t parent_window_id;
 
@@ -617,6 +621,7 @@ static void set_control_details(const mw_util_rect_t *rect,
 	MW_ASSERT(message_func, "Null pointer argument");
 	MW_ASSERT(control_id < MW_MAX_CONTROL_COUNT, "Illegal control id");
 	MW_ASSERT(instance_data, "Null pointer argument");
+	MW_ASSERT(control_type < MW_UI_CONTROL_TYPE_LAST, "Null pointer argument");
 
 	/* get parent window id from parent window handle and check it's in range */
 	parent_window_id = get_window_id_for_handle(parent_handle);
@@ -629,6 +634,7 @@ static void set_control_details(const mw_util_rect_t *rect,
 	mw_all_controls[control_id].parent_handle = parent_handle;
 	mw_all_controls[control_id].instance_data = instance_data;
 	mw_all_controls[control_id].control_handle = control_handle;
+	mw_all_controls[control_id].control_type = control_type;
 
 	/* now make rect's x,y relative to screen rather than window */
 	mw_all_controls[control_id].control_rect.x = rect->x + mw_all_windows[parent_window_id].client_rect.x;
@@ -4275,7 +4281,8 @@ mw_handle_t mw_add_control(mw_util_rect_t *rect,
 		mw_paint_func_p paint_func,
 		mw_message_func_p message_func,
 		uint16_t control_flags,
-		void *instance_data)
+		void *instance_data,
+		mw_ui_control_type_t control_type)
 {
 	uint8_t new_control_id;
 	mw_handle_t parent_window_id;
@@ -4284,14 +4291,21 @@ mw_handle_t mw_add_control(mw_util_rect_t *rect,
 	if (rect == NULL || instance_data == NULL || paint_func == NULL || message_func == NULL)
 	{
 		MW_ASSERT(false, "Null pointer argument");
-		return MW_MAX_CONTROL_COUNT;
+		return MW_INVALID_HANDLE;
 	}
 
 	/* check for being called from within a client window paint function */
 	if (in_client_window_paint_function)
 	{
 		MW_ASSERT(false, "Can't add control in paint function");
-		return MW_MAX_CONTROL_COUNT;
+		return MW_INVALID_HANDLE;
+	}
+
+	/* check for valid control type */
+	if (control_type >= MW_UI_CONTROL_TYPE_LAST)
+	{
+		MW_ASSERT(false, "Bad control type");
+		return MW_INVALID_HANDLE;
 	}
 
 	/* get parent window id from window handle and check it's in range */
@@ -4299,21 +4313,21 @@ mw_handle_t mw_add_control(mw_util_rect_t *rect,
 	if (parent_window_id >= MW_MAX_WINDOW_COUNT)
 	{
 		MW_ASSERT(false, "Bad window handle");
-		return MW_MAX_CONTROL_COUNT;
+		return MW_INVALID_HANDLE;
 	}
 
 	/* cannot add a control to an unused window or the root window so filter these out */
 	if (!(mw_all_windows[parent_window_id].window_flags & MW_WINDOW_FLAG_IS_USED) || parent_window_id == MW_ROOT_WINDOW_ID)
 	{
 		MW_ASSERT(false, "Can't add control to unused or root window");
-		return MW_MAX_CONTROL_COUNT;
+		return MW_INVALID_HANDLE;
 	}
 
 	/* don't allow control to start above or to left of parent window client rect */
 	if (rect->x < 0 || rect->y < 0)
 	{
 		MW_ASSERT(false, "Can't add control at this position");
-		return MW_MAX_CONTROL_COUNT;
+		return MW_INVALID_HANDLE;
 	}
 
 	/* look for an empty slot in the array of controls */
@@ -4322,7 +4336,7 @@ mw_handle_t mw_add_control(mw_util_rect_t *rect,
 	{
 		/* no empty slot */
 		MW_ASSERT(false, "No space for new control");
-		return MW_MAX_CONTROL_COUNT;
+		return MW_INVALID_HANDLE;
 	}
 
 	/* set this control's details */
@@ -4333,7 +4347,8 @@ mw_handle_t mw_add_control(mw_util_rect_t *rect,
    			message_func,
 			parent_handle,
    			control_flags,
-			instance_data);
+			instance_data,
+			control_type);
 
 	/* send control created message to this control's message function */
    	mw_post_message(MW_CONTROL_CREATED_MESSAGE,
@@ -4607,6 +4622,21 @@ uint16_t mw_get_control_flags(mw_handle_t control_handle)
 	}
 
 	return mw_all_controls[control_id].control_flags;
+}
+
+mw_ui_control_type_t mw_get_control_type(mw_handle_t control_handle)
+{
+	uint8_t control_id;
+
+	/* get control id from control handle and check it's in range */
+	control_id = get_control_id_for_handle(control_handle);
+	if (control_id >= MW_UI_CONTROL_TYPE_LAST)
+	{
+		MW_ASSERT(false, "Bad control handle");
+		return 0;
+	}
+
+	return mw_all_controls[control_id].control_type;
 }
 
 mw_handle_t mw_set_timer(uint32_t fire_time, mw_handle_t recipient_handle, mw_message_recipient_type_t recipient_type)

@@ -29,6 +29,7 @@ SOFTWARE.
 ***************/
 
 #include "window_tt_font.h"
+#include "window_tt_font_text_box.h"
 #include "ui/ui_common.h"
 
 /****************
@@ -51,10 +52,15 @@ const char *test_text = "A kitten is a juvenile cat. After being born, " \
 *** GLOBAL VARIABLES ***
 ***********************/
 
-/* window */
+/* windows */
 mw_handle_t window_deja_vu_font_handle;
 mw_handle_t window_blkchcry_bw_font_handle;
 mw_handle_t window_blkchcry_font_handle;
+mw_handle_t window_tt_font_text_box_handle;
+
+/* controls */
+mw_handle_t text_box_handle;
+mw_handle_t button_handle;
 
 /*************************
 *** EXTERNAL VARIABLES ***
@@ -68,9 +74,15 @@ extern const struct mf_rlefont_s mf_rlefont_BLKCHCRY16bw;
 *** LOCAL VARIABLES ***
 **********************/
 
-static window_tt_font_data_t deja_vu_font_data;
-static window_tt_font_data_t blkchcry_bw_font_data;
-static window_tt_font_data_t blkchcry_font_data;
+/* windows instance data */
+static window_tt_font_data_t window_deja_vu_font_data;
+static window_tt_font_data_t window_blkchcry_bw_font_data;
+static window_tt_font_data_t window_blkchcry_font_data;
+static window_tt_font_text_box_data_t window_tt_font_text_box_data;
+
+/* controls instance data */
+static mw_ui_scrollable_text_box_data_t mw_ui_scrollable_text_box_data;
+static mw_ui_button_data_t button_data;
 
 /********************************
 *** LOCAL FUNCTION PROTOTYPES ***
@@ -102,13 +114,42 @@ void mw_user_init(void)
 {
 	mw_util_rect_t r;
 
+	mw_util_set_rect(&r, 0, 10, 210, 190);
+	window_tt_font_text_box_handle = mw_add_window(&r,
+			"Text box",
+			window_tt_font_text_box_paint_function,
+			window_tt_font_text_box_message_function,
+			NULL,
+			0,
+			MW_WINDOW_FLAG_HAS_BORDER | MW_WINDOW_FLAG_HAS_TITLE_BAR |
+				MW_WINDOW_FLAG_CAN_BE_CLOSED | MW_WINDOW_FLAG_IS_VISIBLE,
+			&window_tt_font_text_box_data);
+
+	mw_util_set_rect(&r, 10, 10, 170, 130);
+	mw_ui_scrollable_text_box_data.bg_colour = MW_HAL_LCD_WHITE;
+	mw_ui_scrollable_text_box_data.fg_colour = MW_HAL_LCD_BLACK;
+	mw_ui_scrollable_text_box_data.text = test_text;
+	mw_ui_scrollable_text_box_data.justification = MW_GL_TT_FULLY_JUSTIFIED;
+	mw_ui_scrollable_text_box_data.tt_font = &mf_rlefont_DejaVuSans12;
+	text_box_handle = mw_ui_scrollable_text_box_add_new(&r,
+			window_tt_font_text_box_handle,
+			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
+			&mw_ui_scrollable_text_box_data);
+
+	mw_util_safe_strcpy(button_data.button_label, MW_UI_BUTTON_LABEL_MAX_CHARS, "Change");
+	button_handle = mw_ui_button_add_new(10,
+			150,
+			window_tt_font_text_box_handle,
+			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
+			&button_data);
+
 	mw_util_set_rect(&r, 0, 10, 210, 150);
-	deja_vu_font_data.text = test_text;
-	deja_vu_font_data.rle_font = &mf_rlefont_DejaVuSans12;
-	deja_vu_font_data.bw_font = false;
-	deja_vu_font_data.fg_colour = MW_HAL_LCD_BLUE;
-	deja_vu_font_data.bg_colour = MW_HAL_LCD_WHITE;
-	deja_vu_font_data.justification = MW_GL_TT_FULLY_JUSTIFIED;
+	window_deja_vu_font_data.text = test_text;
+	window_deja_vu_font_data.rle_font = &mf_rlefont_DejaVuSans12;
+	window_deja_vu_font_data.bw_font = false;
+	window_deja_vu_font_data.fg_colour = MW_HAL_LCD_BLUE;
+	window_deja_vu_font_data.bg_colour = MW_HAL_LCD_WHITE;
+	window_deja_vu_font_data.justification = MW_GL_TT_FULLY_JUSTIFIED;
 	window_deja_vu_font_handle = mw_add_window(&r,
 			"Deja Vu",
 			window_tt_font_paint_function,
@@ -118,15 +159,15 @@ void mw_user_init(void)
 			MW_WINDOW_FLAG_HAS_BORDER | MW_WINDOW_FLAG_HAS_TITLE_BAR | MW_WINDOW_FLAG_VERT_SCROLL_BAR_ENABLED |
 				MW_WINDOW_FLAG_HAS_VERT_SCROLL_BAR | MW_WINDOW_FLAG_CAN_BE_CLOSED | MW_WINDOW_FLAG_IS_VISIBLE |
 				MW_WINDOW_FLAG_LARGE_SIZE,
-			&deja_vu_font_data);
+			&window_deja_vu_font_data);
 
 	mw_util_set_rect(&r, 15, 60, 210, 150);
-	blkchcry_bw_font_data.text = test_text;
-	blkchcry_bw_font_data.rle_font = &mf_rlefont_BLKCHCRY16;
-	blkchcry_bw_font_data.bw_font = false;
-	blkchcry_bw_font_data.fg_colour = MW_HAL_LCD_BLACK;
-	blkchcry_bw_font_data.bg_colour = MW_HAL_LCD_YELLOW;
-	blkchcry_bw_font_data.justification = MW_GL_TT_LEFT_JUSTIFIED;
+	window_blkchcry_bw_font_data.text = test_text;
+	window_blkchcry_bw_font_data.rle_font = &mf_rlefont_BLKCHCRY16;
+	window_blkchcry_bw_font_data.bw_font = false;
+	window_blkchcry_bw_font_data.fg_colour = MW_HAL_LCD_BLACK;
+	window_blkchcry_bw_font_data.bg_colour = MW_HAL_LCD_YELLOW;
+	window_blkchcry_bw_font_data.justification = MW_GL_TT_LEFT_JUSTIFIED;
 	window_blkchcry_bw_font_handle = mw_add_window(&r,
 			"B-Chncry bw",
 			window_tt_font_paint_function,
@@ -136,15 +177,15 @@ void mw_user_init(void)
 			MW_WINDOW_FLAG_HAS_BORDER | MW_WINDOW_FLAG_HAS_TITLE_BAR | MW_WINDOW_FLAG_VERT_SCROLL_BAR_ENABLED |
 				MW_WINDOW_FLAG_HAS_VERT_SCROLL_BAR | MW_WINDOW_FLAG_CAN_BE_CLOSED | MW_WINDOW_FLAG_IS_VISIBLE |
 				MW_WINDOW_FLAG_LARGE_SIZE,
-			&blkchcry_bw_font_data);
+			&window_blkchcry_bw_font_data);
 
 	mw_util_set_rect(&r, 30, 110, 210, 150);
-	blkchcry_font_data.text = test_text;
-	blkchcry_font_data.rle_font = &mf_rlefont_BLKCHCRY16bw;
-	blkchcry_font_data.bw_font = true;
-	blkchcry_font_data.fg_colour = MW_HAL_LCD_BLACK;
-	blkchcry_font_data.bg_colour = MW_HAL_LCD_YELLOW;
-	blkchcry_font_data.justification = MW_GL_TT_LEFT_JUSTIFIED;
+	window_blkchcry_font_data.text = test_text;
+	window_blkchcry_font_data.rle_font = &mf_rlefont_BLKCHCRY16bw;
+	window_blkchcry_font_data.bw_font = true;
+	window_blkchcry_font_data.fg_colour = MW_HAL_LCD_BLACK;
+	window_blkchcry_font_data.bg_colour = MW_HAL_LCD_YELLOW;
+	window_blkchcry_font_data.justification = MW_GL_TT_LEFT_JUSTIFIED;
 	window_blkchcry_font_handle = mw_add_window(&r,
 			"B-Chncry",
 			window_tt_font_paint_function,
@@ -154,7 +195,7 @@ void mw_user_init(void)
 			MW_WINDOW_FLAG_HAS_BORDER | MW_WINDOW_FLAG_HAS_TITLE_BAR | MW_WINDOW_FLAG_VERT_SCROLL_BAR_ENABLED |
 				MW_WINDOW_FLAG_HAS_VERT_SCROLL_BAR | MW_WINDOW_FLAG_CAN_BE_CLOSED | MW_WINDOW_FLAG_IS_VISIBLE |
 				MW_WINDOW_FLAG_LARGE_SIZE,
-			&blkchcry_font_data);
+			&window_blkchcry_font_data);
 
 	mw_paint_all();
 }

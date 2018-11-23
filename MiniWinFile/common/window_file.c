@@ -58,8 +58,8 @@ SOFTWARE.
  */
 typedef struct
 {
-	text_window_data_t text_windows_data[TEXT_WINDOW_COUNT];				/**< Array of window data structures for text windows */
-	image_window_data_t image_windows_data[IMAGE_WINDOW_COUNT];				/**< Array of window data structures for image windows */
+	text_window_data_t text_windows_data[TEXT_WINDOW_COUNT];				/**< Array of window instance data structures for text windows */
+	image_window_data_t image_windows_data[IMAGE_WINDOW_COUNT];				/**< Array of window instance data structures for image windows */
 	struct tm set_time;														/**< Time/date from dialogs to send to hardware clock */
 	char create_path_and_filename[MAX_FOLDER_AND_FILENAME_LENGTH + 1];		/**< Path and file name for file to create */
 } window_file_data_t;
@@ -77,8 +77,6 @@ extern mw_handle_t button_set_clock_handle;
 extern mw_handle_t button_create_handle;
 extern mw_handle_t label_time_handle;
 extern mw_handle_t label_date_handle;
-extern mw_ui_label_data_t label_time_data;
-extern mw_ui_label_data_t label_date_data;
 extern volatile uint32_t mw_tick_counter;
 
 /**********************
@@ -94,6 +92,8 @@ static window_file_data_t window_file_data;
 static bool add_text_window(char *path_and_filename);
 static bool add_image_window(char *path_and_filename);
 static void create_new_file(mw_handle_t response_window_handle);
+static char time_text[MW_UI_LABEL_MAX_CHARS + 1];
+static char date_text[MW_UI_LABEL_MAX_CHARS + 1];
 
 /**********************
 *** LOCAL FUNCTIONS ***
@@ -319,22 +319,34 @@ void window_file_message_function(const mw_message_t *message)
 			struct tm t;
 
 			t = app_get_time_date();
-			snprintf(label_time_data.label,
+			snprintf(time_text,
 					MW_UI_LABEL_MAX_CHARS,
 					"%02d:%02d:%02d",
 					t.tm_hour,
 					t.tm_min,
 					t.tm_sec);
 
-			snprintf(label_date_data.label,
+			mw_post_message(MW_LABEL_SET_LABEL_TEXT_MESSAGE,
+					message->recipient_handle,
+					label_time_handle,
+					MW_UNUSED_MESSAGE_PARAMETER,
+					time_text,
+					MW_CONTROL_MESSAGE);
+
+			snprintf(date_text,
 					MW_UI_LABEL_MAX_CHARS,
 					"%02d/%02d/%02d",
 					t.tm_mday,
 					t.tm_mon,
 					t.tm_year);
 
-			mw_paint_control(label_time_handle);
-			mw_paint_control(label_date_handle);
+			mw_post_message(MW_LABEL_SET_LABEL_TEXT_MESSAGE,
+					message->recipient_handle,
+					label_date_handle,
+					MW_UNUSED_MESSAGE_PARAMETER,
+					date_text,
+					MW_CONTROL_MESSAGE);
+
 
 			mw_set_timer(mw_tick_counter + 20, message->recipient_handle, MW_WINDOW_MESSAGE);
 		}

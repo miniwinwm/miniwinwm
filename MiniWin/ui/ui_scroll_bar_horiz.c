@@ -228,5 +228,6 @@ mw_handle_t mw_ui_scroll_bar_horiz_add_new(uint16_t x,
 			scroll_bar_horiz_paint_function,
 			scroll_bar_horiz_message_function,
 			flags,
-			scroll_bar_horiz_instance_data);
+			scroll_bar_horiz_instance_data,
+			MW_UI_CONTROL_SCROLL_BAR_HORIZ_TYPE);
 }

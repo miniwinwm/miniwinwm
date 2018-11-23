@@ -117,24 +117,24 @@ mw_handle_t arrow_file_down_handle;
 mw_handle_t label_file_handle;
 mw_handle_t button_file_ok_handle;
 
-/* controls instance data */
-mw_ui_button_data_t button_temp_back_data;
-mw_ui_button_data_t button_settings_ok_data;
-mw_ui_check_box_data_t check_box_settings_ok_data;
-mw_ui_radio_button_data_t radio_button_settings_data;
-mw_ui_label_data_t label_settings_data;
-mw_ui_list_box_data_t list_box_settings_data;
-mw_ui_arrow_data_t arrow_up_settings_data;
-mw_ui_arrow_data_t arrow_down_settings_data;
-mw_ui_list_box_data_t list_box_file_data;
-mw_ui_arrow_data_t arrow_up_file_data;
-mw_ui_arrow_data_t arrow_down_file_data;
-mw_ui_label_data_t label_file_data;
-mw_ui_button_data_t button_file_ok_data;
-
 /**********************
 *** LOCAL VARIABLES ***
 **********************/
+
+/* controls instance data */
+static mw_ui_button_data_t button_temp_back_data;
+static mw_ui_button_data_t button_settings_ok_data;
+static mw_ui_check_box_data_t check_box_settings_ok_data;
+static mw_ui_radio_button_data_t radio_button_settings_data;
+static mw_ui_label_data_t label_settings_data;
+static mw_ui_arrow_data_t arrow_up_settings_data;
+static mw_ui_arrow_data_t arrow_down_settings_data;
+static mw_ui_arrow_data_t arrow_up_file_data;
+static mw_ui_arrow_data_t arrow_down_file_data;
+static mw_ui_label_data_t label_file_data;
+static mw_ui_button_data_t button_file_ok_data;
+static mw_ui_list_box_data_t list_box_settings_data;
+static mw_ui_list_box_data_t list_box_file_data;
 
 /********************************
 *** LOCAL FUNCTION PROTOTYPES ***

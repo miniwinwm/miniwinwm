@@ -52,7 +52,6 @@ typedef struct
 	bool draw_circle;				/**< If the screen has been touched and need to draw the circle */
 	uint8_t i;						/**< Value shown in label and progress bar progress */
 	char transfer_buffer[10];		/**< Buffer to transfer data to label */
-	uint8_t lines_to_scroll;		/**< Number of lines list box is scrolled */
 	bool large_controls;			/**< If to show large controls */
 } window_test_data_t;
 
@@ -85,14 +84,6 @@ extern mw_handle_t scroll_bar_vert_2_large_handle;
 extern mw_handle_t scroll_bar_horiz_1_large_handle;
 extern mw_handle_t label_1_large_handle;
 extern mw_handle_t list_box_3_large_handle;
-extern mw_ui_scroll_bar_vert_data_t scroll_bar_vert_1_data;
-extern mw_ui_scroll_bar_vert_data_t scroll_bar_vert_2_data;
-extern mw_ui_scroll_bar_horiz_data_t scroll_bar_horiz_1_data;
-extern mw_ui_list_box_data_t list_box_3_data;
-extern mw_ui_scroll_bar_vert_data_t scroll_bar_vert_1_large_data;
-extern mw_ui_scroll_bar_vert_data_t scroll_bar_vert_2_large_data;
-extern mw_ui_scroll_bar_horiz_data_t scroll_bar_horiz_1_large_data;
-extern mw_ui_list_box_data_t list_box_3_large_data;
 
 /**********************
 *** LOCAL VARIABLES ***
@@ -142,7 +133,7 @@ void window_test_message_function(const mw_message_t *message)
 	switch (message->message_id)
 	{
 	case MW_WINDOW_CREATED_MESSAGE:
-		window_test_data.lines_to_scroll = 0;
+//		window_test_data.lines_to_scroll = 0;
 		window_test_data.draw_circle = false;
 		window_test_data.i = 0;
 		window_test_data.large_controls = false;
@@ -315,7 +306,7 @@ void window_test_message_function(const mw_message_t *message)
 			mw_post_message(MW_SCROLL_BAR_SET_SCROLL_MESSAGE,
 					message->recipient_handle,
 					scroll_bar_vert_1_large_handle,
-					scroll_bar_horiz_1_large_data.scroll_position,
+					message->message_data,
 					MW_UNUSED_MESSAGE_PARAMETER,
 					MW_CONTROL_MESSAGE);
 			mw_paint_control(scroll_bar_vert_1_large_handle);
@@ -325,7 +316,7 @@ void window_test_message_function(const mw_message_t *message)
 			mw_post_message(MW_SCROLL_BAR_SET_SCROLL_MESSAGE,
 					message->recipient_handle,
 					scroll_bar_vert_1_handle,
-					scroll_bar_horiz_1_data.scroll_position,
+					message->message_data,
 					MW_UNUSED_MESSAGE_PARAMETER,
 					MW_CONTROL_MESSAGE);
 			mw_paint_control(scroll_bar_vert_1_handle);
@@ -336,26 +327,20 @@ void window_test_message_function(const mw_message_t *message)
 		/* vertical scroll bar scrolled */
 		if (message->sender_handle == scroll_bar_vert_2_handle)
 		{
-			window_test_data.lines_to_scroll = (scroll_bar_vert_2_data.scroll_position *
-					(list_box_3_data.number_of_items - list_box_3_data.number_of_lines)) /
-					UINT8_MAX;
-			mw_post_message(MW_LIST_BOX_LINES_TO_SCROLL_MESSAGE,
+			mw_post_message(MW_LIST_BOX_SCROLL_BAR_POSITION_MESSAGE,
 					MW_UNUSED_MESSAGE_PARAMETER,
 					list_box_3_handle,
-					window_test_data.lines_to_scroll,
+					message->message_data,
 					MW_UNUSED_MESSAGE_PARAMETER,
 					MW_CONTROL_MESSAGE);
 			mw_paint_control(list_box_3_handle);
 		}
 		else if (message->sender_handle == scroll_bar_vert_2_large_handle)
 		{
-			window_test_data.lines_to_scroll = (scroll_bar_vert_2_large_data.scroll_position *
-					(list_box_3_large_data.number_of_items - list_box_3_large_data.number_of_lines)) /
-					UINT8_MAX;
-			mw_post_message(MW_LIST_BOX_LINES_TO_SCROLL_MESSAGE,
+			mw_post_message(MW_LIST_BOX_SCROLL_BAR_POSITION_MESSAGE,
 					MW_UNUSED_MESSAGE_PARAMETER,
 					list_box_3_large_handle,
-					window_test_data.lines_to_scroll,
+					message->message_data,
 					MW_UNUSED_MESSAGE_PARAMETER,
 					MW_CONTROL_MESSAGE);
 			mw_paint_control(list_box_3_large_handle);

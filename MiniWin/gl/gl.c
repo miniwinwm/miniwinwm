@@ -68,7 +68,6 @@ typedef struct
     mw_gl_tt_font_justification_t justification;	/**< Rendering justification used */
     uint16_t rendered_line_count;					/**< How many lines in pixels that have been rendered so far */
     uint16_t vert_scroll_pixels;					/**< How many pixel lines to scroll the text up */
-	bool bw_font;									/**< If the font was created with bw parameter (no anti-aliasing) */
 } tt_font_state_t;
 
 /***********************
@@ -1191,7 +1190,7 @@ static uint8_t tt_character_callback(int16_t x, int16_t y, mf_char character, vo
 	tt_font_state_t *tt_font_state = (tt_font_state_t *)state;
 
 	/* render the character with anti-aliasing */
-	if (tt_font_state->bw_font)
+	if (tt_font_state->font->flags & MF_FONT_FLAG_BW)
 	{
 		return mf_render_character(tt_font_state->font, x, y, character, tt_pixel_callback_no_anti_aliasing, state);
 	}
@@ -2478,7 +2477,6 @@ void mw_gl_tt_render_text(const mw_gl_draw_info_t *draw_info,
 		mw_util_rect_t *text_rect,
 		mw_gl_tt_font_justification_t justification,
 		const struct mf_rlefont_s *rle_font,
-		bool bw_font,
 		const char *tt_text,
 		uint16_t vert_scroll_pixels)
 {
@@ -2499,10 +2497,9 @@ void mw_gl_tt_render_text(const mw_gl_draw_info_t *draw_info,
 	tt_font_state.bottom = text_rect->y + text_rect->height;
 	tt_font_state.justification = justification;
 	tt_font_state.vert_scroll_pixels = vert_scroll_pixels;
-	tt_font_state.bw_font = bw_font;
 
 	/* set up alpha blending values */
-	if (!bw_font)
+	if (!(rle_font->font.flags & MF_FONT_FLAG_BW))
 	{
 		tt_font_state.fg_red = (gc->fg_colour & 0xff0000) >> 16;
 		tt_font_state.fg_green = (gc->fg_colour & 0xff00) >> 8;

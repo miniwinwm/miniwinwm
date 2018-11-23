@@ -36,6 +36,7 @@ SOFTWARE.
 ***************/
 
 #include <stdint.h>
+#include <stdbool.h>
 #include "miniwin_config.h"
 #include "miniwin_debug.h"
 #include "gl/gl.h"
@@ -120,6 +121,25 @@ SOFTWARE.
 /************
 *** TYPES ***
 ************/
+
+ // todo
+ typedef enum
+ {
+	 MW_UI_CONTROL_BUTTON_TYPE,
+	 MW_UI_CONTROL_CHECK_BOX_TYPE,
+	 MW_UI_CONTROL_RADIO_BUTTON_TYPE,
+	 MW_UI_CONTROL_LIST_BOX_TYPE,
+	 MW_UI_CONTROL_LABEL_TYPE,
+	 MW_UI_CONTROL_SCROLL_BAR_VERT_TYPE,
+	 MW_UI_CONTROL_SCROLL_BAR_HORIZ_TYPE,
+	 MW_UI_CONTROL_PROGRESS_BAR_TYPE,
+	 MW_UI_CONTROL_KEYBOARD_TYPE,
+	 MW_UI_CONTROL_ARROW_TYPE,
+	 MW_UI_CONTROL_KEYPAD_TYPE,
+	 MW_UI_CONTROL_TEXT_BOX_TYPE,
+
+	 MW_UI_CONTROL_TYPE_LAST						/**< Must be the last entry in this enum */
+ } mw_ui_control_type_t;
 
 /**
  * System defined window manager messages
@@ -425,12 +445,36 @@ typedef enum
 	MW_LIST_BOX_LINES_TO_SCROLL_MESSAGE,
 
 	/**
+	 * Position of a scroll bar associated with a list box
+	 *
+	 * message_data: Scroll bar position, 0 - 255
+	 * message_pointer: Unused
+	 */
+	MW_LIST_BOX_SCROLL_BAR_POSITION_MESSAGE,
+
+	/**
+	 * New entries and entry count for a list box
+	 *
+	 * message_data: Number of entries in new array of entries
+	 * message_pointer: Pointer to array of entries
+	 */
+	MW_LIST_BOX_SCROLL_NEW_ENTRIES_MESSAGE,
+
+	/**
 	 * Set a radio button's chosen button
 	 *
 	 * message_data: The button to set zero based
 	 * message_pointer: Unused
 	 */
 	MW_RADIO_BUTTON_SET_SELECTED_MESSAGE,
+
+	/**
+	 * Set the scrollable text box's text by passing a pointer to a character buffer
+	 *
+	 * message_data: Unused
+	 * message_pointer: Pointer to the scrollable text box's new text
+	 */
+	MW_LABEL_SET_SCROLLABLE_TEXT_BOX_TEXT_MESSAGE,
 
 	/**************************************
 	*	 								  *
@@ -1005,6 +1049,7 @@ bool mw_find_if_any_control_slots_free(void);
  * @param message_func Pointer to message handling function
  * @param control_flags Flags describing the control and its state
  * @param instance_data void Pointer to control specific data structure containing extra control specific configuration data for this instance
+ * @param control_type The type of the control being created
  * @return The new control handle if created or MW_INVALID_HANDLE if it could not be created
  */
 mw_handle_t mw_add_control(mw_util_rect_t *rect,
@@ -1012,7 +1057,8 @@ mw_handle_t mw_add_control(mw_util_rect_t *rect,
 		mw_paint_func_p paint_func,
 		mw_message_func_p message_func,
 		uint16_t control_flags,
-		void *instance_data);
+		void *instance_data,
+		mw_ui_control_type_t control_type);
 
 /**
  * Test if a control handle is valid and represents a valid control
@@ -1092,6 +1138,14 @@ void *mw_get_control_instance_data(mw_handle_t control_handle);
  * @return The returned flags bitfield
  */
 uint16_t mw_get_control_flags(mw_handle_t control_handle);
+
+/**
+ * Get a control's type from its handle
+ *
+ * @param control_handle The handle of the control to get the control type for
+ * @return The control type or MW_UI_CONTROL_TYPE_LAST if the handle does not represent a control
+ */
+mw_ui_control_type_t mw_get_control_type(mw_handle_t control_handle);
 
 /**
  * Find if there are any free control slots in array of controls

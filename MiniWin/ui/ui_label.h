@@ -58,10 +58,10 @@ SOFTWARE.
  */
 typedef struct
 {
-  /* User modifiable fields */   
+	/* User modifiable fields */
 	char label[MW_UI_LABEL_MAX_CHARS + 1];			/**< text of label */
   
-  /* Non-user modifiable fields */   
+	/* Non-user modifiable fields */
 } mw_ui_label_data_t;
 
 /***************************

@@ -106,29 +106,6 @@ mw_handle_t scroll_bar_horiz_1_large_handle;
 mw_handle_t label_1_large_handle;
 mw_handle_t list_box_3_large_handle;
 
-/* controls instance data */
-mw_ui_check_box_data_t check_box_1_data;
-mw_ui_arrow_data_t arrow_1_data;
-mw_ui_button_data_t button_1_data;
-mw_ui_radio_button_data_t radio_button_1_data;
-mw_ui_list_box_data_t list_box_1_data;
-mw_ui_label_data_t label_1_data;
-mw_ui_progress_bar_data_t progress_bar_1_data;
-mw_ui_list_box_data_t list_box_2_data;
-mw_ui_list_box_data_t list_box_3_data;
-mw_ui_scroll_bar_vert_data_t scroll_bar_vert_1_data;
-mw_ui_scroll_bar_vert_data_t scroll_bar_vert_2_data;
-mw_ui_scroll_bar_horiz_data_t scroll_bar_horiz_1_data;
-mw_ui_check_box_data_t check_box_1_large_data;
-mw_ui_arrow_data_t arrow_1_large_data;
-mw_ui_button_data_t button_1_large_data;
-mw_ui_radio_button_data_t radio_button_1_large_data;
-mw_ui_label_data_t label_1_large_data;
-mw_ui_list_box_data_t list_box_3_large_data;
-mw_ui_scroll_bar_vert_data_t scroll_bar_vert_1_large_data;
-mw_ui_scroll_bar_vert_data_t scroll_bar_vert_2_large_data;
-mw_ui_scroll_bar_horiz_data_t scroll_bar_horiz_1_large_data;
-
 /*************************
 *** EXTERNAL VARIABLES ***
 **************************/
@@ -136,6 +113,29 @@ mw_ui_scroll_bar_horiz_data_t scroll_bar_horiz_1_large_data;
 /**********************
 *** LOCAL VARIABLES ***
 **********************/
+
+/* controls instance data */
+static mw_ui_check_box_data_t check_box_1_data;
+static mw_ui_arrow_data_t arrow_1_data;
+static mw_ui_button_data_t button_1_data;
+static mw_ui_radio_button_data_t radio_button_1_data;
+static mw_ui_list_box_data_t list_box_1_data;
+static mw_ui_label_data_t label_1_data;
+static mw_ui_progress_bar_data_t progress_bar_1_data;
+static mw_ui_list_box_data_t list_box_2_data;
+static mw_ui_list_box_data_t list_box_3_data;
+static mw_ui_scroll_bar_vert_data_t scroll_bar_vert_1_data;
+static mw_ui_scroll_bar_vert_data_t scroll_bar_vert_2_data;
+static mw_ui_scroll_bar_horiz_data_t scroll_bar_horiz_1_data;
+static mw_ui_check_box_data_t check_box_1_large_data;
+static mw_ui_arrow_data_t arrow_1_large_data;
+static mw_ui_button_data_t button_1_large_data;
+static mw_ui_radio_button_data_t radio_button_1_large_data;
+static mw_ui_label_data_t label_1_large_data;
+static mw_ui_list_box_data_t list_box_3_large_data;
+static mw_ui_scroll_bar_vert_data_t scroll_bar_vert_1_large_data;
+static mw_ui_scroll_bar_vert_data_t scroll_bar_vert_2_large_data;
+static mw_ui_scroll_bar_horiz_data_t scroll_bar_horiz_1_large_data;
 
 /********************************
 *** LOCAL FUNCTION PROTOTYPES ***
@@ -324,7 +324,7 @@ void mw_user_init(void)
 			50,
 			window_test_handle,
 			MW_CONTROL_FLAG_IS_VISIBLE,
-			&scroll_bar_vert_1_large_data);
+			&scroll_bar_vert_1_data);
 
 	/* create a new large vertical scroll bar */
 	scroll_bar_vert_1_large_handle = mw_ui_scroll_bar_vert_add_new(205,

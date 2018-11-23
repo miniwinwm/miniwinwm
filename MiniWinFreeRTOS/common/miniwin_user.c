@@ -58,14 +58,6 @@ mw_handle_t label_gyro_y_handle;
 mw_handle_t button_gyro_z_handle;
 mw_handle_t label_gyro_z_handle;
 
-/* controls instance data */
-mw_ui_label_data_t label_gyro_x_data;
-mw_ui_button_data_t button_gyro_x_data;
-mw_ui_label_data_t label_gyro_y_data;
-mw_ui_button_data_t button_gyro_y_data;
-mw_ui_label_data_t label_gyro_z_data;
-mw_ui_button_data_t button_gyro_z_data;
-
 /*************************
 *** EXTERNAL VARIABLES ***
 **************************/
@@ -73,6 +65,14 @@ mw_ui_button_data_t button_gyro_z_data;
 /**********************
 *** LOCAL VARIABLES ***
 **********************/
+
+/* controls instance data */
+static mw_ui_label_data_t label_gyro_x_data;
+static mw_ui_button_data_t button_gyro_x_data;
+static mw_ui_label_data_t label_gyro_y_data;
+static mw_ui_button_data_t button_gyro_y_data;
+static mw_ui_label_data_t label_gyro_z_data;
+static mw_ui_button_data_t button_gyro_z_data;
 
 /********************************
 *** LOCAL FUNCTION PROTOTYPES ***

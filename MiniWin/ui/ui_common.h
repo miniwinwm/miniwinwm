@@ -47,6 +47,7 @@ SOFTWARE.
 #include "ui/ui_keyboard.h"
 #include "ui/ui_arrow.h"
 #include "ui/ui_keypad.h"
+#include "ui/ui_scrollable_text_box.h"
 
 /****************
 *** CONSTANTS ***

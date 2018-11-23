@@ -59,7 +59,7 @@ extern mw_handle_t list_box_settings_handle;
 extern mw_handle_t label_settings_handle;
 extern mw_handle_t arrow_settings_up;
 extern mw_handle_t arrow_settings_down;
-extern mw_ui_list_box_data_t list_box_settings_data;
+//todo extern mw_ui_list_box_data_t list_box_settings_data;
 extern mw_ui_list_box_entry list_box_settings_entries[];
 
 /**********************
@@ -166,12 +166,12 @@ void window_settings_message_function(const mw_message_t *message)
 			mw_paint_control(list_box_settings_handle);
 		}
 		else if (message->message_data == MW_UI_ARROW_DOWN &&
-					settings_data.lines_to_scroll < (list_box_settings_data.number_of_items - list_box_settings_data.number_of_lines))
+					settings_data.lines_to_scroll < mw_ui_list_box_get_max_lines_to_scroll(list_box_settings_handle))
 		{
-			/* down arrow, scroll list box down is ok to do so */
+			/* down arrow, scroll list box down if ok to do so */
 			settings_data.lines_to_scroll++;
 
-			if (settings_data.lines_to_scroll == list_box_settings_data.number_of_items - list_box_settings_data.number_of_lines)
+			if (settings_data.lines_to_scroll == mw_ui_list_box_get_max_lines_to_scroll(list_box_settings_handle))
 			{
 				mw_set_control_enabled(arrow_settings_down, false);
 				mw_paint_control(arrow_settings_down);
