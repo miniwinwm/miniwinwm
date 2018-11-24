@@ -132,12 +132,12 @@ void window_file_message_function(const mw_message_t *message)
 	case MW_WINDOW_CREATED_MESSAGE:
 		break;
 
-	case MW_LIST_BOX_SCROLLING_REQUIRED:
+	case MW_LIST_BOX_SCROLLING_REQUIRED_MESSAGE:
 		mw_set_control_enabled(arrow_file_down_handle, message->message_data);
 		mw_paint_control(arrow_file_down_handle);
 		break;
 
-	case MW_WINDOW_VISIBILITY_CHANGED:
+	case MW_WINDOW_VISIBILITY_CHANGED_MESSAGE:
 		if (message->message_data)
 		{
 			/* visibility gained */
@@ -150,6 +150,12 @@ void window_file_message_function(const mw_message_t *message)
 			mw_paint_control(label_file_handle);
 
 			file_data.lines_to_scroll = 0;
+			mw_post_message(MW_LIST_BOX_LINES_TO_SCROLL_MESSAGE,
+					message->recipient_handle,
+					list_box_file_handle,
+					0,
+					MW_UNUSED_MESSAGE_PARAMETER,
+					MW_CONTROL_MESSAGE);
 			file_data.folder_shown = ROOT_FOLDER;
 
 			mw_post_message(MW_LIST_BOX_SET_ENTRIES_MESSAGE,
@@ -158,8 +164,10 @@ void window_file_message_function(const mw_message_t *message)
 					list_box_file_entries_root_count,
 					(void *)list_box_file_entries_root,
 					MW_CONTROL_MESSAGE);
+			mw_paint_control(list_box_file_handle);
 
 			mw_set_control_enabled(arrow_file_up_handle, false);
+			mw_paint_control(arrow_file_up_handle);
 		}
 		break;
 
@@ -256,6 +264,12 @@ void window_file_message_function(const mw_message_t *message)
 		if (folder_changed)
 		{
 			file_data.lines_to_scroll = 0;
+			mw_post_message(MW_LIST_BOX_LINES_TO_SCROLL_MESSAGE,
+					message->recipient_handle,
+					list_box_file_handle,
+					0,
+					MW_UNUSED_MESSAGE_PARAMETER,
+					MW_CONTROL_MESSAGE);
 
 			mw_set_control_enabled(arrow_file_up_handle, false);
 			if (mw_ui_list_box_get_max_lines_to_scroll(list_box_file_handle) > 0)
@@ -267,6 +281,7 @@ void window_file_message_function(const mw_message_t *message)
 				mw_set_control_enabled(arrow_file_down_handle, false);
 			}
 			mw_paint_control(arrow_file_up_handle);
+			mw_paint_control(arrow_file_down_handle);
 			mw_paint_control(list_box_file_handle);
 		}
 		break;

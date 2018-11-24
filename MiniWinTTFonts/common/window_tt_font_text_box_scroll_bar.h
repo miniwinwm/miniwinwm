@@ -24,8 +24,8 @@ SOFTWARE.
 
 */
 
-#ifndef _WINDOW_TT_FONT_TEXT_BOX_H
-#define _WINDOW_TT_FONT_TEXT_BOX_H
+#ifndef _WINDOW_TT_FONT_TEXT_BOX_SCROLL_BAR_H
+#define _WINDOW_TT_FONT_TEXT_BOX_SCROLL_BAR_H
 
 #ifdef __cplusplus
  extern "C" {
@@ -56,7 +56,7 @@ SOFTWARE.
  * @param draw_info Draw info structure describing offset and clip region
  * @note Do not call this directly from user code
  */
-void window_tt_font_text_box_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_t *draw_info);
+void window_tt_font_text_box_scroll_bar_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_t *draw_info);
 
 /**
  * Window message handler called by the window manager.
@@ -64,7 +64,7 @@ void window_tt_font_text_box_paint_function(mw_handle_t window_handle, const mw_
  * @param message The message to be processed
  * @note Do not call this directly from user code
  */
-void window_tt_font_text_box_message_function(const mw_message_t *message);
+void window_tt_font_text_box_scroll_bar_message_function(const mw_message_t *message);
 
 #ifdef __cplusplus
 }

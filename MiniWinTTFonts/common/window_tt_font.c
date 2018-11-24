@@ -145,7 +145,7 @@ void window_tt_font_message_function(const mw_message_t *message)
 		set_scroll(message, window_tt_font_data);
 		break;
 
-	case MW_WINDOW_RESIZED:
+	case MW_WINDOW_RESIZED_MESSAGE:
 		set_scroll(message, window_tt_font_data);
 		break;
 

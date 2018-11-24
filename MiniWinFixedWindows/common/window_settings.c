@@ -119,7 +119,7 @@ void window_settings_message_function(const mw_message_t *message)
 		mw_set_control_enabled(arrow_settings_up, false);
 		break;
 
-	case MW_LIST_BOX_SCROLLING_REQUIRED:
+	case MW_LIST_BOX_SCROLLING_REQUIRED_MESSAGE:
 		mw_set_control_enabled(arrow_settings_down, message->message_data);
 		mw_paint_control(arrow_settings_down);
 		break;

@@ -31,6 +31,8 @@ SOFTWARE.
 #include "miniwin.h"
 #include "window_tt_font.h"
 #include "window_tt_font_text_box.h"
+#include "window_tt_font_text_box_scroll_bar.h"
+#include "window_tt_font_text_box_arrows.h"
 
 /****************
 *** CONSTANTS ***
@@ -53,15 +55,21 @@ const char *test_text = "A kitten is a juvenile cat. After being born, " \
 ***********************/
 
 /* windows */
-mw_handle_t window_deja_vu_font_handle;
 mw_handle_t window_blkchcry_bw_font_handle;
 mw_handle_t window_blkchcry_font_handle;
+mw_handle_t window_tt_font_text_box_handle;
+mw_handle_t window_tt_font_text_box_scroll_bar_handle;
+mw_handle_t window_tt_font_text_box_arrows_handle;
 
 /* controls */
 mw_handle_t text_box_handle;
-mw_handle_t button_handle;
-mw_handle_t window_tt_font_text_box_handle;
+mw_handle_t text_box_scroll_bar_handle;
+mw_handle_t button_scroll_bar_handle;
 mw_handle_t vert_scroll_bar_handle;
+mw_handle_t text_box_arrows_handle;
+mw_handle_t button_arrows_handle;
+mw_handle_t arrow_up;
+mw_handle_t arrow_down;
 
 /*************************
 *** EXTERNAL VARIABLES ***
@@ -76,15 +84,18 @@ extern const struct mf_rlefont_s mf_rlefont_BLKCHCRY16bw;
 **********************/
 
 /* windows instance data */
-static window_tt_font_data_t window_deja_vu_font_data;
 static window_tt_font_data_t window_blkchcry_bw_font_data;
 static window_tt_font_data_t window_blkchcry_font_data;
-static window_tt_font_text_box_data_t window_tt_font_text_box_data;
 
 /* controls instance data */
-static mw_ui_scrollable_text_box_data_t mw_ui_scrollable_text_box_data;
-static mw_ui_button_data_t button_data;
+static mw_ui_text_box_data_t text_box_data;
+static mw_ui_text_box_data_t text_box_scroll_bar_data;
+static mw_ui_button_data_t button_scroll_bar_data;
 static mw_ui_scroll_bar_vert_data_t vert_scroll_bar_data;
+static mw_ui_text_box_data_t text_box_arrows_data;
+static mw_ui_button_data_t button_arrows_data;
+static mw_ui_arrow_data_t arrow_up_data;
+static mw_ui_arrow_data_t arrow_down_data;
 
 /********************************
 *** LOCAL FUNCTION PROTOTYPES ***
@@ -119,60 +130,112 @@ void mw_user_init(void)
 	/* create window containing a text box control */
 	mw_util_set_rect(&r, 0, 10, 210, 190);
 	window_tt_font_text_box_handle = mw_add_window(&r,
-			"Text box",
+			"Text box 1",
 			window_tt_font_text_box_paint_function,
 			window_tt_font_text_box_message_function,
 			NULL,
 			0,
 			MW_WINDOW_FLAG_HAS_BORDER | MW_WINDOW_FLAG_HAS_TITLE_BAR |
 				MW_WINDOW_FLAG_CAN_BE_CLOSED | MW_WINDOW_FLAG_IS_VISIBLE,
-			&window_tt_font_text_box_data);
+			NULL);
 
 	/* create text box control */
 	mw_util_set_rect(&r, 10, 10, 170, 130);
-	mw_ui_scrollable_text_box_data.bg_colour = MW_HAL_LCD_WHITE;
-	mw_ui_scrollable_text_box_data.fg_colour = MW_HAL_LCD_BLACK;
-	mw_ui_scrollable_text_box_data.text = test_text;
-	mw_ui_scrollable_text_box_data.justification = MW_GL_TT_FULLY_JUSTIFIED;
-	mw_ui_scrollable_text_box_data.tt_font = &mf_rlefont_DejaVuSans12;
-	text_box_handle = mw_ui_scrollable_text_box_add_new(&r,
+	text_box_data.bg_colour = MW_HAL_LCD_WHITE;
+	text_box_data.fg_colour = MW_HAL_LCD_BLACK;
+	text_box_data.text = test_text;
+	text_box_data.justification = MW_GL_TT_LEFT_JUSTIFIED;
+	text_box_data.tt_font = &mf_rlefont_DejaVuSans12;
+	text_box_handle = mw_ui_text_box_add_new(&r,
 			window_tt_font_text_box_handle,
 			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
-			&mw_ui_scrollable_text_box_data);
+			&text_box_data);
+
+	/* create window containing a text box control, scroll bar and button */
+	mw_util_set_rect(&r, 0, 10, 210, 190);
+	window_tt_font_text_box_scroll_bar_handle = mw_add_window(&r,
+			"Text box 2",
+			window_tt_font_text_box_scroll_bar_paint_function,
+			window_tt_font_text_box_scroll_bar_message_function,
+			NULL,
+			0,
+			MW_WINDOW_FLAG_HAS_BORDER | MW_WINDOW_FLAG_HAS_TITLE_BAR |
+				MW_WINDOW_FLAG_CAN_BE_CLOSED | MW_WINDOW_FLAG_IS_VISIBLE,
+			NULL);
+
+	/* create text box control */
+	mw_util_set_rect(&r, 10, 10, 170, 130);
+	text_box_scroll_bar_data.bg_colour = MW_HAL_LCD_WHITE;
+	text_box_scroll_bar_data.fg_colour = MW_HAL_LCD_BLACK;
+	text_box_scroll_bar_data.text = test_text;
+	text_box_scroll_bar_data.justification = MW_GL_TT_CENTRE_JUSTIFIED;
+	text_box_scroll_bar_data.tt_font = &mf_rlefont_DejaVuSans12;
+	text_box_scroll_bar_handle = mw_ui_text_box_add_new(&r,
+			window_tt_font_text_box_scroll_bar_handle,
+			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
+			&text_box_scroll_bar_data);
 
 	/* create button */
-	mw_util_safe_strcpy(button_data.button_label, MW_UI_BUTTON_LABEL_MAX_CHARS, "Change");
-	button_handle = mw_ui_button_add_new(10,
+	mw_util_safe_strcpy(button_scroll_bar_data.button_label, MW_UI_BUTTON_LABEL_MAX_CHARS, "Change");
+	button_scroll_bar_handle = mw_ui_button_add_new(10,
 			150,
-			window_tt_font_text_box_handle,
+			window_tt_font_text_box_scroll_bar_handle,
 			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
-			&button_data);
+			&button_scroll_bar_data);
 
 	/* create vertical scroll bar */
 	vert_scroll_bar_handle = mw_ui_scroll_bar_vert_add_new(180,
 			10,
 			130,
-			window_tt_font_text_box_handle,
+			window_tt_font_text_box_scroll_bar_handle,
 			MW_CONTROL_FLAG_IS_VISIBLE,
 			&vert_scroll_bar_data);
 
-	mw_util_set_rect(&r, 0, 10, 210, 150);
-	window_deja_vu_font_data.text = test_text;
-	window_deja_vu_font_data.rle_font = &mf_rlefont_DejaVuSans12;
-	window_deja_vu_font_data.bw_font = false;
-	window_deja_vu_font_data.fg_colour = MW_HAL_LCD_BLUE;
-	window_deja_vu_font_data.bg_colour = MW_HAL_LCD_WHITE;
-	window_deja_vu_font_data.justification = MW_GL_TT_FULLY_JUSTIFIED;
-	window_deja_vu_font_handle = mw_add_window(&r,
-			"Deja Vu",
-			window_tt_font_paint_function,
-			window_tt_font_message_function,
+	/* create window containing a text box control, arrows and button */
+	mw_util_set_rect(&r, 0, 10, 210, 190);
+	window_tt_font_text_box_arrows_handle = mw_add_window(&r,
+			"Text box 3",
+			window_tt_font_text_box_arrows_paint_function,
+			window_tt_font_text_box_arrows_message_function,
 			NULL,
 			0,
-			MW_WINDOW_FLAG_HAS_BORDER | MW_WINDOW_FLAG_HAS_TITLE_BAR | MW_WINDOW_FLAG_VERT_SCROLL_BAR_ENABLED |
-				MW_WINDOW_FLAG_HAS_VERT_SCROLL_BAR | MW_WINDOW_FLAG_CAN_BE_CLOSED | MW_WINDOW_FLAG_IS_VISIBLE |
-				MW_WINDOW_FLAG_LARGE_SIZE,
-			&window_deja_vu_font_data);
+			MW_WINDOW_FLAG_HAS_BORDER | MW_WINDOW_FLAG_HAS_TITLE_BAR |
+				MW_WINDOW_FLAG_CAN_BE_CLOSED | MW_WINDOW_FLAG_IS_VISIBLE,
+			NULL);
+
+	/* create text box control */
+	mw_util_set_rect(&r, 10, 10, 170, 130);
+	text_box_arrows_data.bg_colour = MW_HAL_LCD_WHITE;
+	text_box_arrows_data.fg_colour = MW_HAL_LCD_BLACK;
+	text_box_arrows_data.text = test_text;
+	text_box_arrows_data.justification = MW_GL_TT_RIGHT_JUSTIFIED;
+	text_box_arrows_data.tt_font = &mf_rlefont_DejaVuSans12;
+	text_box_arrows_handle = mw_ui_text_box_add_new(&r,
+			window_tt_font_text_box_arrows_handle,
+			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
+			&text_box_arrows_data);
+
+	/* create button */
+	mw_util_safe_strcpy(button_arrows_data.button_label, MW_UI_BUTTON_LABEL_MAX_CHARS, "Change");
+	button_arrows_handle = mw_ui_button_add_new(10,
+			150,
+			window_tt_font_text_box_arrows_handle,
+			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
+			&button_arrows_data);
+
+	arrow_up_data.mw_ui_arrow_direction = MW_UI_ARROW_UP;
+	arrow_up = mw_ui_arrow_add_new(180,
+			10,
+			window_tt_font_text_box_arrows_handle,
+			MW_CONTROL_FLAG_IS_VISIBLE,
+			&arrow_up_data);
+
+	arrow_down_data.mw_ui_arrow_direction = MW_UI_ARROW_DOWN;
+	arrow_down = mw_ui_arrow_add_new(180,
+			125,
+			window_tt_font_text_box_arrows_handle,
+			MW_CONTROL_FLAG_IS_VISIBLE,
+			&arrow_down_data);
 
 	mw_util_set_rect(&r, 15, 60, 210, 150);
 	window_blkchcry_bw_font_data.text = test_text;
@@ -180,7 +243,7 @@ void mw_user_init(void)
 	window_blkchcry_bw_font_data.bw_font = false;
 	window_blkchcry_bw_font_data.fg_colour = MW_HAL_LCD_BLACK;
 	window_blkchcry_bw_font_data.bg_colour = MW_HAL_LCD_YELLOW;
-	window_blkchcry_bw_font_data.justification = MW_GL_TT_LEFT_JUSTIFIED;
+	window_blkchcry_bw_font_data.justification = MW_GL_TT_FULLY_JUSTIFIED;
 	window_blkchcry_bw_font_handle = mw_add_window(&r,
 			"B-Chncry bw",
 			window_tt_font_paint_function,

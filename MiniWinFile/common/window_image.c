@@ -202,7 +202,7 @@ void window_image_paint_function(mw_handle_t window_handle, const mw_gl_draw_inf
 
 		/* close this window to prevent continuous repaints and let file window know */
 		mw_remove_window(window_handle);
-		mw_post_message(MW_WINDOW_EXTERNAL_WINDOW_REMOVED,
+		mw_post_message(MW_WINDOW_EXTERNAL_WINDOW_REMOVED_MESSAGE,
 				window_handle,
 				window_file_handle,
 				MW_UNUSED_MESSAGE_PARAMETER,
@@ -218,7 +218,7 @@ void window_image_message_function(const mw_message_t *message)
 	switch (message->message_id)
 	{
 	case MW_WINDOW_REMOVED_MESSAGE:
-		mw_post_message(MW_WINDOW_EXTERNAL_WINDOW_REMOVED,
+		mw_post_message(MW_WINDOW_EXTERNAL_WINDOW_REMOVED_MESSAGE,
 				message->recipient_handle,
 				window_file_handle,
 				MW_UNUSED_MESSAGE_PARAMETER,

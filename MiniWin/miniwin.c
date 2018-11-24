@@ -794,7 +794,7 @@ static bool check_for_restore_touch(int16_t x_touch, int16_t y_touch)
 					mw_tick_counter + MW_WINDOW_MIN_MAX_EFFECT_TIME);
 					
 			/* let the window know that it has been restored */
-			mw_post_message(MW_WINDOW_RESTORED,
+			mw_post_message(MW_WINDOW_RESTORED_MESSAGE,
 					MW_UNUSED_MESSAGE_PARAMETER,
 					mw_all_windows[i].window_handle,
 					MW_UNUSED_MESSAGE_PARAMETER,
@@ -3270,7 +3270,7 @@ static window_redimensioning_state_t process_touch_event(void)
 						set_system_timer(MW_UNUSED_MESSAGE_PARAMETER,
 								SYSTEM_TIMER_EVENT_PAINT_ALL,
 								mw_tick_counter + MW_WINDOW_MIN_MAX_EFFECT_TIME);
-						mw_post_message(MW_WINDOW_MINIMISED,
+						mw_post_message(MW_WINDOW_MINIMISED_MESSAGE,
 								MW_UNUSED_MESSAGE_PARAMETER,
 								mw_all_windows[window_to_receive_message_id].window_handle,
 								MW_UNUSED_MESSAGE_PARAMETER,
@@ -3785,7 +3785,7 @@ void mw_set_window_visible(mw_handle_t window_handle, bool visible)
 	}
 
 	/* send message to window that visibility has changed */
-	mw_post_message(MW_WINDOW_VISIBILITY_CHANGED,
+	mw_post_message(MW_WINDOW_VISIBILITY_CHANGED_MESSAGE,
 			MW_UNUSED_MESSAGE_PARAMETER,
 			window_handle,
 			visible,
@@ -3868,7 +3868,7 @@ void mw_reposition_window(mw_handle_t window_handle, int16_t new_x, int16_t new_
 	calculate_new_window_size_details(window_handle, &r);
 
 	/* send a moved message to the window in case it needs to do anything */
-	mw_post_message(MW_WINDOW_MOVED,
+	mw_post_message(MW_WINDOW_MOVED_MESSAGE,
 			MW_UNUSED_MESSAGE_PARAMETER,
 			window_handle,
 			MW_UNUSED_MESSAGE_PARAMETER,
@@ -3907,7 +3907,7 @@ bool mw_resize_window(mw_handle_t window_handle, uint16_t new_width, uint16_t ne
 	calculate_new_window_size_details(window_handle, &r);
 
 	/* send a resize message to the window in case it needs to do anything */
-	mw_post_message(MW_WINDOW_RESIZED,
+	mw_post_message(MW_WINDOW_RESIZED_MESSAGE,
 			MW_UNUSED_MESSAGE_PARAMETER,
 			window_handle,
 			((uint32_t)new_width) << 16 | new_height,
@@ -4432,7 +4432,7 @@ void mw_set_control_visible(mw_handle_t control_handle, bool visible)
 	}
 
 	/* post visibility state message to control */
-	mw_post_message(MW_CONTROL_VISIBILITY_CHANGED,
+	mw_post_message(MW_CONTROL_VISIBILITY_CHANGED_MESSAGE,
 			MW_UNUSED_MESSAGE_PARAMETER,
 			control_handle,
 			visible,

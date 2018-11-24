@@ -311,7 +311,7 @@ static void list_box_message_function(const mw_message_t *message)
 		this_list_box->lines_to_scroll = 0;
 
 		/* send message about whether scrolling is needed */
-		mw_post_message(MW_LIST_BOX_SCROLLING_REQUIRED,
+		mw_post_message(MW_LIST_BOX_SCROLLING_REQUIRED_MESSAGE,
 				message->recipient_handle,
 				mw_get_control_parent_window_handle(message->recipient_handle),
 				this_list_box->number_of_items > this_list_box->number_of_lines,
@@ -320,13 +320,39 @@ static void list_box_message_function(const mw_message_t *message)
 		break;
 
 	case MW_LIST_BOX_SCROLL_BAR_POSITION_MESSAGE:
-		this_list_box->lines_to_scroll = (message->message_data *
-				(this_list_box->number_of_items - this_list_box->number_of_lines)) /
-				UINT8_MAX;
+		/* check if scrolling is appropriate */
+		if (this_list_box->number_of_items <= this_list_box->number_of_lines)
+		{
+			/* no, so set scroll lines to zero */
+			this_list_box->lines_to_scroll = 0;
+		}
+		else
+		{
+			/* yes so recalculate vertical scroll lines from last scroll bar position recorded */
+			this_list_box->lines_to_scroll = (message->message_data *
+					(this_list_box->number_of_items - this_list_box->number_of_lines)) /
+					UINT8_MAX;
+		}
 		break;
 
 	case MW_LIST_BOX_LINES_TO_SCROLL_MESSAGE:
-		this_list_box->lines_to_scroll = message->message_data;
+		/* check if scrolling is appropriate */
+		if (this_list_box->number_of_items <= this_list_box->number_of_lines)
+		{
+			/* no, so set scroll lines to zero */
+			this_list_box->lines_to_scroll = 0;
+		}
+		else
+		{
+			/* yes so set new scroll position */
+			this_list_box->lines_to_scroll = message->message_data;
+
+			/* check that the new scroll position doesn't exceed maximum possible */
+			if (this_list_box->lines_to_scroll > (this_list_box->number_of_items - this_list_box->number_of_lines))
+			{
+				this_list_box->lines_to_scroll = this_list_box->number_of_items - this_list_box->number_of_lines;
+			}
+		}
 		break;
 
 	case MW_LIST_BOX_SET_ENTRIES_MESSAGE:
@@ -336,7 +362,7 @@ static void list_box_message_function(const mw_message_t *message)
 			this_list_box->list_box_entries = (mw_ui_list_box_entry *)message->message_pointer;
 
 			/* send message about whether scrolling is needed */
-			mw_post_message(MW_LIST_BOX_SCROLLING_REQUIRED,
+			mw_post_message(MW_LIST_BOX_SCROLLING_REQUIRED_MESSAGE,
 					message->recipient_handle,
 					mw_get_control_parent_window_handle(message->recipient_handle),
 					this_list_box->number_of_items > this_list_box->number_of_lines,

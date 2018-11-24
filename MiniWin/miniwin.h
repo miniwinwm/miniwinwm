@@ -191,7 +191,7 @@ typedef enum
 	 * message_data: Upper 16 bits = window new width, lower 16 bits = window new height
 	 * message_pointer: Unused
 	 */
-	MW_WINDOW_RESIZED,
+	MW_WINDOW_RESIZED_MESSAGE,
 
 	/**
 	 * Message to a window when it has been moved
@@ -199,7 +199,7 @@ typedef enum
 	 * message_data: Unused
 	 * message_pointer: Unused
 	 */
-	MW_WINDOW_MOVED,
+	MW_WINDOW_MOVED_MESSAGE,
 
 	/**
 	 * Message to a window when it has been minimised
@@ -207,7 +207,7 @@ typedef enum
 	 * message_data: Unused
 	 * message_pointer: Unused
 	 */
-	MW_WINDOW_MINIMISED,
+	MW_WINDOW_MINIMISED_MESSAGE,
 
 	/**
 	 * Message to a window when it has been restored
@@ -215,7 +215,7 @@ typedef enum
 	 * message_data: Unused
 	 * message_pointer: Unused
 	 */
-	MW_WINDOW_RESTORED,
+	MW_WINDOW_RESTORED_MESSAGE,
 
 	/**
 	 * Message to a window when its visibility has changed
@@ -223,7 +223,7 @@ typedef enum
 	 * message_data: true if made visible, false if made invisible
 	 * message_pointer: Unused
 	 */
-	MW_WINDOW_VISIBILITY_CHANGED,
+	MW_WINDOW_VISIBILITY_CHANGED_MESSAGE,
 
 	/**
 	 * Message to a window when a window vertical scroll bar has been scrolled
@@ -271,7 +271,7 @@ typedef enum
 	 * message_data: true if made visible, false if made invisible
 	 * message_pointer: Unused
 	 */
-	MW_CONTROL_VISIBILITY_CHANGED,
+	MW_CONTROL_VISIBILITY_CHANGED_MESSAGE,
 
 	/**
 	 * Message sent to all controls in a window when parent window loses focus or control made invisible
@@ -374,7 +374,7 @@ typedef enum
 	 * message_data: 1 if a scroll bar is required, 0 if it isn't
 	 * message_pointer: Unused
 	 */
-	MW_LIST_BOX_SCROLLING_REQUIRED,
+	MW_LIST_BOX_SCROLLING_REQUIRED_MESSAGE,
 
 	/**
 	 * Response message from a vertical control scroll bar that it has been scrolled
@@ -415,7 +415,7 @@ typedef enum
 	 * message_data: 1 if a scroll bar is required, 0 if it isn't
 	 * message_pointer: Unused
 	 */
-	MW_TEXT_BOX_SCROLLING_REQUIRED,
+	MW_TEXT_BOX_SCROLLING_REQUIRED_MESSAGE,
 
 	/*********************************************
 	*											 *
@@ -502,6 +502,14 @@ typedef enum
 	 * message_pointer: Unused
 	 */
 	MW_TEXT_BOX_SCROLL_BAR_POSITION_MESSAGE,
+
+	/**
+	 * Set how many lines to scroll a text box
+	 *
+	 * message_data: Number of lines to scroll
+	 * message_pointer: Unused
+	 */
+	MW_TEXT_BOX_LINES_TO_SCROLL_MESSAGE,
 
 	/**************************************
 	*	 								  *
@@ -677,7 +685,7 @@ typedef enum
 	 * message_data: Unused
 	 * message_pointer: Unused
 	 */
-	MW_WINDOW_EXTERNAL_WINDOW_REMOVED,
+	MW_WINDOW_EXTERNAL_WINDOW_REMOVED_MESSAGE,
 
 	/**
 	 * Message to a window for any user-defined purpose

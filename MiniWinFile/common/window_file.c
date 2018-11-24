@@ -526,7 +526,7 @@ void window_file_message_function(const mw_message_t *message)
 		}
 		break;
 
-	case MW_WINDOW_EXTERNAL_WINDOW_REMOVED:
+	case MW_WINDOW_EXTERNAL_WINDOW_REMOVED_MESSAGE:
 		/* a pop up window has been closed */
 		{
 			uint8_t i;

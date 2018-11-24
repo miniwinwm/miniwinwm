@@ -121,9 +121,9 @@ void window_yield_message_function(const mw_message_t *message)
 		window_yield_data.timer_running = false;
 		break;
 
-	case MW_WINDOW_RESTORED:
-	case MW_WINDOW_MOVED:
-	case MW_WINDOW_RESIZED:
+	case MW_WINDOW_RESTORED_MESSAGE:
+	case MW_WINDOW_MOVED_MESSAGE:
+	case MW_WINDOW_RESIZED_MESSAGE:
 		window_yield_data.progress = 0;
 		if (window_yield_data.timer_running)
 		{
@@ -133,7 +133,7 @@ void window_yield_message_function(const mw_message_t *message)
 		window_yield_data.timer_running = true;
 		break;
 
-	case MW_WINDOW_MINIMISED:
+	case MW_WINDOW_MINIMISED_MESSAGE:
 		if (window_yield_data.timer_running)
 		{
 			mw_cancel_timer(window_yield_data.timer_handle);

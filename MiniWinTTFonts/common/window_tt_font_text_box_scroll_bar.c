@@ -29,7 +29,7 @@ SOFTWARE.
 ***************/
 
 #include "miniwin.h"
-#include "window_tt_font_text_box.h"
+#include "window_tt_font_text_box_scroll_bar.h"
 
 /****************
 *** CONSTANTS ***
@@ -39,22 +39,22 @@ SOFTWARE.
 *** TYPES ***
 ************/
 
-/**
-* Window instance data for each true type font window
-*/
-typedef struct
-{
+ /**
+  * Window instance data for each true type font window
+  */
+ typedef struct
+ {
 	/* User-modifiable values */
 
-	/* Non user-modifiable values */
-} window_tt_font_text_box_data_t;
+ 	/* Non user-modifiable values */
+ } window_tt_font_text_box_scroll_bar_data_t;
 
 /*************************
 *** EXTERNAL VARIABLES ***
 **************************/
 
 extern mw_handle_t button_scroll_bar_handle;
-extern mw_handle_t text_box_handle;
+extern mw_handle_t text_box_scroll_bar_handle;
 extern mw_handle_t vert_scroll_bar_handle;
 
 /**********************
@@ -73,7 +73,7 @@ extern mw_handle_t vert_scroll_bar_handle;
 *** GLOBAL FUNCTIONS ***
 ***********************/
 
-void window_tt_font_text_box_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_t *draw_info)
+void window_tt_font_text_box_scroll_bar_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_t *draw_info)
 {
 	MW_ASSERT(draw_info, "Null pointer parameter");
 
@@ -88,7 +88,7 @@ void window_tt_font_text_box_paint_function(mw_handle_t window_handle, const mw_
 			mw_get_window_client_rect(window_handle).height);
 }
 
-void window_tt_font_text_box_message_function(const mw_message_t *message)
+void window_tt_font_text_box_scroll_bar_message_function(const mw_message_t *message)
 {
 	MW_ASSERT(message, "Null pointer parameter");
 
@@ -104,11 +104,11 @@ void window_tt_font_text_box_message_function(const mw_message_t *message)
 		/* vertical scroll bar scroll new position message received so send it on to the text box */
 		mw_post_message(MW_TEXT_BOX_SCROLL_BAR_POSITION_MESSAGE,
 				message->recipient_handle,
-				text_box_handle,
+				text_box_scroll_bar_handle,
 				message->message_data,
 				MW_UNUSED_MESSAGE_PARAMETER,
 				MW_CONTROL_MESSAGE);
-		mw_paint_control(text_box_handle);
+		mw_paint_control(text_box_scroll_bar_handle);
 		break;
 
 	case MW_BUTTON_PRESSED_MESSAGE:
@@ -123,14 +123,18 @@ void window_tt_font_text_box_message_function(const mw_message_t *message)
 					MW_CONTROL_MESSAGE);
 			mw_paint_control(vert_scroll_bar_handle);
 
-			/* set the new text in the text box */
+			/* set the new text in the text box, this sets its scroll position to 0 */
 			mw_post_message(MW_TEXT_BOX_SET_TEXT_MESSAGE,
 					message->recipient_handle,
-					text_box_handle,
+					text_box_scroll_bar_handle,
 					MW_UNUSED_MESSAGE_PARAMETER,
 					(void *)"Hello world!",
 					MW_CONTROL_MESSAGE);
-			mw_paint_control(text_box_handle);
+			mw_paint_control(text_box_scroll_bar_handle);
+
+			/* disable the button */
+			mw_set_control_enabled(button_scroll_bar_handle, false);
+			mw_paint_control(button_scroll_bar_handle);
 		}
 		break;
 
