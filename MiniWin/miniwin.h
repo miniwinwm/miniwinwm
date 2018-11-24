@@ -328,11 +328,11 @@ typedef enum
 	 */
 	MW_TIMER_MESSAGE,
 
-	/******************************************************************
-	*															      *
-	* Messages posted by controls in response to user interface input *
-	*																  *
-	******************************************************************/
+	/********************************************************************
+	*						   									        *
+	* Messages posted from controls in response to user interface input *
+	*																    *
+	********************************************************************/
 
 	/**
 	 * Response message from a button that it has been pressed
@@ -367,6 +367,15 @@ typedef enum
 	MW_LIST_BOX_ITEM_PRESSED_MESSAGE,
 
 	/**
+	 * Message posted by a list box to its parent window indicating if scrolling is required,
+	 * i.e. too many lines to display in the box at once
+	 *
+	 * message_data: 1 if a scroll bar is required, 0 if it isn't
+	 * message_pointer: Unused
+	 */
+	MW_LIST_BOX_SCROLLING_REQUIRED,
+
+	/**
 	 * Response message from a vertical control scroll bar that it has been scrolled
 	 *
 	 * message_data: Unused
@@ -397,6 +406,15 @@ typedef enum
 	 * message_pointer: Unused
 	 */
 	MW_KEY_PRESSED_MESSAGE,
+
+	/**
+	 * Message posted by a text box to its parent window indicating if scrolling is required,
+	 * i.e. too much text to display in the box at once
+	 *
+	 * message_data: 1 if a scroll bar is required, 0 if it isn't
+	 * message_pointer: Unused
+	 */
+	MW_TEXT_BOX_SCROLLING_REQUIRED,
 
 	/*********************************************
 	*											 *
@@ -458,7 +476,7 @@ typedef enum
 	 * message_data: Number of entries in new array of entries
 	 * message_pointer: Pointer to array of entries
 	 */
-	MW_LIST_BOX_SCROLL_NEW_ENTRIES_MESSAGE,
+	MW_LIST_BOX_SET_ENTRIES_MESSAGE,
 
 	/**
 	 * Set a radio button's chosen button
@@ -474,7 +492,15 @@ typedef enum
 	 * message_data: Unused
 	 * message_pointer: Pointer to the scrollable text box's new text
 	 */
-	MW_LABEL_SET_SCROLLABLE_TEXT_BOX_TEXT_MESSAGE,
+	MW_TEXT_BOX_SET_TEXT_MESSAGE,
+
+	/**
+	 * Position of a scroll bar associated with a text box
+	 *
+	 * message_data: Scroll bar position, 0 - 255
+	 * message_pointer: Unused
+	 */
+	MW_TEXT_BOX_SCROLL_BAR_POSITION_MESSAGE,
 
 	/**************************************
 	*	 								  *

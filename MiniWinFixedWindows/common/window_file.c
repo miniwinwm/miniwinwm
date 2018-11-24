@@ -116,6 +116,7 @@ void window_file_paint_function(mw_handle_t window_handle, const mw_gl_draw_info
 			18);
 	mw_gl_set_fg_colour(MW_HAL_LCD_WHITE);
 	mw_gl_set_text_rotation(MW_GL_TEXT_ROTATION_0);
+	mw_gl_set_bg_transparency(MW_GL_BG_TRANSPARENT);
 	mw_gl_set_font(MW_GL_TITLE_FONT);
 	mw_gl_string(draw_info, 2, 2, "File Chooser");
 }
@@ -130,6 +131,11 @@ void window_file_message_function(const mw_message_t *message)
 	switch (message->message_id)
 	{
 	case MW_WINDOW_CREATED_MESSAGE:
+		break;
+
+	case MW_LIST_BOX_SCROLLING_REQUIRED:
+		mw_set_control_enabled(arrow_file_down_handle, message->message_data);
+		mw_paint_control(arrow_file_down_handle);
 		break;
 
 	case MW_WINDOW_VISIBILITY_CHANGED:
@@ -147,7 +153,7 @@ void window_file_message_function(const mw_message_t *message)
 			file_data.lines_to_scroll = 0;
 			file_data.folder_shown = ROOT_FOLDER;
 
-			mw_post_message(MW_LIST_BOX_SCROLL_NEW_ENTRIES_MESSAGE,
+			mw_post_message(MW_LIST_BOX_SET_ENTRIES_MESSAGE,
 					message->recipient_handle,
 					list_box_file_handle,
 					list_box_file_entries_root_count,
@@ -155,14 +161,6 @@ void window_file_message_function(const mw_message_t *message)
 					MW_CONTROL_MESSAGE);
 
 			mw_set_control_enabled(arrow_file_up_handle, false);
-			if (mw_ui_list_box_get_max_lines_to_scroll(list_box_file_handle) > 0)
-			{
-				mw_set_control_enabled(arrow_file_down_handle, true);
-			}
-			else
-			{
-				mw_set_control_enabled(arrow_file_down_handle, false);
-			}
 		}
 		break;
 
@@ -208,6 +206,7 @@ void window_file_message_function(const mw_message_t *message)
 					MW_CONTROL_MESSAGE);
 			break;
 		}
+		mw_paint_control(label_file_handle);
 
 		/* check if a folder has been chosen and if so update the list control to show new contents */
 		folder_changed = false;
@@ -217,7 +216,7 @@ void window_file_message_function(const mw_message_t *message)
 			{
 				file_data.folder_shown = FOLDER_IMAGES;
 
-				mw_post_message(MW_LIST_BOX_SCROLL_NEW_ENTRIES_MESSAGE,
+				mw_post_message(MW_LIST_BOX_SET_ENTRIES_MESSAGE,
 						message->recipient_handle,
 						list_box_file_handle,
 						list_box_file_entries_images_count,
@@ -230,7 +229,7 @@ void window_file_message_function(const mw_message_t *message)
 			{
 				file_data.folder_shown = FOLDER_DOCS;
 
-				mw_post_message(MW_LIST_BOX_SCROLL_NEW_ENTRIES_MESSAGE,
+				mw_post_message(MW_LIST_BOX_SET_ENTRIES_MESSAGE,
 						message->recipient_handle,
 						list_box_file_handle,
 						list_box_file_entries_docs_count,
@@ -244,7 +243,7 @@ void window_file_message_function(const mw_message_t *message)
 		{
 			file_data.folder_shown = ROOT_FOLDER;
 
-			mw_post_message(MW_LIST_BOX_SCROLL_NEW_ENTRIES_MESSAGE,
+			mw_post_message(MW_LIST_BOX_SET_ENTRIES_MESSAGE,
 					message->recipient_handle,
 					list_box_file_handle,
 					list_box_file_entries_root_count,
@@ -269,7 +268,7 @@ void window_file_message_function(const mw_message_t *message)
 				mw_set_control_enabled(arrow_file_down_handle, false);
 			}
 			mw_paint_control(arrow_file_up_handle);
-			mw_paint_control(arrow_file_down_handle);
+			mw_paint_control(list_box_file_handle);
 		}
 		break;
 

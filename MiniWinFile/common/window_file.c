@@ -316,22 +316,21 @@ void window_file_message_function(const mw_message_t *message)
 
 	case MW_TIMER_MESSAGE:
 		{
-			struct tm t;
+			struct tm t = app_get_time_date();
 
-			t = app_get_time_date();
 			snprintf(time_text,
 					MW_UI_LABEL_MAX_CHARS,
 					"%02d:%02d:%02d",
 					t.tm_hour,
 					t.tm_min,
 					t.tm_sec);
-
 			mw_post_message(MW_LABEL_SET_LABEL_TEXT_MESSAGE,
 					message->recipient_handle,
 					label_time_handle,
 					MW_UNUSED_MESSAGE_PARAMETER,
 					time_text,
 					MW_CONTROL_MESSAGE);
+			mw_paint_control(label_time_handle);
 
 			snprintf(date_text,
 					MW_UI_LABEL_MAX_CHARS,
@@ -339,14 +338,13 @@ void window_file_message_function(const mw_message_t *message)
 					t.tm_mday,
 					t.tm_mon,
 					t.tm_year);
-
 			mw_post_message(MW_LABEL_SET_LABEL_TEXT_MESSAGE,
 					message->recipient_handle,
 					label_date_handle,
 					MW_UNUSED_MESSAGE_PARAMETER,
 					date_text,
 					MW_CONTROL_MESSAGE);
-
+			mw_paint_control(label_date_handle);
 
 			mw_set_timer(mw_tick_counter + 20, message->recipient_handle, MW_WINDOW_MESSAGE);
 		}

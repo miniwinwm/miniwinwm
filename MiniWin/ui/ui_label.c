@@ -128,7 +128,6 @@ static void label_message_function(const mw_message_t *message)
 		if (message->message_pointer)
 		{
 			mw_util_safe_strcpy(this_label->label, MW_UI_LABEL_MAX_CHARS, (char *)message->message_pointer);
-			mw_paint_control(message->recipient_handle);
 		}
 		else
 		{

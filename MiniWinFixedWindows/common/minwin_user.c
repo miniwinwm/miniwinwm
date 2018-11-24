@@ -313,14 +313,14 @@ void mw_user_init(void)
 	arrow_settings_up = mw_ui_arrow_add_new(180,
 			180,
 			window_settings_handle,
-			MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_LARGE_SIZE,
+			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_LARGE_SIZE,
 			&arrow_up_settings_data);
 
 	arrow_down_settings_data.mw_ui_arrow_direction = MW_UI_ARROW_DOWN;
 	arrow_settings_down = mw_ui_arrow_add_new(180,
 			232,
 			window_settings_handle,
-			MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_LARGE_SIZE,
+			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_LARGE_SIZE,
 			&arrow_down_settings_data);
 
 	/* create file window */
@@ -367,14 +367,14 @@ void mw_user_init(void)
 	arrow_file_up_handle = mw_ui_arrow_add_new(180,
 			180,
 			window_file_handle,
-			MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_LARGE_SIZE,
+			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_LARGE_SIZE,
 			&arrow_up_file_data);
 
 	arrow_down_file_data.mw_ui_arrow_direction = MW_UI_ARROW_DOWN;
 	arrow_file_down_handle = mw_ui_arrow_add_new(180,
 			232,
 			window_file_handle,
-			MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_LARGE_SIZE,
+			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_LARGE_SIZE,
 			&arrow_down_file_data);
 
 	mw_paint_all();

@@ -133,7 +133,6 @@ void window_test_message_function(const mw_message_t *message)
 	switch (message->message_id)
 	{
 	case MW_WINDOW_CREATED_MESSAGE:
-//		window_test_data.lines_to_scroll = 0;
 		window_test_data.draw_circle = false;
 		window_test_data.i = 0;
 		window_test_data.large_controls = false;
@@ -328,7 +327,7 @@ void window_test_message_function(const mw_message_t *message)
 		if (message->sender_handle == scroll_bar_vert_2_handle)
 		{
 			mw_post_message(MW_LIST_BOX_SCROLL_BAR_POSITION_MESSAGE,
-					MW_UNUSED_MESSAGE_PARAMETER,
+					message->recipient_handle,
 					list_box_3_handle,
 					message->message_data,
 					MW_UNUSED_MESSAGE_PARAMETER,
@@ -338,7 +337,7 @@ void window_test_message_function(const mw_message_t *message)
 		else if (message->sender_handle == scroll_bar_vert_2_large_handle)
 		{
 			mw_post_message(MW_LIST_BOX_SCROLL_BAR_POSITION_MESSAGE,
-					MW_UNUSED_MESSAGE_PARAMETER,
+					message->recipient_handle,
 					list_box_3_large_handle,
 					message->message_data,
 					MW_UNUSED_MESSAGE_PARAMETER,
@@ -362,7 +361,6 @@ void window_test_message_function(const mw_message_t *message)
 					MW_UNUSED_MESSAGE_PARAMETER,
 					(void *)window_test_data.transfer_buffer,
 					MW_CONTROL_MESSAGE);
-
 			mw_paint_control(label_1_large_handle);
 		}
 		else
@@ -373,7 +371,6 @@ void window_test_message_function(const mw_message_t *message)
 					MW_UNUSED_MESSAGE_PARAMETER,
 					(void *)window_test_data.transfer_buffer,
 					MW_CONTROL_MESSAGE);
-
 			mw_paint_control(label_1_handle);
 		}
 

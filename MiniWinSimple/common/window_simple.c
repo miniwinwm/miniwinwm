@@ -134,6 +134,7 @@ void window_simple_message_function(const mw_message_t *message)
 				MW_UNUSED_MESSAGE_PARAMETER,
 				(void *)"Hello world!",
 				MW_CONTROL_MESSAGE);
+		mw_paint_control(label_handle);
 		break;
 
 	default:

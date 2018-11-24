@@ -59,7 +59,6 @@ extern mw_handle_t list_box_settings_handle;
 extern mw_handle_t label_settings_handle;
 extern mw_handle_t arrow_settings_up;
 extern mw_handle_t arrow_settings_down;
-//todo extern mw_ui_list_box_data_t list_box_settings_data;
 extern mw_ui_list_box_entry list_box_settings_entries[];
 
 /**********************
@@ -103,6 +102,7 @@ void window_settings_paint_function(mw_handle_t window_handle, const mw_gl_draw_
 			18);
 	mw_gl_set_fg_colour(MW_HAL_LCD_WHITE);
 	mw_gl_set_text_rotation(MW_GL_TEXT_ROTATION_0);
+	mw_gl_set_bg_transparency(MW_GL_BG_TRANSPARENT);
 	mw_gl_set_font(MW_GL_TITLE_FONT);
 	mw_gl_string(draw_info, 2, 2, "Logging Settings");
 }
@@ -118,7 +118,11 @@ void window_settings_message_function(const mw_message_t *message)
 	case MW_WINDOW_CREATED_MESSAGE:
 		settings_data.lines_to_scroll = 0;
 		mw_set_control_enabled(arrow_settings_up, false);
-		mw_set_control_enabled(arrow_settings_down, true);
+		break;
+
+	case MW_LIST_BOX_SCROLLING_REQUIRED:
+		mw_set_control_enabled(arrow_settings_down, message->message_data);
+		mw_paint_control(arrow_settings_down);
 		break;
 
 	case MW_BUTTON_PRESSED_MESSAGE:

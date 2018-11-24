@@ -45,6 +45,7 @@ SOFTWARE.
 
 extern mw_handle_t button_handle;
 extern mw_handle_t text_box_handle;
+extern mw_handle_t vert_scroll_bar_handle;
 
 /**********************
 *** LOCAL VARIABLES ***
@@ -85,21 +86,42 @@ void window_tt_font_text_box_message_function(const mw_message_t *message)
 
 	switch (message->message_id)
 	{
-	case MW_WINDOW_CREATED_MESSAGE:
+	case MW_TEXT_BOX_SCROLLING_REQUIRED:
+		/* enable/disable the scroll bar depending on if scrolling is required, i.e. text won't all fit in the control */
+		mw_set_control_enabled(vert_scroll_bar_handle, message->message_data);
+		mw_paint_control(vert_scroll_bar_handle);
 		break;
 
-	case MW_WINDOW_RESIZED:
+	case MW_CONTROL_VERT_SCROLL_BAR_SCROLLED_MESSAGE:
+		/* vertical scroll bar scroll new position message received so send it on to the text box */
+		mw_post_message(MW_TEXT_BOX_SCROLL_BAR_POSITION_MESSAGE,
+				message->recipient_handle,
+				text_box_handle,
+				message->message_data,
+				MW_UNUSED_MESSAGE_PARAMETER,
+				MW_CONTROL_MESSAGE);
 		break;
 
 	case MW_BUTTON_PRESSED_MESSAGE:
 		if (message->sender_handle == button_handle)
 		{
-			mw_post_message(MW_LABEL_SET_SCROLLABLE_TEXT_BOX_TEXT_MESSAGE,
+			/* set scroll bar position back to zero */
+			mw_post_message(MW_SCROLL_BAR_SET_SCROLL_MESSAGE,
+					message->recipient_handle,
+					vert_scroll_bar_handle,
+					0,
+					MW_UNUSED_MESSAGE_PARAMETER,
+					MW_CONTROL_MESSAGE);
+			mw_paint_control(vert_scroll_bar_handle);
+
+			/* set the new text in the text box */
+			mw_post_message(MW_TEXT_BOX_SET_TEXT_MESSAGE,
 					message->recipient_handle,
 					text_box_handle,
 					MW_UNUSED_MESSAGE_PARAMETER,
 					(void *)"Hello world!",
 					MW_CONTROL_MESSAGE);
+			mw_paint_control(text_box_handle);
 		}
 		break;
 

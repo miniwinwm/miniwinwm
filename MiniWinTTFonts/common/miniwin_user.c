@@ -56,11 +56,12 @@ const char *test_text = "A kitten is a juvenile cat. After being born, " \
 mw_handle_t window_deja_vu_font_handle;
 mw_handle_t window_blkchcry_bw_font_handle;
 mw_handle_t window_blkchcry_font_handle;
-mw_handle_t window_tt_font_text_box_handle;
 
 /* controls */
 mw_handle_t text_box_handle;
 mw_handle_t button_handle;
+mw_handle_t window_tt_font_text_box_handle;
+mw_handle_t vert_scroll_bar_handle;
 
 /*************************
 *** EXTERNAL VARIABLES ***
@@ -83,6 +84,7 @@ static window_tt_font_text_box_data_t window_tt_font_text_box_data;
 /* controls instance data */
 static mw_ui_scrollable_text_box_data_t mw_ui_scrollable_text_box_data;
 static mw_ui_button_data_t button_data;
+static mw_ui_scroll_bar_vert_data_t vert_scroll_bar_data;
 
 /********************************
 *** LOCAL FUNCTION PROTOTYPES ***
@@ -114,6 +116,7 @@ void mw_user_init(void)
 {
 	mw_util_rect_t r;
 
+	/* create window containing a text box control */
 	mw_util_set_rect(&r, 0, 10, 210, 190);
 	window_tt_font_text_box_handle = mw_add_window(&r,
 			"Text box",
@@ -125,6 +128,7 @@ void mw_user_init(void)
 				MW_WINDOW_FLAG_CAN_BE_CLOSED | MW_WINDOW_FLAG_IS_VISIBLE,
 			&window_tt_font_text_box_data);
 
+	/* create text box control */
 	mw_util_set_rect(&r, 10, 10, 170, 130);
 	mw_ui_scrollable_text_box_data.bg_colour = MW_HAL_LCD_WHITE;
 	mw_ui_scrollable_text_box_data.fg_colour = MW_HAL_LCD_BLACK;
@@ -136,12 +140,21 @@ void mw_user_init(void)
 			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
 			&mw_ui_scrollable_text_box_data);
 
+	/* create button */
 	mw_util_safe_strcpy(button_data.button_label, MW_UI_BUTTON_LABEL_MAX_CHARS, "Change");
 	button_handle = mw_ui_button_add_new(10,
 			150,
 			window_tt_font_text_box_handle,
 			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
 			&button_data);
+
+	/* create vertical scroll bar */
+	vert_scroll_bar_handle = mw_ui_scroll_bar_vert_add_new(180,
+			10,
+			130,
+			window_tt_font_text_box_handle,
+			MW_CONTROL_FLAG_IS_VISIBLE,
+			&vert_scroll_bar_data);
 
 	mw_util_set_rect(&r, 0, 10, 210, 150);
 	window_deja_vu_font_data.text = test_text;

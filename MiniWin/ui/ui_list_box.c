@@ -310,6 +310,14 @@ static void list_box_message_function(const mw_message_t *message)
 		/* initialise the control */			
 		this_list_box->line_is_selected = false;
 		this_list_box->lines_to_scroll = 0;
+
+		/* send message about whether scrolling is needed */
+		mw_post_message(MW_LIST_BOX_SCROLLING_REQUIRED,
+				message->recipient_handle,
+				mw_get_control_parent_window_handle(message->recipient_handle),
+				this_list_box->number_of_items > this_list_box->number_of_lines,
+				MW_UNUSED_MESSAGE_PARAMETER,
+				MW_WINDOW_MESSAGE);
 		break;
 
 	case MW_LIST_BOX_SCROLL_BAR_POSITION_MESSAGE:
@@ -322,12 +330,25 @@ static void list_box_message_function(const mw_message_t *message)
 		this_list_box->lines_to_scroll = message->message_data;
 		break;
 
-	case MW_LIST_BOX_SCROLL_NEW_ENTRIES_MESSAGE:
-		MW_ASSERT(message->message_data > 0, "Illegal number of list box entries");
-		MW_ASSERT(message->message_pointer, "Null pointer");
-		this_list_box->number_of_lines = message->message_data;
-		this_list_box->list_box_entries = (mw_ui_list_box_entry *)message->message_pointer;
-		mw_paint_control(message->recipient_handle);
+	case MW_LIST_BOX_SET_ENTRIES_MESSAGE:
+		if (message->message_pointer && message->message_data > 0)
+		{
+			this_list_box->number_of_items = message->message_data;
+			this_list_box->list_box_entries = (mw_ui_list_box_entry *)message->message_pointer;
+
+			/* send message about whether scrolling is needed */
+			mw_post_message(MW_LIST_BOX_SCROLLING_REQUIRED,
+					message->recipient_handle,
+					mw_get_control_parent_window_handle(message->recipient_handle),
+					this_list_box->number_of_items > this_list_box->number_of_lines,
+					MW_UNUSED_MESSAGE_PARAMETER,
+					MW_WINDOW_MESSAGE);
+		}
+		else
+		{
+			MW_ASSERT(message->message_data > 0, "Illegal number of list box entries");
+			MW_ASSERT(message->message_pointer, "Null pointer");
+		}
 		break;
 
 	case MW_TIMER_MESSAGE:

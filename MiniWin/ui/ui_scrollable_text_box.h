@@ -52,14 +52,14 @@ SOFTWARE.
 typedef struct
 {
 	/* User modifiable fields */
-	const struct mf_rlefont_s *tt_font;
+	const struct mf_rlefont_s *tt_font;				/**< todo */
 	mw_gl_tt_font_justification_t justification;
 	const char *text;
 	mw_hal_lcd_colour_t fg_colour;
 	mw_hal_lcd_colour_t bg_colour;
 
 	/* Non-user modifiable fields */
-	uint16_t scroll_position;
+	uint16_t lines_to_scroll;
 	uint16_t text_height_pixels;
 } mw_ui_scrollable_text_box_data_t;
 
