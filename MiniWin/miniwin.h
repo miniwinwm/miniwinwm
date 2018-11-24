@@ -39,6 +39,7 @@ SOFTWARE.
 #include <stdbool.h>
 #include "miniwin_config.h"
 #include "miniwin_debug.h"
+#include "miniwin_settings.h"
 #include "gl/gl.h"
 
 /****************
@@ -1236,6 +1237,8 @@ void mw_paint_all();
  */
 void mw_show_busy(bool show);
 
+#include "ui/ui_common.h"
+#include "dialogs/dialog_common.h"
 
 #ifdef __cplusplus
 }

@@ -28,7 +28,7 @@ SOFTWARE.
 *** INCLUDES ***
 ***************/
 
-#include "ui/ui_common.h"
+#include "miniwin.h"
 #include "window_gyro_x.h"
 #include "window_gyro_y.h"
 #include "window_gyro_z.h"

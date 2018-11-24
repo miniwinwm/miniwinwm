@@ -28,7 +28,7 @@ SOFTWARE.
 *** INCLUDES ***
 ***************/
 
-#include "hal/hal_lcd.h"
+#include <stdint.h>
 
 /****************
 *** CONSTANTS ***

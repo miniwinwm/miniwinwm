@@ -28,11 +28,11 @@ SOFTWARE.
 *** INCLUDES ***
 ***************/
 
+#include "miniwin.h"
 #include "app.h"
 #include "stm32f4_discovery.h"
 #include "ff_gen_drv.h"
 #include "usbh_diskio_dma.h"
-#include "miniwin_settings.h"
 
 /****************
 *** CONSTANTS ***

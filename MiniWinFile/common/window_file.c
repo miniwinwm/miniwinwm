@@ -34,7 +34,6 @@ SOFTWARE.
 #include <stdio.h>
 #include <time.h>
 #include "miniwin.h"
-#include "ui/ui_common.h"
 #include "dialogs/dialog_common.h"
 #include "app.h"
 #include "window_text.h"

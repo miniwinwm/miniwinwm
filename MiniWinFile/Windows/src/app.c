@@ -28,9 +28,12 @@ SOFTWARE.
 *** INCLUDES ***
 ***************/
 
+#include <stdint.h>
+#include <stdbool.h>
 #include <windows.h>
 #include <stdio.h>
 #include <time.h>
+#include "miniwin.h"
 #include "app.h"
 
 /****************

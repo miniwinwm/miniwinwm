@@ -28,9 +28,9 @@ SOFTWARE.
 *** INCLUDES ***
 ***************/
 
+#include "miniwin.h"
 #include "window_tt_font.h"
 #include "window_tt_font_text_box.h"
-#include "ui/ui_common.h"
 
 /****************
 *** CONSTANTS ***

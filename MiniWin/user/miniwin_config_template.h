@@ -35,8 +35,6 @@ SOFTWARE.
 *** INCLUDES ***
 ***************/
 
-#include "hal/hal_lcd.h"
-
 /****************
 *** CONSTANTS ***
 ****************/

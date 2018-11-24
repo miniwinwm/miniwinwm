@@ -36,7 +36,6 @@ SOFTWARE.
 #include "window_test.h"
 #include "window_yield.h"
 #include "window_paint_rect.h"
-#include "ui/ui_common.h"
 
 /****************
 *** CONSTANTS ***

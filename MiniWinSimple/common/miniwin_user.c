@@ -28,8 +28,8 @@ SOFTWARE.
 *** INCLUDES ***
 ***************/
 
+#include "miniwin.h"
 #include "window_simple.h"
-#include "ui/ui_common.h"
 
 /****************
 *** CONSTANTS ***

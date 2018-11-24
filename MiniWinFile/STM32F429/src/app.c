@@ -29,11 +29,11 @@ SOFTWARE.
 ***************/
 
 #include <time.h>
+#include "miniwin.h"
 #include "stm32f429i_discovery.h"
 #include "ff_gen_drv.h"
 #include "usbh_diskio_dma.h"
 #include "app.h"
-#include "miniwin_settings.h"
 #include "integer.h"
 
 /****************

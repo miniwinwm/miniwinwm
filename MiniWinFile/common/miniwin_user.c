@@ -29,7 +29,6 @@ SOFTWARE.
 ***************/
 
 #include "miniwin.h"
-#include "ui/ui_common.h"
 #include "window_file.h"
 #include "window_text.h"
 

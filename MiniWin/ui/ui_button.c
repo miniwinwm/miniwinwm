@@ -30,7 +30,6 @@ SOFTWARE.
 
 #include <string.h>
 #include "miniwin.h"
-#include "ui/ui_common.h"
 
 /****************
 *** CONSTANTS ***

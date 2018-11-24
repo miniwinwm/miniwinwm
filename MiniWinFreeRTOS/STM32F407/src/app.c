@@ -30,9 +30,9 @@ SOFTWARE.
 
 #include <math.h>
 #include <string.h>
+#include "miniwin.h"
 #include "stm32f4xx_hal.h"
 #include "stm32f4_discovery.h"
-#include "miniwin_settings.h"
 #include "stm32f4_discovery_accelerometer.h"
 #include "app.h"
 

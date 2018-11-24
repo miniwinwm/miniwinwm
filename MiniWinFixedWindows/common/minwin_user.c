@@ -30,7 +30,6 @@ SOFTWARE.
 
 #include <string.h>
 #include "miniwin.h"
-#include "ui/ui_common.h"
 #include "window_date_icon.h"
 #include "window_file_icon.h"
 #include "window_help_icon.h"

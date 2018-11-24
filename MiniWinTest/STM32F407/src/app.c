@@ -28,9 +28,9 @@ SOFTWARE.
 *** INCLUDES ***
 ***************/
 
+#include "miniwin.h"
 #include "app.h"
 #include "stm32f4_discovery.h"
-#include "miniwin_settings.h"
 
 /****************
 *** CONSTANTS ***
