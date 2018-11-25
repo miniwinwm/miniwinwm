@@ -367,7 +367,7 @@ void mw_gl_character(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y, c
  * @param draw_info Reference frame origin coordinates and clip region rect
  * @param x Coordinate of the left edge of the rectangle containing the first character
  * @param y Coordinate of the top edge of the rectangle containing the first character
- * @param s Pointer to the null terminated string containing ISO8859-1 characters
+ * @param s Pointer to the null terminated string containing ASCII characters
  */
 void mw_gl_string(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y, const char *s);
 

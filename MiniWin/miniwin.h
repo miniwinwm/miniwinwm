@@ -395,7 +395,7 @@ typedef enum
 	/**
 	 * Response message from a arrow that it has been pressed
 	 *
-	 * message_data: new horizontal scroll position from 0 to 255 as a proportion of the scroll bar
+	 * message_data: The arrow direction
 	 * message_pointer: Unused
 	 */
 	MW_ARROW_PRESSED_MESSAGE,
@@ -472,7 +472,7 @@ typedef enum
 	MW_LIST_BOX_SCROLL_BAR_POSITION_MESSAGE,
 
 	/**
-	 * New entries and entry count for a list box
+	 * Set new entries and entry count for a list box
 	 *
 	 * message_data: Number of entries in new array of entries
 	 * message_pointer: Pointer to array of entries
@@ -536,7 +536,7 @@ typedef enum
 	/**
 	 * Time chooser dialog has been dismissed by ok button
 	 *
-	 * message_data: Mask with 0x000000ff for minutes, mask with 0x0000ff00 for hours
+	 * message_data: Mask with 0x00ff for minutes, mask with 0xff00 for hours
 	 * message_pointer: Unused
 	 */
 	MW_DIALOG_TIME_CHOOSER_OK_MESSAGE,
@@ -676,7 +676,6 @@ typedef enum
 	 * message_pointer: Pointer to a mw_util_rect_t structure
 	 */
 	MW_CONTROL_PAINT_RECT_MESSAGE,
-
 
 	/**
 	 * Message to a window when another window has been removed that is not the window receiving the message.
