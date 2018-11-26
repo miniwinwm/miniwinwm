@@ -106,16 +106,6 @@ mw_handle_t mw_ui_list_box_add_new(uint16_t x,
 		uint32_t flags,
 		mw_ui_list_box_data_t *list_box_instance_data);
 
-/**
- * Get the maximum number of lines it is possible for a list box to have to scroll
- * i.e. number of entries - number of displayed lines
- *
- * @param list_box_handle Handle of the list box to query
- * @return The maximum number of lines that this list box can scroll
- * @note Returns 0 if number of entries < number of displayed lines
- */
-uint8_t mw_ui_list_box_get_max_lines_to_scroll(mw_handle_t list_box_handle);
-
 #ifdef __cplusplus
 }
 #endif

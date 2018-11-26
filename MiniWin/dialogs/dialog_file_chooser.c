@@ -164,15 +164,18 @@ static void update_folder_entries(bool folders_only)
 				mw_bitmaps_folder_icon_small);
 	}
 
-	if (mw_dialog_file_chooser_data.list_box_file_data.number_of_lines < mw_dialog_file_chooser_data.list_box_file_data.number_of_items)
-	{
-		mw_set_control_enabled(mw_dialog_file_chooser_data.arrow_file_down_handle, true);
-	}
-	else
-	{
-		mw_set_control_enabled(mw_dialog_file_chooser_data.arrow_file_down_handle, false);
-	}
+	/* let the list box know of new data */
+	mw_post_message(MW_LIST_BOX_SET_ENTRIES_MESSAGE,
+			MW_UNUSED_MESSAGE_PARAMETER,
+			mw_dialog_file_chooser_data.list_box_file_handle,
+			mw_dialog_file_chooser_data.list_box_file_data.number_of_items,
+			(void *)mw_dialog_file_chooser_data.file_entries,
+			MW_CONTROL_MESSAGE);
 
+	/* up arrow always disabled on new data as scrolling will be at top position */
+	mw_set_control_enabled(mw_dialog_file_chooser_data.arrow_file_up_handle, false);
+
+	/* update enabled state of back arrow depending on folder depth */
 	if (mw_dialog_file_chooser_data.folder_depth == 0)
 	{
 		mw_set_control_enabled(mw_dialog_file_chooser_data.arrow_file_back_handle, false);
@@ -182,10 +185,9 @@ static void update_folder_entries(bool folders_only)
 		mw_set_control_enabled(mw_dialog_file_chooser_data.arrow_file_back_handle, true);
 	}
 
+	/* paint arrows updated here */
 	mw_paint_control(mw_dialog_file_chooser_data.arrow_file_up_handle);
-	mw_paint_control(mw_dialog_file_chooser_data.arrow_file_down_handle);
 	mw_paint_control(mw_dialog_file_chooser_data.arrow_file_back_handle);
-	mw_paint_control(mw_dialog_file_chooser_data.list_box_file_handle);
 }
 
 /**
@@ -224,6 +226,12 @@ static void mw_dialog_file_chooser_message_function(const mw_message_t *message)
 		mw_dialog_file_chooser_data.folder_depth =
 				get_folder_depth(mw_dialog_file_chooser_data.folder_path);
 		update_folder_entries(mw_dialog_file_chooser_data.folders_only);
+		break;
+
+	case MW_LIST_BOX_SCROLLING_REQUIRED_MESSAGE:
+		mw_set_control_enabled(mw_dialog_file_chooser_data.arrow_file_down_handle, message->message_data >> 16);
+		mw_paint_control(mw_dialog_file_chooser_data.arrow_file_down_handle);
+		mw_paint_control(mw_dialog_file_chooser_data.list_box_file_handle);
 		break;
 
 	case MW_BUTTON_PRESSED_MESSAGE:
@@ -300,7 +308,7 @@ static void mw_dialog_file_chooser_message_function(const mw_message_t *message)
 			mw_set_control_enabled(mw_dialog_file_chooser_data.arrow_file_down_handle, true);
 			mw_paint_control(mw_dialog_file_chooser_data.arrow_file_down_handle);
 
-			mw_post_message(MW_LIST_BOX_SCROLL_BAR_POSITION_MESSAGE,
+			mw_post_message(MW_LIST_BOX_LINES_TO_SCROLL_MESSAGE,
 					0,
 					mw_dialog_file_chooser_data.list_box_file_handle,
 					mw_dialog_file_chooser_data.lines_to_scroll,
@@ -327,7 +335,7 @@ static void mw_dialog_file_chooser_message_function(const mw_message_t *message)
 			mw_set_control_enabled(mw_dialog_file_chooser_data.arrow_file_up_handle, true);
 			mw_paint_control(mw_dialog_file_chooser_data.arrow_file_up_handle);
 
-			mw_post_message(MW_LIST_BOX_SCROLL_BAR_POSITION_MESSAGE,
+			mw_post_message(MW_LIST_BOX_LINES_TO_SCROLL_MESSAGE,
 					0,
 					mw_dialog_file_chooser_data.list_box_file_handle,
 					mw_dialog_file_chooser_data.lines_to_scroll,
@@ -683,9 +691,8 @@ mw_handle_t mw_create_window_dialog_file_chooser(uint16_t x,
 		mw_dialog_file_chooser_data.file_entries[i].icon = NULL;
 	}
 
-	/* set list box entries pointer to windows entries array and entry count to 0 */
+	/* set list box entries pointer to windows entries array */
 	mw_dialog_file_chooser_data.list_box_file_data.list_box_entries = mw_dialog_file_chooser_data.file_entries;
-	mw_dialog_file_chooser_data.list_box_file_data.number_of_items = 0;
 
 	/* set up enabled state of ok button, always enabled if choosing a folder */
 	if (folders_only)

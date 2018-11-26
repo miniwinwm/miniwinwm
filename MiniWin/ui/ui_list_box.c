@@ -306,17 +306,27 @@ static void list_box_message_function(const mw_message_t *message)
 	switch (message->message_id)
 	{
 	case MW_CONTROL_CREATED_MESSAGE:
-		/* initialise the control */			
-		this_list_box->line_is_selected = false;
-		this_list_box->lines_to_scroll = 0;
+		{
+			uint32_t message_data;
 
-		/* send message about whether scrolling is needed */
-		mw_post_message(MW_LIST_BOX_SCROLLING_REQUIRED_MESSAGE,
-				message->recipient_handle,
-				mw_get_control_parent_window_handle(message->recipient_handle),
-				this_list_box->number_of_items > this_list_box->number_of_lines,
-				MW_UNUSED_MESSAGE_PARAMETER,
-				MW_WINDOW_MESSAGE);
+			/* initialise the control */
+			this_list_box->line_is_selected = false;
+			this_list_box->lines_to_scroll = 0;
+
+			/* send message about whether scrolling is needed */
+			message_data = this_list_box->number_of_items > this_list_box->number_of_lines;
+			message_data <<= 16;
+			if (message_data)
+			{
+				message_data |= (this_list_box->number_of_items - this_list_box->number_of_lines);
+			}
+			mw_post_message(MW_LIST_BOX_SCROLLING_REQUIRED_MESSAGE,
+					message->recipient_handle,
+					mw_get_control_parent_window_handle(message->recipient_handle),
+					message_data,
+					MW_UNUSED_MESSAGE_PARAMETER,
+					MW_WINDOW_MESSAGE);
+		}
 		break;
 
 	case MW_LIST_BOX_SCROLL_BAR_POSITION_MESSAGE:
@@ -356,23 +366,34 @@ static void list_box_message_function(const mw_message_t *message)
 		break;
 
 	case MW_LIST_BOX_SET_ENTRIES_MESSAGE:
-		if (message->message_pointer && message->message_data > 0)
 		{
-			this_list_box->number_of_items = message->message_data;
-			this_list_box->list_box_entries = (mw_ui_list_box_entry *)message->message_pointer;
+			uint32_t message_data;
 
-			/* send message about whether scrolling is needed */
-			mw_post_message(MW_LIST_BOX_SCROLLING_REQUIRED_MESSAGE,
-					message->recipient_handle,
-					mw_get_control_parent_window_handle(message->recipient_handle),
-					this_list_box->number_of_items > this_list_box->number_of_lines,
-					MW_UNUSED_MESSAGE_PARAMETER,
-					MW_WINDOW_MESSAGE);
-		}
-		else
-		{
-			MW_ASSERT(message->message_data > 0, "Illegal number of list box entries");
-			MW_ASSERT(message->message_pointer, "Null pointer");
+			if (message->message_pointer && message->message_data > 0)
+			{
+				this_list_box->number_of_items = message->message_data;
+				this_list_box->list_box_entries = (mw_ui_list_box_entry *)message->message_pointer;
+				this_list_box->lines_to_scroll = 0;
+
+				/* send message about whether scrolling is needed */
+				message_data = this_list_box->number_of_items > this_list_box->number_of_lines;
+				message_data <<= 16;
+				if (message_data)
+				{
+					message_data |= (this_list_box->number_of_items - this_list_box->number_of_lines);
+				}
+				mw_post_message(MW_LIST_BOX_SCROLLING_REQUIRED_MESSAGE,
+						message->recipient_handle,
+						mw_get_control_parent_window_handle(message->recipient_handle),
+						message_data,
+						MW_UNUSED_MESSAGE_PARAMETER,
+						MW_WINDOW_MESSAGE);
+			}
+			else
+			{
+				MW_ASSERT(message->message_data > 0, "Illegal number of list box entries");
+				MW_ASSERT(message->message_pointer, "Null pointer");
+			}
 		}
 		break;
 
@@ -425,18 +446,9 @@ mw_handle_t mw_ui_list_box_add_new(uint16_t x,
 	uint8_t i;
 
 	/* check for null parameters */
-	if (list_box_instance_data == NULL ||
-			list_box_instance_data->list_box_entries == NULL)
+	if (list_box_instance_data == NULL)
 	{
 		MW_ASSERT(false, "Null pointer argument");
-		return MW_INVALID_HANDLE;
-	}
-
-	/* check for 0 entries */
-	if (list_box_instance_data->number_of_items == 0 ||
-			list_box_instance_data->number_of_lines == 0)
-	{
-		MW_ASSERT(false, "Zero argument");
 		return MW_INVALID_HANDLE;
 	}
 
@@ -491,30 +503,4 @@ mw_handle_t mw_ui_list_box_add_new(uint16_t x,
 			flags,
 			list_box_instance_data,
 			MW_UI_CONTROL_LIST_BOX_TYPE);
-}
-
-uint8_t mw_ui_list_box_get_max_lines_to_scroll(mw_handle_t list_box_handle)
-{
-	mw_ui_control_type_t control_type = mw_get_control_type(list_box_handle);
-
-	/* check handle is not invalid or of wrong type*/
-	if (control_type != MW_UI_CONTROL_LIST_BOX_TYPE)
-	{
-		MW_ASSERT(false, "Bad handle");
-		return 0;
-	}
-
-	mw_ui_list_box_data_t *this_list_box = (mw_ui_list_box_data_t*)mw_get_control_instance_data(list_box_handle);
-	if (this_list_box == NULL)
-	{
-		MW_ASSERT(false, "Handle doesn't reference a control");
-		return 0;
-	}
-
-	if (this_list_box->number_of_items <= this_list_box->number_of_lines)
-	{
-		return 0;
-	}
-
-	return this_list_box->number_of_items - this_list_box->number_of_lines;
 }

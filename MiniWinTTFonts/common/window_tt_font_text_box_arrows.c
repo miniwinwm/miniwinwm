@@ -50,6 +50,7 @@ typedef struct
 
 	/* Non user-modifiable values */
 	 uint16_t lines_to_scroll;				//todo
+	 uint16_t max_scollable_lines;
 } window_tt_font_text_box_arrows_data_t;
 
 /*************************
@@ -106,7 +107,8 @@ void window_tt_font_text_box_arrows_message_function(const mw_message_t *message
 
 	case MW_TEXT_BOX_SCROLLING_REQUIRED_MESSAGE:
 		/* enable/disable the down arrow depending on if scrolling is required, i.e. text won't all fit in the control */
-		mw_set_control_enabled(arrow_down, message->message_data);
+		mw_set_control_enabled(arrow_down, message->message_data >> 16);
+		window_tt_font_text_box_arrows_data.max_scollable_lines = message->message_data & 0xffff;
 		mw_paint_control(arrow_down);
 		break;
 
@@ -142,14 +144,14 @@ void window_tt_font_text_box_arrows_message_function(const mw_message_t *message
 			mw_paint_control(text_box_arrows_handle);
 		}
 		else if (message->message_data == MW_UI_ARROW_DOWN &&
-				window_tt_font_text_box_arrows_data.lines_to_scroll < mw_ui_text_box_get_max_lines_to_scroll(text_box_arrows_handle))
+				window_tt_font_text_box_arrows_data.lines_to_scroll < window_tt_font_text_box_arrows_data.max_scollable_lines)
 		{
 			/* down arrow, scroll text down if ok to do so */
 			window_tt_font_text_box_arrows_data.lines_to_scroll += SCROLL_STEP_SIZE;
 
-			if (window_tt_font_text_box_arrows_data.lines_to_scroll >= mw_ui_text_box_get_max_lines_to_scroll(text_box_arrows_handle))
+			if (window_tt_font_text_box_arrows_data.lines_to_scroll >= window_tt_font_text_box_arrows_data.max_scollable_lines)
 			{
-				window_tt_font_text_box_arrows_data.lines_to_scroll = mw_ui_text_box_get_max_lines_to_scroll(text_box_arrows_handle);
+				window_tt_font_text_box_arrows_data.lines_to_scroll = window_tt_font_text_box_arrows_data.max_scollable_lines;
 				mw_set_control_enabled(arrow_down, false);
 				mw_paint_control(arrow_down);
 			}

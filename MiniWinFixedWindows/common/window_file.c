@@ -55,6 +55,7 @@ typedef struct
 {
 	uint8_t lines_to_scroll;			/**< Number of lines folder list box is scrolled */
 	folder_shown_t folder_shown;		/**< The current folder on display in the list box */
+	uint16_t max_scrollable_lines;		/**< Maximum number of lines list box can be scrolled */
 } file_data_t;
 
 
@@ -133,7 +134,8 @@ void window_file_message_function(const mw_message_t *message)
 		break;
 
 	case MW_LIST_BOX_SCROLLING_REQUIRED_MESSAGE:
-		mw_set_control_enabled(arrow_file_down_handle, message->message_data);
+		mw_set_control_enabled(arrow_file_down_handle, message->message_data >> 16);
+		file_data.max_scrollable_lines = message->message_data & 0xffff;
 		mw_paint_control(arrow_file_down_handle);
 		break;
 
@@ -264,15 +266,9 @@ void window_file_message_function(const mw_message_t *message)
 		if (folder_changed)
 		{
 			file_data.lines_to_scroll = 0;
-			mw_post_message(MW_LIST_BOX_LINES_TO_SCROLL_MESSAGE,
-					message->recipient_handle,
-					list_box_file_handle,
-					0,
-					MW_UNUSED_MESSAGE_PARAMETER,
-					MW_CONTROL_MESSAGE);
 
 			mw_set_control_enabled(arrow_file_up_handle, false);
-			if (mw_ui_list_box_get_max_lines_to_scroll(list_box_file_handle) > 0)
+			if (file_data.max_scrollable_lines > 0)
 			{
 				mw_set_control_enabled(arrow_file_down_handle, true);
 			}
@@ -311,12 +307,12 @@ void window_file_message_function(const mw_message_t *message)
 			mw_paint_control(list_box_file_handle);
 		}
 		else if (message->message_data == MW_UI_ARROW_DOWN &&
-					file_data.lines_to_scroll < mw_ui_list_box_get_max_lines_to_scroll(list_box_file_handle))
+					file_data.lines_to_scroll < file_data.max_scrollable_lines)
 		{
 			/* down arrow, scroll list box down is ok to do so */
 			file_data.lines_to_scroll++;
 
-			if (file_data.lines_to_scroll == mw_ui_list_box_get_max_lines_to_scroll(list_box_file_handle))
+			if (file_data.lines_to_scroll == file_data.max_scrollable_lines)
 			{
 				mw_set_control_enabled(arrow_file_down_handle, false);
 				mw_paint_control(arrow_file_down_handle);

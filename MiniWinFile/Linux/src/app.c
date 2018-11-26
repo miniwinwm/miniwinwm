@@ -34,6 +34,7 @@ SOFTWARE.
 #include <string.h>
 #include <stdio.h>
 #include <time.h>
+#include "miniwin.h"
 #include "app.h"
 
 /****************

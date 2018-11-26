@@ -118,22 +118,32 @@ static void text_box_message_function(const mw_message_t *message)
 	switch (message->message_id)
 	{
 	case MW_CONTROL_CREATED_MESSAGE:
-		/* initialise the control */
-		this_text_box->lines_to_scroll = 0;
+		{
+			uint32_t message_data;
 
-		/* get height of rendered text in pixels without actually rendering it */
-		this_text_box->text_height_pixels = mw_gl_tt_get_render_text_lines(mw_get_control_rect(message->recipient_handle).width,
-				this_text_box->justification,
-				this_text_box->tt_font,
-				this_text_box->text);
+			/* initialise the control */
+			this_text_box->lines_to_scroll = 0;
 
-		/* send message about whether scrolling is needed */
-		mw_post_message(MW_TEXT_BOX_SCROLLING_REQUIRED_MESSAGE,
-				message->recipient_handle,
-				mw_get_control_parent_window_handle(message->recipient_handle),
-				this_text_box->text_height_pixels > mw_get_control_rect(message->recipient_handle).height,
-				MW_UNUSED_MESSAGE_PARAMETER,
-				MW_WINDOW_MESSAGE);
+			/* get height of rendered text in pixels without actually rendering it */
+			this_text_box->text_height_pixels = mw_gl_tt_get_render_text_lines(mw_get_control_rect(message->recipient_handle).width,
+					this_text_box->justification,
+					this_text_box->tt_font,
+					this_text_box->text);
+
+			/* send message about whether scrolling is needed */
+			message_data = this_text_box->text_height_pixels > mw_get_control_rect(message->recipient_handle).height;
+			message_data <<= 16;
+			if (message_data)
+			{
+				message_data |= (this_text_box->text_height_pixels - mw_get_control_rect(message->recipient_handle).height);
+			}
+			mw_post_message(MW_TEXT_BOX_SCROLLING_REQUIRED_MESSAGE,
+					message->recipient_handle,
+					mw_get_control_parent_window_handle(message->recipient_handle),
+					message_data,
+					MW_UNUSED_MESSAGE_PARAMETER,
+					MW_WINDOW_MESSAGE);
+		}
 		break;
 
 	case MW_TEXT_BOX_SCROLL_BAR_POSITION_MESSAGE:
@@ -181,30 +191,40 @@ static void text_box_message_function(const mw_message_t *message)
 		break;
 
 	case MW_TEXT_BOX_SET_TEXT_MESSAGE:
-		/* message pointer field contains pointer to new text */
-		if (message->message_pointer)
 		{
-			this_text_box->text = (char *)(message->message_pointer);
-			this_text_box->lines_to_scroll = 0;
-			mw_paint_control(message->recipient_handle);
+			uint32_t message_data;
 
-			/* get height of rendered text in pixels without actually rendering it */
-			this_text_box->text_height_pixels = mw_gl_tt_get_render_text_lines(mw_get_control_rect(message->recipient_handle).width,
-					this_text_box->justification,
-					this_text_box->tt_font,
-					this_text_box->text);
+			/* message pointer field contains pointer to new text */
+			if (message->message_pointer)
+			{
+				this_text_box->text = (char *)(message->message_pointer);
+				this_text_box->lines_to_scroll = 0;
+				mw_paint_control(message->recipient_handle);
 
-			/* send message about whether scrolling is needed */
-			mw_post_message(MW_TEXT_BOX_SCROLLING_REQUIRED_MESSAGE,
-					message->recipient_handle,
-					mw_get_control_parent_window_handle(message->recipient_handle),
-					this_text_box->text_height_pixels > mw_get_control_rect(message->recipient_handle).height,
-					MW_UNUSED_MESSAGE_PARAMETER,
-					MW_WINDOW_MESSAGE);
-		}
-		else
-		{
-			MW_ASSERT(false, "Null pointer argument");
+				/* get height of rendered text in pixels without actually rendering it */
+				this_text_box->text_height_pixels = mw_gl_tt_get_render_text_lines(mw_get_control_rect(message->recipient_handle).width,
+						this_text_box->justification,
+						this_text_box->tt_font,
+						this_text_box->text);
+
+				/* send message about whether scrolling is needed */
+				message_data = this_text_box->text_height_pixels > mw_get_control_rect(message->recipient_handle).height;
+				message_data <<= 16;
+				if (message_data)
+				{
+					message_data |= (this_text_box->text_height_pixels - mw_get_control_rect(message->recipient_handle).height);
+				}
+				mw_post_message(MW_TEXT_BOX_SCROLLING_REQUIRED_MESSAGE,
+						message->recipient_handle,
+						mw_get_control_parent_window_handle(message->recipient_handle),
+						message_data,
+						MW_UNUSED_MESSAGE_PARAMETER,
+						MW_WINDOW_MESSAGE);
+			}
+			else
+			{
+				MW_ASSERT(false, "Null pointer argument");
+			}
 		}
 		break;
 
@@ -240,30 +260,3 @@ mw_handle_t mw_ui_text_box_add_new(mw_util_rect_t *control_rect,
 			text_box_instance_data,
 			MW_UI_CONTROL_TEXT_BOX_TYPE);
 }
-
-uint8_t mw_ui_text_box_get_max_lines_to_scroll(mw_handle_t text_box_handle)
-{
-	mw_ui_control_type_t control_type = mw_get_control_type(text_box_handle);
-
-	/* check handle is not invalid or of wrong type*/
-	if (control_type != MW_UI_CONTROL_TEXT_BOX_TYPE)
-	{
-		MW_ASSERT(false, "Bad handle");
-		return 0;
-	}
-
-	mw_ui_text_box_data_t *this_text_box = (mw_ui_text_box_data_t*)mw_get_control_instance_data(text_box_handle);
-	if (this_text_box == NULL)
-	{
-		MW_ASSERT(false, "Handle doesn't reference a control");
-		return 0;
-	}
-
-	if (this_text_box->text_height_pixels <= mw_get_control_rect(text_box_handle).height)
-	{
-		return 0;
-	}
-
-	return this_text_box->text_height_pixels - mw_get_control_rect(text_box_handle).height;
-}
-

@@ -78,16 +78,6 @@ mw_handle_t mw_ui_text_box_add_new(mw_util_rect_t *control_rect,
 		uint32_t flags,
 		mw_ui_text_box_data_t *text_box_instance_data);
 
-/**
- * Get the maximum number of lines it is possible for a text box to have to scroll
- * i.e. height in pixels of rendered text - text box client height
- *
- * @param text_box_handle Handle of the text box to query
- * @return The maximum number of lines that this text box can scroll
- * @note Returns 0 if number of height in pixels of rendered text < text box client height
- */
-uint8_t mw_ui_text_box_get_max_lines_to_scroll(mw_handle_t list_box_handle);
-
 #ifdef __cplusplus
 }
 #endif

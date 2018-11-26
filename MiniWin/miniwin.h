@@ -371,7 +371,7 @@ typedef enum
 	 * Message posted by a list box to its parent window indicating if scrolling is required,
 	 * i.e. too many lines to display in the box at once
 	 *
-	 * message_data: 1 if a scroll bar is required, 0 if it isn't
+	 * message_data: upper 16 bits: 1 if scrolling required, 0 if scrolling not required; lower 16 bits: the maximum lines that can be scrolled
 	 * message_pointer: Unused
 	 */
 	MW_LIST_BOX_SCROLLING_REQUIRED_MESSAGE,
@@ -412,7 +412,8 @@ typedef enum
 	 * Message posted by a text box to its parent window indicating if scrolling is required,
 	 * i.e. too much text to display in the box at once
 	 *
-	 * message_data: 1 if a scroll bar is required, 0 if it isn't
+	 * message_data: upper 16 bits: 1 if scrolling required, 0 if scrolling not required;
+	 * 				 lower 16 bits: the maximum lines that can be scrolled
 	 * message_pointer: Unused
 	 */
 	MW_TEXT_BOX_SCROLLING_REQUIRED_MESSAGE,

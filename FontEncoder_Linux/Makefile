@@ -2,11 +2,7 @@ $(info ************ libfreetype6-dev must be installed ************)
 $(info ************ Use this command: apt-get install libfreetype6-dev ************)
 
 CXXFLAGS = -O2 -Wall -Werror -Wno-unused-function -Wno-sign-compare -std=c++0x
-CXXFLAGS += -ggdb
-
-ifneq ($(shell uname -s),Darwin)
-	LDFLAGS += -pthread
-endif
+LDFLAGS = -lpthread
 
 # Libfreetype
 CXXFLAGS += $(shell freetype-config --cflags)
@@ -27,12 +23,14 @@ OBJS += encode_rlefont.o optimize_rlefont.o export_rlefont.o
 # bwfont export format
 OBJS += export_bwfont.o
 
+OBJS += main.o
+
 all: mcufont
 
 clean:
-	rm -f mcufont $(OBJS) main.o
+	rm -f mcufont $(OBJS) 
 
-mcufont: main.o $(OBJS)
+mcufont: $(OBJS)
 	g++ $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
 
 %.o: %.cc *.hh

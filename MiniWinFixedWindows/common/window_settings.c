@@ -47,6 +47,7 @@ SOFTWARE.
 typedef struct
 {
 	uint8_t lines_to_scroll;		/**< Number of lines list box is scrolled */
+	uint16_t max_scrollable_lines;		/**< Maximum number of lines list box can be scrolled */
 } settings_data_t;
 
 
@@ -120,7 +121,8 @@ void window_settings_message_function(const mw_message_t *message)
 		break;
 
 	case MW_LIST_BOX_SCROLLING_REQUIRED_MESSAGE:
-		mw_set_control_enabled(arrow_settings_down, message->message_data);
+		mw_set_control_enabled(arrow_settings_down, message->message_data >> 16);
+		settings_data.max_scrollable_lines = message->message_data & 0xffff;
 		mw_paint_control(arrow_settings_down);
 		break;
 
@@ -169,12 +171,12 @@ void window_settings_message_function(const mw_message_t *message)
 			mw_paint_control(list_box_settings_handle);
 		}
 		else if (message->message_data == MW_UI_ARROW_DOWN &&
-					settings_data.lines_to_scroll < mw_ui_list_box_get_max_lines_to_scroll(list_box_settings_handle))
+					settings_data.lines_to_scroll < settings_data.max_scrollable_lines)
 		{
 			/* down arrow, scroll list box down if ok to do so */
 			settings_data.lines_to_scroll++;
 
-			if (settings_data.lines_to_scroll == mw_ui_list_box_get_max_lines_to_scroll(list_box_settings_handle))
+			if (settings_data.lines_to_scroll == settings_data.max_scrollable_lines)
 			{
 				mw_set_control_enabled(arrow_settings_down, false);
 				mw_paint_control(arrow_settings_down);
