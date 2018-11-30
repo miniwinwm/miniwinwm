@@ -25,8 +25,8 @@
 
 #include "calibrate.h"
 
-int setCalibrationMatrix( POINT * displayPtr,
-                          POINT * screenPtr,
+int setCalibrationMatrix( POINT_T * displayPtr,
+						  POINT_T * screenPtr,
                           MATRIX * matrixPtr)
 {
 
@@ -129,8 +129,8 @@ int setCalibrationMatrix( POINT * displayPtr,
  *
  *
  */
-int getDisplayPoint( POINT * displayPtr,
-                     POINT * screenPtr,
+int getDisplayPoint( POINT_T * displayPtr,
+					 POINT_T * screenPtr,
                      MATRIX * matrixPtr )
 {
     int retValue = OK ;

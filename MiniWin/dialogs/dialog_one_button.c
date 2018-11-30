@@ -130,6 +130,9 @@ static void mw_dialog_one_button_message_function(const mw_message_t *message)
 		/* remove all controls and window */
 		mw_remove_window(mw_dialog_one_button_data.one_button_dialog_window_handle);
 
+		/* a window has changed visibility so repaint all */
+		mw_paint_all();
+
 		/* post response to receiving window */
 		mw_post_message(MW_DIALOG_ONE_BUTTON_DISMISSED_MESSAGE,
 				MW_UNUSED_MESSAGE_PARAMETER,
@@ -137,9 +140,6 @@ static void mw_dialog_one_button_message_function(const mw_message_t *message)
 				MW_UNUSED_MESSAGE_PARAMETER,
 				MW_UNUSED_MESSAGE_PARAMETER,
 				MW_WINDOW_MESSAGE);
-
-		/* a window has changed visibility so repaint all */
-		mw_paint_all();
 		break;
 
 	default:

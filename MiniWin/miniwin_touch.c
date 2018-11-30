@@ -98,8 +98,8 @@ static void draw_cross(uint16_t x, int16_t y, int16_t length)
 
 mw_hal_touch_state_t mw_touch_get_display_touch(uint16_t* x, uint16_t* y)
 {
-	POINT raw_point;
-	POINT display_point;
+	POINT_T raw_point;
+	POINT_T display_point;
 	uint16_t raw_x;
 	uint16_t raw_y;
 
@@ -125,8 +125,8 @@ mw_hal_touch_state_t mw_touch_get_display_touch(uint16_t* x, uint16_t* y)
 
 void mw_touch_calibrate(MATRIX *matrix)
 {
-	POINT raw_points[3];
-	POINT display_points[3] = { {TOUCH_CROSS_SIZE, TOUCH_CROSS_SIZE},
+	POINT_T raw_points[3];
+	POINT_T display_points[3] = { {TOUCH_CROSS_SIZE, TOUCH_CROSS_SIZE},
 			{MW_HAL_LCD_WIDTH - TOUCH_CROSS_SIZE, TOUCH_CROSS_SIZE},
 			{MW_HAL_LCD_WIDTH - TOUCH_CROSS_SIZE, MW_HAL_LCD_HEIGHT - TOUCH_CROSS_SIZE} };
 	uint16_t x;

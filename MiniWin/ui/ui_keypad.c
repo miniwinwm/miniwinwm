@@ -378,6 +378,5 @@ mw_handle_t mw_ui_keypad_add_new(uint16_t x,
 			keypad_paint_function,
 			keypad_message_function,
 			flags,
-			keypad_instance_data,
-			MW_UI_CONTROL_KEYPAD_TYPE);
+			keypad_instance_data);
 }

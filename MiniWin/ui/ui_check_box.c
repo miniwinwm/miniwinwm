@@ -213,6 +213,5 @@ mw_handle_t mw_ui_check_box_add_new(uint16_t x,
 			check_box_paint_function,
 			check_box_message_function,
 			flags,
-			check_box_instance_data,
-			MW_UI_CONTROL_CHECK_BOX_TYPE);
+			check_box_instance_data);
 }

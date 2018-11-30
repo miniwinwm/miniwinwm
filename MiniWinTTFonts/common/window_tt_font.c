@@ -88,7 +88,7 @@ static void set_scroll(const mw_message_t *message, window_tt_font_data_t *windo
 				window_client_rect.height;
 
 		/* recalculate vertical scroll pixels from last scroll bar position recorded */
-		window_tt_font_data->vert_scroll_pixels = (window_tt_font_data->max_vert_scroll_pixels * window_tt_font_data->vert_scroll_bar_position) / 255;
+		window_tt_font_data->vert_scroll_pixels = (window_tt_font_data->max_vert_scroll_pixels * window_tt_font_data->vert_scroll_bar_position) / UINT8_MAX;
 	}
 
 	/* repaint the scroll bar */
@@ -151,7 +151,7 @@ void window_tt_font_message_function(const mw_message_t *message)
 
 	case MW_WINDOW_VERT_SCROLL_BAR_SCROLLED_MESSAGE:
 		window_tt_font_data->vert_scroll_bar_position = message->message_data;
-		window_tt_font_data->vert_scroll_pixels = (window_tt_font_data->max_vert_scroll_pixels * message->message_data) / 255;
+		window_tt_font_data->vert_scroll_pixels = (window_tt_font_data->max_vert_scroll_pixels * message->message_data) / UINT8_MAX;
 		mw_paint_window_client(message->recipient_handle);
 		break;
 

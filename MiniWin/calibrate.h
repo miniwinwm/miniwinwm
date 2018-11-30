@@ -63,7 +63,7 @@
 
 
 
-#define                 INT32                           long
+#define                 INT_32                           long
 
 
 
@@ -76,9 +76,9 @@
 
 
 typedef struct Point {
-                        INT32    x,
+                        INT_32    x,
                                  y ;
-                     } POINT ;
+                     } POINT_T ;
 
 
 
@@ -86,7 +86,7 @@ typedef struct Matrix {
                                                         /* This arrangement of values facilitates
                                                          *  calculations within getDisplayPoint()
                                                          */
-                        INT32    An,     /* A = An/Divider */
+                        INT_32    An,     /* A = An/Divider */
                                  Bn,     /* B = Bn/Divider */
                                  Cn,     /* C = Cn/Divider */
                                  Dn,     /* D = Dn/Divider */
@@ -105,13 +105,13 @@ typedef struct Matrix {
 /****************************************************/
 
 
-EXTERN int setCalibrationMatrix( POINT * display,
-                                 POINT * screen,
+EXTERN int setCalibrationMatrix( POINT_T * display,
+								 POINT_T * screen,
                                  MATRIX * matrix) ;
 
 
-EXTERN int getDisplayPoint( POINT * display,
-                            POINT * screen,
+EXTERN int getDisplayPoint( POINT_T * display,
+							POINT_T * screen,
                             MATRIX * matrix ) ;
                             
 #ifdef __cplusplus

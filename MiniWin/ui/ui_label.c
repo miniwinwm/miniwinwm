@@ -166,6 +166,5 @@ mw_handle_t mw_ui_label_add_new(uint16_t x,
 			label_paint_function,
 			label_message_function,
 			flags,
-			label_instance_data,
-			MW_UI_CONTROL_LABEL_TYPE);
+			label_instance_data);
 }

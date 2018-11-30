@@ -1000,10 +1000,6 @@ void window_gl_message_function(const mw_message_t *message)
 		window_GL_data.timer_handle = mw_set_timer(mw_tick_counter + GL_TEST_TIME, message->recipient_handle, MW_WINDOW_MESSAGE);
 		break;
 
-	case MW_WINDOW_REMOVED_MESSAGE:
-		mw_cancel_timer(window_GL_data.timer_handle);
-		break;
-
 	case MW_TIMER_MESSAGE:
 		window_GL_data.timer_handle = mw_set_timer(mw_tick_counter + GL_TEST_TIME, message->recipient_handle, MW_WINDOW_MESSAGE);
 		window_GL_data.next_test++;

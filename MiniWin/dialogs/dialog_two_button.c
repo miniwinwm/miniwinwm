@@ -138,6 +138,9 @@ static void mw_dialog_two_button_message_function(const mw_message_t *message)
 			/* remove all controls and window */
 			mw_remove_window(mw_dialog_two_button_data.two_button_dialog_window_handle);
 
+			/* a window has changed visibility so repaint all */
+			mw_paint_all();
+
 			/* find which button was pressed */
 			if (message->sender_handle == mw_dialog_two_button_data.button_1_handle)
 			{
@@ -155,9 +158,6 @@ static void mw_dialog_two_button_message_function(const mw_message_t *message)
 					(uint32_t)button_pressed,
 					MW_UNUSED_MESSAGE_PARAMETER,
 					MW_WINDOW_MESSAGE);
-
-			/* a window has changed visibility so repaint all */
-			mw_paint_all();
 		}
 		break;
 

@@ -36,7 +36,6 @@ SOFTWARE.
 ***************/
 
 #include <time.h>
-#include "ui/ui_common.h"
 
 /****************
 *** CONSTANTS ***

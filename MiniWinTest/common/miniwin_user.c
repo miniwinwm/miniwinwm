@@ -322,7 +322,7 @@ void mw_user_init(void)
 			10,
 			50,
 			window_test_handle,
-			MW_CONTROL_FLAG_IS_VISIBLE,
+			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
 			&scroll_bar_vert_1_data);
 
 	/* create a new large vertical scroll bar */
@@ -330,7 +330,7 @@ void mw_user_init(void)
 			10,
 			170,
 			window_test_handle,
-			MW_CONTROL_FLAG_LARGE_SIZE,
+			MW_CONTROL_FLAG_LARGE_SIZE | MW_CONTROL_FLAG_IS_ENABLED,
 			&scroll_bar_vert_1_large_data);
 
 	/* create a new list box control and add it to the ui test window */

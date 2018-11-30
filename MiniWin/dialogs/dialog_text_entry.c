@@ -278,6 +278,9 @@ static void mw_dialog_text_entry_message_function(const mw_message_t *message)
 		/* remove all controls and window */
 		mw_remove_window(mw_dialog_text_entry_data.text_entry_dialog_window_handle);
 
+		/* a window has changed visibility so repaint all */
+		mw_paint_all();
+
 		if (message->sender_handle == mw_dialog_text_entry_data.button_cancel_handle)
 		{
 			/* post cancel response to receiving window */
@@ -298,9 +301,6 @@ static void mw_dialog_text_entry_message_function(const mw_message_t *message)
 					(void *)mw_dialog_text_entry_data.text_buffer,
 					MW_WINDOW_MESSAGE);
 		}
-
-		/* a window has changed visibility so repaint all */
-		mw_paint_all();
 		break;
 
 	default:

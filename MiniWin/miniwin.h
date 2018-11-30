@@ -123,25 +123,6 @@ SOFTWARE.
 *** TYPES ***
 ************/
 
- // todo
- typedef enum
- {
-	 MW_UI_CONTROL_BUTTON_TYPE,
-	 MW_UI_CONTROL_CHECK_BOX_TYPE,
-	 MW_UI_CONTROL_RADIO_BUTTON_TYPE,
-	 MW_UI_CONTROL_LIST_BOX_TYPE,
-	 MW_UI_CONTROL_LABEL_TYPE,
-	 MW_UI_CONTROL_SCROLL_BAR_VERT_TYPE,
-	 MW_UI_CONTROL_SCROLL_BAR_HORIZ_TYPE,
-	 MW_UI_CONTROL_PROGRESS_BAR_TYPE,
-	 MW_UI_CONTROL_KEYBOARD_TYPE,
-	 MW_UI_CONTROL_ARROW_TYPE,
-	 MW_UI_CONTROL_KEYPAD_TYPE,
-	 MW_UI_CONTROL_TEXT_BOX_TYPE,
-
-	 MW_UI_CONTROL_TYPE_LAST						/**< Must be the last entry in this enum */
- } mw_ui_control_type_t;
-
 /**
  * System defined window manager messages
  */
@@ -228,7 +209,7 @@ typedef enum
 	/**
 	 * Message to a window when a window vertical scroll bar has been scrolled
 	 *
-	 * message_data: new vertical scroll position 0 - 255 as a proportion of scroll bar length
+	 * message_data: new vertical scroll position 0 - UINT8_MAX as a proportion of scroll bar length
 	 * message_pointer: Unused
 	 */
 	MW_WINDOW_VERT_SCROLL_BAR_SCROLLED_MESSAGE,
@@ -236,7 +217,7 @@ typedef enum
 	/**
 	 * Message to a window when a window horizontal scroll bar has been scrolled
 	 *
-	 * message_data: new vertical scroll position 0 - 255 as a proportion of scroll bar length
+	 * message_data: new horizontal scroll position 0 - UINT8_MAX as a proportion of scroll bar length
 	 * message_pointer: Unused
 	 */
 	MW_WINDOW_HORIZ_SCROLL_BAR_SCROLLED_MESSAGE,
@@ -300,7 +281,7 @@ typedef enum
 	/**
 	 * Message sent to a window or control when it receives a touch up event
 	 *
-	 * message_data: Upper 16 bits = x coordinate, lower 16 bits = y coordinate
+	 * message_data: Unused
 	 * message_pointer: Unused
 	 */
 	MW_TOUCH_UP_MESSAGE,
@@ -387,7 +368,7 @@ typedef enum
 	/**
 	 * Response message from a horizontal control scroll bar that it has been scrolled
 	 *
-	 * message_data: new horizontal scroll position from 0 to 255 as a proportion of the scroll bar
+	 * message_data: new horizontal scroll position from 0 - UINT8_MAX as a proportion of the scroll bar
 	 * message_pointer: Unused
 	 */
 	MW_CONTROL_HORIZ_SCROLL_BAR_SCROLLED_MESSAGE,
@@ -451,7 +432,7 @@ typedef enum
 	/**
 	 * Set a scroll bar's scroll position
 	 *
-	 * message_data: Set a scroll bar's scroll position from 0 - 255
+	 * message_data: Set a scroll bar's scroll position from 0 - UINT8_MAX
 	 * message_pointer: Unused
 	 */
 	MW_SCROLL_BAR_SET_SCROLL_MESSAGE,
@@ -467,7 +448,7 @@ typedef enum
 	/**
 	 * Position of a scroll bar associated with a list box
 	 *
-	 * message_data: Scroll bar position, 0 - 255
+	 * message_data: Scroll bar position, 0 - UINT8_MAX
 	 * message_pointer: Unused
 	 */
 	MW_LIST_BOX_SCROLL_BAR_POSITION_MESSAGE,
@@ -499,7 +480,7 @@ typedef enum
 	/**
 	 * Position of a scroll bar associated with a text box
 	 *
-	 * message_data: Scroll bar position, 0 - 255
+	 * message_data: Scroll bar position, 0 - UINT8_MAX
 	 * message_pointer: Unused
 	 */
 	MW_TEXT_BOX_SCROLL_BAR_POSITION_MESSAGE,
@@ -1001,6 +982,24 @@ void mw_set_window_horiz_scroll_bar_enabled_state(mw_handle_t window_handle, boo
 void mw_set_window_vert_scroll_bar_enabled_state(mw_handle_t window_handle, bool enabled);
 
 /**
+ * Set a window horizontal scroll bar position
+ *
+ * @param window_handle The window containing the scroll bar
+ * @param enabled The new position
+ * @note User must do a paint of the scroll bar for the change to be seen
+ */
+void mw_set_window_horiz_scroll_bar_position(mw_handle_t window_handle, uint8_t position);
+
+/**
+ * Set a window vertical scroll bar position
+ *
+ * @param window_handle The window containing the scroll bar
+ * @param enabled The new position
+ * @note User must do a paint of the scroll bar for the change to be seen
+ */
+void mw_set_window_vert_scroll_bar_position(mw_handle_t window_handle, uint8_t position);
+
+/**
  * Add a message to the message queue to get a window frame painted. This
  * paints the borders, title bar, menu bar and scroll bars.
  *
@@ -1084,7 +1083,6 @@ bool mw_find_if_any_control_slots_free(void);
  * @param message_func Pointer to message handling function
  * @param control_flags Flags describing the control and its state
  * @param instance_data void Pointer to control specific data structure containing extra control specific configuration data for this instance
- * @param control_type The type of the control being created
  * @return The new control handle if created or MW_INVALID_HANDLE if it could not be created
  */
 mw_handle_t mw_add_control(mw_util_rect_t *rect,
@@ -1092,8 +1090,7 @@ mw_handle_t mw_add_control(mw_util_rect_t *rect,
 		mw_paint_func_p paint_func,
 		mw_message_func_p message_func,
 		uint16_t control_flags,
-		void *instance_data,
-		mw_ui_control_type_t control_type);
+		void *instance_data);
 
 /**
  * Test if a control handle is valid and represents a valid control
@@ -1173,14 +1170,6 @@ void *mw_get_control_instance_data(mw_handle_t control_handle);
  * @return The returned flags bitfield
  */
 uint16_t mw_get_control_flags(mw_handle_t control_handle);
-
-/**
- * Get a control's type from its handle
- *
- * @param control_handle The handle of the control to get the control type for
- * @return The control type or MW_UI_CONTROL_TYPE_LAST if the handle does not represent a control
- */
-mw_ui_control_type_t mw_get_control_type(mw_handle_t control_handle);
 
 /**
  * Find if there are any free control slots in array of controls

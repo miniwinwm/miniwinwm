@@ -240,6 +240,5 @@ mw_handle_t mw_ui_button_add_new(uint16_t x,
 			button_paint_function,
 			button_message_function,
 			flags,
-			button_instance_data,
-			MW_UI_CONTROL_BUTTON_TYPE);
+			button_instance_data);
 }

@@ -237,6 +237,9 @@ static void mw_dialog_time_chooser_message_function(const mw_message_t *message)
 		/* remove all controls and window */
 		mw_remove_window(mw_dialog_time_chooser_data.time_chooser_dialog_window_handle);
 
+		/* a window has changed visibility so repaint all */
+		mw_paint_all();
+
 		if (message->sender_handle == mw_dialog_time_chooser_data.button_ok_handle)
 		{
 			/* post ok response to receiving window */
@@ -262,9 +265,6 @@ static void mw_dialog_time_chooser_message_function(const mw_message_t *message)
 		{
 			MW_ASSERT(false, "Unknown control id");
 		}
-
-		/* a window has changed visibility so repaint all */
-		mw_paint_all();
 		break;
 
 	default:

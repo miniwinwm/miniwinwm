@@ -109,36 +109,40 @@ static void scroll_bar_vert_paint_function(mw_handle_t control_handle, const mw_
 				narrow_dimension,
 				mw_get_control_rect(control_handle).height);
 
-		scroll_bar_vert_slider_top = (mw_get_control_rect(control_handle).height - slider_size) *
-				this_scroll_bar_vert->scroll_position / UINT8_MAX;
+		/* only paint slider if enabled */
+		if (mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_IS_ENABLED)
+		{
+			scroll_bar_vert_slider_top = (mw_get_control_rect(control_handle).height - slider_size) *
+					this_scroll_bar_vert->scroll_position / UINT8_MAX;
 
-		mw_gl_set_solid_fill_colour(MW_CONTROL_DOWN_COLOUR);
-		mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
-		mw_gl_rectangle(draw_info,
-				1,
-				scroll_bar_vert_slider_top + 1,
-				narrow_dimension - 2,
-				slider_size - 2);
+			mw_gl_set_solid_fill_colour(MW_CONTROL_DOWN_COLOUR);
+			mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
+			mw_gl_rectangle(draw_info,
+					1,
+					scroll_bar_vert_slider_top + 1,
+					narrow_dimension - 2,
+					slider_size - 2);
 
-		/* draw 3d effect */
-		mw_gl_set_fg_colour(MW_HAL_LCD_WHITE);
-		mw_gl_vline(draw_info,
-				2,
-				scroll_bar_vert_slider_top + 2,
-				scroll_bar_vert_slider_top + slider_size - 3);
-		mw_gl_hline(draw_info,
-				2,
-				narrow_dimension - 4,
-				scroll_bar_vert_slider_top + 2);
-		mw_gl_set_fg_colour(MW_HAL_LCD_GREY7);
-		mw_gl_vline(draw_info,
-				narrow_dimension - 3,
-				scroll_bar_vert_slider_top + 2,
-				scroll_bar_vert_slider_top + slider_size - 4);
-		mw_gl_hline(draw_info,
-				3,
-				narrow_dimension - 3,
-				scroll_bar_vert_slider_top + slider_size - 3);
+			/* draw 3d effect */
+			mw_gl_set_fg_colour(MW_HAL_LCD_WHITE);
+			mw_gl_vline(draw_info,
+					2,
+					scroll_bar_vert_slider_top + 2,
+					scroll_bar_vert_slider_top + slider_size - 3);
+			mw_gl_hline(draw_info,
+					2,
+					narrow_dimension - 4,
+					scroll_bar_vert_slider_top + 2);
+			mw_gl_set_fg_colour(MW_HAL_LCD_GREY7);
+			mw_gl_vline(draw_info,
+					narrow_dimension - 3,
+					scroll_bar_vert_slider_top + 2,
+					scroll_bar_vert_slider_top + slider_size - 4);
+			mw_gl_hline(draw_info,
+					3,
+					narrow_dimension - 3,
+					scroll_bar_vert_slider_top + slider_size - 3);
+		}
 	}
 }
 
@@ -226,6 +230,5 @@ mw_handle_t mw_ui_scroll_bar_vert_add_new(uint16_t x,
 			scroll_bar_vert_paint_function,
 			scroll_bar_vert_message_function,
 			flags,
-			scroll_bar_vert_instance_data,
-			MW_UI_CONTROL_SCROLL_BAR_VERT_TYPE);
+			scroll_bar_vert_instance_data);
 }

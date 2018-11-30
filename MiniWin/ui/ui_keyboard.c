@@ -551,6 +551,5 @@ mw_handle_t mw_ui_keyboard_add_new(uint16_t x,
 			keyboard_paint_function,
 			keyboard_message_function,
 			flags,
-			keyboard_instance_data,
-			MW_UI_CONTROL_KEYBOARD_TYPE);
+			keyboard_instance_data);
 }

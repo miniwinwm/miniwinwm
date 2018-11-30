@@ -172,7 +172,7 @@ static bool add_text_window(char *path_and_filename)
 				window_text_message_function,
 				NULL,
 				0,
-				MW_WINDOW_FLAG_HAS_BORDER | MW_WINDOW_FLAG_HAS_TITLE_BAR | MW_WINDOW_FLAG_CAN_BE_CLOSED,
+				MW_WINDOW_FLAG_HAS_BORDER | MW_WINDOW_FLAG_HAS_TITLE_BAR | MW_WINDOW_FLAG_CAN_BE_CLOSED | MW_WINDOW_FLAG_IS_VISIBLE,
 				(void *)&window_file_data.text_windows_data[i]);
 
 			window_file_data.text_windows_data[i].text_window_handle  = new_window_handle;
@@ -181,8 +181,9 @@ static bool add_text_window(char *path_and_filename)
 					MAX_FOLDER_AND_FILENAME_LENGTH,
 					path_and_filename);
 
-			/* removal of the dialog choosing the image file causes a repaint all */
-			mw_set_window_visible(new_window_handle, true);
+			/* paint new window created which will be at the top of the z order */
+			mw_paint_window_client(new_window_handle);
+			mw_paint_window_frame(new_window_handle, MW_WINDOW_FRAME_COMPONENT_ALL);
 
 			return true;
 		}
@@ -234,7 +235,8 @@ static bool add_image_window(char *path_and_filename)
 				window_image_message_function,
 				NULL,
 				0,
-				MW_WINDOW_FLAG_HAS_BORDER | MW_WINDOW_FLAG_HAS_TITLE_BAR | MW_WINDOW_FLAG_CAN_BE_CLOSED,
+				MW_WINDOW_FLAG_HAS_BORDER | MW_WINDOW_FLAG_HAS_TITLE_BAR | MW_WINDOW_FLAG_CAN_BE_CLOSED |
+					MW_WINDOW_FLAG_HAS_VERT_SCROLL_BAR | MW_WINDOW_FLAG_HAS_HORIZ_SCROLL_BAR  | MW_WINDOW_FLAG_IS_VISIBLE,
 				(void *)&window_file_data.image_windows_data[i]);
 
 			window_file_data.image_windows_data[i].image_window_handle  = new_window_handle;
@@ -243,8 +245,9 @@ static bool add_image_window(char *path_and_filename)
 					MAX_FOLDER_AND_FILENAME_LENGTH,
 					path_and_filename);
 
-			/* removal of the dialog choosing the image file causes a repaint all */
-			mw_set_window_visible(new_window_handle, true);
+			/* paint new window created which will be at the top of the z order */
+			mw_paint_window_client(new_window_handle);
+			mw_paint_window_frame(new_window_handle, MW_WINDOW_FRAME_COMPONENT_ALL);
 
 			return true;
 		}
@@ -524,6 +527,19 @@ void window_file_message_function(const mw_message_t *message)
 				create_new_file(message->recipient_handle);
 			}
 		}
+		break;
+
+
+	case MW_USER_1_MESSAGE:
+		/* message received from image window when the image file cannot be decoded */
+		mw_create_window_dialog_one_button(20,
+				50,
+				150,
+				"Warning",
+				"Bad file format.",
+				"OK",
+				false,
+				message->recipient_handle);
 		break;
 
 	case MW_WINDOW_EXTERNAL_WINDOW_REMOVED_MESSAGE:

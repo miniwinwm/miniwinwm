@@ -1158,9 +1158,9 @@ static void tt_pixel_callback_anti_aliasing(int16_t x, int16_t y, uint8_t count,
 	y = y - tt_font_state->vert_scroll_pixels;
 
 	/* calculate alpha blended colour values */
-	alpha_red = ((tt_font_state->fg_red * alpha) + (tt_font_state->bg_red * (255 - alpha))) / 255;
-	alpha_green = ((tt_font_state->fg_green * alpha) + (tt_font_state->bg_green * (255 - alpha))) / 255;
-	alpha_blue = ((tt_font_state->fg_blue * alpha) + (tt_font_state->bg_blue * (255 - alpha))) / 255;
+	alpha_red = ((tt_font_state->fg_red * alpha) + (tt_font_state->bg_red * (UINT8_MAX - alpha))) / UINT8_MAX;
+	alpha_green = ((tt_font_state->fg_green * alpha) + (tt_font_state->bg_green * (UINT8_MAX - alpha))) / UINT8_MAX;
+	alpha_blue = ((tt_font_state->fg_blue * alpha) + (tt_font_state->bg_blue * (UINT8_MAX - alpha))) / UINT8_MAX;
 
     while (count--)
     {

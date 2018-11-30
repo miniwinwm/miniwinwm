@@ -49,15 +49,15 @@ SOFTWARE.
 typedef struct
 {
 	/* User modifiable fields */
-	const struct mf_rlefont_s *tt_font;				/**< todo */
-	mw_gl_tt_font_justification_t justification;
-	const char *text;
-	mw_hal_lcd_colour_t fg_colour;
-	mw_hal_lcd_colour_t bg_colour;
+	const struct mf_rlefont_s *tt_font;				/**< The RLE encoded TrueType font description structure */
+	mw_gl_tt_font_justification_t justification;	/**< How the text is to be justified in the text box, left, centre, right or full */
+	const char *text;								/**< Pointer to the text to be rendered */
+	mw_hal_lcd_colour_t fg_colour;					/**< Foreground colour - this is the pixels comprising the rendered glyph */
+	mw_hal_lcd_colour_t bg_colour;					/**< Background colour - this is the colour of the box behind the glyph */
 
 	/* Non-user modifiable fields */
-	uint16_t lines_to_scroll;
-	uint16_t text_height_pixels;
+	uint16_t lines_to_scroll;						/**< Pixel lines to scroll the rendered text up */
+	uint16_t text_height_pixels;					/**< Height of all the rendered text in pixels, including that part which doesn't fit in the box */
 } mw_ui_text_box_data_t;
 
 /***************************

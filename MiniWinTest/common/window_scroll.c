@@ -45,8 +45,8 @@ SOFTWARE.
  */
 typedef struct 
 {
-	uint16_t scroll_x;				/**< X scroll percentage */
-	uint16_t scroll_y;				/**< Y scroll percentage */
+	uint16_t scroll_x;				/**< X scroll proportion */
+	uint16_t scroll_y;				/**< Y scroll proportion */
 } window_scroll_data_t;
 
 /***********************

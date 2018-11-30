@@ -297,6 +297,5 @@ mw_handle_t mw_ui_radio_button_add_new(uint16_t x,
 			radio_button_paint_function,
 			radio_button_message_function,
 			flags,
-			radio_button_instance_data,
-			MW_UI_CONTROL_RADIO_BUTTON_TYPE);
+			radio_button_instance_data);
 }

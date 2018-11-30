@@ -72,6 +72,7 @@ typedef struct
 	mw_ui_button_data_t button_cancel_data;							/**< Instance data of cancel button */
 	mw_ui_label_data_t label_choice_data;							/**< Instance data of choice data */
 	char *message;													/**< Text to display in dialog */
+	uint16_t max_scroll_lines;										/**< Maximum lines the list box can scroll, depends on data currently in list box */
 } mw_dialog_file_chooser_data_t;
 
 /***********************
@@ -131,8 +132,9 @@ static uint8_t get_folder_depth(char *path)
 				depth++;
 			}
 		}
-
+#ifndef __linux__
 		depth--;
+#endif
 	}
 
 	return depth;
@@ -230,6 +232,7 @@ static void mw_dialog_file_chooser_message_function(const mw_message_t *message)
 
 	case MW_LIST_BOX_SCROLLING_REQUIRED_MESSAGE:
 		mw_set_control_enabled(mw_dialog_file_chooser_data.arrow_file_down_handle, message->message_data >> 16);
+		mw_dialog_file_chooser_data.max_scroll_lines = message->message_data & 0xffff;
 		mw_paint_control(mw_dialog_file_chooser_data.arrow_file_down_handle);
 		mw_paint_control(mw_dialog_file_chooser_data.list_box_file_handle);
 		break;
@@ -238,6 +241,9 @@ static void mw_dialog_file_chooser_message_function(const mw_message_t *message)
 		{
 			/* remove all controls and window */
 			mw_remove_window(mw_dialog_file_chooser_data.file_chooser_dialog_window_handle);
+
+			/* a window has changed visibility so repaint all */
+			mw_paint_all();
 
 			if (message->sender_handle == mw_dialog_file_chooser_data.button_cancel_handle)
 			{
@@ -286,9 +292,6 @@ static void mw_dialog_file_chooser_message_function(const mw_message_t *message)
 							MW_WINDOW_MESSAGE);
 				}
 			}
-
-			/* a window has changed visibility so repaint all */
-			mw_paint_all();
 		}
 		break;
 
@@ -317,16 +320,13 @@ static void mw_dialog_file_chooser_message_function(const mw_message_t *message)
 			mw_paint_control(mw_dialog_file_chooser_data.list_box_file_handle);
 		}
 		else if (message->message_data == MW_UI_ARROW_DOWN &&
-				mw_dialog_file_chooser_data.lines_to_scroll <
-				(mw_dialog_file_chooser_data.list_box_file_data.number_of_items -
-						mw_dialog_file_chooser_data.list_box_file_data.number_of_lines))
+				mw_dialog_file_chooser_data.lines_to_scroll < mw_dialog_file_chooser_data.max_scroll_lines)
 		{
 			/* down arrow, scroll list box down is ok to do so */
 			mw_dialog_file_chooser_data.lines_to_scroll++;
 
 			if (mw_dialog_file_chooser_data.lines_to_scroll ==
-					mw_dialog_file_chooser_data.list_box_file_data.number_of_items -
-					mw_dialog_file_chooser_data.list_box_file_data.number_of_lines)
+					mw_dialog_file_chooser_data.max_scroll_lines)
 			{
 				mw_set_control_enabled(mw_dialog_file_chooser_data.arrow_file_down_handle, false);
 				mw_paint_control(mw_dialog_file_chooser_data.arrow_file_down_handle);
@@ -680,7 +680,6 @@ mw_handle_t mw_create_window_dialog_file_chooser(uint16_t x,
 	}
 
 	mw_dialog_file_chooser_data.lines_to_scroll = 0;
-	mw_dialog_file_chooser_data.folder_depth = 0;
 	mw_util_safe_strcpy(mw_dialog_file_chooser_data.folder_path,
 			MAX_FOLDER_AND_FILENAME_LENGTH,
 			start_path);

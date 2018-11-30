@@ -160,7 +160,7 @@ static void text_box_message_function(const mw_message_t *message)
 			{
 				/* yes so recalculate vertical scroll pixels from last scroll bar position recorded */
 				max_scroll_lines = this_text_box->text_height_pixels - mw_get_control_rect(message->recipient_handle).height;
-				this_text_box->lines_to_scroll = (max_scroll_lines * message->message_data) / 255;
+				this_text_box->lines_to_scroll = (max_scroll_lines * message->message_data) / UINT8_MAX;
 			}
 		}
 		break;
@@ -257,6 +257,5 @@ mw_handle_t mw_ui_text_box_add_new(mw_util_rect_t *control_rect,
 			text_box_paint_function,
 			text_box_message_function,
 			flags,
-			text_box_instance_data,
-			MW_UI_CONTROL_TEXT_BOX_TYPE);
+			text_box_instance_data);
 }

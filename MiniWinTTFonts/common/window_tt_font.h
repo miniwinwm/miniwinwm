@@ -62,7 +62,7 @@ SOFTWARE.
  	uint16_t vert_scroll_pixels;					/**< How many pixel lines to scroll the text up */
  	uint16_t text_height_pixels;					/**< Height of all the text in pixels irrespective if it fits in bounding box */
  	uint16_t max_vert_scroll_pixels;				/**< Number of scroll lines in pixels that the text can be scrolled */
- 	uint8_t vert_scroll_bar_position;				/**< Scroll bar position as reported by the scroll bar, 0-255 */
+ 	uint8_t vert_scroll_bar_position;				/**< Scroll bar position as reported by the scroll bar, 0 - UINT8_MAX */
  } window_tt_font_data_t;
 
 /***************************

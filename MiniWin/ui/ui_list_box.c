@@ -369,7 +369,7 @@ static void list_box_message_function(const mw_message_t *message)
 		{
 			uint32_t message_data;
 
-			if (message->message_pointer && message->message_data > 0)
+			if (message->message_pointer)
 			{
 				this_list_box->number_of_items = message->message_data;
 				this_list_box->list_box_entries = (mw_ui_list_box_entry *)message->message_pointer;
@@ -391,8 +391,7 @@ static void list_box_message_function(const mw_message_t *message)
 			}
 			else
 			{
-				MW_ASSERT(message->message_data > 0, "Illegal number of list box entries");
-				MW_ASSERT(message->message_pointer, "Null pointer");
+				MW_ASSERT(false, "Null pointer");
 			}
 		}
 		break;
@@ -501,6 +500,5 @@ mw_handle_t mw_ui_list_box_add_new(uint16_t x,
 			list_box_paint_function,
 			list_box_message_function,
 			flags,
-			list_box_instance_data,
-			MW_UI_CONTROL_LIST_BOX_TYPE);
+			list_box_instance_data);
 }

@@ -342,6 +342,26 @@ void window_test_message_function(const mw_message_t *message)
 					MW_CONTROL_MESSAGE);
 			mw_paint_control(list_box_3_large_handle);
 		}
+		else if (message->sender_handle == scroll_bar_vert_1_large_handle)
+		{
+			mw_post_message(MW_SCROLL_BAR_SET_SCROLL_MESSAGE,
+					message->recipient_handle,
+					scroll_bar_horiz_1_large_handle,
+					message->message_data,
+					MW_UNUSED_MESSAGE_PARAMETER,
+					MW_CONTROL_MESSAGE);
+			mw_paint_control(scroll_bar_horiz_1_large_handle);
+		}
+		else if (message->sender_handle == scroll_bar_vert_1_handle)
+		{
+			mw_post_message(MW_SCROLL_BAR_SET_SCROLL_MESSAGE,
+					message->recipient_handle,
+					scroll_bar_horiz_1_handle,
+					message->message_data,
+					MW_UNUSED_MESSAGE_PARAMETER,
+					MW_CONTROL_MESSAGE);
+			mw_paint_control(scroll_bar_horiz_1_handle);
+		}
 		break;
 
 	case MW_TIMER_MESSAGE:
