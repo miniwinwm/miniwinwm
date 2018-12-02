@@ -135,6 +135,15 @@ typedef struct
 	system_timer_event_t system_timer_event;		/**< The operation to execute when timer fires */
 } system_timer_t;
 
+/**
+ * Touch event sequence initiation data structure
+ */
+typedef struct
+{
+	mw_message_recipient_type_t touch_up_message_recipient_type;	/**< The The type of recipient that will receive subsequent touch up message */
+	mw_handle_t touch_up_message_recipient_handle;					/**< The handle of the touch up message recipient */
+} touch_up_recipient_t;
+
 /***********************
 *** GLOBAL VARIABLES ***
 ***********************/
@@ -161,6 +170,8 @@ static int16_t vertical_edges[(MW_MAX_WINDOW_COUNT) * 2];	/**< Scratch area to s
 static int16_t horizontal_edges[(MW_MAX_WINDOW_COUNT) * 2]; /**< Scratch area to store array of horizontal window edges, used in various places, for window analysis when repainting */
 static system_timer_t system_timer;							/**< A timer used by the window manager for its own asynchronous events */
 static bool in_client_window_paint_function;				/**< Set true when calling a client window paint function, false after exiting the client window paint function */
+static window_redimensioning_state_t window_redimensioning_state;	/**< The state of window redimensioning - moving or resizing */
+static uint8_t window_being_redimensioned_id;				/**< The id of a window being redimensioned if it is happening */
 
 /********************************
 *** LOCAL FUNCTION PROTOTYPES ***
@@ -244,8 +255,19 @@ static uint8_t get_timer_id_for_handle(mw_handle_t timer_handle);
 static uint8_t get_window_id_for_handle(mw_handle_t window_handle);
 static uint8_t get_control_id_for_handle(mw_handle_t control_handle);
 
+/* touch processing functions */
+static void process_touch(void);
+static bool process_touch_event(mw_message_id_t *touch_message_id, int16_t *touch_x, int16_t *touch_y);
+static void process_touch_message(mw_message_id_t touch_message_id, int16_t touch_x, int16_t touch_y);
+static bool check_and_process_touch_on_window_without_focus(uint8_t window_id);
+static bool check_and_process_touch_on_root_window(uint8_t window_id, uint16_t touch_x, uint16_t touch_y, mw_message_id_t touch_message);
+static bool check_and_process_touch_on_window_border(uint8_t window_id, uint16_t touch_x, uint16_t touch_y);
+static bool check_and_process_touch_on_dual_scroll_bars_corner_zone(uint8_t window_id, uint16_t touch_x, uint16_t touch_y);
+static bool check_and_process_touch_on_window_scroll_bar(uint8_t window_id, uint16_t touch_x, uint16_t touch_y, mw_message_id_t touch_message_id);
+static bool check_and_process_touch_on_menu_bar(uint8_t window_id, uint16_t touch_x, uint16_t touch_y, mw_message_id_t touch_message_id);
+static bool check_and_process_touch_on_title_bar(uint8_t window_id, uint16_t touch_x, uint16_t touch_y, mw_message_id_t touch_message_id);
+
 /* other functions */
-static window_redimensioning_state_t process_touch_event(void);
 static void do_paint_all();
 static void set_focus(void);
 static void rationalize_z_orders();
@@ -2763,52 +2785,68 @@ static uint8_t get_control_id_for_handle(mw_handle_t control_handle)
 }
 
 /**
- * Check if a touch event has been raised and if so process it or send it to the appropriate recipient.
- *
- * @return One of window_redimensioning_state_t depending on if window is being resized, moved or neither
+ * Check if a touch screen has been touched and if so process it or send it to the appropriate recipient as a message.
  */
-static window_redimensioning_state_t process_touch_event(void)
+static void process_touch(void)
 {
-	static mw_hal_touch_state_t old_touch_state = MW_HAL_TOUCH_STATE_UP;
-	static window_redimensioning_state_t window_redimensioning_state = WINDOW_NOT_BEING_REDIMENSIONED;
-	static uint8_t window_being_redimensioned_id;
-	static int16_t touch_x_old;
-	static int16_t touch_y_old;
-	static uint32_t last_process_time = 0;
 	int16_t touch_x;
 	int16_t touch_y;
+	bool is_touch_message_to_process;
+	mw_message_id_t touch_message_id;
+
+	/* get and process touch event and translate it into a touch message if not consumed */
+	is_touch_message_to_process = process_touch_event(&touch_message_id, &touch_x, &touch_y);
+
+	/* if touch event not already consumed process the corresponding touch message */
+	if (is_touch_message_to_process)
+	{
+		process_touch_message(touch_message_id, touch_x, touch_y);
+	}
+}
+
+/**
+ * Check touch screen for a touch event. If event has occurred either process it immediately or
+ * translate it into a touch message for subsequent touch message processing.
+ *
+ * @param touch_message Pointer to returned touch message
+ * @param touch_x Pointer to returned touch x position in screen coordinates
+ * @param touch_y Pointer to returned touch y position in screen coordinates
+ * @return true if there is now a touch message to process else false if teh touch event already consumed
+ */
+static bool process_touch_event(mw_message_id_t *touch_message, int16_t *touch_x, int16_t *touch_y)
+{
+	static uint32_t previous_process_time = 0;
+	static int16_t previous_touch_x;
+	static int16_t previous_touch_y;
+	static mw_hal_touch_state_t previous_touch_state = MW_HAL_TOUCH_STATE_UP;
 	int16_t difference_x = 0;
 	int16_t difference_y = 0;
-	uint8_t window_to_receive_message_id;
-	static uint8_t window_to_receive_previous_message_id;
-	uint8_t control_to_receive_message_id;
-	int16_t client_x;
-	int16_t client_y;
-	mw_message_id_t touch_message;
 	touch_event_t touch_event = TOUCH_EVENT_NONE;
 	mw_hal_touch_state_t touch_state;
-	bool is_window_overlapped;
-	mw_handle_t control_handle;
-	static mw_handle_t previous_control_handle = MW_INVALID_HANDLE;
+
+	/* check parameters for non-null */
+	MW_ASSERT(touch_message, "Null pointer");
+	MW_ASSERT(touch_x, "Null pointer");
+	MW_ASSERT(touch_y, "Null pointer");
 
 	/* check if it's time to process another touch event yet */
-	if (mw_tick_counter - last_process_time < MW_TOUCH_INTERVAL_TICKS)
+	if (mw_tick_counter - previous_process_time < MW_TOUCH_INTERVAL_TICKS)
 	{
-		return window_redimensioning_state;
+		return false;
 	}
 
 	/* it is time, so remember the time now */
-	last_process_time = mw_tick_counter;
+	previous_process_time = mw_tick_counter;
 
 	/* get the current touch state and measurements from the screen */
-	touch_state = mw_touch_get_display_touch((uint16_t *)&touch_x, (uint16_t *)&touch_y);
+	touch_state = mw_touch_get_display_touch((uint16_t *)touch_x, (uint16_t *)touch_y);
 
 	/* check for a touch state change from the last time round and create an up or down event if the state has changed */
-	if (touch_state == MW_HAL_TOUCH_STATE_DOWN && old_touch_state == MW_HAL_TOUCH_STATE_UP)
+	if (touch_state == MW_HAL_TOUCH_STATE_DOWN && previous_touch_state == MW_HAL_TOUCH_STATE_UP)
 	{
 		touch_event = TOUCH_EVENT_DOWN;
 	}
-	else if (touch_state == MW_HAL_TOUCH_STATE_UP && old_touch_state == MW_HAL_TOUCH_STATE_DOWN)
+	else if (touch_state == MW_HAL_TOUCH_STATE_UP && previous_touch_state == MW_HAL_TOUCH_STATE_DOWN)
 	{
 		touch_event = TOUCH_EVENT_UP;
 	}
@@ -2819,14 +2857,14 @@ static window_redimensioning_state_t process_touch_event(void)
 	}
 
 	/* cache current touch state for next time round */
-	old_touch_state = touch_state;
+	previous_touch_state = touch_state;
 
 	/* if the touch state is down but there is no outstanding touch event pending then check for a touch drag */
 	if (touch_state == MW_HAL_TOUCH_STATE_DOWN && touch_event == TOUCH_EVENT_NONE)
 	{
 		/* work out the touch differences from last time to determine if a drag has occurred */
-		difference_x = touch_x - touch_x_old;
-		difference_y = touch_y - touch_y_old;
+		difference_x = *touch_x - previous_touch_x;
+		difference_y = *touch_y - previous_touch_y;
 
 		/* check if there has been movement since last time above the threshold for a drag */
 		if (abs(difference_x) > MW_DRAG_THRESHOLD_PIXELS || abs(difference_y) > MW_DRAG_THRESHOLD_PIXELS)
@@ -2835,8 +2873,8 @@ static window_redimensioning_state_t process_touch_event(void)
 			touch_event = TOUCH_EVENT_DRAG;
 
 			/* cache current touch points for next time round */
-			touch_x_old = touch_x;
-			touch_y_old = touch_y;
+			previous_touch_x = *touch_x;
+			previous_touch_y = *touch_y;
 		}
 		else
 		{
@@ -2849,22 +2887,22 @@ static window_redimensioning_state_t process_touch_event(void)
 	if (touch_event == TOUCH_EVENT_NONE)
 	{
 		/* no touch event to process so return */
-		return window_redimensioning_state;
+		return false;
 	}
 
 	if (touch_event == TOUCH_EVENT_DOWN)
 	{
 		/* there's been a touch down event, cache the points for any subsequent drag or touch up next time round */
-		touch_x_old = touch_x;
-		touch_y_old = touch_y;
+		previous_touch_x = *touch_x;
+		previous_touch_y = *touch_y;
 
 		/* need to send a touch down message as there has been a touch down event */
-		touch_message = MW_TOUCH_DOWN_MESSAGE;
+		*touch_message = MW_TOUCH_DOWN_MESSAGE;
 	}
 	else if (touch_event == TOUCH_EVENT_HOLD_DOWN)
 	{
 		/* need to send a touch hold down message as there has been a touch hold down event */
-		touch_message = MW_TOUCH_HOLD_DOWN_MESSAGE;
+		*touch_message = MW_TOUCH_HOLD_DOWN_MESSAGE;
 	}
 	else if (touch_event == TOUCH_EVENT_UP)
 	{
@@ -2876,15 +2914,15 @@ static window_redimensioning_state_t process_touch_event(void)
 			mw_paint_all();
 
 			/* touch up event now consumed */
-			return WINDOW_NOT_BEING_REDIMENSIONED;
+			return false;
 		}
 
 		/* there's been a touch up event, can't read screen so use last recorded position */
-		touch_x = touch_x_old;
-		touch_y = touch_y_old;
+		*touch_x = previous_touch_x;
+		*touch_y = previous_touch_y;
 
 		/* need to send a touch up message as there has been a touch up event */
-		touch_message = MW_TOUCH_UP_MESSAGE;
+		*touch_message = MW_TOUCH_UP_MESSAGE;
 	}
 	else
 	{
@@ -2902,7 +2940,9 @@ static window_redimensioning_state_t process_touch_event(void)
 			draw_redimensioning_window_outline(mw_all_windows[window_being_redimensioned_id].window_handle);
 
 			/* touch drag event now consumed */
-			return WINDOW_BEING_MOVED;
+			window_redimensioning_state = WINDOW_BEING_MOVED;
+
+			return false;
 		}
 
 		if (window_redimensioning_state == WINDOW_BEING_RESIZED)
@@ -2926,21 +2966,36 @@ static window_redimensioning_state_t process_touch_event(void)
 			}
 
 			/* touch drag event now consumed */
-			return WINDOW_BEING_RESIZED;
+			window_redimensioning_state = WINDOW_BEING_RESIZED;
+			return false;
 		}
 
 		/* there's been a touch drag event that's not redimensioning so need to send a drag message */
-		touch_message = MW_TOUCH_DRAG_MESSAGE;
+		*touch_message = MW_TOUCH_DRAG_MESSAGE;
 	}
 
-	/********************************************************************************************/
-	/* mark the touch event as consumed as it has been translated into a touch message type now */
-	/********************************************************************************************/
+	return true;
+}
 
-	touch_event = TOUCH_EVENT_NONE;
+/**
+ * Process a touch message that has been translated from a touch event sending it on to the
+ * required recipient
+ *
+ * @param touch_message_id The message to process
+ * @param touch_x The x coordinate of the touch point in screen coordinates
+ * @param touch_y The y coordinate of the touch point in screen coordinates
+ */
+static void process_touch_message(mw_message_id_t touch_message_id, int16_t touch_x, int16_t touch_y)
+{
+	static touch_up_recipient_t touch_up_recipient;
+	static uint8_t window_to_receive_previous_message_id;
+	int16_t client_x;
+	int16_t client_y;
+	uint8_t window_to_receive_message_id;
+	uint8_t control_to_receive_message_id;
 
 	/* find window this touch event occurred in, but only change window on a touch down */
-	if (touch_message != MW_TOUCH_DOWN_MESSAGE)
+	if (touch_message_id != MW_TOUCH_DOWN_MESSAGE)
 	{
 		window_to_receive_message_id = window_to_receive_previous_message_id;
 
@@ -2948,13 +3003,37 @@ static window_redimensioning_state_t process_touch_event(void)
 		if (!(mw_all_windows[window_to_receive_message_id].window_flags & MW_WINDOW_FLAG_IS_USED))
 		{
 			/* it doesn't as it's been removed so abandon this touch event */
-			return window_redimensioning_state;
+			return;
 		}
 
 		/* touch up messages treated differently */
-		if (touch_message == MW_TOUCH_UP_MESSAGE)
+		if (touch_message_id == MW_TOUCH_UP_MESSAGE && touch_up_recipient.touch_up_message_recipient_handle != MW_INVALID_HANDLE)
 		{
-			/* check for outside window client area or root window */
+			/* check if the window/control the touch initiator handle represents still exists */
+			if (touch_up_recipient.touch_up_message_recipient_type == MW_WINDOW_MESSAGE)
+			{
+				if (get_window_id_for_handle(touch_up_recipient.touch_up_message_recipient_handle) == MW_MAX_WINDOW_COUNT)
+				{
+					/* it doesn't as it's been removed so abandon this touch up event */
+					return;
+				}
+			}
+			else if (touch_up_recipient.touch_up_message_recipient_type == MW_CONTROL_MESSAGE)
+			{
+				if (get_control_id_for_handle(touch_up_recipient.touch_up_message_recipient_handle) == MW_MAX_CONTROL_COUNT)
+				{
+					/* it doesn't as it's been removed so abandon this touch up event */
+					return;
+				}
+			}
+			else
+			{
+				/* Oops! Dodgy message recipient type, should never get here */
+				MW_ASSERT(false, "Illegal recipient type");
+				return;
+			}
+
+			/* check for outside window client area or touch on root window */
 			if (touch_x < mw_all_windows[window_to_receive_message_id].client_rect.x ||
 					touch_y < mw_all_windows[window_to_receive_message_id].client_rect.y ||
 					touch_x >= mw_all_windows[window_to_receive_message_id].client_rect.x +
@@ -2964,51 +3043,56 @@ static window_redimensioning_state_t process_touch_event(void)
 						window_to_receive_message_id == MW_ROOT_WINDOW_ID)
 			{
 				/* touch up occurred on root window or outside current window's client area
-				 * so send touch up message to current window */
+				 * so send touch up message to current recipient */
 				mw_post_message(MW_TOUCH_UP_MESSAGE,
+						touch_up_recipient.touch_up_message_recipient_handle,
+						touch_up_recipient.touch_up_message_recipient_handle,
 						MW_UNUSED_MESSAGE_PARAMETER,
-						mw_all_windows[window_to_receive_message_id].window_handle,
+						MW_UNUSED_MESSAGE_PARAMETER,
+						touch_up_recipient.touch_up_message_recipient_type);
+
+				touch_up_recipient.touch_up_message_recipient_handle = MW_INVALID_HANDLE;
+				return;
+			}
+
+			/* touch originator was a window so send touch up to that window */
+			if (touch_up_recipient.touch_up_message_recipient_type == MW_WINDOW_MESSAGE)
+			{
+				mw_post_message(MW_TOUCH_UP_MESSAGE,
+						touch_up_recipient.touch_up_message_recipient_handle,
+						touch_up_recipient.touch_up_message_recipient_handle,
 						MW_UNUSED_MESSAGE_PARAMETER,
 						MW_UNUSED_MESSAGE_PARAMETER,
 						MW_WINDOW_MESSAGE);
-				return window_redimensioning_state;
+
+				touch_up_recipient.touch_up_message_recipient_handle = MW_INVALID_HANDLE;
+				return;
 			}
 
 			/* touch up is in window client area here so find if it happened in a control */
-			control_handle = find_control_point_is_in(mw_all_windows[window_to_receive_message_id].window_handle, touch_x, touch_y);
-			if (control_handle == MW_INVALID_HANDLE)
+			if (find_control_point_is_in(mw_all_windows[window_to_receive_message_id].window_handle, touch_x, touch_y) ==
+					MW_INVALID_HANDLE)
 			{
 				/* touch did not happen in a control so post touch up message to current window */
 				mw_post_message(MW_TOUCH_UP_MESSAGE,
-						MW_UNUSED_MESSAGE_PARAMETER,
+						touch_up_recipient.touch_up_message_recipient_handle,
 						mw_all_windows[window_to_receive_message_id].window_handle,
 						MW_UNUSED_MESSAGE_PARAMETER,
 						MW_UNUSED_MESSAGE_PARAMETER,
 						MW_WINDOW_MESSAGE);
-				return window_redimensioning_state;
+				touch_up_recipient.touch_up_message_recipient_handle = MW_INVALID_HANDLE;
+				return;
 			}
 
-			/* check if touch up occurred in previous control to receive a message
-			 * so post touch up message there */
-			if (control_handle == previous_control_handle)
-			{
-				mw_post_message(MW_TOUCH_UP_MESSAGE,
-						MW_UNUSED_MESSAGE_PARAMETER,
-						previous_control_handle,
-						MW_UNUSED_MESSAGE_PARAMETER,
-						MW_UNUSED_MESSAGE_PARAMETER,
-						MW_CONTROL_MESSAGE);
-				return window_redimensioning_state;
-			}
-
-			/* touch up occurred in a different control so post touch up message to window */
+			/* touch up occurred in a control so post touch up message to the control that received the original touch down */
 			mw_post_message(MW_TOUCH_UP_MESSAGE,
+					touch_up_recipient.touch_up_message_recipient_handle,
+					touch_up_recipient.touch_up_message_recipient_handle,
 					MW_UNUSED_MESSAGE_PARAMETER,
-					mw_all_windows[window_to_receive_message_id].window_handle,
 					MW_UNUSED_MESSAGE_PARAMETER,
-					MW_UNUSED_MESSAGE_PARAMETER,
-					MW_WINDOW_MESSAGE);
-			return window_redimensioning_state;
+					MW_CONTROL_MESSAGE);
+			touch_up_recipient.touch_up_message_recipient_handle = MW_INVALID_HANDLE;
+			return;
 		}
 	}
 	else
@@ -3018,11 +3102,183 @@ static window_redimensioning_state_t process_touch_event(void)
 	}
 	MW_ASSERT(window_to_receive_message_id < MW_MAX_WINDOW_COUNT, "Bad window handle");
 
-	/* clear previously remembered control handle */
-	previous_control_handle = MW_INVALID_HANDLE;
+	/* check for touch on root window */
+	if (check_and_process_touch_on_root_window(window_to_receive_message_id, touch_x, touch_y, touch_message_id))
+	{
+		return;
+	}
 
-	/* now send touch message to appropriate window first checking root window */
-	if (window_to_receive_message_id == MW_ROOT_WINDOW_ID)
+	/* check if the window the touch was in does not have focus */
+	if (check_and_process_touch_on_window_without_focus(window_to_receive_message_id))
+	{
+		return;
+	}
+
+	/* check for touch on border */
+	if (check_and_process_touch_on_window_border(window_to_receive_message_id, touch_x, touch_y))
+	{
+		return;
+	}
+
+	/* touch occurred in a window with focus so find out if it occurred in dead zone in
+	 * bottom right corner of window with both scroll bars */
+	if (check_and_process_touch_on_dual_scroll_bars_corner_zone(window_to_receive_message_id, touch_x, touch_y))
+	{
+		return;
+	}
+
+	/* check for touch on either window scroll bar */
+	if (check_and_process_touch_on_window_scroll_bar(window_to_receive_message_id, touch_x, touch_y, touch_message_id))
+	{
+		/* remember this handle for any subsequent off window touch up event */
+		touch_up_recipient.touch_up_message_recipient_type = MW_WINDOW_MESSAGE;
+		touch_up_recipient.touch_up_message_recipient_handle = mw_all_windows[window_to_receive_message_id].window_handle;
+		return;
+	}
+
+	/* check for touch on menu bar */
+	if (check_and_process_touch_on_menu_bar(window_to_receive_message_id, touch_x, touch_y, touch_message_id))
+	{
+		return;
+	}
+
+	/* check if touch occurred in window's title bar */
+	if (check_and_process_touch_on_title_bar(window_to_receive_message_id, touch_x, touch_y, touch_message_id))
+	{
+		return;
+	}
+
+	/* find out if it occurred in a control */
+	if (touch_message_id == MW_TOUCH_DOWN_MESSAGE)
+	{
+		control_to_receive_message_id = get_control_id_for_handle(
+			find_control_point_is_in(mw_all_windows[window_to_receive_message_id].window_handle, touch_x, touch_y));
+	}
+	else
+	{
+		control_to_receive_message_id = get_control_id_for_handle(touch_up_recipient.touch_up_message_recipient_handle);
+	}
+
+	/* check if touch was identified to have occurred in a control */
+	if (control_to_receive_message_id < MW_MAX_CONTROL_COUNT)
+	{
+		/* only send message to control if it is enabled */
+		if (mw_all_controls[control_to_receive_message_id].control_flags & MW_CONTROL_FLAG_IS_ENABLED)
+		{
+			/* touch occurred in a control so send touch message to that control */
+			client_x = touch_x - mw_all_controls[control_to_receive_message_id].control_rect.x;
+			client_y = touch_y - mw_all_controls[control_to_receive_message_id].control_rect.y;
+
+			/* limit touch position to client area */
+			mw_util_limit_point_to_rect_size(&client_x, &client_y, &mw_all_controls[control_to_receive_message_id].control_rect);
+
+			/* post the touch message to the control */
+			mw_post_message(touch_message_id,
+					MW_UNUSED_MESSAGE_PARAMETER,
+					mw_all_controls[control_to_receive_message_id].control_handle,
+					((client_x) << 16) | client_y,
+					MW_UNUSED_MESSAGE_PARAMETER,
+					MW_CONTROL_MESSAGE);
+
+			/* remember this handle for any subsequent off control touch up event */
+			touch_up_recipient.touch_up_message_recipient_type = MW_CONTROL_MESSAGE;
+			touch_up_recipient.touch_up_message_recipient_handle = mw_all_controls[control_to_receive_message_id].control_handle;
+		}
+
+		return;
+	}
+
+	/* touch event must now have occurred on window client rect */
+	if (touch_message_id == MW_TOUCH_DOWN_MESSAGE)
+	{
+		/* already have the window id the touch occurred in */
+	}
+	else
+	{
+		window_to_receive_message_id = get_window_id_for_handle(touch_up_recipient.touch_up_message_recipient_handle);
+	}
+
+	client_x = touch_x - mw_all_windows[window_to_receive_message_id].client_rect.x;
+	client_y = touch_y - mw_all_windows[window_to_receive_message_id].client_rect.y;
+
+	/* limit touch position to client area */
+	mw_util_limit_point_to_rect_size(&client_x, &client_y, &mw_all_windows[window_to_receive_message_id].window_rect);
+
+	/* post the touch message to the window */
+	mw_post_message(touch_message_id,
+			MW_UNUSED_MESSAGE_PARAMETER,
+			mw_all_windows[window_to_receive_message_id].window_handle,
+			(((uint32_t)client_x) << 16) | client_y,
+			MW_UNUSED_MESSAGE_PARAMETER,
+			MW_WINDOW_MESSAGE);
+
+	/* remember this handle for any subsequent off window touch up event */
+	touch_up_recipient.touch_up_message_recipient_type = MW_WINDOW_MESSAGE;
+	touch_up_recipient.touch_up_message_recipient_handle = mw_all_windows[window_to_receive_message_id].window_handle;
+
+	return;
+}
+
+/**
+ * Check if a touch occurred on a window without focus and if it did process it
+ *
+ * @param window_id The window to test
+ * @return true if touch event consumed else false
+ */
+static bool check_and_process_touch_on_window_without_focus(uint8_t window_id)
+{
+	bool is_window_overlapped;
+
+	if (mw_all_windows[window_id].window_handle != window_with_focus_handle)
+	{
+		/* it doesn't but only give touched window focus if there's not a modal window showing */
+		if (mw_is_any_window_modal())
+		{
+			/* there's a modal window showing so ignore this touch event */
+			return true;
+		}
+
+		/* paint frame of window losing focus */
+		mw_paint_window_frame(window_with_focus_handle, MW_WINDOW_FRAME_COMPONENT_ALL);
+
+		/* find if this window is overlapped now before giving it focus which brings it to the front */
+		is_window_overlapped = find_if_window_is_overlapped(mw_all_windows[window_id].window_handle);
+
+		/* bring touched window to front which will give it focus */
+		mw_bring_window_to_front(mw_all_windows[window_id].window_handle);
+
+		/* paint frame of window gaining focus */
+		mw_paint_window_frame(mw_all_windows[window_id].window_handle, MW_WINDOW_FRAME_COMPONENT_ALL);
+
+		/* paint client of window gaining focus if it was overlapped by any other window */
+		if (is_window_overlapped)
+		{
+			mw_paint_window_client(mw_all_windows[window_id].window_handle);
+		}
+
+		/* check if the touch event should now be passed on to the window */
+		if (!(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_TOUCH_FOCUS_AND_EVENT))
+		{
+			/* it shouldn't so this touch event has now been consumed */
+			return true;
+		}
+	}
+
+	return false;
+}
+
+/**
+ * Check if a touch occurred on the root window and if it did process it
+ *
+ * @param window_id The window to test
+ * @param touch_x The touch x position in screen coordinates
+ * @param touch_y The touch y position in screen coordinates
+ * @param touch_message The type of touch message that will be sent
+ * @return true if touch event consumed else false
+ */
+static bool check_and_process_touch_on_root_window(uint8_t window_id, uint16_t touch_x, uint16_t touch_y, mw_message_id_t touch_message)
+{
+	if (window_id == MW_ROOT_WINDOW_ID)
 	{
 		/* only send if there's not a modal window showing */
 		if (!mw_is_any_window_modal())
@@ -3036,214 +3292,224 @@ static window_redimensioning_state_t process_touch_event(void)
 					MW_WINDOW_MESSAGE);
 		}
 
-		return window_redimensioning_state;
+		return true;
 	}
 
-	/* check if the window the touch was in does not have focus */
-	if (mw_all_windows[window_to_receive_message_id].window_handle != window_with_focus_handle)
-	{
-		/* it doesn't but only give touched window focus if there's not a modal window showing */
-		if (mw_is_any_window_modal())
-		{
-			/* there's a modal window showing so ignore this touch event */
-			return window_redimensioning_state;
-		}
+	return false;
+}
 
-		/* paint frame of window losing focus */
-		mw_paint_window_frame(window_with_focus_handle, MW_WINDOW_FRAME_COMPONENT_ALL);
-
-		/* find if this window is overlapped now before giving it focus which brings it to the front */
-		is_window_overlapped = find_if_window_is_overlapped(mw_all_windows[window_to_receive_message_id].window_handle);
-
-		/* bring touched window to front which will give it focus */
-		mw_bring_window_to_front(mw_all_windows[window_to_receive_message_id].window_handle);
-
-		/* paint frame of window gaining focus */
-		mw_paint_window_frame(mw_all_windows[window_to_receive_message_id].window_handle, MW_WINDOW_FRAME_COMPONENT_ALL);
-
-		/* paint client of window gaining focus if it was overlapped by any other window */
-		if (is_window_overlapped)
-		{
-			mw_paint_window_client(mw_all_windows[window_to_receive_message_id].window_handle);
-		}
-
-		/* check if the touch event should now be passed on to the window */
-		if (!(mw_all_windows[window_to_receive_message_id].window_flags & MW_WINDOW_FLAG_TOUCH_FOCUS_AND_EVENT))
-		{
-			/* it shouldn't so this touch event has now been consumed */
-			return window_redimensioning_state;
-		}
-	}
-
-	/* check for touch on border */
-	if (mw_all_windows[window_to_receive_message_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER)
+/**
+ * Check if a touch occurred on a window border and if it did process it
+ *
+ * @param window_id The window to test
+ * @param touch_x The touch x position in screen coordinates
+ * @param touch_y The touch y position in screen coordinates
+ * @return true if touch event consumed else false
+ */
+static bool check_and_process_touch_on_window_border(uint8_t window_id, uint16_t touch_x, uint16_t touch_y)
+{
+	if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER)
 	{
 		/* check for a touch on bottom border */
-		if (touch_y >= mw_all_windows[window_to_receive_message_id].window_rect.y +
-				mw_all_windows[window_to_receive_message_id].window_rect.height - MW_BORDER_WIDTH)
+		if (touch_y >= mw_all_windows[window_id].window_rect.y +
+				mw_all_windows[window_id].window_rect.height - MW_BORDER_WIDTH)
 		{
-			return window_redimensioning_state;
+			return true;
 		}
 
-		if (mw_all_windows[window_to_receive_message_id].window_flags & MW_WINDOW_FLAG_HAS_TITLE_BAR)
+		if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_TITLE_BAR)
 		{
 			/* check for a touch on left border */
-			if (touch_x < mw_all_windows[window_to_receive_message_id].window_rect.x + MW_BORDER_WIDTH &&
+			if (touch_x < mw_all_windows[window_id].window_rect.x + MW_BORDER_WIDTH &&
 					touch_y > MW_TITLE_BAR_HEIGHT)
 			{
-				return window_redimensioning_state;
+				return true;
 			}
 
 			/* check for a touch on right border */
-			if ((touch_x >= mw_all_windows[window_to_receive_message_id].window_rect.x +
-					mw_all_windows[window_to_receive_message_id].window_rect.width - MW_BORDER_WIDTH) &&
+			if ((touch_x >= mw_all_windows[window_id].window_rect.x +
+					mw_all_windows[window_id].window_rect.width - MW_BORDER_WIDTH) &&
 					touch_y > MW_TITLE_BAR_HEIGHT)
 			{
-				return window_redimensioning_state;
+				return true;
 			}
 		}
 		else
 		{
 			/* check for a touch on top border */
-			if (touch_y < mw_all_windows[window_to_receive_message_id].window_rect.y + MW_BORDER_WIDTH)
+			if (touch_y < mw_all_windows[window_id].window_rect.y + MW_BORDER_WIDTH)
 			{
-				return window_redimensioning_state;
+				return true;
 			}
 
 			/* check for a touch on left border */
-			if (touch_x < mw_all_windows[window_to_receive_message_id].window_rect.x + MW_BORDER_WIDTH)
+			if (touch_x < mw_all_windows[window_id].window_rect.x + MW_BORDER_WIDTH)
 			{
-				return window_redimensioning_state;
+				return true;
 			}
 
 			/* check for a touch on right border */
-			if (touch_x >= mw_all_windows[window_to_receive_message_id].window_rect.x +
-					mw_all_windows[window_to_receive_message_id].window_rect.width - MW_BORDER_WIDTH)
+			if (touch_x >= mw_all_windows[window_id].window_rect.x +
+					mw_all_windows[window_id].window_rect.width - MW_BORDER_WIDTH)
 			{
-				return window_redimensioning_state;
+				return true;
 			}
 		}
 	}
 
-	/* touch occurred in a window with focus so find out if it occurred in
-	 * dead zone in bottom right corner of window with both scroll bars */
+	return false;
+}
 
-	if ((mw_all_windows[window_to_receive_message_id].window_flags & MW_WINDOW_FLAG_HAS_VERT_SCROLL_BAR) &&
-			(mw_all_windows[window_to_receive_message_id].window_flags & MW_WINDOW_FLAG_HAS_HORIZ_SCROLL_BAR))
+/**
+ * Check if a touch occurred in the dead corner zone at the bottom right of a window when both scroll bars are enabled
+ * and if it did process it
+ *
+ * @param window_id The window to test
+ * @param touch_x The touch x position in screen coordinates
+ * @param touch_y The touch y position in screen coordinates
+ * @return true if touch event consumed else false
+ */
+static bool check_and_process_touch_on_dual_scroll_bars_corner_zone(uint8_t window_id, uint16_t touch_x, uint16_t touch_y)
+{
+	if ((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_VERT_SCROLL_BAR) &&
+			(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_HORIZ_SCROLL_BAR))
 	{
-		if (touch_x > mw_all_windows[window_to_receive_message_id].client_rect.x +
-				mw_all_windows[window_to_receive_message_id].client_rect.width &&
-				touch_y > mw_all_windows[window_to_receive_message_id].client_rect.y +
-								mw_all_windows[window_to_receive_message_id].client_rect.height)
+		if (touch_x > mw_all_windows[window_id].client_rect.x + mw_all_windows[window_id].client_rect.width &&
+				touch_y > mw_all_windows[window_id].client_rect.y +	mw_all_windows[window_id].client_rect.height)
 		{
-			return window_redimensioning_state;
+			return true;
 		}
 	}
 
+	return false;
+}
+
+/**
+ * Check if a touch occurred on a window scroll bar and if it did process it
+ *
+ * @param window_id The window to test
+ * @param touch_x The touch x position in screen coordinates
+ * @param touch_y The touch y position in screen coordinates
+ * @param touch_message_id The type of touch message that will be sent
+ * @return true if touch event consumed else false
+ */
+static bool check_and_process_touch_on_window_scroll_bar(uint8_t window_id, uint16_t touch_x, uint16_t touch_y, mw_message_id_t touch_message_id)
+{
+	uint8_t new_scroll_position;
+	int16_t scaled_touch;
+
 	/* check if touch occurred in vertical scroll bar */
-	if (mw_all_windows[window_to_receive_message_id].window_flags & MW_WINDOW_FLAG_HAS_VERT_SCROLL_BAR)
+	if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_VERT_SCROLL_BAR)
 	{
-		if (touch_x > mw_all_windows[window_to_receive_message_id].client_rect.x +
-				mw_all_windows[window_to_receive_message_id].client_rect.width &&
-				touch_y >= mw_all_windows[window_to_receive_message_id].client_rect.y)
+		if (touch_x > mw_all_windows[window_id].client_rect.x +
+				mw_all_windows[window_id].client_rect.width &&
+				touch_y >= mw_all_windows[window_id].client_rect.y)
 		{
 			/* check if scroll bar disabled */
-			if (mw_all_windows[window_to_receive_message_id].window_flags & MW_WINDOW_FLAG_VERT_SCROLL_BAR_ENABLED)
+			if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_VERT_SCROLL_BAR_ENABLED)
 			{
 				/* enabled so post message and redraw scroll bar */
-				if (touch_message == MW_TOUCH_DOWN_MESSAGE || touch_message == MW_TOUCH_DRAG_MESSAGE)
+				if (touch_message_id == MW_TOUCH_DOWN_MESSAGE || touch_message_id == MW_TOUCH_DRAG_MESSAGE)
 				{
-					int16_t scaled_touch_y;
-					uint8_t new_scroll_position;
-
 					/* scale touch point to middle 90% of scroll bar length */
-					scaled_touch_y = mw_ui_common_scale_scroll_bar_touch_point(mw_all_windows[window_to_receive_message_id].client_rect.height,
-							touch_y - mw_all_windows[window_to_receive_message_id].client_rect.y);
+					scaled_touch = mw_ui_common_scale_scroll_bar_touch_point(mw_all_windows[window_id].client_rect.height,
+							touch_y - mw_all_windows[window_id].client_rect.y);
 
-					new_scroll_position = (uint8_t)(UINT8_MAX * scaled_touch_y / mw_all_windows[window_to_receive_message_id].client_rect.height);
-					if (new_scroll_position != mw_all_windows[window_to_receive_message_id].vert_scroll_pos)
+					new_scroll_position = (uint8_t)(UINT8_MAX * scaled_touch / mw_all_windows[window_id].client_rect.height);
+					if (new_scroll_position != mw_all_windows[window_id].vert_scroll_pos)
 					{
 						/* only repaint if the scroll slider position has changed */
-						mw_all_windows[window_to_receive_message_id].vert_scroll_pos = new_scroll_position;
+						mw_all_windows[window_id].vert_scroll_pos = new_scroll_position;
 
 						/* just paint vertical scroll bar */
-						mw_paint_window_frame(mw_all_windows[window_to_receive_message_id].window_handle,
+						mw_paint_window_frame(mw_all_windows[window_id].window_handle,
 								MW_WINDOW_FRAME_COMPONENT_VERT_SCROLL_BAR);
 
 						mw_post_message(MW_WINDOW_VERT_SCROLL_BAR_SCROLLED_MESSAGE,
 								MW_UNUSED_MESSAGE_PARAMETER,
-								mw_all_windows[window_to_receive_message_id].window_handle,
-								mw_all_windows[window_to_receive_message_id].vert_scroll_pos,
+								mw_all_windows[window_id].window_handle,
+								mw_all_windows[window_id].vert_scroll_pos,
 								MW_UNUSED_MESSAGE_PARAMETER,
 								MW_WINDOW_MESSAGE);
 					}
 				}
 			}
 
-			return window_redimensioning_state;
+			return true;
 		}
 	}
 
 	/* check if touch occurred in horizontal scroll bar */
-	if (mw_all_windows[window_to_receive_message_id].window_flags & MW_WINDOW_FLAG_HAS_HORIZ_SCROLL_BAR)
+	if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_HORIZ_SCROLL_BAR)
 	{
-		if (touch_y > mw_all_windows[window_to_receive_message_id].client_rect.y +
-				mw_all_windows[window_to_receive_message_id].client_rect.height &&
-				touch_x >= mw_all_windows[window_to_receive_message_id].client_rect.x)
+		if (touch_y > mw_all_windows[window_id].client_rect.y +
+				mw_all_windows[window_id].client_rect.height &&
+				touch_x >= mw_all_windows[window_id].client_rect.x)
 		{
 			/* check if scroll bar disabled */
-			if (mw_all_windows[window_to_receive_message_id].window_flags & MW_WINDOW_FLAG_HORIZ_SCROLL_BAR_ENABLED)
+			if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HORIZ_SCROLL_BAR_ENABLED)
 			{
 				/* enabled so post message and redraw scroll bar */
-				if (touch_message == MW_TOUCH_DOWN_MESSAGE || touch_message == MW_TOUCH_DRAG_MESSAGE)
+				if (touch_message_id == MW_TOUCH_DOWN_MESSAGE || touch_message_id == MW_TOUCH_DRAG_MESSAGE)
 				{
-					int16_t scaled_touch_x;
-					uint8_t new_scroll_position;
-
 					/* scale touch point to middle 90% of scroll bar length */
-					scaled_touch_x = mw_ui_common_scale_scroll_bar_touch_point(mw_all_windows[window_to_receive_message_id].client_rect.width,
-							touch_x - mw_all_windows[window_to_receive_message_id].client_rect.x);
+					scaled_touch = mw_ui_common_scale_scroll_bar_touch_point(mw_all_windows[window_id].client_rect.width,
+							touch_x - mw_all_windows[window_id].client_rect.x);
 
-					new_scroll_position = (uint8_t)(UINT8_MAX * scaled_touch_x / mw_all_windows[window_to_receive_message_id].client_rect.width);
-					if (new_scroll_position != mw_all_windows[window_to_receive_message_id].horiz_scroll_pos)
+					new_scroll_position = (uint8_t)(UINT8_MAX * scaled_touch / mw_all_windows[window_id].client_rect.width);
+					if (new_scroll_position != mw_all_windows[window_id].horiz_scroll_pos)
 					{
 						/* only repaint if the scroll slider position has changed */
-						mw_all_windows[window_to_receive_message_id].horiz_scroll_pos = new_scroll_position;
+						mw_all_windows[window_id].horiz_scroll_pos = new_scroll_position;
 
 						/* just paint horizontal scroll bar */
-						mw_paint_window_frame(mw_all_windows[window_to_receive_message_id].window_handle,
+						mw_paint_window_frame(mw_all_windows[window_id].window_handle,
 								MW_WINDOW_FRAME_COMPONENT_HORIZ_SCROLL_BAR);
 
 						mw_post_message(MW_WINDOW_HORIZ_SCROLL_BAR_SCROLLED_MESSAGE,
 								MW_UNUSED_MESSAGE_PARAMETER,
-								mw_all_windows[window_to_receive_message_id].window_handle,
-								mw_all_windows[window_to_receive_message_id].horiz_scroll_pos,
+								mw_all_windows[window_id].window_handle,
+								mw_all_windows[window_id].horiz_scroll_pos,
 								MW_UNUSED_MESSAGE_PARAMETER,
 								MW_WINDOW_MESSAGE);
 					}
 				}
 			}
-			return window_redimensioning_state;
+			return true;
 		}
 	}
 
+	return false;
+}
+
+/**
+ * Check if a touch occurred on a menu bar and if it did process it
+ *
+ * @param window_id The window to test
+ * @param touch_x The touch x position in screen coordinates
+ * @param touch_y The touch y position in screen coordinates
+ * @param touch_message The type of touch message that will be sent
+ * @return true if touch event consumed else false
+ */
+static bool check_and_process_touch_on_menu_bar(uint8_t window_id, uint16_t touch_x, uint16_t touch_y, mw_message_id_t touch_message_id)
+{
+	uint16_t next_menu_item_text_left_pos = 0;
+	uint8_t i;
+
 	/* check if touch occurred on menu bar */
-	if (mw_all_windows[window_to_receive_message_id].window_flags & MW_WINDOW_FLAG_HAS_MENU_BAR)
+	if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_MENU_BAR)
 	{
-		if (touch_y < mw_all_windows[window_to_receive_message_id].client_rect.y &&
-				touch_y > (mw_all_windows[window_to_receive_message_id].client_rect.y - MW_MENU_BAR_HEIGHT) &&
-				(mw_all_windows[window_to_receive_message_id].window_flags & MW_WINDOW_FLAG_MENU_BAR_ENABLED))
+		if (touch_y < mw_all_windows[window_id].client_rect.y &&
+				touch_y > (mw_all_windows[window_id].client_rect.y - MW_MENU_BAR_HEIGHT) &&
+				(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_MENU_BAR_ENABLED))
 		{
-			if (touch_message == MW_TOUCH_DOWN_MESSAGE)
+			if (touch_message_id == MW_TOUCH_DOWN_MESSAGE)
 			{
 				/* loop through the menu items checking the position of the touch point with the running total of the position of the text labels */
-				uint16_t next_menu_item_text_left_pos = 0;
-				uint8_t i;
-
-				for (i = 0; i < mw_all_windows[window_to_receive_message_id].menu_bar_items_count; i++)
+				for (i = 0; i < mw_all_windows[window_id].menu_bar_items_count; i++)
 				{
 					/* setting font needed for getting font width */
-					if (mw_all_windows[window_to_receive_message_id].window_flags & MW_WINDOW_FLAG_LARGE_SIZE)
+					if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_LARGE_SIZE)
 					{
 					    mw_gl_set_font(MW_GL_TITLE_FONT);
 					}
@@ -3251,25 +3517,25 @@ static window_redimensioning_state_t process_touch_event(void)
 					{
 					    mw_gl_set_font(MW_GL_FONT_9);
 					}
-					if ((touch_x - mw_all_windows[window_to_receive_message_id].client_rect.x) >= next_menu_item_text_left_pos &&
-							(touch_x - mw_all_windows[window_to_receive_message_id].client_rect.x) <
-								next_menu_item_text_left_pos + mw_gl_get_string_width_pixels(mw_all_windows[window_to_receive_message_id].menu_bar_items[i]) +
+					if ((touch_x - mw_all_windows[window_id].client_rect.x) >= next_menu_item_text_left_pos &&
+							(touch_x - mw_all_windows[window_id].client_rect.x) <
+								next_menu_item_text_left_pos + mw_gl_get_string_width_pixels(mw_all_windows[window_id].menu_bar_items[i]) +
 									mw_gl_get_string_width_pixels("  "))
 
 					{
 						/* check if this particular line is enabled */
-						if (mw_util_get_bit(mw_all_windows[window_to_receive_message_id].menu_bar_item_enables, i))
+						if (mw_util_get_bit(mw_all_windows[window_id].menu_bar_item_enables, i))
 						{
 							/* relevant text label found so cache this in window structure */
-							mw_all_windows[window_to_receive_message_id].window_flags |= MW_WINDOW_FLAG_MENU_BAR_ITEM_IS_SELECTED;
-							mw_all_windows[window_to_receive_message_id].menu_bar_selected_item = i;
+							mw_all_windows[window_id].window_flags |= MW_WINDOW_FLAG_MENU_BAR_ITEM_IS_SELECTED;
+							mw_all_windows[window_id].menu_bar_selected_item = i;
 
 							/* just paint menu bar */
-							mw_paint_window_frame(mw_all_windows[window_to_receive_message_id].window_handle,
+							mw_paint_window_frame(mw_all_windows[window_id].window_handle,
 									MW_WINDOW_FRAME_COMPONENT_MENU_BAR);
 
 							/* set system timer to animate menu bar item */
-							set_system_timer(mw_all_windows[window_to_receive_message_id].window_handle,
+							set_system_timer(mw_all_windows[window_id].window_handle,
 									SYSTEM_TIMER_EVENT_MENU_BAR_REDRAW,
 									mw_tick_counter + MW_CONTROL_DOWN_TIME);
 						}
@@ -3277,122 +3543,108 @@ static window_redimensioning_state_t process_touch_event(void)
 					}
 
 					/* increment the running total of the position of the text labels */
-					next_menu_item_text_left_pos += mw_gl_get_string_width_pixels(mw_all_windows[window_to_receive_message_id].menu_bar_items[i]) + mw_gl_get_string_width_pixels("  ");
+					next_menu_item_text_left_pos += mw_gl_get_string_width_pixels(mw_all_windows[window_id].menu_bar_items[i]) + mw_gl_get_string_width_pixels("  ");
 				}
 			}
 
-			return window_redimensioning_state;
+			return true;
 		}
 	}
 
-	/* find out if it occurred in a control */
-	control_to_receive_message_id = get_control_id_for_handle(
-			find_control_point_is_in(mw_all_windows[window_to_receive_message_id].window_handle, touch_x, touch_y));
+	return false;
+}
 
-	/* check if touch was identified to have occurred in a control */
-	if (control_to_receive_message_id < MW_MAX_CONTROL_COUNT)
-	{
-		/* only send message to control if it is enabled */
-		if (mw_all_controls[control_to_receive_message_id].control_flags & MW_CONTROL_FLAG_IS_ENABLED)
-		{
-			/* touch occurred in a control so send touch message to that control */
-			client_x = touch_x - mw_all_controls[control_to_receive_message_id].control_rect.x;
-			client_y = touch_y - mw_all_controls[control_to_receive_message_id].control_rect.y;
-
-			mw_post_message(touch_message,
-					MW_UNUSED_MESSAGE_PARAMETER,
-					mw_all_controls[control_to_receive_message_id].control_handle,
-					(((uint32_t)client_x) << 16) | client_y,
-					MW_UNUSED_MESSAGE_PARAMETER,
-					MW_CONTROL_MESSAGE);
-
-			/* remember this handle for any subsequent off control touch up event */
-			previous_control_handle = mw_all_controls[control_to_receive_message_id].control_handle;
-		}
-
-		return window_redimensioning_state;
-	}
-
-	/* touch event did not occur in a control so check if it occurred in window's title bar */
-	if (touch_y < mw_all_windows[window_to_receive_message_id].client_rect.y)
+/**
+ * Check if a touch occurred on a title bar and if it did process it
+ *
+ * @param window_id The window to test
+ * @param touch_x The touch x position in screen coordinates
+ * @param touch_y The touch y position in screen coordinates
+ * @param touch_message The type of touch message that will be sent
+ * @return true if touch event consumed else false
+ */
+static bool check_and_process_touch_on_title_bar(uint8_t window_id, uint16_t touch_x, uint16_t touch_y, mw_message_id_t touch_message_id)
+{
+	if (touch_y < mw_all_windows[window_id].client_rect.y)
 	{
 		/* touch was above client rect */
-		if (mw_all_windows[window_to_receive_message_id].window_flags & MW_WINDOW_FLAG_HAS_TITLE_BAR)
+		if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_TITLE_BAR)
 		{
-			if (!(mw_all_windows[window_to_receive_message_id].window_flags & MW_WINDOW_FLAG_IS_MODAL))
+			if (!(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_MODAL))
 			{
 				/* touch event occurred on title bar so check if it occurred on close icon */
-				if (touch_x > (mw_all_windows[window_to_receive_message_id].window_rect.x +
-						mw_all_windows[window_to_receive_message_id].window_rect.width) - MW_TITLE_BAR_ICON_OFFSET)
+				if (touch_x > (mw_all_windows[window_id].window_rect.x +
+						mw_all_windows[window_id].window_rect.width) - MW_TITLE_BAR_ICON_OFFSET)
 				{
 					/* touch event was on close icon; ignore touch if window is modal */
-					if (touch_message == MW_TOUCH_DOWN_MESSAGE)
+					if (touch_message_id == MW_TOUCH_DOWN_MESSAGE)
 					{
 						/* it was touch down and window isn't modal so close window if it's allowed */
-						if (mw_all_windows[window_to_receive_message_id].window_flags & MW_WINDOW_FLAG_CAN_BE_CLOSED)
+						if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_CAN_BE_CLOSED)
 						{
 							/* it's allowed, close it */
-							mw_remove_window(mw_all_windows[window_to_receive_message_id].window_handle);
+							mw_remove_window(mw_all_windows[window_id].window_handle);
 							mw_paint_all();
 						}
 					}
 				}
 				/* check if touch occurred on maximise icon */
-				else if (touch_x > (mw_all_windows[window_to_receive_message_id].window_rect.x +
-						mw_all_windows[window_to_receive_message_id].window_rect.width) - (2 * MW_TITLE_BAR_ICON_OFFSET))
+				else if (touch_x > (mw_all_windows[window_id].window_rect.x +
+						mw_all_windows[window_id].window_rect.width) - (2 * MW_TITLE_BAR_ICON_OFFSET))
 				{
 					/* touch event was on maximise icon; ignore if window is modal */
-					if (touch_message == MW_TOUCH_DOWN_MESSAGE)
+					if (touch_message_id == MW_TOUCH_DOWN_MESSAGE)
 					{
 						/* it was touch down and window isn't modal so maximise window */
-						mw_resize_window(mw_all_windows[window_to_receive_message_id].window_handle,
+						mw_resize_window(mw_all_windows[window_id].window_handle,
 								MW_HAL_LCD_WIDTH, MW_HAL_LCD_HEIGHT);
-						mw_reposition_window(mw_all_windows[window_to_receive_message_id].window_handle, 0, 0);
+						mw_reposition_window(mw_all_windows[window_id].window_handle, 0, 0);
 						mw_paint_all();
 					}
 				}
 				/* check if touch occurred on minimise icon */
-				else if (touch_x > (mw_all_windows[window_to_receive_message_id].window_rect.x +
-						mw_all_windows[window_to_receive_message_id].window_rect.width) - (3 * MW_TITLE_BAR_ICON_OFFSET))
+				else if (touch_x > (mw_all_windows[window_id].window_rect.x +
+						mw_all_windows[window_id].window_rect.width) - (3 * MW_TITLE_BAR_ICON_OFFSET))
 				{
 					/* touch event was on minimise icon; ignore if window is modal */
-					if (touch_message == MW_TOUCH_DOWN_MESSAGE)
+					if (touch_message_id == MW_TOUCH_DOWN_MESSAGE)
 					{
 						/* if window isn't modal so minimise window */
-						draw_min_restore_window_effect(mw_all_windows[window_to_receive_message_id].window_handle);
-						mw_all_windows[window_to_receive_message_id].window_flags |= MW_WINDOW_FLAG_IS_MINIMISED;
+						draw_min_restore_window_effect(mw_all_windows[window_id].window_handle);
+						mw_all_windows[window_id].window_flags |= MW_WINDOW_FLAG_IS_MINIMISED;
 						set_focus();
 						set_system_timer(MW_UNUSED_MESSAGE_PARAMETER,
 								SYSTEM_TIMER_EVENT_PAINT_ALL,
 								mw_tick_counter + MW_WINDOW_MIN_MAX_EFFECT_TIME);
 						mw_post_message(MW_WINDOW_MINIMISED_MESSAGE,
 								MW_UNUSED_MESSAGE_PARAMETER,
-								mw_all_windows[window_to_receive_message_id].window_handle,
+								mw_all_windows[window_id].window_handle,
 								MW_UNUSED_MESSAGE_PARAMETER,
 								MW_UNUSED_MESSAGE_PARAMETER,
 								MW_WINDOW_MESSAGE);
 					}
 				}
+
 				/* check if touch occurred on resize icon */
-				else if (touch_x - mw_all_windows[window_to_receive_message_id].window_rect.x < MW_TITLE_BAR_ICON_SIZE)
+				else if (touch_x - mw_all_windows[window_id].window_rect.x < MW_TITLE_BAR_ICON_SIZE)
 				{
 					/* touch event was on resize icon; ignore if window is modal */
-					if (touch_message == MW_TOUCH_DOWN_MESSAGE)
+					if (touch_message_id == MW_TOUCH_DOWN_MESSAGE)
 					{
 						/* window isn't modal so start resize process */
 						window_redimensioning_state = WINDOW_BEING_RESIZED;
-						window_being_redimensioned_id = get_window_id_for_handle(mw_all_windows[window_to_receive_message_id].window_handle);
+						window_being_redimensioned_id = get_window_id_for_handle(mw_all_windows[window_id].window_handle);
 						MW_ASSERT(window_being_redimensioned_id < MW_MAX_WINDOW_COUNT, "Bad window handle");
 					}
 				}
 				else
 				{
 					/* check for touch anywhere else on title bar which will start a window move */
-					if (touch_message == MW_TOUCH_DOWN_MESSAGE)
+					if (touch_message_id == MW_TOUCH_DOWN_MESSAGE)
 					{
 						/* touch is elsewhere on title bar so start move process */
 						window_redimensioning_state = WINDOW_BEING_MOVED;
-						window_being_redimensioned_id = get_window_id_for_handle(mw_all_windows[window_to_receive_message_id].window_handle);
+						window_being_redimensioned_id = get_window_id_for_handle(mw_all_windows[window_id].window_handle);
 						MW_ASSERT(window_being_redimensioned_id < MW_MAX_WINDOW_COUNT, "Bad window handle");
 					}
 				}
@@ -3400,30 +3652,20 @@ static window_redimensioning_state_t process_touch_event(void)
 			else
 			{
 				/* touch occurred anywhere on a modal window title bar which will start a window move */
-				if (touch_message == MW_TOUCH_DOWN_MESSAGE)
+				if (touch_message_id == MW_TOUCH_DOWN_MESSAGE)
 				{
 					/* touch is elsewhere on title bar so start move process */
 					window_redimensioning_state = WINDOW_BEING_MOVED;
-					window_being_redimensioned_id = get_window_id_for_handle(mw_all_windows[window_to_receive_message_id].window_handle);
+					window_being_redimensioned_id = get_window_id_for_handle(mw_all_windows[window_id].window_handle);
 					MW_ASSERT(window_being_redimensioned_id < MW_MAX_WINDOW_COUNT, "Bad window handle");
 				}
 			}
 		}
 
-		return window_redimensioning_state;
+		return true;
 	}
 
-	/* touch event occurred on client rect */
-	client_x = touch_x - mw_all_windows[window_to_receive_message_id].client_rect.x;
-	client_y = touch_y - mw_all_windows[window_to_receive_message_id].client_rect.y;
-	mw_post_message(touch_message,
-			MW_UNUSED_MESSAGE_PARAMETER,
-			mw_all_windows[window_to_receive_message_id].window_handle,
-			(((uint32_t)client_x) << 16) | client_y,
-			MW_UNUSED_MESSAGE_PARAMETER,
-			MW_WINDOW_MESSAGE);
-
-	return window_redimensioning_state;
+	return false;
 }
 
 /**
@@ -3669,6 +3911,9 @@ void mw_init()
 	{
 	   mw_all_windows[i].window_flags &= ~MW_WINDOW_FLAG_IS_USED;
 	}
+
+	/* set no window being redimensioned */
+	window_redimensioning_state = WINDOW_NOT_BEING_REDIMENSIONED;
 
 	/* send root window window created message */
 	mw_post_message(MW_WINDOW_CREATED_MESSAGE,
@@ -4857,7 +5102,7 @@ void mw_post_message(uint8_t message_id,
 	}
 	else if (recipient_type == MW_CONTROL_MESSAGE)
 	{
-		recipient_id = get_control_id_for_handle(recipient_handle);;
+		recipient_id = get_control_id_for_handle(recipient_handle);
 		MW_ASSERT(recipient_id < MW_MAX_CONTROL_COUNT, "Bad control handle");
 	}	
 
@@ -4887,13 +5132,12 @@ bool mw_process_message(void)
 	uint8_t window_id;
 	uint8_t control_id;
 	mw_message_t message;
-	window_redimensioning_state_t redimensioning_window_state;
 
 	/* handle any outstanding touch screen events */
-	redimensioning_window_state = process_touch_event();
+	process_touch();
 
 	/* only process timer event if not redimensioning a window */
-	if (redimensioning_window_state == WINDOW_NOT_BEING_REDIMENSIONED)
+	if (window_redimensioning_state == WINDOW_NOT_BEING_REDIMENSIONED)
 	{
 		/* process system timer */
 		if (system_timer.next_fire_time > 0 && mw_tick_counter >= system_timer.next_fire_time)

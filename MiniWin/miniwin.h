@@ -281,7 +281,7 @@ typedef enum
 	/**
 	 * Message sent to a window or control when it receives a touch up event
 	 *
-	 * message_data: Unused
+	 * message_data: The handle of the original window or control where the touch down occurred
 	 * message_pointer: Unused
 	 */
 	MW_TOUCH_UP_MESSAGE,
@@ -394,7 +394,7 @@ typedef enum
 	 * i.e. too much text to display in the box at once
 	 *
 	 * message_data: upper 16 bits: 1 if scrolling required, 0 if scrolling not required;
-	 * 				 lower 16 bits: the maximum lines that can be scrolled
+	 * 				 lower 16 bits: the maximum lines that can be scrolled in pixels
 	 * message_pointer: Unused
 	 */
 	MW_TEXT_BOX_SCROLLING_REQUIRED_MESSAGE,
@@ -488,7 +488,7 @@ typedef enum
 	/**
 	 * Set how many lines to scroll a text box
 	 *
-	 * message_data: Number of lines to scroll
+	 * message_data: Number of lines to scroll in pixels
 	 * message_pointer: Unused
 	 */
 	MW_TEXT_BOX_LINES_TO_SCROLL_MESSAGE,

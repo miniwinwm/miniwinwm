@@ -236,3 +236,29 @@ int32_t mw_util_strcicmp(char const *a, char const *b)
         }
     }
 }
+
+void mw_util_limit_point_to_rect_size(int16_t *x, int16_t *y, const mw_util_rect_t *r)
+{
+	if (!x || !y || !r)
+	{
+		MW_ASSERT(false, "Null pointer");
+		return;
+	}
+
+	if (*x < 0)
+	{
+		*x = 0;
+	}
+	if (*y < 0)
+	{
+		*y = 0;
+	}
+	if (*x >= r->width)
+	{
+		*x = r->width - 1;
+	}
+	if (*y >= r->height)
+	{
+		*y = r->height - 1;
+	}
+}

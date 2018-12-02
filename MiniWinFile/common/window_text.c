@@ -246,9 +246,6 @@ void window_text_message_function(const mw_message_t *message)
 		text_window_data->last_drag_y = (int16_t)(message->message_data & 0xffff);
 		break;
 
-	case MW_TOUCH_UP_MESSAGE:
-		break;
-
 	case MW_TOUCH_DRAG_MESSAGE:
 		{
 			/* allows the text to be dragged around and updates the window scroll bars */

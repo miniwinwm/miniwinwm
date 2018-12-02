@@ -171,6 +171,15 @@ static void scroll_bar_horiz_message_function(const mw_message_t *message)
 		this_scroll_bar_horiz->scroll_position  = (uint8_t)message->message_data;
 		break;
 
+	case MW_TOUCH_UP_MESSAGE:
+		mw_post_message(MW_TOUCH_UP_MESSAGE,
+				message->recipient_handle,
+				mw_get_control_parent_window_handle(message->recipient_handle),
+				MW_UNUSED_MESSAGE_PARAMETER,
+				MW_UNUSED_MESSAGE_PARAMETER,
+				MW_WINDOW_MESSAGE);
+		break;
+
 	case MW_TOUCH_DOWN_MESSAGE:
 	case MW_TOUCH_DRAG_MESSAGE:
 		/* respond to a down or drag event by recalulating the new slider position from the touch coordinate */
@@ -195,6 +204,7 @@ static void scroll_bar_horiz_message_function(const mw_message_t *message)
 						this_scroll_bar_horiz->scroll_position,
 						MW_UNUSED_MESSAGE_PARAMETER,
 						MW_WINDOW_MESSAGE);
+
 			}
 		}
 		break;

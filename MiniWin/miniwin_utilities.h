@@ -166,6 +166,15 @@ const char *mw_util_get_filename_ext(const char *filename);
  */
 int32_t mw_util_strcicmp(char const *a, char const *b);
 
+/**
+ * Limit a point to a a rect's size changing the point if necessary
+ *
+ * @param x Pointer to the point's x coordinate
+ * @param y Pointer to the point's y coordinate
+ * @param r Pointer to the bounding rect
+ */
+void mw_util_limit_point_to_rect_size(int16_t *x, int16_t *y, const mw_util_rect_t *r);
+
 #ifdef __cplusplus
 }
 #endif
