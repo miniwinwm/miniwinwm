@@ -45,16 +45,16 @@ static const char *menu_bar_labels[] = {"Cat", "Dog", "Gnu"};
 #define MENU_BAR_1_ITEMS_COUNT				(sizeof(menu_bar_labels)/sizeof(char *))
 static const char *radio_button_labels[] = {"Elk", "Ant", "Hog"};
 #define RADIO_BUTTON_1_ITEMS_COUNT			(sizeof(radio_button_labels)/sizeof(char *))
-static const mw_ui_list_box_entry list_box_1_labels[] = {
+static const mw_ui_list_box_entry list_box_1_entries[] = {
 		{"To back", NULL},
 		{"Disabled", NULL}};
-#define LIST_BOX_1_ITEMS_COUNT				(sizeof(list_box_1_labels)/sizeof(mw_ui_list_box_entry))
-static const mw_ui_list_box_entry list_box_2_labels[] = {
+#define LIST_BOX_1_ITEMS_COUNT				(sizeof(list_box_1_entries)/sizeof(mw_ui_list_box_entry))
+static const mw_ui_list_box_entry list_box_2_entries[] = {
 		{"Line", NULL},
 		{"Square", NULL},
 		{"Cube", NULL}};
-#define LIST_BOX_2_ITEMS_COUNT				(sizeof(list_box_2_labels)/sizeof(mw_ui_list_box_entry))
-static const mw_ui_list_box_entry list_box_3_labels[] = {
+#define LIST_BOX_2_ITEMS_COUNT				(sizeof(list_box_2_entries)/sizeof(mw_ui_list_box_entry))
+static const mw_ui_list_box_entry list_box_3_entries[] = {
 		{"List", NULL},
 		{"Button", NULL},
 		{"Menu", NULL},
@@ -64,7 +64,7 @@ static const mw_ui_list_box_entry list_box_3_labels[] = {
 		{"Control", NULL},
 		{"Icon", NULL},
 		{"Root", NULL}};
-#define LIST_BOX_3_ITEMS_COUNT				(sizeof(list_box_3_labels)/sizeof(mw_ui_list_box_entry))
+#define LIST_BOX_3_ITEMS_COUNT				(sizeof(list_box_3_entries)/sizeof(mw_ui_list_box_entry))
 
 /************
 *** TYPES ***
@@ -104,6 +104,7 @@ mw_handle_t scroll_bar_vert_2_large_handle;
 mw_handle_t scroll_bar_horiz_1_large_handle;
 mw_handle_t label_1_large_handle;
 mw_handle_t list_box_3_large_handle;
+mw_handle_t scroll_bar_vert_3_handle;
 
 /*************************
 *** EXTERNAL VARIABLES ***
@@ -135,6 +136,7 @@ static mw_ui_list_box_data_t list_box_3_large_data;
 static mw_ui_scroll_bar_vert_data_t scroll_bar_vert_1_large_data;
 static mw_ui_scroll_bar_vert_data_t scroll_bar_vert_2_large_data;
 static mw_ui_scroll_bar_horiz_data_t scroll_bar_horiz_1_large_data;
+static mw_ui_scroll_bar_vert_data_t scroll_bar_vert_3_data;
 
 /********************************
 *** LOCAL FUNCTION PROTOTYPES ***
@@ -187,7 +189,7 @@ void mw_user_init(void)
 			"Test 2",
 			window_test_paint_function,
 			window_test_message_function,
-			(char **)menu_bar_labels,
+			menu_bar_labels,
 			MENU_BAR_1_ITEMS_COUNT,
 			MW_WINDOW_FLAG_HAS_BORDER | MW_WINDOW_FLAG_HAS_TITLE_BAR | MW_WINDOW_FLAG_IS_VISIBLE |
 				MW_WINDOW_FLAG_HAS_MENU_BAR | MW_WINDOW_FLAG_MENU_BAR_ENABLED,
@@ -253,7 +255,7 @@ void mw_user_init(void)
 
 	/* create a new radio buttons control and add it to the ui test window */
 	radio_button_1_data.number_of_items = RADIO_BUTTON_1_ITEMS_COUNT;
-	radio_button_1_data.radio_button_labels = (char **)radio_button_labels;
+	radio_button_1_data.radio_button_labels = radio_button_labels;
 	radio_button_1_handle = mw_ui_radio_button_add_new(150,
 			10,
 			60,
@@ -263,7 +265,7 @@ void mw_user_init(void)
 
 	/* create a new large radio buttons control and add it to the ui test window */
 	radio_button_1_large_data.number_of_items = RADIO_BUTTON_1_ITEMS_COUNT;
-	radio_button_1_large_data.radio_button_labels = (char **)radio_button_labels;
+	radio_button_1_large_data.radio_button_labels = radio_button_labels;
 	radio_button_1_large_handle = mw_ui_radio_button_add_new(10,
 			125,
 			60,
@@ -274,7 +276,7 @@ void mw_user_init(void)
 	/* create a new list box control and add it to the ui test window, y position to be directly under the menu bar, control invisible for now */
 	list_box_1_data.number_of_lines = LIST_BOX_1_ITEMS_COUNT;
 	list_box_1_data.number_of_items = LIST_BOX_1_ITEMS_COUNT;
-	list_box_1_data.list_box_entries = list_box_1_labels;
+	list_box_1_data.list_box_entries = list_box_1_entries;
 	list_box_1_data.line_enables = mw_util_change_bit(MW_ALL_ITEMS_ENABLED, 1, false);
 	list_box_1_handle = mw_ui_list_box_add_new(0,
 			0,
@@ -336,7 +338,7 @@ void mw_user_init(void)
 	/* create a new list box control and add it to the ui test window */
 	list_box_3_data.number_of_lines = 3;
 	list_box_3_data.number_of_items = LIST_BOX_3_ITEMS_COUNT;
-	list_box_3_data.list_box_entries = list_box_3_labels;
+	list_box_3_data.list_box_entries = list_box_3_entries;
 	list_box_3_data.line_enables = MW_ALL_ITEMS_ENABLED;
 	list_box_3_handle = mw_ui_list_box_add_new(60,
 			30,
@@ -348,7 +350,7 @@ void mw_user_init(void)
 	/* create a new large list box control and add it to the ui test window */
 	list_box_3_large_data.number_of_lines = 3;
 	list_box_3_large_data.number_of_items = LIST_BOX_3_ITEMS_COUNT;
-	list_box_3_large_data.list_box_entries = list_box_3_labels;
+	list_box_3_large_data.list_box_entries = list_box_3_entries;
 	list_box_3_large_data.line_enables = MW_ALL_ITEMS_ENABLED;
 	list_box_3_large_handle = mw_ui_list_box_add_new(10,
 			30,
@@ -385,8 +387,18 @@ void mw_user_init(void)
 			NULL,
 			0,
 			MW_WINDOW_FLAG_HAS_BORDER | MW_WINDOW_FLAG_HAS_TITLE_BAR |
-				MW_WINDOW_FLAG_CAN_BE_CLOSED | MW_WINDOW_FLAG_IS_VISIBLE,
+				MW_WINDOW_FLAG_CAN_BE_CLOSED | MW_WINDOW_FLAG_IS_VISIBLE |
+				MW_WINDOW_FLAG_HAS_VERT_SCROLL_BAR | MW_WINDOW_FLAG_HAS_HORIZ_SCROLL_BAR |
+				MW_WINDOW_FLAG_VERT_SCROLL_BAR_ENABLED | MW_WINDOW_FLAG_HORIZ_SCROLL_BAR_ENABLED,
 			NULL);
+
+	/* create a new vertical scroll bar for the drag window */
+	scroll_bar_vert_3_handle = mw_ui_scroll_bar_vert_add_new(120,
+			30,
+			100,
+			window_drag_handle,
+			MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_IS_VISIBLE,
+			&scroll_bar_vert_3_data);
 
 	/* process waiting messages to reduce queue contents */
 	while (mw_process_message());
@@ -439,7 +451,7 @@ void mw_user_init(void)
 	/* create a new list box control and add it to the paint rect window */
 	list_box_2_data.number_of_lines = LIST_BOX_2_ITEMS_COUNT;
 	list_box_2_data.number_of_items = LIST_BOX_2_ITEMS_COUNT;
-	list_box_2_data.list_box_entries = list_box_2_labels;
+	list_box_2_data.list_box_entries = list_box_2_entries;
 	list_box_2_data.line_enables = MW_ALL_ITEMS_ENABLED;
 	list_box_2_handle = mw_ui_list_box_add_new(100,
 			10,

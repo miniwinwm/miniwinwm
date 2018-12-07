@@ -847,7 +847,7 @@ mw_handle_t mw_add_window(mw_util_rect_t *rect,
 		char *title,
 		mw_paint_func_p paint_func,
 		mw_message_func_p message_func,
-		char **menu_bar_items,
+		const char **menu_bar_items,
 		uint8_t menu_bar_items_count,
 		uint32_t window_flags,
 		void *instance_data);

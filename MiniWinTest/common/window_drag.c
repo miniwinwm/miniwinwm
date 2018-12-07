@@ -28,6 +28,7 @@ SOFTWARE.
 *** INCLUDES ***
 ***************/
 
+#include <stdio.h>
 #include "miniwin.h"
 
 /****************
@@ -48,6 +49,12 @@ typedef struct
 	uint8_t points_count;								/**< Number of points recorded */
 	uint16_t points[2][POINTS_COUNT_MAX];				/**< The recorded points */
 	uint8_t next_point;									/**< Next location in array to save a drag point */
+	uint8_t scroll_h;									/**< Horizontal window horizontal scroll bar position */
+	uint8_t scroll_v;									/**< Vertical window vertical scroll position */
+	char event_text_buffer[10];							/**< Buffer for text of event */
+	uint8_t touch_x;									/**< Latest touch x position */
+	uint8_t touch_y;									/**< Latest touch y position */
+	uint8_t scroll_control;								/**< Control scroll bar position */
 } window_drag_data_t;
 
 /***********************
@@ -82,6 +89,7 @@ void window_drag_paint_function(mw_handle_t window_handle, const mw_gl_draw_info
 	uint8_t i;
 	uint16_t previous_x;
 	uint16_t previous_y;
+	char text_buffer[5];
 
 	MW_ASSERT(draw_info, "Null pointer parameter");
 
@@ -94,6 +102,25 @@ void window_drag_paint_function(mw_handle_t window_handle, const mw_gl_draw_info
 			0,
 			mw_get_window_client_rect(window_handle).width,
 			mw_get_window_client_rect(window_handle).height);
+
+    /* draw the scroll positions text */
+	mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
+	mw_gl_set_bg_colour(MW_HAL_LCD_WHITE);
+	mw_gl_set_bg_transparency(MW_GL_BG_NOT_TRANSPARENT);
+	mw_gl_set_text_rotation(MW_GL_TEXT_ROTATION_0);
+	mw_gl_set_font(MW_GL_FONT_9);
+
+	sprintf(text_buffer, "%u", window_drag_data.touch_x);
+	mw_gl_string(draw_info, 1, 1, text_buffer);
+	sprintf(text_buffer, "%u", window_drag_data.touch_y);
+	mw_gl_string(draw_info, 22, 1, text_buffer);
+	mw_gl_string(draw_info, 43, 1, window_drag_data.event_text_buffer);
+	sprintf(text_buffer, "%u", window_drag_data.scroll_h);
+	mw_gl_string(draw_info, 72, 1, text_buffer);
+	sprintf(text_buffer, "%u", window_drag_data.scroll_v);
+	mw_gl_string(draw_info, 93, 1, text_buffer);
+	sprintf(text_buffer, "%u", window_drag_data.scroll_control);
+	mw_gl_string(draw_info, 114, 1, text_buffer);
 
 	if (window_drag_data.next_point == 0)
 	{
@@ -135,12 +162,56 @@ void window_drag_message_function(const mw_message_t *message)
 
 	switch (message->message_id)
 	{
+	case MW_WINDOW_CREATED_MESSAGE:
+		window_drag_data.scroll_h = 0;
+		window_drag_data.scroll_v = 0;
+		window_drag_data.touch_x = 0;
+		window_drag_data.touch_y = 0;
+		window_drag_data.scroll_control = 0;
+		mw_util_safe_strcpy(window_drag_data.event_text_buffer, sizeof(window_drag_data.event_text_buffer), "NONE");
+		break;
+
 	case MW_TOUCH_DOWN_MESSAGE:
+		mw_util_safe_strcpy(window_drag_data.event_text_buffer, sizeof(window_drag_data.event_text_buffer), "DOWN");
 		window_drag_data.points_count = 0;
 		window_drag_data.next_point = 0;
+		window_drag_data.touch_x = message->message_data >> 16;
+		window_drag_data.touch_y = message->message_data & 0xffff;
+		mw_paint_window_client(message->recipient_handle);
+		break;
+
+	case MW_CONTROL_VERT_SCROLL_BAR_SCROLLED_MESSAGE:
+		window_drag_data.scroll_control = message->message_data;
+		mw_util_safe_strcpy(window_drag_data.event_text_buffer, sizeof(window_drag_data.event_text_buffer), "CSCR");
+		mw_paint_window_client(message->recipient_handle);
+		break;
+
+	case MW_TOUCH_HOLD_DOWN_MESSAGE:
+		mw_util_safe_strcpy(window_drag_data.event_text_buffer, sizeof(window_drag_data.event_text_buffer), "HOLD");
+		mw_paint_window_client(message->recipient_handle);
+		break;
+
+	case MW_TOUCH_UP_MESSAGE:
+		mw_util_safe_strcpy(window_drag_data.event_text_buffer, sizeof(window_drag_data.event_text_buffer), "UP");
+		mw_paint_window_client(message->recipient_handle);
+		break;
+
+	case MW_WINDOW_VERT_SCROLL_BAR_SCROLLED_MESSAGE:
+		mw_util_safe_strcpy(window_drag_data.event_text_buffer, sizeof(window_drag_data.event_text_buffer), "VSCR");
+		window_drag_data.scroll_v = message->message_data;
+		mw_paint_window_client(message->recipient_handle);
+		break;
+
+	case MW_WINDOW_HORIZ_SCROLL_BAR_SCROLLED_MESSAGE:
+		mw_util_safe_strcpy(window_drag_data.event_text_buffer, sizeof(window_drag_data.event_text_buffer), "HSCR");
+		window_drag_data.scroll_h = message->message_data;
+		mw_paint_window_client(message->recipient_handle);
 		break;
 
 	case MW_TOUCH_DRAG_MESSAGE:
+		window_drag_data.touch_x = message->message_data >> 16;
+		window_drag_data.touch_y = message->message_data & 0xffff;
+		mw_util_safe_strcpy(window_drag_data.event_text_buffer, 5, "DRAG");
 		window_drag_data.points_count++;
 		if (window_drag_data.points_count > POINTS_COUNT_MAX)
 		{
