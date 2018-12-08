@@ -116,26 +116,18 @@ static uint8_t get_folder_depth(char *path);
  */
 static uint8_t get_folder_depth(char *path)
 {
-	uint8_t depth;
+	uint8_t depth = 0;
 	uint16_t i;
 
-	if (path[strlen(path) - 1] == '/')
+	for (i = 0; i < strlen(path); i++)
 	{
-		depth = 0;
-	}
-	else
-	{
-		for (i = 0; i < strlen(path); i++)
+		if (path[i] == '/')
 		{
-			if (path[i] == '/')
-			{
-				depth++;
-			}
+			depth++;
 		}
-#ifndef __linux__
-		depth--;
-#endif
 	}
+
+	depth--;
 
 	return depth;
 }
@@ -347,13 +339,11 @@ static void mw_dialog_file_chooser_message_function(const mw_message_t *message)
 		{
 			/* left arrow, go up a folder path */
 			*strrchr(mw_dialog_file_chooser_data.folder_path, '/') = '\0';
+			*strrchr(mw_dialog_file_chooser_data.folder_path, '/') = '\0';
+			strcat(mw_dialog_file_chooser_data.folder_path, "/");
 			mw_dialog_file_chooser_data.folder_depth--;
 
-			/* check if back to root and if so add / again as it's the only folder that ends in a '/' */
-			if (mw_dialog_file_chooser_data.folder_depth == 0)
-			{
-				mw_util_safe_strcat(mw_dialog_file_chooser_data.folder_path, MAX_FOLDER_AND_FILENAME_LENGTH, "/");
-			}
+			/* update folder entries for this new folder */
 			update_folder_entries(mw_dialog_file_chooser_data.folders_only);
 			if (mw_dialog_file_chooser_data.folders_only)
 			{
@@ -401,19 +391,12 @@ static void mw_dialog_file_chooser_message_function(const mw_message_t *message)
 					mw_paint_control(mw_dialog_file_chooser_data.button_ok_handle);
 				}
 
-				/* change folder to list_box_file_data.list_box_entries[item_chosen].label
-				 * create new folder path by adding / and then the sub-folder name, but don't add /
-				 * to root folder path as it ends in / already
-				 */
-				if (mw_dialog_file_chooser_data.folder_depth > 0)
-				{
-					mw_util_safe_strcat(mw_dialog_file_chooser_data.folder_path,
-							MAX_FOLDER_AND_FILENAME_LENGTH,
-							"/");
-				}
 				mw_util_safe_strcat(mw_dialog_file_chooser_data.folder_path,
 						MAX_FOLDER_AND_FILENAME_LENGTH,
 						mw_dialog_file_chooser_data.list_box_file_data.list_box_entries[item_chosen].label);
+				mw_util_safe_strcat(mw_dialog_file_chooser_data.folder_path,
+										MAX_FOLDER_AND_FILENAME_LENGTH,
+										"/");
 
 				/* increment sub-folder depth counter */
 				mw_dialog_file_chooser_data.folder_depth++;

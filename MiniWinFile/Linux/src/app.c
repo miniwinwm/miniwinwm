@@ -62,6 +62,7 @@ GC graphical_context;
 **********************/
 
 static FILE *file_handle;		/**< File to access */
+static char root_folder[MAX_FOLDER_AND_FILENAME_LENGTH];
 
 /********************************
 *** LOCAL FUNCTION PROTOTYPES ***
@@ -80,6 +81,9 @@ void app_init(void)
 	static	Visual *visual;
 	static int depth;
 	static XSetWindowAttributes frame_attributes;
+	
+	strcpy(root_folder, getenv("HOME"));
+	strcat(root_folder, "/");
 
 	display = XOpenDisplay(NULL);
 	visual = DefaultVisual(display, 0);
@@ -109,7 +113,7 @@ void app_init(void)
 
 char *app_get_root_folder_path(void)
 {
-	return getenv("HOME");
+	return root_folder;
 }
 
 void app_main_loop_process(void)

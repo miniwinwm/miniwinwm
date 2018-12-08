@@ -393,6 +393,7 @@ void window_file_message_function(const mw_message_t *message)
 
 			/* enable the create button now time/date set */
 			mw_set_control_enabled(button_create_handle, true);
+			mw_paint_control(button_create_handle);
 		}
 		break;
 

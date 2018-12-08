@@ -279,7 +279,7 @@ void mw_user_init(void)
 
 	/* create settings window radio buttons */
 	radio_button_settings_data.number_of_items = RADIO_BUTTON_ITEMS_COUNT;
-	radio_button_settings_data.radio_button_labels = (char **)radio_button_labels;
+	radio_button_settings_data.radio_button_labels = radio_button_labels;
 	radio_button_settings_handle = mw_ui_radio_button_add_new(20,
 			70,
 			100,
