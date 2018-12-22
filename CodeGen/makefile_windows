@@ -1,0 +1,12 @@
+src = $(wildcard *.cpp)
+obj = $(src:.cpp=.o)
+
+LDFLAGS = 
+CXXFLAGS = -std=gnu++11 -g
+
+CodeGen.exe: $(obj)
+	$(CXX) -o $@ $^ $(LDFLAGS)
+
+.PHONY: clean
+clean:
+	del $(obj) CodeGen.exe

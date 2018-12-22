@@ -245,7 +245,7 @@ void mw_user_init(void)
 	window_blkchcry_bw_font_data.bg_colour = MW_HAL_LCD_YELLOW;
 	window_blkchcry_bw_font_data.justification = MW_GL_TT_FULLY_JUSTIFIED;
 	window_blkchcry_bw_font_handle = mw_add_window(&r,
-			"B-Chncry bw",
+			"B-Chncry",
 			window_tt_font_paint_function,
 			window_tt_font_message_function,
 			NULL,
@@ -263,7 +263,7 @@ void mw_user_init(void)
 	window_blkchcry_font_data.bg_colour = MW_HAL_LCD_YELLOW;
 	window_blkchcry_font_data.justification = MW_GL_TT_LEFT_JUSTIFIED;
 	window_blkchcry_font_handle = mw_add_window(&r,
-			"B-Chncry",
+			"B-Chncry bw",
 			window_tt_font_paint_function,
 			window_tt_font_message_function,
 			NULL,

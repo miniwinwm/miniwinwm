@@ -408,7 +408,7 @@ void mw_user_init(void)
 
 	mw_util_set_rect(&r, 20, 220, 100, 95);
 	window_scroll_handle = mw_add_window(&r,
-			"Scroll 5",
+			"Scroll 4",
 			window_scroll_paint_function,
 			window_scroll_message_function,
 			NULL,
@@ -424,7 +424,7 @@ void mw_user_init(void)
 
 	mw_util_set_rect(&r, 20, 100, 120, 120);
 	window_scroll_handle = mw_add_window(&r,
-			"Yield 6",
+			"Yield 5",
 			window_yield_paint_function,
 			window_yield_message_function,
 			NULL,
@@ -439,7 +439,7 @@ void mw_user_init(void)
 
 	mw_util_set_rect(&r, 20, 150, 180, 120);
 	window_paint_rect_handle = mw_add_window(&r,
-			"Paint Rect 7",
+			"Paint Rect 6",
 			window_paint_rect_paint_function,
 			window_paint_rect_message_function,
 			NULL,

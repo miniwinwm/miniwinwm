@@ -59,6 +59,7 @@ SOFTWARE.
 #define MW_MIN_Z_ORDER 								1       							/**< Lowest window z order */
 #define MW_MAX_Z_ORDER 								0xff    							/**< The highest possible value of z order */
 #define MW_ROOT_WINDOW_ID 							0       							/**< This window always exists and is created on initialisation */
+#define MW_ROOT_WINDOW_HANDLE						1       							/**< This window always has this handle and is set on initialisation */
 #define MW_FIRST_USER_WINDOW_ID 					(MW_ROOT_WINDOW_ID + 1)      		/**< User window identifiers are from this value upwards */
 #define MW_TITLE_BAR_ICON_SIZE						14									/**< Size of icons, which are square */
 #define MW_TITLE_BAR_ICON_OFFSET					16									/**< Distance between each title bar icon */
@@ -816,6 +817,13 @@ void mw_user_root_message_function(const mw_message_t *message);
  * a thread.
  */
 void mw_init();
+
+/**
+ * Returns the state of initializtion process
+ *
+ * @return true when miniwin and user initializations complete else false
+ */
+bool mw_is_init_complete(void);
 
 /**
  * Memory for holding window data is allocated statically at compile time.

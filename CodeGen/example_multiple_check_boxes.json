@@ -1,0 +1,61 @@
+{
+"TargetType": "Linux",
+"TargetName": "MiniWinGen",
+"LargeSize": false,	
+"Windows":
+[
+{
+"Name": "W1",
+"Title": "Window 1",
+"X": 10,
+"Y": 15,
+"Width": 200,
+"Height": 180,
+"Border": true,
+"TitleBar": true,
+"CanClose": true,
+"Visible": true,
+"Minimised": false,
+"CheckBoxes": [{
+		   "Name": "CB1",
+		   "Label": "Check 1",
+		   "X": 5,
+		   "Y": 5,
+		   "Enabled": true,
+		   "Visible": true
+			},
+			{
+		   "Name": "CB2",
+		   "Label": "Check 2",
+		   "X": 5,
+		   "Y": 20,
+		   "Enabled": true,
+		   "Visible": true
+			},
+			{
+		   "Name": "CB3",
+		   "Label": "Check 3",
+		   "X": 5,
+		   "Y": 35,
+		   "Enabled": true,
+		   "Visible": true
+			},
+			{
+		   "Name": "CB4",
+		   "Label": "Check 4",
+		   "X": 5,
+		   "Y": 50,
+		   "Enabled": true,
+		   "Visible": true
+			},
+			{
+		   "Name": "CB5",
+		   "Label": "Check 5",
+		   "X": 5,
+		   "Y": 65,
+		   "Enabled": true,
+		   "Visible": true
+			}]
+}
+]
+}

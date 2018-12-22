@@ -1,0 +1,189 @@
+{
+"TargetType": "Linux",
+"TargetName": "MiniWinGen",
+"LargeSize": false,	
+"Windows":
+[
+{
+"Name": "W1",
+"Title": "Window 1",
+"X": 10,
+"Y": 15,
+"Width": 200,
+"Height": 180,
+"Border": true,
+"TitleBar": true,
+"CanClose": true,
+"VerticalScrollBar": true,
+"HorizontalScrollBar": true,
+"VerticalScrollBarEnabled": true,
+"HorizontalScrollBarEnabled": true,
+"MenuBar": true,
+"MenuBarEnabled": true,
+"MenuItems": ["Fred", "Bert", "Pete", "Alf", "Ian"],
+"Visible": true,
+"Minimised": false,
+"Buttons": [{
+			"Name": "B1",
+			"Label": "Button1",
+			"X": 10,
+			"Y": 10,
+			"Enabled": true,
+			"Visible": true
+			},
+			{
+			"Name": "B2",
+			"Label": "Button2",
+			"X": 11,
+			"Y": 35,
+			"Enabled": true,
+			"Visible": true
+			}],			
+"Labels": [{
+		   "Name": "L1",
+		   "Label": "Label 1",
+		   "X": 65,
+		   "Y": 10,
+		   "Width": 50,
+		   "Enabled": true,
+		   "Visible": true
+			}],
+"ScrollBarsVert": [{
+		   "Name": "SBV1",
+		   "X": 120,
+		   "Y": 10,
+		   "Height": 50,
+		   "Enabled": true,
+		   "Visible": true
+			}],
+"RadioButtons": [{
+		   "Name": "RB1",
+		   "X": 10,
+		   "Y": 60,
+		   "Width": 50,
+		   "Labels": ["Terry", "Howard", "Simon", "Bill"],
+		   "Enabled": true,
+		   "Visible": true
+			},
+			{
+		   "Name": "RB2",
+		   "X": 65,
+		   "Y": 60,
+		   "Width": 50,
+		   "Labels": ["Jim", "John", "Dan"],
+		   "Enabled": false,
+		   "Visible": true
+			}],
+"ScrollingListBoxes": [{
+		   "Name": "SLB1",
+		   "X": 115,
+		   "Y": 75,
+		   "Width": 50,
+		   "Lines": 3,
+		   "Labels": ["Fred", "Bert", "Pete", "Alf", "Jim", "Alan"],
+		   "Enabled": true,
+		   "Visible": true
+			}]				
+},
+{
+"Name": "W2",
+"Title": "Window 2",
+"X": 50,
+"Y": 120,
+"Width": 180,
+"Height": 171,
+"Border": true,
+"TitleBar": true,
+"CanClose": true,
+"VerticalScrollBar": false,
+"HorizontalScrollBar": false,
+"VerticalScrollBarEnabled": false,
+"HorizontalScrollBarEnabled": false,
+"MenuBar": false,
+"Visible": true,
+"Minimised": false,
+"Buttons": [{
+			"Name": "B3",
+			"Label": "Button3",
+			"X": 10,
+			"Y": 10,
+			"Enabled": true,
+			"Visible": true
+			},
+			{
+			"Name": "B4",
+			"Label": "Button4",
+			"X": 11,
+			"Y": 35,
+			"Enabled": true,
+			"Visible": true
+			}],
+"CheckBoxes": [{
+		   "Name": "CB1",
+		   "Label": "Check 1",
+		   "X": 65,
+		   "Y": 35,
+		   "Enabled": true,
+		   "Visible": true
+			}],
+"Arrows": [{
+		   "Name": "A1",
+		   "X": 65,
+		   "Y": 10,
+		   "Direction": "UP",
+		   "Enabled": true,
+		   "Visible": true
+			}],
+"ProgressBars": [{
+		   "Name": "PB1",
+		   "X": 10,
+		   "Y": 60,
+		   "Width": 50,
+		   "Height": 10,
+		   "Enabled": true,
+		   "Visible": true
+			}],
+"ScrollBarsHoriz": [{
+		   "Name": "SBH1",
+		   "X": 120,
+		   "Y": 80,
+		   "Width": 50,
+		   "Enabled": true,
+		   "Visible": true
+			}],
+"TextBoxes": [{
+		   "Name": "TB1",
+		   "X": 120,
+		   "Y": 10,
+		   "Width": 115,
+		   "Height": 50,
+		   "Justification": "Centre",
+		   "BackgroundColour": "MW_HAL_LCD_YELLOW", 
+		   "ForegroundColour": "MW_HAL_LCD_BLACK", 		   
+		   "Font": "mf_rlefont_DejaVuSans12",
+		   "Enabled": true,
+		   "Visible": true
+			}],			
+"ListBoxes": [{
+		   "Name": "LB1",
+		   "X": 10,
+		   "Y": 60,
+		   "Width": 50,
+		   "Lines": 3,
+		   "Labels": ["Fred", "Bert", "Pete"],
+		   "Enabled": true,
+		   "Visible": true
+			},
+			{
+		   "Name": "LB2",
+		   "X": 65,
+		   "Y": 60,
+		   "Width": 50,
+		   "Lines": 5,
+		   "Labels": ["Jim", "Mike", "Johan"],
+		   "Enabled": true,
+		   "Visible": true
+			}]				
+}
+]
+}

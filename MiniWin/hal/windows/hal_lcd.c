@@ -53,7 +53,8 @@ SOFTWARE.
 *** LOCAL VARIABLES ***
 **********************/
 
-static HWND hwnd;
+///static HWND hwnd;
+extern HWND hwnd;
 static HDC hdc;
 
 /********************************
@@ -70,17 +71,7 @@ static HDC hdc;
 
 void mw_hal_lcd_init(void)
 {
-	RECT rect;
-	CONSOLE_CURSOR_INFO cinfo = {100, FALSE};
-	HANDLE handle;
-
-	hwnd = GetConsoleWindow();
-	handle = GetStdHandle(STD_OUTPUT_HANDLE);
-
-	GetWindowRect(hwnd, &rect);
-	MoveWindow(hwnd, rect.left, rect.top, 280, 380, TRUE);
-	SetConsoleCursorInfo(handle, &cinfo);
-	SetConsoleTitle("MiniWin for Windows");
+	Sleep(600);
 }
 
 void mw_hal_lcd_pixel(int16_t x, int16_t y, mw_hal_lcd_colour_t colour)
@@ -211,3 +202,4 @@ void mw_hal_lcd_monochrome_bitmap_clip(int16_t image_start_x,
 		}
 	}
 }
+

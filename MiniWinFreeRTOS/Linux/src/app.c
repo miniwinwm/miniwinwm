@@ -33,6 +33,7 @@ SOFTWARE.
 #include <stdbool.h>
 #include <stdint.h>
 #include "app.h"
+#include "miniwin.h"
 
 /****************
 *** CONSTANTS ***
@@ -66,8 +67,6 @@ extern XEvent event;
 *** LOCAL FUNCTION PROTOTYPES ***
 ********************************/
 
-static void setLeds(int32_t leds);
-
 /**********************
 *** LOCAL FUNCTIONS ***
 **********************/
@@ -94,14 +93,16 @@ void app_init(void)
 		XRootWindow(display, 0),
 		0, 
 		0, 
-		240,
-		320,
+		MW_ROOT_WIDTH + 20,
+		MW_ROOT_HEIGHT,
 		5, 
 		depth,
 		InputOutput, 
 		visual, 
 		CWBackPixel,
 		&frame_attributes);
+
+	XStoreName(display, frame_window, "MiniWin Sim");
 
 	graphical_context = XCreateGC( display, frame_window, 0, 0 );
 
@@ -110,36 +111,24 @@ void app_init(void)
 	XFlush(display);
 }
 
-/**
- * Set the computer's keyboard led state
- *
- * @param leds Binary or of the leds that are to be set on using the #defines above or 0 for off
- */
-static void setLeds(int32_t leds)
-{
-	XKeyboardControl values;
-
-	XLockDisplay(display);
-    values.led_mode = leds & SCROLL_LOCK ? LedModeOn : LedModeOff;
-    XChangeKeyboardControl(display, KBLedMode, &values);
-	XUnlockDisplay(display);
-}
-
 void app_main_loop_process(void)
 {
 	/* toggle the scroll lock led state */
 	static bool toggle = false;
 
-	if (toggle)
+	if (mw_is_init_complete())
 	{
-		setLeds(SCROLL_LOCK);
-	}
-	else
-	{
-		setLeds(0);
-	}
+		if (toggle)
+		{
+			mw_hal_lcd_filled_rectangle(MW_ROOT_WIDTH + 5, 10, 10, 10, MW_HAL_LCD_YELLOW);
+		}
+		else
+		{
+			mw_hal_lcd_filled_rectangle(MW_ROOT_WIDTH + 5, 10, 10, 10, MW_HAL_LCD_BLACK);
+		}
 
-	toggle = !toggle;
+		toggle = !toggle;
+	}
 }
 
 float *app_get_gyro_readings(void)

@@ -30,7 +30,9 @@ SOFTWARE.
 
 #include <windows.h>
 #include <stdio.h>
+#include "miniwin.h"
 #include "hal/hal_touch.h"
+#include "app.h"
 
 /****************
 *** CONSTANTS ***
@@ -48,14 +50,13 @@ SOFTWARE.
 *** EXTERNAL VARIABLES ***
 **************************/
 
+extern bool mouse_down;
+extern SHORT mx;
+extern SHORT my;
+
 /**********************
 *** LOCAL VARIABLES ***
 **********************/
-
-static HANDLE hStdin;
-static bool mouse_down = false;
-static SHORT mx;
-static SHORT my;
 
 /********************************
 *** LOCAL FUNCTION PROTOTYPES ***
@@ -71,61 +72,6 @@ static SHORT my;
 
 void mw_hal_touch_init(void)
 {
-    DWORD fdwMode;
-
-    hStdin = GetStdHandle(STD_INPUT_HANDLE);
-    fdwMode = ENABLE_MOUSE_INPUT;
-    SetConsoleMode(hStdin, fdwMode);
-}
-
-VOID MouseEventProc(MOUSE_EVENT_RECORD mer)
-{
-    switch(mer.dwEventFlags)
-    {
-        case 0:
-            if (mer.dwButtonState == FROM_LEFT_1ST_BUTTON_PRESSED)
-            {
-                mouse_down = true;
-            }
-            else if (mer.dwButtonState == 0)
-            {
-            	mouse_down = false;
-            }
-            break;
-
-        case MOUSE_MOVED:
-        {
-        	RECT r;
-        	GetWindowRect( GetConsoleWindow(), &r );
-
-        	POINT p;
-        	GetCursorPos(&p);
-
-        	mx = p.x - r.left - 4;
-        	my = p.y - r.top - 23;
-
-        	if (mx < 0)
-        	{
-        		mx = 0;
-        	}
-
-        	if (my < 0)
-        	{
-        		my = 0;
-        	}
-
-        	if (mx > 239)
-        	{
-        		mx = 239;
-        	}
-
-        	if (my > 319)
-        	{
-        		my = 319;
-        	}
-        }
-        break;
-    }
 }
 
 bool mw_hal_touch_get_point(uint16_t* x, uint16_t* y)
@@ -143,29 +89,7 @@ bool mw_hal_touch_get_point(uint16_t* x, uint16_t* y)
 
 mw_hal_touch_state_t mw_hal_touch_get_state(void)
 {
-	DWORD lpcNumberOfEvents, cNumRead;
-    INPUT_RECORD irInBuf[1];
-
-	GetNumberOfConsoleInputEvents(hStdin, &lpcNumberOfEvents);
-
-	while (lpcNumberOfEvents > 0)
-	{
-		{
-			ReadConsoleInput(hStdin,
-							irInBuf,
-							1,
-							&cNumRead);
-		}
-
-		switch(irInBuf[0].EventType)
-		{
-			case MOUSE_EVENT:
-				MouseEventProc(irInBuf[0].Event.MouseEvent);
-				break;
-		};
-
-		lpcNumberOfEvents--;
-	}
+	app_main_loop_process();
 
 	if (mouse_down)
 	{

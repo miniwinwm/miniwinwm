@@ -174,6 +174,7 @@ extern volatile uint32_t mw_tick_counter;
 **********************/
 
 static window_t mw_all_windows[MW_MAX_WINDOW_COUNT];    	/**< Array of structures describing all the windows */
+static uint8_t minimised_windows[MW_MAX_WINDOW_COUNT];		/**< window id's of currently minimised windows */
 static control_t mw_all_controls[MW_MAX_CONTROL_COUNT]; 	/**< Array of structures describing all the controls */
 static window_timer_t mw_all_timers[MW_MAX_TIMER_COUNT];   	/**< Array of structures describing containing information on all the timers */
 static mw_handle_t window_with_focus_handle;				/**< The window at the front with focus receiving touch events within its rect */
@@ -183,6 +184,7 @@ static system_timer_t system_timer;							/**< A timer used by the window manage
 static bool in_client_window_paint_function;				/**< Set true when calling a client window paint function, false after exiting the client window paint function */
 static window_redimensioning_state_t window_redimensioning_state;	/**< The state of window redimensioning - moving or resizing */
 static uint8_t window_being_redimensioned_id;				/**< The id of a window being redimensioned if it is happening */
+static bool init_complete;									/**< Flag indicating when initialisations are complete */
 
 /********************************
 *** LOCAL FUNCTION PROTOTYPES ***
@@ -220,8 +222,10 @@ static void set_control_details(const mw_util_rect_t *rect,
 static void root_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_t *draw_info);
 static void root_message_function(const mw_message_t *message);
 
-/* minimized window functions */
+/* minimised window functions */
 static uint8_t find_icon_number_for_window(mw_handle_t window_handle);
+void remove_minimised_window_from_list(mw_handle_t window_handle);
+void add_minimised_window_to_list(mw_handle_t window_handle);
 static void find_minimsed_icon_location(uint8_t icon_number, int16_t *x, int16_t *y);
 static bool check_for_restore_touch(int16_t x_touch, int16_t y_touch);
 static void draw_min_restore_window_effect(mw_handle_t window_handle);
@@ -719,7 +723,7 @@ static void root_message_function(const mw_message_t *message)
 }
 
 /**
- * Find a window icon reference number for a window. The window icons are plotted by icon
+ * Find a window icon number for a window. The window icons are plotted by icon
  * reference number along rows along the bottom of the root window, working right along
  * each row then by rows up the screen.
  *
@@ -729,28 +733,92 @@ static void root_message_function(const mw_message_t *message)
 static uint8_t find_icon_number_for_window(mw_handle_t window_handle)
 {
 	uint8_t i;
-	uint8_t icon_number = 0;
+	uint8_t window_id;
 
-	/* loop through all windows */
-	for (i = 1; i < MW_MAX_WINDOW_COUNT; i++)
+	window_id = get_window_id_for_handle(window_handle);
+	if (window_id >= MW_MAX_WINDOW_COUNT)
 	{
-		/* ignore unused invisible maximised windows */
-		if (!(mw_all_windows[i].window_flags & MW_WINDOW_FLAG_IS_USED) ||
-				!(mw_all_windows[i].window_flags & MW_WINDOW_FLAG_IS_VISIBLE) ||
-				!(mw_all_windows[i].window_flags & MW_WINDOW_FLAG_IS_MINIMISED))
-		{
-			continue;
-		}
-
-		if (mw_all_windows[i].window_handle == window_handle)
-		{
-			break;
-		}
-
-		icon_number++;
+		MW_ASSERT(false, "Bad window handle");
+		return 0;
 	}
 
-	return icon_number;
+	/* loop through all minimised windows */
+	for (i = 1; i < MW_MAX_WINDOW_COUNT; i++)
+	{
+		if (minimised_windows[i] == window_id)
+		{
+			return i - 1;
+		}
+	}
+
+	return 0;
+}
+
+/**
+ * Remove a window from the list of currently minimised windows if it is in the list
+ *
+ * @param window_handle The window to remove from the list
+ */
+void remove_minimised_window_from_list(mw_handle_t window_handle)
+{
+	uint8_t i;
+	uint8_t window_id;
+
+	window_id = get_window_id_for_handle(window_handle);
+	if (window_id >= MW_MAX_WINDOW_COUNT)
+	{
+		MW_ASSERT(false, "Bad window handle");
+		return;
+	}
+
+	/* loop through all minimised windows */
+	bool shift = false;
+	for (i = 1; i < MW_MAX_WINDOW_COUNT; i++)
+	{
+		if (minimised_windows[i] == window_id)
+		{
+			shift = true;;
+		}
+
+		if (shift && i < (MW_MAX_WINDOW_COUNT - 2))
+		{
+			minimised_windows[i] = minimised_windows[i + 1];
+		}
+	}
+
+	minimised_windows[MW_MAX_WINDOW_COUNT - 1] = MW_ROOT_WINDOW_ID;
+}
+
+/**
+ * Add a window to the list of currently minimised windows
+ *
+ * @param window_handle The window to add to the list
+ */
+void add_minimised_window_to_list(mw_handle_t window_handle)
+{
+	uint8_t i;
+	uint8_t window_id;
+
+	window_id = get_window_id_for_handle(window_handle);
+	if (window_id >= MW_MAX_WINDOW_COUNT)
+	{
+		MW_ASSERT(false, "Bad window handle");
+		return;
+	}
+
+	/* don't add invisible, unused or already minimised windows */
+	if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_VISIBLE &&
+			mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_USED)
+	{
+		for (i = 1; i < MW_MAX_WINDOW_COUNT; i++)
+		{
+			if (minimised_windows[i] == MW_ROOT_WINDOW_ID)
+			{
+				minimised_windows[i] = window_id;
+				break;
+			}
+		}
+	}
 }
 
 /**
@@ -782,7 +850,6 @@ static void find_minimsed_icon_location(uint8_t icon_number, int16_t *x, int16_t
 static bool check_for_restore_touch(int16_t x_touch, int16_t y_touch)
 {
 	uint8_t i;
-	uint8_t minimised_window_count = 0;
 	mw_util_rect_t r;
 	bool touch_consumed = false;
 
@@ -790,32 +857,29 @@ static bool check_for_restore_touch(int16_t x_touch, int16_t y_touch)
 	r.width = MW_DESKTOP_ICON_WIDTH;
 	r.height = MW_DESKTOP_ICON_HEIGHT;
 
-	/* loop through all user windows */
+	/* loop through all minimised windows */
 	for (i = 1; i < MW_MAX_WINDOW_COUNT; i++)
 	{
-		/* ignore unused invisible maximised windows */
-		if (!(mw_all_windows[i].window_flags & MW_WINDOW_FLAG_IS_USED) ||
-				!(mw_all_windows[i].window_flags & MW_WINDOW_FLAG_IS_VISIBLE) ||
-				!(mw_all_windows[i].window_flags & MW_WINDOW_FLAG_IS_MINIMISED))
+		/* loop through all minimised windows */
+		if (minimised_windows[i] == MW_ROOT_WINDOW_ID)
 		{
-			continue;
+			break;
 		}
 
 		/* find the top left location of the next icon */
-		find_minimsed_icon_location(minimised_window_count, &r.x, &r.y);
-		minimised_window_count++;
+		find_minimsed_icon_location(i - 1, &r.x, &r.y);
 
 		/* check if the touch point is in the next icon location */
 		if (mw_util_is_point_in_rect(&r, x_touch, y_touch))
 		{
 			/* it is, so now restore the window, starting off by drawing the restore animation effect */
-			draw_min_restore_window_effect(mw_all_windows[i].window_handle);
+			draw_min_restore_window_effect(mw_all_windows[minimised_windows[i]].window_handle);
 			
 			/* clear minimised status for this window */
-			mw_all_windows[i].window_flags &= ~MW_WINDOW_FLAG_IS_MINIMISED;
+			mw_all_windows[minimised_windows[i]].window_flags &= ~MW_WINDOW_FLAG_IS_MINIMISED;
 			
 			/* restored windows get brought to the font and given focus */
-			mw_bring_window_to_front(mw_all_windows[i].window_handle);
+			mw_bring_window_to_front(mw_all_windows[minimised_windows[i]].window_handle);
 			
 			/* set the system timer to clear the restored window animation effect */
 			set_system_timer(MW_UNUSED_MESSAGE_PARAMETER,
@@ -825,10 +889,13 @@ static bool check_for_restore_touch(int16_t x_touch, int16_t y_touch)
 			/* let the window know that it has been restored */
 			mw_post_message(MW_WINDOW_RESTORED_MESSAGE,
 					MW_UNUSED_MESSAGE_PARAMETER,
-					mw_all_windows[i].window_handle,
+					mw_all_windows[minimised_windows[i]].window_handle,
 					MW_UNUSED_MESSAGE_PARAMETER,
 					MW_UNUSED_MESSAGE_PARAMETER,
 					MW_WINDOW_MESSAGE);
+
+			/* remove this window from the minimised windows list */
+			remove_minimised_window_from_list(mw_all_windows[minimised_windows[i]].window_handle);
 					
 			/* this touch point has now been consumed so won't be passed on to user root message function */
 			touch_consumed = true;
@@ -890,7 +957,6 @@ static void draw_minimised_icons(void)
 {
 	uint8_t i;
 	mw_util_rect_t r;
-	uint8_t minimised_window_count = 0;
 	uint16_t horiz_edges_count;
 	uint16_t vert_edges_count;
 	uint16_t horizontal_edge_counter;
@@ -901,22 +967,19 @@ static void draw_minimised_icons(void)
 	r.width = MW_DESKTOP_ICON_WIDTH;
 	r.height = MW_DESKTOP_ICON_HEIGHT;
 
-	/* loop through all user windows */
+	/* loop through all minimised windows */
 	for (i = 1; i < MW_MAX_WINDOW_COUNT; i++)
 	{
-		/* ignore unused invisible maximised windows */
-		if (!(mw_all_windows[i].window_flags & MW_WINDOW_FLAG_IS_USED) ||
-				!(mw_all_windows[i].window_flags & MW_WINDOW_FLAG_IS_VISIBLE)
-				|| !(mw_all_windows[i].window_flags & MW_WINDOW_FLAG_IS_MINIMISED))
+		if (minimised_windows[i] == MW_ROOT_WINDOW_ID)
 		{
-			continue;
+			break;
 		}
 
 		/* window needs an icon so find its location to draw */
-		find_minimsed_icon_location(minimised_window_count, &r.x, &r.y);
+		find_minimsed_icon_location(i - 1, &r.x, &r.y);
+
 		draw_info.origin_x = r.x;
 		draw_info.origin_y = r.y;
-		minimised_window_count++;
 
 		find_rect_window_intersections(&r, &horiz_edges_count, &vert_edges_count);
 
@@ -951,7 +1014,7 @@ static void draw_minimised_icons(void)
 
 					mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 					mw_gl_rectangle(&draw_info, 0, 0, MW_DESKTOP_ICON_WIDTH, MW_DESKTOP_ICON_HEIGHT);
-					mw_gl_string(&draw_info, 4, 6, mw_all_windows[i].title);
+					mw_gl_string(&draw_info, 4, 6, mw_all_windows[minimised_windows[i]].title);
 
 					/* draw 3d effect */
 					mw_gl_set_fg_colour(MW_HAL_LCD_WHITE);
@@ -1507,11 +1570,12 @@ static void draw_titlebar_text(mw_handle_t window_handle, const mw_gl_draw_info_
  */
 static void draw_menu_bar(const mw_gl_draw_info_t *draw_info, mw_handle_t window_handle)
 {
-	uint16_t next_pos = MW_BORDER_WIDTH;
+	uint16_t next_pos = 0;
 	uint8_t i;
 	uint8_t window_id;
 	uint16_t menu_bar_height;
 	uint16_t selected_text_offset;
+	uint16_t menu_bar_width;
 
 	MW_ASSERT(draw_info, "Null pointer argument");
 
@@ -1519,17 +1583,28 @@ static void draw_menu_bar(const mw_gl_draw_info_t *draw_info, mw_handle_t window
 	window_id = get_window_id_for_handle(window_handle);
 	MW_ASSERT(window_id < MW_MAX_WINDOW_COUNT, "Bad window handle");
 
+	/* check for large size and set font and menu bar dimensions appropriately */
+	menu_bar_width = mw_all_windows[window_id].client_rect.width;
 	if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_LARGE_SIZE)
 	{
 		menu_bar_height = MW_LARGE_MENU_BAR_HEIGHT;
 	    mw_gl_set_font(MW_GL_TITLE_FONT);
+		if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_VERT_SCROLL_BAR)
+		{
+			menu_bar_width += MW_SCROLL_BAR_LARGE_NARROW_DIMENSION;
+		}
 	}
 	else
 	{
 		menu_bar_height = MW_MENU_BAR_HEIGHT;
 	    mw_gl_set_font(MW_GL_FONT_9);
+		if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_VERT_SCROLL_BAR)
+		{
+			menu_bar_width += MW_SCROLL_BAR_NARROW_DIMENSION;
+		}
 	}
 
+	/* draw background rectangle */
 	mw_gl_set_fill(MW_GL_FILL);
 	mw_gl_set_solid_fill_colour(MW_CONTROL_UP_COLOUR);
 	mw_gl_set_border(MW_GL_BORDER_OFF);
@@ -1537,8 +1612,7 @@ static void draw_menu_bar(const mw_gl_draw_info_t *draw_info, mw_handle_t window
 	mw_gl_rectangle(draw_info,
 			mw_all_windows[window_id].client_rect.x - mw_all_windows[window_id].window_rect.x,
 			mw_all_windows[window_id].client_rect.y - mw_all_windows[window_id].window_rect.y - menu_bar_height,
-			(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_VERT_SCROLL_BAR) ?
-					mw_all_windows[window_id].window_rect.width - MW_BORDER_WIDTH * 2 : mw_all_windows[window_id].client_rect.width,
+			menu_bar_width,
 			menu_bar_height);
 
     /* set up text */
@@ -1549,6 +1623,10 @@ static void draw_menu_bar(const mw_gl_draw_info_t *draw_info, mw_handle_t window
 	mw_gl_set_line(MW_GL_SOLID_LINE);
 
     /* draw each item */
+	if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER)
+	{
+		next_pos = MW_BORDER_WIDTH;
+	}
 	for (i = 0; i < mw_all_windows[window_id].menu_bar_items_count; i++)
 	{
         /* check if this item is selected */
@@ -2717,7 +2795,7 @@ static void do_paint_control2(mw_handle_t control_handle, const mw_util_rect_t *
  */
 static mw_handle_t get_next_handle(void)
 {
-	static mw_handle_t next_handle = 0;
+	static mw_handle_t next_handle = MW_ROOT_WINDOW_HANDLE;
 
 	next_handle++;
 	return next_handle;
@@ -3662,6 +3740,7 @@ static bool check_and_process_touch_on_title_bar(uint8_t window_id, uint16_t tou
 					if (touch_message_id == MW_TOUCH_DOWN_MESSAGE)
 					{
 						/* if window isn't modal so minimise window */
+						add_minimised_window_to_list(mw_all_windows[window_id].window_handle);
 						draw_min_restore_window_effect(mw_all_windows[window_id].window_handle);
 						mw_all_windows[window_id].window_flags |= MW_WINDOW_FLAG_IS_MINIMISED;
 						set_focus();
@@ -3945,7 +4024,7 @@ void mw_init()
 			"",
 			root_paint_function,
 			MW_ROOT_WINDOW_ID,
-			get_next_handle(),
+			MW_ROOT_WINDOW_HANDLE,
 			root_message_function,
 			NULL,
 			0,
@@ -3980,6 +4059,14 @@ void mw_init()
 
 	/* call the user init function to get all the user windows and controls created */
 	mw_user_init();
+
+	/* set init complete flag true now all initializations completed */
+	init_complete = true;
+}
+
+bool mw_is_init_complete(void)
+{
+	return init_complete;
 }
 
 bool mw_find_if_any_window_slots_free(void)
@@ -4055,6 +4142,12 @@ mw_handle_t mw_add_window(mw_util_rect_t *rect,
 			menu_bar_items_count,
    			window_flags,
 			instance_data);
+
+   	/* check if created minimised */
+   	if (window_flags & MW_WINDOW_FLAG_IS_MINIMISED)
+   	{
+		add_minimised_window_to_list(mw_all_windows[new_window_id].window_handle);
+   	}
 
    	/* bring this window to the front */
    	mw_bring_window_to_front(mw_all_windows[new_window_id].window_handle);
@@ -4170,12 +4263,25 @@ void mw_set_window_visible(mw_handle_t window_handle, bool visible)
 	/* set window visibility */
 	if (visible)
 	{
+		/* setting visible */
 		mw_all_windows[window_id].window_flags |= MW_WINDOW_FLAG_IS_VISIBLE;
-		mw_bring_window_to_front(window_handle);
+		if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_MINIMISED)
+		{
+			add_minimised_window_to_list(window_handle);
+		}
+		else
+		{
+			mw_bring_window_to_front(window_handle);
+		}
 	}
 	else
 	{
+		/* setting invisible */
 		mw_all_windows[window_id].window_flags &= ~MW_WINDOW_FLAG_IS_VISIBLE;
+		if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_MINIMISED)
+		{
+			remove_minimised_window_from_list(window_handle);
+		}
 		rationalize_z_orders();
 	}
 
@@ -4638,6 +4744,12 @@ void mw_remove_window(mw_handle_t window_handle)
 
 	/* remove this window by marking it as unused */
 	mw_all_windows[window_id].window_flags &= ~MW_WINDOW_FLAG_IS_USED;
+
+	/* remove this window from the minimised list */
+	if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_MINIMISED)
+	{
+		remove_minimised_window_from_list(mw_all_windows[window_id].window_handle);
+	}
 
 	/* rationalize the z orders in case they are irrational */
 	rationalize_z_orders();

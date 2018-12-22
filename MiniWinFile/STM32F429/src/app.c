@@ -281,9 +281,11 @@ uint8_t find_folder_entries(char *path,
     FRESULT result;
     DIR folder;
     FILINFO file_info;
-    UINT i;
+    UINT i = 0;
 
-    i = 0;
+    /* strip off terminating '/' for FatFS folders */
+    path[strlen(path) - 1] = '\0';
+
     result = f_opendir(&folder, path);                       /* Open the folder */
     if (result == FR_OK)
     {
@@ -326,6 +328,9 @@ uint8_t find_folder_entries(char *path,
         }
         f_closedir(&folder);
     }
+
+    /* replace terminating '/' */
+    path[strlen(path)] = '/';
 
     return i;
 }

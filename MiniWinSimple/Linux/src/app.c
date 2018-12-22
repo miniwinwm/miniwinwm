@@ -29,6 +29,7 @@ SOFTWARE.
 ***************/
 
 #include <X11/Xlib.h>
+#include "miniwin.h"
 
 /****************
 *** CONSTANTS ***
@@ -83,14 +84,16 @@ void app_init(void)
 		XRootWindow(display, 0),
 		0, 
 		0, 
-		260,
-		320,
+		MW_ROOT_WIDTH,
+		MW_ROOT_HEIGHT,
 		5, 
 		depth,
 		InputOutput, 
 		visual, 
 		CWBackPixel,
 		&frame_attributes);
+
+	XStoreName(display, frame_window, "MiniWin Sim");
 
 	XSelectInput(display, frame_window, ExposureMask | StructureNotifyMask);
 

@@ -1,0 +1,32 @@
+{
+"TargetType": "Linux",
+"TargetName": "MiniWinGen",
+"LargeSize": false,	
+"Windows":
+[
+{
+"Name": "W1",
+"Title": "Window 1",
+"X": 10,
+"Y": 15,
+"Width": 200,
+"Height": 180,
+"Border": true,
+"TitleBar": true,
+"Visible": true,
+"VerticalScrollBar": true,
+"HorizontalScrollBar": true,
+"VerticalScrollBarEnabled": false,
+"HorizontalScrollBarEnabled": false,
+"Minimised": false,
+"Buttons": [{
+			"Name": "B1",
+			"Label": "Button1",
+			"X": 10,
+			"Y": 10,
+			"Enabled": true,
+			"Visible": true
+			}]				
+}
+]
+}

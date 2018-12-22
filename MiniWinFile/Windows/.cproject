@@ -18,7 +18,7 @@
 							<targetPlatform id="cdt.managedbuild.target.gnu.platform.mingw.exe.debug.1161147988" name="Debug Platform" superClass="cdt.managedbuild.target.gnu.platform.mingw.exe.debug"/>
 							<builder buildPath="${workspace_loc:/MiniWinFile_Windows}/Debug" customBuilderProperties="toolChainpathType=1|toolChainpathString=C:\\Program Files (x86)\\Atollic\\TrueSTUDIO for STM32 9.0.1\\PCTools\\bin|" id="cdt.managedbuild.tool.gnu.builder.mingw.base.1648521202" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="CDT Internal Builder" superClass="cdt.managedbuild.tool.gnu.builder.mingw.base"/>
 							<tool id="cdt.managedbuild.tool.gnu.assembler.mingw.exe.debug.1366490066" name="Assembler" superClass="cdt.managedbuild.tool.gnu.assembler.mingw.exe.debug">
-								<option id="gnu.both.asm.option.include.paths.644512550" name="Include paths (-I)" superClass="gnu.both.asm.option.include.paths" valueType="includePath"/>
+								<option id="gnu.both.asm.option.include.paths.644512550" name="Include paths (-I)" superClass="gnu.both.asm.option.include.paths"/>
 								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.686475290" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.archiver.mingw.base.1395773831" name="Archiver" superClass="cdt.managedbuild.tool.gnu.archiver.mingw.base"/>
@@ -47,6 +47,16 @@
 								<option id="gnu.cpp.compiler.mingw.exe.debug.option.debugging.level.443354296" name="Debug Level" superClass="gnu.cpp.compiler.mingw.exe.debug.option.debugging.level" value="gnu.cpp.compiler.debugging.level.max" valueType="enumerated"/>
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.cpp.linker.mingw.exe.debug.1318759316" name="C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.mingw.exe.debug"/>
+						</toolChain>
+					</folderInfo>
+					<folderInfo id="cdt.managedbuild.config.gnu.mingw.exe.debug.488528513.1937292336" name="/" resourcePath="MiniWin/user">
+						<toolChain id="cdt.managedbuild.toolchain.gnu.mingw.exe.debug.1255601230" name="Atollic PC Tools" superClass="cdt.managedbuild.toolchain.gnu.mingw.exe.debug" unusedChildren="">
+							<tool id="cdt.managedbuild.tool.gnu.assembler.mingw.exe.debug.1600105814" name="Assembler" superClass="cdt.managedbuild.tool.gnu.assembler.mingw.exe.debug.1366490066"/>
+							<tool id="cdt.managedbuild.tool.gnu.archiver.mingw.base.1671313234" name="Archiver" superClass="cdt.managedbuild.tool.gnu.archiver.mingw.base.1395773831"/>
+							<tool id="cdt.managedbuild.tool.gnu.c.compiler.mingw.exe.debug.532241233" name="C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.mingw.exe.debug.1685953327"/>
+							<tool id="cdt.managedbuild.tool.gnu.c.linker.mingw.exe.debug.560175235" name="C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.mingw.exe.debug.2066289076"/>
+							<tool id="cdt.managedbuild.tool.gnu.cpp.compiler.mingw.exe.debug.1051033387" name="C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.mingw.exe.debug.1644998599"/>
+							<tool id="cdt.managedbuild.tool.gnu.cpp.linker.mingw.exe.debug.899379606" name="C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.mingw.exe.debug.1318759316"/>
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>

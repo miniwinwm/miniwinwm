@@ -1,0 +1,30 @@
+{
+"TargetType": "Linux",
+"TargetName": "MiniWinGen",
+"LargeSize": false,	
+"Windows":
+[
+{
+"Name": "W1",
+"Title": "Window 1",
+"X": 10,
+"Y": 15,
+"Width": 200,
+"Height": 180,
+"Border": true,
+"TitleBar": true,
+"Visible": true,
+"Minimised": false,
+"ScrollingListBoxes": [{
+		   "Name": "SLB1",
+		   "X": 50,
+		   "Y": 50,
+		   "Width": 50,
+		   "Lines": 3,
+		   "Labels": ["Fred", "Bert", "Pete", "Alf", "Jim", "Alan"],
+		   "Enabled": true,
+		   "Visible": true
+			}]	
+}
+]
+}

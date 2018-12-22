@@ -1,0 +1,168 @@
+{
+"TargetType": "Linux",
+"TargetName": "MiniWinGen",
+"LargeSize": false,	
+"Windows":
+[
+{
+"Name": "W1",
+"Title": "Window 1",
+"X": 10,
+"Y": 10,
+"Width": 120,
+"Height": 100,
+"Border": true,
+"TitleBar": true,
+"Visible": true,
+"Minimised": false,
+"Buttons": [{
+			"Name": "B1",
+			"Label": "Button1",
+			"X": 10,
+			"Y": 10,
+			"Enabled": true,
+			"Visible": true
+			}]				
+},
+{
+"Name": "W2",
+"Title": "Window 2",
+"X": 20,
+"Y": 30,
+"Width": 120,
+"Height": 100,
+"Border": true,
+"TitleBar": true,
+"Visible": true,
+"Minimised": false,
+"Buttons": [{
+			"Name": "B2",
+			"Label": "Button2",
+			"X": 10,
+			"Y": 10,
+			"Enabled": true,
+			"Visible": true
+			}]				
+},
+{
+"Name": "W3",
+"Title": "Window 3",
+"X": 30,
+"Y": 50,
+"Width": 120,
+"Height": 100,
+"Border": true,
+"TitleBar": true,
+"Visible": true,
+"Minimised": false,
+"Buttons": [{
+			"Name": "B3",
+			"Label": "Button3",
+			"X": 10,
+			"Y": 10,
+			"Enabled": true,
+			"Visible": true
+			}]				
+},
+{
+"Name": "W4",
+"Title": "Window 4",
+"X": 40,
+"Y": 70,
+"Width": 120,
+"Height": 100,
+"Border": true,
+"TitleBar": true,
+"Visible": true,
+"Minimised": false,
+"Buttons": [{
+			"Name": "B4",
+			"Label": "Button4",
+			"X": 10,
+			"Y": 10,
+			"Enabled": true,
+			"Visible": true
+			}]				
+},
+{
+"Name": "W5",
+"Title": "Window 5",
+"X": 50,
+"Y": 90,
+"Width": 120,
+"Height": 100,
+"Border": true,
+"TitleBar": true,
+"Visible": true,
+"Minimised": false,
+"Buttons": [{
+			"Name": "B5",
+			"Label": "Button5",
+			"X": 10,
+			"Y": 10,
+			"Enabled": true,
+			"Visible": true
+			}]				
+},
+{
+"Name": "W6",
+"Title": "Window 6",
+"X": 60,
+"Y": 110,
+"Width": 120,
+"Height": 100,
+"Border": true,
+"TitleBar": true,
+"Visible": true,
+"Minimised": false,
+"Buttons": [{
+			"Name": "B6",
+			"Label": "Button6",
+			"X": 10,
+			"Y": 10,
+			"Enabled": true,
+			"Visible": true
+			}]				
+},
+{
+"Name": "W7",
+"Title": "Window 7",
+"X": 70,
+"Y": 130,
+"Width": 120,
+"Height": 100,
+"Border": true,
+"TitleBar": true,
+"Visible": true,
+"Minimised": false,
+"Buttons": [{
+			"Name": "B7",
+			"Label": "Button7",
+			"X": 10,
+			"Y": 10,
+			"Enabled": true,
+			"Visible": true
+			}]				
+},
+{
+"Name": "W8",
+"Title": "Window 8",
+"X": 80,
+"Y": 150,
+"Width": 120,
+"Height": 100,
+"Border": true,
+"TitleBar": true,
+"Visible": true,
+"Minimised": false,
+"Buttons": [{
+			"Name": "B8",
+			"Label": "Button8",
+			"X": 10,
+			"Y": 10,
+			"Enabled": true,
+			"Visible": true
+			}]				
+}
+]
+}

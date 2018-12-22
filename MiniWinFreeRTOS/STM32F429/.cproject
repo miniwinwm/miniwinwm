@@ -27,7 +27,7 @@
 								<option id="com.atollic.truestudio.common_options.target.fpucore.1054108080" name="FPU" superClass="com.atollic.truestudio.common_options.target.fpucore" value="com.atollic.truestudio.common_options.target.fpucore.fpv4-sp-d16" valueType="enumerated"/>
 								<option id="com.atollic.truestudio.common_options.target.fpu.585258748" name="Floating point" superClass="com.atollic.truestudio.common_options.target.fpu" value="com.atollic.truestudio.common_options.target.fpu.hard" valueType="enumerated"/>
 								<option id="com.atollic.truestudio.as.symbols.defined.705784712" name="Defined symbols" superClass="com.atollic.truestudio.as.symbols.defined"/>
-								<option id="com.atollic.truestudio.as.general.incpath.1999557443" name="Include path" superClass="com.atollic.truestudio.as.general.incpath" valueType="includePath"/>
+								<option id="com.atollic.truestudio.as.general.incpath.1999557443" name="Include path" superClass="com.atollic.truestudio.as.general.incpath"/>
 								<inputType id="com.atollic.truestudio.as.input.983142988" name="Input" superClass="com.atollic.truestudio.as.input"/>
 							</tool>
 							<tool id="com.atollic.truestudio.exe.debug.toolchain.gcc.1238860197" name="C Compiler" superClass="com.atollic.truestudio.exe.debug.toolchain.gcc">
@@ -149,6 +149,25 @@
 							<tool id="com.atollic.truestudio.exe.debug.toolchain.ldcc.1210580137" name="C++ Linker" superClass="com.atollic.truestudio.exe.debug.toolchain.ldcc.1896632458"/>
 							<tool id="com.atollic.truestudio.ar.base.676090613" name="Archiver" superClass="com.atollic.truestudio.ar.base.1641915898"/>
 							<tool id="com.atollic.truestudio.exe.debug.toolchain.secoutput.1439213652" name="Other" superClass="com.atollic.truestudio.exe.debug.toolchain.secoutput.2070959571"/>
+						</toolChain>
+					</folderInfo>
+					<folderInfo id="com.atollic.truestudio.exe.debug.2147054002.1552210749" name="/" resourcePath="MiniWin/user">
+						<toolChain id="com.atollic.truestudio.exe.debug.toolchain.1210447526" name="Atollic ARM Tools" superClass="com.atollic.truestudio.exe.debug.toolchain" unusedChildren="">
+							<option id="com.atollic.truestudio.general.runtimelib.1765791251.1041019119" name="Runtime Library" superClass="com.atollic.truestudio.general.runtimelib.1765791251"/>
+							<option id="com.atollic.truestudio.toolchain_options.mcu.1667298638.1181641147" name="Microcontroller" superClass="com.atollic.truestudio.toolchain_options.mcu.1667298638"/>
+							<option id="com.atollic.truestudio.toolchain_options.vendor.1316884526.1150887769" name="Vendor name" superClass="com.atollic.truestudio.toolchain_options.vendor.1316884526"/>
+							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="com.atollic.truestudio.exe.debug.toolchain.platform" isAbstract="false" name="Debug platform" osList="all" superClass="com.atollic.truestudio.exe.debug.toolchain.platform"/>
+							<tool id="com.atollic.truestudio.exe.debug.toolchain.as.607308791" name="Assembler" superClass="com.atollic.truestudio.exe.debug.toolchain.as.1594145477">
+								<inputType id="com.atollic.truestudio.as.input.575731383" name="Input" superClass="com.atollic.truestudio.as.input"/>
+							</tool>
+							<tool id="com.atollic.truestudio.exe.debug.toolchain.gcc.72466402" name="C Compiler" superClass="com.atollic.truestudio.exe.debug.toolchain.gcc.1238860197">
+								<inputType id="com.atollic.truestudio.gcc.input.1164905091" superClass="com.atollic.truestudio.gcc.input"/>
+							</tool>
+							<tool id="com.atollic.truestudio.exe.debug.toolchain.ld.1017340163" name="C Linker" superClass="com.atollic.truestudio.exe.debug.toolchain.ld.69849188"/>
+							<tool id="com.atollic.truestudio.exe.debug.toolchain.gpp.1430023086" name="C++ Compiler" superClass="com.atollic.truestudio.exe.debug.toolchain.gpp.174572582"/>
+							<tool id="com.atollic.truestudio.exe.debug.toolchain.ldcc.1893825473" name="C++ Linker" superClass="com.atollic.truestudio.exe.debug.toolchain.ldcc.1896632458"/>
+							<tool id="com.atollic.truestudio.ar.base.1086570684" name="Archiver" superClass="com.atollic.truestudio.ar.base.1641915898"/>
+							<tool id="com.atollic.truestudio.exe.debug.toolchain.secoutput.2050536043" name="Other" superClass="com.atollic.truestudio.exe.debug.toolchain.secoutput.2070959571"/>
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
