@@ -1942,11 +1942,9 @@ static void paint_window_frame_and_client_with_z_order(uint8_t z_order)
 				/* it is so paint it */
 				do_paint_window_frame(mw_all_windows[window_id].window_handle, MW_WINDOW_FRAME_COMPONENT_ALL);
 				do_paint_window_client(mw_all_windows[window_id].window_handle);
-			  	if (window_id > MW_ROOT_WINDOW_ID)
-			  	{
-			  		/* paint all the controls; these are always on top of the client area */
-			  		paint_all_controls_in_window(mw_all_windows[window_id].window_handle);
-			  	}
+
+				/* paint all the controls; these are always on top of the client area */
+			  	paint_all_controls_in_window(mw_all_windows[window_id].window_handle);
 				break;
 			}
 		}
@@ -3101,8 +3099,8 @@ static void process_touch_message(mw_message_id_t touch_message_id, int16_t touc
 			return;
 		}
 
-		/* check if the window the touch was in does not have focus */
-		if (check_and_process_touch_on_window_without_focus(window_to_receive_message_id))
+		/* check if the window the touch was in does not have focus and give it focus, unless it's the root window */
+		if (window_to_receive_message_id != MW_ROOT_WINDOW_ID && check_and_process_touch_on_window_without_focus(window_to_receive_message_id))
 		{
 			touch_message_target.touch_down_recipient_handle = MW_INVALID_HANDLE;
 			return;
@@ -3390,6 +3388,13 @@ static bool check_and_process_touch_on_root_window(uint8_t window_id, uint16_t t
 		/* only send if there's not a modal window showing */
 		if (!mw_is_any_window_modal())
 		{
+
+			/* check if touch occurred on a root window control and if it did don't handle it here */
+			if (find_control_point_is_in(mw_all_windows[MW_ROOT_WINDOW_ID].window_handle, touch_x, touch_y) != MW_INVALID_HANDLE)
+			{
+				return false;
+			}
+
 			/* touch on root window so send it straight away */
 			mw_post_message(touch_message,
 					MW_UNUSED_MESSAGE_PARAMETER,
@@ -4855,10 +4860,10 @@ mw_handle_t mw_add_control(mw_util_rect_t *rect,
 		return MW_INVALID_HANDLE;
 	}
 
-	/* cannot add a control to an unused window or the root window so filter these out */
-	if (!(mw_all_windows[parent_window_id].window_flags & MW_WINDOW_FLAG_IS_USED) || parent_window_id == MW_ROOT_WINDOW_ID)
+	/* cannot add a control to an unused window */
+	if (!(mw_all_windows[parent_window_id].window_flags & MW_WINDOW_FLAG_IS_USED))
 	{
-		MW_ASSERT(false, "Can't add control to unused or root window");
+		MW_ASSERT(false, "Can't add control to unused window");
 		return MW_INVALID_HANDLE;
 	}
 
@@ -5438,21 +5443,17 @@ bool mw_process_message(void)
 			case MW_WINDOW_CLIENT_PAINT_MESSAGE:
 				/* paint a window's client and contained controls */
 				do_paint_window_client(message.recipient_handle);
-			  	if (get_window_id_for_handle(message.recipient_handle) > MW_ROOT_WINDOW_ID)
-			  	{
-			  		/* paint all the controls; these are always on top of the client area */
-			  		paint_all_controls_in_window(message.recipient_handle);
-			  	}
+
+				/* paint all the controls; these are always on top of the client area */
+			  	paint_all_controls_in_window(message.recipient_handle);
 				break;
 
 			case MW_WINDOW_CLIENT_PAINT_RECT_MESSAGE:
 				/* paint a window's client and contained controls */
 				do_paint_window_client_rect(message.recipient_handle, (mw_util_rect_t *)message.message_pointer);
-			  	if (get_window_id_for_handle(message.recipient_handle) > MW_ROOT_WINDOW_ID)
-			  	{
-			  		/* paint all the controls; these are always on top of the client area */
-			  		paint_all_controls_in_window_rect(message.recipient_handle, (mw_util_rect_t *)message.message_pointer);
-			  	}
+
+				/* paint all the controls; these are always on top of the client area */
+		  		paint_all_controls_in_window_rect(message.recipient_handle, (mw_util_rect_t *)message.message_pointer);
 				break;
 
 			case MW_CONTROL_PAINT_MESSAGE:

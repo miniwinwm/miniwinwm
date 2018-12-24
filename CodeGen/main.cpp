@@ -20,7 +20,7 @@ int main(int argc, char **argv)
 	// check command line args
 	if (argc != 2)
 	{
-		cout << "Useage: " << argv[0] << " <config file> \n";
+		cout << "Usage: " << argv[0] << " <config file> \n";
 		exit(1);
 	}
 	std::ifstream json_file(argv[1]);
