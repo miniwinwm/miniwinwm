@@ -43,10 +43,10 @@ SOFTWARE.
 *** GLOBAL VARIABLES ***
 ***********************/
 
-/* window */
+/* windows */
 mw_handle_t window_simple_handle;
 
-/* control */
+/* controls */
 mw_handle_t button_handle;
 mw_handle_t label_handle;
 

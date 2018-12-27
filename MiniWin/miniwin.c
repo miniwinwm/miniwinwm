@@ -4287,7 +4287,10 @@ void mw_set_window_visible(mw_handle_t window_handle, bool visible)
 		{
 			remove_minimised_window_from_list(window_handle);
 		}
-		rationalize_z_orders();
+		else
+		{
+			rationalize_z_orders();
+		}
 	}
 
 	/* send message to window that visibility has changed */
@@ -4297,9 +4300,6 @@ void mw_set_window_visible(mw_handle_t window_handle, bool visible)
 			visible,
 			MW_UNUSED_MESSAGE_PARAMETER,
 			MW_WINDOW_MESSAGE);
-
-	/* update focus */
-	set_focus();
 }
 
 void mw_set_window_minimised(mw_handle_t window_handle, bool minimised)

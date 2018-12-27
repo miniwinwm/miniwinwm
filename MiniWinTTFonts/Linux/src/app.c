@@ -106,4 +106,3 @@ void app_init(void)
 void app_main_loop_process(void)
 {
 }
-

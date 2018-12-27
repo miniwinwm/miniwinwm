@@ -140,8 +140,12 @@ static long __stdcall WindowProc(HWND window, unsigned int msg, WPARAM wp, LPARA
 		mouse_down = false;
 		break;
 
-        default:
-            return DefWindowProc(window, msg, wp, lp) ;
+	case WM_SETFOCUS:
+		mw_paint_all();
+		break;
+
+	default:
+		return DefWindowProc(window, msg, wp, lp);
     }
 
     return 0;
