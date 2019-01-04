@@ -2,7 +2,7 @@
 
 MIT License
 
-Copyright (c) John Blaiklock 2018 miniwin Embedded Window Manager
+Copyright (c) John Blaiklock 2019 miniwin Embedded Window Manager
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -41,9 +41,6 @@ SOFTWARE.
 *** CONSTANTS ***
 ****************/
 
-#ifndef M_PI
-#define M_PI				3.1415926535f
-#endif
 #define	DEGREES_IN_RAD		(180.0f / M_PI)
 
 /************
@@ -158,7 +155,7 @@ static void pixel(const mw_gl_draw_info_t *draw_info, int16_t client_x, int16_t 
 	display_x = client_x + draw_info->origin_x;
 	display_y = client_y + draw_info->origin_y;
 
-	if (display_x >= 0 && display_x < MW_HAL_LCD_WIDTH && display_y >= 0 && display_y < MW_HAL_LCD_HEIGHT)
+	if (display_x >= 0 && display_x < MW_ROOT_WIDTH && display_y >= 0 && display_y < MW_ROOT_HEIGHT)
 	{
 		mw_hal_lcd_pixel(display_x, display_y, colour);
 	}

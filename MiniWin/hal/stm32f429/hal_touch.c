@@ -2,7 +2,7 @@
 
 MIT License
 
-Copyright (c) John Blaiklock 2018 miniwin Embedded Window Manager
+Copyright (c) John Blaiklock 2019 miniwin Embedded Window Manager
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -23,6 +23,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 */
+
+#ifdef STM32F429xx
 
 /***************
 *** INCLUDES ***
@@ -68,6 +70,18 @@ SOFTWARE.
 void mw_hal_touch_init(void)
 {
 	BSP_TS_Init(BSP_LCD_GetXSize(), BSP_LCD_GetYSize());
+	BSP_PB_Init(BUTTON_KEY, BUTTON_MODE_GPIO);
+}
+
+bool mw_hal_touch_is_calibration_required(void)
+{
+	return true;
+}
+
+bool mw_hal_touch_is_recalibration_required(void)
+{
+	/* if board button pressed clear settings which forces a screen recalibration */
+	return BSP_PB_GetState(BUTTON_KEY);
 }
 
 mw_hal_touch_state_t mw_hal_touch_get_state()
@@ -105,3 +119,5 @@ bool mw_hal_touch_get_point(uint16_t* x, uint16_t* y)
 
 	return true;
 }
+
+#endif

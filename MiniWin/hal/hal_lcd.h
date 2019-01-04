@@ -2,7 +2,7 @@
 
 MIT License
 
-Copyright (c) John Blaiklock 2018 miniwin Embedded Window Manager
+Copyright (c) John Blaiklock 2019 miniwin Embedded Window Manager
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -41,8 +41,8 @@ SOFTWARE.
 *** CONSTANTS ***
 ****************/
 
-#define MW_HAL_LCD_WIDTH			240     /**< LCD screen width in pixels */
-#define MW_HAL_LCD_HEIGHT			320     /**< LCD screen height in pixels */
+#define MW_HAL_LCD_WIDTH			mw_hal_lcd_get_screen_width()     /**< LCD screen width in pixels */
+#define MW_HAL_LCD_HEIGHT			mw_hal_lcd_get_screen_height()     /**< LCD screen height in pixels */
 
 /**
  * Pre-defined named colours, colour bit layout is rrrr rggg gggb bbbb
@@ -91,6 +91,20 @@ typedef uint32_t mw_hal_lcd_colour_t;      		/**< Integer type that can hold the
  * Initialize all LCD hardware
  */
 void mw_hal_lcd_init(void);
+
+/**
+ * Get the screen width in pixels
+ *
+ * @return The screen width in pixels
+ */
+uint16_t mw_hal_lcd_get_screen_width(void);
+
+/**
+ * Get the screen height in pixels
+ *
+ * @return The screen height in pixels
+ */
+uint16_t mw_hal_lcd_get_screen_height(void);
 
 /**
  * Plot a single pixel. Points off screen are not clipped.

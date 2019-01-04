@@ -2,7 +2,7 @@
 
 MIT License
 
-Copyright (c) John Blaiklock 2018 miniwin Embedded Window Manager
+Copyright (c) John Blaiklock 2019 miniwin Embedded Window Manager
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -23,6 +23,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 */
+
+#ifdef STM32F407xx
 
 /***************
 *** INCLUDES ***
@@ -195,6 +197,16 @@ void mw_hal_lcd_init(void)
     mw_hal_lcd_filled_rectangle(0, 0, MW_HAL_LCD_WIDTH, MW_HAL_LCD_HEIGHT, MW_HAL_LCD_WHITE);
 }
 
+uint16_t mw_hal_lcd_get_screen_width(void)
+{
+	return 240;
+}
+
+uint16_t mw_hal_lcd_get_screen_height(void)
+{
+	return 320;
+}
+
 void mw_hal_lcd_pixel(int16_t x, int16_t y, mw_hal_lcd_colour_t colour)
 {
 	write_command(0x4e, x);
@@ -319,3 +331,5 @@ void mw_hal_lcd_monochrome_bitmap_clip(int16_t image_start_x,
 		}
 	}
 }
+
+#endif

@@ -2,7 +2,7 @@
 
 MIT License
 
-Copyright (c) John Blaiklock 2018 miniwin Embedded Window Manager
+Copyright (c) John Blaiklock 2019 miniwin Embedded Window Manager
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -23,6 +23,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 */
+
+#ifdef __linux
 
 /***************
 *** INCLUDES ***
@@ -74,6 +76,18 @@ void mw_hal_lcd_init(void)
 {
 	/* allow time for connection to XServer */
 	sleep(1);
+}
+
+uint16_t mw_hal_lcd_get_screen_width(void)
+{
+	/* change this value to simulate a different screen width */
+	return 240;
+}
+
+uint16_t mw_hal_lcd_get_screen_height(void)
+{
+	/* change this value to simulate a different screen height */
+	return 320;
 }
 
 void mw_hal_lcd_pixel(int16_t x, int16_t y, mw_hal_lcd_colour_t colour)
@@ -190,3 +204,5 @@ void mw_hal_lcd_monochrome_bitmap_clip(int16_t image_start_x,
 		}
 	}
 }
+
+#endif

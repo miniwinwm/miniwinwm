@@ -2,7 +2,7 @@
 
 MIT License
 
-Copyright (c) John Blaiklock 2018 miniwin Embedded Window Manager
+Copyright (c) John Blaiklock 2019 miniwin Embedded Window Manager
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -23,6 +23,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 */
+
+#ifdef __linux
 
 /***************
 *** INCLUDES ***
@@ -72,6 +74,16 @@ void mw_hal_touch_init(void)
 {
 }
 
+bool mw_hal_touch_is_calibration_required(void)
+{
+	return true;
+}
+
+bool mw_hal_touch_is_recalibration_required(void)
+{
+	return false;
+}
+
 bool mw_hal_touch_get_point(uint16_t* x, uint16_t* y)
 {
     int win_x;
@@ -117,3 +129,5 @@ mw_hal_touch_state_t mw_hal_touch_get_state(void)
 
 	return MW_HAL_TOUCH_STATE_UP;
 }
+
+#endif

@@ -2,7 +2,7 @@
 
 MIT License
 
-Copyright (c) John Blaiklock 2018 miniwin Embedded Window Manager
+Copyright (c) John Blaiklock 2019 miniwin Embedded Window Manager
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -38,6 +38,8 @@ SOFTWARE.
 ****************/
 
 const mw_util_rect_t text_display_rect = {51, 5, 125, 14};
+const mw_util_rect_t text_display_rect_large = {121, 5, 205, 24};
+#define TITLE_FONT_FIXED_CHARACTER_PITCH		10
 
 /************
 *** TYPES ***
@@ -53,13 +55,16 @@ typedef struct
 	mw_handle_t button_cancel_handle;				/**< Control handle of cancel button */
 	mw_handle_t owner_window_handle;				 /**< Window handle to send response message to */
 	mw_handle_t text_entry_dialog_window_handle;	/**< Handle of text entry dialog window */
+	mw_util_rect_t text_rect;						/**< Rect of text entry box */
 	mw_util_rect_t cursor_rect;						/**< Rect of cursor in window coordinates */
 	mw_ui_button_data_t button_ok_data;				/**< Instance data of ok button */
 	mw_ui_button_data_t button_cancel_data;			/**< Instance data of cancel button */
 	mw_ui_keyboard_data_t mw_ui_keyboard_data;	 	/**< Keyboard control instance data */
 	char text_buffer[MW_DIALOG_MAX_TEXT_LENGTH + 1];	/**< MW_DIALOG_MAX_TEXT_LENGTH digits, terminating null */
 	bool draw_cursor;								/**< If to draw cursor this timer tick or not */
+	bool large_size;								/**< True for large size false for standard size */
 	uint8_t cursor_position;						/**< Current position of cursor in characters */
+	uint8_t character_pitch;						/**< The x offset between each character */
 } mw_dialog_text_entry_data_t;
 
 /***********************
@@ -93,12 +98,11 @@ static void mw_dialog_text_entry_message_function(const mw_message_t *message);
 /**
  * Gets the cursor x coordinate from its position
  *
- * @return The x coordinate
+ * @return The x coordinate of cursor
  */
 static uint16_t get_cursor_x_coordinate(void)
 {
-	mw_gl_set_font(MW_GL_FONT_9);
-	return (53 + mw_dialog_text_entry_data.cursor_position * (mw_gl_get_font_width() + 1));
+	return mw_dialog_text_entry_data.text_rect.x + 2 + mw_dialog_text_entry_data.cursor_position * mw_dialog_text_entry_data.character_pitch;
 }
 
 /**
@@ -110,6 +114,9 @@ static uint16_t get_cursor_x_coordinate(void)
  */
 static void mw_dialog_text_entry_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_t *draw_info)
 {
+	char c[2] = {0};
+	uint8_t i;
+
 	mw_gl_set_fill(MW_GL_FILL);
 	mw_gl_set_solid_fill_colour(MW_HAL_LCD_WHITE);
 	mw_gl_set_border(MW_GL_BORDER_OFF);
@@ -126,36 +133,54 @@ static void mw_dialog_text_entry_paint_function(mw_handle_t window_handle, const
 	mw_gl_set_solid_fill_colour(MW_CONTROL_UP_COLOUR);
 
 	/* draw the box the text is displayed in */
-	mw_gl_rectangle(draw_info, 51, 5, 125, 14);
+	mw_gl_rectangle(draw_info, mw_dialog_text_entry_data.text_rect.x,
+			mw_dialog_text_entry_data.text_rect.y,
+			mw_dialog_text_entry_data.text_rect.width,
+			mw_dialog_text_entry_data.text_rect.height);
 
 	/* draw 3d effect */
 	mw_gl_set_fg_colour(MW_HAL_LCD_WHITE);
 	mw_gl_vline(draw_info,
-			52,
-			6,
-			17);
+			mw_dialog_text_entry_data.text_rect.x + 1,
+			mw_dialog_text_entry_data.text_rect.y + 1,
+			mw_dialog_text_entry_data.text_rect.y + mw_dialog_text_entry_data.text_rect.height - 2);
 	mw_gl_hline(draw_info,
-			52,
-			174,
-			4);
+			mw_dialog_text_entry_data.text_rect.x + 1,
+			mw_dialog_text_entry_data.text_rect.x + mw_dialog_text_entry_data.text_rect.width - 2,
+			mw_dialog_text_entry_data.text_rect.y - 1);
 	mw_gl_set_fg_colour(MW_HAL_LCD_GREY7);
 	mw_gl_vline(draw_info,
-			174,
-			6,
-			17);
+			mw_dialog_text_entry_data.text_rect.x + mw_dialog_text_entry_data.text_rect.width - 2,
+			mw_dialog_text_entry_data.text_rect.y + 1,
+			mw_dialog_text_entry_data.text_rect.y + mw_dialog_text_entry_data.text_rect.height - 2);
 	mw_gl_hline(draw_info,
-			52,
-			174,
-			17);
+			mw_dialog_text_entry_data.text_rect.x + 1,
+			mw_dialog_text_entry_data.text_rect.x + mw_dialog_text_entry_data.text_rect.width - 2,
+			mw_dialog_text_entry_data.text_rect.y + mw_dialog_text_entry_data.text_rect.height - 2);
 
-	/* draw the text */
-	mw_gl_set_font(MW_GL_FONT_9);
 	mw_gl_set_text_rotation(MW_GL_TEXT_ROTATION_0);
 	mw_gl_set_bg_transparency(MW_GL_BG_TRANSPARENT);
 	mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 
-	/* draw text */
-	mw_gl_string(draw_info, 54, 8, mw_dialog_text_entry_data.text_buffer);
+	if (mw_dialog_text_entry_data.large_size)
+	{
+		mw_gl_set_font(MW_GL_TITLE_FONT);
+
+		/* draw text */
+		for (i = 0; i < strlen(mw_dialog_text_entry_data.text_buffer); i++)
+		{
+			c[0] = mw_dialog_text_entry_data.text_buffer[i];
+			mw_gl_string(draw_info, text_display_rect_large.x + 4 + i * TITLE_FONT_FIXED_CHARACTER_PITCH, 10, c);
+		}
+	}
+	else
+	{
+		/* draw the text */
+		mw_gl_set_font(MW_GL_FONT_9);
+
+		/* draw text */
+		mw_gl_string(draw_info, text_display_rect.x + 3, 8, mw_dialog_text_entry_data.text_buffer);
+	}
 
 	/* draw cursor */
 	if (mw_dialog_text_entry_data.draw_cursor)
@@ -184,11 +209,25 @@ static void mw_dialog_text_entry_message_function(const mw_message_t *message)
 		mw_set_timer(mw_tick_counter + MW_CURSOR_PERIOD_TICKS, message->recipient_handle,	MW_WINDOW_MESSAGE);
 		mw_dialog_text_entry_data.cursor_position = strlen(mw_dialog_text_entry_data.text_buffer);
 
+		/* set dialog size specific values */
+		if (mw_dialog_text_entry_data.large_size)
+		{
+			mw_dialog_text_entry_data.cursor_rect.height = 22;
+			mw_dialog_text_entry_data.character_pitch = TITLE_FONT_FIXED_CHARACTER_PITCH;
+			memcpy(&mw_dialog_text_entry_data.text_rect, &text_display_rect_large, sizeof(text_display_rect_large));
+		}
+		else
+		{
+			mw_dialog_text_entry_data.cursor_rect.height = 13;
+			mw_gl_set_font(MW_GL_FONT_9);
+			mw_dialog_text_entry_data.character_pitch = mw_gl_get_font_width() + 1;
+			memcpy(&mw_dialog_text_entry_data.text_rect, &text_display_rect, sizeof(text_display_rect));
+		}
+
 		/* set cursor rect values */
 		mw_dialog_text_entry_data.cursor_rect.x = get_cursor_x_coordinate();
 		mw_dialog_text_entry_data.cursor_rect.y = 6;
 		mw_dialog_text_entry_data.cursor_rect.width = 1;
-		mw_dialog_text_entry_data.cursor_rect.height = 11;
 		break;
 
 	case MW_TIMER_MESSAGE:
@@ -198,21 +237,16 @@ static void mw_dialog_text_entry_message_function(const mw_message_t *message)
 		break;
 
 	case MW_TOUCH_DOWN_MESSAGE:
-		/* handle a touch down event within this control */
-		if (mw_get_control_flags(message->recipient_handle) & MW_CONTROL_FLAG_IS_ENABLED)
+		mw_dialog_text_entry_data.cursor_position = ((message->message_data >> 16) - mw_dialog_text_entry_data.text_rect.x) /
+				mw_dialog_text_entry_data.character_pitch;
+
+		if (mw_dialog_text_entry_data.cursor_position > strlen(mw_dialog_text_entry_data.text_buffer))
 		{
-			mw_gl_set_font(MW_GL_FONT_9);		/* needed to get font width */
-			mw_dialog_text_entry_data.cursor_position = ((message->message_data >> 16) - 51) /
-					(mw_gl_get_font_width() + 1);
-
-			if (mw_dialog_text_entry_data.cursor_position > strlen(mw_dialog_text_entry_data.text_buffer))
-			{
-				mw_dialog_text_entry_data.cursor_position = strlen(mw_dialog_text_entry_data.text_buffer);
-			}
-
-			mw_dialog_text_entry_data.cursor_rect.x = get_cursor_x_coordinate();
-			mw_paint_window_client_rect(message->recipient_handle, &text_display_rect);
+			mw_dialog_text_entry_data.cursor_position = strlen(mw_dialog_text_entry_data.text_buffer);
 		}
+
+		mw_dialog_text_entry_data.cursor_rect.x = get_cursor_x_coordinate();
+		mw_paint_window_client_rect(message->recipient_handle, &mw_dialog_text_entry_data.text_rect);
 		break;
 
 	case MW_KEY_PRESSED_MESSAGE:
@@ -268,9 +302,9 @@ static void mw_dialog_text_entry_message_function(const mw_message_t *message)
 			mw_set_control_enabled(mw_dialog_text_entry_data.button_ok_handle, strlen(mw_dialog_text_entry_data.text_buffer) > 0);
 			mw_paint_control(mw_dialog_text_entry_data.button_ok_handle);
 
-			/* repaint cursor */
+			/* repaint text box */
 			mw_dialog_text_entry_data.cursor_rect.x = get_cursor_x_coordinate();
-			mw_paint_window_client_rect(message->recipient_handle, &text_display_rect);
+			mw_paint_window_client_rect(message->recipient_handle, &mw_dialog_text_entry_data.text_rect);
 		}
 		break;
 
@@ -316,6 +350,7 @@ mw_handle_t mw_create_window_dialog_text_entry(uint16_t x,
 		uint16_t y,
 		char *title,
 		char *initial_text,
+		bool large_size,
 		mw_handle_t owner_window_handle)
 {
 	mw_util_rect_t rect;
@@ -327,8 +362,18 @@ mw_handle_t mw_create_window_dialog_text_entry(uint16_t x,
 		return MW_INVALID_HANDLE;
 	}
 
-	rect.width = 232;
-	rect.height = 130;
+	if (large_size)
+	{
+		rect.width = 452;
+		rect.height = 217;
+	}
+	else
+	{
+		rect.width = 232;
+		rect.height = 130;
+	}
+	rect.x = x;
+	rect.y = y;
 
 	/* check start position */
 	if (x + rect.width > MW_ROOT_WIDTH)
@@ -353,8 +398,6 @@ mw_handle_t mw_create_window_dialog_text_entry(uint16_t x,
 	}
 
 	mw_dialog_text_entry_data.owner_window_handle = owner_window_handle;
-	rect.x = x;
-	rect.y = y;
 
 	mw_dialog_text_entry_data.text_entry_dialog_window_handle = mw_add_window(&rect,
 			title,
@@ -380,25 +423,48 @@ mw_handle_t mw_create_window_dialog_text_entry(uint16_t x,
 			MW_UI_BUTTON_LABEL_MAX_CHARS, "Cancel");
 
 	/* create controls */
-	mw_dialog_text_entry_data.keyboard_handle = mw_ui_keyboard_add_new(5,
-			24,
-			mw_dialog_text_entry_data.text_entry_dialog_window_handle,
-			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
-			&mw_dialog_text_entry_data.mw_ui_keyboard_data);
+	if (large_size)
+	{
+		mw_dialog_text_entry_data.keyboard_handle = mw_ui_keyboard_add_new(5,
+				34,
+				mw_dialog_text_entry_data.text_entry_dialog_window_handle,
+				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_LARGE_SIZE,
+				&mw_dialog_text_entry_data.mw_ui_keyboard_data);
 
-	mw_dialog_text_entry_data.button_ok_handle = mw_ui_button_add_new(25,
-			90,
-			mw_dialog_text_entry_data.text_entry_dialog_window_handle,
-			MW_CONTROL_FLAG_IS_VISIBLE,
-			&mw_dialog_text_entry_data.button_ok_data);
+		mw_dialog_text_entry_data.button_ok_handle = mw_ui_button_add_new(50,
+				161,
+				mw_dialog_text_entry_data.text_entry_dialog_window_handle,
+				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_LARGE_SIZE,
+				&mw_dialog_text_entry_data.button_ok_data);
 
-	mw_dialog_text_entry_data.button_cancel_handle = mw_ui_button_add_new(156,
-			90,
-			mw_dialog_text_entry_data.text_entry_dialog_window_handle,
-			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
-			&mw_dialog_text_entry_data.button_cancel_data);
+		mw_dialog_text_entry_data.button_cancel_handle = mw_ui_button_add_new(300,
+				161,
+				mw_dialog_text_entry_data.text_entry_dialog_window_handle,
+				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_LARGE_SIZE,
+				&mw_dialog_text_entry_data.button_cancel_data);
+	}
+	else
+	{
+		mw_dialog_text_entry_data.keyboard_handle = mw_ui_keyboard_add_new(5,
+				24,
+				mw_dialog_text_entry_data.text_entry_dialog_window_handle,
+				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
+				&mw_dialog_text_entry_data.mw_ui_keyboard_data);
 
-	/* check if keyboard could be created */
+		mw_dialog_text_entry_data.button_ok_handle = mw_ui_button_add_new(25,
+				90,
+				mw_dialog_text_entry_data.text_entry_dialog_window_handle,
+				MW_CONTROL_FLAG_IS_VISIBLE,
+				&mw_dialog_text_entry_data.button_ok_data);
+
+		mw_dialog_text_entry_data.button_cancel_handle = mw_ui_button_add_new(156,
+				90,
+				mw_dialog_text_entry_data.text_entry_dialog_window_handle,
+				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
+				&mw_dialog_text_entry_data.button_cancel_data);
+	}
+
+	/* check if controls could be created */
 	if (mw_dialog_text_entry_data.keyboard_handle == MW_INVALID_HANDLE ||
 			mw_dialog_text_entry_data.button_ok_handle == MW_INVALID_HANDLE ||
 			mw_dialog_text_entry_data.button_cancel_handle == MW_INVALID_HANDLE)
@@ -411,6 +477,9 @@ mw_handle_t mw_create_window_dialog_text_entry(uint16_t x,
 
 	/* set initial text */
 	mw_util_safe_strcpy(mw_dialog_text_entry_data.text_buffer, MW_DIALOG_MAX_TEXT_LENGTH + 1, initial_text);
+
+	/* set large size flag */
+	mw_dialog_text_entry_data.large_size = large_size;
 
 	/* owner window needs its title bar redrawing */
 	mw_paint_window_frame(owner_window_handle, MW_WINDOW_FRAME_COMPONENT_TITLE_BAR);

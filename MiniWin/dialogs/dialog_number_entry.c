@@ -2,7 +2,7 @@
 
 MIT License
 
-Copyright (c) John Blaiklock 2018 miniwin Embedded Window Manager
+Copyright (c) John Blaiklock 2019 miniwin Embedded Window Manager
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -40,7 +40,7 @@ SOFTWARE.
 ****************/
 
 const mw_util_rect_t number_display_rect = {24, 5, 65, 14};
-const mw_util_rect_t number_display_large_rect = {48, 3, 130, 18};
+const mw_util_rect_t number_display_rect_large = {48, 3, 130, 19};
 
 /************
 *** TYPES ***
@@ -57,6 +57,7 @@ typedef struct
 	mw_handle_t owner_window_handle;				/**< Window handle to send response message to */
 	mw_handle_t number_entry_dialog_window_handle;	/**< Handle of number entry dialog window */
 	mw_util_rect_t cursor_rect;						/**< Rect of cursor in window coordinates */
+	mw_util_rect_t number_rect;						/**< Rect of number entry box */
 	mw_ui_keypad_data_t mw_ui_keypad_data;			/**< Keypad control instance data */
 	mw_ui_button_data_t button_ok_data;				/**< Instance data of ok button */
 	mw_ui_button_data_t button_cancel_data;			/**< Instance data of cancel button */
@@ -102,17 +103,14 @@ static void mw_dialog_number_entry_message_function(const mw_message_t *message)
 static uint16_t get_cursor_x_coordinate(void)
 {
 	uint16_t pixel_length;
-	uint16_t offset;
 
 	if (mw_dialog_number_entry_data.large_size)
 	{
 		mw_gl_set_font(MW_GL_TITLE_FONT);
-		offset = 58;
 	}
 	else
 	{
 		mw_gl_set_font(MW_GL_FONT_9);
-		offset = 27;
 	}
 
 	pixel_length = mw_gl_get_string_width_pixels(mw_dialog_number_entry_data.number_buffer);
@@ -121,7 +119,7 @@ static uint16_t get_cursor_x_coordinate(void)
 		pixel_length += mw_gl_get_string_width_pixels("-");
 	}
 
-	return pixel_length + offset;
+	return pixel_length + mw_dialog_number_entry_data.number_rect.x + 3;
 }
 
 /**
@@ -150,87 +148,62 @@ static void mw_dialog_number_entry_paint_function(mw_handle_t window_handle, con
 	mw_gl_set_bg_transparency(MW_GL_BG_TRANSPARENT);
 	mw_gl_set_text_rotation(MW_GL_TEXT_ROTATION_0);
 
+	/* draw the box the number is displayed in */
+	mw_gl_rectangle(draw_info, mw_dialog_number_entry_data.number_rect.x,
+			mw_dialog_number_entry_data.number_rect.y,
+			mw_dialog_number_entry_data.number_rect.width,
+			mw_dialog_number_entry_data.number_rect.height);
+
+	/* draw 3d effect */
+	mw_gl_set_fg_colour(MW_HAL_LCD_WHITE);
+	mw_gl_vline(draw_info,
+			mw_dialog_number_entry_data.number_rect.x + 1,
+			mw_dialog_number_entry_data.number_rect.y + 1,
+			mw_dialog_number_entry_data.number_rect.y + mw_dialog_number_entry_data.number_rect.height - 2);
+	mw_gl_hline(draw_info,
+			mw_dialog_number_entry_data.number_rect.x + 1,
+			mw_dialog_number_entry_data.number_rect.x + mw_dialog_number_entry_data.number_rect.width - 2,
+			mw_dialog_number_entry_data.number_rect.y - 1);
+	mw_gl_set_fg_colour(MW_HAL_LCD_GREY7);
+	mw_gl_vline(draw_info,
+			mw_dialog_number_entry_data.number_rect.x + mw_dialog_number_entry_data.number_rect.width - 2,
+			mw_dialog_number_entry_data.number_rect.y + 1,
+			mw_dialog_number_entry_data.number_rect.y + mw_dialog_number_entry_data.number_rect.height - 2);
+	mw_gl_hline(draw_info,
+			mw_dialog_number_entry_data.number_rect.x + 1,
+			mw_dialog_number_entry_data.number_rect.x + mw_dialog_number_entry_data.number_rect.width - 2,
+			mw_dialog_number_entry_data.number_rect.y + mw_dialog_number_entry_data.number_rect.height - 2);
+
+	/* draw the number */
+	mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
+
 	if (mw_dialog_number_entry_data.large_size)
 	{
-		/* draw the box the number is displayed in */
-		mw_gl_rectangle(draw_info, 54, 3, 120, 20);
-
-		/* draw 3d effect */
-		mw_gl_set_fg_colour(MW_HAL_LCD_WHITE);
-		mw_gl_vline(draw_info,
-				55,
-				4,
-				21);
-		mw_gl_hline(draw_info,
-				55,
-				172,
-				4);
-		mw_gl_set_fg_colour(MW_HAL_LCD_GREY7);
-		mw_gl_vline(draw_info,
-				172,
-				4,
-				21);
-		mw_gl_hline(draw_info,
-				55,
-				172,
-				21);
-
-		/* draw the number */
 		mw_gl_set_font(MW_GL_TITLE_FONT);
-		mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
-
-		if (mw_dialog_number_entry_data.is_negative && strcmp(mw_dialog_number_entry_data.number_buffer, "0") !=0)
-		{
-			/* draw negative sign and number */
-			mw_gl_character(draw_info, 58, 6, '-');
-			mw_gl_string(draw_info, 58 + mw_gl_get_string_width_pixels("-"), 6, mw_dialog_number_entry_data.number_buffer);
-		}
-		else
-		{
-			/* draw number only */
-			mw_gl_string(draw_info, 58, 6, mw_dialog_number_entry_data.number_buffer);
-		}
 	}
 	else
 	{
-		/* draw the box the number is displayed in */
-		mw_gl_rectangle(draw_info, 24, 5, 65, 14);
-
-		/* draw 3d effect */
-		mw_gl_set_fg_colour(MW_HAL_LCD_WHITE);
-		mw_gl_vline(draw_info,
-				25,
-				6,
-				17);
-		mw_gl_hline(draw_info,
-				25,
-				87,
-				6);
-		mw_gl_set_fg_colour(MW_HAL_LCD_GREY7);
-		mw_gl_vline(draw_info,
-				87,
-				6,
-				17);
-		mw_gl_hline(draw_info,
-				25,
-				87,
-				17);
-
-		/* draw the number */
 		mw_gl_set_font(MW_GL_FONT_9);
-		mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
+	}
 
-		if (mw_dialog_number_entry_data.is_negative && strcmp(mw_dialog_number_entry_data.number_buffer, "0") !=0)
-		{
-			/* draw negative sign and number */
-			mw_gl_character(draw_info, 27, 8, '-');
-			mw_gl_string(draw_info, 27 + mw_gl_get_font_width() + 1, 8, mw_dialog_number_entry_data.number_buffer);
-		}
-		else
-		{
-			/* draw number only */
-			mw_gl_string(draw_info, 27, 8, mw_dialog_number_entry_data.number_buffer);
-		}
+	if (mw_dialog_number_entry_data.is_negative && strcmp(mw_dialog_number_entry_data.number_buffer, "0") !=0)
+	{
+		/* draw negative sign and number */
+		mw_gl_character(draw_info,
+				mw_dialog_number_entry_data.number_rect.x + 3,
+				mw_dialog_number_entry_data.number_rect.y + 3,
+				'-');
+		mw_gl_string(draw_info,
+				mw_dialog_number_entry_data.number_rect.x + 3 + mw_gl_get_string_width_pixels("-"),
+				mw_dialog_number_entry_data.number_rect.y + 3, mw_dialog_number_entry_data.number_buffer);
+	}
+	else
+	{
+		/* draw number only */
+		mw_gl_string(draw_info,
+				mw_dialog_number_entry_data.number_rect.x + 3,
+				mw_dialog_number_entry_data.number_rect.y + 3,
+				mw_dialog_number_entry_data.number_buffer);
 	}
 
 	/* draw cursor, already adjusted for standard/large size */
@@ -259,19 +232,23 @@ static void mw_dialog_number_entry_message_function(const mw_message_t *message)
 	case MW_WINDOW_CREATED_MESSAGE:
 		mw_set_timer(mw_tick_counter + MW_CURSOR_PERIOD_TICKS, message->recipient_handle, MW_WINDOW_MESSAGE);
 
-		/* set cursor rect values */
-		mw_dialog_number_entry_data.cursor_rect.x = get_cursor_x_coordinate();
-		mw_dialog_number_entry_data.cursor_rect.width = 1;
+		/* set size specific values */
 		if (mw_dialog_number_entry_data.large_size)
 		{
 			mw_dialog_number_entry_data.cursor_rect.y = 4;
-			mw_dialog_number_entry_data.cursor_rect.height = 16;
+			mw_dialog_number_entry_data.cursor_rect.height = 17;
+			memcpy(&mw_dialog_number_entry_data.number_rect, &number_display_rect_large, sizeof(number_display_rect_large));
 		}
 		else
 		{
 			mw_dialog_number_entry_data.cursor_rect.y = 6;
 			mw_dialog_number_entry_data.cursor_rect.height = 11;
+			memcpy(&mw_dialog_number_entry_data.number_rect, &number_display_rect, sizeof(number_display_rect));
 		}
+
+		/* set cursor rect values */
+		mw_dialog_number_entry_data.cursor_rect.x = get_cursor_x_coordinate();
+		mw_dialog_number_entry_data.cursor_rect.width = 1;
 		break;
 
 	case MW_TIMER_MESSAGE:
@@ -324,14 +301,7 @@ static void mw_dialog_number_entry_message_function(const mw_message_t *message)
 				}
 
 				mw_dialog_number_entry_data.cursor_rect.x = get_cursor_x_coordinate();
-				if (mw_dialog_number_entry_data.large_size)
-				{
-					mw_paint_window_client_rect(message->recipient_handle, &number_display_large_rect);
-				}
-				else
-				{
-					mw_paint_window_client_rect(message->recipient_handle, &number_display_rect);
-				}
+				mw_paint_window_client_rect(message->recipient_handle, &mw_dialog_number_entry_data.number_rect);
 			}
 		}
 		break;
@@ -412,15 +382,14 @@ mw_handle_t mw_create_window_dialog_number_entry(uint16_t x,
 	{
 		rect.width = 230;
 		rect.height = 247;
-		rect.x = x;
-		rect.y = y;	}
+	}
 	else
 	{
 		rect.width = 115;
 		rect.height = 149;
-		rect.x = x;
-		rect.y = y;
 	}
+	rect.x = x;
+	rect.y = y;
 
 	/* check start position */
 	if (x + rect.width > MW_ROOT_WIDTH)
@@ -474,19 +443,19 @@ mw_handle_t mw_create_window_dialog_number_entry(uint16_t x,
 	if (large_size)
 	{
 		mw_dialog_number_entry_data.keypad_handle = mw_ui_keypad_add_new(54,
-				25,
+				26,
 				mw_dialog_number_entry_data.number_entry_dialog_window_handle,
 				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_LARGE_SIZE,
 				&mw_dialog_number_entry_data.mw_ui_keypad_data);
 
 		mw_dialog_number_entry_data.button_ok_handle = mw_ui_button_add_new(10,
-				191,
+				192,
 				mw_dialog_number_entry_data.number_entry_dialog_window_handle,
 				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_LARGE_SIZE,
 				&mw_dialog_number_entry_data.button_ok_data);
 
 		mw_dialog_number_entry_data.button_cancel_handle = mw_ui_button_add_new(118,
-				191,
+				192,
 				mw_dialog_number_entry_data.number_entry_dialog_window_handle,
 				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_LARGE_SIZE,
 				&mw_dialog_number_entry_data.button_cancel_data);

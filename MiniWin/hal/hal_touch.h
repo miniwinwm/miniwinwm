@@ -2,7 +2,7 @@
 
 MIT License
 
-Copyright (c) John Blaiklock 2018 miniwin Embedded Window Manager
+Copyright (c) John Blaiklock 2019 miniwin Embedded Window Manager
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -63,6 +63,22 @@ typedef enum
  * Initialise the touch screen driver
  */
 void mw_hal_touch_init(void);
+
+/**
+ * Check done to discover if a touch calibration is required
+ * by this hardware's touch screen
+ *
+ * @return true if required else false
+ */
+bool mw_hal_touch_is_calibration_required(void);
+
+/**
+ * Check done at startup to discover if a touch recalibration is required.
+ * This will be determined by some board specific hardware method.
+ *
+ * @return true if required else false
+ */
+bool mw_hal_touch_is_recalibration_required(void);
 
 /**
  * Get a touch screen touch up/down state

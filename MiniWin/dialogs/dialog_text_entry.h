@@ -2,7 +2,7 @@
 
 MIT License
 
-Copyright (c) John Blaiklock 2018 miniwin Embedded Window Manager
+Copyright (c) John Blaiklock 2019 miniwin Embedded Window Manager
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -58,6 +58,7 @@ SOFTWARE.
  * @param y top Coordinate of dialog window
  * @param title Pointer to text displayed in the window title bar
  * @param initial_text The initial text to display when the dialog starts
+ * @param large_size If to create the dialog at large size
  * @param owner_window_handle Handle of the window that created this dialog and to which the response will be sent
  * @return Handle of the window used for the dialog which is only valid while the dialog is showing
  * @note There must be space in the window array for one new window and space in the control array
@@ -72,6 +73,7 @@ SOFTWARE.
 		uint16_t y,
 		char *title,
 		char *initial_text,
+		bool large_size,
 		mw_handle_t owner_window_handle);
 
 #ifdef __cplusplus

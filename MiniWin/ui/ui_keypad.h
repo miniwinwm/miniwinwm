@@ -2,7 +2,7 @@
 
 MIT License
 
-Copyright (c) John Blaiklock 2018 miniwin Embedded Window Manager
+Copyright (c) John Blaiklock 2019 miniwin Embedded Window Manager
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -58,6 +58,7 @@ typedef struct
 	bool is_key_pressed;						/**< If a key is currently pressed */
 	uint8_t	key_pressed_row;					/**< The currently pressed key */
 	uint8_t	key_pressed_column;					/**< The currently pressed key */
+	mw_util_rect_t invalid_rect;				/**< Rect used for partial repainting of the control */
 	mw_handle_t timer_handle;					/**< Timer handle for animations and hold down repeat timeout */
 	uint32_t touch_down_time;					/**< Time in ticks a key was first pressed down */
 	bool holding_down;							/**< true when holding down a key */

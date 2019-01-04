@@ -2,7 +2,7 @@
 
 MIT License
 
-Copyright (c) John Blaiklock 2018 miniwin Embedded Window Manager
+Copyright (c) John Blaiklock 2019 miniwin Embedded Window Manager
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -312,6 +312,8 @@ static void list_box_message_function(const mw_message_t *message)
 			/* initialise the control */
 			this_list_box->line_is_selected = false;
 			this_list_box->lines_to_scroll = 0;
+			this_list_box->invalid_rect.x = 0;
+			this_list_box->invalid_rect.width = mw_get_control_rect(message->recipient_handle).width;
 
 			/* send message about whether scrolling is needed */
 			message_data = this_list_box->number_of_items > this_list_box->number_of_lines;
@@ -405,7 +407,7 @@ static void list_box_message_function(const mw_message_t *message)
 				this_list_box->selection,
 				MW_UNUSED_MESSAGE_PARAMETER,
 				MW_WINDOW_MESSAGE);
-		mw_paint_control(message->recipient_handle);
+		mw_paint_control_rect(message->recipient_handle, &this_list_box->invalid_rect);
 		break;
 
 	case MW_TOUCH_DOWN_MESSAGE:
@@ -420,7 +422,11 @@ static void list_box_message_function(const mw_message_t *message)
 		{
 			this_list_box->line_is_selected = true;
 			this_list_box->selection = touch_y / row_height + this_list_box->lines_to_scroll;
-			mw_paint_control(message->recipient_handle);
+
+			this_list_box->invalid_rect.y = row_height * (touch_y / row_height);
+			this_list_box->invalid_rect.height = row_height;
+			mw_paint_control_rect(message->recipient_handle, &this_list_box->invalid_rect);
+
 			mw_set_timer(mw_tick_counter + MW_CONTROL_DOWN_TIME, message->recipient_handle, MW_CONTROL_MESSAGE);
 		}
 		break;

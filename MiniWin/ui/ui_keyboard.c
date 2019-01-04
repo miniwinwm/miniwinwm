@@ -2,7 +2,7 @@
 
 MIT License
 
-Copyright (c) John Blaiklock 2018 miniwin Embedded Window Manager
+Copyright (c) John Blaiklock 2019 miniwin Embedded Window Manager
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -66,8 +66,6 @@ extern const uint8_t mw_bitmaps_let_key[];
 *** LOCAL VARIABLES ***
 **********************/
 
-static mw_util_rect_t invalid_rect;
-
 /********************************
 *** LOCAL FUNCTION PROTOTYPES ***
 ********************************/
@@ -93,6 +91,21 @@ static void keyboard_paint_function(mw_handle_t control_handle, const mw_gl_draw
 	uint8_t column;
 	mw_hal_lcd_colour_t highlighted_colour;
 	mw_hal_lcd_colour_t lowlighted_colour;
+	uint8_t text_offset;
+	uint8_t bitmap_offset;
+
+	if (mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_LARGE_SIZE)
+	{
+		mw_gl_set_font(MW_GL_TITLE_FONT);
+		text_offset = MW_UI_KEYBOARD_KEY_TEXT_LARGE_OFFSET;
+		bitmap_offset = MW_UI_KEYBOARD_KEY_BITMAP_LARGE_OFFSET;
+	}
+	else
+	{
+		mw_gl_set_font(MW_GL_FONT_9);
+		text_offset = MW_UI_KEYBOARD_KEY_TEXT_OFFSET;
+		bitmap_offset = MW_UI_KEYBOARD_KEY_BITMAP_OFFSET;
+	}
 
 	/* draw the keys */
 	mw_gl_set_fill(MW_GL_FILL);
@@ -100,7 +113,6 @@ static void keyboard_paint_function(mw_handle_t control_handle, const mw_gl_draw
 	mw_gl_set_line(MW_GL_SOLID_LINE);
 	mw_gl_set_border(MW_GL_BORDER_ON);
 	mw_gl_set_bg_transparency(MW_GL_BG_TRANSPARENT);
-	mw_gl_set_font(MW_GL_FONT_9);
 	mw_gl_set_text_rotation(MW_GL_TEXT_ROTATION_0);
 
 	for (row = 0; row < 3; row ++)
@@ -131,10 +143,10 @@ static void keyboard_paint_function(mw_handle_t control_handle, const mw_gl_draw
 
 			/* draw key rectangle */
 			mw_gl_rectangle(draw_info,
-					column * MW_UI_KEYBOARD_KEY_SIZE,
-					row * MW_UI_KEYBOARD_KEY_SIZE,
-					MW_UI_KEYBOARD_KEY_SIZE,
-					MW_UI_KEYBOARD_KEY_SIZE);
+					column * this_keyboard->key_size,
+					row * this_keyboard->key_size,
+					this_keyboard->key_size,
+					this_keyboard->key_size);
 
 			/* draw 3d effect */
 			if (this_keyboard->is_key_pressed &&
@@ -151,22 +163,22 @@ static void keyboard_paint_function(mw_handle_t control_handle, const mw_gl_draw
 			}
 			mw_gl_set_fg_colour(highlighted_colour);
 			mw_gl_vline(draw_info,
-					column * MW_UI_KEYBOARD_KEY_SIZE + 1,
-					row * MW_UI_KEYBOARD_KEY_SIZE + 1,
-					(row + 1) * MW_UI_KEYBOARD_KEY_SIZE - 2);
+					column * this_keyboard->key_size + 1,
+					row * this_keyboard->key_size + 1,
+					(row + 1) * this_keyboard->key_size - 2);
 			mw_gl_hline(draw_info,
-					column * MW_UI_KEYBOARD_KEY_SIZE + 1,
-					(column + 1) * MW_UI_KEYBOARD_KEY_SIZE - 2,
-					row * MW_UI_KEYBOARD_KEY_SIZE + 1);
+					column * this_keyboard->key_size + 1,
+					(column + 1) * this_keyboard->key_size - 2,
+					row * this_keyboard->key_size + 1);
 			mw_gl_set_fg_colour(lowlighted_colour);
 			mw_gl_vline(draw_info,
-					(column + 1) * MW_UI_KEYBOARD_KEY_SIZE - 2,
-					row * MW_UI_KEYBOARD_KEY_SIZE + 1,
-					(row + 1) * MW_UI_KEYBOARD_KEY_SIZE - 2);
+					(column + 1) * this_keyboard->key_size - 2,
+					row * this_keyboard->key_size + 1,
+					(row + 1) * this_keyboard->key_size - 2);
 			mw_gl_hline(draw_info,
-					column * MW_UI_KEYBOARD_KEY_SIZE + 1,
-					(column + 1) * MW_UI_KEYBOARD_KEY_SIZE - 2,
-					(row + 1) * MW_UI_KEYBOARD_KEY_SIZE - 2);
+					column * this_keyboard->key_size + 1,
+					(column + 1) * this_keyboard->key_size - 2,
+					(row + 1) * this_keyboard->key_size - 2);
 
 			/* draw key character */
 			mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
@@ -175,15 +187,15 @@ static void keyboard_paint_function(mw_handle_t control_handle, const mw_gl_draw
 					column == this_keyboard->key_pressed_column)
 			{
 				mw_gl_character(draw_info,
-						column * MW_UI_KEYBOARD_KEY_SIZE + MW_UI_KEYBOARD_KEY_TEXT_OFFSET + 1,
-						row * MW_UI_KEYBOARD_KEY_SIZE + MW_UI_KEYBOARD_KEY_TEXT_OFFSET + 1,
+						column * this_keyboard->key_size + text_offset + 1,
+						row * this_keyboard->key_size + text_offset + 1,
 						keyboards[this_keyboard->keyboard_display][row][column]);
 			}
 			else
 			{
 				mw_gl_character(draw_info,
-						column * MW_UI_KEYBOARD_KEY_SIZE + MW_UI_KEYBOARD_KEY_TEXT_OFFSET,
-						row * MW_UI_KEYBOARD_KEY_SIZE + MW_UI_KEYBOARD_KEY_TEXT_OFFSET,
+						column * this_keyboard->key_size + text_offset,
+						row * this_keyboard->key_size + text_offset,
 						keyboards[this_keyboard->keyboard_display][row][column]);
 			}
 		}
@@ -194,8 +206,8 @@ static void keyboard_paint_function(mw_handle_t control_handle, const mw_gl_draw
 				this_keyboard->key_pressed_column == 9)
 		{
 			mw_gl_monochrome_bitmap(draw_info,
-					9 * MW_UI_KEYBOARD_KEY_SIZE + MW_UI_KEYBOARD_KEY_BITMAP_OFFSET + 1,
-					1 * MW_UI_KEYBOARD_KEY_SIZE + MW_UI_KEYBOARD_KEY_BITMAP_OFFSET + 1,
+					9 * this_keyboard->key_size + bitmap_offset + 1,
+					1 * this_keyboard->key_size + bitmap_offset + 1,
 					MW_UI_KEYBOARD_KEY_BITMAP_SIZE,
 					MW_UI_KEYBOARD_KEY_BITMAP_SIZE,
 					mw_bitmaps_backspace_key);
@@ -203,8 +215,8 @@ static void keyboard_paint_function(mw_handle_t control_handle, const mw_gl_draw
 		else
 		{
 			mw_gl_monochrome_bitmap(draw_info,
-					9 * MW_UI_KEYBOARD_KEY_SIZE + MW_UI_KEYBOARD_KEY_BITMAP_OFFSET,
-					1 * MW_UI_KEYBOARD_KEY_SIZE + MW_UI_KEYBOARD_KEY_BITMAP_OFFSET,
+					9 * this_keyboard->key_size + bitmap_offset,
+					1 * this_keyboard->key_size + bitmap_offset,
 					MW_UI_KEYBOARD_KEY_BITMAP_SIZE,
 					MW_UI_KEYBOARD_KEY_BITMAP_SIZE,
 					mw_bitmaps_backspace_key);
@@ -219,8 +231,8 @@ static void keyboard_paint_function(mw_handle_t control_handle, const mw_gl_draw
 					this_keyboard->key_pressed_column == 10)
 			{
 				mw_gl_monochrome_bitmap(draw_info,
-						10 * MW_UI_KEYBOARD_KEY_SIZE + MW_UI_KEYBOARD_KEY_BITMAP_OFFSET + 1,
-						MW_UI_KEYBOARD_KEY_BITMAP_OFFSET + 1,
+						10 * this_keyboard->key_size + bitmap_offset + 1,
+						bitmap_offset + 1,
 						MW_UI_KEYBOARD_KEY_BITMAP_SIZE,
 						MW_UI_KEYBOARD_KEY_BITMAP_SIZE,
 						mw_bitmaps_num_key);
@@ -228,8 +240,8 @@ static void keyboard_paint_function(mw_handle_t control_handle, const mw_gl_draw
 			else
 			{
 				mw_gl_monochrome_bitmap(draw_info,
-						10 * MW_UI_KEYBOARD_KEY_SIZE + MW_UI_KEYBOARD_KEY_BITMAP_OFFSET,
-						MW_UI_KEYBOARD_KEY_BITMAP_OFFSET,
+						10 * this_keyboard->key_size + bitmap_offset,
+						bitmap_offset,
 						MW_UI_KEYBOARD_KEY_BITMAP_SIZE,
 						MW_UI_KEYBOARD_KEY_BITMAP_SIZE,
 						mw_bitmaps_num_key);
@@ -240,8 +252,8 @@ static void keyboard_paint_function(mw_handle_t control_handle, const mw_gl_draw
 					this_keyboard->key_pressed_column == 10)
 			{
 				mw_gl_monochrome_bitmap(draw_info,
-						10 * MW_UI_KEYBOARD_KEY_SIZE + MW_UI_KEYBOARD_KEY_BITMAP_OFFSET + 1,
-						1 * MW_UI_KEYBOARD_KEY_SIZE + MW_UI_KEYBOARD_KEY_BITMAP_OFFSET + 1,
+						10 * this_keyboard->key_size + bitmap_offset + 1,
+						1 * this_keyboard->key_size + bitmap_offset + 1,
 						MW_UI_KEYBOARD_KEY_BITMAP_SIZE,
 						MW_UI_KEYBOARD_KEY_BITMAP_SIZE,
 						mw_bitmaps_sym_key);
@@ -249,8 +261,8 @@ static void keyboard_paint_function(mw_handle_t control_handle, const mw_gl_draw
 			else
 			{
 				mw_gl_monochrome_bitmap(draw_info,
-						10 * MW_UI_KEYBOARD_KEY_SIZE + MW_UI_KEYBOARD_KEY_BITMAP_OFFSET,
-						1 * MW_UI_KEYBOARD_KEY_SIZE + MW_UI_KEYBOARD_KEY_BITMAP_OFFSET,
+						10 * this_keyboard->key_size + bitmap_offset,
+						1 * this_keyboard->key_size + bitmap_offset,
 						MW_UI_KEYBOARD_KEY_BITMAP_SIZE,
 						MW_UI_KEYBOARD_KEY_BITMAP_SIZE,
 						mw_bitmaps_sym_key);
@@ -261,8 +273,8 @@ static void keyboard_paint_function(mw_handle_t control_handle, const mw_gl_draw
 					this_keyboard->key_pressed_column == 0)
 			{
 				mw_gl_monochrome_bitmap(draw_info,
-						0 * MW_UI_KEYBOARD_KEY_SIZE + MW_UI_KEYBOARD_KEY_BITMAP_OFFSET + 1,
-						2 * MW_UI_KEYBOARD_KEY_SIZE + MW_UI_KEYBOARD_KEY_BITMAP_OFFSET + 1,
+						0 * this_keyboard->key_size + bitmap_offset + 1,
+						2 * this_keyboard->key_size + bitmap_offset + 1,
 						MW_UI_KEYBOARD_KEY_BITMAP_SIZE,
 						MW_UI_KEYBOARD_KEY_BITMAP_SIZE,
 						mw_bitmaps_shift_key);
@@ -270,8 +282,8 @@ static void keyboard_paint_function(mw_handle_t control_handle, const mw_gl_draw
 			else
 			{
 				mw_gl_monochrome_bitmap(draw_info,
-						0 * MW_UI_KEYBOARD_KEY_SIZE + MW_UI_KEYBOARD_KEY_BITMAP_OFFSET,
-						2 * MW_UI_KEYBOARD_KEY_SIZE + MW_UI_KEYBOARD_KEY_BITMAP_OFFSET,
+						0 * this_keyboard->key_size + bitmap_offset,
+						2 * this_keyboard->key_size + bitmap_offset,
 						MW_UI_KEYBOARD_KEY_BITMAP_SIZE,
 						MW_UI_KEYBOARD_KEY_BITMAP_SIZE,
 						mw_bitmaps_shift_key);
@@ -284,8 +296,8 @@ static void keyboard_paint_function(mw_handle_t control_handle, const mw_gl_draw
 					this_keyboard->key_pressed_column == 10)
 			{
 				mw_gl_monochrome_bitmap(draw_info,
-						10 * MW_UI_KEYBOARD_KEY_SIZE + MW_UI_KEYBOARD_KEY_BITMAP_OFFSET + 1,
-						MW_UI_KEYBOARD_KEY_BITMAP_OFFSET + 1,
+						10 * this_keyboard->key_size + bitmap_offset + 1,
+						bitmap_offset + 1,
 						MW_UI_KEYBOARD_KEY_BITMAP_SIZE,
 						MW_UI_KEYBOARD_KEY_BITMAP_SIZE,
 						mw_bitmaps_let_key);
@@ -293,8 +305,8 @@ static void keyboard_paint_function(mw_handle_t control_handle, const mw_gl_draw
 			else
 			{
 				mw_gl_monochrome_bitmap(draw_info,
-						10 * MW_UI_KEYBOARD_KEY_SIZE + MW_UI_KEYBOARD_KEY_BITMAP_OFFSET,
-						MW_UI_KEYBOARD_KEY_BITMAP_OFFSET,
+						10 * this_keyboard->key_size + bitmap_offset,
+						bitmap_offset,
 						MW_UI_KEYBOARD_KEY_BITMAP_SIZE,
 						MW_UI_KEYBOARD_KEY_BITMAP_SIZE,
 						mw_bitmaps_let_key);
@@ -305,8 +317,8 @@ static void keyboard_paint_function(mw_handle_t control_handle, const mw_gl_draw
 					this_keyboard->key_pressed_column == 10)
 			{
 				mw_gl_monochrome_bitmap(draw_info,
-						10 * MW_UI_KEYBOARD_KEY_SIZE + MW_UI_KEYBOARD_KEY_BITMAP_OFFSET + 1,
-						1 * MW_UI_KEYBOARD_KEY_SIZE + MW_UI_KEYBOARD_KEY_BITMAP_OFFSET + 1,
+						10 * this_keyboard->key_size + bitmap_offset + 1,
+						1 * this_keyboard->key_size + bitmap_offset + 1,
 						MW_UI_KEYBOARD_KEY_BITMAP_SIZE,
 						MW_UI_KEYBOARD_KEY_BITMAP_SIZE,
 						mw_bitmaps_sym_key);
@@ -314,8 +326,8 @@ static void keyboard_paint_function(mw_handle_t control_handle, const mw_gl_draw
 			else
 			{
 				mw_gl_monochrome_bitmap(draw_info,
-						10 * MW_UI_KEYBOARD_KEY_SIZE + MW_UI_KEYBOARD_KEY_BITMAP_OFFSET,
-						1 * MW_UI_KEYBOARD_KEY_SIZE + MW_UI_KEYBOARD_KEY_BITMAP_OFFSET,
+						10 * this_keyboard->key_size + bitmap_offset,
+						1 * this_keyboard->key_size + bitmap_offset,
 						MW_UI_KEYBOARD_KEY_BITMAP_SIZE,
 						MW_UI_KEYBOARD_KEY_BITMAP_SIZE,
 						mw_bitmaps_sym_key);
@@ -328,8 +340,8 @@ static void keyboard_paint_function(mw_handle_t control_handle, const mw_gl_draw
 					this_keyboard->key_pressed_column == 10)
 			{
 				mw_gl_monochrome_bitmap(draw_info,
-						10 * MW_UI_KEYBOARD_KEY_SIZE + MW_UI_KEYBOARD_KEY_BITMAP_OFFSET + 1,
-						MW_UI_KEYBOARD_KEY_BITMAP_OFFSET + 1,
+						10 * this_keyboard->key_size + bitmap_offset + 1,
+						bitmap_offset + 1,
 						MW_UI_KEYBOARD_KEY_BITMAP_SIZE,
 						MW_UI_KEYBOARD_KEY_BITMAP_SIZE,
 						mw_bitmaps_let_key);
@@ -337,8 +349,8 @@ static void keyboard_paint_function(mw_handle_t control_handle, const mw_gl_draw
 			else
 			{
 				mw_gl_monochrome_bitmap(draw_info,
-						10 * MW_UI_KEYBOARD_KEY_SIZE + MW_UI_KEYBOARD_KEY_BITMAP_OFFSET,
-						MW_UI_KEYBOARD_KEY_BITMAP_OFFSET,
+						10 * this_keyboard->key_size + bitmap_offset,
+						bitmap_offset,
 						MW_UI_KEYBOARD_KEY_BITMAP_SIZE,
 						MW_UI_KEYBOARD_KEY_BITMAP_SIZE,
 						mw_bitmaps_let_key);
@@ -349,8 +361,8 @@ static void keyboard_paint_function(mw_handle_t control_handle, const mw_gl_draw
 					this_keyboard->key_pressed_column == 10)
 			{
 				mw_gl_monochrome_bitmap(draw_info,
-						10 * MW_UI_KEYBOARD_KEY_SIZE + MW_UI_KEYBOARD_KEY_BITMAP_OFFSET + 1,
-						1 * MW_UI_KEYBOARD_KEY_SIZE + MW_UI_KEYBOARD_KEY_BITMAP_OFFSET + 1,
+						10 * this_keyboard->key_size + bitmap_offset + 1,
+						1 * this_keyboard->key_size + bitmap_offset + 1,
 						MW_UI_KEYBOARD_KEY_BITMAP_SIZE,
 						MW_UI_KEYBOARD_KEY_BITMAP_SIZE,
 						mw_bitmaps_num_key);
@@ -358,8 +370,8 @@ static void keyboard_paint_function(mw_handle_t control_handle, const mw_gl_draw
 			else
 			{
 				mw_gl_monochrome_bitmap(draw_info,
-						10 * MW_UI_KEYBOARD_KEY_SIZE + MW_UI_KEYBOARD_KEY_BITMAP_OFFSET,
-						1 * MW_UI_KEYBOARD_KEY_SIZE + MW_UI_KEYBOARD_KEY_BITMAP_OFFSET,
+						10 * this_keyboard->key_size + bitmap_offset,
+						1 * this_keyboard->key_size + bitmap_offset,
 						MW_UI_KEYBOARD_KEY_BITMAP_SIZE,
 						MW_UI_KEYBOARD_KEY_BITMAP_SIZE,
 						mw_bitmaps_num_key);
@@ -435,11 +447,9 @@ static void process_keypress(const mw_message_t *message)
 	}
 
 	/* repaint pressed key area only */
-	invalid_rect.x = this_keyboard->key_pressed_column * MW_UI_KEYBOARD_KEY_SIZE;
-	invalid_rect.y = this_keyboard->key_pressed_row * MW_UI_KEYBOARD_KEY_SIZE;
-	invalid_rect.width = MW_UI_KEYBOARD_KEY_SIZE;
-	invalid_rect.height = MW_UI_KEYBOARD_KEY_SIZE;
-	mw_paint_control_rect(message->recipient_handle, &invalid_rect);
+	this_keyboard->invalid_rect.x = this_keyboard->key_pressed_column * this_keyboard->key_size;
+	this_keyboard->invalid_rect.y = this_keyboard->key_pressed_row * this_keyboard->key_size;
+	mw_paint_control_rect(message->recipient_handle, &this_keyboard->invalid_rect);
 }
 
 /**
@@ -460,6 +470,16 @@ static void keyboard_message_function(const mw_message_t *message)
 		this_keyboard->swap_keyboard = false;
 		this_keyboard->holding_down = false;
 		this_keyboard->timer_handle = MW_INVALID_HANDLE;
+		if (mw_get_control_flags(message->recipient_handle) & MW_CONTROL_FLAG_LARGE_SIZE)
+		{
+			this_keyboard->key_size = MW_UI_KEYBOARD_KEY_LARGE_SIZE;
+		}
+		else
+		{
+			this_keyboard->key_size = MW_UI_KEYBOARD_KEY_SIZE;
+		}
+		this_keyboard->invalid_rect.width = this_keyboard->key_size;
+		this_keyboard->invalid_rect.height = this_keyboard->key_size;
 		break;
 
 	case MW_TOUCH_DRAG_MESSAGE:
@@ -494,11 +514,7 @@ static void keyboard_message_function(const mw_message_t *message)
 		else
 		{
 			/* repaint pressed key area only */
-			invalid_rect.x = this_keyboard->key_pressed_column * MW_UI_KEYBOARD_KEY_SIZE;
-			invalid_rect.y = this_keyboard->key_pressed_row * MW_UI_KEYBOARD_KEY_SIZE;
-			invalid_rect.width = MW_UI_KEYBOARD_KEY_SIZE;
-			invalid_rect.height = MW_UI_KEYBOARD_KEY_SIZE;
-			mw_paint_control_rect(message->recipient_handle, &invalid_rect);
+			mw_paint_control_rect(message->recipient_handle, &this_keyboard->invalid_rect);
 		}
 		break;
 
@@ -510,8 +526,8 @@ static void keyboard_message_function(const mw_message_t *message)
 		}
 
 		/* get the key pressed from the touch coordinates */
-		this_keyboard->key_pressed_row = (message->message_data & 0xffff) / MW_UI_KEYBOARD_KEY_SIZE;
-		this_keyboard->key_pressed_column = (message->message_data >> 16) / MW_UI_KEYBOARD_KEY_SIZE;
+		this_keyboard->key_pressed_row = (message->message_data & 0xffff) / this_keyboard->key_size;
+		this_keyboard->key_pressed_column = (message->message_data >> 16) / this_keyboard->key_size;
 
 		this_keyboard->touch_down_time = mw_tick_counter;
 		this_keyboard->timer_handle = mw_set_timer(mw_tick_counter + MW_KEY_DOWN_TIME, message->recipient_handle, MW_CONTROL_MESSAGE);
@@ -544,7 +560,14 @@ mw_handle_t mw_ui_keyboard_add_new(uint16_t x,
 {
 	mw_util_rect_t r;
 
-	mw_util_set_rect(&r, x, y, MW_UI_KEYBOARD_WIDTH, MW_UI_KEYBOARD_HEIGHT);
+	if (flags & MW_CONTROL_FLAG_LARGE_SIZE)
+	{
+		mw_util_set_rect(&r, x, y, MW_UI_KEYBOARD_WIDTH_LARGE_SIZE, MW_UI_KEYBOARD_HEIGHT_LARGE_SIZE);
+	}
+	else
+	{
+		mw_util_set_rect(&r, x, y, MW_UI_KEYBOARD_WIDTH, MW_UI_KEYBOARD_HEIGHT);
+	}
 
 	return mw_add_control(&r,
 			parent_handle,

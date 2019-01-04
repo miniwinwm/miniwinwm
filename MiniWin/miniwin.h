@@ -2,7 +2,7 @@
 
 MIT License
 
-Copyright (c) John Blaiklock 2018 miniwin Embedded Window Manager
+Copyright (c) John Blaiklock 2019 miniwin Embedded Window Manager
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -64,7 +64,7 @@ SOFTWARE.
 #define MW_TITLE_BAR_ICON_SIZE						14									/**< Size of icons, which are square */
 #define MW_TITLE_BAR_ICON_OFFSET					16									/**< Distance between each title bar icon */
 #define MW_DESKTOP_ICONS_PER_ROW					4           						/**< Number of icons of minimized windows to show across bottom of screen */
-#define MW_DESKTOP_ICON_WIDTH						(MW_HAL_LCD_WIDTH / MW_DESKTOP_ICONS_PER_ROW)	/**< Number of icons across desktop */
+#define MW_DESKTOP_ICON_WIDTH						(MW_ROOT_WIDTH / MW_DESKTOP_ICONS_PER_ROW)	/**< Number of icons across desktop */
 #define MW_DESKTOP_ICON_HEIGHT						18									/**< Height of desktop minimised icons */
 #define MW_UNUSED_MESSAGE_PARAMETER					0									/**< To indicate that a parameter to post message is unused rather than zero */
 #define MW_ALL_ITEMS_ENABLED						0xffff								/**< All items in a control that can have individual items enabled are enabled */

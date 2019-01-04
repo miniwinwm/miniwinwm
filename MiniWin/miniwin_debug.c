@@ -2,7 +2,7 @@
 
 MIT License
 
-Copyright (c) John Blaiklock 2018 miniwin Embedded Window Manager
+Copyright (c) John Blaiklock 2019 miniwin Embedded Window Manager
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -31,8 +31,7 @@ SOFTWARE.
 #include <stdint.h>
 #include <stdbool.h>
 #include <stdio.h>
-#include "gl/gl.h"
-#include "hal/hal_lcd.h"
+#include "miniwin.h"
 
 /****************
 *** CONSTANTS ***
@@ -70,7 +69,7 @@ SOFTWARE.
 
 void mw_debug_print_assert(bool expression, const char *function_name, int32_t line_number, char *message)
 {
-    const mw_gl_draw_info_t draw_info = {0, 0, {0, 0, MW_HAL_LCD_WIDTH, MW_HAL_LCD_HEIGHT}};
+    const mw_gl_draw_info_t draw_info = {0, 0, {0, 0, MW_ROOT_WIDTH, MW_ROOT_HEIGHT}};
     char number_buffer[15];
 
     if (expression)
@@ -80,8 +79,8 @@ void mw_debug_print_assert(bool expression, const char *function_name, int32_t l
 
 	mw_hal_lcd_filled_rectangle(0,
 		0,
-		MW_HAL_LCD_WIDTH,
-		MW_HAL_LCD_HEIGHT,
+		MW_ROOT_WIDTH,
+		MW_ROOT_HEIGHT,
 		MW_HAL_LCD_BLUE);
 
 	mw_gl_set_fg_colour(MW_HAL_LCD_YELLOW);

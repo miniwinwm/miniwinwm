@@ -2,7 +2,7 @@
 
 MIT License
 
-Copyright (c) John Blaiklock 2018 miniwin Embedded Window Manager
+Copyright (c) John Blaiklock 2019 miniwin Embedded Window Manager
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -24,6 +24,8 @@ SOFTWARE.
 
 */
 
+#ifdef STM32F407xx
+
 /***************
 *** INCLUDES ***
 ***************/
@@ -31,6 +33,7 @@ SOFTWARE.
 #include "hal/hal_touch.h"
 #include "hal/hal_delay.h"
 #include "stm32f4xx_hal.h"
+#include "stm32f4_discovery.h"
 
 /****************
 *** CONSTANTS ***
@@ -135,6 +138,18 @@ void mw_hal_touch_init(void)
 
 	/* select touch - chip select low */
 	CS_ON;
+
+	BSP_PB_Init(BUTTON_KEY, BUTTON_MODE_GPIO);
+}
+
+bool mw_hal_touch_is_calibration_required(void)
+{
+	return true;
+}
+
+bool mw_hal_touch_is_recalibration_required(void)
+{
+	return BSP_PB_GetState(BUTTON_KEY);
 }
 
 mw_hal_touch_state_t mw_hal_touch_get_state()
@@ -219,3 +234,5 @@ bool mw_hal_touch_get_point(uint16_t* x, uint16_t* y)
 
 	return true;
 }
+
+#endif

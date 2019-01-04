@@ -2,7 +2,7 @@
 
 MIT License
 
-Copyright (c) John Blaiklock 2018 miniwin Embedded Window Manager
+Copyright (c) John Blaiklock 2019 miniwin Embedded Window Manager
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -39,12 +39,17 @@ SOFTWARE.
 *** CONSTANTS ***
 ****************/
 
-#define MW_UI_KEYBOARD_KEY_SIZE				20
-#define MW_UI_KEYBOARD_WIDTH				(MW_UI_KEYBOARD_KEY_SIZE * 11)
-#define MW_UI_KEYBOARD_HEIGHT				(MW_UI_KEYBOARD_KEY_SIZE * 3)
-#define MW_UI_KEYBOARD_KEY_TEXT_OFFSET		7
-#define MW_UI_KEYBOARD_KEY_BITMAP_OFFSET	2
-#define MW_UI_KEYBOARD_KEY_BITMAP_SIZE		16
+#define MW_UI_KEYBOARD_KEY_SIZE					20
+#define MW_UI_KEYBOARD_WIDTH					(MW_UI_KEYBOARD_KEY_SIZE * 11)
+#define MW_UI_KEYBOARD_HEIGHT					(MW_UI_KEYBOARD_KEY_SIZE * 3)
+#define MW_UI_KEYBOARD_KEY_TEXT_OFFSET			7
+#define MW_UI_KEYBOARD_KEY_BITMAP_OFFSET		2
+#define MW_UI_KEYBOARD_KEY_BITMAP_SIZE			16
+#define MW_UI_KEYBOARD_KEY_LARGE_SIZE			40
+#define MW_UI_KEYBOARD_WIDTH_LARGE_SIZE			(MW_UI_KEYBOARD_KEY_LARGE_SIZE * 11)
+#define MW_UI_KEYBOARD_HEIGHT_LARGE_SIZE		(MW_UI_KEYBOARD_KEY_LARGE_SIZE * 3)
+#define MW_UI_KEYBOARD_KEY_TEXT_LARGE_OFFSET	14
+#define MW_UI_KEYBOARD_KEY_BITMAP_LARGE_OFFSET	12
 
 /************
 *** TYPES ***
@@ -70,10 +75,12 @@ typedef struct
 	bool swap_keyboard;							/**< If the keyboard needs swapping on next key up timer event */
 	uint8_t	key_pressed_row;					/**< The currently pressed key row */
 	uint8_t	key_pressed_column;					/**< The currently pressed key column */
+	mw_util_rect_t invalid_rect;				/**< Rect used for partial repainting of the control */
 	keyboard_display_t keyboard_display;		/**< The keyboard to display */
 	mw_handle_t timer_handle;					/**< Timer handle for animations and hold down repeat timeout */
 	uint32_t touch_down_time;					/**< Time in ticks a key was first pressed down */
 	bool holding_down;							/**< true when holding down a key */
+	uint8_t key_size;							/**< Size of individual key depending on if large size or standard size */
 } mw_ui_keyboard_data_t;
 
 /***************************

@@ -2,7 +2,7 @@
 
 MIT License
 
-Copyright (c) John Blaiklock 2018 miniwin Embedded Window Manager
+Copyright (c) John Blaiklock 2019 miniwin Embedded Window Manager
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -46,10 +46,14 @@ SOFTWARE.
 /**
  * User configurable value
  */
-#define MW_GL_MAX_POLY_CORNERS 				5                   /**< Maximum number of corner coordinate points to a polygon */
-#define MW_GL_SEGMENT_FILL_ANGLE_STEP_SIZE	5                   /**< Step angle when filling a circular segment with triangles */
-#define MW_GL_MAX_X					(MW_HAL_LCD_WIDTH - 1)      /**< Maximum x pixel coordinate */
-#define MW_GL_MAX_Y					(MW_HAL_LCD_HEIGHT - 1)     /**< Maximum y pixel coordinate */
+#define MW_GL_MAX_POLY_CORNERS 				5                   	/**< Maximum number of corner coordinate points to a polygon */
+#define MW_GL_SEGMENT_FILL_ANGLE_STEP_SIZE	5                   	/**< Step angle when filling a circular segment with triangles */
+#define MW_GL_MAX_X							(MW_ROOT_WIDTH - 1)     /**< Maximum x pixel coordinate */
+#define MW_GL_MAX_Y							(MW_ROOT_HEIGHT - 1)    /**< Maximum y pixel coordinate */
+
+#ifndef M_PI
+#define M_PI								3.1415926535f
+#endif
 
 /**
  * Non-user configurable values

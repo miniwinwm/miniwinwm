@@ -2,7 +2,7 @@
 
 MIT License
 
-Copyright (c) John Blaiklock 2018 miniwin Embedded Window Manager
+Copyright (c) John Blaiklock 2019 miniwin Embedded Window Manager
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -40,8 +40,6 @@ SOFTWARE.
 /****************
 *** CONSTANTS ***
 ****************/
-
-const mw_gl_draw_info_t draw_info_root = {0, 0, {0, 0, MW_HAL_LCD_WIDTH, MW_HAL_LCD_HEIGHT}};	/**< Fixed draw info structure for root window */
 
 /************
 *** TYPES ***
@@ -184,7 +182,8 @@ static system_timer_t system_timer;							/**< A timer used by the window manage
 static bool in_client_window_paint_function;				/**< Set true when calling a client window paint function, false after exiting the client window paint function */
 static window_redimensioning_state_t window_redimensioning_state;	/**< The state of window redimensioning - moving or resizing */
 static uint8_t window_being_redimensioned_id;				/**< The id of a window being redimensioned if it is happening */
-static bool init_complete;									/**< Flag indicating when initialisations are complete */
+static volatile bool init_complete;							/**< Flag indicating when initialisations are complete. The accessor to this variable may be called from non-miniwin threads */
+static mw_gl_draw_info_t draw_info_root;					/**< Fixed draw info structure for root window */
 
 /********************************
 *** LOCAL FUNCTION PROTOTYPES ***
@@ -837,7 +836,7 @@ static void find_minimsed_icon_location(uint8_t icon_number, int16_t *x, int16_t
 	*x = (icon_number % MW_DESKTOP_ICONS_PER_ROW) * MW_DESKTOP_ICON_WIDTH;
 	
 	/* row position starts at bottom of screen and works up screen */
-	*y = MW_HAL_LCD_HEIGHT - ((1 + (icon_number / MW_DESKTOP_ICONS_PER_ROW)) * MW_DESKTOP_ICON_HEIGHT);
+	*y = MW_ROOT_HEIGHT - ((1 + (icon_number / MW_DESKTOP_ICONS_PER_ROW)) * MW_DESKTOP_ICON_HEIGHT);
 }
 
 /**
@@ -1209,7 +1208,7 @@ static void find_rect_window_intersections(const mw_util_rect_t *r, uint16_t *ho
 		{
 			/* check window's left edge against screen edges */
 			if (mw_all_windows[i].window_rect.x >= 0 &&
-					mw_all_windows[i].window_rect.x < MW_HAL_LCD_WIDTH)
+					mw_all_windows[i].window_rect.x < MW_ROOT_WIDTH)
 			{
 				/* it's within both so add left edge */
 				vertical_edges[*vert_edges_count] = mw_all_windows[i].window_rect.x;
@@ -1223,7 +1222,7 @@ static void find_rect_window_intersections(const mw_util_rect_t *r, uint16_t *ho
 		{
 			/* check window's right edge against screen edges */
 			if (mw_all_windows[i].window_rect.x + mw_all_windows[i].window_rect.width >= 0 &&
-					mw_all_windows[i].window_rect.x + mw_all_windows[i].window_rect.width <= MW_HAL_LCD_WIDTH)
+					mw_all_windows[i].window_rect.x + mw_all_windows[i].window_rect.width <= MW_ROOT_WIDTH)
 			{
 				/* it's within both so add right edge */
 				vertical_edges[*vert_edges_count] = mw_all_windows[i].window_rect.x + mw_all_windows[i].window_rect.width;
@@ -1237,7 +1236,7 @@ static void find_rect_window_intersections(const mw_util_rect_t *r, uint16_t *ho
 		{
 			/* check window's top edge against screen edges */		
 			if (mw_all_windows[i].window_rect.y >= 0 &&
-					mw_all_windows[i].window_rect.y < MW_HAL_LCD_HEIGHT)
+					mw_all_windows[i].window_rect.y < MW_ROOT_HEIGHT)
 			{
 				/* it's within both so add top edge */			
 				horizontal_edges[*horiz_edges_count] = mw_all_windows[i].window_rect.y;
@@ -1251,7 +1250,7 @@ static void find_rect_window_intersections(const mw_util_rect_t *r, uint16_t *ho
 		{
 			/* check window's bottom edge against screen edges */				
 			if (mw_all_windows[i].window_rect.y + mw_all_windows[i].window_rect.height >= 0 &&
-					mw_all_windows[i].window_rect.y + mw_all_windows[i].window_rect.height <= MW_HAL_LCD_HEIGHT)
+					mw_all_windows[i].window_rect.y + mw_all_windows[i].window_rect.height <= MW_ROOT_HEIGHT)
 			{
 				/* it's within both so add bottom edge */			
 				horizontal_edges[*horiz_edges_count] = mw_all_windows[i].window_rect.y + mw_all_windows[i].window_rect.height;
@@ -1299,7 +1298,7 @@ static void find_rect_window_intersections(const mw_util_rect_t *r, uint16_t *ho
 
 	if (!self_right_found)
 	{
-		vertical_edges[*vert_edges_count] = r->x + r->width > MW_HAL_LCD_WIDTH ? MW_HAL_LCD_WIDTH : r->x + r->width;
+		vertical_edges[*vert_edges_count] = r->x + r->width > MW_ROOT_WIDTH ? MW_ROOT_WIDTH : r->x + r->width;
 		(*vert_edges_count)++;
 	}
 
@@ -1311,7 +1310,7 @@ static void find_rect_window_intersections(const mw_util_rect_t *r, uint16_t *ho
 
 	if (!self_bottom_found)
 	{
-		horizontal_edges[*horiz_edges_count] = r->y + r->height > MW_HAL_LCD_HEIGHT ? MW_HAL_LCD_HEIGHT : r->y + r->height;
+		horizontal_edges[*horiz_edges_count] = r->y + r->height > MW_ROOT_HEIGHT ? MW_ROOT_HEIGHT : r->y + r->height;
 		(*horiz_edges_count)++;
 	}
 
@@ -1406,8 +1405,8 @@ static bool find_if_rect_is_completely_on_screen(const mw_util_rect_t *rect)
 {
 	return (rect->x >= 0 &&
 			rect->y >= 0 &&
-			rect->x + rect->width <= MW_HAL_LCD_WIDTH &&
-			rect->y + rect->height <= MW_HAL_LCD_HEIGHT);
+			rect->x + rect->width <= MW_ROOT_WIDTH &&
+			rect->y + rect->height <= MW_ROOT_HEIGHT);
 }
 
 /**
@@ -3732,7 +3731,7 @@ static bool check_and_process_touch_on_title_bar(uint8_t window_id, uint16_t tou
 					{
 						/* it was touch down and window isn't modal so maximise window */
 						mw_resize_window(mw_all_windows[window_id].window_handle,
-								MW_HAL_LCD_WIDTH, MW_HAL_LCD_HEIGHT);
+								MW_ROOT_WIDTH, MW_ROOT_HEIGHT);
 						mw_reposition_window(mw_all_windows[window_id].window_handle, 0, 0);
 						mw_paint_all();
 					}
@@ -3994,7 +3993,6 @@ static void set_system_timer(uint32_t timer_data, system_timer_event_t event, ui
 void mw_init()
 {
 	uint8_t i;
-	mw_util_rect_t r;
 	MATRIX calibration_matrix;
 
 	/* initialise the hardware drivers */
@@ -4003,29 +4001,40 @@ void mw_init()
 	/* initialise gl */
 	mw_gl_init();
 
+	/* check if a screen recalibration is required */
+	if (mw_hal_touch_is_recalibration_required())
+	{
+		mw_settings_set_to_defaults();
+    	mw_settings_save();
+	}
+
 	/* load the settings from non vol storage */
 	mw_settings_load();
 	
-	/* check settings for intialisation and calibration */
-	if (!mw_settings_is_initialised() || !mw_settings_is_calibrated())
+	if (mw_hal_touch_is_calibration_required())
 	{
-		/* settings not initialised or not calibrated so kick off calibrate routine */
-		mw_touch_calibrate(&calibration_matrix);
-		
-		/* set settings to defaults */
-		mw_settings_set_to_defaults();
-		
-		/* save calibration metrics */
-		mw_settings_set_calibration_matrix(&calibration_matrix);
-		mw_settings_set_calibrated(true);
-		
-		/* save settings */
-		mw_settings_save();
+		/* check settings for intialisation and calibration */
+		if (!mw_settings_is_initialised() || !mw_settings_is_calibrated())
+		{
+			/* settings not initialised or not calibrated so kick off calibrate routine */
+			mw_touch_calibrate(&calibration_matrix);
+
+			/* set settings to defaults */
+			mw_settings_set_to_defaults();
+
+			/* save calibration metrics */
+			mw_settings_set_calibration_matrix(&calibration_matrix);
+			mw_settings_set_calibrated(true);
+
+			/* save settings */
+			mw_settings_save();
+		}
 	}
 
 	/* set up root window */
-	mw_util_set_rect(&r, 0, 0, MW_ROOT_WIDTH, MW_ROOT_HEIGHT);
-	set_window_details(&r,
+	draw_info_root.clip_rect.width = MW_ROOT_WIDTH;
+	draw_info_root.clip_rect.height = MW_ROOT_HEIGHT;
+	set_window_details(&draw_info_root.clip_rect,
 			"",
 			root_paint_function,
 			MW_ROOT_WINDOW_ID,
@@ -5512,16 +5521,16 @@ void mw_show_busy(bool show)
 		mw_gl_set_line(MW_GL_SOLID_LINE);
 		mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 		mw_gl_rectangle(&draw_info_root,
-				(MW_HAL_LCD_WIDTH - (mw_gl_get_string_width_pixels(MW_BUSY_TEXT) + 30)) / 2,
-				(MW_HAL_LCD_HEIGHT - 30) / 2,
+				(MW_ROOT_WIDTH - (mw_gl_get_string_width_pixels(MW_BUSY_TEXT) + 30)) / 2,
+				(MW_ROOT_HEIGHT - 30) / 2,
 				mw_gl_get_string_width_pixels(MW_BUSY_TEXT) + 30,
 				30);
 		mw_gl_set_bg_transparency(MW_GL_BG_TRANSPARENT);
 		mw_gl_set_text_rotation(MW_GL_TEXT_ROTATION_0);
 		mw_gl_set_font(MW_GL_TITLE_FONT);
 		mw_gl_string(&draw_info_root,
-				(MW_HAL_LCD_WIDTH - mw_gl_get_string_width_pixels(MW_BUSY_TEXT)) / 2,
-				2 + (MW_HAL_LCD_HEIGHT - MW_GL_TITLE_FONT_HEIGHT) / 2,
+				(MW_ROOT_WIDTH - mw_gl_get_string_width_pixels(MW_BUSY_TEXT)) / 2,
+				2 + (MW_ROOT_HEIGHT - MW_GL_TITLE_FONT_HEIGHT) / 2,
 				MW_BUSY_TEXT);
 	}
 	else

@@ -2,7 +2,7 @@
 
 MIT License
 
-Copyright (c) John Blaiklock 2018 miniwin Embedded Window Manager
+Copyright (c) John Blaiklock 2019 miniwin Embedded Window Manager
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -60,8 +60,6 @@ extern const uint8_t mw_bitmaps_backspace_key[];
 *** LOCAL VARIABLES ***
 **********************/
 
-static mw_util_rect_t invalid_rect;
-
 /********************************
 *** LOCAL FUNCTION PROTOTYPES ***
 ********************************/
@@ -87,21 +85,18 @@ static void keypad_paint_function(mw_handle_t control_handle, const mw_gl_draw_i
 	mw_hal_lcd_colour_t lowlighted_colour;
 	uint8_t row;
 	uint8_t column;
-	uint8_t key_size;
 	uint8_t text_offset;
 	uint8_t bitmap_offset;
 	uint8_t c;
 
 	if (mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_LARGE_SIZE)
 	{
-		key_size = MW_UI_KEYPAD_KEY_LARGE_SIZE;
 		mw_gl_set_font(MW_GL_TITLE_FONT);
 		text_offset = MW_UI_KEYPAD_KEY_TEXT_LARGE_OFFSET;
 		bitmap_offset = MW_UI_KEYPAD_KEY_BITMAP_LARGE_OFFSET;
 	}
 	else
 	{
-		key_size = MW_UI_KEYPAD_KEY_SIZE;
 		mw_gl_set_font(MW_GL_FONT_9);
 		text_offset = MW_UI_KEYPAD_KEY_TEXT_OFFSET;
 		bitmap_offset = MW_UI_KEYPAD_KEY_BITMAP_OFFSET;
@@ -141,10 +136,10 @@ static void keypad_paint_function(mw_handle_t control_handle, const mw_gl_draw_i
 
 			/* draw key rectangle */
 			mw_gl_rectangle(draw_info,
-					column * key_size,
-					row * key_size,
-					key_size,
-					key_size);
+					column * this_keypad->key_size,
+					row * this_keypad->key_size,
+					this_keypad->key_size,
+					this_keypad->key_size);
 
 			/* draw key text character */
 			c = key_codes[(row * 3) + column];
@@ -153,8 +148,8 @@ static void keypad_paint_function(mw_handle_t control_handle, const mw_gl_draw_i
 				if (c == '\b')
 				{
 					mw_gl_monochrome_bitmap(draw_info,
-							(column * key_size) + bitmap_offset + 1,
-							(row * key_size) + bitmap_offset + 1,
+							(column * this_keypad->key_size) + bitmap_offset + 1,
+							(row * this_keypad->key_size) + bitmap_offset + 1,
 							MW_UI_KEYPAD_KEY_BITMAP_SIZE,
 							MW_UI_KEYPAD_KEY_BITMAP_SIZE,
 							mw_bitmaps_backspace_key);
@@ -162,8 +157,8 @@ static void keypad_paint_function(mw_handle_t control_handle, const mw_gl_draw_i
 				else
 				{
 					mw_gl_character(draw_info,
-							(column * key_size) + text_offset + 1,
-							(row * key_size) + text_offset + 1,
+							(column * this_keypad->key_size) + text_offset + 1,
+							(row * this_keypad->key_size) + text_offset + 1,
 							c);
 				}
 			}
@@ -172,8 +167,8 @@ static void keypad_paint_function(mw_handle_t control_handle, const mw_gl_draw_i
 				if (c == '\b')
 				{
 					mw_gl_monochrome_bitmap(draw_info,
-							(column * key_size) + bitmap_offset,
-							(row * key_size) + bitmap_offset,
+							(column * this_keypad->key_size) + bitmap_offset,
+							(row * this_keypad->key_size) + bitmap_offset,
 							MW_UI_KEYPAD_KEY_BITMAP_SIZE,
 							MW_UI_KEYPAD_KEY_BITMAP_SIZE,
 							mw_bitmaps_backspace_key);
@@ -181,8 +176,8 @@ static void keypad_paint_function(mw_handle_t control_handle, const mw_gl_draw_i
 				else
 				{
 					mw_gl_character(draw_info,
-							(column * key_size) + text_offset,
-							(row * key_size) + text_offset,
+							(column * this_keypad->key_size) + text_offset,
+							(row * this_keypad->key_size) + text_offset,
 							c);
 				}
 			}
@@ -201,23 +196,23 @@ static void keypad_paint_function(mw_handle_t control_handle, const mw_gl_draw_i
 
 			mw_gl_set_fg_colour(highlighted_colour);
 			mw_gl_vline(draw_info,
-					(column * key_size) + 1,
-					(row * key_size) + 1,
-					((row + 1) * key_size) - 2);
+					(column * this_keypad->key_size) + 1,
+					(row * this_keypad->key_size) + 1,
+					((row + 1) * this_keypad->key_size) - 2);
 			mw_gl_hline(draw_info,
-					(column * key_size) + 1,
-					((column + 1) * key_size) - 2,
-					(row * key_size) + 1);
+					(column * this_keypad->key_size) + 1,
+					((column + 1) * this_keypad->key_size) - 2,
+					(row * this_keypad->key_size) + 1);
 
 			mw_gl_set_fg_colour(lowlighted_colour);
 			mw_gl_vline(draw_info,
-					((column + 1) * key_size) - 2,
-					(row * key_size) + 1,
-					((row + 1) * key_size) - 2);
+					((column + 1) * this_keypad->key_size) - 2,
+					(row * this_keypad->key_size) + 1,
+					((row + 1) * this_keypad->key_size) - 2);
 			mw_gl_hline(draw_info,
-					(column * key_size) + 1,
-					((column + 1) * key_size) - 2,
-					((row + 1) * key_size) - 2);
+					(column * this_keypad->key_size) + 1,
+					((column + 1) * this_keypad->key_size) - 2,
+					((row + 1) * this_keypad->key_size) - 2);
 		}
 	}
 
@@ -226,8 +221,8 @@ static void keypad_paint_function(mw_handle_t control_handle, const mw_gl_draw_i
 	{
 		mw_gl_set_fg_colour(MW_CONTROL_DISABLED_COLOUR);
 		mw_gl_character(draw_info,
-				(0 * key_size) + MW_UI_KEYPAD_KEY_TEXT_OFFSET,
-				(3 * key_size) + MW_UI_KEYPAD_KEY_TEXT_OFFSET,
+				(0 * this_keypad->key_size) + text_offset,
+				(3 * this_keypad->key_size) + text_offset,
 				'-');
 	}
 }
@@ -253,11 +248,9 @@ static void process_keypress(const mw_message_t *message)
 				MW_WINDOW_MESSAGE);
 
 		/* repaint pressed key area only */
-		invalid_rect.x = this_keypad->key_pressed_column * this_keypad->key_size;
-		invalid_rect.y = this_keypad->key_pressed_row * this_keypad->key_size;
-		invalid_rect.width = this_keypad->key_size;
-		invalid_rect.height = this_keypad->key_size;
-		mw_paint_control_rect(message->recipient_handle, &invalid_rect);
+		this_keypad->invalid_rect.x = this_keypad->key_pressed_column * this_keypad->key_size;
+		this_keypad->invalid_rect.y = this_keypad->key_pressed_row * this_keypad->key_size;
+		mw_paint_control_rect(message->recipient_handle, &this_keypad->invalid_rect);
 	}
 }
 
@@ -287,6 +280,8 @@ static void keypad_message_function(const mw_message_t *message)
 		{
 			this_keypad->key_size = MW_UI_KEYPAD_KEY_SIZE;
 		}
+		this_keypad->invalid_rect.width = this_keypad->key_size;
+		this_keypad->invalid_rect.height = this_keypad->key_size;
 		break;
 
 	case MW_TOUCH_DRAG_MESSAGE:
@@ -314,11 +309,7 @@ static void keypad_message_function(const mw_message_t *message)
 		this_keypad->is_key_pressed = false;
 
 		/* repaint pressed key area only */
-		invalid_rect.x = this_keypad->key_pressed_column * this_keypad->key_size;
-		invalid_rect.y = this_keypad->key_pressed_row * this_keypad->key_size;
-		invalid_rect.width = this_keypad->key_size;
-		invalid_rect.height = this_keypad->key_size;
-		mw_paint_control_rect(message->recipient_handle, &invalid_rect);
+		mw_paint_control_rect(message->recipient_handle, &this_keypad->invalid_rect);
 		break;
 
 	case MW_TOUCH_DOWN_MESSAGE:

@@ -2,7 +2,7 @@
 
 MIT License
 
-Copyright (c) John Blaiklock 2018 miniwin Embedded Window Manager
+Copyright (c) John Blaiklock 2019 miniwin Embedded Window Manager
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -81,6 +81,7 @@ typedef struct
 	uint8_t selection;								/**< The currently selected line */
 	bool line_is_selected;							/**< A line is currently selected */
 	uint16_t touch_down_y_position;					/**< The last down down position */
+	mw_util_rect_t invalid_rect;					/**< Rect used for partial repainting of the control */
 	uint8_t lines_to_scroll;						/**< The number of entries down to start showing entries */
 } mw_ui_list_box_data_t;
 

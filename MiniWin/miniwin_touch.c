@@ -2,7 +2,7 @@
 
 MIT License
 
-Copyright (c) John Blaiklock 2018 miniwin Embedded Window Manager
+Copyright (c) John Blaiklock 2019 miniwin Embedded Window Manager
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -80,6 +80,8 @@ static void draw_cross(uint16_t x, int16_t y, int16_t length);
  */
 static void draw_cross(uint16_t x, int16_t y, int16_t length)
 {
+	mw_gl_draw_info_t draw_info_root = {0, 0, {0, 0, MW_HAL_LCD_WIDTH, MW_HAL_LCD_HEIGHT}};
+
 	mw_hal_lcd_filled_rectangle(0, 0, MW_HAL_LCD_WIDTH, MW_HAL_LCD_HEIGHT, MW_HAL_LCD_WHITE);
 	mw_hal_lcd_filled_rectangle(x - length / 2, y, length, 1, MW_HAL_LCD_BLACK);
 	mw_hal_lcd_filled_rectangle(x, y - length / 2, 1, length, MW_HAL_LCD_BLACK);
@@ -113,12 +115,20 @@ mw_hal_touch_state_t mw_touch_get_display_touch(uint16_t* x, uint16_t* y)
 		return MW_HAL_TOUCH_STATE_UP;
 	}
 
-	raw_point.x = raw_x;
-	raw_point.y = raw_y;
+	if (mw_hal_touch_is_calibration_required())
+	{
+		raw_point.x = raw_x;
+		raw_point.y = raw_y;
 
-	getDisplayPoint(&display_point, &raw_point, mw_settings_get_calibration_matrix());
-	*x = display_point.x;
-	*y = display_point.y;
+		getDisplayPoint(&display_point, &raw_point, mw_settings_get_calibration_matrix());
+		*x = display_point.x;
+		*y = display_point.y;
+	}
+	else
+	{
+		*x = raw_x;
+		*y = raw_y;
+	}
 
 	return MW_HAL_TOUCH_STATE_DOWN;
 }

@@ -2,7 +2,7 @@
 
 MIT License
 
-Copyright (c) John Blaiklock 2018 miniwin Embedded Window Manager
+Copyright (c) John Blaiklock 2019 miniwin Embedded Window Manager
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -226,7 +226,6 @@ static void mw_dialog_file_chooser_message_function(const mw_message_t *message)
 		mw_set_control_enabled(mw_dialog_file_chooser_data.arrow_file_down_handle, message->message_data >> 16);
 		mw_dialog_file_chooser_data.max_scroll_lines = message->message_data & 0xffff;
 		mw_paint_control(mw_dialog_file_chooser_data.arrow_file_down_handle);
-		mw_paint_control(mw_dialog_file_chooser_data.list_box_file_handle);
 		break;
 
 	case MW_BUTTON_PRESSED_MESSAGE:
@@ -342,6 +341,7 @@ static void mw_dialog_file_chooser_message_function(const mw_message_t *message)
 			*strrchr(mw_dialog_file_chooser_data.folder_path, '/') = '\0';
 			strcat(mw_dialog_file_chooser_data.folder_path, "/");
 			mw_dialog_file_chooser_data.folder_depth--;
+			mw_dialog_file_chooser_data.lines_to_scroll = 0;
 
 			/* update folder entries for this new folder */
 			update_folder_entries(mw_dialog_file_chooser_data.folders_only);
@@ -367,6 +367,7 @@ static void mw_dialog_file_chooser_message_function(const mw_message_t *message)
 						"No File");
 				mw_paint_control(mw_dialog_file_chooser_data.label_choice_handle);
 			}
+			mw_paint_control(mw_dialog_file_chooser_data.list_box_file_handle);
 		}
 		break;
 
@@ -425,6 +426,8 @@ static void mw_dialog_file_chooser_message_function(const mw_message_t *message)
 							(void *)"No File",
 							MW_CONTROL_MESSAGE);
 				}
+
+				mw_paint_control(mw_dialog_file_chooser_data.list_box_file_handle);
 				mw_paint_control(mw_dialog_file_chooser_data.label_choice_handle);
 			}
 			else if ((mw_dialog_file_chooser_data.list_box_file_data.list_box_entries[item_chosen].icon ==
