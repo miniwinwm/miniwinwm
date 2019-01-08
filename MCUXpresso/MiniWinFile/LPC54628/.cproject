@@ -90,6 +90,9 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MiniWinFile_LPC54628/MiniWin/gl/fonts/truetype/mcufont}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MiniWinFile_LPC54628/MiniWinFile_Common}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MiniWinFile_LPC54628/src}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MiniWinFile_LPC54628/BSP/sdmmc/inc}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MiniWinFile_LPC54628/BSP/fatfs/fatfs_include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MiniWinFile_LPC54628/BSP/sdmmc/port}&quot;"/>
 								</option>
 								<option id="gnu.c.compiler.option.include.files.459692063" name="Include files (-include)" superClass="gnu.c.compiler.option.include.files"/>
 								<option id="com.crt.advproject.gcc.exe.debug.option.optimization.level.1071179736" name="Optimization Level" superClass="com.crt.advproject.gcc.exe.debug.option.optimization.level"/>

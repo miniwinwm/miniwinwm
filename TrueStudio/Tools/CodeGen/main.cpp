@@ -301,7 +301,35 @@ int main(int argc, char **argv)
 				outfileUserSource << "extern const struct mf_rlefont_s " << next_font << ";\n";
 			}
 		}	
-	}       
+	}     
+    for (auto& window : json["Windows"].array_items())
+    {
+		for (auto& scrolling_text_box : window["ScrollingTextBoxes"].array_items())
+		{	
+			string next_font = scrolling_text_box["Font"].string_value();
+			if (next_font == "")
+			{
+				cout << "No font name specified for text box: " << scrolling_text_box["Name"].string_value() << " in window: " << window["Name"].string_value() << endl;
+				exit(1);
+			}
+			
+			bool exists = false;
+			for (auto& existing_font : fonts)
+			{
+				if (existing_font == next_font)
+				{
+					exists = true;
+					break;
+				}
+			}
+			
+			if (!exists)
+			{
+				fonts.push_back(next_font);
+				outfileUserSource << "extern const struct mf_rlefont_s " << next_font << ";\n";
+			}
+		}	
+	}  	  
 	if (fonts.size() > 0) 
 	{
 		outfileUserSource << endl;	
@@ -386,6 +414,14 @@ int main(int argc, char **argv)
 			outfileUserSource << "mw_handle_t scrolling_list_box_" << scrolling_list_box["Name"].string_value() << "_handle;\n";
 			all_identifier_names.push_back("scrolling_list_box_scroll_bar_vert_" + scrolling_list_box["Name"].string_value() + "_handle");
 			outfileUserSource << "mw_handle_t scrolling_list_box_scroll_bar_vert_" << scrolling_list_box["Name"].string_value() << "_handle;\n";			
+		}			
+		// create scrolling text boxes handles
+		for (auto& scrolling_text_box : window["ScrollingTextBoxes"].array_items())
+		{
+			all_identifier_names.push_back("scrolling_text_box_" + scrolling_text_box["Name"].string_value() + "_handle");
+			outfileUserSource << "mw_handle_t scrolling_text_box_" << scrolling_text_box["Name"].string_value() << "_handle;\n";
+			all_identifier_names.push_back("scrolling_text_box_scroll_bar_vert_" + scrolling_text_box["Name"].string_value() + "_handle");
+			outfileUserSource << "mw_handle_t scrolling_text_box_scroll_bar_vert_" << scrolling_text_box["Name"].string_value() << "_handle;\n";			
 		}													
 	}
 	outfileUserSource << "\n";
@@ -461,8 +497,16 @@ int main(int argc, char **argv)
 			
 			all_identifier_names.push_back("scrolling_list_box_scroll_bar_vert_" + scrolling_list_box["Name"].string_value() + "_data");
 			outfileUserSource << "static mw_ui_scroll_bar_vert_data_t scrolling_list_box_scroll_bar_vert_" << scrolling_list_box["Name"].string_value() << "_data;\n";
-		}		
-										
+		}				
+		// create scrolling text boxes data
+		for (auto& scrolling_text_box : window["ScrollingTextBoxes"].array_items())
+		{		
+			all_identifier_names.push_back("scrolling_text_box_" + scrolling_text_box["Name"].string_value() + "_data");
+			outfileUserSource << "static mw_ui_text_box_data_t scrolling_text_box_" << scrolling_text_box["Name"].string_value() << "_data;\n";
+			
+			all_identifier_names.push_back("scrolling_text_box_scroll_bar_vert_" + scrolling_text_box["Name"].string_value() + "_data");
+			outfileUserSource << "static mw_ui_scroll_bar_vert_data_t scrolling_text_box_scroll_bar_vert_" << scrolling_text_box["Name"].string_value() << "_data;\n";
+		}	
 	}
     
     // root functions and user_init function start
@@ -1228,6 +1272,139 @@ int main(int argc, char **argv)
 			outfileUserSource << ",\n" 
 			    "        &scrolling_list_box_scroll_bar_vert_" << scrolling_list_box["Name"].string_value() << "_data);\n\n"; 				        
 		}		
+
+		// create scrolling text boxes
+		for (auto& scrolling_text_box : window["ScrollingTextBoxes"].array_items())
+		{
+			// check presence and format of required fields
+			if (scrolling_text_box["Name"].string_value() == "")
+			{
+				cout << "No or blank Name value for scrolling text box in window " << window["Name"].string_value() << endl;
+				exit(1);			
+			}
+			if (!scrolling_text_box["X"].is_number())
+			{
+				cout << "No X value for scrolling text box " << scrolling_text_box["Name"].string_value() << " in window " << window["Name"].string_value() << endl;
+				exit(1);
+			}
+			if (!scrolling_text_box["Y"].is_number())
+			{
+				cout << "No Y value for scrolling text box " << scrolling_text_box["Name"].string_value() << " in window " << window["Name"].string_value() << endl;
+				exit(1);
+			}
+			if (!scrolling_text_box["Width"].is_number())
+			{
+				cout << "No Width value for scrolling text box " << scrolling_text_box["Name"].string_value() << " in window " << window["Name"].string_value() << endl;
+				exit(1);
+			}					
+			if (!scrolling_text_box["Height"].is_number())
+			{
+				cout << "No Height value for scrolling text box " << scrolling_text_box["Name"].string_value() << " in window " << window["Name"].string_value() << endl;
+				exit(1);
+			}		
+			if (scrolling_text_box["Justification"].string_value() == "")
+			{
+				cout << "No or blank Justification value for scrolling text box in window " << window["Name"].string_value() << endl;
+				exit(1);			
+			}	
+			if (scrolling_text_box["BackgroundColour"].string_value() == "")
+			{
+				cout << "No or blank BackgroundColour value for scrolling text box in window " << window["Name"].string_value() << endl;
+				exit(1);			
+			}	
+			if (scrolling_text_box["ForegroundColour"].string_value() == "")
+			{
+				cout << "No or blank ForegroundColour value for scrolling text box in window " << window["Name"].string_value() << endl;
+				exit(1);			
+			}				
+			if (scrolling_text_box["Font"].string_value() == "")
+			{
+				cout << "No or blank Font value for scrolling text box in window " << window["Name"].string_value() << endl;
+				exit(1);			
+			}	
+
+			// set data values here
+			outfileUserSource << "    scrolling_text_box_" << scrolling_text_box["Name"].string_value() << "_data.bg_colour = " << scrolling_text_box["BackgroundColour"].string_value() << ";\n";			
+			outfileUserSource << "    scrolling_text_box_" << scrolling_text_box["Name"].string_value() << "_data.fg_colour = " << scrolling_text_box["ForegroundColour"].string_value() << ";\n";				
+			outfileUserSource << "    scrolling_text_box_" << scrolling_text_box["Name"].string_value() << "_data.text = \"Generated by MiniWin code generator.\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\";\n";
+			outfileUserSource << "    scrolling_text_box_" << scrolling_text_box["Name"].string_value() << "_data.tt_font = &" << scrolling_text_box["Font"].string_value() << ";\n";				
+			outfileUserSource << "    scrolling_text_box_" << scrolling_text_box["Name"].string_value() << "_data.justification = ";
+			
+			if (scrolling_text_box["Justification"] == "Left")
+			{
+				outfileUserSource << "MW_GL_TT_LEFT_JUSTIFIED";
+			}
+			else if (scrolling_text_box["Justification"] == "Right")
+			{
+				outfileUserSource << "MW_GL_TT_RIGHT_JUSTIFIED";				
+			}
+			else if (scrolling_text_box["Justification"] == "Centre")
+			{
+				outfileUserSource << "MW_GL_TT_CENTRE_JUSTIFIED";				
+			}
+			else if (scrolling_text_box["Justification"] == "Full")
+			{
+				outfileUserSource << "MW_GL_TT_FULL_JUSTIFIED";				
+			}
+			else
+			{
+				cout << "Unrecognised justification value for text box in window " << window["Name"].string_value() << endl;
+				exit(1);					
+			}
+			outfileUserSource << ";\n";			
+			outfileUserSource << "    mw_util_set_rect(&r, " <<
+					(scrolling_text_box["X"].int_value()) << ", " <<
+					(scrolling_text_box["Y"].int_value()) << ", " <<
+					(scrolling_text_box["Width"].int_value()) << ", " <<
+					(scrolling_text_box["Height"].int_value()) << ");\n" <<					
+					"    scrolling_text_box_" << scrolling_text_box["Name"].string_value() << "_handle = mw_ui_text_box_add_new(&r,\n" 
+					"        window_" << window["Name"].string_value() << "_handle,\n" 
+					"        0";
+			if (scrolling_text_box["Visible"].bool_value())
+			{
+				outfileUserSource << " | MW_CONTROL_FLAG_IS_VISIBLE";
+			}	
+			if (scrolling_text_box["Enabled"].bool_value())
+			{
+				outfileUserSource << " | MW_CONTROL_FLAG_IS_ENABLED";
+			}			
+			if (large_size)
+			{
+				outfileUserSource << " | MW_CONTROL_FLAG_LARGE_SIZE";
+			}	  
+			outfileUserSource << ",\n" 
+			    "        &scrolling_text_box_" << scrolling_text_box["Name"].string_value() << "_data);\n\n"; 			
+			if (large_size)
+			{
+				outfileUserSource << "    scrolling_text_box_scroll_bar_vert_" << scrolling_text_box["Name"].string_value() << "_handle = mw_ui_scroll_bar_vert_add_new(" << (scrolling_text_box["X"].int_value() + scrolling_text_box["Width"].int_value()) << ",\n" 
+					"        " << scrolling_text_box["Y"].int_value() << ",\n" 
+					"        " << scrolling_text_box["Height"].int_value() << ",\n" 
+					"        window_" << window["Name"].string_value() << "_handle,\n" 
+					"        0";				
+			}   
+			else
+			{    			    
+				outfileUserSource << "    scrolling_text_box_scroll_bar_vert_" << scrolling_text_box["Name"].string_value() << "_handle = mw_ui_scroll_bar_vert_add_new(" << (scrolling_text_box["X"].int_value() + scrolling_text_box["Width"].int_value()) << ",\n" 
+					"        " << scrolling_text_box["Y"].int_value() << ",\n" 
+					"        " << scrolling_text_box["Height"].int_value() << ",\n" 
+					"        window_" << window["Name"].string_value() << "_handle,\n" 
+					"        0";
+			}
+			if (scrolling_text_box["Visible"].bool_value())
+			{
+				outfileUserSource << " | MW_CONTROL_FLAG_IS_VISIBLE";
+			}	
+			if (scrolling_text_box["Enabled"].bool_value())
+			{
+				outfileUserSource << " | MW_CONTROL_FLAG_IS_ENABLED";
+			}			
+			if (large_size)
+			{
+				outfileUserSource << " | MW_CONTROL_FLAG_LARGE_SIZE";
+			}	  
+			outfileUserSource << ",\n" 
+			    "        &scrolling_text_box_scroll_bar_vert_" << scrolling_text_box["Name"].string_value() << "_data);\n\n"; 				                    
+		}	
     }
 
     outfileUserSource << "    mw_paint_all();\n}\n";
@@ -1359,6 +1536,18 @@ int main(int argc, char **argv)
 					"extern mw_handle_t scrolling_list_box_scroll_bar_vert_" + scrolling_list_box["Name"].string_value() + "_handle;\n";				
 			}
 		}			
+		
+    	// create scrolling text boxes extern references
+		if (window["ScrollingTextBoxes"].array_items().size() > 0)
+		{
+    		for (auto& scrolling_text_box : window["ScrollingTextBoxes"].array_items())
+			{
+		    	outfileWindowSource << 
+					"extern mw_handle_t scrolling_text_box_" + scrolling_text_box["Name"].string_value() + "_handle;\n";
+		    	outfileWindowSource << 
+					"extern mw_handle_t scrolling_text_box_scroll_bar_vert_" + scrolling_text_box["Name"].string_value() + "_handle;\n";				
+			}
+		}				
     	    	
     	outfileWindowSource << 
     	            "\nvoid window_" << windowName << "_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_t *draw_info)\n" 
@@ -1518,7 +1707,7 @@ int main(int argc, char **argv)
 		}	
 		
 		// create vert scroll bars message handlers
-		if (window["ScrollBarsVert"].array_items().size() > 0 || window["ScrollingListBoxes"].array_items().size() > 0)
+		if (window["ScrollBarsVert"].array_items().size() > 0 || window["ScrollingListBoxes"].array_items().size() > 0 || window["ScrollingTextBoxes"].array_items().size() > 0)
 		{
 			outfileWindowSource << 
 						"    case MW_CONTROL_VERT_SCROLL_BAR_SCROLLED_MESSAGE:\n"; 
@@ -1568,7 +1757,33 @@ int main(int argc, char **argv)
 						"            mw_paint_control(scrolling_list_box_" << scrolling_list_box_scroll_bar_vert["Name"].string_value() << "_handle);\n"
 						"        }\n";
 			}			
-
+			for (auto& scrolling_text_box_scroll_bar_vert : window["ScrollingTextBoxes"].array_items())
+			{
+				if (first)
+				{
+					outfileWindowSource <<
+						"        if (message->sender_handle == " << "scrolling_text_box_scroll_bar_vert_" + scrolling_text_box_scroll_bar_vert["Name"].string_value() + "_handle" << ")\n";
+					first = false;
+				}
+				else
+				{
+					outfileWindowSource <<
+						"        else if (message->sender_handle == " << "scrolling_text_box_scroll_bar_vert_" + scrolling_text_box_scroll_bar_vert["Name"].string_value() + "_handle" << ")\n";
+				}
+				outfileWindowSource <<		
+						"        {\n" 
+						"            /* Post message to text box from its associated scroll bar to get it to scroll */\n"
+						"            mw_post_message(MW_TEXT_BOX_SCROLL_BAR_POSITION_MESSAGE,\n"
+						"                message->recipient_handle,\n"
+						"                scrolling_text_box_" << scrolling_text_box_scroll_bar_vert["Name"].string_value() << "_handle,\n"
+						"                message->message_data,\n"
+						"                MW_UNUSED_MESSAGE_PARAMETER,\n"
+						"                MW_CONTROL_MESSAGE);\n"
+						"\n"
+						"            /* Paint the text box to show its new scrolled position */\n"
+						"            mw_paint_control(scrolling_text_box_" << scrolling_text_box_scroll_bar_vert["Name"].string_value() << "_handle);\n"
+						"        }\n";
+			}					
 			outfileWindowSource << "        break;\n\n";
 		}					
 		
@@ -1600,7 +1815,7 @@ int main(int argc, char **argv)
 		}			
 
 		// create list boxes message handlers
-		if (window["ListBoxes"].array_items().size() > 0)
+		if (window["ListBoxes"].array_items().size() > 0 || window["ScrollingListBoxes"].array_items().size() > 0)
 		{
 			outfileWindowSource << 
 						"    case MW_LIST_BOX_ITEM_PRESSED_MESSAGE:\n"; 
@@ -1623,6 +1838,24 @@ int main(int argc, char **argv)
 						"            /* Add your handler code for this control here */\n" 
 						"        }\n";
 			}
+			for (auto& scrolling_list_box : window["ScrollingListBoxes"].array_items())
+			{
+				if (first)
+				{
+					outfileWindowSource <<
+						"        if (message->sender_handle == " << "scrolling_list_box_" + scrolling_list_box["Name"].string_value() + "_handle" << ")\n";
+					first = false;
+				}
+				else
+				{
+					outfileWindowSource <<
+						"        else if (message->sender_handle == " << "scrolling_list_box_" + scrolling_list_box["Name"].string_value() + "_handle" << ")\n";
+				}
+				outfileWindowSource <<		
+						"        {\n" 
+						"            /* Add your handler code for this control here */\n" 
+						"        }\n";
+			}			
 			outfileWindowSource << "        break;\n\n";
 		}       				
        				

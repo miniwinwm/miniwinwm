@@ -120,7 +120,7 @@ void window_simple_message_function(const mw_message_t *message)
 					"Title",
 					"This is a message",
 					"Yep",
-					false,
+					true,
 					message->recipient_handle);
 		}
 		break;

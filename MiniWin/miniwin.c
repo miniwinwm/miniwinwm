@@ -106,6 +106,7 @@ typedef struct
     uint8_t vert_scroll_pos;						/**< Current scroll position of a vertical scroll bar scaled to 0 - UINT8_MAX */
     uint8_t menu_bar_items_count;					/**< Number of items in above array */
     uint8_t menu_bar_selected_item;					/**< The most recently selected menu bar item */
+    uint8_t title_bar_height;						/**< Height of title bar in pixels */
     char title[MW_MAX_TITLE_SIZE + 1];  			/**< The window's title in the title bar */
 } window_t;
 
@@ -165,6 +166,10 @@ extern const uint8_t mw_bitmaps_close_icon[];
 extern const uint8_t mw_bitmaps_maximise_icon[];
 extern const uint8_t mw_bitmaps_minimise_icon[];
 extern const uint8_t mw_bitmaps_resize_icon[];
+extern const uint8_t mw_bitmaps_close_icon_large[];
+extern const uint8_t mw_bitmaps_maximise_icon_large[];
+extern const uint8_t mw_bitmaps_minimise_icon_large[];
+extern const uint8_t mw_bitmaps_resize_icon_large[];
 extern volatile uint32_t mw_tick_counter;
 
 /**********************
@@ -368,6 +373,14 @@ static void set_window_details(const mw_util_rect_t *rect,
 	mw_all_windows[window_id].vert_scroll_pos = 0;
 	mw_all_windows[window_id].window_handle = window_handle;
 	mw_all_windows[window_id].instance_data = instance_data;
+	if (window_flags & MW_WINDOW_FLAG_LARGE_SIZE)
+	{
+		mw_all_windows[window_id].title_bar_height = MW_TITLE_BAR_HEIGHT_LARGE;
+	}
+	else
+	{
+		mw_all_windows[window_id].title_bar_height = MW_TITLE_BAR_HEIGHT;
+	}
 
 	/* calculate client area location and size from the chosen features */
 	calculate_new_window_size_details(window_handle, rect);
@@ -390,6 +403,8 @@ static bool check_window_dimensions(uint16_t new_width,
 	uint16_t scroll_bar_slider_size;
 	uint16_t window_minimum_height;
 	uint16_t window_minimum_width;
+	uint16_t title_bar_height;
+	uint16_t icon_offset;
 
 	/* get menu bar height, scroll bar narrow dimension and scroll bar slider size depending on large flag */
 	if (flags & MW_WINDOW_FLAG_LARGE_SIZE)
@@ -397,12 +412,16 @@ static bool check_window_dimensions(uint16_t new_width,
 		menu_bar_height = MW_LARGE_MENU_BAR_HEIGHT;
 		scroll_bar_slider_size = MW_SCROLL_BAR_LARGE_SLIDER_SIZE;
 		scroll_bar_narrow_dimension = MW_SCROLL_BAR_LARGE_NARROW_DIMENSION;
+		title_bar_height = MW_TITLE_BAR_HEIGHT_LARGE;
+		icon_offset = MW_TITLE_BAR_ICON_OFFSET_LARGE;
 	}
 	else
 	{
 		menu_bar_height = MW_MENU_BAR_HEIGHT;
 		scroll_bar_slider_size = MW_SCROLL_BAR_SLIDER_SIZE;
 		scroll_bar_narrow_dimension = MW_SCROLL_BAR_NARROW_DIMENSION;
+		title_bar_height = MW_TITLE_BAR_HEIGHT;
+		icon_offset = MW_TITLE_BAR_ICON_OFFSET;
 	}
 
 	/* starting height is 1 pixel */
@@ -415,7 +434,7 @@ static bool check_window_dimensions(uint16_t new_width,
 		if (flags & MW_WINDOW_FLAG_HAS_TITLE_BAR)
 		{
 			/* title bar present so add title bar height and one border thickness */
-			window_minimum_height += (MW_TITLE_BAR_HEIGHT + MW_BORDER_WIDTH);
+			window_minimum_height += (title_bar_height + MW_BORDER_WIDTH);
 		}
 		else
 		{
@@ -429,7 +448,7 @@ static bool check_window_dimensions(uint16_t new_width,
 		if (flags & MW_WINDOW_FLAG_HAS_TITLE_BAR)
 		{
 			/* title bar present so add title bar height */
-			window_minimum_height += MW_TITLE_BAR_HEIGHT;
+			window_minimum_height += title_bar_height;
 		}
 	}
 	
@@ -488,9 +507,9 @@ static bool check_window_dimensions(uint16_t new_width,
 	 * other width giving features, so use which of the two (title bar or previously calculated width) is bigger */
 	if (flags & MW_WINDOW_FLAG_HAS_TITLE_BAR)
 	{
-		if (window_minimum_width < (MW_TITLE_BAR_ICON_OFFSET * 4 + 1))
+		if (window_minimum_width < (icon_offset * 4 + 1))
 		{
-			window_minimum_width = (MW_TITLE_BAR_ICON_OFFSET * 4 + 1);
+			window_minimum_width = (icon_offset * 4 + 1);
 		}
 	}
 
@@ -566,7 +585,7 @@ static void calculate_new_window_size_details(mw_handle_t window_handle, const m
 	/* set client rect y */
 	if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_TITLE_BAR)
 	{
-		mw_all_windows[window_id].client_rect.y = rect->y + MW_TITLE_BAR_HEIGHT;
+		mw_all_windows[window_id].client_rect.y = rect->y + mw_all_windows[window_id].title_bar_height;
 	}
 	else
 	{
@@ -587,7 +606,7 @@ static void calculate_new_window_size_details(mw_handle_t window_handle, const m
 	/* set client rect height */
 	if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_TITLE_BAR)
 	{
-		mw_all_windows[window_id].client_rect.height = rect->height - MW_TITLE_BAR_HEIGHT - border_width;
+		mw_all_windows[window_id].client_rect.height = rect->height - mw_all_windows[window_id].title_bar_height - border_width;
 	}
 	else
 	{
@@ -1419,6 +1438,13 @@ static void draw_title_bar(mw_handle_t window_handle, const mw_gl_draw_info_t *d
 {
 	uint8_t window_id;
 	uint8_t window_with_focus_id;
+	uint16_t icon_size;
+	uint16_t icon_offset;
+	uint16_t title_x_offset;
+	const uint8_t *close_icon_bitmap;
+	const uint8_t *maximise_icon_bitmap;
+	const uint8_t *resize_icon_bitmap;
+	const uint8_t *minimise_icon_bitmap;
 
 	MW_ASSERT(draw_info, "Null pointer argument");
 
@@ -1427,6 +1453,28 @@ static void draw_title_bar(mw_handle_t window_handle, const mw_gl_draw_info_t *d
 	MW_ASSERT(window_id < MW_MAX_WINDOW_COUNT, "Bad window handle");
 	window_with_focus_id = get_window_id_for_handle(window_with_focus_handle);
 	MW_ASSERT(window_with_focus_id < MW_MAX_WINDOW_COUNT, "Bad window handle");
+
+	/* check for large size */
+	if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_LARGE_SIZE)
+	{
+		icon_size = MW_TITLE_BAR_ICON_SIZE_LARGE;
+		icon_offset = MW_TITLE_BAR_ICON_OFFSET_LARGE;
+		title_x_offset = MW_TITLE_X_OFFSET_LARGE;
+		close_icon_bitmap = mw_bitmaps_close_icon_large;
+		maximise_icon_bitmap = mw_bitmaps_maximise_icon_large;
+		minimise_icon_bitmap = mw_bitmaps_minimise_icon_large;
+		resize_icon_bitmap = mw_bitmaps_resize_icon_large;
+	}
+	else
+	{
+		icon_size = MW_TITLE_BAR_ICON_SIZE;
+		icon_offset = MW_TITLE_BAR_ICON_OFFSET;
+		title_x_offset = MW_TITLE_X_OFFSET;
+		close_icon_bitmap = mw_bitmaps_close_icon;
+		maximise_icon_bitmap = mw_bitmaps_maximise_icon;
+		minimise_icon_bitmap = mw_bitmaps_minimise_icon;
+		resize_icon_bitmap = mw_bitmaps_resize_icon;
+	}
 
     /* set title bar colour according to focus/modal state */
 	if (window_handle != window_with_focus_handle)
@@ -1456,7 +1504,7 @@ static void draw_title_bar(mw_handle_t window_handle, const mw_gl_draw_info_t *d
 			0,
 			0,
 			mw_all_windows[window_id].window_rect.width,
-			MW_TITLE_BAR_HEIGHT);
+			mw_all_windows[window_id].title_bar_height);
 
 	/* draw the icons if the window has focus and isn't modal */
 	if (window_with_focus_handle == window_handle && !(mw_all_windows[window_with_focus_id].window_flags & MW_WINDOW_FLAG_IS_MODAL))
@@ -1466,11 +1514,11 @@ static void draw_title_bar(mw_handle_t window_handle, const mw_gl_draw_info_t *d
 		mw_gl_set_bg_colour(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_CAN_BE_CLOSED ? MW_HAL_LCD_WHITE : MW_HAL_LCD_GREY5);
 		mw_gl_set_bg_transparency(MW_GL_BG_NOT_TRANSPARENT);
 		mw_gl_monochrome_bitmap(draw_info,
-				mw_all_windows[window_id].window_rect.width - MW_TITLE_BAR_ICON_OFFSET,
+				mw_all_windows[window_id].window_rect.width - icon_offset,
 				2,
-				MW_TITLE_BAR_ICON_SIZE,
-				MW_TITLE_BAR_ICON_SIZE,
-				mw_bitmaps_close_icon);
+				icon_size,
+				icon_size,
+				close_icon_bitmap);
 
 		/* resize icon */
 		mw_gl_set_fg_colour(MW_HAL_LCD_WHITE);
@@ -1478,32 +1526,32 @@ static void draw_title_bar(mw_handle_t window_handle, const mw_gl_draw_info_t *d
 		mw_gl_monochrome_bitmap(draw_info,
 				2,
 				2,
-				MW_TITLE_BAR_ICON_SIZE,
-				MW_TITLE_BAR_ICON_SIZE,
-				mw_bitmaps_resize_icon);
+				icon_size,
+				icon_size,
+				resize_icon_bitmap);
 
 		/* maximise icon */
 		mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 		mw_gl_set_bg_transparency(MW_GL_BG_NOT_TRANSPARENT);
 		mw_gl_set_bg_colour(MW_HAL_LCD_WHITE);
 		mw_gl_monochrome_bitmap(draw_info,
-				mw_all_windows[window_id].window_rect.width - (MW_TITLE_BAR_ICON_OFFSET * 2),
+				mw_all_windows[window_id].window_rect.width - (icon_offset * 2),
 				2,
-				MW_TITLE_BAR_ICON_SIZE,
-				MW_TITLE_BAR_ICON_SIZE,
-				mw_bitmaps_maximise_icon);
+				icon_size,
+				icon_size,
+				maximise_icon_bitmap);
 
 		/* minimise icon */
 		mw_gl_set_bg_colour(MW_HAL_LCD_WHITE);
 		mw_gl_monochrome_bitmap(draw_info,
-				mw_all_windows[window_id].window_rect.width - (MW_TITLE_BAR_ICON_OFFSET * 3),
+				mw_all_windows[window_id].window_rect.width - (icon_offset * 3),
 				2,
-				MW_TITLE_BAR_ICON_SIZE,
-				MW_TITLE_BAR_ICON_SIZE,
-				mw_bitmaps_minimise_icon);
+				icon_size,
+				icon_size,
+				minimise_icon_bitmap);
 
 		/* only draw the title if there's space remaining */
-		if (mw_all_windows[window_id].window_rect.width - (MW_TITLE_BAR_ICON_OFFSET * 4) - MW_TITLE_X_OFFSET >
+		if (mw_all_windows[window_id].window_rect.width - (icon_offset * 4) - title_x_offset >
 				mw_gl_get_string_width_pixels(mw_all_windows[window_id].title))
 		{
 			draw_titlebar_text(window_handle, draw_info);
@@ -1525,12 +1573,29 @@ static void draw_title_bar(mw_handle_t window_handle, const mw_gl_draw_info_t *d
 static void draw_titlebar_text(mw_handle_t window_handle, const mw_gl_draw_info_t *draw_info)
 {
 	uint8_t window_id;
+	uint16_t title_x_offset;
+	uint16_t title_modal_x_offset;
+	uint16_t title_y_offset;
 
 	MW_ASSERT(draw_info, "Null pointer argument");
 
 	/* get window id from window handle and check it's in range */
 	window_id = get_window_id_for_handle(window_handle);
 	MW_ASSERT(window_id < MW_MAX_WINDOW_COUNT, "Bad window handle");
+
+	/* check for large size */
+	if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_LARGE_SIZE)
+	{
+		title_x_offset = MW_TITLE_X_OFFSET_LARGE;
+		title_y_offset = MW_TITLE_Y_OFFSET_LARGE;
+		title_modal_x_offset = MW_MODAL_TITLE_X_OFFSET_LARGE;
+	}
+	else
+	{
+		title_x_offset = MW_TITLE_X_OFFSET;
+		title_y_offset = MW_TITLE_Y_OFFSET;
+		title_modal_x_offset = MW_MODAL_TITLE_X_OFFSET;
+	}
 
 	if (window_handle != window_with_focus_handle)
 	{
@@ -1553,11 +1618,11 @@ static void draw_titlebar_text(mw_handle_t window_handle, const mw_gl_draw_info_
 	mw_gl_set_font(MW_GL_TITLE_FONT);
 	if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_MODAL || window_handle != window_with_focus_handle)
 	{
-		mw_gl_string(draw_info, MW_MODAL_TITLE_X_OFFSET, MW_TITLE_Y_OFFSET, mw_all_windows[window_id].title);
+		mw_gl_string(draw_info, title_modal_x_offset, title_y_offset, mw_all_windows[window_id].title);
 	}
 	else
 	{
-		mw_gl_string(draw_info, MW_TITLE_X_OFFSET, MW_TITLE_Y_OFFSET, mw_all_windows[window_id].title);
+		mw_gl_string(draw_info, title_x_offset, title_y_offset, mw_all_windows[window_id].title);
 	}
 }
 
@@ -2090,11 +2155,11 @@ static void do_paint_window_frame2(mw_handle_t window_handle, uint8_t components
   		{
   			mw_gl_vline(&draw_info,
   					0,
-  					MW_TITLE_BAR_HEIGHT,
+					mw_all_windows[window_id].title_bar_height,
   					mw_all_windows[window_id].window_rect.height - 1);
   			mw_gl_vline(&draw_info,
   					mw_all_windows[window_id].window_rect.width - 1,
-  					MW_TITLE_BAR_HEIGHT,
+					mw_all_windows[window_id].title_bar_height,
   					mw_all_windows[window_id].window_rect.height - 1);
   		}
   		else
@@ -3432,7 +3497,7 @@ static bool check_and_process_touch_on_window_border(uint8_t window_id, uint16_t
 		{
 			/* check for a touch on left border */
 			if (touch_x < mw_all_windows[window_id].window_rect.x + MW_BORDER_WIDTH &&
-					touch_y > MW_TITLE_BAR_HEIGHT)
+					touch_y > mw_all_windows[window_id].title_bar_height)
 			{
 				return true;
 			}
@@ -3440,7 +3505,7 @@ static bool check_and_process_touch_on_window_border(uint8_t window_id, uint16_t
 			/* check for a touch on right border */
 			if ((touch_x >= mw_all_windows[window_id].window_rect.x +
 					mw_all_windows[window_id].window_rect.width - MW_BORDER_WIDTH) &&
-					touch_y > MW_TITLE_BAR_HEIGHT)
+					touch_y > mw_all_windows[window_id].title_bar_height)
 			{
 				return true;
 			}
@@ -3699,6 +3764,21 @@ static bool check_and_process_touch_on_menu_bar(uint8_t window_id, uint16_t touc
  */
 static bool check_and_process_touch_on_title_bar(uint8_t window_id, uint16_t touch_x, uint16_t touch_y, mw_message_id_t touch_message_id)
 {
+	uint16_t icon_size;
+	uint16_t icon_offset;
+
+	/* check for large size */
+	if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_LARGE_SIZE)
+	{
+		icon_size = MW_TITLE_BAR_ICON_SIZE_LARGE;
+		icon_offset = MW_TITLE_BAR_ICON_OFFSET_LARGE;
+	}
+	else
+	{
+		icon_size = MW_TITLE_BAR_ICON_SIZE;
+		icon_offset = MW_TITLE_BAR_ICON_OFFSET;
+	}
+
 	if (touch_y < mw_all_windows[window_id].client_rect.y)
 	{
 		/* touch was above client rect */
@@ -3708,7 +3788,7 @@ static bool check_and_process_touch_on_title_bar(uint8_t window_id, uint16_t tou
 			{
 				/* touch event occurred on title bar so check if it occurred on close icon */
 				if (touch_x > (mw_all_windows[window_id].window_rect.x +
-						mw_all_windows[window_id].window_rect.width) - MW_TITLE_BAR_ICON_OFFSET)
+						mw_all_windows[window_id].window_rect.width) - icon_offset)
 				{
 					/* touch event was on close icon; ignore touch if window is modal */
 					if (touch_message_id == MW_TOUCH_DOWN_MESSAGE)
@@ -3724,7 +3804,7 @@ static bool check_and_process_touch_on_title_bar(uint8_t window_id, uint16_t tou
 				}
 				/* check if touch occurred on maximise icon */
 				else if (touch_x > (mw_all_windows[window_id].window_rect.x +
-						mw_all_windows[window_id].window_rect.width) - (2 * MW_TITLE_BAR_ICON_OFFSET))
+						mw_all_windows[window_id].window_rect.width) - (2 * icon_offset))
 				{
 					/* touch event was on maximise icon; ignore if window is modal */
 					if (touch_message_id == MW_TOUCH_DOWN_MESSAGE)
@@ -3738,7 +3818,7 @@ static bool check_and_process_touch_on_title_bar(uint8_t window_id, uint16_t tou
 				}
 				/* check if touch occurred on minimise icon */
 				else if (touch_x > (mw_all_windows[window_id].window_rect.x +
-						mw_all_windows[window_id].window_rect.width) - (3 * MW_TITLE_BAR_ICON_OFFSET))
+						mw_all_windows[window_id].window_rect.width) - (3 * icon_offset))
 				{
 					/* touch event was on minimise icon; ignore if window is modal */
 					if (touch_message_id == MW_TOUCH_DOWN_MESSAGE)
@@ -3761,7 +3841,7 @@ static bool check_and_process_touch_on_title_bar(uint8_t window_id, uint16_t tou
 				}
 
 				/* check if touch occurred on resize icon */
-				else if (touch_x - mw_all_windows[window_id].window_rect.x < MW_TITLE_BAR_ICON_SIZE)
+				else if (touch_x - mw_all_windows[window_id].window_rect.x < icon_size)
 				{
 					/* touch event was on resize icon; ignore if window is modal */
 					if (touch_message_id == MW_TOUCH_DOWN_MESSAGE)

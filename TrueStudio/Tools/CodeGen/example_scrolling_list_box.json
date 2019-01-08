@@ -15,10 +15,20 @@
 "TitleBar": true,
 "Visible": true,
 "Minimised": false,
+"ListBoxes": [{
+		   "Name": "LB1",
+		   "X": 10,
+		   "Y": 60,
+		   "Width": 50,
+		   "Lines": 3,
+		   "Labels": ["Fred", "Bert", "Pete"],
+		   "Enabled": true,
+		   "Visible": true
+			}],
 "ScrollingListBoxes": [{
 		   "Name": "SLB1",
-		   "X": 50,
-		   "Y": 50,
+		   "X": 80,
+		   "Y": 60,
 		   "Width": 50,
 		   "Lines": 3,
 		   "Labels": ["Fred", "Bert", "Pete", "Alf", "Jim", "Alan"],

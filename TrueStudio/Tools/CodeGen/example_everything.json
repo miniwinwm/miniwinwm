@@ -83,7 +83,20 @@
 		   "Labels": ["Fred", "Bert", "Pete", "Alf", "Jim", "Alan"],
 		   "Enabled": true,
 		   "Visible": true
-			}]				
+			}],
+"ScrollingTextBoxes": [{
+		   "Name": "STB1",
+		   "X": 10,
+		   "Y": 140,
+		   "Width": 115,
+		   "Height": 80,
+		   "Justification": "Centre",
+		   "BackgroundColour": "MW_HAL_LCD_YELLOW", 
+		   "ForegroundColour": "MW_HAL_LCD_BLACK", 		   
+		   "Font": "mf_rlefont_DejaVuSans12",
+		   "Enabled": true,
+		   "Visible": true
+			}]							
 },
 {
 "Name": "W2",

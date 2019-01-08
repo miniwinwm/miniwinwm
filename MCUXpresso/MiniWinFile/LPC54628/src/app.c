@@ -29,14 +29,25 @@ SOFTWARE.
 ***************/
 
 #include <time.h>
+#include "ff.h"
 #include "fsl_rtc.h"
+#include "fsl_iocon.h"
+#include "fsl_sd.h"
+#include "fsl_sd_disk.h"
 #include "miniwin.h"
 #include "board.h"
 #include "pin_mux.h"
+#include "app.h"
+
+
+#include <string.h>
+#include "diskio.h"
 
 /****************
 *** CONSTANTS ***
 ****************/
+
+#define BUFFER_SIZE (100U)
 
 /************
 *** TYPES ***
@@ -57,13 +68,75 @@ extern const uint8_t mw_bitmaps_folder_icon_small[];
 *** LOCAL VARIABLES ***
 **********************/
 
+static FIL file_handle;
+static FATFS g_fileSystem;
+
+SDK_ALIGN(uint8_t g_bufferWrite[SDK_SIZEALIGN(BUFFER_SIZE, SDMMC_DATA_BUFFER_ALIGN_CACHE)],
+          MAX(SDMMC_DATA_BUFFER_ALIGN_CACHE, SDMMCHOST_DMA_BUFFER_ADDR_ALIGN));
+SDK_ALIGN(uint8_t g_bufferRead[SDK_SIZEALIGN(BUFFER_SIZE, SDMMC_DATA_BUFFER_ALIGN_CACHE)],
+          MAX(SDMMC_DATA_BUFFER_ALIGN_CACHE, SDMMCHOST_DMA_BUFFER_ADDR_ALIGN));
+
+static const sdmmchost_detect_card_t s_sdCardDetect =
+{
+    .cdType = BOARD_SD_DETECT_TYPE,
+    .cdTimeOut_ms = (~0U),
+};
+
 /********************************
 *** LOCAL FUNCTION PROTOTYPES ***
 ********************************/
 
+//todo
+static void Board_InitSdifUnusedDataPin(void);
+static status_t sdcardWaitCardInsert(void);
+
 /**********************
 *** LOCAL FUNCTIONS ***
 **********************/
+
+static status_t sdcardWaitCardInsert(void)
+{
+    /* Save host information. */
+    g_sd.host.base = SD_HOST_BASEADDR;
+    g_sd.host.sourceClock_Hz = SD_HOST_CLK_FREQ;
+
+    /* card detect type */
+    g_sd.usrParam.cd = &s_sdCardDetect;
+
+    /* SD host init function */
+    if (SD_HostInit(&g_sd) != kStatus_Success)
+    {
+        return kStatus_Fail;
+    }
+
+    /* power off card */
+    SD_PowerOffCard(g_sd.host.base, g_sd.usrParam.pwr);
+
+    /* wait card insert */
+    if (SD_WaitCardDetectStatus(SD_HOST_BASEADDR, &s_sdCardDetect, true) == kStatus_Success)
+    {
+        /* power on the card */
+        SD_PowerOnCard(g_sd.host.base, g_sd.usrParam.pwr);
+    }
+    else
+    {
+        return kStatus_Fail;
+    }
+
+    return kStatus_Success;
+}
+
+void static Board_InitSdifUnusedDataPin(void)
+{
+    IOCON_PinMuxSet(IOCON, 4, 29,
+                    (IOCON_FUNC2 | IOCON_PIO_SLEW_MASK | IOCON_DIGITAL_EN | IOCON_MODE_PULLUP)); /* sd data[4] */
+    IOCON_PinMuxSet(IOCON, 4, 30,
+                    (IOCON_FUNC2 | IOCON_PIO_SLEW_MASK | IOCON_DIGITAL_EN | IOCON_MODE_PULLUP)); /* sd data[5] */
+    IOCON_PinMuxSet(IOCON, 4, 31,
+                    (IOCON_FUNC2 | IOCON_PIO_SLEW_MASK | IOCON_DIGITAL_EN | IOCON_MODE_PULLUP)); /* sd data[6] */
+    IOCON_PinMuxSet(IOCON, 5, 0,
+                    (IOCON_FUNC2 | IOCON_PIO_SLEW_MASK | IOCON_DIGITAL_EN | IOCON_MODE_PULLUP)); /* sd data[7] */
+}
 
 /***********************
 *** GLOBAL FUNCTIONS ***
@@ -71,6 +144,8 @@ extern const uint8_t mw_bitmaps_folder_icon_small[];
 
 void app_init(void)
 {
+    const TCHAR driverNumberBuffer[3U] = {SDDISK + '0', ':', '/'};
+
     /* enable the rtc 32k oscillator */
     SYSCON->RTCOSCCTRL |= SYSCON_RTCOSCCTRL_EN_MASK;
 
@@ -80,90 +155,98 @@ void app_init(void)
 
     /* init rtc */
     RTC_Init(RTC);
+
+
+
+
+    /* attach main clock to SDIF */
+    CLOCK_AttachClk(BOARD_SDIF_CLK_ATTACH);
+    Board_InitSdifUnusedDataPin();
+
+    /* need call this function to clear the halt bit in clock divider register */
+    CLOCK_SetClkDiv(kCLOCK_DivSdioClk, (uint32_t)(SystemCoreClock / FSL_FEATURE_SDIF_MAX_SOURCE_CLOCK + 1U), true);
+
+    if (sdcardWaitCardInsert() != kStatus_Success)
+    {
+        return;
+    }
+
+    if (f_mount(&g_fileSystem, driverNumberBuffer, 0U))
+    {
+        return;
+    }
+
+    f_chdrive((char const *)&driverNumberBuffer[0U]);
 }
 
 bool app_file_open(char *path_and_filename)
 {
 	bool result = false;
-/*
-	if (application_state == APPLICATION_START)
+
+	// todo
+//	if (application_state == APPLICATION_START)
 	{
 		if (f_open(&file_handle, path_and_filename, FA_READ) == FR_OK)
 		{
 			result = true;
 		}
 	}
-*/
+
 	return result;
 }
 
 bool app_file_create(char *path_and_filename)
 {
 	bool result = false;
-/*
-	if (application_state == APPLICATION_START)
+/* todo
+	if (application_state == APPLICATION_START)*/
 	{
 		if (f_open(&file_handle, path_and_filename, FA_WRITE | FA_CREATE_ALWAYS) == FR_OK)
 		{
 			result = true;
 		}
 	}
-*/
+
 	return result;
 }
 
 uint32_t app_file_size(void)
 {
-	/*
 	return (uint32_t)f_size(&file_handle);
-	*/
-	return 0;
 }
 
 uint8_t app_file_getc()
 {
-	/*
 	uint8_t byte;
 	UINT bytes_read;
 
 	f_read(&file_handle, &byte, 1, &bytes_read);
 
 	return byte;
-	*/
-	return 0;
 }
 
 void app_file_read(uint8_t *buffer, uint32_t count)
 {
-	/*
 	UINT bytes_read;
 
 	f_read(&file_handle, buffer, count, &bytes_read);
-*/
 }
 
 void app_file_write(uint8_t *buffer, uint32_t count)
 {
-	/*
 	UINT bytes_written;
 
 	f_write (&file_handle, buffer, count, &bytes_written);
-	*/
 }
 
 uint32_t app_file_seek(uint32_t position)
 {
-	/*
 	return (uint32_t)(f_lseek(&file_handle, position));
-	*/
-	return 0;
 }
 
 void app_file_close(void)
 {
-	/*
 	f_close(&file_handle);
-	*/
 }
 
 char *app_get_root_folder_path(void)
@@ -182,7 +265,6 @@ uint8_t find_folder_entries(char *path,
 		const uint8_t *file_entry_icon,
 		const uint8_t *folder_entry_icon)
 {
-#if 0
     FRESULT result;
     DIR folder;
     FILINFO file_info;
@@ -238,9 +320,6 @@ uint8_t find_folder_entries(char *path,
     path[strlen(path)] = '/';
 
     return i;
-#endif
-
-    return 0;
 }
 
 struct tm app_get_time_date(void)
@@ -279,7 +358,6 @@ void app_set_time_date(struct tm tm)
     RTC_StartTimer(RTC);
 }
 
-/*
 DWORD get_fattime (void)
 {
 	DWORD fattime = 0;
@@ -296,4 +374,3 @@ DWORD get_fattime (void)
 
 	return fattime;
 }
-*/

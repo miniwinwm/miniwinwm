@@ -406,7 +406,7 @@ mw_handle_t mw_create_window_dialog_text_entry(uint16_t x,
 			NULL,
 			0,
 			MW_WINDOW_FLAG_HAS_BORDER | MW_WINDOW_FLAG_HAS_TITLE_BAR |
-					MW_WINDOW_FLAG_IS_VISIBLE | MW_WINDOW_FLAG_IS_MODAL,
+					MW_WINDOW_FLAG_IS_VISIBLE | MW_WINDOW_FLAG_IS_MODAL | (large_size ? MW_WINDOW_FLAG_LARGE_SIZE : 0),
 			NULL);
 
 	/* check if window could be created */

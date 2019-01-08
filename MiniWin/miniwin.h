@@ -50,10 +50,14 @@ SOFTWARE.
  * System define constants, changing may break things!
  */
 #define MW_BORDER_WIDTH 							1               					/**< Width of a window border */
-#define MW_TITLE_BAR_HEIGHT 						(MW_GL_TITLE_FONT_HEIGHT + 2)       /**< Height of a window's title bar which must be greater than MW_LARGE_CHARACTER_HEIGHT */
+#define MW_TITLE_BAR_HEIGHT 						(MW_TITLE_BAR_ICON_SIZE + 4)        /**< Height of a window's title bar */
 #define MW_TITLE_X_OFFSET							18									/**< Title text x offset in title bar of normal window */
 #define MW_MODAL_TITLE_X_OFFSET						2									/**< Title text x offset in title bar of modal window */
 #define MW_TITLE_Y_OFFSET							2									/**< Title text y offset in title bar */
+#define MW_TITLE_BAR_HEIGHT_LARGE 					(MW_TITLE_BAR_ICON_SIZE_LARGE + 4)  /**< Height of a window's large title bar */
+#define MW_TITLE_X_OFFSET_LARGE						25									/**< Title text x offset in large title bar of normal window */
+#define MW_MODAL_TITLE_X_OFFSET_LARGE				2									/**< Title text x offset in large title bar of modal window */
+#define MW_TITLE_Y_OFFSET_LARGE						5									/**< Title text y offset in large title bar */
 #define MW_USER_MESSAGE_BASE						50      							/**< User messages can be defined from this base value upwards */
 #define MW_ROOT_Z_ORDER 							0       							/**< Root z order is always the lowest */
 #define MW_MIN_Z_ORDER 								1       							/**< Lowest window z order */
@@ -61,8 +65,10 @@ SOFTWARE.
 #define MW_ROOT_WINDOW_ID 							0       							/**< This window always exists and is created on initialisation */
 #define MW_ROOT_WINDOW_HANDLE						1       							/**< This window always has this handle and is set on initialisation */
 #define MW_FIRST_USER_WINDOW_ID 					(MW_ROOT_WINDOW_ID + 1)      		/**< User window identifiers are from this value upwards */
-#define MW_TITLE_BAR_ICON_SIZE						14									/**< Size of icons, which are square */
-#define MW_TITLE_BAR_ICON_OFFSET					16									/**< Distance between each title bar icon */
+#define MW_TITLE_BAR_ICON_SIZE						14									/**< Size of title bar small icons, which are square */
+#define MW_TITLE_BAR_ICON_SIZE_LARGE				20									/**< Size of title bar large icons, which are square */
+#define MW_TITLE_BAR_ICON_OFFSET					(MW_TITLE_BAR_ICON_SIZE + 2)		/**< Distance between each title bar icon */
+#define MW_TITLE_BAR_ICON_OFFSET_LARGE				(MW_TITLE_BAR_ICON_SIZE_LARGE + 3)	/**< Distance between each title bar large icon */
 #define MW_DESKTOP_ICONS_PER_ROW					4           						/**< Number of icons of minimized windows to show across bottom of screen */
 #define MW_DESKTOP_ICON_WIDTH						(MW_ROOT_WIDTH / MW_DESKTOP_ICONS_PER_ROW)	/**< Number of icons across desktop */
 #define MW_DESKTOP_ICON_HEIGHT						18									/**< Height of desktop minimised icons */

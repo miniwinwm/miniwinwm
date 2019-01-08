@@ -1,0 +1,33 @@
+{
+"TargetType": "Linux",
+"TargetName": "MiniWinGen",
+"LargeSize": false,	
+"Windows":
+[
+{
+"Name": "W1",
+"Title": "Window 1",
+"X": 10,
+"Y": 15,
+"Width": 200,
+"Height": 180,
+"Border": true,
+"TitleBar": true,
+"Visible": true,
+"Minimised": false,
+"ScrollingTextBoxes": [{
+		   "Name": "STB1",
+		   "X": 10,
+		   "Y": 10,
+		   "Width": 115,
+		   "Height": 80,
+		   "Justification": "Centre",
+		   "BackgroundColour": "MW_HAL_LCD_YELLOW", 
+		   "ForegroundColour": "MW_HAL_LCD_BLACK", 		   
+		   "Font": "mf_rlefont_DejaVuSans12",
+		   "Enabled": true,
+		   "Visible": true
+			}]
+}
+]
+}
