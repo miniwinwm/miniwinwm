@@ -16,6 +16,8 @@ MiniWinSimple_Common contains platform independant files for an example applioca
 
 MiniWinTest_Common contains platform independant files for an example appliocation. Builds for Windows and Linux simulators and embedded platforms.
 
+MiniWinRoot_Common contains platform independant files for an example appliocation. Builds for Windows and Linux simulators and embedded platforms.
+
 MiniWinTTFonts_Common contains platform independant files for an example appliocation. Builds for Windows and Linux simulators and embedded platforms.
 
 In addition the MiniWin tools are build using TrueStudio and are found under the TrueStudio folder. These tools are...
