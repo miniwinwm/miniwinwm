@@ -28,6 +28,7 @@ SOFTWARE.
 *** INCLUDES ***
 ***************/
 
+#include <string.h>
 #include <time.h>
 #include "ff.h"
 #include "fsl_rtc.h"
@@ -38,16 +39,17 @@ SOFTWARE.
 #include "board.h"
 #include "pin_mux.h"
 #include "app.h"
-
-
-#include <string.h>
 #include "diskio.h"
 
 /****************
 *** CONSTANTS ***
 ****************/
 
-#define BUFFER_SIZE (100U)
+static const sdmmchost_detect_card_t s_sdCardDetect =
+{
+    .cdType = BOARD_SD_DETECT_TYPE,
+    .cdTimeOut_ms = ~0
+};
 
 /************
 *** TYPES ***
@@ -69,34 +71,34 @@ extern const uint8_t mw_bitmaps_folder_icon_small[];
 **********************/
 
 static FIL file_handle;
-static FATFS g_fileSystem;
-
-SDK_ALIGN(uint8_t g_bufferWrite[SDK_SIZEALIGN(BUFFER_SIZE, SDMMC_DATA_BUFFER_ALIGN_CACHE)],
-          MAX(SDMMC_DATA_BUFFER_ALIGN_CACHE, SDMMCHOST_DMA_BUFFER_ADDR_ALIGN));
-SDK_ALIGN(uint8_t g_bufferRead[SDK_SIZEALIGN(BUFFER_SIZE, SDMMC_DATA_BUFFER_ALIGN_CACHE)],
-          MAX(SDMMC_DATA_BUFFER_ALIGN_CACHE, SDMMCHOST_DMA_BUFFER_ADDR_ALIGN));
-
-static const sdmmchost_detect_card_t s_sdCardDetect =
-{
-    .cdType = BOARD_SD_DETECT_TYPE,
-    .cdTimeOut_ms = (~0U),
-};
+static FATFS file_system;
+static TCHAR root_folder_path[] = {SDDISK + '0', ':', '/', 0};
+static bool sd_card_mounted = false;
 
 /********************************
 *** LOCAL FUNCTION PROTOTYPES ***
 ********************************/
 
-//todo
-static void Board_InitSdifUnusedDataPin(void);
-static status_t sdcardWaitCardInsert(void);
+/**
+ * Initialize the unused SD card interface data pins 
+ */
+static void init_sdif_unused_data_pins(void);
+
+/**
+ * Check if the SD card is inserted 
+ *
+ * @return kStatus_Fail if the card is not inserted or its status cannot be found, kStatus_Success if the card is inserted
+ * @note If an inserted card is found it is powered up by this function
+ */
+static status_t check_sd_card_inserted(void);
 
 /**********************
 *** LOCAL FUNCTIONS ***
 **********************/
 
-static status_t sdcardWaitCardInsert(void)
+static status_t check_sd_card_inserted(void)
 {
-    /* Save host information. */
+    /* save host information. */
     g_sd.host.base = SD_HOST_BASEADDR;
     g_sd.host.sourceClock_Hz = SD_HOST_CLK_FREQ;
 
@@ -112,10 +114,10 @@ static status_t sdcardWaitCardInsert(void)
     /* power off card */
     SD_PowerOffCard(g_sd.host.base, g_sd.usrParam.pwr);
 
-    /* wait card insert */
+    /* wait for card insert */
     if (SD_WaitCardDetectStatus(SD_HOST_BASEADDR, &s_sdCardDetect, true) == kStatus_Success)
     {
-        /* power on the card */
+        /* power on card */
         SD_PowerOnCard(g_sd.host.base, g_sd.usrParam.pwr);
     }
     else
@@ -126,7 +128,7 @@ static status_t sdcardWaitCardInsert(void)
     return kStatus_Success;
 }
 
-void static Board_InitSdifUnusedDataPin(void)
+void static init_sdif_unused_data_pins(void)
 {
     IOCON_PinMuxSet(IOCON, 4, 29,
                     (IOCON_FUNC2 | IOCON_PIO_SLEW_MASK | IOCON_DIGITAL_EN | IOCON_MODE_PULLUP)); /* sd data[4] */
@@ -144,7 +146,7 @@ void static Board_InitSdifUnusedDataPin(void)
 
 void app_init(void)
 {
-    const TCHAR driverNumberBuffer[3U] = {SDDISK + '0', ':', '/'};
+    DIR folder;
 
     /* enable the rtc 32k oscillator */
     SYSCON->RTCOSCCTRL |= SYSCON_RTCOSCCTRL_EN_MASK;
@@ -156,37 +158,39 @@ void app_init(void)
     /* init rtc */
     RTC_Init(RTC);
 
-
-
-
     /* attach main clock to SDIF */
     CLOCK_AttachClk(BOARD_SDIF_CLK_ATTACH);
-    Board_InitSdifUnusedDataPin();
+    init_sdif_unused_data_pins();
 
-    /* need call this function to clear the halt bit in clock divider register */
+    /* clear the halt bit in clock divider register */
     CLOCK_SetClkDiv(kCLOCK_DivSdioClk, (uint32_t)(SystemCoreClock / FSL_FEATURE_SDIF_MAX_SOURCE_CLOCK + 1U), true);
 
-    if (sdcardWaitCardInsert() != kStatus_Success)
+    if (check_sd_card_inserted() != kStatus_Success)
     {
         return;
     }
 
-    if (f_mount(&g_fileSystem, driverNumberBuffer, 0U))
+    if (f_mount(&file_system, (const TCHAR *)root_folder_path, 0))
     {
         return;
     }
 
-    f_chdrive((char const *)&driverNumberBuffer[0U]);
+    f_chdrive((const TCHAR *)root_folder_path);
+
+    /* first access to the file system is slow so do it here */
+    f_opendir(&folder, root_folder_path);
+    f_closedir(&folder);
+
+    sd_card_mounted = true;
 }
 
 bool app_file_open(char *path_and_filename)
 {
 	bool result = false;
 
-	// todo
-//	if (application_state == APPLICATION_START)
+	if (sd_card_mounted)
 	{
-		if (f_open(&file_handle, path_and_filename, FA_READ) == FR_OK)
+		if (f_open(&file_handle, (TCHAR *)path_and_filename, FA_READ) == FR_OK)
 		{
 			result = true;
 		}
@@ -198,10 +202,10 @@ bool app_file_open(char *path_and_filename)
 bool app_file_create(char *path_and_filename)
 {
 	bool result = false;
-/* todo
-	if (application_state == APPLICATION_START)*/
+
+	if (sd_card_mounted)
 	{
-		if (f_open(&file_handle, path_and_filename, FA_WRITE | FA_CREATE_ALWAYS) == FR_OK)
+		if (f_open(&file_handle, (TCHAR *)path_and_filename, FA_WRITE | FA_CREATE_ALWAYS) == FR_OK)
 		{
 			result = true;
 		}
@@ -212,15 +216,25 @@ bool app_file_create(char *path_and_filename)
 
 uint32_t app_file_size(void)
 {
-	return (uint32_t)f_size(&file_handle);
+	uint32_t size = 0;
+
+	if (sd_card_mounted)
+	{
+		size = (uint32_t)f_size(&file_handle);
+	}
+
+	return size;
 }
 
 uint8_t app_file_getc()
 {
-	uint8_t byte;
+	uint8_t byte = 0;
 	UINT bytes_read;
 
-	f_read(&file_handle, &byte, 1, &bytes_read);
+	if (sd_card_mounted)
+	{
+		f_read(&file_handle, (void *)&byte, 1, (UINT *)&bytes_read);
+	}
 
 	return byte;
 }
@@ -229,29 +243,38 @@ void app_file_read(uint8_t *buffer, uint32_t count)
 {
 	UINT bytes_read;
 
-	f_read(&file_handle, buffer, count, &bytes_read);
+	if (sd_card_mounted)
+	{
+		f_read(&file_handle, (void *)buffer, (UINT)count, (UINT *)&bytes_read);
+	}
 }
 
 void app_file_write(uint8_t *buffer, uint32_t count)
 {
 	UINT bytes_written;
 
-	f_write (&file_handle, buffer, count, &bytes_written);
+	if (sd_card_mounted)
+	{
+		f_write(&file_handle, (void *)buffer, (UINT)count, (UINT *)&bytes_written);
+	}
 }
 
 uint32_t app_file_seek(uint32_t position)
 {
-	return (uint32_t)(f_lseek(&file_handle, position));
+	return (uint32_t)(f_lseek(&file_handle, (FSIZE_t)position));
 }
 
 void app_file_close(void)
 {
-	f_close(&file_handle);
+	if (sd_card_mounted)
+	{
+		f_close(&file_handle);
+	}
 }
 
 char *app_get_root_folder_path(void)
 {
-	return "/";
+	return root_folder_path;
 }
 
 void app_main_loop_process(void)
@@ -270,21 +293,34 @@ uint8_t find_folder_entries(char *path,
     FILINFO file_info;
     UINT i = 0;
 
+	if (!sd_card_mounted)
+	{
+		return 0;
+	}
+
     /* strip off terminating '/' for FatFS folders */
     path[strlen(path) - 1] = '\0';
 
-    result = f_opendir(&folder, path);                       /* Open the folder */
+    /* open the folder */
+    result = f_opendir(&folder, path);
     if (result == FR_OK)
     {
         for (;;)
         {
-            result = f_readdir(&folder, &file_info);                   /* Read a folder item */
-            if (result != FR_OK || file_info.fname[0] == 0)
+            if (i == max_entries)
             {
-            	break;  /* Break on error or end of folder */
+            	break;
             }
 
-        	/* Ignore if it's a hidden or system entry*/
+        	/* read a folder item */
+            result = f_readdir(&folder, &file_info);
+            if (result != FR_OK || file_info.fname[0] == 0)
+            {
+            	/* break on error or end of folder */
+            	break;
+            }
+
+        	/* ignore if it's a hidden or system entry*/
         	if ((file_info.fattrib & AM_HID) || (file_info.fattrib & AM_SYS))
         	{
         		continue;
@@ -299,19 +335,15 @@ uint8_t find_folder_entries(char *path,
             mw_util_safe_strcpy(list_box_settings_entries[i].label, MAX_FILENAME_LENGTH + 1, file_info.fname);
             if (file_info.fattrib & AM_DIR)
             {
-            	/* It is a folder */
+            	/* it is a folder */
             	list_box_settings_entries[i].icon = folder_entry_icon;
             }
             else
             {
-            	/* It is a file. */
+            	/* it is a file */
                 list_box_settings_entries[i].icon = file_entry_icon;
             }
             i++;
-            if (i == max_entries)
-            {
-            	break;
-            }
         }
         f_closedir(&folder);
     }
@@ -358,7 +390,7 @@ void app_set_time_date(struct tm tm)
     RTC_StartTimer(RTC);
 }
 
-DWORD get_fattime (void)
+DWORD get_fattime(void)
 {
 	DWORD fattime = 0;
 	struct tm tm;

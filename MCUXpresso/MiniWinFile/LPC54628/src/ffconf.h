@@ -237,14 +237,12 @@
 /  Instead of private sector buffer eliminated from the file object, common sector
 /  buffer in the filesystem object (FATFS) is used for the file data transfer. */
 
-
 #define FF_FS_EXFAT		0
 /* This option switches support for exFAT filesystem. (0:Disable or 1:Enable)
 /  To enable exFAT, also LFN needs to be enabled.
 /  Note that enabling exFAT discards ANSI C (C89) compatibility. */
 
-
-#define FF_FS_NORTC		1
+#define FF_FS_NORTC		0
 #define FF_NORTC_MON	1
 #define FF_NORTC_MDAY	1
 #define FF_NORTC_YEAR	2018
@@ -289,10 +287,6 @@
 /  The FF_SYNC_t defines O/S dependent sync object type. e.g. HANDLE, ID, OS_EVENT*,
 /  SemaphoreHandle_t and etc. A header file for O/S definitions needs to be
 /  included somewhere in the scope of ff.h. */
-
-/* #include <windows.h>	// O/S definitions  */
-
-
 
 /*--- End of configuration options ---*/
 

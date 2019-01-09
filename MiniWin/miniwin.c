@@ -2488,7 +2488,7 @@ static void do_paint_window_client2(mw_handle_t window_handle, const mw_util_rec
 
 	/* get window id from window handle and check it's in range */
 	window_id = get_window_id_for_handle(window_handle);
-	MW_ASSERT(window_id < MW_MAX_CONTROL_COUNT, "Illegal control id");
+	MW_ASSERT(window_id < MW_MAX_WINDOW_COUNT, "Illegal window id");
 
 	client_draw_info.clip_rect.x = invalid_rect->x - mw_all_windows[window_id].client_rect.x;
 	client_draw_info.clip_rect.y = invalid_rect->y - mw_all_windows[window_id].client_rect.y;
@@ -5461,7 +5461,7 @@ bool mw_process_message(void)
 				{
 					/* check if recipient id is sensible */
 					control_id = get_control_id_for_handle(mw_all_timers[i].recipient_handle);
-					MW_ASSERT(control_id < MW_MAX_CONTROL_COUNT, "Bad window handle");
+					MW_ASSERT(control_id < MW_MAX_CONTROL_COUNT, "Bad control handle");
 
 					if (control_id < MW_MAX_CONTROL_COUNT)
 					{
