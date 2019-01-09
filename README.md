@@ -1,6 +1,6 @@
 See https://miniwinwm.wixsite.com/miniwinwm
 
-MiniWin contains the MiniWin window manager source code in C99. Builds for Windows, Linux and embedded devices.
+MiniWin contains the MiniWin window manager source code in C99. Builds for the Windows and Linux MiniWin simulator, and embedded devices.
 
 MCUXpresso contains project files and application specific source files for the example projects running on the LPC54628 dev board.
 
