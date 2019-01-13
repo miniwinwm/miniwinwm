@@ -34,6 +34,7 @@ SOFTWARE.
 #include "fsl_ft5406.h"
 #include "fsl_gpio.h"
 #include "hal/hal_touch.h"
+#include "hal/hal_delay.h"
 
 /****************
 *** CONSTANTS ***
@@ -41,6 +42,8 @@ SOFTWARE.
 
 #define I2C_MASTER_CLOCK_FREQUENCY 	12000000
 #define I2C_MASTER_SLAVE_ADDR_7BIT 	0x7EU
+#define APP_BOARD_USER_BUTTON_PORT 	1
+#define APP_BOARD_USER_BUTTON_PIN	1
 
 /************
 *** TYPES ***
@@ -85,16 +88,14 @@ void mw_hal_touch_init(void)
 
     /* initialize the touch controller */
     FT5406_Init(&touch_handle, I2C2);
-}
 
-bool mw_hal_touch_is_calibration_required(void)
-{
-	return false;
+    /* Give touch hardware time to settle to prevent false touch at startup */
+    mw_hal_delay_ms(50);
 }
 
 bool mw_hal_touch_is_recalibration_required(void)
 {
-	return false;
+	return !GPIO_PinRead(GPIO, APP_BOARD_USER_BUTTON_PORT, APP_BOARD_USER_BUTTON_PIN);
 }
 
 bool mw_hal_touch_get_point(uint16_t* x, uint16_t* y)

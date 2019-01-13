@@ -41,9 +41,6 @@ SOFTWARE.
 *** CONSTANTS ***
 ****************/
 
-#define MW_HAL_LCD_WIDTH			mw_hal_lcd_get_screen_width()     /**< LCD screen width in pixels */
-#define MW_HAL_LCD_HEIGHT			mw_hal_lcd_get_screen_height()     /**< LCD screen height in pixels */
-
 /**
  * Pre-defined named colours, colour bit layout is rrrr rggg gggb bbbb
  */
@@ -93,18 +90,18 @@ typedef uint32_t mw_hal_lcd_colour_t;      		/**< Integer type that can hold the
 void mw_hal_lcd_init(void);
 
 /**
- * Get the screen width in pixels
+ * Get the display width in pixels
  *
- * @return The screen width in pixels
+ * @return The display width in pixels. This is the physical unrotated pixel width.
  */
-uint16_t mw_hal_lcd_get_screen_width(void);
+uint16_t mw_hal_lcd_get_display_width(void);
 
 /**
- * Get the screen height in pixels
+ * Get the display height in pixels
  *
- * @return The screen height in pixels
+ * @return The display height in pixels. This is the physical unrotated pixel height.
  */
-uint16_t mw_hal_lcd_get_screen_height(void);
+uint16_t mw_hal_lcd_get_display_height(void);
 
 /**
  * Plot a single pixel. Points off screen are not clipped.

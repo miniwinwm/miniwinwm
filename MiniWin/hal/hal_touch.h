@@ -65,14 +65,6 @@ typedef enum
 void mw_hal_touch_init(void);
 
 /**
- * Check done to discover if a touch calibration is required
- * by this hardware's touch screen
- *
- * @return true if required else false
- */
-bool mw_hal_touch_is_calibration_required(void);
-
-/**
  * Check done at startup to discover if a touch recalibration is required.
  * This will be determined by some board specific hardware method.
  *

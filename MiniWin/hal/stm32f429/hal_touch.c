@@ -73,11 +73,6 @@ void mw_hal_touch_init(void)
 	BSP_PB_Init(BUTTON_KEY, BUTTON_MODE_GPIO);
 }
 
-bool mw_hal_touch_is_calibration_required(void)
-{
-	return true;
-}
-
 bool mw_hal_touch_is_recalibration_required(void)
 {
 	/* if board button pressed clear settings which forces a screen recalibration */

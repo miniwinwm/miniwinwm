@@ -30,14 +30,17 @@ SOFTWARE.
 ***************/
 
 #include "hal/hal_lcd.h"
+#include "miniwin_config.h"
 #include "stm32f429i_discovery_lcd.h"
 
 /****************
 *** CONSTANTS ***
 ****************/
 
-#define LCD_FRAME_BUFFER_LAYER0                  (LCD_FRAME_BUFFER+0x130000)
-#define LCD_FRAME_BUFFER_LAYER1                  LCD_FRAME_BUFFER
+#define LCD_DISPLAY_WIDTH_PIXELS	240							/**< This is the width of the display in pixels irrespective of user specified display rotation */
+#define LCD_DISPLAY_HEIGHT_PIXELS	320							/**< This is the height of the display in pixels irrespective of user specified display rotation */
+#define LCD_FRAME_BUFFER_LAYER0     (LCD_FRAME_BUFFER+0x130000)
+#define LCD_FRAME_BUFFER_LAYER1     LCD_FRAME_BUFFER
 
 /************
 *** TYPES ***
@@ -83,23 +86,29 @@ void mw_hal_lcd_init(void)
     BSP_LCD_SetLayerVisible(0, ENABLE);
 
     BSP_LCD_DisplayOn();
-
-    mw_hal_lcd_filled_rectangle(0, 0, MW_HAL_LCD_WIDTH, MW_HAL_LCD_HEIGHT, MW_HAL_LCD_WHITE);
 }
 
-uint16_t mw_hal_lcd_get_screen_width(void)
+uint16_t mw_hal_lcd_get_display_width(void)
 {
-	return 240;
+	return LCD_DISPLAY_WIDTH_PIXELS;
 }
 
-uint16_t mw_hal_lcd_get_screen_height(void)
+uint16_t mw_hal_lcd_get_display_height(void)
 {
-	return 320;
+	return LCD_DISPLAY_HEIGHT_PIXELS;
 }
 
 void mw_hal_lcd_pixel(int16_t x, int16_t y, mw_hal_lcd_colour_t colour)
 {
+#if defined(MW_DISPLAY_ROTATION_0)
 	BSP_LCD_DrawPixel(x, y, colour);
+#elif defined(MW_DISPLAY_ROTATION_90)
+	BSP_LCD_DrawPixel(y, LCD_DISPLAY_HEIGHT_PIXELS - 1 - x, colour);
+#elif defined (MW_DISPLAY_ROTATION_180)
+	BSP_LCD_DrawPixel(LCD_DISPLAY_WIDTH_PIXELS - x - 1, LCD_DISPLAY_HEIGHT_PIXELS - 1 - y, colour);
+#elif defined (MW_DISPLAY_ROTATION_270)
+	BSP_LCD_DrawPixel(LCD_DISPLAY_WIDTH_PIXELS - 1 - y, x, colour);
+#endif
 }
 
 void mw_hal_lcd_filled_rectangle(int16_t start_x,
@@ -108,7 +117,15 @@ void mw_hal_lcd_filled_rectangle(int16_t start_x,
 		uint16_t height,
 		mw_hal_lcd_colour_t colour)
 {
+#if defined(MW_DISPLAY_ROTATION_0)
 	BSP_LCD_FillRect(start_x, start_y, width, height, colour);
+#elif defined(MW_DISPLAY_ROTATION_90)
+	BSP_LCD_FillRect(start_y, LCD_DISPLAY_HEIGHT_PIXELS - start_x - width, height, width, colour);
+#elif defined (MW_DISPLAY_ROTATION_180)
+	BSP_LCD_FillRect(LCD_DISPLAY_WIDTH_PIXELS - start_x - width, LCD_DISPLAY_HEIGHT_PIXELS - start_y - height, width, height, colour);
+#elif defined (MW_DISPLAY_ROTATION_270)
+	BSP_LCD_FillRect(LCD_DISPLAY_WIDTH_PIXELS - start_y - height, start_x, height, width, colour);
+#endif
 }
 
 void mw_hal_lcd_colour_bitmap_clip(int16_t image_start_x,

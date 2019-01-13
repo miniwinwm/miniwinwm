@@ -4091,24 +4091,21 @@ void mw_init()
 	/* load the settings from non vol storage */
 	mw_settings_load();
 	
-	if (mw_hal_touch_is_calibration_required())
+	/* check settings for intialisation and calibration */
+	if (!mw_settings_is_initialised() || !mw_settings_is_calibrated())
 	{
-		/* check settings for intialisation and calibration */
-		if (!mw_settings_is_initialised() || !mw_settings_is_calibrated())
-		{
-			/* settings not initialised or not calibrated so kick off calibrate routine */
-			mw_touch_calibrate(&calibration_matrix);
+		/* settings not initialised or not calibrated so kick off calibrate routine */
+		mw_touch_calibrate(&calibration_matrix);
 
-			/* set settings to defaults */
-			mw_settings_set_to_defaults();
+		/* set settings to defaults */
+		mw_settings_set_to_defaults();
 
-			/* save calibration metrics */
-			mw_settings_set_calibration_matrix(&calibration_matrix);
-			mw_settings_set_calibrated(true);
+		/* save calibration metrics */
+		mw_settings_set_calibration_matrix(&calibration_matrix);
+		mw_settings_set_calibrated(true);
 
-			/* save settings */
-			mw_settings_save();
-		}
+		/* save settings */
+		mw_settings_save();
 	}
 
 	/* set up root window */

@@ -90,10 +90,10 @@ void mw_hal_timer_init(void)
     GPIO_PortInit(GPIO, APP_BOARD_TEST_LED_PORT);
     GPIO_PinInit(GPIO, APP_BOARD_TEST_LED_PORT, APP_BOARD_TEST_LED_PIN, &led_config);
 
-    /* Enable the asynchronous bridge */
+    /* enable the asynchronous bridge */
     SYSCON->ASYNCAPBCTRL = 1;
 
-    /* Use 12 MHz clock for some of the Ctimers */
+    /* use 12 MHz clock for some of the ctimers */
     CLOCK_AttachClk(kFRO12M_to_ASYNC_APB);
 
     CTIMER_GetDefaultConfig(&config);

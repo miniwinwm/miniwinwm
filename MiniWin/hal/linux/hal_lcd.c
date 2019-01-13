@@ -40,6 +40,9 @@ SOFTWARE.
 *** CONSTANTS ***
 ****************/
 
+#define LCD_DISPLAY_WIDTH_PIXELS	240							/**< This is the width of the display in pixels irrespective of user specified display rotation */
+#define LCD_DISPLAY_HEIGHT_PIXELS	320							/**< This is the height of the display in pixels irrespective of user specified display rotation */
+
 /************
 *** TYPES ***
 ************/
@@ -78,16 +81,14 @@ void mw_hal_lcd_init(void)
 	sleep(1);
 }
 
-uint16_t mw_hal_lcd_get_screen_width(void)
+uint16_t mw_hal_lcd_get_display_width(void)
 {
-	/* change this value to simulate a different screen width */
-	return 240;
+	return LCD_DISPLAY_WIDTH_PIXELS;
 }
 
-uint16_t mw_hal_lcd_get_screen_height(void)
+uint16_t mw_hal_lcd_get_display_height(void)
 {
-	/* change this value to simulate a different screen height */
-	return 320;
+	return LCD_DISPLAY_HEIGHT_PIXELS;
 }
 
 void mw_hal_lcd_pixel(int16_t x, int16_t y, mw_hal_lcd_colour_t colour)

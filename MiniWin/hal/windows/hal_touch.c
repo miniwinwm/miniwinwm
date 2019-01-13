@@ -76,11 +76,6 @@ void mw_hal_touch_init(void)
 {
 }
 
-bool mw_hal_touch_is_calibration_required(void)
-{
-	return true;
-}
-
 bool mw_hal_touch_is_recalibration_required(void)
 {
 	return false;

@@ -43,16 +43,31 @@ SOFTWARE.
  * User configurable values
  */
  
- /* Memory allocation */
+/* Memory allocation */
 #define MW_MAX_WINDOW_COUNT 				14               		/**< Maximum number of allowed windows; root window always takes 1 space */
 #define MW_MAX_CONTROL_COUNT				24              		/**< Total maximum number of allowed controls in all windows */
 #define MW_MAX_TIMER_COUNT					8               		/**< Maximum number of timers */
 #define MW_MESSAGE_QUEUE_SIZE				100              		/**< Maximum number of messages in message queue */
 
+/* Display rotation - one and only one of these must be defined */
+#define MW_DISPLAY_ROTATION_0
+/* #define MW_DISPLAY_ROTATION_90 */
+/* #define MW_DISPLAY_ROTATION_180 */
+/* #define MW_DISPLAY_ROTATION_270 */
+
+#if !defined(MW_DISPLAY_ROTATION_0) && !defined (MW_DISPLAY_ROTATION_90)  && !defined (MW_DISPLAY_ROTATION_180) && !defined (MW_DISPLAY_ROTATION_270)
+#error Display rotation not defined
+#endif
+
 /* Sizes */
-#define MW_ROOT_WIDTH 						MW_HAL_LCD_WIDTH   		/**< Width of root window */
-#define MW_ROOT_HEIGHT 						MW_HAL_LCD_HEIGHT  		/**< Height of root window */
-#define MW_MAX_TITLE_SIZE 					14              		/**< Maximum window title bar title size in characters */
+#if defined(MW_DISPLAY_ROTATION_0) || defined(MW_DISPLAY_ROTATION_180)
+#define MW_ROOT_WIDTH 						mw_hal_lcd_get_display_width()  /**< Width of root window */
+#define MW_ROOT_HEIGHT 						mw_hal_lcd_get_display_height() /**< Height of root window */
+#elif defined(MW_DISPLAY_ROTATION_90) || defined(MW_DISPLAY_ROTATION_270)
+#define MW_ROOT_WIDTH 						mw_hal_lcd_get_display_height() /**< Width of root window */
+#define MW_ROOT_HEIGHT 						mw_hal_lcd_get_display_width()	/**< Height of root window */
+#endif
+#define MW_MAX_TITLE_SIZE 					14              				/**< Maximum window title bar title size in characters */
 
 /* User interface colours */
 #define MW_TITLE_BAR_COLOUR_FOCUS			MW_HAL_LCD_BLUE    		/**< Colour of title bar of window with focus */

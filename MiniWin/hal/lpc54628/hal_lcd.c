@@ -36,11 +36,13 @@ SOFTWARE.
 #include "fsl_lcdc.h"
 #include "fsl_sctimer.h"
 #include "hal/hal_lcd.h"
+#include "miniwin_config.h"
 
 /****************
 *** CONSTANTS ***
 ****************/
-
+#define LCD_DISPLAY_WIDTH_PIXELS	480							/**< This is the width of the display in pixels irrespective of user specified display rotation */
+#define LCD_DISPLAY_HEIGHT_PIXELS	272							/**< This is the height of the display in pixels irrespective of user specified display rotation */
 #define LCD_PANEL_CLK 	9000000
 #define LCD_PPL 		480
 #define LCD_HSW 		2
@@ -51,8 +53,6 @@ SOFTWARE.
 #define LCD_VFP 		4
 #define LCD_VBP 		12
 #define LCD_POL_FLAGS 	(kLCDC_InvertVsyncPolarity | kLCDC_InvertHsyncPolarity)
-#define IMG_HEIGHT 		LCD_LPP
-#define IMG_WIDTH 		LCD_PPL
 
 /************
 *** TYPES ***
@@ -71,7 +71,7 @@ SOFTWARE.
 **********************/
 
 __attribute__((aligned(8)))
-__NOINIT(RAM4) static uint32_t s_frameBuf0[IMG_HEIGHT][IMG_WIDTH];
+__NOINIT(RAM4) static uint32_t s_frameBuf0[LCD_DISPLAY_HEIGHT_PIXELS][LCD_DISPLAY_WIDTH_PIXELS];
 
 /********************************
 *** LOCAL FUNCTION PROTOTYPES ***
@@ -108,7 +108,7 @@ void mw_hal_lcd_init(void)
     lcdc_config_t lcdConfig;
 
     /* clear the screen buffers */
-    memset(s_frameBuf0, 0, IMG_HEIGHT * IMG_WIDTH * sizeof(uint32_t));
+    memset(s_frameBuf0, 0, LCD_DISPLAY_WIDTH_PIXELS * LCD_DISPLAY_HEIGHT_PIXELS * sizeof(uint32_t));
 
     /* route Main clock to lcd */
     CLOCK_AttachClk(kMAIN_CLK_to_LCD_CLK);
@@ -140,19 +140,27 @@ void mw_hal_lcd_init(void)
     LCDC_PowerUp(LCD);
 }
 
-uint16_t mw_hal_lcd_get_screen_width(void)
+uint16_t mw_hal_lcd_get_display_width(void)
 {
-	return IMG_WIDTH;
+	return LCD_DISPLAY_WIDTH_PIXELS;
 }
 
-uint16_t mw_hal_lcd_get_screen_height(void)
+uint16_t mw_hal_lcd_get_display_height(void)
 {
-	return IMG_HEIGHT;
+	return LCD_DISPLAY_HEIGHT_PIXELS;
 }
 
 void mw_hal_lcd_pixel(int16_t x, int16_t y, mw_hal_lcd_colour_t colour)
 {
+#if defined(MW_DISPLAY_ROTATION_0)
 	s_frameBuf0[y][x] = colour;
+#elif defined(MW_DISPLAY_ROTATION_90)
+	s_frameBuf0[LCD_DISPLAY_HEIGHT_PIXELS - 1 - x][y] = colour;
+#elif defined (MW_DISPLAY_ROTATION_180)
+	s_frameBuf0[LCD_DISPLAY_HEIGHT_PIXELS - 1 - y][LCD_DISPLAY_WIDTH_PIXELS - x - 1] = colour;
+#elif defined (MW_DISPLAY_ROTATION_270)
+	s_frameBuf0[x][LCD_DISPLAY_WIDTH_PIXELS - 1 - y] = colour;
+#endif
 }
 
 void mw_hal_lcd_filled_rectangle(int16_t start_x,
@@ -168,7 +176,16 @@ void mw_hal_lcd_filled_rectangle(int16_t start_x,
 	{
 		for (y = start_y; y < start_y + height; y++)
 		{
+			//s_frameBuf0[y][x] = colour;
+#if defined(MW_DISPLAY_ROTATION_0)
 			s_frameBuf0[y][x] = colour;
+#elif defined(MW_DISPLAY_ROTATION_90)
+			s_frameBuf0[LCD_DISPLAY_HEIGHT_PIXELS - 1 - x][y] = colour;
+#elif defined (MW_DISPLAY_ROTATION_180)
+			s_frameBuf0[LCD_DISPLAY_HEIGHT_PIXELS - 1 - y][LCD_DISPLAY_WIDTH_PIXELS - x - 1] = colour;
+#elif defined (MW_DISPLAY_ROTATION_270)
+			s_frameBuf0[x][LCD_DISPLAY_WIDTH_PIXELS - 1 - y] = colour;
+#endif
 		}
 	}
 }

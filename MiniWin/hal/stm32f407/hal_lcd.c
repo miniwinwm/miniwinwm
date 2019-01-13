@@ -33,11 +33,15 @@ SOFTWARE.
 #include <stdbool.h>
 #include "hal/hal_lcd.h"
 #include "hal/hal_delay.h"
+#include "miniwin_config.h"
 #include "stm32f4xx_hal.h"
 
 /****************
 *** CONSTANTS ***
 ****************/
+
+#define LCD_DISPLAY_WIDTH_PIXELS	240							/**< This is the width of the display in pixels irrespective of user specified display rotation */
+#define LCD_DISPLAY_HEIGHT_PIXELS	320							/**< This is the height of the display in pixels irrespective of user specified display rotation */
 
 /************
 *** TYPES ***
@@ -193,24 +197,34 @@ void mw_hal_lcd_init(void)
     write_command(0x24,0x0000);		/* ram write data mask 2 */
     write_command(0x4f,0x0000);		/* ram x address counter */
     write_command(0x4e,0x0000);		/* ram y address counter */
-
-    mw_hal_lcd_filled_rectangle(0, 0, MW_HAL_LCD_WIDTH, MW_HAL_LCD_HEIGHT, MW_HAL_LCD_WHITE);
 }
 
-uint16_t mw_hal_lcd_get_screen_width(void)
+uint16_t mw_hal_lcd_get_display_width(void)
 {
-	return 240;
+	return LCD_DISPLAY_WIDTH_PIXELS;
 }
 
-uint16_t mw_hal_lcd_get_screen_height(void)
+uint16_t mw_hal_lcd_get_display_height(void)
 {
-	return 320;
+	return LCD_DISPLAY_HEIGHT_PIXELS;
 }
 
 void mw_hal_lcd_pixel(int16_t x, int16_t y, mw_hal_lcd_colour_t colour)
 {
+#if defined(MW_DISPLAY_ROTATION_0)
 	write_command(0x4e, x);
 	write_command(0x4f, y);
+#elif defined(MW_DISPLAY_ROTATION_90)
+	write_command(0x4e, y);
+	write_command(0x4f, LCD_DISPLAY_HEIGHT_PIXELS - 1 - x);
+#elif defined (MW_DISPLAY_ROTATION_180)
+	write_command(0x4e, LCD_DISPLAY_WIDTH_PIXELS - x - 1);
+	write_command(0x4f, LCD_DISPLAY_HEIGHT_PIXELS - 1 - y);
+#elif defined (MW_DISPLAY_ROTATION_270)
+	write_command(0x4e, LCD_DISPLAY_WIDTH_PIXELS - 1 - y);
+	write_command(0x4f, x);
+#endif
+
 	write_command(0x22, ((colour & 0xf80000) >> 8) |
 			((colour & 0xfc00) >> 5) |
 			((colour & 0xf8) >> 3));

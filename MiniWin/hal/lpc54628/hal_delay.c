@@ -31,6 +31,8 @@ SOFTWARE.
 ***************/
 
 #include <stdint.h>
+#include "fsl_ctimer.h"
+#include "fsl_gpio.h"
 
 /****************
 *** CONSTANTS ***
@@ -66,6 +68,29 @@ SOFTWARE.
 
 void mw_hal_delay_init(void)
 {
+}
+
+void mw_hal_delay_ms(uint16_t ms)
+{
+	uint16_t i;
+
+	for (i = 0; i < ms; i++)
+	{
+		mw_hal_delay_us(1000);
+	}
+}
+
+void mw_hal_delay_us(uint32_t us)
+{
+	volatile uint32_t i;
+	volatile uint32_t j;
+
+	for (i = 0; i < us; i++)
+	{
+		for (j = 0; j < 23; j++)
+		{
+		}
+	}
 }
 
 #endif

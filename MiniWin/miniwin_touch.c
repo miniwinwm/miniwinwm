@@ -39,9 +39,6 @@ SOFTWARE.
 *** CONSTANTS ***
 ****************/
 
-#define MIN_SCREEN_DIMENSION (MW_HAL_LCD_WIDTH < MW_HAL_LCD_HEIGHT ? MW_HAL_LCD_WIDTH : MW_HAL_LCD_HEIGHT)
-#define TOUCH_CROSS_SIZE ( MIN_SCREEN_DIMENSION / 6 )
-
 /************
 *** TYPES ***
 ************/
@@ -80,17 +77,17 @@ static void draw_cross(uint16_t x, int16_t y, int16_t length);
  */
 static void draw_cross(uint16_t x, int16_t y, int16_t length)
 {
-	mw_gl_draw_info_t draw_info_root = {0, 0, {0, 0, MW_HAL_LCD_WIDTH, MW_HAL_LCD_HEIGHT}};
+	mw_gl_draw_info_t draw_info_root = {0, 0, {0, 0, mw_hal_lcd_get_display_width(), MW_ROOT_HEIGHT}};
 
-	mw_hal_lcd_filled_rectangle(0, 0, MW_HAL_LCD_WIDTH, MW_HAL_LCD_HEIGHT, MW_HAL_LCD_WHITE);
+	mw_hal_lcd_filled_rectangle(0, 0, MW_ROOT_WIDTH, MW_ROOT_HEIGHT, MW_HAL_LCD_WHITE);
 	mw_hal_lcd_filled_rectangle(x - length / 2, y, length, 1, MW_HAL_LCD_BLACK);
 	mw_hal_lcd_filled_rectangle(x, y - length / 2, 1, length, MW_HAL_LCD_BLACK);
 	mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 	mw_gl_set_bg_transparency(MW_GL_BG_TRANSPARENT);
 	mw_gl_set_font(MW_GL_TITLE_FONT);
 	mw_gl_string(&draw_info_root,
-			(MW_HAL_LCD_WIDTH - mw_gl_get_string_width_pixels(MW_CALIBRATE_TEXT)) / 2,
-			MW_HAL_LCD_HEIGHT / 2,
+			(MW_ROOT_WIDTH - mw_gl_get_string_width_pixels(MW_CALIBRATE_TEXT)) / 2,
+			MW_ROOT_HEIGHT / 2,
 			MW_CALIBRATE_TEXT);
 }
 
@@ -115,37 +112,32 @@ mw_hal_touch_state_t mw_touch_get_display_touch(uint16_t* x, uint16_t* y)
 		return MW_HAL_TOUCH_STATE_UP;
 	}
 
-	if (mw_hal_touch_is_calibration_required())
-	{
-		raw_point.x = raw_x;
-		raw_point.y = raw_y;
+	raw_point.x = raw_x;
+	raw_point.y = raw_y;
 
-		getDisplayPoint(&display_point, &raw_point, mw_settings_get_calibration_matrix());
-		*x = display_point.x;
-		*y = display_point.y;
-	}
-	else
-	{
-		*x = raw_x;
-		*y = raw_y;
-	}
+	getDisplayPoint(&display_point, &raw_point, mw_settings_get_calibration_matrix());
+	*x = display_point.x;
+	*y = display_point.y;
 
 	return MW_HAL_TOUCH_STATE_DOWN;
 }
 
 void mw_touch_calibrate(MATRIX *matrix)
 {
+	uint16_t minimum_screen_dimension = MW_ROOT_WIDTH < MW_ROOT_HEIGHT ? MW_ROOT_WIDTH : MW_ROOT_HEIGHT;
+	uint16_t touch_cross_size = minimum_screen_dimension / 6;
+
 	POINT_T raw_points[3];
-	POINT_T display_points[3] = { {TOUCH_CROSS_SIZE, TOUCH_CROSS_SIZE},
-			{MW_HAL_LCD_WIDTH - TOUCH_CROSS_SIZE, TOUCH_CROSS_SIZE},
-			{MW_HAL_LCD_WIDTH - TOUCH_CROSS_SIZE, MW_HAL_LCD_HEIGHT - TOUCH_CROSS_SIZE} };
+	POINT_T display_points[3] = { {touch_cross_size, touch_cross_size},
+			{MW_ROOT_WIDTH - touch_cross_size, touch_cross_size},
+			{MW_ROOT_WIDTH - touch_cross_size, MW_ROOT_HEIGHT - touch_cross_size} };
 	uint16_t x;
 	uint16_t y;
 
 	MW_ASSERT(matrix, "Null pointer argument");
 
     /* first point */
-	draw_cross(display_points[0].x, display_points[0].y, TOUCH_CROSS_SIZE);
+	draw_cross(display_points[0].x, display_points[0].y, touch_cross_size);
 	while (mw_hal_touch_get_state() == MW_HAL_TOUCH_STATE_UP)
 	{
 	}
@@ -159,7 +151,7 @@ void mw_touch_calibrate(MATRIX *matrix)
 	}
 
     /* second point */
-	draw_cross(display_points[1].x, display_points[1].y, TOUCH_CROSS_SIZE);
+	draw_cross(display_points[1].x, display_points[1].y, touch_cross_size);
 	while (mw_hal_touch_get_state() == MW_HAL_TOUCH_STATE_UP)
 	{
 	}
@@ -173,7 +165,7 @@ void mw_touch_calibrate(MATRIX *matrix)
 	}
 
     /* third point */
-	draw_cross(display_points[2].x, display_points[2].y, TOUCH_CROSS_SIZE);
+	draw_cross(display_points[2].x, display_points[2].y, touch_cross_size);
 	while (mw_hal_touch_get_state() == MW_HAL_TOUCH_STATE_UP)
 	{
 	}
