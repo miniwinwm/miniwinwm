@@ -71,7 +71,7 @@ SOFTWARE.
 #define MW_TITLE_BAR_ICON_OFFSET_LARGE				(MW_TITLE_BAR_ICON_SIZE_LARGE + 3)	/**< Distance between each title bar large icon */
 #define MW_DESKTOP_ICONS_PER_ROW					4           						/**< Number of icons of minimized windows to show across bottom of screen */
 #define MW_DESKTOP_ICON_WIDTH						(MW_ROOT_WIDTH / MW_DESKTOP_ICONS_PER_ROW)	/**< Number of icons across desktop */
-#define MW_DESKTOP_ICON_HEIGHT						18									/**< Height of desktop minimised icons */
+#define MW_DESKTOP_ICON_HEIGHT						24									/**< Height of desktop minimised icons */
 #define MW_UNUSED_MESSAGE_PARAMETER					0									/**< To indicate that a parameter to post message is unused rather than zero */
 #define MW_ALL_ITEMS_ENABLED						0xffff								/**< All items in a control that can have individual items enabled are enabled */
 #define MW_ALL_ITEMS_DISABLED						0									/**< All items in a control that can have individual items enabled are disabled */

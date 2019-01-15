@@ -1032,7 +1032,7 @@ static void draw_minimised_icons(void)
 
 					mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 					mw_gl_rectangle(&draw_info, 0, 0, MW_DESKTOP_ICON_WIDTH, MW_DESKTOP_ICON_HEIGHT);
-					mw_gl_string(&draw_info, 4, 6, mw_all_windows[minimised_windows[i]].title);
+					mw_gl_string(&draw_info, 4, 9, mw_all_windows[minimised_windows[i]].title);
 
 					/* draw 3d effect */
 					mw_gl_set_fg_colour(MW_HAL_LCD_WHITE);

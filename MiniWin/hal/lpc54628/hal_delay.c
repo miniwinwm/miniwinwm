@@ -33,6 +33,7 @@ SOFTWARE.
 #include <stdint.h>
 #include "fsl_ctimer.h"
 #include "fsl_gpio.h"
+#include "hal/hal_delay.h"
 
 /****************
 *** CONSTANTS ***
