@@ -73,6 +73,146 @@ int main(int argc, char **argv)
 		exit(1);
 	}
 
+	// check max window count
+	uint8_t max_window_count;
+	if (!json["MaxWindowCount"].is_number())
+	{
+		max_window_count = json["Windows"].array_items().size() + 2;
+	}
+	else
+	{
+		max_window_count = json["MaxWindowCount"].number_value();
+	}
+	if (max_window_count < json["Windows"].array_items().size() + 1)
+	{
+		cout << "Not enough space for all the specified windows.\n";
+		exit(1);
+	}
+	
+	// check max control count
+	uint16_t control_count = 0;
+	uint16_t max_control_count;
+	for (auto& window : json["Windows"].array_items())
+	{
+		// count buttons handles
+		for (auto& button : window["Buttons"].array_items())
+		{
+			control_count++;
+		}
+		// count labels handles
+		for (auto& label : window["Labels"].array_items())
+		{
+			control_count++;
+		}		
+		// count check boxes handles
+		for (auto& check_box : window["CheckBoxes"].array_items())
+		{
+			control_count++;
+		}	
+		// count arrows handles
+		for (auto& arrow : window["Arrows"].array_items())
+		{
+			control_count++;
+		}		
+		// count progress bars handles
+		for (auto& progress_bar : window["ProgressBars"].array_items())
+		{
+			control_count++;
+		}				
+		// count horiz scroll bars handles
+		for (auto& scroll_bar_horiz : window["ScrollBarsHoriz"].array_items())
+		{
+			control_count++;
+		}			
+		// count vert scroll bars handles
+		for (auto& scroll_bar_vert : window["ScrollBarsVert"].array_items())
+		{
+			control_count++;
+		}				
+		// count radio buttons handles
+		for (auto& radio_button : window["RadioButtons"].array_items())
+		{
+			control_count++;
+		}	
+		// count list boxes handles
+		for (auto& list_box : window["ListBoxes"].array_items())
+		{
+			control_count++;
+		}	
+		// count text boxes handles
+		for (auto& text_box : window["TextBoxes"].array_items())
+		{
+			control_count++;
+		}		
+		// count scrolling list boxes handles
+		for (auto& scrolling_list_box : window["ScrollingListBoxes"].array_items())
+		{
+			control_count += 2;
+		}			
+		// count scrolling text boxes handles
+		for (auto& scrolling_text_box : window["ScrollingTextBoxes"].array_items())
+		{
+			control_count += 2;	
+		}															
+	}		
+	if (!json["MaxControlCount"].is_number())
+	{
+		max_control_count = control_count + 5;
+	}
+	else
+	{
+		max_control_count = json["MaxControlCount"].number_value();
+		if (max_control_count < control_count)
+		{
+			cout << "Not enough space for all the specified controls.\n";
+			exit(1);
+		}		
+	}
+	
+	// get max timer count
+	uint8_t max_timer_count;
+	if (!json["MaxTimerCount"].is_number())
+	{
+		max_timer_count = 8;
+	}
+	else
+	{
+		max_timer_count = json["MaxTimerCount"].number_value();
+	}
+	
+	// get max message count
+	uint16_t max_message_count;
+	if (!json["MaxMessageCount"].is_number())
+	{
+		max_message_count = 80;
+	}
+	else
+	{
+		max_message_count = json["MaxMessageCount"].number_value();
+	}
+	
+	// get calibrate text
+	std::string calibrate_text;
+	if (!json["CalibrateText"].is_string())
+	{
+		calibrate_text = "Touch centre of cross";
+	}
+	else
+	{
+		calibrate_text = json["CalibrateText"].string_value();
+	}
+	
+	// get busy text
+	std::string busy_text;
+	if (!json["BusyText"].is_string())
+	{
+		busy_text = "BUSY...";
+	}
+	else
+	{
+		busy_text = json["BusyText"].string_value();
+	}	
+	
     // make output folders
 #if defined(_WIN32)
 	if (_mkdir(("../../" + json["TargetName"].string_value()).c_str()) != 0 && errno != EEXIST)
@@ -131,10 +271,10 @@ int main(int argc, char **argv)
 				"#ifdef __cplusplus\n"
 				" extern \"C\" {\n"
 				"#endif\n\n"
-				"#define MW_MAX_WINDOW_COUNT 				14               		/**< Maximum number of allowed windows; root window always takes 1 space */\n"
-				"#define MW_MAX_CONTROL_COUNT				24              		/**< Total maximum number of allowed controls in all windows */\n"
-				"#define MW_MAX_TIMER_COUNT					8               		/**< Maximum number of timers */\n"
-				"#define MW_MESSAGE_QUEUE_SIZE				100              		/**< Maximum number of messages in message queue */\n"
+				"#define MW_MAX_WINDOW_COUNT 				" << std::to_string(max_window_count) << "               		/**< Maximum number of allowed windows; root window always takes 1 space */\n"
+				"#define MW_MAX_CONTROL_COUNT				" << std::to_string(max_control_count) << "              		/**< Total maximum number of allowed controls in all windows */\n"
+				"#define MW_MAX_TIMER_COUNT					" << std::to_string(max_timer_count) << "              			/**< Maximum number of timers */\n"
+				"#define MW_MESSAGE_QUEUE_SIZE				" << std::to_string(max_message_count) << "              		/**< Maximum number of messages in message queue */\n"
 				"#define MW_DISPLAY_ROTATION_0\n"
 				"/* #define MW_DISPLAY_ROTATION_90 */\n"
 				"/* #define MW_DISPLAY_ROTATION_180 */\n"
@@ -170,8 +310,8 @@ int main(int argc, char **argv)
 				"#define MW_FONT_24_INCLUDED											/**< Comment this in to include Courier 24 point font or out to exclude it */\n"
 				"/* #define MW_DIALOG_FILE_CHOOSER */								/**< File chooser dialog is optional and is only built if this is defined */\n"
 				"#define MW_DRAG_THRESHOLD_PIXELS			2               		/**< Distance a touch pointer moves before a drag event is created */\n"
-				"#define MW_BUSY_TEXT						\"BUSY...\"				/**< Text to display when screen is not responsive because of long operation */\n"
-				"#define MW_CALIBRATE_TEXT					\"Touch centre of cross\"	/**< Text to display in touch screen calibrate screen */\n\n"
+				"#define MW_BUSY_TEXT						\"" << busy_text << "\"				/**< Text to display when screen is not responsive because of long operation */\n"
+				"#define MW_CALIBRATE_TEXT					\"" << calibrate_text << "\"	/**< Text to display in touch screen calibrate screen */\n\n"
 				"#ifdef __cplusplus\n"
 				"}\n"
 				"#endif\n\n"
