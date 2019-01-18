@@ -74,7 +74,7 @@ int main(int argc, char **argv)
 	}
 
 	// check max window count
-	uint8_t max_window_count;
+	uint32_t max_window_count;
 	if (!json["MaxWindowCount"].is_number())
 	{
 		max_window_count = json["Windows"].array_items().size() + 2;
@@ -90,8 +90,8 @@ int main(int argc, char **argv)
 	}
 	
 	// check max control count
-	uint16_t control_count = 0;
-	uint16_t max_control_count;
+	uint32_t control_count = 0;
+	uint32_t max_control_count;
 	for (auto& window : json["Windows"].array_items())
 	{
 		// count buttons handles
@@ -170,7 +170,7 @@ int main(int argc, char **argv)
 	}
 	
 	// get max timer count
-	uint8_t max_timer_count;
+	uint32_t max_timer_count;
 	if (!json["MaxTimerCount"].is_number())
 	{
 		max_timer_count = 8;
@@ -181,7 +181,7 @@ int main(int argc, char **argv)
 	}
 	
 	// get max message count
-	uint16_t max_message_count;
+	uint32_t max_message_count;
 	if (!json["MaxMessageCount"].is_number())
 	{
 		max_message_count = 80;
@@ -271,10 +271,10 @@ int main(int argc, char **argv)
 				"#ifdef __cplusplus\n"
 				" extern \"C\" {\n"
 				"#endif\n\n"
-				"#define MW_MAX_WINDOW_COUNT 				" << std::to_string(max_window_count) << "               		/**< Maximum number of allowed windows; root window always takes 1 space */\n"
-				"#define MW_MAX_CONTROL_COUNT				" << std::to_string(max_control_count) << "              		/**< Total maximum number of allowed controls in all windows */\n"
-				"#define MW_MAX_TIMER_COUNT					" << std::to_string(max_timer_count) << "              			/**< Maximum number of timers */\n"
-				"#define MW_MESSAGE_QUEUE_SIZE				" << std::to_string(max_message_count) << "              		/**< Maximum number of messages in message queue */\n"
+				"#define MW_MAX_WINDOW_COUNT 				" << max_window_count << "               		/**< Maximum number of allowed windows; root window always takes 1 space */\n"
+				"#define MW_MAX_CONTROL_COUNT				" << max_control_count << "              		/**< Total maximum number of allowed controls in all windows */\n"
+				"#define MW_MAX_TIMER_COUNT					" << max_timer_count << "              			/**< Maximum number of timers */\n"
+				"#define MW_MESSAGE_QUEUE_SIZE				" << max_message_count << "              		/**< Maximum number of messages in message queue */\n"
 				"#define MW_DISPLAY_ROTATION_0\n"
 				"/* #define MW_DISPLAY_ROTATION_90 */\n"
 				"/* #define MW_DISPLAY_ROTATION_180 */\n"
