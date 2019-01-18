@@ -92,7 +92,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MiniWinTTFonts_LPC54628/MiniWinTTFonts_Common}&quot;"/>
 								</option>
 								<option id="gnu.c.compiler.option.include.files.1763882188" name="Include files (-include)" superClass="gnu.c.compiler.option.include.files"/>
-								<option id="com.crt.advproject.gcc.exe.debug.option.optimization.level.1009689181" name="Optimization Level" superClass="com.crt.advproject.gcc.exe.debug.option.optimization.level"/>
+								<option id="com.crt.advproject.gcc.exe.debug.option.optimization.level.1009689181" name="Optimization Level" superClass="com.crt.advproject.gcc.exe.debug.option.optimization.level" value="gnu.c.optimization.level.most" valueType="enumerated"/>
 								<option id="gnu.c.compiler.option.optimization.flags.933125181" name="Other optimization flags" superClass="gnu.c.compiler.option.optimization.flags" value="-fno-common" valueType="string"/>
 								<option id="com.crt.advproject.gcc.exe.debug.option.debugging.level.727797049" name="Debug Level" superClass="com.crt.advproject.gcc.exe.debug.option.debugging.level"/>
 								<option id="gnu.c.compiler.option.debugging.other.1712437614" name="Other debugging flags" superClass="gnu.c.compiler.option.debugging.other"/>
