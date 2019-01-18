@@ -73,6 +73,146 @@ int main(int argc, char **argv)
 		exit(1);
 	}
 
+	// check max window count
+	uint8_t max_window_count;
+	if (!json["MaxWindowCount"].is_number())
+	{
+		max_window_count = json["Windows"].array_items().size() + 2;
+	}
+	else
+	{
+		max_window_count = json["MaxWindowCount"].number_value();
+	}
+	if (max_window_count < json["Windows"].array_items().size() + 1)
+	{
+		cout << "Not enough space for all the specified windows.\n";
+		exit(1);
+	}
+	
+	// check max control count
+	uint16_t control_count = 0;
+	uint16_t max_control_count;
+	for (auto& window : json["Windows"].array_items())
+	{
+		// count buttons handles
+		for (auto& button : window["Buttons"].array_items())
+		{
+			control_count++;
+		}
+		// count labels handles
+		for (auto& label : window["Labels"].array_items())
+		{
+			control_count++;
+		}		
+		// count check boxes handles
+		for (auto& check_box : window["CheckBoxes"].array_items())
+		{
+			control_count++;
+		}	
+		// count arrows handles
+		for (auto& arrow : window["Arrows"].array_items())
+		{
+			control_count++;
+		}		
+		// count progress bars handles
+		for (auto& progress_bar : window["ProgressBars"].array_items())
+		{
+			control_count++;
+		}				
+		// count horiz scroll bars handles
+		for (auto& scroll_bar_horiz : window["ScrollBarsHoriz"].array_items())
+		{
+			control_count++;
+		}			
+		// count vert scroll bars handles
+		for (auto& scroll_bar_vert : window["ScrollBarsVert"].array_items())
+		{
+			control_count++;
+		}				
+		// count radio buttons handles
+		for (auto& radio_button : window["RadioButtons"].array_items())
+		{
+			control_count++;
+		}	
+		// count list boxes handles
+		for (auto& list_box : window["ListBoxes"].array_items())
+		{
+			control_count++;
+		}	
+		// count text boxes handles
+		for (auto& text_box : window["TextBoxes"].array_items())
+		{
+			control_count++;
+		}		
+		// count scrolling list boxes handles
+		for (auto& scrolling_list_box : window["ScrollingListBoxes"].array_items())
+		{
+			control_count += 2;
+		}			
+		// count scrolling text boxes handles
+		for (auto& scrolling_text_box : window["ScrollingTextBoxes"].array_items())
+		{
+			control_count += 2;	
+		}															
+	}		
+	if (!json["MaxControlCount"].is_number())
+	{
+		max_control_count = control_count + 5;
+	}
+	else
+	{
+		max_control_count = json["MaxControlCount"].number_value();
+		if (max_control_count < control_count)
+		{
+			cout << "Not enough space for all the specified controls.\n";
+			exit(1);
+		}		
+	}
+	
+	// get max timer count
+	uint8_t max_timer_count;
+	if (!json["MaxTimerCount"].is_number())
+	{
+		max_timer_count = 8;
+	}
+	else
+	{
+		max_timer_count = json["MaxTimerCount"].number_value();
+	}
+	
+	// get max message count
+	uint16_t max_message_count;
+	if (!json["MaxMessageCount"].is_number())
+	{
+		max_message_count = 80;
+	}
+	else
+	{
+		max_message_count = json["MaxMessageCount"].number_value();
+	}
+	
+	// get calibrate text
+	std::string calibrate_text;
+	if (!json["CalibrateText"].is_string())
+	{
+		calibrate_text = "Touch centre of cross";
+	}
+	else
+	{
+		calibrate_text = json["CalibrateText"].string_value();
+	}
+	
+	// get busy text
+	std::string busy_text;
+	if (!json["BusyText"].is_string())
+	{
+		busy_text = "BUSY...";
+	}
+	else
+	{
+		busy_text = json["BusyText"].string_value();
+	}	
+	
     // make output folders
 #if defined(_WIN32)
 	if (_mkdir(("../../" + json["TargetName"].string_value()).c_str()) != 0 && errno != EEXIST)
@@ -90,7 +230,7 @@ int main(int argc, char **argv)
 		cout << "Could not make " + json["TargetName"].string_value() + "/" << json["TargetType"].string_value() << "/src folder.\n";
 		exit(1);
 	}
-	if (_mkdir(("../../../" + json["TargetName"].string_value() + "_Common").c_str()) != 0 && errno != EEXIST)
+	if (_mkdir(("../../" + json["TargetName"].string_value() + "/" + json["TargetName"].string_value() + "_Common").c_str()) != 0 && errno != EEXIST)
 	{
 		cout << "Could not make " + json["TargetName"].string_value() + "_Common folder.\n";
 		exit(1);
@@ -111,39 +251,78 @@ int main(int argc, char **argv)
 		cout << "Could not make " + json["TargetName"].string_value() + "/" << json["TargetType"].string_value() << "/src folder.\n";
 		exit(1);
 	}
-	if (mkdir(("../../../" + json["TargetName"].string_value() + "_Common").c_str(), 0777) != 0 && errno != EEXIST)
+	if (mkdir(("../../" + json["TargetName"].string_value() + "/" + json["TargetName"].string_value() + "_Common").c_str(), 0777) != 0 && errno != EEXIST)
 	{
 		cout << "Could not make " + json["TargetName"].string_value() + "_Common folder.\n";
 		exit(1);
 	}
 #endif
 
-	// copy the config header file
-    std::ifstream infileConfigHeaderSrc("../../../MiniWin/templates/miniwin_config.h_template", std::ios::binary);
-    if (infileConfigHeaderSrc.is_open())
-    {
-		std::ofstream outfileConfigHeaderDst("../../../" + json["TargetName"].string_value() + "_Common/miniwin_config.h",   std::ios::binary);
-	
-		if (!outfileConfigHeaderDst.is_open())
-		{
-			cout << "Could not create file\n";
-			infileConfigHeaderSrc.close();
-			exit(1);
-		}
-		outfileConfigHeaderDst << infileConfigHeaderSrc.rdbuf();
-		infileConfigHeaderSrc.close();
-		outfileConfigHeaderDst.close();
-	}
-	else
+	// create the config header file
+	std::ofstream outfileConfigHeader("../../" + json["TargetName"].string_value() + "/" + json["TargetName"].string_value() + "_Common/miniwin_config.h",   std::ios::binary);
+
+	if (!outfileConfigHeader.is_open())
 	{
-		cout << "Could not find miniwin_config_template.h. Continuing anyway. You will need to supply your own user_config.h header file.\n";
-	}    
+		cout << "Could not create file\n";
+		exit(1);
+	}
+		outfileConfigHeader << "#ifndef _MINIWIN_CONFIG_H\n"
+				"#define _MINIWIN_CONFIG_H\n\n"
+				"#ifdef __cplusplus\n"
+				" extern \"C\" {\n"
+				"#endif\n\n"
+				"#define MW_MAX_WINDOW_COUNT 				" << std::to_string(max_window_count) << "               		/**< Maximum number of allowed windows; root window always takes 1 space */\n"
+				"#define MW_MAX_CONTROL_COUNT				" << std::to_string(max_control_count) << "              		/**< Total maximum number of allowed controls in all windows */\n"
+				"#define MW_MAX_TIMER_COUNT					" << std::to_string(max_timer_count) << "              			/**< Maximum number of timers */\n"
+				"#define MW_MESSAGE_QUEUE_SIZE				" << std::to_string(max_message_count) << "              		/**< Maximum number of messages in message queue */\n"
+				"#define MW_DISPLAY_ROTATION_0\n"
+				"/* #define MW_DISPLAY_ROTATION_90 */\n"
+				"/* #define MW_DISPLAY_ROTATION_180 */\n"
+				"/* #define MW_DISPLAY_ROTATION_270 */\n"
+				"#if defined(MW_DISPLAY_ROTATION_0) || defined(MW_DISPLAY_ROTATION_180)\n"
+				"#define MW_ROOT_WIDTH 						mw_hal_lcd_get_display_width()  /**< Width of root window */\n"
+				"#define MW_ROOT_HEIGHT 						mw_hal_lcd_get_display_height() /**< Height of root window */\n"
+				"#elif defined(MW_DISPLAY_ROTATION_90) || defined(MW_DISPLAY_ROTATION_270)\n"
+				"#define MW_ROOT_WIDTH 						mw_hal_lcd_get_display_height() /**< Width of root window */\n"
+				"#define MW_ROOT_HEIGHT 						mw_hal_lcd_get_display_width()	/**< Height of root window */\n"
+				"#endif\n"
+				"#define MW_MAX_TITLE_SIZE 					14              		/**< Maximum window title bar title size in characters */\n"
+				"#define MW_TITLE_BAR_COLOUR_FOCUS			MW_HAL_LCD_BLUE    		/**< Colour of title bar of window with focus */\n"
+				"#define MW_TITLE_BAR_COLOUR_NO_FOCUS		MW_HAL_LCD_GREY5    	/**< Colour of title bars of windows without focus */\n"
+				"#define MW_TITLE_BAR_COLOUR_MODAL			MW_HAL_LCD_RED			/**< Colour of title bar of modal window */\n"
+				"#define MW_TITLE_TEXT_COLOUR_FOCUS			MW_HAL_LCD_WHITE    	/**< Title bar text colour of window with focus */\n"
+				"#define MW_TITLE_TEXT_COLOUR_NO_FOCUS		MW_HAL_LCD_WHITE    	/**< Title bar text colour of window without focus */\n"
+				"#define MW_TITLE_TEXT_COLOUR_MODAL			MW_HAL_LCD_BLACK   	 	/**< Title bar text colour of window that's modal */\n"
+				"#define MW_CONTROL_UP_COLOUR				MW_HAL_LCD_GREY2    	/**< Animated controls up colour */\n"
+				"#define MW_CONTROL_SEPARATOR_COLOUR			MW_HAL_LCD_GREY3		/**< Separator between control items colour */\n"
+				"#define MW_CONTROL_DOWN_COLOUR				MW_HAL_LCD_GREY4    	/**< Animated controls down colour */\n"
+				"#define MW_CONTROL_DISABLED_COLOUR			MW_HAL_LCD_GREY5		/**< Colour to draw a control that is disabled */\n"
+				"#define MW_CONTROL_DOWN_TIME				4               		/**< Time for animated controls down time in system ticks */\n"
+				"#define MW_KEY_DOWN_TIME					3               		/**< Time for animated keys down time in system ticks */\n"
+				"#define MW_TICKS_PER_SECOND					20						/**< The number of window timer ticks per second */\n"
+				"#define MW_WINDOW_MIN_MAX_EFFECT_TIME		5						/**< Number of window ticks to show window minimise/maximise effect for */\n"
+				"#define MW_CURSOR_PERIOD_TICKS				10						/**< Period between cursor change in system ticks */\n"
+				"#define MW_TOUCH_INTERVAL_TICKS				2               		/**< Number of window ticks a touch has to be down for to count as a touch event */\n"
+				"#define MW_HOLD_DOWN_DELAY_TICKS			10						/**< Time in ticks that a ui control starts repeating if held down */\n"
+				"#define MW_FONT_12_INCLUDED											/**< Comment this in to include Courier 12 point font or out to exclude it */\n"
+				"#define MW_FONT_16_INCLUDED											/**< Comment this in to include Courier 16 point font or out to exclude it */\n"
+				"#define MW_FONT_20_INCLUDED											/**< Comment this in to include Courier 20 point font or out to exclude it */\n"
+				"#define MW_FONT_24_INCLUDED											/**< Comment this in to include Courier 24 point font or out to exclude it */\n"
+				"/* #define MW_DIALOG_FILE_CHOOSER */								/**< File chooser dialog is optional and is only built if this is defined */\n"
+				"#define MW_DRAG_THRESHOLD_PIXELS			2               		/**< Distance a touch pointer moves before a drag event is created */\n"
+				"#define MW_BUSY_TEXT						\"" << busy_text << "\"				/**< Text to display when screen is not responsive because of long operation */\n"
+				"#define MW_CALIBRATE_TEXT					\"" << calibrate_text << "\"	/**< Text to display in touch screen calibrate screen */\n\n"
+				"#ifdef __cplusplus\n"
+				"}\n"
+				"#endif\n\n"
+				"#endif\n";
+	outfileConfigHeader.close();
 
     // check large size flag
     bool large_size = json["LargeSize"].bool_value();
 
 	// create miniwin_user.c
-	std::ofstream outfileUserSource("../../../" + json["TargetName"].string_value() + "_Common/miniwin_user.c");
+	std::ofstream outfileUserSource("../../" + json["TargetName"].string_value() + "/" + json["TargetName"].string_value() + "_Common/miniwin_user.c");
 	if (!outfileUserSource.is_open())
 	{
 		cout << "Could not create file\n";
@@ -1414,7 +1593,7 @@ int main(int argc, char **argv)
     for (auto &window : json["Windows"].array_items())
     {
     	string windowName = window["Name"].string_value();
-    	std::ofstream outfileWindowSource("../../../" + json["TargetName"].string_value() + "_Common/" + windowName + ".c");
+    	std::ofstream outfileWindowSource("../../" + json["TargetName"].string_value() + "/" + json["TargetName"].string_value() + "_Common/" + windowName + ".c");
     	if (!outfileWindowSource.is_open())
     	{
     		cout << "Could not create file\n";
@@ -1864,7 +2043,7 @@ int main(int argc, char **argv)
 					"        break;\n    }\n}\n";
     	outfileWindowSource.close();
 
-    	std::ofstream outfileWindowHeader("../../../" + json["TargetName"].string_value() + "_Common/" + windowName + ".h");
+    	std::ofstream outfileWindowHeader("../../" + json["TargetName"].string_value() + "/" + json["TargetName"].string_value() + "_Common/" + windowName + ".h");
     	if (!outfileWindowHeader.is_open())
     	{
     		cout << "Could not create file\n";
@@ -1900,93 +2079,184 @@ int main(int argc, char **argv)
     	outfileWindowHeader.close();
     }
 
-    // copy main.c source file
-    std::ifstream infileMainSourceSrc("../../../MiniWin/templates/main.c_template", std::ios::binary);
-    if (infileMainSourceSrc.is_open())
-    {
-		std::ofstream outfileMainSourceDst("../../../" + json["TargetName"].string_value() + "_Common/main.c", std::ios::binary);
-	
-		if (!outfileMainSourceDst.is_open())
-		{
-			cout << "Could not create file\n";
-			infileMainSourceSrc.close();
-			exit(1);
-		}
-		outfileMainSourceDst << infileMainSourceSrc.rdbuf();
-		infileMainSourceSrc.close();
-		outfileMainSourceDst.close();
-	}
-	else
+    // create main.c source file
+	std::ofstream outfileMainSource("../../" + json["TargetName"].string_value() + "/" + json["TargetName"].string_value() + "_Common/main.c", std::ios::binary);
+
+	if (!outfileMainSource.is_open())
 	{
-		cout << "Could not find main.c_template. Continuing anyway. You will need to supply your own main.c header file.\n";
+		cout << "Could not create file\n";
+		exit(1);
 	}
 
-    // copy app.h header file
-    std::ifstream infileAppHeaderSrc("../../../MiniWin/templates/app.h_template", std::ios::binary);
-    if (infileAppHeaderSrc.is_open())
-    {
-		std::ofstream outfileAppHeaderDst("../../" + json["TargetName"].string_value() + "/" + json["TargetType"].string_value() + "/src/app.h", std::ios::binary);
-	
-		if (!outfileAppHeaderDst.is_open())
-		{
-			cout << "Could not create file\n";
-			infileAppHeaderSrc.close();
-			exit(1);
-		}
-		outfileAppHeaderDst << infileAppHeaderSrc.rdbuf();
-		infileAppHeaderSrc.close();
-		outfileAppHeaderDst.close();
-	}
-	else
-	{
-		cout << "Could not find app.h_template. Continuing anyway. You will need to supply your own app.h header file.\n";
-	}    
+	outfileMainSource << "#include \"miniwin.h\"\n#include \"app.h\"\n\n"
+				"int main(void)\n{\n"
+				"	app_init();\n	mw_init();\n\n"
+				"	while (true)\n	{\n"
+				"		app_main_loop_process();\n		mw_process_message();\n"
+				"	}\n}\n";
+	outfileMainSource.close();
 
-    // copy app.c source file
+    // create app.h header file
+	std::ofstream outfileAppHeader("../../" + json["TargetName"].string_value() + "/" + json["TargetType"].string_value() + "/src/app.h", std::ios::binary);
+
+	if (!outfileAppHeader.is_open())
+	{
+		cout << "Could not create file\n";
+		exit(1);
+	}
+	
+	outfileAppHeader << "#ifndef _APP_H\n"
+			"#define _APP_H\n"
+			"\n"
+			"#ifdef __cplusplus\n"
+			" extern \"C\" {\n"
+			"#endif\n\n"
+			"void app_init(void);\n"
+			"void app_main_loop_process(void);\n\n"
+			"#ifdef __cplusplus\n"
+			"}\n"
+			"#endif\n\n"
+			"#endif\n";
+	outfileAppHeader.close();
+
+	// create app.c source file
+	std::ofstream outfileAppSource("../../" + json["TargetName"].string_value() + "/" + json["TargetType"].string_value() + "/src/app.c", std::ios::binary);
+
+	if (!outfileAppSource.is_open())
+	{
+		cout << "Could not create file\n";
+		exit(1);
+	}	
 	if (json["TargetType"].string_value() == "Linux")
-	{    
-		std::ifstream infileAppSourceSrc("../../../MiniWin/templates/app.c_template_linux", std::ios::binary);
-		if (infileAppSourceSrc.is_open())
-		{
-			std::ofstream outfileAppSourceDst("../../" + json["TargetName"].string_value() + "/" + json["TargetType"].string_value() + "/src/app.c", std::ios::binary);
-		
-			if (!outfileAppSourceDst.is_open())
-			{
-				cout << "Could not create file\n";
-				infileAppSourceSrc.close();
-				exit(1);
-			}
-			outfileAppSourceDst << infileAppSourceSrc.rdbuf();
-			infileAppSourceSrc.close();
-			outfileAppSourceDst.close();
-		}
-		else
-		{
-			cout << "Could not find app.c_template_linux. Continuing anyway. You will need to supply your own app.c source file.\n";
-		}    
+	{ 
+			outfileAppSource << "#include <X11/Xlib.h>\n"
+			"#include \"miniwin.h\"\n\n"
+			"Display *display;\n"
+			"Window frame_window;\n"
+			"GC graphical_context;\n\n"
+			"void app_init(void)\n"
+			"{\n"
+			"	static	Visual *visual;\n"
+			"	static int depth;\n"
+			"	static XSetWindowAttributes frame_attributes;\n\n"
+			"	display = XOpenDisplay(NULL);\n"
+			"	visual = DefaultVisual(display, 0);\n"
+			"	depth  = DefaultDepth(display, 0);\n\n"
+			"	frame_attributes.background_pixel = XBlackPixel(display, 0);\n\n"
+			"	frame_window = XCreateWindow(display, \n"
+			"		XRootWindow(display, 0),\n"
+			"		0,\n"
+			"		0,\n" 
+			"		MW_ROOT_WIDTH,\n"
+			"		MW_ROOT_HEIGHT,\n"
+			"		5,\n"
+			"		depth,\n"
+			"		InputOutput,\n" 
+			"		visual,\n" 
+			"		CWBackPixel,\n"
+			"		&frame_attributes);\n\n"
+			"	XStoreName(display, frame_window, \"MiniWin Sim\");\n\n"
+			"	XSelectInput(display, frame_window, ExposureMask | StructureNotifyMask);\n\n"
+			"	graphical_context = XCreateGC( display, frame_window, 0, 0 );\n\n"
+			"	XMapWindow(display, frame_window);\n"
+			"	XFlush(display);\n"
+			"}\n\n"
+			"void app_main_loop_process(void)\n"
+			"{\n"
+			"}\n";
 	}
 	else
 	{
-		std::ifstream infileAppSourceSrc("../../../MiniWin/templates/app.c_template_windows", std::ios::binary);
-		if (infileAppSourceSrc.is_open())
-		{
-			std::ofstream outfileAppSourceDst("../../" + json["TargetName"].string_value() + "/" + json["TargetType"].string_value() + "/src/app.c", std::ios::binary);
-		
-			if (!outfileAppSourceDst.is_open())
-			{
-				cout << "Could not create file\n";
-				infileAppSourceSrc.close();
-				exit(1);
-			}
-			outfileAppSourceDst << infileAppSourceSrc.rdbuf();
-			infileAppSourceSrc.close();
-			outfileAppSourceDst.close();
-		}
-		else
-		{
-			cout << "Could not find app.c_template_windows. Continuing anyway. You will need to supply your own app.c source file.\n";
-		}   		
+		outfileAppSource << "#include <windows.h>\n"
+			"#include <stdbool.h>\n"
+			"#include \"miniwin.h\"\n\n"
+			"#define WINDOW_START_LOCATION_X		100\n"
+			"#define WINDOW_START_LOCATION_Y		100\n\n"
+			"HWND hwnd;\n"
+			"bool mouse_down = false;\n"
+			"SHORT mx;\n"
+			"SHORT my;\n\n"
+			"static VOID MouseEventProc(LPARAM lp);\n"
+			"static long __stdcall WindowProc(HWND window, unsigned int msg, WPARAM wp, LPARAM lp);\n\n"
+			"static VOID MouseEventProc(LPARAM lp)\n"
+			"{\n"
+			"    POINTS mouse_point;\n\n"
+			"    mouse_point = MAKEPOINTS(lp);\n"
+			"	mx = mouse_point.x;\n"
+			"	my = mouse_point.y;\n\n"
+			"	if (mx < 0)\n"
+			"	{\n"
+			"		mx = 0;\n"
+			"	}\n\n"
+			"	if (my < 0)\n"
+			"	{\n"
+			"		my = 0;\n"
+			"	}\n\n"
+			"	if (mx > MW_ROOT_WIDTH - 1)\n"
+			"	{\n"
+			"		mx = MW_ROOT_WIDTH - 1;\n"
+			"	}\n\n"
+			"	if (my > MW_ROOT_HEIGHT - 1)\n"
+			"	{\n"
+			"		my = MW_ROOT_HEIGHT - 1;\n"
+			"	}\n"
+			"}\n\n"
+			"static long __stdcall WindowProc(HWND window, unsigned int msg, WPARAM wp, LPARAM lp)\n"
+			"{\n"
+			"    switch(msg)\n"
+			"    {\n"
+			"	case WM_DESTROY:\n"
+			"		PostQuitMessage(0);\n"
+			"		exit(0);\n\n"
+			"	case WM_LBUTTONDOWN:\n"
+			"		mouse_down = true;\n"
+			"		MouseEventProc(lp);\n"
+			"		break;\n\n"
+			"	case WM_MOUSEMOVE:\n"
+			"		MouseEventProc(lp);\n"
+			"		break;\n\n"
+			"	case WM_LBUTTONUP:\n"
+			"		mouse_down = false;\n"
+			"		break;\n\n"		
+			"	case WM_SETFOCUS:\n"
+			"		mw_paint_all();\n"
+			"		break;\n\n"
+			"    default:\n"
+			"        return DefWindowProc(window, msg, wp, lp);\n"
+			"    }\n\n"
+			"    return 0;\n"
+			"}\n\n"
+			"void app_init(void)\n"
+			"{\n"
+			"    const char* const miniwin_class = \"miniwin_class\";\n"
+			"    WNDCLASSEX wndclass = {sizeof(WNDCLASSEX), CS_DBLCLKS, WindowProc,\n"
+			"                            0, 0, GetModuleHandle(0), LoadIcon(0,IDI_APPLICATION),\n"
+			"                            LoadCursor(0,IDC_ARROW), (HBRUSH)COLOR_WINDOW+1,\n"
+			"                            0, miniwin_class, LoadIcon(0,IDI_APPLICATION)};\n"
+			"    RegisterClassEx(&wndclass);\n\n"
+			"    RECT r = {WINDOW_START_LOCATION_X,\n"
+			"    		WINDOW_START_LOCATION_Y,\n"
+			"			WINDOW_START_LOCATION_X + MW_ROOT_WIDTH,\n"
+			"			WINDOW_START_LOCATION_Y + MW_ROOT_HEIGHT};\n"
+			"   AdjustWindowRectEx(&r, WS_OVERLAPPEDWINDOW, FALSE, 0);\n\n"
+			"	hwnd = CreateWindow(miniwin_class, \"MiniWin Sim\",\n"
+			"			   WS_OVERLAPPEDWINDOW | WS_CAPTION, r.left, r.top,\n"
+			"			   r.right - r.left, r.bottom - r.top, 0, 0, GetModuleHandle(0), 0);\n\n"
+
+			"	ShowWindow(hwnd, SW_SHOWDEFAULT);\n"
+			"}\n\n"
+			"void app_main_loop_process(void)\n"
+			"{\n"
+			"    MSG msg;\n\n"
+
+			"    while(PeekMessageA(&msg, hwnd, 0, 0, PM_NOREMOVE))\n"
+			"    {\n"
+			"		GetMessage(&msg, 0, 0, 0);\n"
+			"		DispatchMessage(&msg);\n"
+			"    }\n"
+			"}\n";
 	}
+	outfileAppSource.close();		
 
 	// create makefile
 	std::ofstream outfileMake("../../" + json["TargetName"].string_value() + "/" + json["TargetType"].string_value() + "/makefile");
@@ -2008,7 +2278,7 @@ int main(int argc, char **argv)
 
 	outfileMake <<
 			"SRCS := $(wildcard src/*.c) \\\n" 
-			"	$(wildcard ../../../" << json["TargetName"].string_value() << "_Common/*.c) \\\n"
+			"	$(wildcard ../" << json["TargetName"].string_value() << "_Common/*.c) \\\n"
 			"	$(wildcard ../../../MiniWin/*.c) \\\n"
 			"	$(wildcard ../../../MiniWin/bitmaps/*.c) \\\n"
 			"	$(wildcard ../../../MiniWin/hal/*.c) \\\n";
@@ -2029,7 +2299,7 @@ int main(int argc, char **argv)
 			"	$(wildcard ../../../MiniWin/gl/fonts/truetype/mcufont/*.c)\n\n"
 			"CC = gcc\n" 
 			"CFLAGS = -I../../../MiniWin -I../../../MiniWin/gl/fonts/truetype/mcufont "
-			"-Isrc -I../../../" << json["TargetName"].string_value() << "_Common -g -Wall\n"
+			"-Isrc -I../" << json["TargetName"].string_value() << "_Common -g -Wall\n"
 			"OBJECTS := $(SRCS:.c=.o)\n";
 
 	if (json["TargetType"].string_value() == "Windows")

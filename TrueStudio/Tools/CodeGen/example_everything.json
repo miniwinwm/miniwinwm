@@ -1,7 +1,13 @@
 {
-"TargetType": "Windows",
+"TargetType": "Linux",
 "TargetName": "MiniWinGen",
 "LargeSize": false,	
+"MaxWindowCount": 10,
+"MaxControlCount": 25,
+"MaxTimerCount": 6,
+"MaxMessageCount": 90,
+"CalibrateText": "Touch cross centre",
+"BusyText": "Busy...",
 "Windows":
 [
 {
