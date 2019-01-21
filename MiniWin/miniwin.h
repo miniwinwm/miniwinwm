@@ -610,6 +610,22 @@ typedef enum
 	 */
 	MW_DIALOG_NUMBER_ENTRY_CANCEL_MESSAGE,
 
+	/**
+	 * Colour chooser dialog has been dismissed by ok button
+	 *
+	 * message_data: Mask with 0x00ffffff for colour in 24 bit form
+	 * message_pointer: Unused
+	 */
+	MW_DIALOG_COLOUR_CHOOSER_OK_MESSAGE,
+
+	/**
+	 * Colour chooser dialog has been dismissed by cancel button
+	 *
+	 * message_data: Unused
+	 * message_pointer: Unused
+	 */
+	MW_DIALOG_COLOUR_CHOOSER_CANCEL_MESSAGE,
+
 
 	/*******************
 	*                  *

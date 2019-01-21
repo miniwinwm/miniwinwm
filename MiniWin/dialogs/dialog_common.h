@@ -43,6 +43,7 @@ SOFTWARE.
 #include "dialogs/dialog_file_chooser.h"
 #include "dialogs/dialog_text_entry.h"
 #include "dialogs/dialog_number_entry.h"
+#include "dialogs/dialog_colour_chooser.h"
 
 /****************
 *** CONSTANTS ***
