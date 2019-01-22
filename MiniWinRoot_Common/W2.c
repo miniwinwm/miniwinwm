@@ -52,12 +52,13 @@ typedef struct
 
 extern mw_handle_t list_box_LB1_handle;
 extern mw_handle_t window_W2_handle;
+extern mw_hal_lcd_colour_t desktop_colour;
 
 /**********************
 *** LOCAL VARIABLES ***
 **********************/
 
-static window_W2_data_t window_W2_data;
+static window_W2_data_t window_W2_data = {};
 
 /********************************
 *** LOCAL FUNCTION PROTOTYPES ***
@@ -100,11 +101,25 @@ void window_W2_message_function(const mw_message_t *message)
     case MW_LIST_BOX_ITEM_PRESSED_MESSAGE:
         if (message->sender_handle == list_box_LB1_handle)
         {
+        	if (message->message_data == 0)
+        	{
+        		 mw_create_window_dialog_colour_chooser(10,
+        				10,
+        				"Choose desktop colour",
+						desktop_colour,
+        				false,
+        				message->recipient_handle);
+        	}
         	mw_set_window_visible(window_W2_handle, false);
 
         	/* this window will lose focus and get a MW_WINDOW_LOST_FOCUS_MESSAGE which will perform the paint all */
         }
         break;
+
+    case MW_DIALOG_COLOUR_CHOOSER_OK_MESSAGE:
+    	desktop_colour = message->message_data;
+		mw_paint_window_client(MW_ROOT_WINDOW_HANDLE);
+    	break;
 
 	case MW_WINDOW_LOST_FOCUS_MESSAGE:
 		mw_set_window_visible(window_W2_handle, false);

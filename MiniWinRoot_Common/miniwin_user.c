@@ -36,7 +36,7 @@ SOFTWARE.
 *** CONSTANTS ***
 ****************/
 
-static const mw_ui_list_box_entry list_box_LB1_entries[] = {{"Fred", NULL}, {"Bert", NULL}, {"Pete", NULL}};
+static const mw_ui_list_box_entry list_box_LB1_entries[] = {{"Root Colour", NULL}, {"Test 1", NULL}, {"Test 2", NULL}};
 #define ROOT_BITMAP_WIDTH	66
 #define ROOT_BITMAP_HEIGHT	92
 
@@ -56,6 +56,8 @@ mw_handle_t window_W2_handle;
 mw_handle_t button_B1_handle;
 mw_handle_t button_B2_handle;
 mw_handle_t list_box_LB1_handle;
+
+mw_hal_lcd_colour_t desktop_colour = MW_HAL_LCD_PURPLE;			/**< Current root window background colour */
 
 /*************************
 *** EXTERNAL VARIABLES ***
@@ -86,7 +88,7 @@ static mw_ui_list_box_data_t list_box_LB1_data;
 
 void mw_user_root_paint_function(const mw_gl_draw_info_t *draw_info)
 {
-    mw_gl_set_solid_fill_colour(MW_HAL_LCD_PURPLE);
+    mw_gl_set_solid_fill_colour(desktop_colour);
     mw_gl_clear_pattern();
     mw_gl_set_border(MW_GL_BORDER_OFF);
     mw_gl_set_fill(MW_GL_FILL);
@@ -111,7 +113,7 @@ void mw_user_root_paint_function(const mw_gl_draw_info_t *draw_info)
 
     /* draw bitmap */
     mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
-    mw_gl_set_bg_colour(MW_HAL_LCD_PURPLE);
+    mw_gl_set_bg_colour(desktop_colour);
     mw_gl_set_bg_transparency(MW_GL_BG_NOT_TRANSPARENT);
     mw_gl_monochrome_bitmap(draw_info,
     		(MW_ROOT_WIDTH - ROOT_BITMAP_WIDTH) / 2,
@@ -178,7 +180,7 @@ void mw_user_init(void)
         0 | MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
         &button_B2_data);
 
-    mw_util_set_rect(&r, 0, 0, 50, 42);
+    mw_util_set_rect(&r, 0, 0, 80, 42);
     window_W2_handle = mw_add_window(&r,
         "", 
         window_W2_paint_function,
@@ -194,7 +196,7 @@ void mw_user_init(void)
     list_box_LB1_data.list_box_entries = list_box_LB1_entries;
     list_box_LB1_handle = mw_ui_list_box_add_new(0,
         0,
-        50,
+        80,
         window_W2_handle,
         0 | MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
         &list_box_LB1_data);
