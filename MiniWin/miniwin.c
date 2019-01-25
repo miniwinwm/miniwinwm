@@ -1511,7 +1511,7 @@ static void draw_title_bar(mw_handle_t window_handle, const mw_gl_draw_info_t *d
 	{
 		/* window close icon */
 		mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
-		mw_gl_set_bg_colour(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_CAN_BE_CLOSED ? MW_HAL_LCD_WHITE : MW_HAL_LCD_GREY5);
+		mw_gl_set_bg_colour((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_CAN_BE_CLOSED) ? MW_HAL_LCD_WHITE : MW_HAL_LCD_GREY5);
 		mw_gl_set_bg_transparency(MW_GL_BG_NOT_TRANSPARENT);
 		mw_gl_monochrome_bitmap(draw_info,
 				mw_all_windows[window_id].window_rect.width - icon_offset,
@@ -1805,9 +1805,9 @@ static void draw_horizontal_window_scroll_bar(const mw_gl_draw_info_t *draw_info
 	}
 
 	mw_gl_rectangle(draw_info,
-			mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0,
+			(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER) ? MW_BORDER_WIDTH : 0,
 			mw_all_windows[window_id].window_rect.height -
-				(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0) -
+				((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER) ? MW_BORDER_WIDTH : 0) -
 				scroll_bar_narrow_dimension,
 			mw_all_windows[window_id].client_rect.width,
 			scroll_bar_narrow_dimension);
@@ -1830,7 +1830,7 @@ static void draw_horizontal_window_scroll_bar(const mw_gl_draw_info_t *draw_info
 	mw_gl_rectangle(draw_info,
 			scroll_bar_horiz_slider_left,
 			mw_all_windows[window_id].window_rect.height -
-				(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0) -
+				((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER) ? MW_BORDER_WIDTH : 0) -
 				scroll_bar_narrow_dimension,
 			scroll_bar_slider_size,
 			scroll_bar_narrow_dimension);
@@ -1841,34 +1841,34 @@ static void draw_horizontal_window_scroll_bar(const mw_gl_draw_info_t *draw_info
 			scroll_bar_horiz_slider_left + 1,
 			2 +
 				mw_all_windows[window_id].window_rect.height -
-				(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0) -
+				((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER) ? MW_BORDER_WIDTH : 0) -
 				scroll_bar_narrow_dimension,
 			mw_all_windows[window_id].window_rect.height -
 				2 -
-				(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0));
+				((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER) ? MW_BORDER_WIDTH : 0));
 	mw_gl_hline(draw_info,
 			scroll_bar_horiz_slider_left + 1,
 			scroll_bar_horiz_slider_left + scroll_bar_slider_size - 2,
 			1 +
 				mw_all_windows[window_id].window_rect.height -
-				(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0) -
+				((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER) ? MW_BORDER_WIDTH : 0) -
 				scroll_bar_narrow_dimension);
 	mw_gl_set_fg_colour(MW_HAL_LCD_GREY7);
 	mw_gl_vline(draw_info,
 			scroll_bar_horiz_slider_left + scroll_bar_slider_size - 2,
 			2 +
 				mw_all_windows[window_id].window_rect.height -
-				(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0) -
+				((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER) ? MW_BORDER_WIDTH : 0) -
 				scroll_bar_narrow_dimension,
 			mw_all_windows[window_id].window_rect.height -
 				3 -
-				(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0));
+				((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER) ? MW_BORDER_WIDTH : 0));
 	mw_gl_hline(draw_info,
 			scroll_bar_horiz_slider_left + 2,
 			scroll_bar_horiz_slider_left + scroll_bar_slider_size - 2,
 			mw_all_windows[window_id].window_rect.height -
 				2 -
-				(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0));
+				((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER) ? MW_BORDER_WIDTH : 0));
 }
 
 /**
@@ -1917,7 +1917,7 @@ static void draw_vertical_window_scroll_bar(const mw_gl_draw_info_t *draw_info, 
 	}
 
 	mw_gl_rectangle(draw_info,
-			(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0) +
+			((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER) ? MW_BORDER_WIDTH : 0) +
 				mw_all_windows[window_id].client_rect.width,
 			mw_all_windows[window_id].client_rect.y - mw_all_windows[window_id].window_rect.y,
 			scroll_bar_narrow_dimension,
@@ -1939,7 +1939,7 @@ static void draw_vertical_window_scroll_bar(const mw_gl_draw_info_t *draw_info, 
 
 	mw_gl_rectangle(draw_info,
 			mw_all_windows[window_id].window_rect.width -
-				(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0) -
+				((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER) ? MW_BORDER_WIDTH : 0) -
 				scroll_bar_narrow_dimension,
 			scroll_bar_horiz_slider_top,
 			scroll_bar_narrow_dimension,
@@ -1950,24 +1950,24 @@ static void draw_vertical_window_scroll_bar(const mw_gl_draw_info_t *draw_info, 
 	mw_gl_vline(draw_info,
 			2 +
 				mw_all_windows[window_id].window_rect.width -
-				(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0) -
+				((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER) ? MW_BORDER_WIDTH : 0) -
 				scroll_bar_narrow_dimension,
 			1 + scroll_bar_horiz_slider_top,
 			scroll_bar_horiz_slider_top + scroll_bar_narrow_dimension - 2);
 	mw_gl_hline(draw_info,
 			2 +
 				mw_all_windows[window_id].window_rect.width -
-				(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0) -
+				((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER) ? MW_BORDER_WIDTH : 0) -
 				scroll_bar_narrow_dimension,
 			mw_all_windows[window_id].window_rect.width -
-				(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0) -
+				((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER) ? MW_BORDER_WIDTH : 0) -
 				2,
 			scroll_bar_horiz_slider_top + 1);
 	mw_gl_set_fg_colour(MW_HAL_LCD_GREY7);
 	mw_gl_vline(draw_info,
 			scroll_bar_narrow_dimension +
 				mw_all_windows[window_id].window_rect.width -
-				(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0) -
+				((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER) ? MW_BORDER_WIDTH : 0) -
 				scroll_bar_narrow_dimension -
 				2,
 				2 + scroll_bar_horiz_slider_top,
@@ -1975,10 +1975,10 @@ static void draw_vertical_window_scroll_bar(const mw_gl_draw_info_t *draw_info, 
 	mw_gl_hline(draw_info,
 			2 +
 				mw_all_windows[window_id].window_rect.width -
-				(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0) -
+				((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER) ? MW_BORDER_WIDTH : 0) -
 				scroll_bar_narrow_dimension,
 			mw_all_windows[window_id].window_rect.width -
-				(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER ? MW_BORDER_WIDTH : 0) -
+				((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER) ? MW_BORDER_WIDTH : 0) -
 				2,
 			scroll_bar_horiz_slider_top + scroll_bar_slider_size - 2);
 }

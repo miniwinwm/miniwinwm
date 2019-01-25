@@ -292,7 +292,7 @@ int main(int argc, char **argv)
 				"#define MW_TITLE_BAR_COLOUR_MODAL			MW_HAL_LCD_RED			/**< Colour of title bar of modal window */\n"
 				"#define MW_TITLE_TEXT_COLOUR_FOCUS			MW_HAL_LCD_WHITE    	/**< Title bar text colour of window with focus */\n"
 				"#define MW_TITLE_TEXT_COLOUR_NO_FOCUS		MW_HAL_LCD_WHITE    	/**< Title bar text colour of window without focus */\n"
-				"#define MW_TITLE_TEXT_COLOUR_MODAL			MW_HAL_LCD_BLACK   	 	/**< Title bar text colour of window that's modal */\n"
+				"#define MW_TITLE_TEXT_COLOUR_MODAL			MW_HAL_LCD_WHITE   	 	/**< Title bar text colour of window that's modal */\n"
 				"#define MW_CONTROL_UP_COLOUR				MW_HAL_LCD_GREY2    	/**< Animated controls up colour */\n"
 				"#define MW_CONTROL_SEPARATOR_COLOUR			MW_HAL_LCD_GREY3		/**< Separator between control items colour */\n"
 				"#define MW_CONTROL_DOWN_COLOUR				MW_HAL_LCD_GREY4    	/**< Animated controls down colour */\n"

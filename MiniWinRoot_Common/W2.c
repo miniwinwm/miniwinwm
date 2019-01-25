@@ -105,7 +105,7 @@ void window_W2_message_function(const mw_message_t *message)
         	{
         		 mw_create_window_dialog_colour_chooser(10,
         				10,
-        				"Choose desktop colour",
+        				"Root colour",
 						desktop_colour,
         				false,
         				message->recipient_handle);
