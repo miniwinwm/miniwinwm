@@ -379,7 +379,7 @@ void mw_user_init(void)
 	while (mw_process_message());
 
 	/* create the new drag test window */
-	mw_util_set_rect(&r, 20, 120, 150, 190);
+	mw_util_set_rect(&r, 20, 120, 180, 190);
 	window_drag_handle = mw_add_window(&r,
 			"Drag 3",
 			window_drag_paint_function,
