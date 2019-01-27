@@ -71,7 +71,6 @@ typedef struct
 	mw_ui_button_data_t button_ok_data;								/**< Instance data of ok button */
 	mw_ui_button_data_t button_cancel_data;							/**< Instance data of cancel button */
 	mw_ui_label_data_t label_choice_data;							/**< Instance data of choice data */
-	char *message;													/**< Text to display in dialog */
 	uint16_t max_scroll_lines;										/**< Maximum lines the list box can scroll, depends on data currently in list box */
 } mw_dialog_file_chooser_data_t;
 

@@ -2477,7 +2477,6 @@ void mw_gl_tt_render_text(const mw_gl_draw_info_t *draw_info,
 		const char *tt_text,
 		uint16_t vert_scroll_pixels)
 {
-	mw_gl_gc_t *gc = mw_gl_get_gc();
 	tt_font_state_t tt_font_state;
 
 	/* check parameters */
@@ -2498,16 +2497,16 @@ void mw_gl_tt_render_text(const mw_gl_draw_info_t *draw_info,
 	/* set up alpha blending values */
 	if (!(rle_font->font.flags & MF_FONT_FLAG_BW))
 	{
-		tt_font_state.fg_red = (gc->fg_colour & 0xff0000) >> 16;
-		tt_font_state.fg_green = (gc->fg_colour & 0xff00) >> 8;
-		tt_font_state.fg_blue = gc->fg_colour & 0xff;
-		tt_font_state.bg_red = (gc->bg_colour & 0xff0000) >> 16;
-		tt_font_state.bg_green = (gc->bg_colour & 0xff00) >> 8;
-		tt_font_state.bg_blue = gc->bg_colour & 0xff;
+		tt_font_state.fg_red = (gc.fg_colour & 0xff0000) >> 16;
+		tt_font_state.fg_green = (gc.fg_colour & 0xff00) >> 8;
+		tt_font_state.fg_blue = gc.fg_colour & 0xff;
+		tt_font_state.bg_red = (gc.bg_colour & 0xff0000) >> 16;
+		tt_font_state.bg_green = (gc.bg_colour & 0xff00) >> 8;
+		tt_font_state.bg_blue = gc.bg_colour & 0xff;
 	}
 
 	/* set up gc for drawing background in line draw callback */
-	mw_gl_set_solid_fill_colour(gc->bg_colour);
+	mw_gl_set_solid_fill_colour(gc.bg_colour);
 	mw_gl_clear_pattern();
 	mw_gl_set_fill(MW_GL_FILL);
 	mw_gl_set_border(MW_GL_BORDER_OFF);

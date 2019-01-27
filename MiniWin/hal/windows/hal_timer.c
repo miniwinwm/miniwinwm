@@ -85,7 +85,7 @@ void mw_hal_timer_fired(void)
 
 void mw_hal_timer_init(void)
 {
-	CreateThread(NULL, 0, tf, NULL, 0, NULL);
+	(void)CreateThread(NULL, 0, tf, NULL, 0, NULL);
 }
 
 #endif

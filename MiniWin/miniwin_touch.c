@@ -52,7 +52,6 @@ SOFTWARE.
 **************************/
 
 extern volatile uint32_t mw_tick_counter;
-extern const mw_gl_draw_info_t draw_info_root;
 
 /**********************
 *** LOCAL VARIABLES ***
@@ -77,7 +76,7 @@ static void draw_cross(uint16_t x, int16_t y, int16_t length);
  */
 static void draw_cross(uint16_t x, int16_t y, int16_t length)
 {
-	mw_gl_draw_info_t draw_info_root = {0, 0, {0, 0, mw_hal_lcd_get_display_width(), MW_ROOT_HEIGHT}};
+	mw_gl_draw_info_t draw_info_root = {0, 0, {0, 0, MW_ROOT_WIDTH, MW_ROOT_HEIGHT}};
 
 	mw_hal_lcd_filled_rectangle(0, 0, MW_ROOT_WIDTH, MW_ROOT_HEIGHT, MW_HAL_LCD_WHITE);
 	mw_hal_lcd_filled_rectangle(x - length / 2, y, length, 1, MW_HAL_LCD_BLACK);

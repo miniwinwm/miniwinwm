@@ -58,7 +58,7 @@ extern mw_hal_lcd_colour_t desktop_colour;
 *** LOCAL VARIABLES ***
 **********************/
 
-static window_W2_data_t window_W2_data = {};
+static window_W2_data_t window_W2_data;
 
 /********************************
 *** LOCAL FUNCTION PROTOTYPES ***

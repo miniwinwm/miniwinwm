@@ -467,11 +467,6 @@ mw_handle_t mw_ui_list_box_add_new(uint16_t x,
 		}
 	}
 
-	if (list_box_instance_data == NULL)
-	{
-		return MW_INVALID_HANDLE;
-	}
-
 	if (flags & MW_CONTROL_FLAG_LARGE_SIZE)
 	{
 		/* check for a sensible width */
