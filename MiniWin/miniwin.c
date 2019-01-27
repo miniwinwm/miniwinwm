@@ -81,7 +81,8 @@ typedef enum
  */
 typedef enum
 {
-	TOUCH_DOWN_RECIPIENT_TYPE_WINDOW,					/**< Touch down original recipient was a window */
+	TOUCH_DOWN_RECIPIENT_TYPE_WINDOW_CLIENT,			/**< Touch down original recipient was a window client area */
+	TOUCH_DOWN_RECIPIENT_TYPE_WINDOW_TITLE_BAR,			/**< Touch down original recipient was a window but not client area */
 	TOUCH_DOWN_RECIPIENT_TYPE_CONTROL,					/**< Touch down original recipient was a control */
 	TOUCH_DOWN_RECIPIENT_TYPE_HORIZ_WINDOW_SCROLL_BAR,	/**< Touch down original recipient was a horizontal scroll bar */
 	TOUCH_DOWN_RECIPIENT_TYPE_VERT_WINDOW_SCROLL_BAR	/**< Touch down original recipient was a vertical scroll bar */
@@ -2969,7 +2970,7 @@ static void process_touch(void)
  * @param touch_message Pointer to returned touch message
  * @param touch_x Pointer to returned touch x position in screen coordinates
  * @param touch_y Pointer to returned touch y position in screen coordinates
- * @return true if there is now a touch message to process else false if teh touch event already consumed
+ * @return true if there is now a touch message to process else false if the touch event already consumed
  */
 static bool process_touch_event(mw_message_id_t *touch_message, int16_t *touch_x, int16_t *touch_y)
 {
@@ -3159,7 +3160,7 @@ static void process_touch_message(mw_message_id_t touch_message_id, int16_t touc
 		if (check_and_process_touch_on_root_window(window_to_receive_message_id, touch_x, touch_y, touch_message_id))
 		{
 			touch_message_target.touch_down_recipient_handle = mw_all_windows[MW_ROOT_WINDOW_ID].window_handle;
-			touch_message_target.touch_down_recipient_type = TOUCH_DOWN_RECIPIENT_TYPE_WINDOW;
+			touch_message_target.touch_down_recipient_type = TOUCH_DOWN_RECIPIENT_TYPE_WINDOW_CLIENT;
 			return;
 		}
 
@@ -3211,7 +3212,7 @@ static void process_touch_message(mw_message_id_t touch_message_id, int16_t touc
 		/* check if touch occurred in window's title bar */
 		if (check_and_process_touch_on_title_bar(window_to_receive_message_id, touch_x, touch_y, touch_message_id))
 		{
-			touch_message_target.touch_down_recipient_type = TOUCH_DOWN_RECIPIENT_TYPE_WINDOW;
+			touch_message_target.touch_down_recipient_type = TOUCH_DOWN_RECIPIENT_TYPE_WINDOW_TITLE_BAR;
 			touch_message_target.touch_down_recipient_handle = mw_all_windows[window_to_receive_message_id].window_handle;
 			return;
 		}
@@ -3261,7 +3262,7 @@ static void process_touch_message(mw_message_id_t touch_message_id, int16_t touc
 				MW_WINDOW_MESSAGE);
 
 		/* remember this handle for any subsequent off window touch up event */
-		touch_message_target.touch_down_recipient_type = TOUCH_DOWN_RECIPIENT_TYPE_WINDOW;
+		touch_message_target.touch_down_recipient_type = TOUCH_DOWN_RECIPIENT_TYPE_WINDOW_CLIENT;
 		touch_message_target.touch_down_recipient_handle = mw_all_windows[window_to_receive_message_id].window_handle;
 
 		return;
@@ -3270,7 +3271,7 @@ static void process_touch_message(mw_message_id_t touch_message_id, int16_t touc
 	/* touch message is any other than down here */
 	if (touch_message_target.touch_down_recipient_handle != MW_INVALID_HANDLE)
 	{
-		if (touch_message_target.touch_down_recipient_type == TOUCH_DOWN_RECIPIENT_TYPE_WINDOW)
+		if (touch_message_target.touch_down_recipient_type == TOUCH_DOWN_RECIPIENT_TYPE_WINDOW_CLIENT)
 		{
 			/* check if this window still exists */
 			window_to_receive_message_id = get_window_id_for_handle(touch_message_target.touch_down_recipient_handle);
@@ -3487,8 +3488,8 @@ static bool check_and_process_touch_on_window_border(uint8_t window_id, uint16_t
 	if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER)
 	{
 		/* check for a touch on bottom border */
-		if (touch_y >= mw_all_windows[window_id].window_rect.y +
-				mw_all_windows[window_id].window_rect.height - MW_BORDER_WIDTH)
+		if ((int16_t)touch_y >= mw_all_windows[window_id].window_rect.y +
+				(int16_t)(mw_all_windows[window_id].window_rect.height - MW_BORDER_WIDTH))
 		{
 			return true;
 		}
@@ -3496,16 +3497,16 @@ static bool check_and_process_touch_on_window_border(uint8_t window_id, uint16_t
 		if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_TITLE_BAR)
 		{
 			/* check for a touch on left border */
-			if (touch_x < mw_all_windows[window_id].window_rect.x + MW_BORDER_WIDTH &&
-					touch_y > mw_all_windows[window_id].title_bar_height)
+			if ((int16_t)touch_x < mw_all_windows[window_id].window_rect.x + (int16_t)MW_BORDER_WIDTH &&
+					(int16_t)touch_y > (int16_t)mw_all_windows[window_id].title_bar_height)
 			{
 				return true;
 			}
 
 			/* check for a touch on right border */
-			if ((touch_x >= mw_all_windows[window_id].window_rect.x +
-					mw_all_windows[window_id].window_rect.width - MW_BORDER_WIDTH) &&
-					touch_y > mw_all_windows[window_id].title_bar_height)
+			if (((int16_t)touch_x >= mw_all_windows[window_id].window_rect.x +
+					(int16_t)mw_all_windows[window_id].window_rect.width - (int16_t)MW_BORDER_WIDTH) &&
+					(int16_t)touch_y > (int16_t)mw_all_windows[window_id].title_bar_height)
 			{
 				return true;
 			}
@@ -3513,20 +3514,20 @@ static bool check_and_process_touch_on_window_border(uint8_t window_id, uint16_t
 		else
 		{
 			/* check for a touch on top border */
-			if (touch_y < mw_all_windows[window_id].window_rect.y + MW_BORDER_WIDTH)
+			if ((int16_t)touch_y < mw_all_windows[window_id].window_rect.y + (int16_t)MW_BORDER_WIDTH)
 			{
 				return true;
 			}
 
 			/* check for a touch on left border */
-			if (touch_x < mw_all_windows[window_id].window_rect.x + MW_BORDER_WIDTH)
+			if ((int16_t)touch_x < mw_all_windows[window_id].window_rect.x + (int16_t)MW_BORDER_WIDTH)
 			{
 				return true;
 			}
 
 			/* check for a touch on right border */
-			if (touch_x >= mw_all_windows[window_id].window_rect.x +
-					mw_all_windows[window_id].window_rect.width - MW_BORDER_WIDTH)
+			if ((int16_t)touch_x >= mw_all_windows[window_id].window_rect.x +
+					(int16_t)mw_all_windows[window_id].window_rect.width - (int16_t)MW_BORDER_WIDTH)
 			{
 				return true;
 			}

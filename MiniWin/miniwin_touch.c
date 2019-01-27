@@ -111,12 +111,31 @@ mw_hal_touch_state_t mw_touch_get_display_touch(uint16_t* x, uint16_t* y)
 		return MW_HAL_TOUCH_STATE_UP;
 	}
 
-	raw_point.x = raw_x;
-	raw_point.y = raw_y;
+	raw_point.x = (INT_32)raw_x;
+	raw_point.y = (INT_32)raw_y;
 
 	getDisplayPoint(&display_point, &raw_point, mw_settings_get_calibration_matrix());
-	*x = display_point.x;
-	*y = display_point.y;
+
+	/* limit touch point to display size */
+	if (display_point.x >= (INT_32)(mw_hal_lcd_get_display_width()))
+	{
+		display_point.x = (INT_32)(mw_hal_lcd_get_display_width() - 1U);
+	}
+	if (display_point.y >= (INT_32)(mw_hal_lcd_get_display_height()))
+	{
+		display_point.y = (INT_32)(mw_hal_lcd_get_display_height() - 1U);
+	}
+	if (display_point.x < 0)
+	{
+		display_point.x = 0;
+	}
+	if (display_point.y < 0)
+	{
+		display_point.y = 0;
+	}
+
+	*x = (uint16_t)display_point.x;
+	*y = (uint16_t)display_point.y;
 
 	return MW_HAL_TOUCH_STATE_DOWN;
 }
