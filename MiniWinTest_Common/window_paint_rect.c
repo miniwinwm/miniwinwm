@@ -151,7 +151,7 @@ void window_paint_rect_message_function(const mw_message_t *message)
 	switch (message->message_id)
 	{
 	case MW_WINDOW_CREATED_MESSAGE:
-		window_paint_rect_data.choice = 0;
+		window_paint_rect_data.choice = 0U;
 		break;
 
 	case MW_LIST_BOX_ITEM_PRESSED_MESSAGE:

@@ -69,9 +69,9 @@ SOFTWARE.
  *
  * @warning Do not call this from a client window paint function. In debug mode it will cause an assert failure.
  */
- mw_handle_t mw_create_window_dialog_one_button(uint16_t x,
-		uint16_t y,
-		uint16_t width,
+ mw_handle_t mw_create_window_dialog_one_button(int16_t x,
+		int16_t y,
+		int16_t width,
 		char *title,
 		char *message,
 		char *button_label,

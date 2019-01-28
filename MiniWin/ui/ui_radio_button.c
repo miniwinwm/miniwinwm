@@ -71,8 +71,8 @@ static void radio_button_paint_function(mw_handle_t control_handle, const mw_gl_
 {
 	uint8_t i;
 	mw_ui_radio_button_data_t *this_radio_radio_button = (mw_ui_radio_button_data_t*)mw_get_control_instance_data(control_handle);
-	uint16_t height;
-	uint16_t box_size;
+	int16_t height;
+	int16_t box_size;
 
 	mw_gl_set_fill(MW_GL_FILL);
 	mw_gl_set_line(MW_GL_SOLID_LINE);
@@ -95,7 +95,7 @@ static void radio_button_paint_function(mw_handle_t control_handle, const mw_gl_
 		mw_gl_set_font(MW_GL_FONT_9);
 	}
 
-	for (i = 0; i < this_radio_radio_button->number_of_items; i++)
+	for (i = 0U; i < this_radio_radio_button->number_of_items; i++)
 	{
         /* set the box outline and text colour depending on enabled state */
 		if (mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_IS_ENABLED)
@@ -184,7 +184,7 @@ static void radio_button_paint_function(mw_handle_t control_handle, const mw_gl_
 static void radio_button_message_function(const mw_message_t *message)
 {
 	mw_ui_radio_button_data_t *this_radio_radio_button = (mw_ui_radio_button_data_t*)mw_get_control_instance_data(message->recipient_handle);
-	uint16_t height;
+	int16_t height;
 
 	MW_ASSERT(message, "Null pointer argument");
 
@@ -202,7 +202,7 @@ static void radio_button_message_function(const mw_message_t *message)
 	{
 	case MW_CONTROL_CREATED_MESSAGE:
 		/* initialise the control */				
-		this_radio_radio_button->selected_radio_button = 0;
+		this_radio_radio_button->selected_radio_button = 0U;
 		break;
 		
 	case MW_RADIO_BUTTON_SET_SELECTED_MESSAGE:
@@ -240,9 +240,9 @@ static void radio_button_message_function(const mw_message_t *message)
 *** GLOBAL FUNCTIONS ***
 ***********************/
 
-mw_handle_t mw_ui_radio_button_add_new(uint16_t x,
-		uint16_t y,
-		uint16_t width,
+mw_handle_t mw_ui_radio_button_add_new(int16_t x,
+		int16_t y,
+		int16_t width,
 		mw_handle_t parent_handle,
 		uint32_t flags,
 		mw_ui_radio_button_data_t *radio_button_instance_data)
@@ -259,14 +259,14 @@ mw_handle_t mw_ui_radio_button_add_new(uint16_t x,
 	}
 
 	/* check for 0 entries */
-	if (radio_button_instance_data->number_of_items == 0)
+	if (radio_button_instance_data->number_of_items == 0U)
 	{
 		MW_ASSERT(false, "Zero argument");
 		return MW_INVALID_HANDLE;
 	}
 
 	/* check for null pointers in entry text */
-	for (i = 0; i < radio_button_instance_data->number_of_items; i++)
+	for (i = 0U; i < radio_button_instance_data->number_of_items; i++)
 	{
 		if (radio_button_instance_data->radio_button_labels[i] == NULL)
 		{

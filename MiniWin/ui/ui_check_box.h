@@ -61,7 +61,7 @@ SOFTWARE.
 typedef struct
 {
 	/* User modifiable fields */
-	char label[MW_UI_CHECK_BOX_LABEL_MAX_CHARS + 1];	/**< text of label shown to right of check box */
+	char label[MW_UI_CHECK_BOX_LABEL_MAX_CHARS + 1U];	/**< text of label shown to right of check box */
   
 	/* Non-user modifiable fields */
 	bool checked;										/**< if the check box is checked */  
@@ -81,8 +81,8 @@ typedef struct
  * @param check_box_instance_data Instance structure containing check box specific data items
  * @return The new control's handle
  */
-mw_handle_t mw_ui_check_box_add_new(uint16_t x,
-		uint16_t y,
+mw_handle_t mw_ui_check_box_add_new(int16_t x,
+		int16_t y,
 		mw_handle_t parent_handle,
 		uint32_t flags,
 		mw_ui_check_box_data_t *check_box_instance_data);

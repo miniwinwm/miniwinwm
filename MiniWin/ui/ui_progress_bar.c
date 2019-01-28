@@ -85,9 +85,9 @@ static void progress_bar_paint_function(mw_handle_t control_handle, const mw_gl_
 			mw_get_control_rect(control_handle).width,
 			mw_get_control_rect(control_handle).height);
 
-	if (this_progress_bar->progress_percent > 100)
+	if (this_progress_bar->progress_percent > 100U)
 	{
-		this_progress_bar->progress_percent = 100;
+		this_progress_bar->progress_percent = 100U;
 	}
 
 	mw_gl_set_fg_colour(MW_HAL_LCD_WHITE);
@@ -112,7 +112,7 @@ static void progress_bar_paint_function(mw_handle_t control_handle, const mw_gl_
 	mw_gl_rectangle(draw_info,
 			2,
 			2,
-			((mw_get_control_rect(control_handle).width - 4) * this_progress_bar->progress_percent) / 100,
+			((mw_get_control_rect(control_handle).width - 4) * this_progress_bar->progress_percent) / 100U,
 			mw_get_control_rect(control_handle).height - 4);
 }
 
@@ -143,10 +143,10 @@ static void progress_bar_message_function(const mw_message_t *message)
 *** GLOBAL FUNCTIONS ***
 ***********************/
 
-mw_handle_t mw_ui_progress_bar_add_new(uint16_t x,
-		uint16_t y,
-		uint16_t width,
-		uint16_t height,
+mw_handle_t mw_ui_progress_bar_add_new(int16_t x,
+		int16_t y,
+		int16_t width,
+		int16_t height,
 		mw_handle_t parent_handle,
 		uint32_t flags,
 		mw_ui_progress_bar_data_t *progress_bar_instance_data)

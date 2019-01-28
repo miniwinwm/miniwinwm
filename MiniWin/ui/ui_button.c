@@ -75,8 +75,8 @@ static void button_paint_function(mw_handle_t control_handle, const mw_gl_draw_i
 	mw_ui_button_data_t *this_button = (mw_ui_button_data_t*)mw_get_control_instance_data(control_handle);
 	mw_hal_lcd_colour_t highlighted_colour;
 	mw_hal_lcd_colour_t lowlighted_colour;
-	uint16_t text_width;
-	uint16_t text_x;
+	int16_t text_width;
+	int16_t text_x;
 
     /* set the button box fill colour depending on enabled state */    
 	if (this_button->button_down)
@@ -135,12 +135,12 @@ static void button_paint_function(mw_handle_t control_handle, const mw_gl_draw_i
 	if (mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_LARGE_SIZE)
 	{
 		mw_gl_set_font(MW_GL_TITLE_FONT);
-		text_width = mw_gl_get_string_width_pixels(this_button->button_label);
+		text_width = (int16_t)mw_gl_get_string_width_pixels(this_button->button_label);
 	}
 	else
 	{
 		mw_gl_set_font(MW_GL_FONT_9);
-		text_width = strlen(this_button->button_label) * (mw_gl_get_font_width() + 1);
+		text_width = strlen(this_button->button_label) * ((int16_t)mw_gl_get_font_width() + 1);
 	}
 	text_x = (mw_get_control_rect(control_handle).width - text_width) / 2;
 
@@ -218,8 +218,8 @@ static void button_message_function(const mw_message_t *message)
 *** GLOBAL FUNCTIONS ***
 ***********************/
 
-mw_handle_t mw_ui_button_add_new(uint16_t x,
-		uint16_t y,
+mw_handle_t mw_ui_button_add_new(int16_t x,
+		int16_t y,
 		mw_handle_t parent_handle,
 		uint32_t flags,
 		mw_ui_button_data_t *button_instance_data)

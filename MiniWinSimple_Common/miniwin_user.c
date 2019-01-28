@@ -103,7 +103,7 @@ void mw_user_init(void)
 				MW_WINDOW_FLAG_CAN_BE_CLOSED | MW_WINDOW_FLAG_IS_VISIBLE,
 			NULL);
 
-	mw_util_safe_strcpy(label_data.label, MW_UI_LABEL_MAX_CHARS, "Not yet set");
+	(void)mw_util_safe_strcpy(label_data.label, MW_UI_LABEL_MAX_CHARS, "Not yet set");
 	label_handle = mw_ui_label_add_new(100,
 			5,
 			84,
@@ -111,7 +111,7 @@ void mw_user_init(void)
 			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
 			&label_data);
 
-	mw_util_safe_strcpy(button_data.button_label, MW_UI_BUTTON_LABEL_MAX_CHARS, "TEST");
+	(void)mw_util_safe_strcpy(button_data.button_label, MW_UI_BUTTON_LABEL_MAX_CHARS, "TEST");
 	button_handle = mw_ui_button_add_new(10,
 			10,
 			window_simple_handle,

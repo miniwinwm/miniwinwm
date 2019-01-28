@@ -69,9 +69,9 @@ typedef struct
  * @param scroll_bar_horiz_instance_data Instance structure containing horizontal scroll bar specific data items
  * @return The new control's handle
  */
-mw_handle_t mw_ui_scroll_bar_horiz_add_new(uint16_t x,
-		uint16_t y,
-		uint16_t width,
+mw_handle_t mw_ui_scroll_bar_horiz_add_new(int16_t x,
+		int16_t y,
+		int16_t width,
 		mw_handle_t parent_handle,
 		uint32_t flags,
 		mw_ui_scroll_bar_horiz_data_t *scroll_bar_horiz_instance_data);

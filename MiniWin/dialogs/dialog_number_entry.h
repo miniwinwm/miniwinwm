@@ -71,8 +71,8 @@ SOFTWARE.
  *
  * @warning Do not call this from a client window paint function. In debug mode it will cause an assert failure.
  */
- mw_handle_t mw_create_window_dialog_number_entry(uint16_t x,
-		uint16_t y,
+ mw_handle_t mw_create_window_dialog_number_entry(int16_t x,
+		int16_t y,
 		char *title,
 		bool enable_negative,
 		int32_t initial_number,

@@ -57,7 +57,7 @@ SOFTWARE.
 typedef struct
 {
 	/* User modifiable fields */
-	char button_label[MW_UI_BUTTON_LABEL_MAX_CHARS + 1];	/**< text of label shown to right of button */
+	char button_label[MW_UI_BUTTON_LABEL_MAX_CHARS + 1U];	/**< text of label shown to right of button */
   
 	/* Non-user modifiable fields */
 	bool button_down;										/**< set when the button is down */
@@ -77,8 +77,8 @@ typedef struct
  * @param button_instance_data Instance structure containing button specific data items
  * @return The new control's handle
  */
-mw_handle_t mw_ui_button_add_new(uint16_t x,
-		uint16_t y,
+mw_handle_t mw_ui_button_add_new(int16_t x,
+		int16_t y,
 		mw_handle_t parent_handle,
 		uint32_t flags,
 		mw_ui_button_data_t *button_instance_data);

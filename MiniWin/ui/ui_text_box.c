@@ -122,7 +122,7 @@ static void text_box_message_function(const mw_message_t *message)
 			uint32_t message_data;
 
 			/* initialise the control */
-			this_text_box->lines_to_scroll = 0;
+			this_text_box->lines_to_scroll = 0U;
 
 			/* get height of rendered text in pixels without actually rendering it */
 			this_text_box->text_height_pixels = mw_gl_tt_get_render_text_lines(mw_get_control_rect(message->recipient_handle).width,
@@ -154,7 +154,7 @@ static void text_box_message_function(const mw_message_t *message)
 			if (this_text_box->text_height_pixels <= mw_get_control_rect(message->recipient_handle).height)
 			{
 				/* no, so set scroll pixels to zero */
-				this_text_box->lines_to_scroll = 0;
+				this_text_box->lines_to_scroll = 0U;
 			}
 			else
 			{
@@ -173,7 +173,7 @@ static void text_box_message_function(const mw_message_t *message)
 			if (this_text_box->text_height_pixels <= mw_get_control_rect(message->recipient_handle).height)
 			{
 				/* no, so set scroll pixels to zero */
-				this_text_box->lines_to_scroll = 0;
+				this_text_box->lines_to_scroll = 0U;
 			}
 			else
 			{
@@ -198,7 +198,7 @@ static void text_box_message_function(const mw_message_t *message)
 			if (message->message_pointer)
 			{
 				this_text_box->text = (char *)(message->message_pointer);
-				this_text_box->lines_to_scroll = 0;
+				this_text_box->lines_to_scroll = 0U;
 				mw_paint_control(message->recipient_handle);
 
 				/* get height of rendered text in pixels without actually rendering it */

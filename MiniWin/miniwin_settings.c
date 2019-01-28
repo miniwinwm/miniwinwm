@@ -38,7 +38,7 @@ SOFTWARE.
 *** CONSTANTS ***
 ****************/
 
-#define SETTINGS_INIT_FLAG	0xBADD10DE      /**< Signature of the initialisation flag */
+#define SETTINGS_INIT_FLAG	0xBADD10DEU      /**< Signature of the initialisation flag */
 
 /************
 *** TYPES ***

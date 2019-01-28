@@ -151,9 +151,9 @@ static void mw_dialog_one_button_message_function(const mw_message_t *message)
 *** GLOBAL FUNCTIONS ***
 ***********************/
 
-mw_handle_t mw_create_window_dialog_one_button(uint16_t x,
-		uint16_t y,
-		uint16_t width,
+mw_handle_t mw_create_window_dialog_one_button(int16_t x,
+		int16_t y,
+		int16_t width,
 		char *title,
 		char *message,
 		char *button_label,
@@ -189,11 +189,11 @@ mw_handle_t mw_create_window_dialog_one_button(uint16_t x,
 	}
 
 	/* check start position */
-	if (width > MW_ROOT_WIDTH || x + width > MW_ROOT_WIDTH)
+	if (x + width > MW_ROOT_WIDTH || x < 0)
 	{
 		return MW_INVALID_HANDLE;
 	}
-	if (y + rect.height > MW_ROOT_HEIGHT)
+	if (y + rect.height > MW_ROOT_HEIGHT || y < 0)
 	{
 		return MW_INVALID_HANDLE;
 	}
@@ -224,7 +224,7 @@ mw_handle_t mw_create_window_dialog_one_button(uint16_t x,
 			NULL,
 			0,
 			MW_WINDOW_FLAG_HAS_BORDER | MW_WINDOW_FLAG_HAS_TITLE_BAR |
-					MW_WINDOW_FLAG_IS_VISIBLE | MW_WINDOW_FLAG_IS_MODAL | (large_size ? MW_WINDOW_FLAG_LARGE_SIZE : 0),
+					MW_WINDOW_FLAG_IS_VISIBLE | MW_WINDOW_FLAG_IS_MODAL | (large_size ? MW_WINDOW_FLAG_LARGE_SIZE : 0U),
 			NULL);
 
 	/* check if window could be created */
@@ -238,7 +238,7 @@ mw_handle_t mw_create_window_dialog_one_button(uint16_t x,
 	window_client_width = mw_get_window_client_rect(mw_dialog_one_button_data.one_button_dialog_window_handle).width;
 
 	/* create a button control and add it to the  window */
-	mw_util_safe_strcpy(mw_dialog_one_button_data.button_data.button_label,
+	(void)mw_util_safe_strcpy(mw_dialog_one_button_data.button_data.button_label,
 			MW_UI_BUTTON_LABEL_MAX_CHARS, button_label);
 	if (large_size)
 	{

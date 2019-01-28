@@ -69,8 +69,8 @@ SOFTWARE.
  *
  * @warning Do not call this from a client window paint function. In debug mode it will cause an assert failure.
  */
- mw_handle_t mw_create_window_dialog_text_entry(uint16_t x,
-		uint16_t y,
+ mw_handle_t mw_create_window_dialog_text_entry(int16_t x,
+		int16_t y,
 		char *title,
 		char *initial_text,
 		bool large_size,

@@ -74,9 +74,9 @@ static void list_box_paint_function(mw_handle_t control_handle, const mw_gl_draw
 {
 	uint8_t i;
 	mw_ui_list_box_data_t *this_list_box = (mw_ui_list_box_data_t*)mw_get_control_instance_data(control_handle);
-	uint16_t row_height;
-	uint16_t icon_x_offset;
-	uint16_t text_x_offset;
+	int16_t row_height;
+	int16_t icon_x_offset;
+	int16_t text_x_offset;
 
 	if (mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_LARGE_SIZE)
 	{
@@ -115,13 +115,13 @@ static void list_box_paint_function(mw_handle_t control_handle, const mw_gl_draw
 	mw_gl_set_bg_transparency(MW_GL_BG_TRANSPARENT);
 	mw_gl_set_text_rotation(MW_GL_TEXT_ROTATION_0);
 	
-	for(i = 0; i < this_list_box->number_of_lines; i++)
+	for (i = 0U; i < this_list_box->number_of_lines; i++)
 	{
 		/* draw feint separator between items */
 		mw_gl_set_fg_colour(MW_CONTROL_SEPARATOR_COLOUR);
 		mw_gl_set_line(MW_GL_DOT_LINE);
 
-		if (i > 0)
+		if (i > 0U)
 		{
 			mw_gl_hline(draw_info,
 				2,
@@ -148,21 +148,21 @@ static void list_box_paint_function(mw_handle_t control_handle, const mw_gl_draw
 			mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 			mw_gl_vline(draw_info,
 					1,
-					row_height * i + 1,
-					row_height * (i + 1) - 1);
+					row_height * i + 1U,
+					row_height * (i + 1U) - 1);
 			mw_gl_hline(draw_info,
 					1,
 					mw_get_control_rect(control_handle).width - 2,
-					row_height * i + 1);
+					row_height * i + 1U);
 			mw_gl_set_fg_colour(MW_HAL_LCD_WHITE);
 			mw_gl_vline(draw_info,
 					mw_get_control_rect(control_handle).width - 3,
-					row_height * i + 1,
+					row_height * i + 1U,
 					row_height * i + row_height - 1);
 			mw_gl_hline(draw_info,
 					1,
 					mw_get_control_rect(control_handle).width - 3,
-					row_height * (i + 1) - 1);
+					row_height * (i + 1U) - 1);
 		}
 
 		/* set up text colour on enabled state - from control and individual items bitfield */
@@ -288,9 +288,9 @@ static void list_box_paint_function(mw_handle_t control_handle, const mw_gl_draw
  */
 static void list_box_message_function(const mw_message_t *message)
 {
-	uint16_t touch_y;
+	int16_t touch_y;
 	mw_ui_list_box_data_t *this_list_box = (mw_ui_list_box_data_t*)mw_get_control_instance_data(message->recipient_handle);
-	uint16_t row_height;
+	int16_t row_height;
 
 	MW_ASSERT(message, "Null pointer argument");
 
@@ -311,13 +311,13 @@ static void list_box_message_function(const mw_message_t *message)
 
 			/* initialise the control */
 			this_list_box->line_is_selected = false;
-			this_list_box->lines_to_scroll = 0;
+			this_list_box->lines_to_scroll = 0U;
 			this_list_box->invalid_rect.x = 0;
 			this_list_box->invalid_rect.width = mw_get_control_rect(message->recipient_handle).width;
 
 			/* send message about whether scrolling is needed */
 			message_data = this_list_box->number_of_items > this_list_box->number_of_lines;
-			message_data <<= 16;
+			message_data <<= 16U;
 			if (message_data)
 			{
 				message_data |= (this_list_box->number_of_items - this_list_box->number_of_lines);
@@ -336,7 +336,7 @@ static void list_box_message_function(const mw_message_t *message)
 		if (this_list_box->number_of_items <= this_list_box->number_of_lines)
 		{
 			/* no, so set scroll lines to zero */
-			this_list_box->lines_to_scroll = 0;
+			this_list_box->lines_to_scroll = 0U;
 		}
 		else
 		{
@@ -352,7 +352,7 @@ static void list_box_message_function(const mw_message_t *message)
 		if (this_list_box->number_of_items <= this_list_box->number_of_lines)
 		{
 			/* no, so set scroll lines to zero */
-			this_list_box->lines_to_scroll = 0;
+			this_list_box->lines_to_scroll = 0U;
 		}
 		else
 		{
@@ -375,11 +375,11 @@ static void list_box_message_function(const mw_message_t *message)
 			{
 				this_list_box->number_of_items = message->message_data;
 				this_list_box->list_box_entries = (mw_ui_list_box_entry *)message->message_pointer;
-				this_list_box->lines_to_scroll = 0;
+				this_list_box->lines_to_scroll = 0U;
 
 				/* send message about whether scrolling is needed */
 				message_data = this_list_box->number_of_items > this_list_box->number_of_lines;
-				message_data <<= 16;
+				message_data <<= 16U;
 				if (message_data)
 				{
 					message_data |= (this_list_box->number_of_items - this_list_box->number_of_lines);
@@ -412,7 +412,7 @@ static void list_box_message_function(const mw_message_t *message)
 
 	case MW_TOUCH_DOWN_MESSAGE:
 		/* handle a touch down event within this control */		
-		touch_y = message->message_data;
+		touch_y = (int16_t)message->message_data;
 		
 		/* check if the control is enabled and this particular line is enabled and
 		 * there's an entry on this line */
@@ -440,9 +440,9 @@ static void list_box_message_function(const mw_message_t *message)
 *** GLOBAL FUNCTIONS ***
 ***********************/
 
-mw_handle_t mw_ui_list_box_add_new(uint16_t x,
-		uint16_t y,
-		uint16_t width,
+mw_handle_t mw_ui_list_box_add_new(int16_t x,
+		int16_t y,
+		int16_t width,
 		mw_handle_t parent_handle,
 		uint32_t flags,
 		mw_ui_list_box_data_t *list_box_instance_data)
@@ -458,7 +458,7 @@ mw_handle_t mw_ui_list_box_add_new(uint16_t x,
 	}
 
 	/* check for null pointers in entry text */
-	for (i = 0; i < list_box_instance_data->number_of_items; i++)
+	for (i = 0U; i < list_box_instance_data->number_of_items; i++)
 	{
 		if (list_box_instance_data->list_box_entries[i].label == NULL)
 		{

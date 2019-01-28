@@ -657,8 +657,8 @@ static void draw_character_0_degrees(const mw_gl_draw_info_t *draw_info, int16_t
 
 	if (x >= draw_info->clip_rect.x + draw_info->clip_rect.width ||
 			y >= draw_info->clip_rect.y + draw_info->clip_rect.height ||
-			x + mw_gl_get_font_width() + 1 <= draw_info->clip_rect.x ||
-			y + mw_gl_get_font_height() + 1 <= draw_info->clip_rect.y)
+			x + (int16_t)mw_gl_get_font_width() + 1 <= draw_info->clip_rect.x ||
+			y + (int16_t)mw_gl_get_font_height() + 1 <= draw_info->clip_rect.y)
 	{
 		return;
 	}
@@ -668,8 +668,8 @@ static void draw_character_0_degrees(const mw_gl_draw_info_t *draw_info, int16_t
 		filled_rectangle(draw_info,
 				x,
 				y,
-				mw_gl_get_font_width() + 1,
-				mw_gl_get_font_height() + 1,
+				(int16_t)mw_gl_get_font_width() + 1,
+				(int16_t)mw_gl_get_font_height() + 1,
 				gc.bg_colour);
 	}
 
@@ -2071,7 +2071,7 @@ uint16_t mw_gl_get_string_width_pixels(const char *s)
 
 	if (gc.font == MW_GL_TITLE_FONT)
 	{
-		for (i = 0; i < strlen((char *)s); i++)
+		for (i = 0U; i < strlen((char *)s); i++)
 		{
 			width += mw_title_font_positions[s[i] - ' ' + 1] - mw_title_font_positions[s[i] - ' '];
 		}

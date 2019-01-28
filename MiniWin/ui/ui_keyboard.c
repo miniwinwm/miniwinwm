@@ -91,8 +91,8 @@ static void keyboard_paint_function(mw_handle_t control_handle, const mw_gl_draw
 	uint8_t column;
 	mw_hal_lcd_colour_t highlighted_colour;
 	mw_hal_lcd_colour_t lowlighted_colour;
-	uint8_t text_offset;
-	uint8_t bitmap_offset;
+	int8_t text_offset;
+	int8_t bitmap_offset;
 
 	if (mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_LARGE_SIZE)
 	{
@@ -115,9 +115,9 @@ static void keyboard_paint_function(mw_handle_t control_handle, const mw_gl_draw
 	mw_gl_set_bg_transparency(MW_GL_BG_TRANSPARENT);
 	mw_gl_set_text_rotation(MW_GL_TEXT_ROTATION_0);
 
-	for (row = 0; row < 3; row ++)
+	for (row = 0U; row < 3U; row ++)
 	{
-		for (column = 0; column < 11; column++)
+		for (column = 0U; column < 11U; column++)
 		{
 			/* set colour of key box fill according to pressed state */
 			if (this_keyboard->is_key_pressed &&
@@ -163,22 +163,22 @@ static void keyboard_paint_function(mw_handle_t control_handle, const mw_gl_draw
 			}
 			mw_gl_set_fg_colour(highlighted_colour);
 			mw_gl_vline(draw_info,
-					column * this_keyboard->key_size + 1,
-					row * this_keyboard->key_size + 1,
-					(row + 1) * this_keyboard->key_size - 2);
+					column * this_keyboard->key_size + 1U,
+					row * this_keyboard->key_size + 1U,
+					(row + 1U) * this_keyboard->key_size - 2U);
 			mw_gl_hline(draw_info,
-					column * this_keyboard->key_size + 1,
-					(column + 1) * this_keyboard->key_size - 2,
-					row * this_keyboard->key_size + 1);
+					column * this_keyboard->key_size + 1U,
+					(column + 1) * this_keyboard->key_size - 2U,
+					row * this_keyboard->key_size + 1U);
 			mw_gl_set_fg_colour(lowlighted_colour);
 			mw_gl_vline(draw_info,
-					(column + 1) * this_keyboard->key_size - 2,
-					row * this_keyboard->key_size + 1,
-					(row + 1) * this_keyboard->key_size - 2);
+					(column + 1) * this_keyboard->key_size - 2U,
+					row * this_keyboard->key_size + 1U,
+					(row + 1) * this_keyboard->key_size - 2U);
 			mw_gl_hline(draw_info,
-					column * this_keyboard->key_size + 1,
-					(column + 1) * this_keyboard->key_size - 2,
-					(row + 1) * this_keyboard->key_size - 2);
+					column * this_keyboard->key_size + 1U,
+					(column + 1) * this_keyboard->key_size - 2U,
+					(row + 1) * this_keyboard->key_size - 2U);
 
 			/* draw key character */
 			mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
@@ -202,8 +202,8 @@ static void keyboard_paint_function(mw_handle_t control_handle, const mw_gl_draw
 
 		/* draw keys on all keyboards */
 		if (this_keyboard->is_key_pressed &&
-				this_keyboard->key_pressed_row == 1 &&
-				this_keyboard->key_pressed_column == 9)
+				this_keyboard->key_pressed_row == 1U &&
+				this_keyboard->key_pressed_column == 9U)
 		{
 			mw_gl_monochrome_bitmap(draw_info,
 					9 * this_keyboard->key_size + bitmap_offset + 1,
@@ -227,8 +227,8 @@ static void keyboard_paint_function(mw_handle_t control_handle, const mw_gl_draw
 				 this_keyboard->keyboard_display == KEYBOARD_LOWER_CHARS)
 		{
 			if (this_keyboard->is_key_pressed &&
-					this_keyboard->key_pressed_row == 0 &&
-					this_keyboard->key_pressed_column == 10)
+					this_keyboard->key_pressed_row == 0U &&
+					this_keyboard->key_pressed_column == 10U)
 			{
 				mw_gl_monochrome_bitmap(draw_info,
 						10 * this_keyboard->key_size + bitmap_offset + 1,
@@ -248,8 +248,8 @@ static void keyboard_paint_function(mw_handle_t control_handle, const mw_gl_draw
 			}
 
 			if (this_keyboard->is_key_pressed &&
-					this_keyboard->key_pressed_row == 1 &&
-					this_keyboard->key_pressed_column == 10)
+					this_keyboard->key_pressed_row == 1U &&
+					this_keyboard->key_pressed_column == 10U)
 			{
 				mw_gl_monochrome_bitmap(draw_info,
 						10 * this_keyboard->key_size + bitmap_offset + 1,
@@ -269,8 +269,8 @@ static void keyboard_paint_function(mw_handle_t control_handle, const mw_gl_draw
 			}
 
 			if (this_keyboard->is_key_pressed &&
-					this_keyboard->key_pressed_row == 2 &&
-					this_keyboard->key_pressed_column == 0)
+					this_keyboard->key_pressed_row == 2U &&
+					this_keyboard->key_pressed_column == 0U)
 			{
 				mw_gl_monochrome_bitmap(draw_info,
 						0 * this_keyboard->key_size + bitmap_offset + 1,
@@ -292,8 +292,8 @@ static void keyboard_paint_function(mw_handle_t control_handle, const mw_gl_draw
 		else if (this_keyboard->keyboard_display == KEYBOARD_NUMBERS)
 		{
 			if (this_keyboard->is_key_pressed &&
-					this_keyboard->key_pressed_row == 0 &&
-					this_keyboard->key_pressed_column == 10)
+					this_keyboard->key_pressed_row == 0U &&
+					this_keyboard->key_pressed_column == 10U)
 			{
 				mw_gl_monochrome_bitmap(draw_info,
 						10 * this_keyboard->key_size + bitmap_offset + 1,
@@ -313,8 +313,8 @@ static void keyboard_paint_function(mw_handle_t control_handle, const mw_gl_draw
 			}
 
 			if (this_keyboard->is_key_pressed &&
-					this_keyboard->key_pressed_row == 1 &&
-					this_keyboard->key_pressed_column == 10)
+					this_keyboard->key_pressed_row == 1U &&
+					this_keyboard->key_pressed_column == 10U)
 			{
 				mw_gl_monochrome_bitmap(draw_info,
 						10 * this_keyboard->key_size + bitmap_offset + 1,
@@ -336,8 +336,8 @@ static void keyboard_paint_function(mw_handle_t control_handle, const mw_gl_draw
 		else
 		{
 			if (this_keyboard->is_key_pressed &&
-					this_keyboard->key_pressed_row == 0 &&
-					this_keyboard->key_pressed_column == 10)
+					this_keyboard->key_pressed_row == 0U &&
+					this_keyboard->key_pressed_column == 10U)
 			{
 				mw_gl_monochrome_bitmap(draw_info,
 						10 * this_keyboard->key_size + bitmap_offset + 1,
@@ -357,8 +357,8 @@ static void keyboard_paint_function(mw_handle_t control_handle, const mw_gl_draw
 			}
 
 			if (this_keyboard->is_key_pressed &&
-					this_keyboard->key_pressed_row == 1 &&
-					this_keyboard->key_pressed_column == 10)
+					this_keyboard->key_pressed_row == 1U &&
+					this_keyboard->key_pressed_column == 10U)
 			{
 				mw_gl_monochrome_bitmap(draw_info,
 						10 * this_keyboard->key_size + bitmap_offset + 1,
@@ -390,8 +390,8 @@ static void process_keypress(const mw_message_t *message)
 	mw_ui_keyboard_data_t *this_keyboard = (mw_ui_keyboard_data_t*)mw_get_control_instance_data(message->recipient_handle);
 
 	/* check for shift key pressed */
-	if (this_keyboard->key_pressed_row == 2
-			&& this_keyboard->key_pressed_column == 0 &&
+	if (this_keyboard->key_pressed_row == 2U
+			&& this_keyboard->key_pressed_column == 0U &&
 			(this_keyboard->keyboard_display == KEYBOARD_UPPER_CHARS ||
 			 this_keyboard->keyboard_display == KEYBOARD_LOWER_CHARS))
 	{
@@ -406,7 +406,7 @@ static void process_keypress(const mw_message_t *message)
 		this_keyboard->swap_keyboard = true;
 	}
 	/* check for upper keypad change key pressed */
-	else if (this_keyboard->key_pressed_row == 0 && this_keyboard->key_pressed_column == 10)
+	else if (this_keyboard->key_pressed_row == 0U && this_keyboard->key_pressed_column == 10U)
 	{
 		if (this_keyboard->keyboard_display == KEYBOARD_LOWER_CHARS ||
 				this_keyboard->keyboard_display == KEYBOARD_UPPER_CHARS)
@@ -420,7 +420,7 @@ static void process_keypress(const mw_message_t *message)
 		this_keyboard->swap_keyboard = true;
 	}
 	/* check for lower keypad change key pressed */
-	else if (this_keyboard->key_pressed_row == 1 && this_keyboard->key_pressed_column == 10)
+	else if (this_keyboard->key_pressed_row == 1U && this_keyboard->key_pressed_column == 10U)
 	{
 		if (this_keyboard->keyboard_display == KEYBOARD_LOWER_CHARS ||
 				this_keyboard->keyboard_display == KEYBOARD_UPPER_CHARS ||
@@ -526,8 +526,8 @@ static void keyboard_message_function(const mw_message_t *message)
 		}
 
 		/* get the key pressed from the touch coordinates */
-		this_keyboard->key_pressed_row = (message->message_data & 0xffff) / this_keyboard->key_size;
-		this_keyboard->key_pressed_column = (message->message_data >> 16) / this_keyboard->key_size;
+		this_keyboard->key_pressed_row = (message->message_data & 0xffffU) / this_keyboard->key_size;
+		this_keyboard->key_pressed_column = (message->message_data >> 16U) / this_keyboard->key_size;
 
 		this_keyboard->touch_down_time = mw_tick_counter;
 		this_keyboard->timer_handle = mw_set_timer(mw_tick_counter + MW_KEY_DOWN_TIME, message->recipient_handle, MW_CONTROL_MESSAGE);
@@ -552,8 +552,8 @@ static void keyboard_message_function(const mw_message_t *message)
 *** GLOBAL FUNCTIONS ***
 ***********************/
 
-mw_handle_t mw_ui_keyboard_add_new(uint16_t x,
-		uint16_t y,
+mw_handle_t mw_ui_keyboard_add_new(int16_t x,
+		int16_t y,
 		mw_handle_t parent_handle,
 		uint32_t flags,
 		mw_ui_keyboard_data_t *keyboard_instance_data)

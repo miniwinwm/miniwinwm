@@ -72,7 +72,7 @@ static void check_box_message_function(const mw_message_t *message);
  */
 static void check_box_paint_function(mw_handle_t control_handle, const mw_gl_draw_info_t *draw_info)
 {
-	uint16_t height;
+	int16_t height;
 	mw_ui_check_box_data_t *this_check_box = (mw_ui_check_box_data_t*)mw_get_control_instance_data(control_handle);
 
     /* set the box outline, text and X colour depending on enabled state */   
@@ -135,11 +135,11 @@ static void check_box_paint_function(mw_handle_t control_handle, const mw_gl_dra
 
 	    if (mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_LARGE_SIZE)
 	    {
-	    	mw_gl_monochrome_bitmap(draw_info, 2, 2, 24, 24, mw_bitmaps_tick_large);
+	    	mw_gl_monochrome_bitmap(draw_info, 2, 2, 24U, 24U, mw_bitmaps_tick_large);
 	    }
 	    else
 	    {
-	    	mw_gl_monochrome_bitmap(draw_info, 1, 1, 12, 12, mw_bitmaps_tick);
+	    	mw_gl_monochrome_bitmap(draw_info, 1, 1, 12U, 12U, mw_bitmaps_tick);
 	    }
 	}
 }
@@ -164,7 +164,7 @@ static void check_box_message_function(const mw_message_t *message)
 		
 	case MW_CHECK_BOX_SET_CHECKED_STATE_MESSAGE:
 		/* handle a transfer data message, which contains new number */
-		this_check_box->checked = message->message_data & 0x01;
+		this_check_box->checked = message->message_data & 0x01U;
 		break;
 
 	case MW_TOUCH_DOWN_MESSAGE:
@@ -191,8 +191,8 @@ static void check_box_message_function(const mw_message_t *message)
 *** GLOBAL FUNCTIONS ***
 ***********************/
 
-mw_handle_t mw_ui_check_box_add_new(uint16_t x,
-		uint16_t y,
+mw_handle_t mw_ui_check_box_add_new(int16_t x,
+		int16_t y,
 		mw_handle_t parent_handle,
 		uint32_t flags,
 		mw_ui_check_box_data_t *check_box_instance_data)

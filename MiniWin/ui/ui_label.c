@@ -126,7 +126,7 @@ static void label_message_function(const mw_message_t *message)
 		/* message pointer field contains pointer to new text */
 		if (message->message_pointer)
 		{
-			mw_util_safe_strcpy(this_label->label, MW_UI_LABEL_MAX_CHARS, (char *)message->message_pointer);
+			(void)mw_util_safe_strcpy(this_label->label, MW_UI_LABEL_MAX_CHARS, (char *)message->message_pointer);
 		}
 		else
 		{
@@ -143,9 +143,9 @@ static void label_message_function(const mw_message_t *message)
 *** GLOBAL FUNCTIONS ***
 ***********************/
 
-mw_handle_t mw_ui_label_add_new(uint16_t x,
-		uint16_t y,
-		uint16_t width,
+mw_handle_t mw_ui_label_add_new(int16_t x,
+		int16_t y,
+		int16_t width,
 		mw_handle_t parent_handle,
 		uint32_t flags,
 		mw_ui_label_data_t *label_instance_data)

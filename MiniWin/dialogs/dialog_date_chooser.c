@@ -114,17 +114,17 @@ static uint8_t get_max_date_for_month_and_year(uint8_t month, uint16_t year)
 	uint8_t days;
 
 	days = days_in_months[month];
-	if (month == 2)
+	if (month == 2U)
 	{
-		if (year % 4 == 0)
+		if (year % 4U == 0U)
 		{
 			days++;
 
-			if (year % 100 == 0)
+			if (year % 100U == 0U)
 			{
 				days--;
 
-				if (year % 400 == 0)
+				if (year % 400U == 0U)
 				{
 					days++;
 				}
@@ -154,7 +154,7 @@ static void update_arrow_enable_states(void)
 
 	mw_set_control_enabled(mw_dialog_date_chooser_data.arrow_date_up_handle, true);
 	mw_set_control_enabled(mw_dialog_date_chooser_data.arrow_date_down_handle, true);
-	if (mw_dialog_date_chooser_data.current_date_date == 1)
+	if (mw_dialog_date_chooser_data.current_date_date == 1U)
 	{
 		mw_set_control_enabled(mw_dialog_date_chooser_data.arrow_date_down_handle, false);
 	}
@@ -167,22 +167,22 @@ static void update_arrow_enable_states(void)
 
 	mw_set_control_enabled(mw_dialog_date_chooser_data.arrow_month_up_handle, true);
 	mw_set_control_enabled(mw_dialog_date_chooser_data.arrow_month_down_handle, true);
-	if (mw_dialog_date_chooser_data.current_date_month == 1)
+	if (mw_dialog_date_chooser_data.current_date_month == 1U)
 	{
 		mw_set_control_enabled(mw_dialog_date_chooser_data.arrow_month_down_handle, false);
 	}
-	else if (mw_dialog_date_chooser_data.current_date_month == 12)
+	else if (mw_dialog_date_chooser_data.current_date_month == 12U)
 	{
 		mw_set_control_enabled(mw_dialog_date_chooser_data.arrow_month_up_handle, false);
 	}
 
 	mw_set_control_enabled(mw_dialog_date_chooser_data.arrow_year_up_handle, true);
 	mw_set_control_enabled(mw_dialog_date_chooser_data.arrow_year_down_handle, true);
-	if (mw_dialog_date_chooser_data.current_date_year == 0)
+	if (mw_dialog_date_chooser_data.current_date_year == 0U)
 	{
 		mw_set_control_enabled(mw_dialog_date_chooser_data.arrow_year_down_handle, false);
 	}
-	else if (mw_dialog_date_chooser_data.current_date_year == 99)
+	else if (mw_dialog_date_chooser_data.current_date_year == 99U)
 	{
 		mw_set_control_enabled(mw_dialog_date_chooser_data.arrow_year_up_handle, false);
 	}
@@ -222,9 +222,9 @@ static void mw_dialog_date_chooser_paint_function(mw_handle_t window_handle, con
 	mw_gl_set_bg_transparency(MW_GL_BG_TRANSPARENT);
 	mw_gl_set_text_rotation(MW_GL_TEXT_ROTATION_0);
 
-	snprintf(text_year, 16, "Year: %04u", (unsigned int)mw_dialog_date_chooser_data.current_date_year);
-	snprintf(text_month, 16, "Month: %u", (unsigned int)mw_dialog_date_chooser_data.current_date_month);
-	snprintf(text_date, 16, "Date: %u", (unsigned int)mw_dialog_date_chooser_data.current_date_date);
+	(void)snprintf(text_year, 16, "Year: %04u", (unsigned int)mw_dialog_date_chooser_data.current_date_year);
+	(void)snprintf(text_month, 16, "Month: %u", (unsigned int)mw_dialog_date_chooser_data.current_date_month);
+	(void)snprintf(text_date, 16, "Date: %u", (unsigned int)mw_dialog_date_chooser_data.current_date_date);
 
 	if (mw_dialog_date_chooser_data.large_size)
 	{
@@ -257,28 +257,28 @@ static void mw_dialog_date_chooser_message_function(const mw_message_t *message)
 	case MW_ARROW_PRESSED_MESSAGE:
 		if (message->sender_handle == mw_dialog_date_chooser_data.arrow_year_up_handle)
 		{
-			if (mw_dialog_date_chooser_data.current_date_year < 9999)
+			if (mw_dialog_date_chooser_data.current_date_year < 9999U)
 			{
 				mw_dialog_date_chooser_data.current_date_year++;
 			}
 		}
 		else if (message->sender_handle == mw_dialog_date_chooser_data.arrow_year_down_handle)
 		{
-			if (mw_dialog_date_chooser_data.current_date_year > 0)
+			if (mw_dialog_date_chooser_data.current_date_year > 0U)
 			{
 				mw_dialog_date_chooser_data.current_date_year--;
 			}
 		}
 		else if (message->sender_handle == mw_dialog_date_chooser_data.arrow_month_up_handle)
 		{
-			if (mw_dialog_date_chooser_data.current_date_month < 12)
+			if (mw_dialog_date_chooser_data.current_date_month < 12U)
 			{
 				mw_dialog_date_chooser_data.current_date_month++;
 			}
 		}
 		else if (message->sender_handle == mw_dialog_date_chooser_data.arrow_month_down_handle)
 		{
-			if (mw_dialog_date_chooser_data.current_date_month > 1)
+			if (mw_dialog_date_chooser_data.current_date_month > 1U)
 			{
 				mw_dialog_date_chooser_data.current_date_month--;
 			}
@@ -294,7 +294,7 @@ static void mw_dialog_date_chooser_message_function(const mw_message_t *message)
 		}
 		else if (message->sender_handle == mw_dialog_date_chooser_data.arrow_date_down_handle)
 		{
-			if (mw_dialog_date_chooser_data.current_date_date > 1)
+			if (mw_dialog_date_chooser_data.current_date_date > 1U)
 			{
 				mw_dialog_date_chooser_data.current_date_date--;
 			}
@@ -331,8 +331,8 @@ static void mw_dialog_date_chooser_message_function(const mw_message_t *message)
 			mw_post_message(MW_DIALOG_DATE_CHOOSER_OK_MESSAGE,
 					MW_UNUSED_MESSAGE_PARAMETER,
 					mw_dialog_date_chooser_data.owner_window_handle,
-					(uint32_t)mw_dialog_date_chooser_data.current_date_year << 16 |
-							(uint32_t)mw_dialog_date_chooser_data.current_date_month << 8 |
+					(uint32_t)mw_dialog_date_chooser_data.current_date_year << 16U |
+							(uint32_t)mw_dialog_date_chooser_data.current_date_month << 8U |
 							mw_dialog_date_chooser_data.current_date_date,
 					MW_UNUSED_MESSAGE_PARAMETER,
 					MW_WINDOW_MESSAGE);
@@ -363,8 +363,8 @@ static void mw_dialog_date_chooser_message_function(const mw_message_t *message)
 *** GLOBAL FUNCTIONS ***
 ***********************/
 
-mw_handle_t mw_create_window_dialog_date_chooser(uint16_t x,
-		uint16_t y,
+mw_handle_t mw_create_window_dialog_date_chooser(int16_t x,
+		int16_t y,
 		uint8_t start_date_date,
 		uint8_t start_date_month,
 		uint16_t start_date_year,
@@ -374,9 +374,9 @@ mw_handle_t mw_create_window_dialog_date_chooser(uint16_t x,
 	mw_util_rect_t rect;
 
 	/* check the start date */
-	if (start_date_year > 9999 ||
-			start_date_month > 12 || start_date_month == 0 ||
-			start_date_date == 0 || start_date_date > get_max_date_for_month_and_year(start_date_month, start_date_year))
+	if (start_date_year > 9999U ||
+			start_date_month > 12U || start_date_month == 0U ||
+			start_date_date == 0U || start_date_date > get_max_date_for_month_and_year(start_date_month, start_date_year))
 	{
 		return MW_INVALID_HANDLE;
 	}
@@ -397,11 +397,11 @@ mw_handle_t mw_create_window_dialog_date_chooser(uint16_t x,
 	}
 
 	/* check start position */
-	if (x + rect.width > MW_ROOT_WIDTH)
+	if (x + rect.width > MW_ROOT_WIDTH || x < 0)
 	{
 		return MW_INVALID_HANDLE;
 	}
-	if (y + rect.height > MW_ROOT_HEIGHT)
+	if (y + rect.height > MW_ROOT_HEIGHT || y < 0)
 	{
 		return MW_INVALID_HANDLE;
 	}
@@ -430,7 +430,7 @@ mw_handle_t mw_create_window_dialog_date_chooser(uint16_t x,
 			NULL,
 			0,
 			MW_WINDOW_FLAG_HAS_BORDER | MW_WINDOW_FLAG_HAS_TITLE_BAR |
-					MW_WINDOW_FLAG_IS_VISIBLE | MW_WINDOW_FLAG_IS_MODAL | (large_size ? MW_WINDOW_FLAG_LARGE_SIZE : 0),
+					MW_WINDOW_FLAG_IS_VISIBLE | MW_WINDOW_FLAG_IS_MODAL | (large_size ? MW_WINDOW_FLAG_LARGE_SIZE : 0U),
 			NULL);
 
 	/* check if window could be created */
@@ -441,9 +441,9 @@ mw_handle_t mw_create_window_dialog_date_chooser(uint16_t x,
 	}
 
 	/* set controls data */
-	mw_util_safe_strcpy(mw_dialog_date_chooser_data.button_ok_data.button_label,
+	(void)mw_util_safe_strcpy(mw_dialog_date_chooser_data.button_ok_data.button_label,
 			MW_UI_BUTTON_LABEL_MAX_CHARS, "OK");
-	mw_util_safe_strcpy(mw_dialog_date_chooser_data.button_cancel_data.button_label,
+	(void)mw_util_safe_strcpy(mw_dialog_date_chooser_data.button_cancel_data.button_label,
 			MW_UI_BUTTON_LABEL_MAX_CHARS, "Cancel");
 	mw_dialog_date_chooser_data.arrow_year_up_data.mw_ui_arrow_direction = MW_UI_ARROW_UP;
 	mw_dialog_date_chooser_data.arrow_year_down_data.mw_ui_arrow_direction = MW_UI_ARROW_DOWN;

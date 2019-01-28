@@ -57,7 +57,7 @@ typedef struct
 
 	/* Non-user modifiable fields */
 	uint16_t lines_to_scroll;						/**< Pixel lines to scroll the rendered text up */
-	uint16_t text_height_pixels;					/**< Height of all the rendered text in pixels, including that part which doesn't fit in the box */
+	int16_t text_height_pixels;						/**< Height of all the rendered text in pixels, including that part which doesn't fit in the box */
 } mw_ui_text_box_data_t;
 
 /***************************

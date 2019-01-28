@@ -43,13 +43,13 @@ SOFTWARE.
 #define MW_UI_LIST_BOX_LABEL_Y_OFFSET			3
 #define MW_UI_LIST_BOX_LABEL_X_OFFSET 			8
 #define MW_UI_LIST_BOX_MIN_WIDTH			    12
-#define MW_UI_LIST_BOX_ICON_SIZE				8
+#define MW_UI_LIST_BOX_ICON_SIZE				8U
 
 #define MW_UI_LIST_BOX_LARGE_ROW_HEIGHT			28
 #define MW_UI_LIST_BOX_LARGE_LABEL_Y_OFFSET		6
 #define MW_UI_LIST_BOX_LARGE_LABEL_X_OFFSET 	8
 #define MW_UI_LIST_BOX_LARGE_MIN_WIDTH			24
-#define MW_UI_LIST_BOX_LARGE_ICON_SIZE			16
+#define MW_UI_LIST_BOX_LARGE_ICON_SIZE			16U
 
 #define MW_UI_LIST_BOX_MAX_ENTRIES				16
 
@@ -100,9 +100,9 @@ typedef struct
  * @param list_box_instance_data Instance structure containing list box specific data items
  * @return The new control's handle
  */
-mw_handle_t mw_ui_list_box_add_new(uint16_t x,
-		uint16_t y,
-		uint16_t width,
+mw_handle_t mw_ui_list_box_add_new(int16_t x,
+		int16_t y,
+		int16_t width,
 		mw_handle_t parent_handle,
 		uint32_t flags,
 		mw_ui_list_box_data_t *list_box_instance_data);

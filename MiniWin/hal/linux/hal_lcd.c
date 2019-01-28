@@ -167,7 +167,7 @@ void mw_hal_lcd_monochrome_bitmap_clip(int16_t image_start_x,
 	uint8_t mask;
 	uint8_t array_width_bytes;
 
-	array_width_bytes = bitmap_width >> 3;
+	array_width_bytes = bitmap_width >> 3U;
 	if (bitmap_width % 8 > 0)
 	{
 		array_width_bytes++;
@@ -178,7 +178,7 @@ void mw_hal_lcd_monochrome_bitmap_clip(int16_t image_start_x,
 		for (a = 0; a < array_width_bytes; a++)
 		{
 			image_byte = image_data[y * array_width_bytes + a];
-			mask = 0x80;
+			mask = 0x80U;
 			for (x = 0; x < 8; x++)
 			{
 				if ((a << 3) + x == bitmap_width)
@@ -200,7 +200,7 @@ void mw_hal_lcd_monochrome_bitmap_clip(int16_t image_start_x,
 						mw_hal_lcd_pixel((a << 3) + x + image_start_x, y + image_start_y, bg_colour);
 					}
 				}
-				mask >>= 1;
+				mask >>= 1U;
 			}
 		}
 	}

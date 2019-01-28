@@ -61,7 +61,7 @@ typedef struct
 	mw_ui_keypad_data_t mw_ui_keypad_data;			/**< Keypad control instance data */
 	mw_ui_button_data_t button_ok_data;				/**< Instance data of ok button */
 	mw_ui_button_data_t button_cancel_data;			/**< Instance data of cancel button */
-	char number_buffer[MW_DIALOG_MAX_NUMBER_LENGTH + 2];	/**< MW_DIALOG_MAX_NUMBER_LENGTH digits, - sign, terminating null */
+	char number_buffer[MW_DIALOG_MAX_NUMBER_LENGTH + 2U];	/**< MW_DIALOG_MAX_NUMBER_LENGTH digits, - sign, terminating null */
 	bool is_negative;								/**< If the number is negative */
 	bool large_size;								/**< True for large size false for standard size */
 	bool draw_cursor;								/**< if to draw cursor this timer tick or not */
@@ -87,7 +87,7 @@ static mw_dialog_number_entry_data_t mw_dialog_number_entry_data;
 *** LOCAL FUNCTION PROTOTYPES ***
 ********************************/
 
-static uint16_t get_cursor_x_coordinate(void);
+static int16_t get_cursor_x_coordinate(void);
 static void mw_dialog_number_entry_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_t *draw_info);
 static void mw_dialog_number_entry_message_function(const mw_message_t *message);
 
@@ -100,9 +100,9 @@ static void mw_dialog_number_entry_message_function(const mw_message_t *message)
  *
  * @return The x coordinate
  */
-static uint16_t get_cursor_x_coordinate(void)
+static int16_t get_cursor_x_coordinate(void)
 {
-	uint16_t pixel_length;
+	int16_t pixel_length;
 
 	if (mw_dialog_number_entry_data.large_size)
 	{
@@ -113,10 +113,10 @@ static uint16_t get_cursor_x_coordinate(void)
 		mw_gl_set_font(MW_GL_FONT_9);
 	}
 
-	pixel_length = mw_gl_get_string_width_pixels(mw_dialog_number_entry_data.number_buffer);
+	pixel_length = (int16_t)mw_gl_get_string_width_pixels(mw_dialog_number_entry_data.number_buffer);
 	if (mw_dialog_number_entry_data.is_negative)
 	{
-		pixel_length += mw_gl_get_string_width_pixels("-");
+		pixel_length += (int16_t)mw_gl_get_string_width_pixels("-");
 	}
 
 	return pixel_length + mw_dialog_number_entry_data.number_rect.x + 3;
@@ -194,7 +194,7 @@ static void mw_dialog_number_entry_paint_function(mw_handle_t window_handle, con
 				mw_dialog_number_entry_data.number_rect.y + 3,
 				'-');
 		mw_gl_string(draw_info,
-				mw_dialog_number_entry_data.number_rect.x + 3 + mw_gl_get_string_width_pixels("-"),
+				mw_dialog_number_entry_data.number_rect.x + 3 + (int16_t)mw_gl_get_string_width_pixels("-"),
 				mw_dialog_number_entry_data.number_rect.y + 3, mw_dialog_number_entry_data.number_buffer);
 	}
 	else
@@ -271,14 +271,14 @@ static void mw_dialog_number_entry_message_function(const mw_message_t *message)
 				}
 				else if (message->message_data == '\b')
 				{
-					if (current_length == 1)
+					if (current_length == 1U)
 					{
 						mw_dialog_number_entry_data.is_negative = false;
 						strcpy(mw_dialog_number_entry_data.number_buffer, "0");
 					}
 					else
 					{
-						mw_dialog_number_entry_data.number_buffer[current_length - 1] = '\0';
+						mw_dialog_number_entry_data.number_buffer[current_length - 1U] = '\0';
 					}
 				}
 				else
@@ -295,7 +295,7 @@ static void mw_dialog_number_entry_message_function(const mw_message_t *message)
 						{
 							/* append entered digit to existing digits */
 							mw_dialog_number_entry_data.number_buffer[current_length] = (char)message->message_data;
-							mw_dialog_number_entry_data.number_buffer[current_length + 1] = '\0';
+							mw_dialog_number_entry_data.number_buffer[current_length + 1U] = '\0';
 						}
 					}
 				}
@@ -331,9 +331,9 @@ static void mw_dialog_number_entry_message_function(const mw_message_t *message)
 				if (mw_dialog_number_entry_data.is_negative)
 				{
 					memmove(mw_dialog_number_entry_data.number_buffer,
-							mw_dialog_number_entry_data.number_buffer + 1,
+							mw_dialog_number_entry_data.number_buffer + 1U,
 							1 + strlen(mw_dialog_number_entry_data.number_buffer));
-					mw_dialog_number_entry_data.number_buffer[0] = '-';
+					mw_dialog_number_entry_data.number_buffer[0U] = '-';
 				}
 				mw_post_message(MW_DIALOG_NUMBER_ENTRY_OK_MESSAGE,
 						MW_UNUSED_MESSAGE_PARAMETER,
@@ -354,8 +354,8 @@ static void mw_dialog_number_entry_message_function(const mw_message_t *message)
 *** GLOBAL FUNCTIONS ***
 ***********************/
 
-mw_handle_t mw_create_window_dialog_number_entry(uint16_t x,
-		uint16_t y,
+mw_handle_t mw_create_window_dialog_number_entry(int16_t x,
+		int16_t y,
 		char *title,
 		bool enable_negative,
 		int32_t initial_number,
@@ -380,8 +380,8 @@ mw_handle_t mw_create_window_dialog_number_entry(uint16_t x,
 
 	if (large_size)
 	{
-		rect.width = 230;
-		rect.height = 247;
+		rect.width = 220;
+		rect.height = 252;
 	}
 	else
 	{
@@ -422,7 +422,7 @@ mw_handle_t mw_create_window_dialog_number_entry(uint16_t x,
 			NULL,
 			0,
 			MW_WINDOW_FLAG_HAS_BORDER | MW_WINDOW_FLAG_HAS_TITLE_BAR |
-					MW_WINDOW_FLAG_IS_VISIBLE | MW_WINDOW_FLAG_IS_MODAL | (large_size ? MW_WINDOW_FLAG_LARGE_SIZE : 0),
+					MW_WINDOW_FLAG_IS_VISIBLE | MW_WINDOW_FLAG_IS_MODAL | (large_size ? MW_WINDOW_FLAG_LARGE_SIZE : 0U),
 			NULL);
 
 	/* check if window could be created */
@@ -434,27 +434,27 @@ mw_handle_t mw_create_window_dialog_number_entry(uint16_t x,
 
 	/* set controls instance data */
 	mw_dialog_number_entry_data.mw_ui_keypad_data.enable_negative = enable_negative;
-	mw_util_safe_strcpy(mw_dialog_number_entry_data.button_ok_data.button_label,
+	(void)mw_util_safe_strcpy(mw_dialog_number_entry_data.button_ok_data.button_label,
 			MW_UI_BUTTON_LABEL_MAX_CHARS, "OK");
-	mw_util_safe_strcpy(mw_dialog_number_entry_data.button_cancel_data.button_label,
+	(void)mw_util_safe_strcpy(mw_dialog_number_entry_data.button_cancel_data.button_label,
 			MW_UI_BUTTON_LABEL_MAX_CHARS, "Cancel");
 
 	/* create controls */
 	if (large_size)
 	{
-		mw_dialog_number_entry_data.keypad_handle = mw_ui_keypad_add_new(54,
+		mw_dialog_number_entry_data.keypad_handle = mw_ui_keypad_add_new(49,
 				26,
 				mw_dialog_number_entry_data.number_entry_dialog_window_handle,
 				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_LARGE_SIZE,
 				&mw_dialog_number_entry_data.mw_ui_keypad_data);
 
-		mw_dialog_number_entry_data.button_ok_handle = mw_ui_button_add_new(10,
+		mw_dialog_number_entry_data.button_ok_handle = mw_ui_button_add_new(5,
 				192,
 				mw_dialog_number_entry_data.number_entry_dialog_window_handle,
 				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_LARGE_SIZE,
 				&mw_dialog_number_entry_data.button_ok_data);
 
-		mw_dialog_number_entry_data.button_cancel_handle = mw_ui_button_add_new(118,
+		mw_dialog_number_entry_data.button_cancel_handle = mw_ui_button_add_new(113,
 				192,
 				mw_dialog_number_entry_data.number_entry_dialog_window_handle,
 				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_LARGE_SIZE,
@@ -498,7 +498,7 @@ mw_handle_t mw_create_window_dialog_number_entry(uint16_t x,
 	{
 		initial_number =-initial_number;
 	}
-	sprintf(mw_dialog_number_entry_data.number_buffer, "%u", (unsigned int)initial_number);
+	(void)sprintf(mw_dialog_number_entry_data.number_buffer, "%u", (unsigned int)initial_number);
 	mw_dialog_number_entry_data.large_size = large_size;
 
 	/* owner window needs its title bar redrawing */

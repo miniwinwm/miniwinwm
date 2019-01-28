@@ -73,10 +73,10 @@ typedef struct
  * @note No account taken of the MW_CONTROL_FLAG_LARGE_SIZE flag as user sets required size of this control
  * @return The new control's handle
  */
-mw_handle_t mw_ui_progress_bar_add_new(uint16_t x,
-		uint16_t y,
-		uint16_t width,
-		uint16_t height,
+mw_handle_t mw_ui_progress_bar_add_new(int16_t x,
+		int16_t y,
+		int16_t width,
+		int16_t height,
 		mw_handle_t parent_handle,
 		uint32_t flags,
 		mw_ui_progress_bar_data_t *progress_bar_instance_data);

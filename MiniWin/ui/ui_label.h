@@ -57,7 +57,7 @@ SOFTWARE.
 typedef struct
 {
 	/* User modifiable fields */
-	char label[MW_UI_LABEL_MAX_CHARS + 1];			/**< text of label */
+	char label[MW_UI_LABEL_MAX_CHARS + 1U];			/**< text of label */
   
 	/* Non-user modifiable fields */
 } mw_ui_label_data_t;
@@ -77,9 +77,9 @@ typedef struct
  * @param label_instance_data Instance structure containing label specific data items
  * @return The new control's handle
  */
-mw_handle_t mw_ui_label_add_new(uint16_t x,
-		uint16_t y,
-		uint16_t width,
+mw_handle_t mw_ui_label_add_new(int16_t x,
+		int16_t y,
+		int16_t width,
 		mw_handle_t parent_handle,
 		uint32_t flags,
 		mw_ui_label_data_t *label_instance_data);

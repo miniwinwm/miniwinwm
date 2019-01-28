@@ -28,7 +28,6 @@ SOFTWARE.
 *** INCLUDES ***
 ***************/
 
-#include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
 #include "miniwin_debug.h"
@@ -66,7 +65,7 @@ SOFTWARE.
 *** GLOBAL FUNCTIONS ***
 ***********************/
 
-void mw_util_set_rect(mw_util_rect_t *r, int16_t x, int16_t y, uint16_t width, uint16_t height)
+void mw_util_set_rect(mw_util_rect_t *r, int16_t x, int16_t y, int16_t width, int16_t height)
 {
 	if (!r)
 	{
@@ -136,9 +135,9 @@ char *mw_util_safe_strcpy(char *dest, size_t size, const char *src)
     	return 0;
     }
 
-    if (size > 0)
+    if (size > 0U)
     {
-        for (i = 0; i < size - 1 && src[i]; i++)
+        for (i = 0U; i < size - 1 && src[i]; i++)
         {
              dest[i] = src[i];
         }
@@ -157,7 +156,7 @@ uint16_t mw_util_change_bit(uint16_t word, uint8_t bit, bool state)
 {
 	uint16_t mask;
 
-	if (bit < 16)
+	if (bit < 16U)
 	{
 		mask = 1U << bit;
 
@@ -179,9 +178,9 @@ bool mw_util_get_bit(uint16_t word, uint8_t bit)
 	uint16_t mask;
 	bool result = false;
 
-	if (bit < 16)
+	if (bit < 16U)
 	{
-		mask = 1 << bit;
+		mask = 1U << bit;
 		if ((word & mask) == mask)
 		{
 			result = true;

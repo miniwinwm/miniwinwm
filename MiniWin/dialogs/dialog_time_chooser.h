@@ -65,8 +65,8 @@ SOFTWARE.
  *       The dialog must fit entirely on the screen or else it will not be created.*
  * @warning Do not call this from a client window paint function. In debug mode it will cause an assert failure.
  */
- mw_handle_t mw_create_window_dialog_time_chooser(uint16_t x,
-		uint16_t y,
+ mw_handle_t mw_create_window_dialog_time_chooser(int16_t x,
+		int16_t y,
 		uint8_t start_time_hour,
 		uint8_t start_time_minute,
 		bool large_size,

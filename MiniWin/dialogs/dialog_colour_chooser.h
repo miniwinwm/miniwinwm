@@ -67,8 +67,8 @@ SOFTWARE.
  *       In the response message data the value 0 indicates left button, 1 right button
  * @warning Do not call this from a client window paint function. In debug mode it will cause an assert failure.
  */
- mw_handle_t mw_create_window_dialog_colour_chooser(uint16_t x,
-		uint16_t y,
+ mw_handle_t mw_create_window_dialog_colour_chooser(int16_t x,
+		int16_t y,
 		char *title,
 		mw_hal_lcd_colour_t start_colour,
 		bool large_size,

@@ -86,7 +86,7 @@ bool mw_message_queue_insert(const mw_message_t *incoming_message)
 	next_write_slot++;
 	if (next_write_slot == MW_MESSAGE_QUEUE_SIZE)
 	{
-		next_write_slot = 0;
+		next_write_slot = 0U;
 	}
 
 	items_in_queue++;
@@ -107,7 +107,7 @@ bool mw_message_queue_remove(mw_message_t *outgoing_message)
 	MW_ASSERT(outgoing_message, "Null pointer argument");
 
 	/* check if there is anything in the queue */
-	if (items_in_queue == 0)
+	if (items_in_queue == 0U)
 	{
 		return false;
 	}
@@ -117,7 +117,7 @@ bool mw_message_queue_remove(mw_message_t *outgoing_message)
 	next_read_slot++;
 	if (next_read_slot == MW_MESSAGE_QUEUE_SIZE)
 	{
-		next_read_slot = 0;
+		next_read_slot = 0U;
 	}
 
 	items_in_queue--;

@@ -85,7 +85,7 @@ bool mw_hal_touch_get_point(uint16_t* x, uint16_t* y)
 	int win_y;
 	int root_x;
 	int root_y;
-    unsigned int mask = 0;
+    unsigned int mask = 0U;
     Window child_win;
 	Window root_win;
 
@@ -94,7 +94,7 @@ bool mw_hal_touch_get_point(uint16_t* x, uint16_t* y)
     XQueryPointer(display, frame_window, &child_win, &root_win, &root_x, &root_y, &win_x, &win_y, &mask);
 	XUnlockDisplay(display);
 
-    if (mask == 256)
+    if (mask == 256U)
     {
     	*x = win_x;
     	*y = win_y;
@@ -111,13 +111,13 @@ mw_hal_touch_state_t mw_hal_touch_get_state(void)
 	int win_y;
 	int root_x;
 	int root_y;
-    unsigned int mask = 0;
+    unsigned int mask = 0U;
     Window child_win;
 	Window root_win;
 
     XQueryPointer(display, frame_window, &child_win, &root_win, &root_x, &root_y, &win_x, &win_y, &mask);
 
-    if (mask == 256)
+    if (mask == 256U)
     {
     	return MW_HAL_TOUCH_STATE_DOWN;
     }

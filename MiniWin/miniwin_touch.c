@@ -85,7 +85,7 @@ static void draw_cross(uint16_t x, int16_t y, int16_t length)
 	mw_gl_set_bg_transparency(MW_GL_BG_TRANSPARENT);
 	mw_gl_set_font(MW_GL_TITLE_FONT);
 	mw_gl_string(&draw_info_root,
-			(MW_ROOT_WIDTH - mw_gl_get_string_width_pixels(MW_CALIBRATE_TEXT)) / 2,
+			(MW_ROOT_WIDTH - (int16_t)mw_gl_get_string_width_pixels(MW_CALIBRATE_TEXT)) / 2,
 			MW_ROOT_HEIGHT / 2,
 			MW_CALIBRATE_TEXT);
 }
@@ -94,7 +94,7 @@ static void draw_cross(uint16_t x, int16_t y, int16_t length)
 *** GLOBAL FUNCTIONS ***
 ***********************/
 
-mw_hal_touch_state_t mw_touch_get_display_touch(uint16_t* x, uint16_t* y)
+mw_hal_touch_state_t mw_touch_get_display_touch(int16_t* x, int16_t* y)
 {
 	POINT_T raw_point;
 	POINT_T display_point;
@@ -134,19 +134,19 @@ mw_hal_touch_state_t mw_touch_get_display_touch(uint16_t* x, uint16_t* y)
 		display_point.y = 0;
 	}
 
-	*x = (uint16_t)display_point.x;
-	*y = (uint16_t)display_point.y;
+	*x = (int16_t)display_point.x;
+	*y = (int16_t)display_point.y;
 
 	return MW_HAL_TOUCH_STATE_DOWN;
 }
 
 void mw_touch_calibrate(MATRIX *matrix)
 {
-	uint16_t minimum_screen_dimension = MW_ROOT_WIDTH < MW_ROOT_HEIGHT ? MW_ROOT_WIDTH : MW_ROOT_HEIGHT;
-	uint16_t touch_cross_size = minimum_screen_dimension / 6;
+	int16_t minimum_screen_dimension = MW_ROOT_WIDTH < MW_ROOT_HEIGHT ? MW_ROOT_WIDTH : MW_ROOT_HEIGHT;
+	int16_t touch_cross_size = minimum_screen_dimension / 6;
 
-	POINT_T raw_points[3];
-	POINT_T display_points[3] = { {touch_cross_size, touch_cross_size},
+	POINT_T raw_points[3U];
+	POINT_T display_points[3U] = { {touch_cross_size, touch_cross_size},
 			{MW_ROOT_WIDTH - touch_cross_size, touch_cross_size},
 			{MW_ROOT_WIDTH - touch_cross_size, MW_ROOT_HEIGHT - touch_cross_size} };
 	uint16_t x;
@@ -162,8 +162,8 @@ void mw_touch_calibrate(MATRIX *matrix)
 	while (!mw_hal_touch_get_point(&x, &y))
 	{
 	}
-	raw_points[0].x = x;
-	raw_points[0].y = y;
+	raw_points[0U].x = x;
+	raw_points[0U].y = y;
 	while (mw_hal_touch_get_state() == MW_HAL_TOUCH_STATE_DOWN)
 	{
 	}
@@ -176,8 +176,8 @@ void mw_touch_calibrate(MATRIX *matrix)
 	while (!mw_hal_touch_get_point(&x, &y))
 	{
 	}
-	raw_points[1].x = x;
-	raw_points[1].y = y;
+	raw_points[1U].x = x;
+	raw_points[1U].y = y;
 	while (mw_hal_touch_get_state() == MW_HAL_TOUCH_STATE_DOWN)
 	{
 	}
@@ -190,8 +190,8 @@ void mw_touch_calibrate(MATRIX *matrix)
 	while (!mw_hal_touch_get_point(&x, &y))
 	{
 	}
-	raw_points[2].x = x;
-	raw_points[2].y = y;
+	raw_points[2U].x = x;
+	raw_points[2U].y = y;
 	while (mw_hal_touch_get_state() == MW_HAL_TOUCH_STATE_DOWN)
 	{
 	}

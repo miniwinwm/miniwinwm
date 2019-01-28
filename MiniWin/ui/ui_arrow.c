@@ -82,8 +82,8 @@ static void arrow_message_function(const mw_message_t *message);
 static void arrow_paint_function(mw_handle_t control_handle, const mw_gl_draw_info_t *draw_info)
 {
 	mw_ui_arrow_data_t *this_arrow = (mw_ui_arrow_data_t*)mw_get_control_instance_data(control_handle);
-	uint16_t arrow_size;
-	uint16_t arrow_offset;
+	int16_t arrow_size;
+	int16_t arrow_offset;
 	mw_hal_lcd_colour_t highlighted_colour;
 	mw_hal_lcd_colour_t lowlighted_colour;
 
@@ -236,8 +236,8 @@ static void arrow_message_function(const mw_message_t *message)
 *** GLOBAL FUNCTIONS ***
 ***********************/
 
-mw_handle_t mw_ui_arrow_add_new(uint16_t x,
-		uint16_t y,
+mw_handle_t mw_ui_arrow_add_new(int16_t x,
+		int16_t y,
 		mw_handle_t parent_handle,
 		uint32_t flags,
 		mw_ui_arrow_data_t *arrow_instance_data)

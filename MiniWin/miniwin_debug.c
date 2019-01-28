@@ -70,7 +70,7 @@ SOFTWARE.
 void mw_debug_print_assert(bool expression, const char *function_name, int32_t line_number, char *message)
 {
     const mw_gl_draw_info_t draw_info = {0, 0, {0, 0, MW_ROOT_WIDTH, MW_ROOT_HEIGHT}};
-    char number_buffer[15];
+    char number_buffer[15U];
 
     if (expression)
     {
@@ -89,10 +89,10 @@ void mw_debug_print_assert(bool expression, const char *function_name, int32_t l
 	mw_gl_set_text_rotation(MW_GL_TEXT_ROTATION_0);
 
 	mw_gl_string(&draw_info, 0, 0, "ASSERT FAILED");
-	mw_gl_string(&draw_info, 0, mw_gl_get_font_height() + 1, function_name);
-	sprintf(number_buffer, "line: %d", (int)line_number);
-	mw_gl_string(&draw_info, 0, 2 * (mw_gl_get_font_height() + 1), number_buffer);
-	mw_gl_string(&draw_info, 0, 3 * (mw_gl_get_font_height() + 1), message);
+	mw_gl_string(&draw_info, 0, (int16_t)mw_gl_get_font_height() + 1, function_name);
+	(void)sprintf(number_buffer, "line: %d", (int)line_number);
+	mw_gl_string(&draw_info, 0, 2 * ((int16_t)mw_gl_get_font_height() + 1), number_buffer);
+	mw_gl_string(&draw_info, 0, 3 * ((int16_t)mw_gl_get_font_height() + 1), message);
 
 	while(true);
 }

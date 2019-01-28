@@ -54,8 +54,8 @@ typedef struct
 {
 	int16_t x;              /**< Left coordinate */
 	int16_t y;              /**< Top coordinate */
-	uint16_t width;         /**< Width, right coordinate is x + width - 1 */
-	uint16_t height;        /**< Height, bottom coordinate is y + height - 1 */
+	int16_t width;          /**< Width, right coordinate is x + width - 1 */
+	int16_t height;         /**< Height, bottom coordinate is y + height - 1 */
 } mw_util_rect_t;
 
 /***************************
@@ -71,7 +71,7 @@ typedef struct
  * @param width Width value to put in rect structure
  * @param height Height value to put in rect structure
  */
-void mw_util_set_rect(mw_util_rect_t *r, int16_t x, int16_t y, uint16_t width, uint16_t height);
+void mw_util_set_rect(mw_util_rect_t *r, int16_t x, int16_t y, int16_t width, int16_t height);
 
 /**
  * Determines if a point is in a rect.

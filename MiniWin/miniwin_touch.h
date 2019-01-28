@@ -60,7 +60,7 @@ SOFTWARE.
  * @param y Pointer to value to return the y coordinate in pixels
  * @return The touch up/down state
  */
-mw_hal_touch_state_t mw_touch_get_display_touch(uint16_t* x, uint16_t* y);
+mw_hal_touch_state_t mw_touch_get_display_touch(int16_t* x, int16_t* y);
 
 /**
  * Run the touch screen calibration procedure. This plots 3 crosses on the screen that the user needs to touch.
