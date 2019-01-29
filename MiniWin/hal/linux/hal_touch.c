@@ -76,7 +76,7 @@ void mw_hal_touch_init(void)
 
 bool mw_hal_touch_is_recalibration_required(void)
 {
-	return false;
+	return (false);
 }
 
 bool mw_hal_touch_get_point(uint16_t* x, uint16_t* y)
@@ -90,8 +90,8 @@ bool mw_hal_touch_get_point(uint16_t* x, uint16_t* y)
 	Window root_win;
 
 	XLockDisplay(display);
-	XCheckMaskEvent(display, KeyPressMask, &event);
-    XQueryPointer(display, frame_window, &child_win, &root_win, &root_x, &root_y, &win_x, &win_y, &mask);
+	(void)XCheckMaskEvent(display, KeyPressMask, &event);
+    (void)XQueryPointer(display, frame_window, &child_win, &root_win, &root_x, &root_y, &win_x, &win_y, &mask);
 	XUnlockDisplay(display);
 
     if (mask == 256U)
@@ -99,10 +99,10 @@ bool mw_hal_touch_get_point(uint16_t* x, uint16_t* y)
     	*x = win_x;
     	*y = win_y;
 
-    	return true;
+    	return (true);
     }
 
-    return false;
+    return (false);
 }
 
 mw_hal_touch_state_t mw_hal_touch_get_state(void)
@@ -115,14 +115,14 @@ mw_hal_touch_state_t mw_hal_touch_get_state(void)
     Window child_win;
 	Window root_win;
 
-    XQueryPointer(display, frame_window, &child_win, &root_win, &root_x, &root_y, &win_x, &win_y, &mask);
+    (void)XQueryPointer(display, frame_window, &child_win, &root_win, &root_x, &root_y, &win_x, &win_y, &mask);
 
     if (mask == 256U)
     {
-    	return MW_HAL_TOUCH_STATE_DOWN;
+    	return (MW_HAL_TOUCH_STATE_DOWN);
     }
 
-	return MW_HAL_TOUCH_STATE_UP;
+	return (MW_HAL_TOUCH_STATE_UP);
 }
 
 #endif

@@ -82,8 +82,8 @@ void app_init(void)
 	static int depth;
 	static XSetWindowAttributes frame_attributes;
 	
-	strcpy(root_folder, getenv("HOME"));
-	strcat(root_folder, "/");
+	(void)strcpy(root_folder, getenv("HOME"));
+	(void)strcat(root_folder, "/");
 
 	display = XOpenDisplay(NULL);
 	visual = DefaultVisual(display, 0);
@@ -105,17 +105,17 @@ void app_init(void)
 		CWBackPixel,
 		&frame_attributes);
 
-	XStoreName(display, frame_window, "MiniWin Sim");
+	(void)XStoreName(display, frame_window, "MiniWin Sim");
 
 	graphical_context = XCreateGC( display, frame_window, 0, 0 );
 
-	XMapWindow(display, frame_window);
-	XFlush(display);
+	(void)XMapWindow(display, frame_window);
+	(void)XFlush(display);
 }
 
 char *app_get_root_folder_path(void)
 {
-	return root_folder;
+	return (root_folder);
 }
 
 void app_main_loop_process(void)
@@ -133,7 +133,7 @@ bool app_file_open(char *path_and_filename)
 		result = true;
 	}
 
-	return result;
+	return (result);
 }
 
 bool app_file_create(char *path_and_filename)
@@ -147,43 +147,43 @@ bool app_file_create(char *path_and_filename)
 		result = true;
 	}
 
-	return result;
+	return (result);
 }
 
 uint32_t app_file_size(void)
 {
 	uint32_t size;
 
-	fseek(file_handle, 0L, SEEK_END);
+	(void)fseek(file_handle, 0L, SEEK_END);
 	size = (uint32_t)ftell(file_handle);
-	fseek(file_handle, 0L, SEEK_SET);
+	(void)fseek(file_handle, 0L, SEEK_SET);
 
-	return size;
+	return (size);
 }
 
 uint8_t app_file_getc(void)
 {
-	return (uint8_t)fgetc(file_handle);
+	return ((uint8_t)fgetc(file_handle));
 }
 
 void app_file_read(uint8_t *buffer, uint32_t count)
 {
-	fread(buffer, 1, count, file_handle);
+	(void)fread(buffer, 1, count, file_handle);
 }
 
 void app_file_write(uint8_t *buffer, uint32_t count)
 {
-	fwrite(buffer, 1, count, file_handle);
+	(void)fwrite(buffer, 1, count, file_handle);
 }
 
 uint32_t app_file_seek(uint32_t position)
 {
-	return (uint32_t)fseek(file_handle, position, SEEK_SET);
+	return ((uint32_t)fseek(file_handle, position, SEEK_SET));
 }
 
 void app_file_close(void)
 {
-	fclose(file_handle);
+	(void)fclose(file_handle);
 }
 
 uint8_t find_folder_entries(char* path,
@@ -240,10 +240,10 @@ uint8_t find_folder_entries(char* path,
 	        	break;
 	        }
 		}
-		closedir(directory);
+		(void)closedir(directory);
 	}
 
-	return i;
+	return (i);
 }
 
 struct tm app_get_time_date(void)
@@ -251,15 +251,15 @@ struct tm app_get_time_date(void)
 	struct tm tm;
 	time_t t;
 
-	time(&t);
-	memcpy(&tm, localtime(&t), sizeof(struct tm));
+	(void)time(&t);
+	(void)memcpy(&tm, localtime(&t), sizeof(struct tm));
 	tm.tm_year += 1900;
 	tm.tm_mon++;
 
-	return tm;
+	return (tm);
 }
 
 void app_set_time_date(struct tm tm)
 {
-	/* do nothing for windows build */
+	/* do nothing for linux build */
 }

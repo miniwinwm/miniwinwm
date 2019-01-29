@@ -166,7 +166,7 @@ static void list_box_paint_function(mw_handle_t control_handle, const mw_gl_draw
 		}
 
 		/* set up text colour on enabled state - from control and individual items bitfield */
-		if (mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_IS_ENABLED &&
+		if ((mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_IS_ENABLED) &&
 	    		mw_util_get_bit(this_list_box->line_enables, i))
 		{
 			mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
@@ -431,8 +431,8 @@ static void list_box_message_function(const mw_message_t *message)
 		}
 		break;
 
-		default:
-			break;
+	default:
+		break;
 	}
 }
 
@@ -454,7 +454,7 @@ mw_handle_t mw_ui_list_box_add_new(int16_t x,
 	if (list_box_instance_data == NULL)
 	{
 		MW_ASSERT(false, "Null pointer argument");
-		return MW_INVALID_HANDLE;
+		return (MW_INVALID_HANDLE);
 	}
 
 	/* check for null pointers in entry text */
@@ -463,7 +463,7 @@ mw_handle_t mw_ui_list_box_add_new(int16_t x,
 		if (list_box_instance_data->list_box_entries[i].label == NULL)
 		{
 			MW_ASSERT(false, "Null pointer value in array");
-			return MW_INVALID_HANDLE;
+			return (MW_INVALID_HANDLE);
 		}
 	}
 
@@ -472,7 +472,7 @@ mw_handle_t mw_ui_list_box_add_new(int16_t x,
 		/* check for a sensible width */
 		if (width < MW_UI_LIST_BOX_LARGE_MIN_WIDTH)
 		{
-			return MW_INVALID_HANDLE;
+			return (MW_INVALID_HANDLE);
 		}
 
 		mw_util_set_rect(&r,
@@ -486,7 +486,7 @@ mw_handle_t mw_ui_list_box_add_new(int16_t x,
 		/* check for a sensible width */
 		if (width < MW_UI_LIST_BOX_MIN_WIDTH)
 		{
-			return MW_INVALID_HANDLE;
+			return (MW_INVALID_HANDLE);
 		}
 
 		mw_util_set_rect(&r,
@@ -496,10 +496,10 @@ mw_handle_t mw_ui_list_box_add_new(int16_t x,
 				MW_UI_LIST_BOX_ROW_HEIGHT * list_box_instance_data->number_of_lines);
 	}
 
-	return mw_add_control(&r,
+	return (mw_add_control(&r,
 			parent_handle,
 			list_box_paint_function,
 			list_box_message_function,
 			flags,
-			list_box_instance_data);
+			list_box_instance_data));
 }

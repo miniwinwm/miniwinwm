@@ -76,7 +76,7 @@ void mw_hal_touch_init(void)
 bool mw_hal_touch_is_recalibration_required(void)
 {
 	/* if board button pressed clear settings which forces a screen recalibration */
-	return BSP_PB_GetState(BUTTON_KEY);
+	return (BSP_PB_GetState(BUTTON_KEY));
 }
 
 mw_hal_touch_state_t mw_hal_touch_get_state()
@@ -87,10 +87,10 @@ mw_hal_touch_state_t mw_hal_touch_get_state()
 
 	if (touch_state.TouchDetected)
 	{
-		return MW_HAL_TOUCH_STATE_DOWN;
+		return (MW_HAL_TOUCH_STATE_DOWN);
 	}
 
-	return MW_HAL_TOUCH_STATE_UP;
+	return (MW_HAL_TOUCH_STATE_UP);
 }
 
 bool mw_hal_touch_get_point(uint16_t* x, uint16_t* y)
@@ -99,20 +99,20 @@ bool mw_hal_touch_get_point(uint16_t* x, uint16_t* y)
 
 	if (BSP_TS_IsFifoEmpty())
 	{
-		return false;
+		return (false);
 	}
 
 	BSP_TS_GetState(&touch_state);
 
 	if (!touch_state.TouchDetected)
 	{
-		return false;
+		(return false);
 	}
 
 	*x = touch_state.X;
 	*y = touch_state.Y;
 
-	return true;
+	return (true);
 }
 
 #endif

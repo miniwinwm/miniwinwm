@@ -255,14 +255,14 @@ mw_handle_t mw_ui_radio_button_add_new(int16_t x,
 			radio_button_instance_data->radio_button_labels == NULL)
 	{
 		MW_ASSERT(false, "Null pointer argument");
-		return MW_INVALID_HANDLE;
+		return (MW_INVALID_HANDLE);
 	}
 
 	/* check for 0 entries */
 	if (radio_button_instance_data->number_of_items == 0U)
 	{
 		MW_ASSERT(false, "Zero argument");
-		return MW_INVALID_HANDLE;
+		return (MW_INVALID_HANDLE);
 	}
 
 	/* check for null pointers in entry text */
@@ -271,7 +271,7 @@ mw_handle_t mw_ui_radio_button_add_new(int16_t x,
 		if (radio_button_instance_data->radio_button_labels[i] == NULL)
 		{
 			MW_ASSERT(false, "Null pointer value in array");
-			return MW_INVALID_HANDLE;
+			return (MW_INVALID_HANDLE);
 		}
 	}
 
@@ -279,7 +279,7 @@ mw_handle_t mw_ui_radio_button_add_new(int16_t x,
 	{
 		if (width < MW_UI_RADIO_BUTTON_LARGE_HEIGHT)
 		{
-			return MW_INVALID_HANDLE;
+			return (MW_INVALID_HANDLE);
 		}
 		mw_util_set_rect(&r, x, y, width, MW_UI_RADIO_BUTTON_LARGE_HEIGHT * radio_button_instance_data->number_of_items);
 	}
@@ -287,15 +287,15 @@ mw_handle_t mw_ui_radio_button_add_new(int16_t x,
 	{
 		if (width < MW_UI_RADIO_BUTTON_HEIGHT)
 		{
-			return MW_INVALID_HANDLE;
+			return (MW_INVALID_HANDLE);
 		}
 		mw_util_set_rect(&r, x, y, width, MW_UI_RADIO_BUTTON_HEIGHT * radio_button_instance_data->number_of_items);
 	}
 
-	return mw_add_control(&r,
+	return (mw_add_control(&r,
 			parent_handle,
 			radio_button_paint_function,
 			radio_button_message_function,
 			flags,
-			radio_button_instance_data);
+			radio_button_instance_data));
 }

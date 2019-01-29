@@ -123,15 +123,15 @@ void window_image_paint_function(mw_handle_t window_handle, const mw_gl_draw_inf
 			{
 				app_file_seek(10);
 				app_file_read(file_buffer, 4);
-				file_data_offset = file_buffer[0] + (file_buffer[1] << 8) + (file_buffer[2] << 16) + (file_buffer[3] << 24);
+				file_data_offset = file_buffer[0] + (file_buffer[1] << 8U) + (file_buffer[2] << 16U) + (file_buffer[3] << 24U);
 				app_file_read(file_buffer, 4);
-				if (file_buffer[0] + (file_buffer[1] << 8) + (file_buffer[2] << 16) + (file_buffer[3] << 24) == 40)
+				if (file_buffer[0] + (file_buffer[1] << 8U) + (file_buffer[2] << 16U) + (file_buffer[3] << 24) == 40)
 				{
 					/* Windows BITMAPINFOHEADER */
 					app_file_read(file_buffer, 4);
-					image_window_data->image_width = file_buffer[0] + (file_buffer[1] << 8) + (file_buffer[2] << 16) + (file_buffer[3] << 24);
+					image_window_data->image_width = file_buffer[0] + (file_buffer[1] << 8U) + (file_buffer[2] << 16U) + (file_buffer[3] << 24U);
 					app_file_read(file_buffer, 4);
-					image_window_data->image_height = file_buffer[0] + (file_buffer[1] << 8) + (file_buffer[2] << 16) + (file_buffer[3] << 24);
+					image_window_data->image_height = file_buffer[0] + (file_buffer[1] << 8U) + (file_buffer[2] << 16U) + (file_buffer[3] << 24U);
 
 					/* calculate the number of pixels to scroll the image vertically using the scroll bar position */
 					if (client_height > image_window_data->image_height)
@@ -153,9 +153,9 @@ void window_image_paint_function(mw_handle_t window_handle, const mw_gl_draw_inf
 						x_scroll_pos = (image_window_data->x_scroll_pos * (image_window_data->image_width - client_width)) / UINT8_MAX;
 					}
 
-					row_size = ((image_window_data->image_width * 3) + 3) & 0xfffffffc;
-					app_file_read(file_buffer, 4);
-					if (file_buffer[0] + (file_buffer[1] << 8) + (file_buffer[2] << 16) + (file_buffer[3] << 24) == 0x00180001)
+					row_size = ((image_window_data->image_width * 3) + 3) & 0xfffffffcU;
+					app_file_read(file_buffer, 4U);
+					if (file_buffer[0] + (file_buffer[1] << 8U) + (file_buffer[2] << 16U) + (file_buffer[3] << 24U) == 0x00180001U)
 					{
 						success = true;
 
@@ -183,7 +183,7 @@ void window_image_paint_function(mw_handle_t window_handle, const mw_gl_draw_inf
 							{
 								if (x_pos + BITMAP_TRASFER_BUFFER_SIZE < x_pixels_to_plot)
 								{
-									app_file_read(bitmap_buffer, 48);
+									app_file_read(bitmap_buffer, 48U);
 									mw_gl_colour_bitmap(draw_info,
 											x_pos,
 											y_pos,
@@ -198,7 +198,7 @@ void window_image_paint_function(mw_handle_t window_handle, const mw_gl_draw_inf
 									for (x = x_pos; x < x_pos + remainder; x++)
 									{
 										app_file_read(file_buffer, 3);
-										pixel = (file_buffer[0]) | (file_buffer[1] << 8) | (file_buffer[2] << 16);
+										pixel = (file_buffer[0]) | (file_buffer[1] << 8U) | (file_buffer[2] << 16U);
 										mw_gl_set_fg_colour(pixel);
 										mw_gl_fg_pixel(draw_info, x, y_pos);
 									}
@@ -302,8 +302,8 @@ void window_image_message_function(const mw_message_t *message)
 	switch (message->message_id)
 	{
 	case MW_WINDOW_CREATED_MESSAGE:
-		image_window_data->x_scroll_pos = 0;
-		image_window_data->y_scroll_pos = 0;
+		image_window_data->x_scroll_pos = 0U;
+		image_window_data->y_scroll_pos = 0U;
 		break;
 
 	case MW_WINDOW_VERT_SCROLL_BAR_SCROLLED_MESSAGE:

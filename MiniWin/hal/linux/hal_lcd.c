@@ -78,25 +78,25 @@ extern GC graphical_context;
 void mw_hal_lcd_init(void)
 {
 	/* allow time for connection to XServer */
-	sleep(1);
+	sleep(1U);
 }
 
 uint16_t mw_hal_lcd_get_display_width(void)
 {
-	return LCD_DISPLAY_WIDTH_PIXELS;
+	return (LCD_DISPLAY_WIDTH_PIXELS);
 }
 
 uint16_t mw_hal_lcd_get_display_height(void)
 {
-	return LCD_DISPLAY_HEIGHT_PIXELS;
+	return (LCD_DISPLAY_HEIGHT_PIXELS);
 }
 
 void mw_hal_lcd_pixel(int16_t x, int16_t y, mw_hal_lcd_colour_t colour)
 {
 	XLockDisplay(display);
-	XSetForeground(display, graphical_context,  colour);
-	XDrawPoint(display, frame_window, graphical_context, x, y);
-	XFlush(display);
+	(void)XSetForeground(display, graphical_context,  colour);
+	(void)XDrawPoint(display, frame_window, graphical_context, x, y);
+	(void)XFlush(display);
 	XUnlockDisplay(display);
 }
 
@@ -107,10 +107,10 @@ void mw_hal_lcd_filled_rectangle(int16_t start_x,
 		mw_hal_lcd_colour_t colour)
 {
 	XLockDisplay(display);
-	XSetForeground(display, graphical_context, colour);
-	XSetFillStyle(display, graphical_context, FillSolid);
-	XFillRectangle(display, frame_window, graphical_context, start_x, start_y, width, height);
-	XFlush(display);
+	(void)XSetForeground(display, graphical_context, colour);
+	(void)XSetFillStyle(display, graphical_context, FillSolid);
+	(void)XFillRectangle(display, frame_window, graphical_context, start_x, start_y, width, height);
+	(void)XFlush(display);
 	XUnlockDisplay(display);
 }
 
@@ -168,25 +168,25 @@ void mw_hal_lcd_monochrome_bitmap_clip(int16_t image_start_x,
 	uint8_t array_width_bytes;
 
 	array_width_bytes = bitmap_width >> 3U;
-	if (bitmap_width % 8 > 0)
+	if (bitmap_width % 8U > 0U)
 	{
 		array_width_bytes++;
 	}
 
 	for (y = 0; y < bitmap_height; y++)
 	{
-		for (a = 0; a < array_width_bytes; a++)
+		for (a = 0U; a < array_width_bytes; a++)
 		{
 			image_byte = image_data[y * array_width_bytes + a];
 			mask = 0x80U;
 			for (x = 0; x < 8; x++)
 			{
-				if ((a << 3) + x == bitmap_width)
+				if ((a << 3U) + x == bitmap_width)
 				{
 					break;
 				}
-				if ((a << 3) + x + image_start_x >= clip_start_x &&
-						(a << 3) + x + image_start_x < clip_start_x + clip_width &&
+				if ((a << 3U) + x + image_start_x >= clip_start_x &&
+						(a << 3U) + x + image_start_x < clip_start_x + clip_width &&
 						y + image_start_y >= clip_start_y &&
 						y + image_start_y < clip_start_y + clip_height)
 				{

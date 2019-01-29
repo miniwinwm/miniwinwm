@@ -94,6 +94,6 @@ void mw_debug_print_assert(bool expression, const char *function_name, int32_t l
 	mw_gl_string(&draw_info, 0, 2 * ((int16_t)mw_gl_get_font_height() + 1), number_buffer);
 	mw_gl_string(&draw_info, 0, 3 * ((int16_t)mw_gl_get_font_height() + 1), message);
 
-	while(true);
+	while (true);
 }
 #endif

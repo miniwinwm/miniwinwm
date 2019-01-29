@@ -74,6 +74,9 @@ uint16_t mw_ui_common_scale_scroll_bar_touch_point(uint16_t scroll_bar_length, i
 	{
 		touch_point = scroll_bar_length - MW_SCROLL_BAR_SLIDER_SIZE;
 	}
+	else
+	{
+	}
 
-	return (scroll_bar_length * touch_point) / (scroll_bar_length - MW_SCROLL_BAR_SLIDER_SIZE);
+	return ((scroll_bar_length * touch_point) / (scroll_bar_length - MW_SCROLL_BAR_SLIDER_SIZE));
 }

@@ -364,10 +364,10 @@ mw_handle_t mw_ui_keypad_add_new(int16_t x,
 		mw_util_set_rect(&r, x, y, MW_UI_KEYPAD_KEY_SIZE * 3, MW_UI_KEYPAD_KEY_SIZE * 4);
 	}
 
-	return mw_add_control(&r,
+	return (mw_add_control(&r,
 			parent_handle,
 			keypad_paint_function,
 			keypad_message_function,
 			flags,
-			keypad_instance_data);
+			keypad_instance_data));
 }

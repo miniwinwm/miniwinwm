@@ -53,8 +53,6 @@ typedef struct
 *** EXTERNAL VARIABLES ***
 **************************/
 
-extern mw_handle_t text_box_handle;
-
 /**********************
 *** LOCAL VARIABLES ***
 **********************/

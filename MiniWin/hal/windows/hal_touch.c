@@ -78,7 +78,7 @@ void mw_hal_touch_init(void)
 
 bool mw_hal_touch_is_recalibration_required(void)
 {
-	return false;
+	return (false);
 }
 
 bool mw_hal_touch_get_point(uint16_t* x, uint16_t* y)
@@ -91,7 +91,7 @@ bool mw_hal_touch_get_point(uint16_t* x, uint16_t* y)
 	*x = mx;
 	*y = my;
 
-	return true;
+	return (true);
 }
 
 mw_hal_touch_state_t mw_hal_touch_get_state(void)
@@ -100,10 +100,10 @@ mw_hal_touch_state_t mw_hal_touch_get_state(void)
 
 	if (mouse_down)
 	{
-		return MW_HAL_TOUCH_STATE_DOWN;
+		return (MW_HAL_TOUCH_STATE_DOWN);
 	}
 
-	return MW_HAL_TOUCH_STATE_UP;
+	return (MW_HAL_TOUCH_STATE_UP);
 }
 
 #endif

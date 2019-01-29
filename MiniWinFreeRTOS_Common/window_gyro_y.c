@@ -62,7 +62,6 @@ typedef struct
 *** EXTERNAL VARIABLES ***
 **************************/
 
-extern mw_handle_t button_gyro_y_handle;
 extern mw_handle_t label_gyro_y_handle;
 extern MessageBufferHandle_t gyro_y_message_buffer;
 extern volatile uint32_t mw_tick_counter;

@@ -209,8 +209,8 @@ static void button_message_function(const mw_message_t *message)
 		}
 		break;
 
-		default:
-			break;
+	default:
+		break;
 	}
 }
 
@@ -235,10 +235,10 @@ mw_handle_t mw_ui_button_add_new(int16_t x,
 		mw_util_set_rect(&r, x, y, MW_UI_BUTTON_WIDTH, MW_UI_BUTTON_HEIGHT);
 	}
 
-	return mw_add_control(&r,
+	return (mw_add_control(&r,
 			parent_handle,
 			button_paint_function,
 			button_message_function,
 			flags,
-			button_instance_data);
+			button_instance_data));
 }

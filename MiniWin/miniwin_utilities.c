@@ -84,15 +84,15 @@ bool mw_util_is_point_in_rect(const mw_util_rect_t *r, int16_t x, int16_t y)
 	if (!r)
 	{
 		MW_ASSERT(false, "Null pointer argument");
-		return false;
+		return (false);
 	}
 
 	if (x < r->x || x >= (r->x + r->width) || y < r->y || y >= (r->y + r->height))
 	{
-		return false;
+		return (false);
 	}
 
-	return true;
+	return (true);
 }
 
 bool mw_util_do_rects_coincide(const mw_util_rect_t *a, const mw_util_rect_t *b)
@@ -100,10 +100,10 @@ bool mw_util_do_rects_coincide(const mw_util_rect_t *a, const mw_util_rect_t *b)
 	if (!a || !b)
 	{
 		MW_ASSERT(false, "Null pointer argument");
-		return false;
+		return (false);
 	}
 
-    return !(a->x + a->width < b->x || a->y + a->height < b->y || a->x > b->x + b->width || a->y > b->y + b->height);
+    return (!(a->x + a->width < b->x || a->y + a->height < b->y || a->x > b->x + b->width || a->y > b->y + b->height));
 }
 
 bool mw_util_does_rect_a_obscure_rect_b(const mw_util_rect_t *a, const mw_util_rect_t *b)
@@ -111,7 +111,7 @@ bool mw_util_does_rect_a_obscure_rect_b(const mw_util_rect_t *a, const mw_util_r
 	if (!a || !b)
 	{
 		MW_ASSERT(false, "Null pointer argument");
-		return false;
+		return (false);
 	}
 
 	if (a->x <= b->x &&
@@ -119,10 +119,10 @@ bool mw_util_does_rect_a_obscure_rect_b(const mw_util_rect_t *a, const mw_util_r
 			a->x + a->width >= b->x + b->width &&
 			a->y + a->height >= b->y + b->height)
 	{
-		return true;
+		return (true);
 	}
 
-	return false;
+	return (false);
 }
 
 char *mw_util_safe_strcpy(char *dest, size_t size, const char *src)
@@ -132,7 +132,7 @@ char *mw_util_safe_strcpy(char *dest, size_t size, const char *src)
     if (dest == NULL || src == NULL)
     {
     	MW_ASSERT(false, "Null pointer argument");
-    	return 0;
+    	return (0);
     }
 
     if (size > 0U)
@@ -144,12 +144,12 @@ char *mw_util_safe_strcpy(char *dest, size_t size, const char *src)
         dest[i] = '\0';
     }
 
-    return dest;
+    return (dest);
 }
 
 char *mw_util_safe_strcat(char *dest, size_t size, const char *src)
 {
-	return strncat(dest, src, size - strlen(dest) - 1);
+	return (strncat(dest, src, size - strlen(dest) - 1));
 }
 
 uint16_t mw_util_change_bit(uint16_t word, uint8_t bit, bool state)
@@ -170,7 +170,7 @@ uint16_t mw_util_change_bit(uint16_t word, uint8_t bit, bool state)
 		}
 	}
 
-	return word;
+	return (word);
 }
 
 bool mw_util_get_bit(uint16_t word, uint8_t bit)
@@ -187,7 +187,7 @@ bool mw_util_get_bit(uint16_t word, uint8_t bit)
 		}
 	}
 
-	return result;
+	return (result);
 }
 
 int mw_util_compare_int16_t(const void *a, const void *b)
@@ -195,19 +195,19 @@ int mw_util_compare_int16_t(const void *a, const void *b)
 	if (a == NULL || b == NULL)
 	{
 		MW_ASSERT(false, "Null pointer argument");
-		return 0;
+		return (0);
 	}
 
 	if (*(int16_t*)a < *(int16_t*)b)
 	{
-		return -1;
+		return (-1);
 	}
 	if (*(int16_t*)a == *(int16_t*)b)
 	{
-		return 0;
+		return (0);
 	}
   
-	return 1;
+	return (1);
 }
 
 const char *mw_util_get_filename_ext(const char *filename)
@@ -216,10 +216,10 @@ const char *mw_util_get_filename_ext(const char *filename)
 
     if (!dot || dot == filename)
     {
-    	return "";
+    	return ("");
     }
 
-    return dot + 1;
+    return (dot + 1);
 }
 
 int32_t mw_util_strcicmp(char const *a, char const *b)
@@ -231,9 +231,11 @@ int32_t mw_util_strcicmp(char const *a, char const *b)
         d = (int32_t)(tolower((unsigned char)*a) - tolower((unsigned char)*b));
         if (d != 0 || !*a)
         {
-            return d;
+            return (d);
         }
     }
+
+    return (0);
 }
 
 void mw_util_limit_point_to_rect_size(int16_t *x, int16_t *y, const mw_util_rect_t *r)

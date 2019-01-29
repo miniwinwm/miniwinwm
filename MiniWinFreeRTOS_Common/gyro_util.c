@@ -75,5 +75,5 @@ int16_t gyro_util_rationalize_angle(int16_t angle)
 		}
 	}
 
-	return angle;
+	return (angle);
 }

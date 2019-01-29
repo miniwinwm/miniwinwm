@@ -78,7 +78,7 @@ void mw_hal_non_vol_init(void)
 
 void mw_hal_non_vol_load(uint8_t *data, uint16_t length)
 {
-	memcpy(data, (uint8_t *)(FSL_FEATURE_EEPROM_BASE_ADDRESS), length);
+	(void)memcpy(data, (uint8_t *)(FSL_FEATURE_EEPROM_BASE_ADDRESS), length);
 }
 
 void mw_hal_non_vol_save(uint8_t *data, uint16_t length)
@@ -91,14 +91,14 @@ void mw_hal_non_vol_save(uint8_t *data, uint16_t length)
 	/* write settings */
 	for (page = 0; page < pages; page++)
 	{
-		memset((uint8_t *)buffer, 0, FSL_FEATURE_EEPROM_PAGE_SIZE_BYTES);
+		(void)memset((uint8_t *)buffer, 0, FSL_FEATURE_EEPROM_PAGE_SIZE_BYTES);
 		if (length < FSL_FEATURE_EEPROM_PAGE_SIZE_BYTES)
 		{
-			memcpy((uint8_t *)buffer, data + (page * FSL_FEATURE_EEPROM_PAGE_SIZE_BYTES), length);
+			(void)memcpy((uint8_t *)buffer, data + (page * FSL_FEATURE_EEPROM_PAGE_SIZE_BYTES), length);
 		}
 		else
 		{
-			memcpy((uint8_t *)buffer, data + (page * FSL_FEATURE_EEPROM_PAGE_SIZE_BYTES), FSL_FEATURE_EEPROM_PAGE_SIZE_BYTES);
+			(void)memcpy((uint8_t *)buffer, data + (page * FSL_FEATURE_EEPROM_PAGE_SIZE_BYTES), FSL_FEATURE_EEPROM_PAGE_SIZE_BYTES);
 			length -= FSL_FEATURE_EEPROM_PAGE_SIZE_BYTES;
 		}
 

@@ -83,7 +83,7 @@ static uint8_t spi_transfer(uint8_t byte)
 
 	HAL_SPI_TransmitReceive(&SpiHandle, &byte, &result, 1, 1000);
 
-	return result;
+	return (result);
 }
 
 /***********************
@@ -144,16 +144,16 @@ void mw_hal_touch_init(void)
 
 bool mw_hal_touch_is_recalibration_required(void)
 {
-	return BSP_PB_GetState(BUTTON_KEY);
+	return (BSP_PB_GetState(BUTTON_KEY));
 }
 
 mw_hal_touch_state_t mw_hal_touch_get_state()
 {
 	if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_6) == GPIO_PIN_RESET)
 	{
-		return MW_HAL_TOUCH_STATE_DOWN;
+		return (MW_HAL_TOUCH_STATE_DOWN);
 	}
-	return MW_HAL_TOUCH_STATE_UP;
+	return (MW_HAL_TOUCH_STATE_UP);
 }
 
 bool mw_hal_touch_get_point(uint16_t* x, uint16_t* y)
@@ -189,7 +189,7 @@ bool mw_hal_touch_get_point(uint16_t* x, uint16_t* y)
 
 	if (touch_count != MW_HAL_TOUCH_READ_POINTS_COUNT)
 	{
-		return false;
+		return (false);
 	}
 
 	do
@@ -227,7 +227,7 @@ bool mw_hal_touch_get_point(uint16_t* x, uint16_t* y)
 	*x = (databuffer[0][4]+databuffer[0][5]) / 8;
 	*y = (databuffer[1][4]+databuffer[1][5]) / 8;
 
-	return true;
+	return (true);
 }
 
 #endif

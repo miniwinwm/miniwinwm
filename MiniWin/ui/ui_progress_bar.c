@@ -156,17 +156,17 @@ mw_handle_t mw_ui_progress_bar_add_new(int16_t x,
 	if (height < 3 || width < 3)
 	{
 		MW_ASSERT(false, "Height too small");
-		return MW_INVALID_HANDLE;
+		return (MW_INVALID_HANDLE);
 	}
 
 	mw_util_set_rect(&r, x, y, width, height);
 
 	/* no account taken of the MW_CONTROL_FLAG_LARGE_SIZE flag as user sets required size of this control */
 
-	return mw_add_control(&r,
+	return (mw_add_control(&r,
 			parent_handle,
 			progress_bar_paint_function,
 			progress_bar_message_function,
 			flags,
-			progress_bar_instance_data);
+			progress_bar_instance_data));
 }

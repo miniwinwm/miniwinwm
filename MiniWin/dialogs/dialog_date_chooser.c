@@ -132,7 +132,7 @@ static uint8_t get_max_date_for_month_and_year(uint8_t month, uint16_t year)
 		}
 	}
 
-	return days;
+	return (days);
 }
 
 /**
@@ -185,6 +185,9 @@ static void update_arrow_enable_states(void)
 	else if (mw_dialog_date_chooser_data.current_date_year == 99U)
 	{
 		mw_set_control_enabled(mw_dialog_date_chooser_data.arrow_year_up_handle, false);
+	}
+	else
+	{
 	}
 
 	mw_paint_control(mw_dialog_date_chooser_data.arrow_month_up_handle);
@@ -378,7 +381,7 @@ mw_handle_t mw_create_window_dialog_date_chooser(int16_t x,
 			start_date_month > 12U || start_date_month == 0U ||
 			start_date_date == 0U || start_date_date > get_max_date_for_month_and_year(start_date_month, start_date_year))
 	{
-		return MW_INVALID_HANDLE;
+		return (MW_INVALID_HANDLE);
 	}
 	mw_dialog_date_chooser_data.current_date_year = start_date_year;
 	mw_dialog_date_chooser_data.current_date_month = start_date_month;
@@ -399,23 +402,23 @@ mw_handle_t mw_create_window_dialog_date_chooser(int16_t x,
 	/* check start position */
 	if (x + rect.width > MW_ROOT_WIDTH || x < 0)
 	{
-		return MW_INVALID_HANDLE;
+		return (MW_INVALID_HANDLE);
 	}
 	if (y + rect.height > MW_ROOT_HEIGHT || y < 0)
 	{
-		return MW_INVALID_HANDLE;
+		return (MW_INVALID_HANDLE);
 	}
 
 	/* check no modal windows already showing */
 	if (mw_is_any_window_modal())
 	{
-		return MW_INVALID_HANDLE;
+		return (MW_INVALID_HANDLE);
 	}
 
 	/* check response window handle */
 	if (!mw_is_window_handle_valid(owner_window_handle))
 	{
-		return MW_INVALID_HANDLE;
+		return (MW_INVALID_HANDLE);
 	}
 
 	mw_dialog_date_chooser_data.large_size = large_size;
@@ -437,7 +440,7 @@ mw_handle_t mw_create_window_dialog_date_chooser(int16_t x,
 	if (mw_dialog_date_chooser_data.date_chooser_dialog_window_handle == MW_INVALID_HANDLE)
 	{
 		/* it couldn't so exit */
-		return MW_INVALID_HANDLE;
+		return (MW_INVALID_HANDLE);
 	}
 
 	/* set controls data */
@@ -565,7 +568,7 @@ mw_handle_t mw_create_window_dialog_date_chooser(int16_t x,
 		/* remove all controls and window */
 		mw_remove_window(mw_dialog_date_chooser_data.date_chooser_dialog_window_handle);
 
-		return MW_INVALID_HANDLE;
+		return (MW_INVALID_HANDLE);
 	}
 
 	/* set arrow enable states appropriately */
@@ -578,5 +581,5 @@ mw_handle_t mw_create_window_dialog_date_chooser(int16_t x,
 	mw_paint_window_frame(mw_dialog_date_chooser_data.date_chooser_dialog_window_handle, MW_WINDOW_FRAME_COMPONENT_ALL);
 	mw_paint_window_client(mw_dialog_date_chooser_data.date_chooser_dialog_window_handle);
 
-	return mw_dialog_date_chooser_data.date_chooser_dialog_window_handle;
+	return (mw_dialog_date_chooser_data.date_chooser_dialog_window_handle);
 }

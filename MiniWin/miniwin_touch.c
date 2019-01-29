@@ -51,8 +51,6 @@ SOFTWARE.
 *** EXTERNAL VARIABLES ***
 **************************/
 
-extern volatile uint32_t mw_tick_counter;
-
 /**********************
 *** LOCAL VARIABLES ***
 **********************/
@@ -108,7 +106,7 @@ mw_hal_touch_state_t mw_touch_get_display_touch(int16_t* x, int16_t* y)
 	if (!mw_hal_touch_get_point(&raw_x, &raw_y))
 	{
 		/* no valid point to read */
-		return MW_HAL_TOUCH_STATE_UP;
+		return (MW_HAL_TOUCH_STATE_UP);
 	}
 
 	raw_point.x = (INT_32)raw_x;
@@ -137,7 +135,7 @@ mw_hal_touch_state_t mw_touch_get_display_touch(int16_t* x, int16_t* y)
 	*x = (int16_t)display_point.x;
 	*y = (int16_t)display_point.y;
 
-	return MW_HAL_TOUCH_STATE_DOWN;
+	return (MW_HAL_TOUCH_STATE_DOWN);
 }
 
 void mw_touch_calibrate(MATRIX *matrix)

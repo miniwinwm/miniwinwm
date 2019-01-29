@@ -161,10 +161,10 @@ mw_handle_t mw_ui_label_add_new(int16_t x,
 		mw_util_set_rect(&r, x, y, width, MW_UI_LABEL_HEIGHT);
 	}
 
-	return mw_add_control(&r,
+	return (mw_add_control(&r,
 			parent_handle,
 			label_paint_function,
 			label_message_function,
 			flags,
-			label_instance_data);
+			label_instance_data));
 }

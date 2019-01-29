@@ -90,12 +90,12 @@ void mw_hal_lcd_init(void)
 
 uint16_t mw_hal_lcd_get_display_width(void)
 {
-	return LCD_DISPLAY_WIDTH_PIXELS;
+	return (LCD_DISPLAY_WIDTH_PIXELS);
 }
 
 uint16_t mw_hal_lcd_get_display_height(void)
 {
-	return LCD_DISPLAY_HEIGHT_PIXELS;
+	return (LCD_DISPLAY_HEIGHT_PIXELS);
 }
 
 void mw_hal_lcd_pixel(int16_t x, int16_t y, mw_hal_lcd_colour_t colour)

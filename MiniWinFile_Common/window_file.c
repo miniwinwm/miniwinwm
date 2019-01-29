@@ -382,13 +382,16 @@ void window_file_message_function(const mw_message_t *message)
 					false,
 					message->recipient_handle);
 		}
+		else
+		{
+		}
 		break;
 
 	case MW_DIALOG_DATE_CHOOSER_OK_MESSAGE:
 		{
 			window_file_data.set_time.tm_mday = (int)(message->message_data & 0xff);
-			window_file_data.set_time.tm_mon = (int)((message->message_data >> 8) & 0xff);
-			window_file_data.set_time.tm_year = (int)(message->message_data >> 16);
+			window_file_data.set_time.tm_mon = (int)((message->message_data >> 8U) & 0xff);
+			window_file_data.set_time.tm_year = (int)(message->message_data >> 16U);
 			app_set_time_date(window_file_data.set_time);
 
 			/* enable the create button now time/date set */

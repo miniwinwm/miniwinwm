@@ -58,8 +58,6 @@ typedef struct
 *** EXTERNAL VARIABLES ***
 **************************/
 
-extern mw_handle_t button_handle;
-
 /**********************
 *** LOCAL VARIABLES ***
 **********************/

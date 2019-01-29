@@ -132,7 +132,7 @@ static void text_box_message_function(const mw_message_t *message)
 
 			/* send message about whether scrolling is needed */
 			message_data = this_text_box->text_height_pixels > mw_get_control_rect(message->recipient_handle).height;
-			message_data <<= 16;
+			message_data <<= 16U;
 			if (message_data)
 			{
 				message_data |= (this_text_box->text_height_pixels - mw_get_control_rect(message->recipient_handle).height);
@@ -209,7 +209,7 @@ static void text_box_message_function(const mw_message_t *message)
 
 				/* send message about whether scrolling is needed */
 				message_data = this_text_box->text_height_pixels > mw_get_control_rect(message->recipient_handle).height;
-				message_data <<= 16;
+				message_data <<= 16U;
 				if (message_data)
 				{
 					message_data |= (this_text_box->text_height_pixels - mw_get_control_rect(message->recipient_handle).height);
@@ -252,10 +252,10 @@ mw_handle_t mw_ui_text_box_add_new(mw_util_rect_t *control_rect,
 		return MW_INVALID_HANDLE;
 	}
 
-	return mw_add_control(control_rect,
+	return (mw_add_control(control_rect,
 			parent_handle,
 			text_box_paint_function,
 			text_box_message_function,
 			flags,
-			text_box_instance_data);
+			text_box_instance_data));
 }

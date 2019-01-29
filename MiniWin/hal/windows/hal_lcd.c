@@ -80,20 +80,20 @@ void mw_hal_lcd_init(void)
 
 uint16_t mw_hal_lcd_get_display_width(void)
 {
-	return LCD_DISPLAY_WIDTH_PIXELS;
+	return (LCD_DISPLAY_WIDTH_PIXELS);
 }
 
 uint16_t mw_hal_lcd_get_display_height(void)
 {
-	return LCD_DISPLAY_HEIGHT_PIXELS;
+	return (LCD_DISPLAY_HEIGHT_PIXELS);
 }
 
 void mw_hal_lcd_pixel(int16_t x, int16_t y, mw_hal_lcd_colour_t colour)
 {
 	hdc = GetDC(hwnd);
-	uint8_t r = (colour & 0xff0000) >> 16;
-	uint8_t g = (colour & 0xff00) >> 8;
-	uint8_t b = colour & 0xff;
+	uint8_t r = (colour & 0xff0000U) >> 16U;
+	uint8_t g = (colour & 0xff00U) >> 8U;
+	uint8_t b = colour & 0xffU;
 
 	SetPixel(hdc, x, y, RGB(r, g, b));
 
@@ -108,9 +108,9 @@ void mw_hal_lcd_filled_rectangle(int16_t start_x,
 {
 	HBRUSH brush;
 	RECT rect;
-	uint8_t r = (colour & 0xff0000) >> 16;
-	uint8_t g = (colour & 0xff00) >> 8;
-	uint8_t b = colour & 0xff;
+	uint8_t r = (colour & 0xff0000U) >> 16U;
+	uint8_t g = (colour & 0xff00U) >> 8U;
+	uint8_t b = colour & 0xffU;
 
 	hdc = GetDC(hwnd);
 
@@ -149,8 +149,8 @@ void mw_hal_lcd_colour_bitmap_clip(int16_t image_start_x,
 					y + image_start_y < clip_start_y + clip_height)
 			{
 				pixel_colour = *(data + (x + y * image_data_width_pixels) * 3);
-				pixel_colour |= *(1 + data + (x + y * image_data_width_pixels) * 3) << 8;
-				pixel_colour |= *(2 + data + (x + y * image_data_width_pixels) * 3) << 16;
+				pixel_colour |= *(1 + data + (x + y * image_data_width_pixels) * 3) << 8U;
+				pixel_colour |= *(2 + data + (x + y * image_data_width_pixels) * 3) << 16U;
 				mw_hal_lcd_pixel(x + image_start_x, y + image_start_y, pixel_colour);
 			}
 		}
@@ -179,20 +179,20 @@ void mw_hal_lcd_monochrome_bitmap_clip(int16_t image_start_x,
 	uint8_t array_width_bytes;
 
 	array_width_bytes = bitmap_width >> 3;
-	if (bitmap_width % 8 > 0)
+	if (bitmap_width % 8U > 0U)
 	{
 		array_width_bytes++;
 	}
 
 	for (y = 0; y < bitmap_height; y++)
 	{
-		for (a = 0; a < array_width_bytes; a++)
+		for (a = 0U; a < array_width_bytes; a++)
 		{
 			image_byte = image_data[y * array_width_bytes + a];
-			mask = 0x80;
+			mask = 0x80U;
 			for (x = 0; x < 8; x++)
 			{
-				if ((a << 3) + x == bitmap_width)
+				if ((a << 3U) + x == bitmap_width)
 				{
 					break;
 				}

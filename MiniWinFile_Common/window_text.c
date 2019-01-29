@@ -242,7 +242,7 @@ void window_text_message_function(const mw_message_t *message)
 		break;
 
 	case MW_TOUCH_DOWN_MESSAGE:
-		text_window_data->last_drag_x = (int16_t)(message->message_data >> 16);
+		text_window_data->last_drag_x = (int16_t)(message->message_data >> 16U);
 		text_window_data->last_drag_y = (int16_t)(message->message_data & 0xffff);
 		break;
 
@@ -259,8 +259,8 @@ void window_text_message_function(const mw_message_t *message)
 			if (mw_get_window_client_rect(message->recipient_handle).width < text_window_data->max_line_width * (mw_gl_get_font_width() + 1))
 			{
 				/* calculate the number of pixels dragged in x dimension */
-				pixels_to_move = text_window_data->last_drag_x - (int16_t)(message->message_data >> 16);
-				text_window_data->last_drag_x = (int16_t)(message->message_data >> 16);
+				pixels_to_move = text_window_data->last_drag_x - (int16_t)(message->message_data >> 16U);
+				text_window_data->last_drag_x = (int16_t)(message->message_data >> 16U);
 
 				text_window_data->x_scroll_pos += pixels_to_move;
 

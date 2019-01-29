@@ -76,8 +76,8 @@ void mw_hal_non_vol_load(uint8_t *data, uint16_t length)
 	settings = fopen("settings.bin", "rb");
 	if (settings)
 	{
-		fread(data, 1, length, settings);
-		fclose(settings);
+		(void)fread(data, 1, length, settings);
+		(void)fclose(settings);
 	}
 }
 
@@ -88,8 +88,8 @@ void mw_hal_non_vol_save(uint8_t *data, uint16_t length)
 	settings = fopen("settings.bin", "wb");
 	if (settings)
 	{
-		fwrite(data, 1, length, settings);
-		fclose(settings);
+		(void)fwrite(data, 1, length, settings);
+		(void)fclose(settings);
 	}
 }
 

@@ -315,11 +315,11 @@ static uint8_t find_empty_window_slot()
 	    if (!(mw_all_windows[i].window_flags & MW_WINDOW_FLAG_IS_USED))
 	    {
 			/* empty slot found */
-	        return i;
+	        return (i);
 		}
 	}
 
-	return MW_MAX_WINDOW_COUNT;
+	return (MW_MAX_WINDOW_COUNT);
 }
 
 /**
@@ -461,7 +461,7 @@ static bool check_window_dimensions(int16_t new_width,
 	}
 
 	/* check for scroll bars */
-	if (flags & MW_WINDOW_FLAG_HAS_HORIZ_SCROLL_BAR && flags & MW_WINDOW_FLAG_HAS_VERT_SCROLL_BAR)
+	if ((flags & MW_WINDOW_FLAG_HAS_HORIZ_SCROLL_BAR) && (flags & MW_WINDOW_FLAG_HAS_VERT_SCROLL_BAR))
 	{
 		/* both scroll bars present so add scroll bar narrow dimension and slider size*/
 		window_minimum_height += (scroll_bar_narrow_dimension + scroll_bar_slider_size);
@@ -476,6 +476,9 @@ static bool check_window_dimensions(int16_t new_width,
 		/* only horiz scroll bar present so add scroll bar narrow dimension */
 		window_minimum_height += (scroll_bar_narrow_dimension);
 	}
+	else
+	{
+	}
 
 	/* starting width is 1 pixel */
 	window_minimum_width = 1;
@@ -488,7 +491,7 @@ static bool check_window_dimensions(int16_t new_width,
 	}
 
 	/* check for scroll bars */
-	if (flags & MW_WINDOW_FLAG_HAS_HORIZ_SCROLL_BAR && flags & MW_WINDOW_FLAG_HAS_VERT_SCROLL_BAR)
+	if ((flags & MW_WINDOW_FLAG_HAS_HORIZ_SCROLL_BAR) && (flags & MW_WINDOW_FLAG_HAS_VERT_SCROLL_BAR))
 	{
 		/* both scroll bars present so add scroll bar narrow dimension and slider size*/
 		window_minimum_width += (scroll_bar_narrow_dimension + scroll_bar_slider_size);
@@ -502,6 +505,9 @@ static bool check_window_dimensions(int16_t new_width,
 	{
 		/* only vert scroll bar present so add scroll bar narrow dimension */
 		window_minimum_width += (scroll_bar_narrow_dimension);
+	}
+	else
+	{
 	}
 
 	/* if a title bar is specified there must be space for the icons but title bar width is in parallel with the
@@ -517,15 +523,15 @@ static bool check_window_dimensions(int16_t new_width,
 	/* now check the new dimensions with the minimums allowed */
 	if (new_width < window_minimum_width)
 	{
-		return false;
+		return (false);
 	}
 	if (new_height < window_minimum_height)
 	{
-		return false;
+		return (false);
 	}
 
 	/* requested new dimensions acceptable */
-	return true;
+	return (true);
 }
 
 /**
@@ -626,7 +632,7 @@ static void calculate_new_window_size_details(mw_handle_t window_handle, const m
 /**
  * Find an empty slot in the array of control identifiers for a new control.
  *
- * @return The slot for the new control if one is avaialble or MAX_CONTROL_COUNT if no slot available
+ * @return The slot for the new control if one is available or MAX_CONTROL_COUNT if no slot available
  */
 static uint8_t find_empty_control_slot()
 {
@@ -639,11 +645,11 @@ static uint8_t find_empty_control_slot()
 	    if (!(mw_all_controls[i].control_flags & MW_CONTROL_FLAG_IS_USED))
 	    {
 			/* an empty slot has been found */
-	        return i;
+	        return (i);
 		}
 	}
 
-	return MW_MAX_CONTROL_COUNT;
+	return (MW_MAX_CONTROL_COUNT);
 }
 
 /**
@@ -727,7 +733,7 @@ static void root_message_function(const mw_message_t *message)
 	switch (message->message_id)
 	{
 	case MW_TOUCH_DOWN_MESSAGE:
-		consumed = check_for_restore_touch(message->message_data >> 16, message->message_data & 0x0000ffffUL);
+		consumed = check_for_restore_touch(message->message_data >> 16U, message->message_data & 0x0000ffffU);
 		break;
 
 	default:
@@ -758,7 +764,7 @@ static uint8_t find_icon_number_for_window(mw_handle_t window_handle)
 	if (window_id >= MW_MAX_WINDOW_COUNT)
 	{
 		MW_ASSERT(false, "Bad window handle");
-		return 0;
+		return (0);
 	}
 
 	/* loop through all minimised windows */
@@ -766,11 +772,11 @@ static uint8_t find_icon_number_for_window(mw_handle_t window_handle)
 	{
 		if (minimised_windows[i] == window_id)
 		{
-			return i - 1U;
+			return (i - 1U);
 		}
 	}
 
-	return 0U;
+	return (0U);
 }
 
 /**
@@ -826,8 +832,8 @@ void add_minimised_window_to_list(mw_handle_t window_handle)
 	}
 
 	/* don't add invisible, unused or already minimised windows */
-	if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_VISIBLE &&
-			mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_USED)
+	if ((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_VISIBLE) &&
+			(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_USED))
 	{
 		for (i = 1U; i < MW_MAX_WINDOW_COUNT; i++)
 		{
@@ -922,7 +928,7 @@ static bool check_for_restore_touch(int16_t x_touch, int16_t y_touch)
 		}
 	}
 
-	return touch_consumed;
+	return (touch_consumed);
 }
 
 /**
@@ -1076,7 +1082,7 @@ static uint8_t find_next_z_order(uint8_t z_order)
 		}
 	}
 
-	return next_z_order;
+	return (next_z_order);
 }
 
 /**
@@ -1104,7 +1110,7 @@ static uint8_t find_highest_z_order()
 		}
 	}
 
-	return highest_z_order;
+	return (highest_z_order);
 }
 
 /**
@@ -1141,7 +1147,7 @@ static mw_handle_t find_window_point_is_in(int16_t touch_x, int16_t touch_y)
 		}
 	}
 
-	return mw_all_windows[window_id].window_handle;
+	return (mw_all_windows[window_id].window_handle);
 }
 
 /**
@@ -1177,7 +1183,7 @@ static mw_handle_t find_control_point_is_in(mw_handle_t window_handle, int16_t p
 		}
 	}
 
-	return control_found;
+	return (control_found);
 }
 
 /**
@@ -1353,7 +1359,7 @@ static uint8_t find_highest_z_order_at_point(int16_t x, int16_t y)
 	window_id = get_window_id_for_handle(find_window_point_is_in(x, y));
 	MW_ASSERT(window_id < MW_MAX_WINDOW_COUNT, "Bad window handle");
 
-	return mw_all_windows[window_id].z_order;
+	return (mw_all_windows[window_id].z_order);
 }
 
 /**
@@ -1377,7 +1383,7 @@ static uint8_t find_number_of_displayed_windows()
 		}
 	}
 
-	return displayed_windows;
+	return (displayed_windows);
 }
 
 /**
@@ -1408,11 +1414,11 @@ static bool find_if_window_is_overlapped(mw_handle_t window_handle)
 
 		if (mw_util_do_rects_coincide(&mw_all_windows[i].window_rect, &mw_all_windows[window_id].window_rect))
 		{
-			return true;
+			return (true);
 		}
 	}
 
-	return false;
+	return (false);
 }
 
 /**
@@ -1617,7 +1623,7 @@ static void draw_titlebar_text(mw_handle_t window_handle, const mw_gl_draw_info_
 	mw_gl_set_bg_transparency(MW_GL_BG_TRANSPARENT);
 	mw_gl_set_text_rotation(MW_GL_TEXT_ROTATION_0);
 	mw_gl_set_font(MW_GL_TITLE_FONT);
-	if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_MODAL || window_handle != window_with_focus_handle)
+	if ((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_MODAL) || (window_handle != window_with_focus_handle))
 	{
 		mw_gl_string(draw_info, title_modal_x_offset, title_y_offset, mw_all_windows[window_id].title);
 	}
@@ -1738,7 +1744,7 @@ static void draw_menu_bar(const mw_gl_draw_info_t *draw_info, mw_handle_t window
 		}
 
 		/* set up text colour on enabled state - from control and individual items bitfield */
-	    if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_MENU_BAR_ENABLED &&
+	    if ((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_MENU_BAR_ENABLED) &&
 	    		mw_util_get_bit(mw_all_windows[window_id].menu_bar_item_enables, i))
 	    {
 	        mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
@@ -1823,7 +1829,7 @@ static void draw_horizontal_window_scroll_bar(const mw_gl_draw_info_t *draw_info
 	mw_gl_set_solid_fill_colour(MW_CONTROL_DOWN_COLOUR);
 
 	scroll_bar_horiz_slider_left = (mw_all_windows[window_id].client_rect.width - scroll_bar_slider_size) *
-		mw_all_windows[window_id].horiz_scroll_pos / UINT8_MAX;
+		(int16_t)mw_all_windows[window_id].horiz_scroll_pos / UINT8_MAX;
 
 	scroll_bar_horiz_slider_left += (mw_all_windows[window_id].client_rect.x -
 		mw_all_windows[window_id].window_rect.x);
@@ -1934,7 +1940,7 @@ static void draw_vertical_window_scroll_bar(const mw_gl_draw_info_t *draw_info, 
 	mw_gl_set_solid_fill_colour(MW_CONTROL_DOWN_COLOUR);
 
 	scroll_bar_horiz_slider_top = (mw_all_windows[window_id].client_rect.height - scroll_bar_slider_size) *
-			mw_all_windows[window_id].vert_scroll_pos / UINT8_MAX;
+			(int16_t)mw_all_windows[window_id].vert_scroll_pos / UINT8_MAX;
 
 	scroll_bar_horiz_slider_top += (mw_all_windows[window_id].client_rect.y - mw_all_windows[window_id].window_rect.y);
 
@@ -2072,7 +2078,7 @@ static void do_paint_window_frame(mw_handle_t window_handle, uint8_t components)
 			rect_current.height = (horizontal_edges[horizontal_edge_counter + 1U] - rect_current.y);
 
 			/* iterate through vertical edges along current row */
-			for(vertical_edge_counter = 0; vertical_edge_counter < vert_edges_count - 1U; vertical_edge_counter++)
+			for(vertical_edge_counter = 0U; vertical_edge_counter < vert_edges_count - 1U; vertical_edge_counter++)
 			{
 				/* get next rect in current row to examine */
 				rect_current.x = vertical_edges[vertical_edge_counter];
@@ -2138,14 +2144,14 @@ static void do_paint_window_frame2(mw_handle_t window_handle, uint8_t components
 	draw_info.origin_y = mw_all_windows[window_id].window_rect.y;
 
 	/* draw menu bar */
-	if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_MENU_BAR &&
+	if ((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_MENU_BAR) &&
 			(components & MW_WINDOW_FRAME_COMPONENT_MENU_BAR))
 	{
 		draw_menu_bar(&draw_info, window_handle);
 	}
 
-	/* draw border, fixed width of 1 for now */
-  	if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER &&
+	/* draw border */
+  	if ((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER) &&
   			((components & MW_WINDOW_FRAME_COMPONENT_BORDER) || (components & MW_WINDOW_FRAME_COMPONENT_MENU_BAR)))
   	{
   		mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
@@ -2188,7 +2194,7 @@ static void do_paint_window_frame2(mw_handle_t window_handle, uint8_t components
   	}
 
 	/* draw title bar if this window has one */
-	if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_TITLE_BAR &&
+	if ((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_TITLE_BAR) &&
 			(components & MW_WINDOW_FRAME_COMPONENT_TITLE_BAR))
 	{
 		draw_title_bar(window_handle, &draw_info);
@@ -2229,17 +2235,20 @@ static void do_paint_window_frame2(mw_handle_t window_handle, uint8_t components
 				scroll_bar_narrow_dimension,
 				scroll_bar_narrow_dimension);
 	}
-	else if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_HORIZ_SCROLL_BAR &&
+	else if ((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_HORIZ_SCROLL_BAR) &&
 				(components & MW_WINDOW_FRAME_COMPONENT_HORIZ_SCROLL_BAR))
 	{
 		/* draw horizontal scroll bar only */
 		draw_horizontal_window_scroll_bar(&draw_info, window_handle);
 	}
-	else if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_VERT_SCROLL_BAR &&
+	else if ((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_VERT_SCROLL_BAR) &&
 				(components & MW_WINDOW_FRAME_COMPONENT_VERT_SCROLL_BAR))
 	{
 		/* draw vertical scroll bar only */
 		draw_vertical_window_scroll_bar(&draw_info, window_handle);
+	}
+	else
+	{
 	}
 }
 
@@ -2431,10 +2440,10 @@ static void do_paint_window_client_rect(mw_handle_t window_handle, const mw_util
 		{
 			rect_waiting_to_be_painted = false;
 			rect_current.y = horizontal_edges[horizontal_edge_counter];
-			rect_current.height = (horizontal_edges[horizontal_edge_counter + 1] - rect_current.y);
+			rect_current.height = (horizontal_edges[horizontal_edge_counter + 1U] - rect_current.y);
 
 			/* iterate through vertical edges along current row */
-			for(vertical_edge_counter = 0; vertical_edge_counter < vert_edges_count - 1U; vertical_edge_counter++)
+			for(vertical_edge_counter = 0U; vertical_edge_counter < vert_edges_count - 1U; vertical_edge_counter++)
 			{
 				/* get next rect in current row to examine */
 				rect_current.x = vertical_edges[vertical_edge_counter];
@@ -2648,7 +2657,7 @@ static void do_paint_control_rect(mw_handle_t control_handle, const mw_util_rect
 		rect_current.height = (horizontal_edges[horizontal_edge_counter + 1U] - rect_current.y);
 
 		/* iterate through vertical edges along current row */
-		for(vertical_edge_counter = 0U; vertical_edge_counter < vert_edges_count - 1U; vertical_edge_counter++)
+		for (vertical_edge_counter = 0U; vertical_edge_counter < vert_edges_count - 1U; vertical_edge_counter++)
 		{
 			/* get next rect in current row to examine */
 			rect_current.x = vertical_edges[vertical_edge_counter];
@@ -2738,7 +2747,7 @@ static void do_paint_control(mw_handle_t control_handle)
 		rect_current.height = (horizontal_edges[horizontal_edge_counter + 1U] - rect_current.y);
 
 		/* iterate through vertical edges along current row */
-		for(vertical_edge_counter = 0U; vertical_edge_counter < vert_edges_count - 1U; vertical_edge_counter++)
+		for (vertical_edge_counter = 0U; vertical_edge_counter < vert_edges_count - 1U; vertical_edge_counter++)
 		{
 			/* get next rect in current row to examine */
 			rect_current.x = vertical_edges[vertical_edge_counter];
@@ -2861,7 +2870,7 @@ static mw_handle_t get_next_handle(void)
 	static mw_handle_t next_handle = MW_ROOT_WINDOW_HANDLE;
 
 	next_handle++;
-	return next_handle;
+	return (next_handle);
 }
 
 /**
@@ -2876,18 +2885,18 @@ static uint8_t get_timer_id_for_handle(mw_handle_t timer_handle)
 
 	if (timer_handle == MW_INVALID_HANDLE)
 	{
-		return MW_MAX_TIMER_COUNT;
+		return (MW_MAX_TIMER_COUNT);
 	}
 
 	for (i = 0U; i < MW_MAX_TIMER_COUNT; i++)
 	{
 		if (mw_all_timers[i].timer_handle == timer_handle)
 		{
-			return i;
+			return (i);
 		}
 	}
 
-	return MW_MAX_TIMER_COUNT;
+	return (MW_MAX_TIMER_COUNT);
 }
 
 /**
@@ -2902,19 +2911,19 @@ static uint8_t get_window_id_for_handle(mw_handle_t window_handle)
 
 	if (window_handle == MW_INVALID_HANDLE)
 	{
-		return MW_MAX_WINDOW_COUNT;
+		return (MW_MAX_WINDOW_COUNT);
 	}
 
 	for (i = 0U; i < MW_MAX_WINDOW_COUNT; i++)
 	{
 		if (mw_all_windows[i].window_handle == window_handle &&
-				mw_all_windows[i].window_flags & MW_WINDOW_FLAG_IS_USED)
+				(mw_all_windows[i].window_flags & MW_WINDOW_FLAG_IS_USED))
 		{
-			return i;
+			return (i);
 		}
 	}
 
-	return MW_MAX_WINDOW_COUNT;
+	return (MW_MAX_WINDOW_COUNT);
 }
 
 /**
@@ -2929,18 +2938,18 @@ static uint8_t get_control_id_for_handle(mw_handle_t control_handle)
 
 	if (control_handle == MW_INVALID_HANDLE)
 	{
-		return MW_MAX_CONTROL_COUNT;
+		return (MW_MAX_CONTROL_COUNT);
 	}
 
 	for (i = 0U; i < MW_MAX_CONTROL_COUNT; i++)
 	{
 		if (mw_all_controls[i].control_handle == control_handle)
 		{
-			return i;
+			return (i);
 		}
 	}
 
-	return MW_MAX_CONTROL_COUNT;
+	return (MW_MAX_CONTROL_COUNT);
 }
 
 /**
@@ -2991,14 +3000,14 @@ static bool process_touch_event(mw_message_id_t *touch_message, int16_t *touch_x
 	/* check if it's time to process another touch event yet */
 	if (mw_tick_counter - previous_process_time < MW_TOUCH_INTERVAL_TICKS)
 	{
-		return false;
+		return (false);
 	}
 
 	/* it is time, so remember the time now */
 	previous_process_time = mw_tick_counter;
 
 	/* get the current touch state and measurements from the screen */
-	touch_state = mw_touch_get_display_touch((int16_t *)touch_x, (int16_t *)touch_y);
+	touch_state = mw_touch_get_display_touch(touch_x, touch_y);
 
 	/* check for a touch state change from the last time round and create an up or down event if the state has changed */
 	if (touch_state == MW_HAL_TOUCH_STATE_DOWN && previous_touch_state == MW_HAL_TOUCH_STATE_UP)
@@ -3026,7 +3035,7 @@ static bool process_touch_event(mw_message_id_t *touch_message, int16_t *touch_x
 		difference_y = *touch_y - previous_touch_y;
 
 		/* check if there has been movement since last time above the threshold for a drag */
-		if (abs(difference_x) > MW_DRAG_THRESHOLD_PIXELS || abs(difference_y) > MW_DRAG_THRESHOLD_PIXELS)
+		if ((int16_t)abs((int16_t)difference_x) > MW_DRAG_THRESHOLD_PIXELS || (int16_t)abs((int16_t)difference_y) > MW_DRAG_THRESHOLD_PIXELS)
 		{
 			/* drag event happened */
 			touch_event = TOUCH_EVENT_DRAG;
@@ -3046,7 +3055,7 @@ static bool process_touch_event(mw_message_id_t *touch_message, int16_t *touch_x
 	if (touch_event == TOUCH_EVENT_NONE)
 	{
 		/* no touch event to process so return */
-		return false;
+		return (false);
 	}
 
 	if (touch_event == TOUCH_EVENT_DOWN)
@@ -3073,7 +3082,7 @@ static bool process_touch_event(mw_message_id_t *touch_message, int16_t *touch_x
 			mw_paint_all();
 
 			/* touch up event now consumed */
-			return false;
+			return (false);
 		}
 
 		/* there's been a touch up event, can't read screen so use last recorded position */
@@ -3101,7 +3110,7 @@ static bool process_touch_event(mw_message_id_t *touch_message, int16_t *touch_x
 			/* touch drag event now consumed */
 			window_redimensioning_state = WINDOW_BEING_MOVED;
 
-			return false;
+			return (false);
 		}
 
 		if (window_redimensioning_state == WINDOW_BEING_RESIZED)
@@ -3126,14 +3135,14 @@ static bool process_touch_event(mw_message_id_t *touch_message, int16_t *touch_x
 
 			/* touch drag event now consumed */
 			window_redimensioning_state = WINDOW_BEING_RESIZED;
-			return false;
+			return (false);
 		}
 
 		/* there's been a touch drag event that's not redimensioning so need to send a drag message */
 		*touch_message = MW_TOUCH_DRAG_MESSAGE;
 	}
 
-	return true;
+	return (true);
 }
 
 /**
@@ -3257,7 +3266,7 @@ static void process_touch_message(mw_message_id_t touch_message_id, int16_t touc
 		mw_post_message(touch_message_id,
 				MW_UNUSED_MESSAGE_PARAMETER,
 				mw_all_windows[window_to_receive_message_id].window_handle,
-				(((uint32_t)client_x) << 16U) | client_y,
+				(((uint32_t)client_x) << 16U) | (uint32_t)client_y,
 				MW_UNUSED_MESSAGE_PARAMETER,
 				MW_WINDOW_MESSAGE);
 
@@ -3291,7 +3300,7 @@ static void process_touch_message(mw_message_id_t touch_message_id, int16_t touc
 			mw_post_message(touch_message_id,
 					MW_UNUSED_MESSAGE_PARAMETER,
 					touch_message_target.touch_down_recipient_handle,
-					(((uint32_t)client_x) << 16) | client_y,
+					(((uint32_t)client_x) << 16U) | (uint32_t)client_y,
 					MW_UNUSED_MESSAGE_PARAMETER,
 					MW_WINDOW_MESSAGE);
 		}
@@ -3315,7 +3324,7 @@ static void process_touch_message(mw_message_id_t touch_message_id, int16_t touc
 			mw_post_message(touch_message_id,
 					MW_UNUSED_MESSAGE_PARAMETER,
 					touch_message_target.touch_down_recipient_handle,
-					(((uint32_t)client_x) << 16U) | client_y,
+					(((uint32_t)client_x) << 16U) | (uint32_t)client_y,
 					MW_UNUSED_MESSAGE_PARAMETER,
 					MW_CONTROL_MESSAGE);
 		}
@@ -3349,6 +3358,9 @@ static void process_touch_message(mw_message_id_t touch_message_id, int16_t touc
 				touch_message_target.touch_down_recipient_handle = MW_INVALID_HANDLE;
 				return;
 			}
+			else
+			{
+			}
 		}
 		else if (touch_message_target.touch_down_recipient_type == TOUCH_DOWN_RECIPIENT_TYPE_VERT_WINDOW_SCROLL_BAR)
 		{
@@ -3380,6 +3392,9 @@ static void process_touch_message(mw_message_id_t touch_message_id, int16_t touc
 				touch_message_target.touch_down_recipient_handle = MW_INVALID_HANDLE;
 				return;
 			}
+			else
+			{
+			}
 		}
 	}
 
@@ -3405,7 +3420,7 @@ static bool check_and_process_touch_on_window_without_focus(uint8_t window_id)
 		if (mw_is_any_window_modal())
 		{
 			/* there's a modal window showing so ignore this touch event */
-			return true;
+			return (true);
 		}
 
 		/* paint frame of window losing focus */
@@ -3430,11 +3445,11 @@ static bool check_and_process_touch_on_window_without_focus(uint8_t window_id)
 		if (!(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_TOUCH_FOCUS_AND_EVENT))
 		{
 			/* it shouldn't so this touch event has now been consumed */
-			return true;
+			return (true);
 		}
 	}
 
-	return false;
+	return (false);
 }
 
 /**
@@ -3457,22 +3472,22 @@ static bool check_and_process_touch_on_root_window(uint8_t window_id, int16_t to
 			/* check if touch occurred on a root window control and if it did don't handle it here */
 			if (find_control_point_is_in(mw_all_windows[MW_ROOT_WINDOW_ID].window_handle, touch_x, touch_y) != MW_INVALID_HANDLE)
 			{
-				return false;
+				return (false);
 			}
 
 			/* touch on root window so send it straight away */
 			mw_post_message(touch_message,
 					MW_UNUSED_MESSAGE_PARAMETER,
 					mw_all_windows[MW_ROOT_WINDOW_ID].window_handle,
-					(((uint32_t)touch_x) << 16U) | touch_y,
+					(((uint32_t)touch_x) << 16U) | (uint32_t)touch_y,
 					MW_UNUSED_MESSAGE_PARAMETER,
 					MW_WINDOW_MESSAGE);
 		}
 
-		return true;
+		return (true);
 	}
 
-	return false;
+	return (false);
 }
 
 /**
@@ -3491,7 +3506,7 @@ static bool check_and_process_touch_on_window_border(uint8_t window_id, int16_t 
 		if (touch_y >= mw_all_windows[window_id].window_rect.y +
 				mw_all_windows[window_id].window_rect.height - MW_BORDER_WIDTH)
 		{
-			return true;
+			return (true);
 		}
 
 		if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_TITLE_BAR)
@@ -3500,7 +3515,7 @@ static bool check_and_process_touch_on_window_border(uint8_t window_id, int16_t 
 			if (touch_x < mw_all_windows[window_id].window_rect.x + MW_BORDER_WIDTH &&
 					touch_y > mw_all_windows[window_id].title_bar_height)
 			{
-				return true;
+				return (true);
 			}
 
 			/* check for a touch on right border */
@@ -3508,7 +3523,7 @@ static bool check_and_process_touch_on_window_border(uint8_t window_id, int16_t 
 					mw_all_windows[window_id].window_rect.width - MW_BORDER_WIDTH) &&
 					touch_y > mw_all_windows[window_id].title_bar_height)
 			{
-				return true;
+				return (true);
 			}
 		}
 		else
@@ -3516,25 +3531,25 @@ static bool check_and_process_touch_on_window_border(uint8_t window_id, int16_t 
 			/* check for a touch on top border */
 			if (touch_y < mw_all_windows[window_id].window_rect.y + MW_BORDER_WIDTH)
 			{
-				return true;
+				return (true);
 			}
 
 			/* check for a touch on left border */
 			if (touch_x < mw_all_windows[window_id].window_rect.x + MW_BORDER_WIDTH)
 			{
-				return true;
+				return (true);
 			}
 
 			/* check for a touch on right border */
 			if (touch_x >= mw_all_windows[window_id].window_rect.x +
 					mw_all_windows[window_id].window_rect.width - MW_BORDER_WIDTH)
 			{
-				return true;
+				return (true);
 			}
 		}
 	}
 
-	return false;
+	return (false);
 }
 
 /**
@@ -3554,11 +3569,11 @@ static bool check_and_process_touch_on_dual_scroll_bars_corner_zone(uint8_t wind
 		if (touch_x > mw_all_windows[window_id].client_rect.x + mw_all_windows[window_id].client_rect.width &&
 				touch_y > mw_all_windows[window_id].client_rect.y +	mw_all_windows[window_id].client_rect.height)
 		{
-			return true;
+			return (true);
 		}
 	}
 
-	return false;
+	return (false);
 }
 
 /**
@@ -3614,11 +3629,11 @@ static bool check_and_process_touch_on_vert_window_scroll_bar(uint8_t window_id,
 				}
 			}
 
-			return true;
+			return (true);
 		}
 	}
 
-	return false;
+	return (false);
 }
 
 /**
@@ -3674,11 +3689,11 @@ static bool check_and_process_touch_on_horiz_window_scroll_bar(uint8_t window_id
 					}
 				}
 			}
-			return true;
+			return (true);
 		}
 	}
 
-	return false;
+	return (false);
 }
 
 
@@ -3747,11 +3762,11 @@ static bool check_and_process_touch_on_menu_bar(uint8_t window_id, int16_t touch
 				}
 			}
 
-			return true;
+			return (true);
 		}
 	}
 
-	return false;
+	return (false);
 }
 
 /**
@@ -3878,10 +3893,10 @@ static bool check_and_process_touch_on_title_bar(uint8_t window_id, int16_t touc
 			}
 		}
 
-		return true;
+		return (true);
 	}
 
-	return false;
+	return (false);
 }
 
 /**
@@ -4158,7 +4173,7 @@ void mw_init()
 
 bool mw_is_init_complete(void)
 {
-	return init_complete;
+	return (init_complete);
 }
 
 bool mw_find_if_any_window_slots_free(void)
@@ -4181,21 +4196,21 @@ mw_handle_t mw_add_window(mw_util_rect_t *rect,
 	if (rect == NULL || paint_func == NULL || message_func == NULL || title == NULL)
 	{
 		MW_ASSERT(false, "Null pointer argument");
-		return MW_INVALID_HANDLE;
+		return (MW_INVALID_HANDLE);
 	}
 
 	/* check for being called from within a client window paint function */
 	if (in_client_window_paint_function)
 	{
 		MW_ASSERT(false, "Can't add window in paint function");
-		return MW_INVALID_HANDLE;
+		return (MW_INVALID_HANDLE);
 	}
 
 	/* check optional parameters */
 	if ((window_flags & MW_WINDOW_FLAG_HAS_MENU_BAR) && (!menu_bar_items || !*menu_bar_items || menu_bar_items_count == 0U))
 	{
 		MW_ASSERT(false, "Non-sensical arguments");
-		return MW_INVALID_HANDLE;
+		return (MW_INVALID_HANDLE);
 	}
 
 	/* look for an empty slot in the array of windows */
@@ -4204,14 +4219,14 @@ mw_handle_t mw_add_window(mw_util_rect_t *rect,
 	{
 		/* no empty slot */	
 		MW_ASSERT(false, "No space to add window");
-		return MW_INVALID_HANDLE;
+		return (MW_INVALID_HANDLE);
 	}
 
 	/* sanity check on width compared to border thickness */
 	if (rect->width < ((window_flags & MW_WINDOW_FLAG_HAS_BORDER) ? (MW_BORDER_WIDTH * 2) + 1 : 1))
 	{
 		MW_ASSERT(false, "Width too small");
-		return MW_INVALID_HANDLE;
+		return (MW_INVALID_HANDLE);
 	}
 
 	/* sanity check dimensions */
@@ -4220,7 +4235,7 @@ mw_handle_t mw_add_window(mw_util_rect_t *rect,
 			window_flags))
 	{
 		MW_ASSERT(false, "Window too small");
-		return MW_INVALID_HANDLE;
+		return (MW_INVALID_HANDLE);
 	}
 
 	/* set the new window's details with a z order that will make it the front-most window */
@@ -4252,7 +4267,7 @@ mw_handle_t mw_add_window(mw_util_rect_t *rect,
 			MW_UNUSED_MESSAGE_PARAMETER,
    			MW_WINDOW_MESSAGE);
 
-	return mw_all_windows[new_window_id].window_handle;
+	return (mw_all_windows[new_window_id].window_handle);
 }
 
 bool mw_is_window_handle_valid(mw_handle_t window_handle)
@@ -4261,18 +4276,18 @@ bool mw_is_window_handle_valid(mw_handle_t window_handle)
 
 	if (window_handle == MW_INVALID_HANDLE)
 	{
-		return false;
+		return (false);
 	}
 
 	for (i = 0U; i < MW_MAX_WINDOW_COUNT; i++)
 	{
 		if (mw_all_windows[i].window_handle == window_handle)
 		{
-			return true;
+			return (true);
 		}
 	}
 
-	return false;
+	return (false);
 }
 
 void mw_bring_window_to_front(mw_handle_t window_handle)
@@ -4292,7 +4307,7 @@ void mw_bring_window_to_front(mw_handle_t window_handle)
 	max_existing_z_order = find_highest_z_order();
 
     /* set the z order to the highest value plus 1 */
-	mw_all_windows[window_id].z_order = max_existing_z_order + 1;
+	mw_all_windows[window_id].z_order = max_existing_z_order + 1U;
     
     /* rationalize the z orders as there will now be a gap in the numbers */
 	rationalize_z_orders();
@@ -4479,7 +4494,7 @@ bool mw_resize_window(mw_handle_t window_handle, int16_t new_width, int16_t new_
 	if (window_id >= MW_MAX_WINDOW_COUNT)
 	{
 		MW_ASSERT(false, "Bad window handle");
-		return false;
+		return (false);
 	}
 
 	/* check the proposed new window dimensions to see if they are sensible */
@@ -4487,7 +4502,7 @@ bool mw_resize_window(mw_handle_t window_handle, int16_t new_width, int16_t new_
 			new_height,
 			mw_all_windows[window_id].window_flags))
 	{
-		return false;
+		return (false);
 	}
 
 	/* fill in a temporary rect with the window's new position details */
@@ -4503,16 +4518,16 @@ bool mw_resize_window(mw_handle_t window_handle, int16_t new_width, int16_t new_
 	mw_post_message(MW_WINDOW_RESIZED_MESSAGE,
 			MW_UNUSED_MESSAGE_PARAMETER,
 			window_handle,
-			((uint32_t)new_width) << 16 | new_height,
+			((uint32_t)new_width) << 16U | (uint32_t)new_height,
 			MW_UNUSED_MESSAGE_PARAMETER,
 			MW_WINDOW_MESSAGE);
 
-	return true;
+	return (true);
 }
 
 mw_handle_t mw_find_window_with_focus(void)
 {
-	return window_with_focus_handle;
+	return (window_with_focus_handle);
 }
 
 bool mw_is_any_window_modal(void)
@@ -4522,14 +4537,14 @@ bool mw_is_any_window_modal(void)
 	/* search through all windows */
 	for (i = MW_FIRST_USER_WINDOW_ID; i < MW_MAX_WINDOW_COUNT; i++)
 	{
-		if (mw_all_windows[i].window_flags & MW_WINDOW_FLAG_IS_MODAL &&
-				mw_all_windows[i].window_flags & MW_WINDOW_FLAG_IS_USED)
+		if ((mw_all_windows[i].window_flags & MW_WINDOW_FLAG_IS_MODAL) &&
+				(mw_all_windows[i].window_flags & MW_WINDOW_FLAG_IS_USED))
 		{
-			return true;
+			return (true);
 		}
 	}
 
-	return false;
+	return (false);
 }
 
 void mw_set_window_modal(mw_handle_t window_handle, bool modal)
@@ -4563,7 +4578,7 @@ void mw_set_window_modal(mw_handle_t window_handle, bool modal)
 		/* must not be a modal window already */
 		for (i = MW_FIRST_USER_WINDOW_ID; i < MW_MAX_WINDOW_COUNT; i++)
 		{
-			if (mw_all_windows[i].window_flags & MW_WINDOW_FLAG_IS_USED &&
+			if ((mw_all_windows[i].window_flags & MW_WINDOW_FLAG_IS_USED) &&
 					(mw_all_windows[i].window_flags & MW_WINDOW_FLAG_IS_MODAL))
 			{
 				return;
@@ -4859,10 +4874,10 @@ mw_util_rect_t mw_get_window_client_rect(mw_handle_t window_handle)
 	if (window_id >= MW_MAX_WINDOW_COUNT)
 	{
 		MW_ASSERT(false, "Bad window handle");
-		return default_rect;
+		return (default_rect);
 	}
 
-	return mw_all_windows[window_id].client_rect;
+	return (mw_all_windows[window_id].client_rect);
 }
 
 void *mw_get_window_instance_data(mw_handle_t window_handle)
@@ -4877,7 +4892,7 @@ void *mw_get_window_instance_data(mw_handle_t window_handle)
 		return NULL;
 	}
 
-	return mw_all_windows[window_id].instance_data;
+	return (mw_all_windows[window_id].instance_data);
 }
 
 uint16_t mw_get_window_flags(mw_handle_t window_handle)
@@ -4889,10 +4904,10 @@ uint16_t mw_get_window_flags(mw_handle_t window_handle)
 	if (window_id >= MW_MAX_WINDOW_COUNT)
 	{
 		MW_ASSERT(false, "Bad window handle");
-		return 0U;
+		return (0U);
 	}
 
-	return mw_all_windows[window_id].window_flags;
+	return (mw_all_windows[window_id].window_flags);
 }
 
 void wm_set_window_title(mw_handle_t window_handle, char *title_text)
@@ -4929,14 +4944,14 @@ mw_handle_t mw_add_control(mw_util_rect_t *rect,
 	if (rect == NULL || instance_data == NULL || paint_func == NULL || message_func == NULL)
 	{
 		MW_ASSERT(false, "Null pointer argument");
-		return MW_INVALID_HANDLE;
+		return (MW_INVALID_HANDLE);
 	}
 
 	/* check for being called from within a client window paint function */
 	if (in_client_window_paint_function)
 	{
 		MW_ASSERT(false, "Can't add control in paint function");
-		return MW_INVALID_HANDLE;
+		return (MW_INVALID_HANDLE);
 	}
 
 	/* get parent window id from window handle and check it's in range */
@@ -4944,21 +4959,21 @@ mw_handle_t mw_add_control(mw_util_rect_t *rect,
 	if (parent_window_id >= MW_MAX_WINDOW_COUNT)
 	{
 		MW_ASSERT(false, "Bad window handle");
-		return MW_INVALID_HANDLE;
+		return (MW_INVALID_HANDLE);
 	}
 
 	/* cannot add a control to an unused window */
 	if (!(mw_all_windows[parent_window_id].window_flags & MW_WINDOW_FLAG_IS_USED))
 	{
 		MW_ASSERT(false, "Can't add control to unused window");
-		return MW_INVALID_HANDLE;
+		return (MW_INVALID_HANDLE);
 	}
 
 	/* don't allow control to start above or to left of parent window client rect */
 	if (rect->x < 0 || rect->y < 0)
 	{
 		MW_ASSERT(false, "Can't add control at this position");
-		return MW_INVALID_HANDLE;
+		return (MW_INVALID_HANDLE);
 	}
 
 	/* look for an empty slot in the array of controls */
@@ -4967,7 +4982,7 @@ mw_handle_t mw_add_control(mw_util_rect_t *rect,
 	{
 		/* no empty slot */
 		MW_ASSERT(false, "No space for new control");
-		return MW_INVALID_HANDLE;
+		return (MW_INVALID_HANDLE);
 	}
 
 	/* set this control's details */
@@ -4999,7 +5014,7 @@ mw_handle_t mw_add_control(mw_util_rect_t *rect,
    	   			MW_CONTROL_MESSAGE);
    	}
 
-	return mw_all_controls[new_control_id].control_handle;
+	return (mw_all_controls[new_control_id].control_handle);
 }
 
 bool mw_is_control_handle_valid(mw_handle_t control_handle)
@@ -5008,18 +5023,18 @@ bool mw_is_control_handle_valid(mw_handle_t control_handle)
 
 	if (control_handle == MW_INVALID_HANDLE)
 	{
-		return false;
+		return (false);
 	}
 
 	for (i = 0U; i < MW_MAX_CONTROL_COUNT; i++)
 	{
 		if (mw_all_controls[i].control_handle == control_handle)
 		{
-			return true;
+			return (true);
 		}
 	}
 
-	return false;
+	return (false);
 }
 
 void mw_set_control_visible(mw_handle_t control_handle, bool visible)
@@ -5203,10 +5218,10 @@ mw_util_rect_t mw_get_control_rect(mw_handle_t control_handle)
 	if (control_id >= MW_MAX_CONTROL_COUNT)
 	{
 		MW_ASSERT(false, "Bad control handle");
-		return default_rect;
+		return (default_rect);
 	}
 
-	return mw_all_controls[control_id].control_rect;
+	return (mw_all_controls[control_id].control_rect);
 }
 
 mw_handle_t mw_get_control_parent_window_handle(mw_handle_t control_handle)
@@ -5218,10 +5233,10 @@ mw_handle_t mw_get_control_parent_window_handle(mw_handle_t control_handle)
 	if (control_id >= MW_MAX_CONTROL_COUNT)
 	{
 		MW_ASSERT(false, "Bad control handle");
-		return MW_INVALID_HANDLE;
+		return (MW_INVALID_HANDLE);
 	}
 
-	return mw_all_controls[control_id].parent_handle;
+	return (mw_all_controls[control_id].parent_handle);
 }
 
 void *mw_get_control_instance_data(mw_handle_t control_handle)
@@ -5236,7 +5251,7 @@ void *mw_get_control_instance_data(mw_handle_t control_handle)
 		return NULL;
 	}
 
-	return mw_all_controls[control_id].instance_data;
+	return (mw_all_controls[control_id].instance_data);
 }
 
 uint16_t mw_get_control_flags(mw_handle_t control_handle)
@@ -5248,10 +5263,10 @@ uint16_t mw_get_control_flags(mw_handle_t control_handle)
 	if (control_id >= MW_MAX_CONTROL_COUNT)
 	{
 		MW_ASSERT(false, "Bad control handle");
-		return 0U;
+		return (0U);
 	}
 
-	return mw_all_controls[control_id].control_flags;
+	return (mw_all_controls[control_id].control_flags);
 }
 
 mw_handle_t mw_set_timer(uint32_t fire_time, mw_handle_t recipient_handle, mw_message_recipient_type_t recipient_type)
@@ -5261,26 +5276,26 @@ mw_handle_t mw_set_timer(uint32_t fire_time, mw_handle_t recipient_handle, mw_me
 	/* reject fire time in the past */
 	if (fire_time <= mw_tick_counter)
 	{
-		return MW_INVALID_HANDLE;
+		return (MW_INVALID_HANDLE);
 	}
 
 	/* reject any other recipient than window or control */
 	if (recipient_type != MW_WINDOW_MESSAGE && recipient_type != MW_CONTROL_MESSAGE)
 	{
 		MW_ASSERT(false, "Illegal timer recipient type");
-		return MW_INVALID_HANDLE;
+		return (MW_INVALID_HANDLE);
 	}
 	
 	/* check that recipient id is in range for recipient type */
 	if (recipient_type == MW_WINDOW_MESSAGE && get_window_id_for_handle(recipient_handle) > MW_MAX_WINDOW_COUNT)
 	{
 		MW_ASSERT(false, "Bad window handle");
-		return MW_INVALID_HANDLE;
+		return (MW_INVALID_HANDLE);
 	}
 	if (recipient_type == MW_CONTROL_MESSAGE && get_control_id_for_handle(recipient_handle) > MW_MAX_CONTROL_COUNT)
 	{
 		MW_ASSERT(false, "Illegal control id");
-		return MW_INVALID_HANDLE;
+		return (MW_INVALID_HANDLE);
 	}	
 
 	for (i = 0U; i < MW_MAX_TIMER_COUNT; i++)
@@ -5293,13 +5308,15 @@ mw_handle_t mw_set_timer(uint32_t fire_time, mw_handle_t recipient_handle, mw_me
 			mw_all_timers[i].recipient_handle = recipient_handle;
 			mw_all_timers[i].recipient_type = recipient_type;
 			mw_all_timers[i].timer_handle = get_next_handle();
-			return mw_all_timers[i].timer_handle;
+
+			return (mw_all_timers[i].timer_handle);
 		}
 	}
 
 	/* failed to find an empty timer slot */
 	MW_ASSERT(false, "No space to add timer");
-	return MW_INVALID_HANDLE;
+
+	return (MW_INVALID_HANDLE);
 }
 
 void mw_cancel_timer(mw_handle_t timer_handle)
@@ -5361,6 +5378,9 @@ void mw_post_message(uint8_t message_id,
 		recipient_id = get_control_id_for_handle(recipient_handle);
 		MW_ASSERT(recipient_id < MW_MAX_CONTROL_COUNT, "Bad control handle");
 	}	
+	else
+	{
+	}
 
 	/* fill in the message fields from supplied parameters */
 	new_message.message_id = message_id;
@@ -5567,11 +5587,11 @@ bool mw_process_message(void)
 			MW_ASSERT(false, "Illegal message recipient type");
 		}
 
-		return true;
+		return (true);
 	}
 	else
 	{
-		return false;
+		return (false);
 	}
 }
 

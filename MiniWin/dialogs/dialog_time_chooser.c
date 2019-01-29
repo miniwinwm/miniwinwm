@@ -111,6 +111,9 @@ static void update_arrow_enable_states(void)
 	{
 		mw_set_control_enabled(mw_dialog_time_chooser_data.arrow_minute_up_handle, false);
 	}
+	else
+	{
+	}
 
 	mw_set_control_enabled(mw_dialog_time_chooser_data.arrow_hour_up_handle, true);
 	mw_set_control_enabled(mw_dialog_time_chooser_data.arrow_hour_down_handle, true);
@@ -122,6 +125,9 @@ static void update_arrow_enable_states(void)
 	else if (mw_dialog_time_chooser_data.current_time_hours == 23U)
 	{
 		mw_set_control_enabled(mw_dialog_time_chooser_data.arrow_hour_up_handle, false);
+	}
+	else
+	{
 	}
 
 	mw_paint_control(mw_dialog_time_chooser_data.arrow_minute_up_handle);
@@ -288,7 +294,7 @@ mw_handle_t mw_create_window_dialog_time_chooser(int16_t x,
 	/* check the start time */
 	if (start_time_hour > 23U || start_time_minute > 59U)
 	{
-		return MW_INVALID_HANDLE;
+		return (MW_INVALID_HANDLE);
 	}
 	mw_dialog_time_chooser_data.current_time_hours = start_time_hour;
 	mw_dialog_time_chooser_data.current_time_mins = start_time_minute;
@@ -308,23 +314,23 @@ mw_handle_t mw_create_window_dialog_time_chooser(int16_t x,
 	/* check start position */
 	if (x + rect.width > MW_ROOT_WIDTH || x < 0)
 	{
-		return MW_INVALID_HANDLE;
+		return (MW_INVALID_HANDLE);
 	}
 	if (y + rect.height > MW_ROOT_HEIGHT || y < 0)
 	{
-		return MW_INVALID_HANDLE;
+		return (MW_INVALID_HANDLE);
 	}
 
 	/* check no modal windows already showing */
 	if (mw_is_any_window_modal())
 	{
-		return MW_INVALID_HANDLE;
+		return (MW_INVALID_HANDLE);
 	}
 
 	/* check parent window handle */
 	if (!mw_is_window_handle_valid(owner_window_handle))
 	{
-		return MW_INVALID_HANDLE;
+		return (MW_INVALID_HANDLE);
 	}
 
 	mw_dialog_time_chooser_data.large_size = large_size;
@@ -346,7 +352,7 @@ mw_handle_t mw_create_window_dialog_time_chooser(int16_t x,
 	if (mw_dialog_time_chooser_data.time_chooser_dialog_window_handle == MW_INVALID_HANDLE)
 	{
 		/* it couldn't so exit */
-		return MW_INVALID_HANDLE;
+		return (MW_INVALID_HANDLE);
 	}
 
 	/* set controls data */
@@ -446,7 +452,7 @@ mw_handle_t mw_create_window_dialog_time_chooser(int16_t x,
 		/* remove all controls and window */
 		mw_remove_window(mw_dialog_time_chooser_data.time_chooser_dialog_window_handle);
 
-		return MW_INVALID_HANDLE;
+		return (MW_INVALID_HANDLE);
 	}
 
 	/* set arrow enable states appropriately */
@@ -459,5 +465,5 @@ mw_handle_t mw_create_window_dialog_time_chooser(int16_t x,
 	mw_paint_window_frame(mw_dialog_time_chooser_data.time_chooser_dialog_window_handle, MW_WINDOW_FRAME_COMPONENT_ALL);
 	mw_paint_window_client(mw_dialog_time_chooser_data.time_chooser_dialog_window_handle);
 
-	return mw_dialog_time_chooser_data.time_chooser_dialog_window_handle;
+	return (mw_dialog_time_chooser_data.time_chooser_dialog_window_handle);
 }

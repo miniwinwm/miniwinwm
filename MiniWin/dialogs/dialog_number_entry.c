@@ -119,7 +119,7 @@ static int16_t get_cursor_x_coordinate(void)
 		pixel_length += (int16_t)mw_gl_get_string_width_pixels("-");
 	}
 
-	return pixel_length + mw_dialog_number_entry_data.number_rect.x + 3;
+	return (pixel_length + mw_dialog_number_entry_data.number_rect.x + 3);
 }
 
 /**
@@ -368,14 +368,14 @@ mw_handle_t mw_create_window_dialog_number_entry(int16_t x,
 	if (!title)
 	{
 		MW_ASSERT(false, "Null pointer argument");
-		return MW_INVALID_HANDLE;
+		return (MW_INVALID_HANDLE);
 	}
 
 	/* check negative/initial number sanity */
 	if (!enable_negative && initial_number < 0)
 	{
 		MW_ASSERT(false, "Nonsense arguments");
-		return MW_INVALID_HANDLE;
+		return (MW_INVALID_HANDLE);
 	}
 
 	if (large_size)
@@ -394,23 +394,23 @@ mw_handle_t mw_create_window_dialog_number_entry(int16_t x,
 	/* check start position */
 	if (x + rect.width > MW_ROOT_WIDTH)
 	{
-		return MW_INVALID_HANDLE;
+		return (MW_INVALID_HANDLE);
 	}
 	if (y + rect.height > MW_ROOT_HEIGHT)
 	{
-		return MW_INVALID_HANDLE;
+		return (MW_INVALID_HANDLE);
 	}
 
 	/* check no modal windows already showing */
 	if (mw_is_any_window_modal())
 	{
-		return MW_INVALID_HANDLE;
+		return (MW_INVALID_HANDLE);
 	}
 
 	/* check response window handle */
 	if (!mw_is_window_handle_valid(owner_window_handle))
 	{
-		return MW_INVALID_HANDLE;
+		return (MW_INVALID_HANDLE);
 	}
 
 	mw_dialog_number_entry_data.owner_window_handle = owner_window_handle;
@@ -429,7 +429,7 @@ mw_handle_t mw_create_window_dialog_number_entry(int16_t x,
 	if (mw_dialog_number_entry_data.number_entry_dialog_window_handle == MW_INVALID_HANDLE)
 	{
 		/* it couldn't so exit */
-		return MW_INVALID_HANDLE;
+		return (MW_INVALID_HANDLE);
 	}
 
 	/* set controls instance data */
@@ -489,7 +489,7 @@ mw_handle_t mw_create_window_dialog_number_entry(int16_t x,
 		/* remove all controls and window */
 		mw_remove_window(mw_dialog_number_entry_data.number_entry_dialog_window_handle);
 
-		return MW_INVALID_HANDLE;
+		return (MW_INVALID_HANDLE);
 	}
 
 	/* set initial value which comes as number but is converted to string, minus sign (if minus) stored separately */
@@ -508,5 +508,5 @@ mw_handle_t mw_create_window_dialog_number_entry(int16_t x,
 	mw_paint_window_frame(mw_dialog_number_entry_data.number_entry_dialog_window_handle, MW_WINDOW_FRAME_COMPONENT_ALL);
 	mw_paint_window_client(mw_dialog_number_entry_data.number_entry_dialog_window_handle);
 
-	return mw_dialog_number_entry_data.number_entry_dialog_window_handle;
+	return (mw_dialog_number_entry_data.number_entry_dialog_window_handle);
 }

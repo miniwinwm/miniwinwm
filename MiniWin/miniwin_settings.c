@@ -92,7 +92,7 @@ void mw_settings_save(void)
 
 bool mw_settings_is_initialised(void)
 {
-	return settings.init_flag == SETTINGS_INIT_FLAG;
+	return (settings.init_flag == SETTINGS_INIT_FLAG);
 }
 
 void mw_settings_set_to_defaults(void)
@@ -103,7 +103,7 @@ void mw_settings_set_to_defaults(void)
 
 bool mw_settings_is_calibrated(void)
 {
-	return settings.is_calibrated;
+	return (settings.is_calibrated);
 }
 
 void mw_settings_set_calibrated(bool calibrated)
@@ -113,7 +113,7 @@ void mw_settings_set_calibrated(bool calibrated)
 
 MATRIX *mw_settings_get_calibration_matrix(void)
 {
-	return &settings.calibration_matrix;
+	return (&settings.calibration_matrix);
 }
 
 void mw_settings_set_calibration_matrix(const MATRIX *new_calibration_matrix)

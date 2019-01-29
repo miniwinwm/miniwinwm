@@ -102,7 +102,7 @@ static void mw_dialog_text_entry_message_function(const mw_message_t *message);
  */
 static int16_t get_cursor_x_coordinate(void)
 {
-	return mw_dialog_text_entry_data.text_rect.x + 2 + mw_dialog_text_entry_data.cursor_position * mw_dialog_text_entry_data.character_pitch;
+	return (mw_dialog_text_entry_data.text_rect.x + 2 + mw_dialog_text_entry_data.cursor_position * mw_dialog_text_entry_data.character_pitch);
 }
 
 /**
@@ -359,7 +359,7 @@ mw_handle_t mw_create_window_dialog_text_entry(int16_t x,
 	if (!title || !initial_text)
 	{
 		MW_ASSERT(false, "Null pointer argument");
-		return MW_INVALID_HANDLE;
+		return (MW_INVALID_HANDLE);
 	}
 
 	if (large_size)
@@ -378,23 +378,23 @@ mw_handle_t mw_create_window_dialog_text_entry(int16_t x,
 	/* check start position */
 	if (x + rect.width > MW_ROOT_WIDTH || x < 0)
 	{
-		return MW_INVALID_HANDLE;
+		return (MW_INVALID_HANDLE);
 	}
 	if (y + rect.height > MW_ROOT_HEIGHT || y < 0)
 	{
-		return MW_INVALID_HANDLE;
+		return (MW_INVALID_HANDLE);
 	}
 
 	/* check no modal windows already showing */
 	if (mw_is_any_window_modal())
 	{
-		return MW_INVALID_HANDLE;
+		return (MW_INVALID_HANDLE);
 	}
 
 	/* check response window handle */
 	if (!mw_is_window_handle_valid(owner_window_handle))
 	{
-		return MW_INVALID_HANDLE;
+		return (MW_INVALID_HANDLE);
 	}
 
 	mw_dialog_text_entry_data.owner_window_handle = owner_window_handle;
@@ -413,7 +413,7 @@ mw_handle_t mw_create_window_dialog_text_entry(int16_t x,
 	if (mw_dialog_text_entry_data.text_entry_dialog_window_handle == MW_INVALID_HANDLE)
 	{
 		/* it couldn't so exit */
-		return MW_INVALID_HANDLE;
+		return (MW_INVALID_HANDLE);
 	}
 
 	/* set controls instance data */
@@ -472,7 +472,7 @@ mw_handle_t mw_create_window_dialog_text_entry(int16_t x,
 		/* remove all controls and window */
 		mw_remove_window(mw_dialog_text_entry_data.text_entry_dialog_window_handle);
 
-		return MW_INVALID_HANDLE;
+		return (MW_INVALID_HANDLE);
 	}
 
 	/* set initial text */
@@ -488,5 +488,5 @@ mw_handle_t mw_create_window_dialog_text_entry(int16_t x,
 	mw_paint_window_frame(mw_dialog_text_entry_data.text_entry_dialog_window_handle, MW_WINDOW_FRAME_COMPONENT_ALL);
 	mw_paint_window_client(mw_dialog_text_entry_data.text_entry_dialog_window_handle);
 
-	return mw_dialog_text_entry_data.text_entry_dialog_window_handle;
+	return (mw_dialog_text_entry_data.text_entry_dialog_window_handle);
 }

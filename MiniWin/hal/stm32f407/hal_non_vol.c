@@ -74,7 +74,7 @@ void mw_hal_non_vol_init(void)
 
 void mw_hal_non_vol_load(uint8_t *data, uint16_t length)
 {
-	memcpy(data, (uint8_t *)(CONFIG_ADDRESS), length);
+	(void)memcpy(data, (uint8_t *)(CONFIG_ADDRESS), length);
 }
 
 void mw_hal_non_vol_save(uint8_t *data, uint16_t length)

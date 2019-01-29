@@ -99,7 +99,7 @@ bool mw_message_queue_insert(const mw_message_t *incoming_message)
 	}
 #endif
 
-	return true;
+	return (true);
 }
 
 bool mw_message_queue_remove(mw_message_t *outgoing_message)
@@ -109,7 +109,7 @@ bool mw_message_queue_remove(mw_message_t *outgoing_message)
 	/* check if there is anything in the queue */
 	if (items_in_queue == 0U)
 	{
-		return false;
+		return (false);
 	}
 
 	/* there is an item in the queue so copy it out */
@@ -122,7 +122,7 @@ bool mw_message_queue_remove(mw_message_t *outgoing_message)
 
 	items_in_queue--;
 
-	return true;
+	return (true);
 }
 
 mw_message_t *mw_message_queue_get_ref_to_item_at_position(uint8_t position)

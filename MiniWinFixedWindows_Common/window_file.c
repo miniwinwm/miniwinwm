@@ -63,7 +63,6 @@ typedef struct
 *** EXTERNAL VARIABLES ***
 **************************/
 
-extern mw_handle_t button_2_handle;
 extern mw_handle_t list_box_file_handle;
 extern mw_handle_t label_file_handle;
 extern mw_handle_t arrow_file_up_handle;

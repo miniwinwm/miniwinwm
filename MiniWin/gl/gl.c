@@ -280,9 +280,9 @@ static void filled_poly(const mw_gl_draw_info_t *draw_info, uint8_t poly_corners
 	int16_t swap;
 	int16_t line_node_count;
 	int16_t y;
-	int16_t node_x[MW_GL_MAX_POLY_CORNERS - 1];
-	int16_t y_min = 32767;
-	uint16_t y_max = -32768;
+	int16_t node_x[MW_GL_MAX_POLY_CORNERS - 1U];
+	int16_t y_min = INT16_MAX;
+	uint16_t y_max = INT16_MIN;
 	uint16_t x;
 
 	MW_ASSERT(draw_info, "Null pointer argument");
@@ -291,7 +291,7 @@ static void filled_poly(const mw_gl_draw_info_t *draw_info, uint8_t poly_corners
 	MW_ASSERT(poly_corners <= MW_GL_MAX_POLY_CORNERS, "Too many points in polygon shape");
 
 	/* find y range of shape */
-	for (i = 0; i < poly_corners; i++)
+	for (i = 0U; i < poly_corners; i++)
 	{
 		if (poly_y[i]<y_min)
 		{
@@ -313,8 +313,8 @@ static void filled_poly(const mw_gl_draw_info_t *draw_info, uint8_t poly_corners
 
 		/* build a list of nodes on this line */
 		line_node_count = 0;
-		j = poly_corners - 1;
-		for (i = 0; i  <poly_corners; i++)
+		j = poly_corners - 1U;
+		for (i = 0U; i  <poly_corners; i++)
 		{
 			if ((poly_y[i] < y && poly_y[j] >= y) || (poly_y[j] < y && poly_y[i] >= y))
 			{
@@ -325,7 +325,7 @@ static void filled_poly(const mw_gl_draw_info_t *draw_info, uint8_t poly_corners
 		}
 
 		/* sort the nodes, via a simple bubble sort */
-		i = 0;
+		i = 0U;
 		while (i < line_node_count - 1)
 		{
 			if (node_x[i] > node_x[i + 1])
@@ -446,7 +446,7 @@ static void arc_point(const mw_gl_draw_info_t *draw_info, int16_t centre_x, int1
 	MW_ASSERT(draw_info, "Null pointer argument");
 
 	/* calculate the angle the current point makes with the circle centre */
-	int16_t angle = (int16_t)(DEGREES_IN_RAD  *(atan2(centre_y - y, centre_x - x))) -90;
+	int16_t angle = (int16_t)(DEGREES_IN_RAD  *(atan2(centre_y - y, centre_x - x))) - 90;
 	if (angle < 0)
 	{
 		angle += 360;
@@ -558,12 +558,12 @@ static void circle_bres(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y
 	{
 		if (decision < 0)
 		{
-			decision += (x_point << 1) + 3;
+			decision += (x_point << 1U) + 3;
 			x_point++;
 		}
 		else
 		{
-			decision += ((x_point - y_point) << 1) + 5;
+			decision += ((x_point - y_point) << 1U) + 5;
 			x_point++;
 			y_point--;
 		}
@@ -602,8 +602,8 @@ static void filled_segment(const mw_gl_draw_info_t *draw_info, int16_t x, int16_
 
 	MW_ASSERT(draw_info, "Null pointer argument");
 
-	triangle_corners_x[0] = x;
-	triangle_corners_y[0] = y;
+	triangle_corners_x[0U] = x;
+	triangle_corners_y[0U] = y;
 
 	if (start_angle > end_angle)
 	{
@@ -613,10 +613,10 @@ static void filled_segment(const mw_gl_draw_info_t *draw_info, int16_t x, int16_
 	for (i = start_angle + angle_step_size; i <= end_angle; i += angle_step_size)
 	{
 		angle = (float)i / DEGREES_IN_RAD;
-		triangle_corners_x[1] = x + (int16_t)(sin(angle) * (float)radius);
-		triangle_corners_y[1] = y - (int16_t)(cos(angle) * (float)radius);
-		triangle_corners_x[2] = old_x;
-		triangle_corners_y[2] = old_y;
+		triangle_corners_x[1U] = x + (int16_t)(sin(angle) * (float)radius);
+		triangle_corners_y[1U] = y - (int16_t)(cos(angle) * (float)radius);
+		triangle_corners_x[2U] = old_x;
+		triangle_corners_y[2U] = old_y;
 
 		filled_poly(draw_info, 3, triangle_corners_x, triangle_corners_y, 0, 0);
 
@@ -673,21 +673,21 @@ static void draw_character_0_degrees(const mw_gl_draw_info_t *draw_info, int16_t
 				gc.bg_colour);
 	}
 
-	character_byte_width = mw_gl_get_font_width() / 8 + (mw_gl_get_font_width() % 8 > 0);
+	character_byte_width = mw_gl_get_font_width() / 8U + (mw_gl_get_font_width() % 8U > 0U);
 	byte_pos = (c - ' ') * mw_gl_get_font_height() * character_byte_width;
 
 	for (char_y = 0; char_y < mw_gl_get_font_height(); char_y++)
 	{
-		word = 0;
-		for (byte = 0; byte < character_byte_width; byte++)
+		word = 0U;
+		for (byte = 0U; byte < character_byte_width; byte++)
 		{
-			word <<= 8;
+			word <<= 8U;
 			word |= (uint32_t)get_font_data()[byte_pos];
 			byte_pos++;
 		}
 
-		word <<= ((4 - character_byte_width) * 8);
-		mask = 0x80000000;
+		word <<= ((4U - character_byte_width) * 8U);
+		mask = 0x80000000U;
 
 		for (char_x = 0; char_x < mw_gl_get_font_width(); char_x++)
 		{
@@ -696,7 +696,7 @@ static void draw_character_0_degrees(const mw_gl_draw_info_t *draw_info, int16_t
 				mw_gl_fg_pixel(draw_info, x + char_x, y + char_y);
 			}
 
-			mask >>= 1;
+			mask >>= 1U;
 		}
 	}
 }
@@ -743,16 +743,16 @@ static void draw_character_90_degrees(const mw_gl_draw_info_t *draw_info, int16_
 
 	for (char_y = 0; char_y < mw_gl_get_font_height(); char_y++)
 	{
-		word = 0;
-		for (byte = 0; byte < character_byte_width; byte++)
+		word = 0U;
+		for (byte = 0U; byte < character_byte_width; byte++)
 		{
-			word <<= 8;
+			word <<= 8U;
 			word |= (uint32_t)get_font_data()[byte_pos];
 			byte_pos++;
 		}
 
-		word <<= ((4 - character_byte_width) * 8);
-		mask = 0x80000000;
+		word <<= ((4U - character_byte_width) * 8U);
+		mask = 0x80000000U;
 
 		for (char_x = 0; char_x < mw_gl_get_font_width(); char_x++)
 		{
@@ -761,7 +761,7 @@ static void draw_character_90_degrees(const mw_gl_draw_info_t *draw_info, int16_
 	   			mw_gl_fg_pixel(draw_info, x - char_y, y + char_x);
 			}
 
-			mask >>= 1;
+			mask >>= 1U;
 		}
 	}
 }
@@ -798,26 +798,26 @@ static void draw_character_180_degrees(const mw_gl_draw_info_t *draw_info, int16
 		filled_rectangle(draw_info,
 				x - mw_gl_get_font_width(),
 				y - mw_gl_get_font_height(),
-				mw_gl_get_font_width() + 1,
-				mw_gl_get_font_height() + 1,
+				(uint16_t)mw_gl_get_font_width() + 1,
+				(uint16_t)mw_gl_get_font_height() + 1,
 				gc.bg_colour);
 	}
 
-	character_byte_width = mw_gl_get_font_width() / 8 + (mw_gl_get_font_width() % 8 > 0);
+	character_byte_width = mw_gl_get_font_width() / 8U + (mw_gl_get_font_width() % 8U > 0U);
 	byte_pos = (c - ' ') * mw_gl_get_font_height() * character_byte_width;
 
 	for (char_y = 0; char_y < mw_gl_get_font_height(); char_y++)
 	{
-		word = 0;
-		for (byte = 0; byte < character_byte_width; byte++)
+		word = 0U;
+		for (byte = 0U; byte < character_byte_width; byte++)
 		{
-			word <<= 8;
+			word <<= 8U;
 			word |= (uint32_t)get_font_data()[byte_pos];
 			byte_pos++;
 		}
 
-		word <<= ((4 - character_byte_width) * 8);
-		mask = 0x80000000;
+		word <<= ((4U - character_byte_width) * 8U);
+		mask = 0x80000000U;
 
 		for (char_x = 0; char_x < mw_gl_get_font_width(); char_x++)
 		{
@@ -826,7 +826,7 @@ static void draw_character_180_degrees(const mw_gl_draw_info_t *draw_info, int16
 				mw_gl_fg_pixel(draw_info, x - char_x, y - char_y);
 			}
 
-			mask >>= 1;
+			mask >>= 1U;
 		}
 	}
 }
@@ -873,16 +873,16 @@ static void draw_character_270_degrees(const mw_gl_draw_info_t *draw_info, int16
 
 	for (char_y = 0; char_y < mw_gl_get_font_height(); char_y++)
 	{
-		word = 0;
-		for (byte = 0; byte < character_byte_width; byte++)
+		word = 0U;
+		for (byte = 0U; byte < character_byte_width; byte++)
 		{
-			word <<= 8;
+			word <<= 8U;
 			word |= (uint32_t)get_font_data()[byte_pos];
 			byte_pos++;
 		}
 
-		word <<= ((4 - character_byte_width) * 8);
-		mask = 0x80000000;
+		word <<= ((4U - character_byte_width) * 8U);
+		mask = 0x80000000U;
 
 		for (char_x = 0; char_x < mw_gl_get_font_width(); char_x++)
 		{
@@ -891,7 +891,7 @@ static void draw_character_270_degrees(const mw_gl_draw_info_t *draw_info, int16
 	   			mw_gl_fg_pixel(draw_info, x + char_y, y - char_x);
 			}
 
-			mask >>= 1;
+			mask >>= 1U;
 		}
 	}
 }
@@ -1018,7 +1018,7 @@ static void title_font_string(const mw_gl_draw_info_t *draw_info, int16_t x, int
 		break;
 	}
 
-	for (i = 0; i < length; i++)
+	for (i = 0U; i < length; i++)
 	{
 		for (bitmap_y = 0; bitmap_y < MW_GL_TITLE_FONT_HEIGHT; bitmap_y++)
 		{
@@ -1032,13 +1032,13 @@ static void title_font_string(const mw_gl_draw_info_t *draw_info, int16_t x, int
 			start_pos_in_bitmap = mw_title_font_positions[(uint8_t)c];
 			end_pos_in_bitmap = mw_title_font_positions[(uint8_t)c + 1];
 
-			mask = 0x80;
-			mask >>= (mw_title_font_positions[(uint8_t)c] % 8);
+			mask = 0x80U;
+			mask >>= (mw_title_font_positions[(uint8_t)c] % 8U);
 
-			position_across_character = 0;
+			position_across_character = 0U;
 			for (bitmap_x = start_pos_in_bitmap; bitmap_x < end_pos_in_bitmap; bitmap_x++)
 			{
-				byte_from_bitmap = mw_title_font_bitmap[(bitmap_x >> 3) + bitmap_y * 87];
+				byte_from_bitmap = mw_title_font_bitmap[(bitmap_x >> 3U) + bitmap_y * 87];
 
 				if (!(byte_from_bitmap & mask))
 				{
@@ -1068,13 +1068,16 @@ static void title_font_string(const mw_gl_draw_info_t *draw_info, int16_t x, int
 								x + bitmap_y,
 								y - next_char_start_position_along_string - position_across_character);
 						break;
+
+					default:
+						break;
 					}
 				}
 
-				mask >>= 1;
-				if (mask == 0)
+				mask >>= 1U;
+				if (mask == 0U)
 				{
-					mask = 0x80;
+					mask = 0x80U;
 				}
 				position_across_character++;
 			}
@@ -1093,33 +1096,33 @@ static const uint8_t *get_font_data(void)
 	switch (gc.font)
 	{
 	case MW_GL_FONT_9:
-		return Font9.table;
+		return (Font9.table);
 
 #ifdef MW_FONT_12_INCLUDED
 	case MW_GL_FONT_12:
-		return Font12.table;
+		return (Font12.table);
 #endif
 
 #ifdef MW_FONT_16_INCLUDED
 	case MW_GL_FONT_16:
-		return Font16.table;
+		return (Font16.table);
 #endif
 
 #ifdef MW_FONT_20_INCLUDED
 	case MW_GL_FONT_20:
-		return Font20.table;
+		return (Font20.table);
 #endif
 
 #ifdef MW_FONT_24_INCLUDED
 	case MW_GL_FONT_24:
-		return Font24.table;
+		return (Font24.table);
 #endif
 
 	default:
-		return NULL;
+		return (NULL);
 	}
 
-	return NULL;
+	return (NULL);
 }
 
 /**
@@ -1146,7 +1149,7 @@ static void tt_pixel_callback_anti_aliasing(int16_t x, int16_t y, uint8_t count,
     	return;
     }
 
-    if ((int16_t)(y - tt_font_state->vert_scroll_pixels) < 0)
+    if ((int16_t)(y - tt_font_state->vert_scroll_pixels) < 0U)
     {
     	return;
     }
@@ -1162,7 +1165,7 @@ static void tt_pixel_callback_anti_aliasing(int16_t x, int16_t y, uint8_t count,
     while (count--)
     {
     	/* set pixel colour with this value */
-    	mw_gl_set_fg_colour((alpha_red << 16) + (alpha_green << 8) + alpha_blue);
+    	mw_gl_set_fg_colour((alpha_red << 16U) + (alpha_green << 8U) + alpha_blue);
 
     	/* draw pixel */
         mw_gl_fg_pixel(tt_font_state->draw_info, x, y);
@@ -1189,11 +1192,11 @@ static uint8_t tt_character_callback(int16_t x, int16_t y, mf_char character, vo
 	/* render the character with anti-aliasing */
 	if (tt_font_state->font->flags & MF_FONT_FLAG_BW)
 	{
-		return mf_render_character(tt_font_state->font, x, y, character, tt_pixel_callback_no_anti_aliasing, state);
+		return (mf_render_character(tt_font_state->font, x, y, character, tt_pixel_callback_no_anti_aliasing, state));
 	}
 	else
 	{
-		return mf_render_character(tt_font_state->font, x, y, character, tt_pixel_callback_anti_aliasing, state);
+		return (mf_render_character(tt_font_state->font, x, y, character, tt_pixel_callback_anti_aliasing, state));
 	}
 }
 
@@ -1311,10 +1314,10 @@ static bool tt_line_callback(mf_str line, uint16_t count, void *state)
     /* check if y value is still in the text box */
     if (tt_font_state->bounding_box.y - tt_font_state->vert_scroll_pixels > tt_font_state->bottom)
     {
-    	return false;
+    	return (false);
     }
 
-	return true;
+	return (true);
 }
 
 /**
@@ -1332,7 +1335,7 @@ static bool tt_dummy_line_callback(mf_str line, uint16_t count, void *state)
     /* increment line count */
     tt_font_state->rendered_line_count++;
 
-	return true;
+	return (true);
 }
 
 /***********************
@@ -1355,7 +1358,7 @@ void mw_gl_init(void)
 
 mw_gl_gc_t *mw_gl_get_gc(void)
 {
-	return &gc;
+	return (&gc);
 }
 
 void mw_gl_set_fg_colour(mw_hal_lcd_colour_t colour)
@@ -1447,33 +1450,33 @@ uint8_t mw_gl_get_font_width(void)
 	switch (gc.font)
 	{
 	case MW_GL_FONT_9:
-		return Font9.Width;
+		return (Font9.Width);
 
 #ifdef MW_FONT_12_INCLUDED
 	case MW_GL_FONT_12:
-		return Font12.Width;
+		return (Font12.Width);
 #endif
 
 #ifdef MW_FONT_16_INCLUDED
 	case MW_GL_FONT_16:
-		return Font16.Width;
+		return (Font16.Width);
 #endif
 
 #ifdef MW_FONT_20_INCLUDED
 	case MW_GL_FONT_20:
-		return Font20.Width;
+		return (Font20.Width);
 #endif
 
 #ifdef MW_FONT_24_INCLUDED
 	case MW_GL_FONT_24:
-		return Font24.Width;
+		return (Font24.Width);
 #endif
 
 	default:
-		return 0;
+		return (0);
 	}
 
-	return 0;
+	return (0);
 }
 
 uint8_t mw_gl_get_font_height(void)
@@ -1481,36 +1484,36 @@ uint8_t mw_gl_get_font_height(void)
 	switch (gc.font)
 	{
 	case MW_GL_FONT_9:
-		return Font9.Height;
+		return (Font9.Height);
 
 #ifdef MW_FONT_12_INCLUDED
 	case MW_GL_FONT_12:
-		return Font12.Height;
+		return (Font12.Height);
 #endif
 
 #ifdef MW_FONT_16_INCLUDED
 	case MW_GL_FONT_16:
-		return Font16.Height;
+		return (Font16.Height);
 #endif
 
 #ifdef MW_FONT_20_INCLUDED
 	case MW_GL_FONT_20:
-		return Font20.Height;
+		return (Font20.Height);
 #endif
 
 #ifdef MW_FONT_24_INCLUDED
 	case MW_GL_FONT_24:
-		return Font24.Height;
+		return (Font24.Height);
 #endif
 
 	case MW_GL_TITLE_FONT:
-		return MW_GL_TITLE_FONT_HEIGHT;
+		return (MW_GL_TITLE_FONT_HEIGHT);
 
 	default:
-		return 0;
+		return (0);
 	}
 
-	return 0;
+	return (0);
 }
 
 void mw_gl_solid_fill_pixel(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y)
@@ -1531,8 +1534,8 @@ void mw_gl_solid_fill_pixel(const mw_gl_draw_info_t *draw_info, int16_t x, int16
 	
 	if (gc.pattern_set)
 	{
-		mask = 0x8000 >> (x & 0x000F);
-		pattern_y = y & 0x000F;
+		mask = 0x8000U >> (x & 0x000FU);
+		pattern_y = y & 0x000FU;
 
 		if (gc.pattern[pattern_y] & mask)
 		{
@@ -1578,7 +1581,7 @@ void mw_gl_hline(const mw_gl_draw_info_t *draw_info, int16_t x_start, int16_t x_
 {
 	int16_t temp;
 	int16_t x;
-	uint16_t mask = 0x8000;
+	uint16_t mask = 0x8000U;
 
 	if (!draw_info)
 	{
@@ -1619,10 +1622,10 @@ void mw_gl_hline(const mw_gl_draw_info_t *draw_info, int16_t x_start, int16_t x_
 					pixel(draw_info, x, y, gc.bg_colour);
 				}
 			}
-			mask >>= 1;
+			mask >>= 1U;
 			if (!mask)
 			{
-				mask = 0x8000;
+				mask = 0x8000U;
 			}
 		}
 	}
@@ -1632,7 +1635,7 @@ void mw_gl_vline(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y_start,
 {
 	int16_t temp;
 	int16_t y;
-	uint16_t mask = 0x8000;
+	uint16_t mask = 0x8000U;
 
 	if (!draw_info)
 	{
@@ -1673,10 +1676,10 @@ void mw_gl_vline(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y_start,
 					pixel(draw_info, x, y, gc.bg_colour);
 				}
 			}
-			mask >>= 1;
+			mask >>= 1U;
 			if (!mask)
 			{
-				mask = 0x8000;
+				mask = 0x8000U;
 			}
 		}
 	}
@@ -1693,7 +1696,7 @@ void mw_gl_line(const mw_gl_draw_info_t *draw_info, int16_t p1x, int16_t p1y, in
 	int16_t dx2;
 	int16_t dy2_minus_dx2;
 	int16_t dy2_plus_dx2;
-	uint16_t mask = 0x8000;
+	uint16_t mask = 0x8000U;
 
 	if (!draw_info)
 	{
@@ -1747,10 +1750,10 @@ void mw_gl_line(const mw_gl_draw_info_t *draw_info, int16_t p1x, int16_t p1y, in
 					{
 						mw_gl_bg_pixel(draw_info, x, y);
 					}
-					mask >>= 1;
+					mask >>= 1U;
 					if (!mask)
 					{
-						mask = 0x8000;
+						mask = 0x8000U;
 					}
 				}
 				if (F <= 0)
@@ -1786,10 +1789,10 @@ void mw_gl_line(const mw_gl_draw_info_t *draw_info, int16_t p1x, int16_t p1y, in
 					{
 						mw_gl_bg_pixel(draw_info, x, y);
 					}
-					mask >>= 1;
+					mask >>= 1U;
 					if (!mask)
 					{
-						mask = 0x8000;
+						mask = 0x8000U;
 					}
 				}
 				if (F <= 0)
@@ -1828,10 +1831,10 @@ void mw_gl_line(const mw_gl_draw_info_t *draw_info, int16_t p1x, int16_t p1y, in
 					{
 						mw_gl_bg_pixel(draw_info, x, y);
 					}
-					mask >>= 1;
+					mask >>= 1U;
 					if (!mask)
 					{
-						mask = 0x8000;
+						mask = 0x8000U;
 					}
 				}
 				if (F <= 0)
@@ -1867,10 +1870,10 @@ void mw_gl_line(const mw_gl_draw_info_t *draw_info, int16_t p1x, int16_t p1y, in
 					{
 						mw_gl_bg_pixel(draw_info, x, y);
 					}
-					mask >>= 1;
+					mask >>= 1U;
 					if (!mask)
 					{
-						mask = 0x8000;
+						mask = 0x8000U;
 					}
 				}
 				if (F <= 0)
@@ -1982,8 +1985,8 @@ void mw_gl_character(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y, c
 	/* check for proportional title font as handled differently */
 	if (gc.font == MW_GL_TITLE_FONT)
 	{
-		character_buffer[0] = c;
-		character_buffer[1] = '\0';
+		character_buffer[0U] = c;
+		character_buffer[1U] = '\0';
 		title_font_string(draw_info, x, y, character_buffer);
 		return;
 	}
@@ -2031,7 +2034,7 @@ void mw_gl_string(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y, cons
 	}
 
 	length = strlen((char *)s);
-	for (c = 0; c < length; c++)
+	for (c = 0U; c < length; c++)
 	{
 		switch (gc.text_rotation)
 		{
@@ -2061,12 +2064,12 @@ void mw_gl_string(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y, cons
 uint16_t mw_gl_get_string_width_pixels(const char *s)
 {
 	uint8_t i;
-	uint16_t width = 0;
+	uint16_t width = 0U;
 
 	if (!s)
 	{
 		MW_ASSERT(false, "Null pointer argument");
-		return 0;
+		return (0U);
 	}
 
 	if (gc.font == MW_GL_TITLE_FONT)
@@ -2081,19 +2084,19 @@ uint16_t mw_gl_get_string_width_pixels(const char *s)
 		width = strlen(s) * (mw_gl_get_font_width() + 1);
 	}
 
-	return width;
+	return (width);
 }
 
 uint16_t mw_gl_largest_string_width(const char **s, uint16_t count)
 {
 	uint16_t i;
-	uint16_t largest_width = 0;
+	uint16_t largest_width = 0U;
 	uint16_t width;
 
 	if (!s || !*s)
 	{
 		MW_ASSERT(false, "Null pointer argument");
-		return 0;
+		return (0U);
 	}
 
 	for (i = 0; i < count; i++)
@@ -2105,7 +2108,7 @@ uint16_t mw_gl_largest_string_width(const char **s, uint16_t count)
 		}
 	}
 
-	return largest_width;
+	return (largest_width);
 }
 
 void mw_gl_circle(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y, int16_t radius)
@@ -2183,7 +2186,7 @@ void mw_gl_rotate_shape(uint8_t poly_corners, int16_t *poly_x, int16_t *poly_y, 
 	}
 
 	angle_rads = (float)angle_degrees / DEGREES_IN_RAD;
-	for (i = 0; i < poly_corners; i++)
+	for (i = 0U; i < poly_corners; i++)
 	{
 		x = (int16_t)roundf(((float)poly_x[i] * cos(angle_rads) - (float)poly_y[i] * sin(angle_rads)));
 		poly_y[i] = (int16_t)roundf(((float)poly_x[i] * sin(angle_rads) + (float)poly_y[i] * cos(angle_rads)));
@@ -2201,7 +2204,7 @@ void mw_gl_scale_shape(uint8_t poly_corners, int16_t *poly_x, int16_t *poly_y, i
 		return;
 	}
 
-	for (i = 0; i < poly_corners; i++)
+	for (i = 0U; i < poly_corners; i++)
 	{
 		poly_x[i] = poly_x[i] * scale_x / 10;
 		poly_y[i] = poly_y[i] * scale_y / 10;;
@@ -2216,7 +2219,7 @@ void mw_gl_arc(const mw_gl_draw_info_t *draw_info, int16_t centre_x, int16_t cen
 	float end_angle_rads;
 	int16_t x;
 	int16_t y;
-	uint16_t mask = 0x8000;
+	uint16_t mask = 0x8000U;
 
 	if (!draw_info)
 	{
@@ -2229,7 +2232,7 @@ void mw_gl_arc(const mw_gl_draw_info_t *draw_info, int16_t centre_x, int16_t cen
 		return;
 	}
 
-	angle_step = 1.0 / (float)radius;
+	angle_step = 1.0f / (float)radius;
 
 	if (end_angle < start_angle)
 	{
@@ -2258,10 +2261,10 @@ void mw_gl_arc(const mw_gl_draw_info_t *draw_info, int16_t centre_x, int16_t cen
 		{
 			mw_gl_bg_pixel(draw_info, x, y);
 		}
-		mask >>= 1;
-		if (mask == 0x0000)
+		mask >>= 1U;
+		if (mask == 0x0000U)
 		{
-			mask = 0x8000;
+			mask = 0x8000U;
 		}
 	}
 }
@@ -2388,8 +2391,8 @@ void mw_gl_monochrome_bitmap(const mw_gl_draw_info_t *draw_info,
 		uint8_t mask;
 		uint8_t array_width;
 
-		array_width = image_data_width_pixels >> 3;
-		if (image_data_width_pixels % 8 > 0)
+		array_width = image_data_width_pixels >> 3U;
+		if (image_data_width_pixels % 8U > 0U)
 		{
 			array_width++;
 		}
@@ -2399,10 +2402,10 @@ void mw_gl_monochrome_bitmap(const mw_gl_draw_info_t *draw_info,
 			for (a = 0; a < array_width; a++)
 			{
 				image_byte = image_data[y * array_width + a];
-				mask = 0x80;
+				mask = 0x80U;
 				for (x = 0; x < 8; x++)
 				{
-					if ((a << 3) + x == image_data_width_pixels)
+					if ((a << 3U) + x == image_data_width_pixels)
 					{
 						break;
 					}
@@ -2411,7 +2414,7 @@ void mw_gl_monochrome_bitmap(const mw_gl_draw_info_t *draw_info,
 					{
 						mw_gl_fg_pixel(draw_info, (a << 3) + x + start_x, y + start_y);
 					}
-					mask >>= 1;
+					mask >>= 1U;
 				}
 			}
 		}
@@ -2497,12 +2500,12 @@ void mw_gl_tt_render_text(const mw_gl_draw_info_t *draw_info,
 	/* set up alpha blending values */
 	if (!(rle_font->font.flags & MF_FONT_FLAG_BW))
 	{
-		tt_font_state.fg_red = (gc.fg_colour & 0xff0000) >> 16;
-		tt_font_state.fg_green = (gc.fg_colour & 0xff00) >> 8;
-		tt_font_state.fg_blue = gc.fg_colour & 0xff;
-		tt_font_state.bg_red = (gc.bg_colour & 0xff0000) >> 16;
-		tt_font_state.bg_green = (gc.bg_colour & 0xff00) >> 8;
-		tt_font_state.bg_blue = gc.bg_colour & 0xff;
+		tt_font_state.fg_red = (gc.fg_colour & 0xff0000U) >> 16U;
+		tt_font_state.fg_green = (gc.fg_colour & 0xff00U) >> 8U;
+		tt_font_state.fg_blue = gc.fg_colour & 0xffU;
+		tt_font_state.bg_red = (gc.bg_colour & 0xff0000U) >> 16U;
+		tt_font_state.bg_green = (gc.bg_colour & 0xff00U) >> 8U;
+		tt_font_state.bg_blue = gc.bg_colour & 0xffU;
 	}
 
 	/* set up gc for drawing background in line draw callback */
@@ -2530,7 +2533,7 @@ uint16_t mw_gl_tt_get_render_text_lines(uint16_t width,
 	if (!rle_font || !tt_text)
 	{
 		MW_ASSERT(false, "Null pointer argument");
-		return 0;
+		return (0);
 	}
 
     if (justification != MW_GL_TT_FULLY_JUSTIFIED &&
@@ -2539,14 +2542,14 @@ uint16_t mw_gl_tt_get_render_text_lines(uint16_t width,
 			justification != MW_GL_TT_CENTRE_JUSTIFIED)
     {
     	MW_ASSERT(false, "Invalid justification");
-    	return 0;
+    	return (0);
     }
 
 	/* set up tt font rendering state from parameters */
 	tt_font_state.font = &rle_font->font;
 	tt_font_state.bounding_box.width = width;
 	tt_font_state.justification = justification;
-	tt_font_state.rendered_line_count = 0;
+	tt_font_state.rendered_line_count = 0U;
 
 	/* dummy render tt text */
 	mf_wordwrap(tt_font_state.font,
@@ -2555,5 +2558,5 @@ uint16_t mw_gl_tt_get_render_text_lines(uint16_t width,
 			tt_dummy_line_callback,
 			&tt_font_state);
 
-	return tt_font_state.rendered_line_count * tt_font_state.font->line_height;
+	return (tt_font_state.rendered_line_count * tt_font_state.font->line_height);
 }

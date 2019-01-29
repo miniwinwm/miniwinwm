@@ -227,8 +227,8 @@ static void arrow_message_function(const mw_message_t *message)
 		}
 		break;
 
-		default:
-			break;
+	default:
+		break;
 	}
 }
 
@@ -253,10 +253,10 @@ mw_handle_t mw_ui_arrow_add_new(int16_t x,
 		mw_util_set_rect(&r, x, y, MW_UI_ARROW_SIZE + 1, MW_UI_ARROW_SIZE + 1);
 	}
 
-	return mw_add_control(&r,
+	return (mw_add_control(&r,
 			parent_handle,
 			arrow_paint_function,
 			arrow_message_function,
 			flags,
-			arrow_instance_data);
+			arrow_instance_data));
 }

@@ -31,6 +31,7 @@ SOFTWARE.
 ***************/
 
 #include <stdint.h>
+#include <stdbool.h>
 #include <unistd.h>
 #include <pthread.h>
 #include "hal/hal_timer.h"
@@ -71,9 +72,9 @@ static void* tf(void *arg);
 
 static void* tf(void *arg)
 {
-	while (1)
+	while (true)
 	{
-		usleep(50000);
+		(void)usleep(50000U);
 		mw_hal_timer_fired();
 	}
 
@@ -92,7 +93,7 @@ void mw_hal_timer_fired(void)
 
 void mw_hal_timer_init(void)
 {
-	pthread_create(&tid, NULL, &tf, NULL);
+	(void)pthread_create(&tid, NULL, &tf, NULL);
 }
 
 #endif

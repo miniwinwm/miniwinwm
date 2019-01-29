@@ -75,9 +75,9 @@ void mw_hal_delay_ms(uint16_t ms)
 {
 	uint16_t i;
 
-	for (i = 0; i < ms; i++)
+	for (i = 0U; i < ms; i++)
 	{
-		mw_hal_delay_us(1000);
+		mw_hal_delay_us(1000U);
 	}
 }
 
@@ -86,9 +86,9 @@ void mw_hal_delay_us(uint32_t us)
 	volatile uint32_t i;
 	volatile uint32_t j;
 
-	for (i = 0; i < us; i++)
+	for (i = 0U; i < us; i++)
 	{
-		for (j = 0; j < 23; j++)
+		for (j = 0U; j < 23U; j++)
 		{
 		}
 	}

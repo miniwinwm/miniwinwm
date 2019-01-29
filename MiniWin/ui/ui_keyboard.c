@@ -432,6 +432,9 @@ static void process_keypress(const mw_message_t *message)
 		{
 			this_keyboard->keyboard_display = KEYBOARD_NUMBERS;
 		}
+		else
+		{
+		}
 		this_keyboard->swap_keyboard = true;
 	}
 	/* else get the character that has been pressed */
@@ -569,10 +572,10 @@ mw_handle_t mw_ui_keyboard_add_new(int16_t x,
 		mw_util_set_rect(&r, x, y, MW_UI_KEYBOARD_WIDTH, MW_UI_KEYBOARD_HEIGHT);
 	}
 
-	return mw_add_control(&r,
+	return (mw_add_control(&r,
 			parent_handle,
 			keyboard_paint_function,
 			keyboard_message_function,
 			flags,
-			keyboard_instance_data);
+			keyboard_instance_data));
 }

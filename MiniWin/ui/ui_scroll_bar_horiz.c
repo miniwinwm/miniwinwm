@@ -236,10 +236,10 @@ mw_handle_t mw_ui_scroll_bar_horiz_add_new(int16_t x,
 		mw_util_set_rect(&r, x, y, width, MW_SCROLL_BAR_NARROW_DIMENSION);
 	}
 
-	return mw_add_control(&r,
+	return (mw_add_control(&r,
 			parent_handle,
 			scroll_bar_horiz_paint_function,
 			scroll_bar_horiz_message_function,
 			flags,
-			scroll_bar_horiz_instance_data);
+			scroll_bar_horiz_instance_data));
 }

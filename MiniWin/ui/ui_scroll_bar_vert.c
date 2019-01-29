@@ -234,10 +234,10 @@ mw_handle_t mw_ui_scroll_bar_vert_add_new(int16_t x,
 		mw_util_set_rect(&r, x, y, MW_SCROLL_BAR_NARROW_DIMENSION, height);
 	}
 
-	return mw_add_control(&r,
+	return (mw_add_control(&r,
 			parent_handle,
 			scroll_bar_vert_paint_function,
 			scroll_bar_vert_message_function,
 			flags,
-			scroll_bar_vert_instance_data);
+			scroll_bar_vert_instance_data));
 }

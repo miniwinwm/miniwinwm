@@ -182,8 +182,8 @@ static void check_box_message_function(const mw_message_t *message)
 		}
 		break;
 
-		default:
-			break;
+	default:
+		break;
 	}
 }
 
@@ -208,10 +208,10 @@ mw_handle_t mw_ui_check_box_add_new(int16_t x,
 		mw_util_set_rect(&r, x, y, MW_UI_CHECK_BOX_WIDTH, MW_UI_CHECK_BOX_HEIGHT);
 	}
 
-	return mw_add_control(&r,
+	return (mw_add_control(&r,
 			parent_handle,
 			check_box_paint_function,
 			check_box_message_function,
 			flags,
-			check_box_instance_data);
+			check_box_instance_data));
 }
