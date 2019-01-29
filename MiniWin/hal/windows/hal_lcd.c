@@ -95,9 +95,9 @@ void mw_hal_lcd_pixel(int16_t x, int16_t y, mw_hal_lcd_colour_t colour)
 	uint8_t g = (colour & 0xff00U) >> 8U;
 	uint8_t b = colour & 0xffU;
 
-	SetPixel(hdc, x, y, RGB(r, g, b));
+	(void)SetPixel(hdc, x, y, RGB(r, g, b));
 
-	ReleaseDC(hwnd, hdc);
+	(void)ReleaseDC(hwnd, hdc);
 }
 
 void mw_hal_lcd_filled_rectangle(int16_t start_x,
@@ -119,10 +119,10 @@ void mw_hal_lcd_filled_rectangle(int16_t start_x,
 	rect.top = start_y;
 	rect.right = start_x + width;
 	rect.bottom = start_y + height;
-	FillRect(hdc, &rect, brush);
+	(void)FillRect(hdc, &rect, brush);
 
-	DeleteObject(brush);
-	ReleaseDC(hwnd, hdc);
+	(void)DeleteObject(brush);
+	(void)ReleaseDC(hwnd, hdc);
 }
 
 void mw_hal_lcd_colour_bitmap_clip(int16_t image_start_x,
@@ -196,8 +196,8 @@ void mw_hal_lcd_monochrome_bitmap_clip(int16_t image_start_x,
 				{
 					break;
 				}
-				if ((a << 3) + x + image_start_x >= clip_start_x &&
-						(a << 3) + x + image_start_x < clip_start_x + clip_width &&
+				if ((a << 3U) + x + image_start_x >= clip_start_x &&
+						(a << 3U) + x + image_start_x < clip_start_x + clip_width &&
 						y + image_start_y >= clip_start_y &&
 						y + image_start_y < clip_start_y + clip_height)
 				{

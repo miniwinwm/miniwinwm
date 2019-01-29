@@ -148,7 +148,7 @@ static long __stdcall WindowProc(HWND window, unsigned int msg, WPARAM wp, LPARA
 		return DefWindowProc(window, msg, wp, lp);
     }
 
-    return 0;
+    return (0);
 }
 
 /***********************
@@ -162,34 +162,34 @@ void app_init(void)
                             0, 0, GetModuleHandle(0), LoadIcon(0,IDI_APPLICATION),
                             LoadCursor(0,IDC_ARROW), (HBRUSH)COLOR_WINDOW+1,
                             0, miniwin_class, LoadIcon(0,IDI_APPLICATION)};
-    RegisterClassEx(&wndclass);
+    (void)RegisterClassEx(&wndclass);
 
     RECT r = {WINDOW_START_LOCATION_X,
     		WINDOW_START_LOCATION_Y,
 			WINDOW_START_LOCATION_X + MW_ROOT_WIDTH,
 			WINDOW_START_LOCATION_Y + MW_ROOT_HEIGHT};
-    AdjustWindowRectEx(&r, WS_OVERLAPPEDWINDOW, FALSE, 0);
+    (void)AdjustWindowRectEx(&r, WS_OVERLAPPEDWINDOW, FALSE, 0);
 
 	hwnd = CreateWindow(miniwin_class, "MiniWin Sim",
 			   WS_OVERLAPPEDWINDOW | WS_CAPTION, r.left, r.top,
 			   r.right - r.left, r.bottom - r.top, 0, 0, GetModuleHandle(0), 0);
 
-	ShowWindow(hwnd, SW_SHOWDEFAULT);
+	(void)ShowWindow(hwnd, SW_SHOWDEFAULT);
 }
 
 char *app_get_root_folder_path(void)
 {
-	return "c:/";
+	return ("c:/");
 }
 
 void app_main_loop_process(void)
 {
     MSG msg;
 
-    while(PeekMessageA(&msg, hwnd, 0, 0, PM_NOREMOVE))
+    while (PeekMessageA(&msg, hwnd, 0, 0, PM_NOREMOVE))
     {
-		GetMessage(&msg, 0, 0, 0);
-		DispatchMessage(&msg) ;
+    	(void)GetMessage(&msg, 0, 0, 0);
+    	(void)DispatchMessage(&msg) ;
     }
 }
 
@@ -204,7 +204,7 @@ bool app_file_open(char *path_and_filename)
 		result = true;
 	}
 
-	return result;
+	return (result);
 }
 
 bool app_file_create(char *path_and_filename)
@@ -218,43 +218,43 @@ bool app_file_create(char *path_and_filename)
 		result = true;
 	}
 
-	return result;
+	return (result);
 }
 
 uint32_t app_file_size(void)
 {
 	uint32_t size;
 
-	fseek(file_handle, 0L, SEEK_END);
+	(void)fseek(file_handle, 0L, SEEK_END);
 	size = (uint32_t)ftell(file_handle);
-	fseek(file_handle, 0L, SEEK_SET);
+	(void)fseek(file_handle, 0L, SEEK_SET);
 
-	return size;
+	return (size);
 }
 
 uint8_t app_file_getc(void)
 {
-	return (uint8_t)fgetc(file_handle);
+	return ((uint8_t)fgetc(file_handle));
 }
 
 void app_file_read(uint8_t *buffer, uint32_t count)
 {
-	fread(buffer, 1, count, file_handle);
+	(void)fread(buffer, 1, count, file_handle);
 }
 
 void app_file_write(uint8_t *buffer, uint32_t count)
 {
-	fwrite(buffer, 1, count, file_handle);
+	(void)fwrite(buffer, 1, count, file_handle);
 }
 
 uint32_t app_file_seek(uint32_t position)
 {
-	return (uint32_t)fseek(file_handle, position, SEEK_SET);
+	return ((uint32_t)fseek(file_handle, position, SEEK_SET));
 }
 
 void app_file_close(void)
 {
-	fclose(file_handle);
+	(void)fclose(file_handle);
 }
 
 uint8_t find_folder_entries(char* path,
@@ -269,15 +269,15 @@ uint8_t find_folder_entries(char* path,
 	WIN32_FIND_DATA ffd;
 	uint8_t i;
 
-	i = 0;
-	mw_util_safe_strcpy(szDir, MAX_FOLDER_AND_FILENAME_LENGTH - 2, path);
-	strcat(szDir, TEXT("\\*"));
+	i = 0U;
+	(void)mw_util_safe_strcpy(szDir, MAX_FOLDER_AND_FILENAME_LENGTH - 2, path);
+	(void)strcat(szDir, TEXT("\\*"));
 
 	/* Find the first file in the folder */
 	hFind = FindFirstFile(szDir, &ffd);
 	if (hFind == INVALID_HANDLE_VALUE)
 	{
-		return 0;
+		return (0U);
 	}
 
 	do
@@ -300,7 +300,7 @@ uint8_t find_folder_entries(char* path,
     		continue;
     	}
 
-        mw_util_safe_strcpy(list_box_settings_entries[i].label, MAX_FILENAME_LENGTH + 1, ffd.cFileName);
+    	(void)mw_util_safe_strcpy(list_box_settings_entries[i].label, MAX_FILENAME_LENGTH + 1, ffd.cFileName);
 
 		if (ffd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
 		{
@@ -321,9 +321,9 @@ uint8_t find_folder_entries(char* path,
 	}
 	while (FindNextFile(hFind, &ffd) != 0);
 
-	FindClose(hFind);
+	(void)FindClose(hFind);
 
-	return i;
+	return (i);
 }
 
 struct tm app_get_time_date(void)
@@ -331,10 +331,10 @@ struct tm app_get_time_date(void)
 	struct tm tm;
 	time_t t;
 
-	time(&t);
-	memcpy(&tm, localtime(&t), sizeof(struct tm));
+	(void)time(&t);
+	(void)memcpy(&tm, localtime(&t), sizeof(struct tm));
 	tm.tm_year += 1900;
-	return tm;
+	return (tm);
 }
 
 void app_set_time_date(struct tm tm)

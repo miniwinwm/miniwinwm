@@ -176,7 +176,7 @@ static long __stdcall WindowProc(HWND window, unsigned int msg, WPARAM wp, LPARA
         return DefWindowProc(window, msg, wp, lp);
     }
 
-    return 0;
+    return (0);
 }
 
 /**
@@ -190,7 +190,7 @@ static void GetDesktopResolution(uint32_t *width, uint32_t *height)
    RECT desktop;
 
    const HWND hDesktop = GetDesktopWindow();
-   GetWindowRect(hDesktop, &desktop);
+   (void)GetWindowRect(hDesktop, &desktop);
    *width = desktop.right;
    *height = desktop.bottom;
 }
@@ -220,7 +220,7 @@ void app_main_loop_process(void)
 	                            0, 0, GetModuleHandle(0), LoadIcon(0,IDI_APPLICATION),
 	                            LoadCursor(0,IDC_ARROW), (HBRUSH)COLOR_WINDOW+1,
 	                            0, miniwin_class, LoadIcon(0,IDI_APPLICATION)};
-	    RegisterClassEx(&wndclass);
+	    (void)RegisterClassEx(&wndclass);
 
 	    RECT r = {WINDOW_START_LOCATION_X,
 	    		WINDOW_START_LOCATION_Y,
@@ -232,18 +232,18 @@ void app_main_loop_process(void)
 				   WS_OVERLAPPEDWINDOW | WS_CAPTION, r.left, r.top,
 				   r.right - r.left, r.bottom - r.top, 0, 0, GetModuleHandle(0), 0);
 
-		ShowWindow(hwnd, SW_SHOWDEFAULT);
-		FreeConsole();
+		(void)ShowWindow(hwnd, SW_SHOWDEFAULT);
+		(void)FreeConsole();
 
 		init = true;
 		return;
 	}
 
-    while(PeekMessageA(&msg, hwnd, 0, 0, PM_NOREMOVE))
+    while (PeekMessageA(&msg, hwnd, 0, 0, PM_NOREMOVE))
     {
-		GetMessage(&msg, 0, 0, 0);
-        TranslateMessage(&msg);
-		DispatchMessage(&msg) ;
+    	(void)GetMessage(&msg, 0, 0, 0);
+    	(void)TranslateMessage(&msg);
+    	(void)DispatchMessage(&msg) ;
     }
 
 	/* toggle a pretend led */
@@ -257,9 +257,9 @@ float *app_get_gyro_readings(void)
 {
 	POINT p;
 
-	GetCursorPos(&p);
+	(void)GetCursorPos(&p);
 	cumulative_gyro_readings[GYRO_READING_Y] = (float)p.x / (float)desktop_width * 360.0f;
 	cumulative_gyro_readings[GYRO_READING_X] = (float)p.y / (float)desktop_height * 360.0f;
 
-	return cumulative_gyro_readings;
+	return (cumulative_gyro_readings);
 }

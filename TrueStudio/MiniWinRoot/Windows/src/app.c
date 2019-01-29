@@ -142,7 +142,7 @@ static long __stdcall WindowProc(HWND window, unsigned int msg, WPARAM wp, LPARA
 		return DefWindowProc(window, msg, wp, lp);
     }
 
-    return 0;
+    return (0);
 }
 
 /***********************
@@ -156,28 +156,28 @@ void app_init(void)
                             0, 0, GetModuleHandle(0), LoadIcon(0,IDI_APPLICATION),
                             LoadCursor(0,IDC_ARROW), (HBRUSH)COLOR_WINDOW+1,
                             0, miniwin_class, LoadIcon(0,IDI_APPLICATION)};
-    RegisterClassEx(&wndclass);
+    (void)RegisterClassEx(&wndclass);
 
     RECT r = {WINDOW_START_LOCATION_X,
     		WINDOW_START_LOCATION_Y,
 			WINDOW_START_LOCATION_X + MW_ROOT_WIDTH,
 			WINDOW_START_LOCATION_Y + MW_ROOT_HEIGHT};
-    AdjustWindowRectEx(&r, WS_OVERLAPPEDWINDOW, FALSE, 0);
+    (void)AdjustWindowRectEx(&r, WS_OVERLAPPEDWINDOW, FALSE, 0);
 
 	hwnd = CreateWindow(miniwin_class, "MiniWin Sim",
 			   WS_OVERLAPPEDWINDOW | WS_CAPTION, r.left, r.top,
 			   r.right - r.left, r.bottom - r.top, 0, 0, GetModuleHandle(0), 0);
 
-	ShowWindow(hwnd, SW_SHOWDEFAULT);
+	(void)ShowWindow(hwnd, SW_SHOWDEFAULT);
 }
 
 void app_main_loop_process(void)
 {
     MSG msg;
 
-    while(PeekMessageA(&msg, hwnd, 0, 0, PM_NOREMOVE))
+    while (PeekMessageA(&msg, hwnd, 0, 0, PM_NOREMOVE))
     {
-		GetMessage(&msg, 0, 0, 0);
-		DispatchMessage(&msg) ;
+    	(void)GetMessage(&msg, 0, 0, 0);
+		(void)DispatchMessage(&msg) ;
     }
 }
