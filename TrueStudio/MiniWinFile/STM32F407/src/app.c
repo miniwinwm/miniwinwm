@@ -187,14 +187,6 @@ void app_init(void)
 	hal_time_structure.StoreOperation = RTC_STOREOPERATION_RESET;
 	(void)HAL_RTC_SetTime(&rtc_handle, &hal_time_structure, FORMAT_BCD);
 
-	/* if board button pressed clear settings which forces a screen recalibration */
-	BSP_PB_Init(BUTTON_KEY, BUTTON_MODE_GPIO);
-	if (BSP_PB_GetState(BUTTON_KEY))
-	{
-		mw_settings_set_to_defaults();
-		mw_settings_save();
-	}
-
 	/* Link the USB Mass Storage disk I/O driver */
 	(void)FATFS_LinkDriver(&USBH_Driver, usb_path);
 

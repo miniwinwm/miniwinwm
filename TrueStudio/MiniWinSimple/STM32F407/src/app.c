@@ -111,14 +111,6 @@ void app_init(void)
 {
 	(void)HAL_Init();
 	SystemClock_Config();
-
-	/* if board button pressed clear settings which forces a screen recalibration */
-	BSP_PB_Init(BUTTON_KEY, BUTTON_MODE_GPIO);
-	if (BSP_PB_GetState(BUTTON_KEY))
-	{
-		mw_settings_set_to_defaults();
-		mw_settings_save();
-	}
 }
 
 void app_main_loop_process(void)

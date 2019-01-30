@@ -171,14 +171,6 @@ void app_init(void)
 	hal_time_structure.StoreOperation = RTC_STOREOPERATION_RESET;
 	(void)HAL_RTC_SetTime(&rtc_handle, &hal_time_structure, FORMAT_BCD);
 
-	/* if board button pressed clear settings which forces a screen recalibration */
-	BSP_PB_Init(BUTTON_KEY, BUTTON_MODE_GPIO);
-	if (BSP_PB_GetState(BUTTON_KEY))
-	{
-		mw_settings_set_to_defaults();
-		mw_settings_save();
-	}
-
 	/* Init Host Library */
 	(void)USBH_Init(&hUSBHost, USBH_UserProcess, 0U);
 
