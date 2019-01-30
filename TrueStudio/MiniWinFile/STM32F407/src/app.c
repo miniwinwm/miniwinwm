@@ -67,7 +67,7 @@ extern const uint8_t mw_bitmaps_folder_icon_small[];
 **********************/
 
 static FATFS usb_disk_fatfs;  										/**< File system object for USB Disk logical drive */
-static char usb_path[4];     										/**< USB Disk logical drive path */
+static char usb_path[4U];     										/**< USB Disk logical drive path */
 static MSC_ApplicationTypeDef application_state = APPLICATION_IDLE;	/**< USB host state machine state variable */
 static FIL file_handle;												/**< File to access */
 static RTC_HandleTypeDef rtc_handle;								/**< Driver handle for RTC */
@@ -111,11 +111,11 @@ static void SystemClock_Config  (void)
   RCC_OscInitStruct.HSEState = RCC_HSE_ON;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
-  RCC_OscInitStruct.PLL.PLLM = 8;
-  RCC_OscInitStruct.PLL.PLLN = 336;
+  RCC_OscInitStruct.PLL.PLLM = 8U;
+  RCC_OscInitStruct.PLL.PLLN = 336U;
   RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
-  RCC_OscInitStruct.PLL.PLLQ = 7;
-  HAL_RCC_OscConfig (&RCC_OscInitStruct);
+  RCC_OscInitStruct.PLL.PLLQ = 7U;
+  (void)HAL_RCC_OscConfig (&RCC_OscInitStruct);
 
   /* Select PLL as system clock source and configure the HCLK, PCLK1 and PCLK2
      clocks dividers */
@@ -124,10 +124,10 @@ static void SystemClock_Config  (void)
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4;
   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2;
-  HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_5);
+  (void)HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_5);
 
   /* STM32F405x/407x/415x/417x Revision Z devices: prefetch is supported  */
-  if (HAL_GetREVID() == 0x1001)
+  if (HAL_GetREVID() == 0x1001U)
   {
     /* Enable the Flash prefetch */
     __HAL_FLASH_PREFETCH_BUFFER_ENABLE();
@@ -140,11 +140,14 @@ static void USBH_UserProcess(USBH_HandleTypeDef *phost, uint8_t id)
 	{
 	case HOST_USER_DISCONNECTION:
 		application_state = APPLICATION_IDLE;
-		f_mount(&usb_disk_fatfs, "", 0);
+		(void)f_mount(&usb_disk_fatfs, "", 0U);
 		break;
 
 	case HOST_USER_CLASS_ACTIVE:
 		application_state = APPLICATION_START;
+		break;
+
+	default:
 		break;
 	}
 }
@@ -158,31 +161,31 @@ void app_init(void)
 	RTC_DateTypeDef  hal_date_structure;
 	RTC_TimeTypeDef  hal_time_structure;
 
-	HAL_Init();
+	(void)HAL_Init();
 	SystemClock_Config();
 
 	rtc_handle.Instance = RTC;
 	rtc_handle.Init.HourFormat = RTC_HOURFORMAT_24;
-	rtc_handle.Init.AsynchPrediv = 0x7F;
-	rtc_handle.Init.SynchPrediv = 0x0130;
+	rtc_handle.Init.AsynchPrediv = 0x7FU;
+	rtc_handle.Init.SynchPrediv = 0x0130U;
 	rtc_handle.Init.OutPut = RTC_OUTPUT_DISABLE;
 	rtc_handle.Init.OutPutPolarity = RTC_OUTPUT_POLARITY_HIGH;
 	rtc_handle.Init.OutPutType = RTC_OUTPUT_TYPE_OPENDRAIN;
-	HAL_RTC_Init(&rtc_handle);
+	(void)HAL_RTC_Init(&rtc_handle);
 
-	hal_date_structure.Year = 0x00;
+	hal_date_structure.Year = 0x00U;
 	hal_date_structure.Month = RTC_MONTH_JANUARY;
-	hal_date_structure.Date = 0x01;
+	hal_date_structure.Date = 0x01U;
 	hal_date_structure.WeekDay = RTC_WEEKDAY_MONDAY;	/* must be set to something even if not correct for the date */
-	HAL_RTC_SetDate(&rtc_handle, &hal_date_structure, FORMAT_BCD);
+	(void)HAL_RTC_SetDate(&rtc_handle, &hal_date_structure, FORMAT_BCD);
 
-	hal_time_structure.Hours = 0x01;
-	hal_time_structure.Minutes = 0x0;
-	hal_time_structure.Seconds = 0x00;
+	hal_time_structure.Hours = 0x01U;
+	hal_time_structure.Minutes = 0x0U;
+	hal_time_structure.Seconds = 0x00U;
 	hal_time_structure.TimeFormat = RTC_HOURFORMAT12_AM;
 	hal_time_structure.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
 	hal_time_structure.StoreOperation = RTC_STOREOPERATION_RESET;
-	HAL_RTC_SetTime(&rtc_handle, &hal_time_structure, FORMAT_BCD);
+	(void)HAL_RTC_SetTime(&rtc_handle, &hal_time_structure, FORMAT_BCD);
 
 	/* if board button pressed clear settings which forces a screen recalibration */
 	BSP_PB_Init(BUTTON_KEY, BUTTON_MODE_GPIO);
@@ -193,19 +196,19 @@ void app_init(void)
 	}
 
 	/* Link the USB Mass Storage disk I/O driver */
-	FATFS_LinkDriver(&USBH_Driver, usb_path);
+	(void)FATFS_LinkDriver(&USBH_Driver, usb_path);
 
 	/* Init Host Library */
-	USBH_Init(&hUSB_Host, USBH_UserProcess, 0);
+	(void)USBH_Init(&hUSB_Host, USBH_UserProcess, 0U);
 
 	/* Add Supported Class */
-	USBH_RegisterClass(&hUSB_Host, USBH_MSC_CLASS);
+	(void)USBH_RegisterClass(&hUSB_Host, USBH_MSC_CLASS);
 
 	/* Start Host Process */
-	USBH_Start(&hUSB_Host);
+	(void)USBH_Start(&hUSB_Host);
 
 	/* Register the file system object to the FatFs module */
-	f_mount(&usb_disk_fatfs, (TCHAR const*)usb_path, 0);
+	(void)f_mount(&usb_disk_fatfs, (TCHAR const*)usb_path, 0U);
 }
 
 bool app_file_open(char *path_and_filename)
@@ -220,7 +223,7 @@ bool app_file_open(char *path_and_filename)
 		}
 	}
 
-	return result;
+	return (result);
 }
 
 bool app_file_create(char *path_and_filename)
@@ -235,12 +238,12 @@ bool app_file_create(char *path_and_filename)
 		}
 	}
 
-	return result;
+	return (result);
 }
 
 uint32_t app_file_size(void)
 {
-	return (uint32_t)f_size(&file_handle);
+	return ((uint32_t)f_size(&file_handle));
 }
 
 uint8_t app_file_getc()
@@ -250,41 +253,41 @@ uint8_t app_file_getc()
 
 	f_read(&file_handle, &byte, 1, &bytes_read);
 
-	return byte;
+	return (byte);
 }
 
 void app_file_read(uint8_t *buffer, uint32_t count)
 {
 	UINT bytes_read;
 
-	f_read(&file_handle, buffer, count, &bytes_read);
+	(void)f_read(&file_handle, buffer, count, &bytes_read);
 }
 
 void app_file_write(uint8_t *buffer, uint32_t count)
 {
 	UINT bytes_written;
 
-	f_write (&file_handle, buffer, count, &bytes_written);
+	(void)f_write (&file_handle, buffer, count, &bytes_written);
 }
 
 uint32_t app_file_seek(uint32_t position)
 {
-	return (uint32_t)(f_lseek(&file_handle, position));
+	return ((uint32_t)(f_lseek(&file_handle, position)));
 }
 
 void app_file_close(void)
 {
-	f_close(&file_handle);
+	(void)f_close(&file_handle);
 }
 
 char *app_get_root_folder_path(void)
 {
-	return usb_path;
+	return (usb_path);
 }
 
 void app_main_loop_process(void)
 {
-    USBH_Process(&hUSB_Host);
+	(void)USBH_Process(&hUSB_Host);
 }
 
 uint8_t find_folder_entries(char *path,
@@ -299,7 +302,7 @@ uint8_t find_folder_entries(char *path,
     FILINFO file_info;
     UINT i;
 
-    i = 0;
+    i = 0U;
     result = f_opendir(&folder, path);                       /* Open the folder */
     if (result == FR_OK)
     {
@@ -323,7 +326,7 @@ uint8_t find_folder_entries(char *path,
         		continue;
         	}
 
-            mw_util_safe_strcpy(list_box_settings_entries[i].label, MAX_FILENAME_LENGTH + 1, file_info.fname);
+            mw_util_safe_strcpy(list_box_settings_entries[i].label, MAX_FILENAME_LENGTH + 1U, file_info.fname);
             if (file_info.fattrib & AM_DIR)
             {
             	/* It is a folder */
@@ -340,10 +343,10 @@ uint8_t find_folder_entries(char *path,
             	break;
             }
         }
-        f_closedir(&folder);
+        (void)f_closedir(&folder);
     }
 
-    return i;
+    return (i);
 }
 
 struct tm app_get_time_date(void)
@@ -352,8 +355,8 @@ struct tm app_get_time_date(void)
 	RTC_TimeTypeDef rtc_time;
 	struct tm stdlib_tm;
 
-	HAL_RTC_GetTime(&rtc_handle, &rtc_time, FORMAT_BIN);
-	HAL_RTC_GetDate(&rtc_handle, &rtc_date, FORMAT_BIN);
+	(void)HAL_RTC_GetTime(&rtc_handle, &rtc_time, FORMAT_BIN);
+	(void)HAL_RTC_GetDate(&rtc_handle, &rtc_date, FORMAT_BIN);
 
 	stdlib_tm.tm_hour = rtc_time.Hours;
 	stdlib_tm.tm_min = rtc_time.Minutes;
@@ -362,7 +365,7 @@ struct tm app_get_time_date(void)
 	stdlib_tm.tm_mon = rtc_date.Month;
 	stdlib_tm.tm_mday = rtc_date.Date;
 
-	return stdlib_tm;
+	return (stdlib_tm);
 }
 
 void app_set_time_date(struct tm tm)
@@ -374,12 +377,30 @@ void app_set_time_date(struct tm tm)
 	hal_date_structure.Month = tm.tm_mon;
 	hal_date_structure.Date = tm.tm_mday;
 	hal_date_structure.WeekDay = RTC_WEEKDAY_MONDAY;	/* must be set to something even if not correct for the date */
-	HAL_RTC_SetDate(&rtc_handle, &hal_date_structure, FORMAT_BIN);
+	(void)HAL_RTC_SetDate(&rtc_handle, &hal_date_structure, FORMAT_BIN);
 
 	hal_time_structure.Hours = tm.tm_hour;
 	hal_time_structure.Minutes = tm.tm_min;
-	hal_time_structure.Seconds = 0x00;
+	hal_time_structure.Seconds = 0x00U;
 	hal_time_structure.TimeFormat = RTC_HOURFORMAT12_AM;
 	hal_time_structure.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
 	hal_time_structure.StoreOperation = RTC_STOREOPERATION_RESET;
-	HAL_RTC_SetTime(&rtc_handle, &hal_time_structure, FORMAT_BIN);}
+	(void)HAL_RTC_SetTime(&rtc_handle, &hal_time_structure, FORMAT_BIN);
+}
+
+DWORD get_fattime (void)
+{
+	DWORD fattime = 0;
+	struct tm tm;
+
+	tm = app_get_time_date();
+
+	fattime = (tm.tm_year - 1980) << 25U;
+	fattime |= tm.tm_mon << 21U;
+	fattime |= tm.tm_mday << 16U;
+	fattime |= tm.tm_hour << 11U;
+	fattime |= tm.tm_min << 5U;
+	fattime |= tm.tm_sec / 2;
+
+	return (fattime);
+}

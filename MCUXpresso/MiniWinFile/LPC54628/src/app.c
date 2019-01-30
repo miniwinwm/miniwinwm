@@ -108,7 +108,7 @@ static status_t check_sd_card_inserted(void)
     /* SD host init function */
     if (SD_HostInit(&g_sd) != kStatus_Success)
     {
-        return kStatus_Fail;
+        return (kStatus_Fail);
     }
 
     /* power off card */
@@ -122,10 +122,10 @@ static status_t check_sd_card_inserted(void)
     }
     else
     {
-        return kStatus_Fail;
+        return (kStatus_Fail);
     }
 
-    return kStatus_Success;
+    return (kStatus_Success);
 }
 
 void static init_sdif_unused_data_pins(void)
@@ -196,7 +196,7 @@ bool app_file_open(char *path_and_filename)
 		}
 	}
 
-	return result;
+	return (result);
 }
 
 bool app_file_create(char *path_and_filename)
@@ -211,7 +211,7 @@ bool app_file_create(char *path_and_filename)
 		}
 	}
 
-	return result;
+	return (result);
 }
 
 uint32_t app_file_size(void)
@@ -223,7 +223,7 @@ uint32_t app_file_size(void)
 		size = (uint32_t)f_size(&file_handle);
 	}
 
-	return size;
+	return (size);
 }
 
 uint8_t app_file_getc()
@@ -233,10 +233,10 @@ uint8_t app_file_getc()
 
 	if (sd_card_mounted)
 	{
-		f_read(&file_handle, (void *)&byte, 1, (UINT *)&bytes_read);
+		(void)f_read(&file_handle, (void *)&byte, 1, (UINT *)&bytes_read);
 	}
 
-	return byte;
+	return (byte);
 }
 
 void app_file_read(uint8_t *buffer, uint32_t count)
@@ -245,7 +245,7 @@ void app_file_read(uint8_t *buffer, uint32_t count)
 
 	if (sd_card_mounted)
 	{
-		f_read(&file_handle, (void *)buffer, (UINT)count, (UINT *)&bytes_read);
+		(void)f_read(&file_handle, (void *)buffer, (UINT)count, (UINT *)&bytes_read);
 	}
 }
 
@@ -255,26 +255,26 @@ void app_file_write(uint8_t *buffer, uint32_t count)
 
 	if (sd_card_mounted)
 	{
-		f_write(&file_handle, (void *)buffer, (UINT)count, (UINT *)&bytes_written);
+		(void)f_write(&file_handle, (void *)buffer, (UINT)count, (UINT *)&bytes_written);
 	}
 }
 
 uint32_t app_file_seek(uint32_t position)
 {
-	return (uint32_t)(f_lseek(&file_handle, (FSIZE_t)position));
+	return ((uint32_t)(f_lseek(&file_handle, (FSIZE_t)position)));
 }
 
 void app_file_close(void)
 {
 	if (sd_card_mounted)
 	{
-		f_close(&file_handle);
+		(void)f_close(&file_handle);
 	}
 }
 
 char *app_get_root_folder_path(void)
 {
-	return root_folder_path;
+	return (root_folder_path);
 }
 
 void app_main_loop_process(void)

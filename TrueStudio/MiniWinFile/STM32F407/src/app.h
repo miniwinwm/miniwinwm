@@ -42,8 +42,8 @@ SOFTWARE.
 *** CONSTANTS ***
 ****************/
 
-#define MAX_FILENAME_LENGTH					12			/**< Maximum length of a file name in eight dot three format */
-#define MAX_FOLDER_AND_FILENAME_LENGTH		128			/**< Maximum length of a file name and its path */
+#define MAX_FILENAME_LENGTH					12U			/**< Maximum length of a file name in eight dot three format */
+#define MAX_FOLDER_AND_FILENAME_LENGTH		128U		/**< Maximum length of a file name and its path */
 
 /************
 *** TYPES ***

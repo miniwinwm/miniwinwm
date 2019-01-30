@@ -106,7 +106,7 @@ bool mw_hal_touch_get_point(uint16_t* x, uint16_t* y)
 
 	if (!touch_state.TouchDetected)
 	{
-		(return false);
+		return (false);
 	}
 
 	*x = touch_state.X;

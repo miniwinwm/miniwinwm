@@ -80,11 +80,11 @@ static void SystemClock_Config  (void)
   RCC_OscInitStruct.HSEState = RCC_HSE_ON;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
-  RCC_OscInitStruct.PLL.PLLM = 8;
-  RCC_OscInitStruct.PLL.PLLN = 336;
+  RCC_OscInitStruct.PLL.PLLM = 8U;
+  RCC_OscInitStruct.PLL.PLLN = 336U;
   RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
-  RCC_OscInitStruct.PLL.PLLQ = 7;
-  HAL_RCC_OscConfig (&RCC_OscInitStruct);
+  RCC_OscInitStruct.PLL.PLLQ = 7U;
+  (void)HAL_RCC_OscConfig (&RCC_OscInitStruct);
 
   /* Select PLL as system clock source and configure the HCLK, PCLK1 and PCLK2
      clocks dividers */
@@ -93,10 +93,10 @@ static void SystemClock_Config  (void)
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4;
   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2;
-  HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_5);
+  (void)HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_5);
 
   /* STM32F405x/407x/415x/417x Revision Z devices: prefetch is supported  */
-  if (HAL_GetREVID() == 0x1001)
+  if (HAL_GetREVID() == 0x1001U)
   {
     /* Enable the Flash prefetch */
     __HAL_FLASH_PREFETCH_BUFFER_ENABLE();
@@ -109,7 +109,7 @@ static void SystemClock_Config  (void)
 
 void app_init(void)
 {
-	HAL_Init();
+	(void)HAL_Init();
 	SystemClock_Config();
 
 	/* if board button pressed clear settings which forces a screen recalibration */

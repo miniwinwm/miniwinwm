@@ -84,11 +84,11 @@ static void SystemClock_Config(void)
 	RCC_OscInitStruct.HSEState = RCC_HSE_ON;
 	RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
 	RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
-	RCC_OscInitStruct.PLL.PLLM = 8;
-	RCC_OscInitStruct.PLL.PLLN = 336;
-	RCC_OscInitStruct.PLL.PLLP = 2;
-	RCC_OscInitStruct.PLL.PLLQ = 7;
-	HAL_RCC_OscConfig(&RCC_OscInitStruct);
+	RCC_OscInitStruct.PLL.PLLM = 8U;
+	RCC_OscInitStruct.PLL.PLLN = 336U;
+	RCC_OscInitStruct.PLL.PLLP = 2U;
+	RCC_OscInitStruct.PLL.PLLQ = 7U;
+	(void)HAL_RCC_OscConfig(&RCC_OscInitStruct);
 
 	/* Select PLL as system clock source and configure the HCLK, PCLK1 and PCLK2
 	 clocks dividers */
@@ -97,7 +97,7 @@ static void SystemClock_Config(void)
 	RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
 	RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4;
 	RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2;
-	HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_5);
+	(void)HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_5);
 }
 
 /***********************
@@ -106,7 +106,7 @@ static void SystemClock_Config(void)
 
 void app_init(void)
 {
-	HAL_Init();
+	(void)HAL_Init();
 	SystemClock_Config();
 
 	/* if board button pressed clear settings which forces a screen recalibration */
@@ -122,8 +122,8 @@ void app_init(void)
 	BSP_LED_Init(LED4);
 
 	/* initialise the gyro */
-	BSP_ACCELERO_Init();
-	BSP_ACCELERO_Reset();
+	(void)BSP_ACCELERO_Init();
+	(void)BSP_ACCELERO_Reset();
 }
 
 void app_main_loop_process(void)
@@ -133,10 +133,10 @@ void app_main_loop_process(void)
 
 float *app_get_gyro_readings(void)
 {
-	static float gyro_angles[3] = {0};
-	static int16_t gyro_accelerations[10][3];
+	static float gyro_angles[3U] = {0};
+	static int16_t gyro_accelerations[10U][3U];
 	static uint8_t i;
-	double average_accelerations[3];
+	double average_accelerations[3U];
 	uint8_t c;
 
 	BSP_ACCELERO_GetXYZ(gyro_accelerations[i]);
@@ -155,15 +155,15 @@ float *app_get_gyro_readings(void)
 	i++;
 
 	/* calculate average when have 10 readings */
-	if (i == 10)
+	if (i == 10U)
 	{
-		i = 0;
+		i = 0U;
 
 		/* zero sum */
-		memset(&average_accelerations, 0, sizeof(average_accelerations));
+		(void)memset(&average_accelerations, 0, sizeof(average_accelerations));
 
 		/* sum 10 accelerations readings */
-		for (c = 0; c < 10; c++)
+		for (c = 0U; c < 10U; c++)
 		{
 			average_accelerations[GYRO_READING_X] += gyro_accelerations[c][GYRO_READING_X];
 			average_accelerations[GYRO_READING_Y] += gyro_accelerations[c][GYRO_READING_Y];
@@ -191,5 +191,5 @@ float *app_get_gyro_readings(void)
 		gyro_angles[GYRO_READING_Y] *= (180.0f / M_PI);
 	}
 
-	return gyro_angles;
+	return (gyro_angles);
 }
