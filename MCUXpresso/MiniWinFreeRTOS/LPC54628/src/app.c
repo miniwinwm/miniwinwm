@@ -41,10 +41,10 @@ SOFTWARE.
 *** CONSTANTS ***
 ****************/
 
-#define ACCELEROMETER_DEVICE_ADDRESS 	0x1d
-#define CTRL_REG_1						0x2a
-#define CTRL_REG_2						0x2b
-#define OUT_X_MSB_REG					0X01
+#define ACCELEROMETER_DEVICE_ADDRESS 	0x1DU
+#define CTRL_REG_1						0x2AU
+#define CTRL_REG_2						0x2BU
+#define OUT_X_MSB_REG					0X01U
 #define FREERTOS_LED_PORT 				3U
 #define FREERTOS_LED_PIN	 			3U
 
@@ -84,7 +84,7 @@ void app_init(void)
 
     gpio_pin_config_t led_config =
     {
-        kGPIO_DigitalOutput, 0
+        kGPIO_DigitalOutput, 0U
     };
 
     GPIO_PortInit(GPIO, FREERTOS_LED_PORT);
@@ -93,7 +93,7 @@ void app_init(void)
 
 static void get_accelerometer_readings(float *readings)
 {
-	uint8_t acc_data[6];
+	uint8_t acc_data[6U];
 	int16_t x_acc_raw;
 	int16_t y_acc_raw;
 	int16_t z_acc_raw;
@@ -101,40 +101,30 @@ static void get_accelerometer_readings(float *readings)
 
 	if (!initialized)
 	{
-		/* The i2c bus used for the accelerometer in this project is shared with the display touch controller.
-		 * The miniwin touch driver in the hal layer will ungate the clock and initialise the i2c driver
-		 * shared by these peripherals so here just wait until miniwin reports that its initializations
-		 * are complete.
-		 */
-		if (!mw_is_init_complete())
-		{
-			return;
-		}
-
 		/* i2c peripheral now initialised so send initialisation commands to the accelerometer chip */
 
 		/* reset the chip and wait */
-		BOARD_Accel_I2C_Send(ACCELEROMETER_DEVICE_ADDRESS, CTRL_REG_2, 1, 0x40);
-		vTaskDelay(10);
+		(void)BOARD_Accel_I2C_Send(ACCELEROMETER_DEVICE_ADDRESS, CTRL_REG_2, 1U, 0x40U);
+		vTaskDelay(10U);
 
 		/* set high definition */
-	    BOARD_Accel_I2C_Send(ACCELEROMETER_DEVICE_ADDRESS, CTRL_REG_2, 1, 0x02);
+		(void)BOARD_Accel_I2C_Send(ACCELEROMETER_DEVICE_ADDRESS, CTRL_REG_2, 1U, 0x02U);
 
 	    /* start readings */
-	    BOARD_Accel_I2C_Send(ACCELEROMETER_DEVICE_ADDRESS, CTRL_REG_1, 1, 0x01);
+		(void)BOARD_Accel_I2C_Send(ACCELEROMETER_DEVICE_ADDRESS, CTRL_REG_1, 1U, 0x01U);
 	    initialized = true;
 	    return;
 	}
 
-	BOARD_Accel_I2C_Receive(ACCELEROMETER_DEVICE_ADDRESS, OUT_X_MSB_REG, 1, acc_data, 6);
+	(void)BOARD_Accel_I2C_Receive(ACCELEROMETER_DEVICE_ADDRESS, OUT_X_MSB_REG, 1U, acc_data, 6U);
 
-	x_acc_raw = (int16_t)(acc_data[0]) << 8 | (int16_t)(acc_data[1]) >> 4;
-	y_acc_raw = (int16_t)(acc_data[2]) << 8 | (int16_t)(acc_data[3]) >> 4;
-	z_acc_raw = (int16_t)(acc_data[4]) << 8 | (int16_t)(acc_data[5]) >> 4;
+	x_acc_raw = (int16_t)(acc_data[0U]) << 8U | (int16_t)(acc_data[1]) >> 4U;
+	y_acc_raw = (int16_t)(acc_data[2U]) << 8U | (int16_t)(acc_data[3]) >> 4U;
+	z_acc_raw = (int16_t)(acc_data[4U]) << 8U | (int16_t)(acc_data[5]) >> 4U;
 
-	readings[0] = ((float) x_acc_raw) / (16384.0f);
-	readings[1] = ((float) y_acc_raw) / (16384.0f);
-	readings[2] = ((float) z_acc_raw) / (16384.0f);
+	readings[0U] = ((float) x_acc_raw) / (16384.0f);
+	readings[1U] = ((float) y_acc_raw) / (16384.0f);
+	readings[2U] = ((float) z_acc_raw) / (16384.0f);
 }
 
 void app_main_loop_process(void)
@@ -144,10 +134,10 @@ void app_main_loop_process(void)
 
 float *app_get_gyro_readings(void)
 {
-	static float gyro_angles[3];
-	static float gyro_accelerations[10][3];
+	static float gyro_angles[3U];
+	static float gyro_accelerations[10U][3U];
 	static uint8_t i;
-	double average_accelerations[3];
+	double average_accelerations[3U];
 	uint8_t c;
 
 	get_accelerometer_readings(gyro_accelerations[i]);
@@ -155,15 +145,15 @@ float *app_get_gyro_readings(void)
 	i++;
 
 	/* calculate average when have 10 readings */
-	if (i == 10)
+	if (i == 10U)
 	{
-		i = 0;
+		i = 0U;
 
 		/* zero sum */
-		memset(&average_accelerations, 0, sizeof(average_accelerations));
+		(void)memset(&average_accelerations, 0, sizeof(average_accelerations));
 
 		/* sum 10 accelerations readings */
-		for (c = 0; c < 10; c++)
+		for (c = 0U; c < 10U; c++)
 		{
 			average_accelerations[GYRO_READING_X] += gyro_accelerations[c][GYRO_READING_X];
 			average_accelerations[GYRO_READING_Y] += gyro_accelerations[c][GYRO_READING_Y];
@@ -191,6 +181,6 @@ float *app_get_gyro_readings(void)
 		gyro_angles[GYRO_READING_Y] *= (180.0f / M_PI);
 	}
 
-	return gyro_angles;
+	return (gyro_angles);
 }
 

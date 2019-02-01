@@ -247,10 +247,7 @@ void app_main_loop_process(void)
     }
 
 	/* toggle a pretend led */
-	if (mw_is_init_complete())
-	{	
-		toggle = !toggle;
-	}
+	toggle = !toggle;
 }
 
 float *app_get_gyro_readings(void)

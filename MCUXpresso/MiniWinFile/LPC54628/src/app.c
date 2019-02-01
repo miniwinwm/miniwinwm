@@ -48,7 +48,7 @@ SOFTWARE.
 static const sdmmchost_detect_card_t s_sdCardDetect =
 {
     .cdType = BOARD_SD_DETECT_TYPE,
-    .cdTimeOut_ms = ~0
+    .cdTimeOut_ms = ~0U
 };
 
 /************
@@ -72,7 +72,7 @@ extern const uint8_t mw_bitmaps_folder_icon_small[];
 
 static FIL file_handle;
 static FATFS file_system;
-static TCHAR root_folder_path[] = {SDDISK + '0', ':', '/', 0};
+static TCHAR root_folder_path[] = {SDDISK + '0', ':', '/', '\0'};
 static bool sd_card_mounted = false;
 
 /********************************
@@ -130,13 +130,13 @@ static status_t check_sd_card_inserted(void)
 
 void static init_sdif_unused_data_pins(void)
 {
-    IOCON_PinMuxSet(IOCON, 4, 29,
+    IOCON_PinMuxSet(IOCON, 4U, 29U,
                     (IOCON_FUNC2 | IOCON_PIO_SLEW_MASK | IOCON_DIGITAL_EN | IOCON_MODE_PULLUP)); /* sd data[4] */
-    IOCON_PinMuxSet(IOCON, 4, 30,
+    IOCON_PinMuxSet(IOCON, 4U, 30U,
                     (IOCON_FUNC2 | IOCON_PIO_SLEW_MASK | IOCON_DIGITAL_EN | IOCON_MODE_PULLUP)); /* sd data[5] */
-    IOCON_PinMuxSet(IOCON, 4, 31,
+    IOCON_PinMuxSet(IOCON, 4U, 31U,
                     (IOCON_FUNC2 | IOCON_PIO_SLEW_MASK | IOCON_DIGITAL_EN | IOCON_MODE_PULLUP)); /* sd data[6] */
-    IOCON_PinMuxSet(IOCON, 5, 0,
+    IOCON_PinMuxSet(IOCON, 5U, 0U,
                     (IOCON_FUNC2 | IOCON_PIO_SLEW_MASK | IOCON_DIGITAL_EN | IOCON_MODE_PULLUP)); /* sd data[7] */
 }
 
@@ -170,16 +170,16 @@ void app_init(void)
         return;
     }
 
-    if (f_mount(&file_system, (const TCHAR *)root_folder_path, 0))
+    if (f_mount(&file_system, (const TCHAR *)root_folder_path, 0U))
     {
         return;
     }
 
-    f_chdrive((const TCHAR *)root_folder_path);
+    (void)f_chdrive((const TCHAR *)root_folder_path);
 
     /* first access to the file system is slow so do it here */
-    f_opendir(&folder, root_folder_path);
-    f_closedir(&folder);
+    (void)f_opendir(&folder, root_folder_path);
+    (void)f_closedir(&folder);
 
     sd_card_mounted = true;
 }
@@ -216,7 +216,7 @@ bool app_file_create(char *path_and_filename)
 
 uint32_t app_file_size(void)
 {
-	uint32_t size = 0;
+	uint32_t size = 0U;
 
 	if (sd_card_mounted)
 	{
@@ -228,7 +228,7 @@ uint32_t app_file_size(void)
 
 uint8_t app_file_getc()
 {
-	uint8_t byte = 0;
+	uint8_t byte = 0U;
 	UINT bytes_read;
 
 	if (sd_card_mounted)
@@ -291,15 +291,15 @@ uint8_t find_folder_entries(char *path,
     FRESULT result;
     DIR folder;
     FILINFO file_info;
-    UINT i = 0;
+    UINT i = 0U;
 
 	if (!sd_card_mounted)
 	{
-		return 0;
+		return (0U);
 	}
 
     /* strip off terminating '/' for FatFS folders */
-    path[strlen(path) - 1] = '\0';
+    path[strlen(path) - 1U] = '\0';
 
     /* open the folder */
     result = f_opendir(&folder, path);
@@ -314,7 +314,7 @@ uint8_t find_folder_entries(char *path,
 
         	/* read a folder item */
             result = f_readdir(&folder, &file_info);
-            if (result != FR_OK || file_info.fname[0] == 0)
+            if (result != FR_OK || file_info.fname[0] == '\0')
             {
             	/* break on error or end of folder */
             	break;
@@ -332,7 +332,7 @@ uint8_t find_folder_entries(char *path,
         		continue;
         	}
 
-            mw_util_safe_strcpy(list_box_settings_entries[i].label, MAX_FILENAME_LENGTH + 1, file_info.fname);
+        	(void)mw_util_safe_strcpy(list_box_settings_entries[i].label, MAX_FILENAME_LENGTH + 1U, file_info.fname);
             if (file_info.fattrib & AM_DIR)
             {
             	/* it is a folder */
@@ -345,13 +345,13 @@ uint8_t find_folder_entries(char *path,
             }
             i++;
         }
-        f_closedir(&folder);
+        (void)f_closedir(&folder);
     }
 
     /* replace terminating '/' */
     path[strlen(path)] = '/';
 
-    return i;
+    return (i);
 }
 
 struct tm app_get_time_date(void)
@@ -367,7 +367,7 @@ struct tm app_get_time_date(void)
     stdlib_tm.tm_min =  date.minute;
     stdlib_tm.tm_sec = date.second;
 
-	return stdlib_tm;
+	return (stdlib_tm);
 }
 
 void app_set_time_date(struct tm tm)
@@ -383,8 +383,8 @@ void app_set_time_date(struct tm tm)
     date.day = tm.tm_mday;
     date.hour = tm.tm_hour;
     date.minute = tm.tm_min;
-    date.second = 0;
-    RTC_SetDatetime(RTC, &date);
+    date.second = 0U;
+    (void)RTC_SetDatetime(RTC, &date);
 
     /* start the rtc time counter */
     RTC_StartTimer(RTC);
@@ -397,12 +397,12 @@ DWORD get_fattime(void)
 
 	tm = app_get_time_date();
 
-	fattime = (tm.tm_year - 1980) << 25;
-	fattime |= tm.tm_mon << 21;
-	fattime |= tm.tm_mday << 16;
-	fattime |= tm.tm_hour << 11;
-	fattime |= tm.tm_min << 5;
+	fattime = (tm.tm_year - 1980) << 25U;
+	fattime |= tm.tm_mon << 21U;
+	fattime |= tm.tm_mday << 16U;
+	fattime |= tm.tm_hour << 11U;
+	fattime |= tm.tm_min << 5U;
 	fattime |= tm.tm_sec / 2;
 
-	return fattime;
+	return (fattime);
 }

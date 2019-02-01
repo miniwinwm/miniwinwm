@@ -37,24 +37,24 @@ SOFTWARE.
 *** CONSTANTS ***
 ****************/
 
-#define PAGE_SIZE 256
-#define SECTOR_SIZE 4096
-#define EXAMPLE_SPI_BAUDRATE 96000000
-#define QUAD_MODE_VAL 0x02
-#define READ 0
-#define PROGRAM_PAGE 1
-#define GET_STATUS 2
-#define ERASE_SECTOR 3
-#define WRITE_ENABLE 4
-#define WRITE_REGISTER 5
+#define PAGE_SIZE 				256U
+#define SECTOR_SIZE 			4096U
+#define EXAMPLE_SPI_BAUDRATE 	96000000U
+#define QUAD_MODE_VAL 			0x02U
+#define READ 					0U
+#define PROGRAM_PAGE 			1U
+#define GET_STATUS 				2U
+#define ERASE_SECTOR 			3U
+#define WRITE_ENABLE 			4U
+#define WRITE_REGISTER 			5U
 
 static spifi_command_t command[] = {
-    {PAGE_SIZE, false, kSPIFI_DataInput, 1, kSPIFI_CommandDataQuad, kSPIFI_CommandOpcodeAddrThreeBytes, 0x6B},
-    {PAGE_SIZE, false, kSPIFI_DataOutput, 0, kSPIFI_CommandDataQuad, kSPIFI_CommandOpcodeAddrThreeBytes, 0x32},
-    {1, false, kSPIFI_DataInput, 0, kSPIFI_CommandAllSerial, kSPIFI_CommandOpcodeOnly, 0x05},
-    {0, false, kSPIFI_DataOutput, 0, kSPIFI_CommandAllSerial, kSPIFI_CommandOpcodeAddrThreeBytes, 0x20},
-    {0, false, kSPIFI_DataOutput, 0, kSPIFI_CommandAllSerial, kSPIFI_CommandOpcodeOnly, 0x06},
-    {1, false, kSPIFI_DataOutput, 0, kSPIFI_CommandAllSerial, kSPIFI_CommandOpcodeOnly, 0x31}};
+    {PAGE_SIZE, false, kSPIFI_DataInput, 1U, kSPIFI_CommandDataQuad, kSPIFI_CommandOpcodeAddrThreeBytes, 0x6BU},
+    {PAGE_SIZE, false, kSPIFI_DataOutput, 0U, kSPIFI_CommandDataQuad, kSPIFI_CommandOpcodeAddrThreeBytes, 0x32U},
+    {1U, false, kSPIFI_DataInput, 0U, kSPIFI_CommandAllSerial, kSPIFI_CommandOpcodeOnly, 0x05U},
+    {0U, false, kSPIFI_DataOutput, 0U, kSPIFI_CommandAllSerial, kSPIFI_CommandOpcodeAddrThreeBytes, 0x20U},
+    {0U, false, kSPIFI_DataOutput, 0U, kSPIFI_CommandAllSerial, kSPIFI_CommandOpcodeOnly, 0x06U},
+    {1U, false, kSPIFI_DataOutput, 0U, kSPIFI_CommandAllSerial, kSPIFI_CommandOpcodeOnly, 0x31U}};
 
 /************
 *** TYPES ***
@@ -87,7 +87,7 @@ static void enable_quad_mode();
 
 static void enable_quad_mode()
 {
-    uint8_t val = 0;
+    uint8_t val = 0U;
 
     /* write enable */
     SPIFI_SetCommand(SPIFI0, &command[WRITE_ENABLE]);
@@ -106,7 +106,7 @@ static void enable_quad_mode()
         }
         val = SPIFI_ReadDataByte(SPIFI0);
     }
-    while (val & 0x1);
+    while (val & 0x1U);
 }
 
 /***********************

@@ -83,13 +83,13 @@ void mw_hal_non_vol_load(uint8_t *data, uint16_t length)
 
 void mw_hal_non_vol_save(uint8_t *data, uint16_t length)
 {
-	uint32_t words = (length / sizeof(uint32_t)) + ((length % sizeof(uint32_t)) ? 1 : 0);
+	uint32_t words = (length / sizeof(uint32_t)) + ((length % sizeof(uint32_t)) ? 1U : 0U);
 	uint32_t pages = (words / FSL_FEATURE_EEPROM_PAGE_SIZE_WORDS) + ((length % FSL_FEATURE_EEPROM_PAGE_SIZE_WORDS) ? 1 : 0);
 	uint32_t page;
 	uint32_t buffer[FSL_FEATURE_EEPROM_PAGE_SIZE_WORDS];
 
 	/* write settings */
-	for (page = 0; page < pages; page++)
+	for (page = 0U; page < pages; page++)
 	{
 		(void)memset((uint8_t *)buffer, 0, FSL_FEATURE_EEPROM_PAGE_SIZE_BYTES);
 		if (length < FSL_FEATURE_EEPROM_PAGE_SIZE_BYTES)
@@ -102,7 +102,7 @@ void mw_hal_non_vol_save(uint8_t *data, uint16_t length)
 			length -= FSL_FEATURE_EEPROM_PAGE_SIZE_BYTES;
 		}
 
-	    EEPROM_WritePage(EEPROM, page, buffer);
+		(void)EEPROM_WritePage(EEPROM, page, buffer);
 	}
 }
 

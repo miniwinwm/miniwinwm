@@ -97,14 +97,14 @@ void mw_hal_touch_init(void)
 	/* enable SPI1, AF, GPIOA and GPIOB clocks */
 	__HAL_RCC_GPIOA_CLK_ENABLE();
 	__HAL_RCC_GPIOB_CLK_ENABLE();
-	__HAL_RCC_SPI1_CLK_ENABLE();
+	__HAL_RCC_SPI2_CLK_ENABLE();
 	__HAL_RCC_SYSCFG_CLK_ENABLE();
 
 	/* configure SPI1 pins SCK, MISO and MOSI */
 	GPIO_InitStructure.Mode = GPIO_MODE_AF_PP;
 	GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_HIGH;
 	GPIO_InitStructure.Pull = GPIO_PULLDOWN;
-	GPIO_InitStructure.Pin = GPIO_PIN_3 | GPIO_PIN_4 |GPIO_PIN_5;
+	GPIO_InitStructure.Pin = GPIO_PIN_13 | GPIO_PIN_14 |GPIO_PIN_15;
 	GPIO_InitStructure.Alternate = GPIO_AF5_SPI1;
 	HAL_GPIO_Init(GPIOB, &GPIO_InitStructure);
 
@@ -123,7 +123,7 @@ void mw_hal_touch_init(void)
 	CS_OFF;
 
 	/* SPI1 configuration */
-	SpiHandle.Instance = SPI1;
+	SpiHandle.Instance = SPI2;
 	HAL_SPI_DeInit(&SpiHandle);
 	SpiHandle.Init.Direction = SPI_DIRECTION_2LINES;
 	SpiHandle.Init.Mode = SPI_MODE_MASTER;
@@ -133,11 +133,8 @@ void mw_hal_touch_init(void)
 	SpiHandle.Init.NSS = SPI_NSS_SOFT;
 	SpiHandle.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_16;
 	SpiHandle.Init.FirstBit = SPI_FIRSTBIT_MSB;
-	SpiHandle.Init.CRCCalculation    = SPI_CRCCALCULATION_DISABLE;
+	SpiHandle.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
 	HAL_SPI_Init(&SpiHandle);
-
-	/* select touch - chip select low */
-	CS_ON;
 
 	BSP_PB_Init(BUTTON_KEY, BUTTON_MODE_GPIO);
 }
@@ -166,6 +163,7 @@ bool mw_hal_touch_get_point(uint16_t* x, uint16_t* y)
 	uint16_t databuffer[2][MW_HAL_TOUCH_READ_POINTS_COUNT];
 	uint8_t touch_count;
 
+	CS_ON;
 	touch_count = 0;
 	do
 	{
@@ -186,6 +184,7 @@ bool mw_hal_touch_get_point(uint16_t* x, uint16_t* y)
 		touch_count++;
 	}
 	while (mw_hal_touch_get_state() == MW_HAL_TOUCH_STATE_DOWN && touch_count < MW_HAL_TOUCH_READ_POINTS_COUNT);
+	CS_OFF;
 
 	if (touch_count != MW_HAL_TOUCH_READ_POINTS_COUNT)
 	{

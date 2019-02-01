@@ -115,7 +115,7 @@ static void main_thread(void *parameters)
 	while (true)
 	{
 		app_main_loop_process();
-		vTaskDelay(100);
+		vTaskDelay(100U);
     }
 }
 
@@ -129,27 +129,32 @@ static void miniwin_thread(void *parameters)
     	/* do miniwin message processing */
 		if (!xSemaphoreTake(semaphore_handle, 10))
 		{
-			vTaskDelay(10);
+			vTaskDelay(10U);
 			continue;
 		}
 		mw_process_message();
 		xSemaphoreGive(semaphore_handle);
 
-		vTaskDelay(10);
+		vTaskDelay(10U);
 	}
 }
 
 static void gyro_thread(void *parameters)
 {
-	static uint8_t reading_counter = 0;
+	static uint8_t reading_counter = 0U;
 	TickType_t xLastWakeTime;
 	float *gyro_readings;
 
-	xLastWakeTime = xTaskGetTickCount();
+	/* wait until window manager is started */
+	while (!mw_is_init_complete())
+	{
+		vTaskDelay(100);
+	}
 
+	xLastWakeTime = xTaskGetTickCount();
 	while (true)
 	{
-		if (!xSemaphoreTake(semaphore_handle, 10))
+		if (!xSemaphoreTake(semaphore_handle, 10U))
 		{
 			continue;
 		}
@@ -158,17 +163,17 @@ static void gyro_thread(void *parameters)
 
 		/* only send 1 in every 10 readings to window */
 		reading_counter++;
-		if (reading_counter == 10)
+		if (reading_counter == 10U)
 		{
-			reading_counter = 0;
+			reading_counter = 0U;
 
-			xMessageBufferSend(gyro_x_message_buffer, (void *)&gyro_readings[GYRO_READING_X], sizeof(float), 0);
-			xMessageBufferSend(gyro_y_message_buffer, (void *)&gyro_readings[GYRO_READING_Y], sizeof(float), 0);
-			xMessageBufferSend(gyro_z_message_buffer, (void *)&gyro_readings[GYRO_READING_Z], sizeof(float), 0);
+			xMessageBufferSend(gyro_x_message_buffer, (void *)&gyro_readings[GYRO_READING_X], sizeof(float), 0U);
+			xMessageBufferSend(gyro_y_message_buffer, (void *)&gyro_readings[GYRO_READING_Y], sizeof(float), 0U);
+			xMessageBufferSend(gyro_z_message_buffer, (void *)&gyro_readings[GYRO_READING_Z], sizeof(float), 0U);
 		}
 
 		/* pause thread until next reading */
-		vTaskDelayUntil(&xLastWakeTime, 10);
+		vTaskDelayUntil(&xLastWakeTime, 10U);
 	}
 }
 
@@ -196,13 +201,13 @@ int main(void)
 	semaphore_handle = xSemaphoreCreateMutexStatic(&semaphore_buffer);
 
 	/* Create the led task */
-	xTaskCreateStatic(main_thread, "MAIN", 128, NULL, 1, main_stack, &main_task_handle);
+	xTaskCreateStatic(main_thread, "MAIN", 128U, NULL, 1, main_stack, &main_task_handle);
 
 	/* Create the gyro task */
-	xTaskCreateStatic(gyro_thread, "GYRO", 128, NULL, 2, gyro_stack, &gyro_task_handle);
+	xTaskCreateStatic(gyro_thread, "GYRO", 128U, NULL, 2, gyro_stack, &gyro_task_handle);
 
 	/* Create the miniwin task */
-	xTaskCreateStatic(miniwin_thread, "MINIWIN", 1024, NULL, 1, miniwin_stack, &miniwin_task_handle);
+	xTaskCreateStatic(miniwin_thread, "MINIWIN", 1024U, NULL, 1, miniwin_stack, &miniwin_task_handle);
 
 	/* Start the scheduler */
 	vTaskStartScheduler();

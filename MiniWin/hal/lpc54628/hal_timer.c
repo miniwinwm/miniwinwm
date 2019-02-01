@@ -84,14 +84,14 @@ void mw_hal_timer_init(void)
     ctimer_match_config_t matchConfig;
     gpio_pin_config_t led_config =
     {
-        kGPIO_DigitalOutput, 0
+        kGPIO_DigitalOutput, 0U
     };
 
     GPIO_PortInit(GPIO, APP_BOARD_TEST_LED_PORT);
     GPIO_PinInit(GPIO, APP_BOARD_TEST_LED_PORT, APP_BOARD_TEST_LED_PIN, &led_config);
 
     /* enable the asynchronous bridge */
-    SYSCON->ASYNCAPBCTRL = 1;
+    SYSCON->ASYNCAPBCTRL = 1U;
 
     /* use 12 MHz clock for some of the ctimers */
     CLOCK_AttachClk(kFRO12M_to_ASYNC_APB);
@@ -101,7 +101,7 @@ void mw_hal_timer_init(void)
 
     matchConfig.enableCounterReset = true;
     matchConfig.enableCounterStop = false;
-    matchConfig.matchValue = CLOCK_GetFreq(kCLOCK_AsyncApbClk) / 20;
+    matchConfig.matchValue = CLOCK_GetFreq(kCLOCK_AsyncApbClk) / 20U;
     matchConfig.outControl = kCTIMER_Output_NoAction;
     matchConfig.enableInterrupt = true;
     CTIMER_SetupMatch(CTIMER3, kCTIMER_Match_1, &matchConfig);
@@ -116,7 +116,7 @@ void CTIMER3_IRQHandler(void)
 
     mw_hal_timer_fired();
 
-    GPIO_PortToggle(GPIO, APP_BOARD_TEST_LED_PORT, 1u << APP_BOARD_TEST_LED_PIN);
+    GPIO_PortToggle(GPIO, APP_BOARD_TEST_LED_PORT, 1U << APP_BOARD_TEST_LED_PIN);
 }
 
 #endif

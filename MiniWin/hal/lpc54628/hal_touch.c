@@ -95,7 +95,7 @@ void mw_hal_touch_init(void)
 
 bool mw_hal_touch_is_recalibration_required(void)
 {
-	return ()!GPIO_PinRead(GPIO, APP_BOARD_USER_BUTTON_PORT, APP_BOARD_USER_BUTTON_PIN));
+	return (!GPIO_PinRead(GPIO, APP_BOARD_USER_BUTTON_PORT, APP_BOARD_USER_BUTTON_PIN));
 }
 
 bool mw_hal_touch_get_point(uint16_t* x, uint16_t* y)
