@@ -109,21 +109,9 @@ void app_init(void)
 	(void)HAL_Init();
 	SystemClock_Config();
 
-	/* if board button pressed clear settings which forces a screen recalibration */
-	BSP_PB_Init(BUTTON_KEY, BUTTON_MODE_GPIO);
-	if (BSP_PB_GetState(BUTTON_KEY))
-	{
-		mw_settings_set_to_defaults();
-		mw_settings_save();
-	}
-
 	/* initialise the leds */
 	BSP_LED_Init(LED3);
 	BSP_LED_Init(LED4);
-
-	/* initialise the gyro */
-	(void)BSP_ACCELERO_Init();
-	(void)BSP_ACCELERO_Reset();
 }
 
 void app_main_loop_process(void)
@@ -138,6 +126,15 @@ float *app_get_gyro_readings(void)
 	static uint8_t i;
 	double average_accelerations[3U];
 	uint8_t c;
+	static bool init = false;
+
+	/* initialise the gyro if not already done */
+	if (!init)
+	{
+		init = true;
+		(void)BSP_ACCELERO_Init();
+		BSP_ACCELERO_Reset();
+	}
 
 	BSP_ACCELERO_GetXYZ(gyro_accelerations[i]);
 

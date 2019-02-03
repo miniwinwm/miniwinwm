@@ -101,44 +101,6 @@
 							<tool id="com.atollic.truestudio.exe.debug.toolchain.secoutput.1673762331" name="Other" superClass="com.atollic.truestudio.exe.debug.toolchain.secoutput"/>
 						</toolChain>
 					</folderInfo>
-					<folderInfo id="com.atollic.truestudio.exe.debug.2051120753.1725373344" name="/" resourcePath="MiniWin/hal/lpc54628">
-						<toolChain id="com.atollic.truestudio.exe.debug.toolchain.1796908559" name="Atollic ARM Tools" superClass="com.atollic.truestudio.exe.debug.toolchain" unusedChildren="">
-							<option id="com.atollic.truestudio.general.runtimelib.552697371.2113717760" name="Runtime Library" superClass="com.atollic.truestudio.general.runtimelib.552697371"/>
-							<option id="com.atollic.truestudio.toolchain_options.mcu.777467909.1334682231" name="Microcontroller" superClass="com.atollic.truestudio.toolchain_options.mcu.777467909"/>
-							<option id="com.atollic.truestudio.toolchain_options.vendor.860712816.23389629" name="Vendor name" superClass="com.atollic.truestudio.toolchain_options.vendor.860712816"/>
-							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="com.atollic.truestudio.exe.debug.toolchain.platform" isAbstract="false" name="Debug platform" osList="all" superClass="com.atollic.truestudio.exe.debug.toolchain.platform"/>
-							<tool id="com.atollic.truestudio.exe.debug.toolchain.as.528439221" name="Assembler" superClass="com.atollic.truestudio.exe.debug.toolchain.as.2085866169">
-								<inputType id="com.atollic.truestudio.as.input.1334546429" name="Input" superClass="com.atollic.truestudio.as.input"/>
-							</tool>
-							<tool id="com.atollic.truestudio.exe.debug.toolchain.gcc.47874225" name="C Compiler" superClass="com.atollic.truestudio.exe.debug.toolchain.gcc.1478668627">
-								<inputType id="com.atollic.truestudio.gcc.input.1531252910" superClass="com.atollic.truestudio.gcc.input"/>
-							</tool>
-							<tool id="com.atollic.truestudio.exe.debug.toolchain.ld.1523766580" name="C Linker" superClass="com.atollic.truestudio.exe.debug.toolchain.ld.415110968"/>
-							<tool id="com.atollic.truestudio.exe.debug.toolchain.gpp.599235803" name="C++ Compiler" superClass="com.atollic.truestudio.exe.debug.toolchain.gpp.976307563"/>
-							<tool id="com.atollic.truestudio.exe.debug.toolchain.ldcc.1805525705" name="C++ Linker" superClass="com.atollic.truestudio.exe.debug.toolchain.ldcc.832961356"/>
-							<tool id="com.atollic.truestudio.ar.base.1444510773" name="Archiver" superClass="com.atollic.truestudio.ar.base.673398596"/>
-							<tool id="com.atollic.truestudio.exe.debug.toolchain.secoutput.822220047" name="Other" superClass="com.atollic.truestudio.exe.debug.toolchain.secoutput.1673762331"/>
-						</toolChain>
-					</folderInfo>
-					<folderInfo id="com.atollic.truestudio.exe.debug.2051120753.1473265092" name="/" resourcePath="MiniWin/hal/linux">
-						<toolChain id="com.atollic.truestudio.exe.debug.toolchain.1502823417" name="Atollic ARM Tools" superClass="com.atollic.truestudio.exe.debug.toolchain" unusedChildren="">
-							<option id="com.atollic.truestudio.general.runtimelib.552697371.1566033641" name="Runtime Library" superClass="com.atollic.truestudio.general.runtimelib.552697371"/>
-							<option id="com.atollic.truestudio.toolchain_options.mcu.777467909.657031430" name="Microcontroller" superClass="com.atollic.truestudio.toolchain_options.mcu.777467909"/>
-							<option id="com.atollic.truestudio.toolchain_options.vendor.860712816.891673751" name="Vendor name" superClass="com.atollic.truestudio.toolchain_options.vendor.860712816"/>
-							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="com.atollic.truestudio.exe.debug.toolchain.platform" isAbstract="false" name="Debug platform" osList="all" superClass="com.atollic.truestudio.exe.debug.toolchain.platform"/>
-							<tool id="com.atollic.truestudio.exe.debug.toolchain.as.1880546783" name="Assembler" superClass="com.atollic.truestudio.exe.debug.toolchain.as.2085866169">
-								<inputType id="com.atollic.truestudio.as.input.1643201569" name="Input" superClass="com.atollic.truestudio.as.input"/>
-							</tool>
-							<tool id="com.atollic.truestudio.exe.debug.toolchain.gcc.1095654815" name="C Compiler" superClass="com.atollic.truestudio.exe.debug.toolchain.gcc.1478668627">
-								<inputType id="com.atollic.truestudio.gcc.input.1715290803" superClass="com.atollic.truestudio.gcc.input"/>
-							</tool>
-							<tool id="com.atollic.truestudio.exe.debug.toolchain.ld.1482824200" name="C Linker" superClass="com.atollic.truestudio.exe.debug.toolchain.ld.415110968"/>
-							<tool id="com.atollic.truestudio.exe.debug.toolchain.gpp.1927475138" name="C++ Compiler" superClass="com.atollic.truestudio.exe.debug.toolchain.gpp.976307563"/>
-							<tool id="com.atollic.truestudio.exe.debug.toolchain.ldcc.1910951805" name="C++ Linker" superClass="com.atollic.truestudio.exe.debug.toolchain.ldcc.832961356"/>
-							<tool id="com.atollic.truestudio.ar.base.861732259" name="Archiver" superClass="com.atollic.truestudio.ar.base.673398596"/>
-							<tool id="com.atollic.truestudio.exe.debug.toolchain.secoutput.980824145" name="Other" superClass="com.atollic.truestudio.exe.debug.toolchain.secoutput.1673762331"/>
-						</toolChain>
-					</folderInfo>
 					<sourceEntries>
 						<entry excluding="STM32F429_BSP|MiniWinFile_Common|MiniWin|common|Example|MiniWin2|Utilities" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="MiniWin"/>

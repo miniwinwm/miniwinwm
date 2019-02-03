@@ -67,9 +67,12 @@ SOFTWARE.
 
 #ifndef NDEBUG
 
-void mw_debug_print_assert(bool expression, const char *function_name, int32_t line_number, char *message)
+void mw_debug_print_assert(bool expression, const char *function_name, int32_t line_number, const char *message)
 {
-    const mw_gl_draw_info_t draw_info = {0, 0, {0, 0, MW_ROOT_WIDTH, MW_ROOT_HEIGHT}};
+    mw_gl_draw_info_t draw_info = {0};
+    draw_info.clip_rect.width = MW_ROOT_WIDTH;
+    draw_info.clip_rect.height = MW_ROOT_HEIGHT;
+
     char number_buffer[15U];
 
     if (expression)

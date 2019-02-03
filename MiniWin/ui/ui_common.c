@@ -63,7 +63,7 @@ SOFTWARE.
 *** GLOBAL FUNCTIONS ***
 ***********************/
 
-uint16_t mw_ui_common_scale_scroll_bar_touch_point(uint16_t scroll_bar_length, int16_t touch_point)
+int16_t mw_ui_common_scale_scroll_bar_touch_point(int16_t scroll_bar_length, int16_t touch_point)
 {
 	touch_point -= MW_SCROLL_BAR_SLIDER_SIZE / 2;
 	if (touch_point < 0)
@@ -76,6 +76,7 @@ uint16_t mw_ui_common_scale_scroll_bar_touch_point(uint16_t scroll_bar_length, i
 	}
 	else
 	{
+		/* keep MISRA happy */
 	}
 
 	return ((scroll_bar_length * touch_point) / (scroll_bar_length - MW_SCROLL_BAR_SLIDER_SIZE));

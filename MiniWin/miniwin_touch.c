@@ -59,7 +59,7 @@ SOFTWARE.
 *** LOCAL FUNCTION PROTOTYPES ***
 ********************************/
 
-static void draw_cross(uint16_t x, int16_t y, int16_t length);
+static void draw_cross(int16_t x, int16_t y, int16_t length);
 
 /**********************
 *** LOCAL FUNCTIONS ***
@@ -72,9 +72,11 @@ static void draw_cross(uint16_t x, int16_t y, int16_t length);
  * @param Y y coordinate of centre of cross
  * @param length Length of each cross arm
  */
-static void draw_cross(uint16_t x, int16_t y, int16_t length)
+static void draw_cross(int16_t x, int16_t y, int16_t length)
 {
-	mw_gl_draw_info_t draw_info_root = {0, 0, {0, 0, MW_ROOT_WIDTH, MW_ROOT_HEIGHT}};
+	mw_gl_draw_info_t draw_info_root = {0};
+	draw_info_root.clip_rect.width = MW_ROOT_WIDTH;
+	draw_info_root.clip_rect.height = MW_ROOT_HEIGHT;
 
 	mw_hal_lcd_filled_rectangle(0, 0, MW_ROOT_WIDTH, MW_ROOT_HEIGHT, MW_HAL_LCD_WHITE);
 	mw_hal_lcd_filled_rectangle(x - length / 2, y, length, 1, MW_HAL_LCD_BLACK);
@@ -112,16 +114,16 @@ mw_hal_touch_state_t mw_touch_get_display_touch(int16_t* x, int16_t* y)
 	raw_point.x = (INT_32)raw_x;
 	raw_point.y = (INT_32)raw_y;
 
-	getDisplayPoint(&display_point, &raw_point, mw_settings_get_calibration_matrix());
+	(void)getDisplayPoint(&display_point, &raw_point, mw_settings_get_calibration_matrix());
 
 	/* limit touch point to display size */
-	if (display_point.x >= (INT_32)(mw_hal_lcd_get_display_width()))
+	if (display_point.x >= (INT_32)mw_hal_lcd_get_display_width())
 	{
-		display_point.x = (INT_32)(mw_hal_lcd_get_display_width() - 1U);
+		display_point.x = (INT_32)mw_hal_lcd_get_display_width() - 1;
 	}
-	if (display_point.y >= (INT_32)(mw_hal_lcd_get_display_height()))
+	if (display_point.y >= (INT_32)mw_hal_lcd_get_display_height())
 	{
-		display_point.y = (INT_32)(mw_hal_lcd_get_display_height() - 1U);
+		display_point.y = (INT_32)mw_hal_lcd_get_display_height() - 1;
 	}
 	if (display_point.x < 0)
 	{
@@ -144,55 +146,59 @@ void mw_touch_calibrate(MATRIX *matrix)
 	int16_t touch_cross_size = minimum_screen_dimension / 6;
 
 	POINT_T raw_points[3U];
-	POINT_T display_points[3U] = { {touch_cross_size, touch_cross_size},
-			{MW_ROOT_WIDTH - touch_cross_size, touch_cross_size},
-			{MW_ROOT_WIDTH - touch_cross_size, MW_ROOT_HEIGHT - touch_cross_size} };
+	POINT_T display_points[3U];
+	display_points[0U].x = touch_cross_size;
+	display_points[0U].y = touch_cross_size;
+	display_points[1U].x = MW_ROOT_WIDTH - (INT_32)touch_cross_size;
+	display_points[1U].y = touch_cross_size;
+	display_points[2U].x = MW_ROOT_WIDTH - (INT_32)touch_cross_size;
+	display_points[2U].y = MW_ROOT_HEIGHT - (INT_32)touch_cross_size;
 	uint16_t x;
 	uint16_t y;
 
 	MW_ASSERT(matrix, "Null pointer argument");
 
     /* first point */
-	draw_cross(display_points[0].x, display_points[0].y, touch_cross_size);
+	draw_cross((int16_t)display_points[0].x, (int16_t)display_points[0].y, touch_cross_size);
 	while (mw_hal_touch_get_state() == MW_HAL_TOUCH_STATE_UP)
 	{
 	}
 	while (!mw_hal_touch_get_point(&x, &y))
 	{
 	}
-	raw_points[0U].x = x;
-	raw_points[0U].y = y;
+	raw_points[0U].x = (INT_32)x;
+	raw_points[0U].y = (INT_32)y;
 	while (mw_hal_touch_get_state() == MW_HAL_TOUCH_STATE_DOWN)
 	{
 	}
 
     /* second point */
-	draw_cross(display_points[1].x, display_points[1].y, touch_cross_size);
+	draw_cross((int16_t)display_points[1].x, (int16_t)display_points[1].y, touch_cross_size);
 	while (mw_hal_touch_get_state() == MW_HAL_TOUCH_STATE_UP)
 	{
 	}
 	while (!mw_hal_touch_get_point(&x, &y))
 	{
 	}
-	raw_points[1U].x = x;
-	raw_points[1U].y = y;
+	raw_points[1U].x = (INT_32)x;
+	raw_points[1U].y = (INT_32)y;
 	while (mw_hal_touch_get_state() == MW_HAL_TOUCH_STATE_DOWN)
 	{
 	}
 
     /* third point */
-	draw_cross(display_points[2].x, display_points[2].y, touch_cross_size);
+	draw_cross((int16_t)display_points[2].x, (int16_t)display_points[2].y, touch_cross_size);
 	while (mw_hal_touch_get_state() == MW_HAL_TOUCH_STATE_UP)
 	{
 	}
 	while (!mw_hal_touch_get_point(&x, &y))
 	{
 	}
-	raw_points[2U].x = x;
-	raw_points[2U].y = y;
+	raw_points[2U].x = (INT_32)x;
+	raw_points[2U].y = (INT_32)y;
 	while (mw_hal_touch_get_state() == MW_HAL_TOUCH_STATE_DOWN)
 	{
 	}
 
-	setCalibrationMatrix(display_points, raw_points, matrix);
+	(void)setCalibrationMatrix(display_points, raw_points, matrix);
 }

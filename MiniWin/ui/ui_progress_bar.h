@@ -78,7 +78,7 @@ mw_handle_t mw_ui_progress_bar_add_new(int16_t x,
 		int16_t width,
 		int16_t height,
 		mw_handle_t parent_handle,
-		uint32_t flags,
+		uint16_t flags,
 		mw_ui_progress_bar_data_t *progress_bar_instance_data);
 
 #ifdef __cplusplus

@@ -342,9 +342,10 @@ void LIS3DSH_FullScaleCmd(uint8_t FS_value)
 void LIS3DSH_RebootCmd(void)
 {
   uint8_t tmpreg;
+
   /* Read CTRL_REG6 register */
   ACCELERO_IO_Read(&tmpreg, LIS3DSH_CTRL_REG6_ADDR, 1);
-  
+
   /* Enable or Disable the reboot memory */
   tmpreg |= LIS3DSH_BOOT_FORCED;
   

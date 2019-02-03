@@ -56,13 +56,13 @@ typedef struct
 	
 	 /* Non-user modifiable fields */ 
 	bool is_key_pressed;						/**< If a key is currently pressed */
-	uint8_t	key_pressed_row;					/**< The currently pressed key */
-	uint8_t	key_pressed_column;					/**< The currently pressed key */
+	int16_t key_pressed_row;					/**< The currently pressed key */
+	int16_t key_pressed_column;					/**< The currently pressed key */
 	mw_util_rect_t invalid_rect;				/**< Rect used for partial repainting of the control */
 	mw_handle_t timer_handle;					/**< Timer handle for animations and hold down repeat timeout */
 	uint32_t touch_down_time;					/**< Time in ticks a key was first pressed down */
 	bool holding_down;							/**< true when holding down a key */
-	uint8_t key_size;							/**< Size of individual key depending on if large size or standard size */
+	int16_t key_size;							/**< Size of individual key depending on if large size or standard size */
 } mw_ui_keypad_data_t;
 
 /***************************
@@ -82,7 +82,7 @@ typedef struct
 mw_handle_t mw_ui_keypad_add_new(int16_t x,
 		int16_t y,
 		mw_handle_t parent_handle,
-		uint32_t flags,
+		uint16_t flags,
 		mw_ui_keypad_data_t *keypad_instance_data);
 
 #ifdef __cplusplus

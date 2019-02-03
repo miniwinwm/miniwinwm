@@ -75,7 +75,7 @@ SOFTWARE.
  * @param touch_point Touch position within the scroll bar as draw on screen
  * @return The scaled scroll bar position, ranging from 0 for left end, scroll_bar_length for right end
  */
-uint16_t mw_ui_common_scale_scroll_bar_touch_point(uint16_t scroll_bar_length, int16_t touch_point);
+int16_t mw_ui_common_scale_scroll_bar_touch_point(int16_t scroll_bar_length, int16_t touch_point);
 
 #ifdef __cplusplus
 }

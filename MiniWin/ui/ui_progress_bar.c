@@ -98,7 +98,7 @@ static void progress_bar_paint_function(mw_handle_t control_handle, const mw_gl_
 	mw_gl_hline(draw_info, 1, mw_get_control_rect(control_handle).width - 2, mw_get_control_rect(control_handle).height - 2);
 
     /* set progress_bar progress fill colour according to enabled state */
-	if (mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_IS_ENABLED)
+	if ((mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_IS_ENABLED) == MW_CONTROL_FLAG_IS_ENABLED)
 	{
 		mw_gl_set_solid_fill_colour(MW_PROGRESS_BAR_COLOUR);
 	}
@@ -112,7 +112,7 @@ static void progress_bar_paint_function(mw_handle_t control_handle, const mw_gl_
 	mw_gl_rectangle(draw_info,
 			2,
 			2,
-			((mw_get_control_rect(control_handle).width - 4) * this_progress_bar->progress_percent) / 100U,
+			((mw_get_control_rect(control_handle).width - 4) * (int16_t)this_progress_bar->progress_percent) / 100,
 			mw_get_control_rect(control_handle).height - 4);
 }
 
@@ -131,10 +131,11 @@ static void progress_bar_message_function(const mw_message_t *message)
 	{
 	case MW_PROGRESS_BAR_SET_PROGRESS_MESSAGE:
 		/* handle a transfer data message, which contains new progress_bar progress */
-		this_progress_bar->progress_percent = message->message_data;
+		this_progress_bar->progress_percent = (uint8_t)message->message_data;
 		break;
 
 	default:
+		/* keep MISRA happy */
 		break;
 	}
 }
@@ -148,14 +149,14 @@ mw_handle_t mw_ui_progress_bar_add_new(int16_t x,
 		int16_t width,
 		int16_t height,
 		mw_handle_t parent_handle,
-		uint32_t flags,
+		uint16_t flags,
 		mw_ui_progress_bar_data_t *progress_bar_instance_data)
 {
 	mw_util_rect_t r;
 
 	if (height < 3 || width < 3)
 	{
-		MW_ASSERT(false, "Height too small");
+		MW_ASSERT((bool)false, "Height too small");
 		return (MW_INVALID_HANDLE);
 	}
 

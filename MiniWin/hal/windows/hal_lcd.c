@@ -78,12 +78,12 @@ void mw_hal_lcd_init(void)
 	Sleep(600);
 }
 
-uint16_t mw_hal_lcd_get_display_width(void)
+int16_t mw_hal_lcd_get_display_width(void)
 {
 	return (LCD_DISPLAY_WIDTH_PIXELS);
 }
 
-uint16_t mw_hal_lcd_get_display_height(void)
+int16_t mw_hal_lcd_get_display_height(void)
 {
 	return (LCD_DISPLAY_HEIGHT_PIXELS);
 }
@@ -102,8 +102,8 @@ void mw_hal_lcd_pixel(int16_t x, int16_t y, mw_hal_lcd_colour_t colour)
 
 void mw_hal_lcd_filled_rectangle(int16_t start_x,
 		int16_t start_y,
-		uint16_t width,
-		uint16_t height,
+		int16_t width,
+		int16_t height,
 		mw_hal_lcd_colour_t colour)
 {
 	HBRUSH brush;
@@ -131,8 +131,8 @@ void mw_hal_lcd_colour_bitmap_clip(int16_t image_start_x,
 		uint16_t image_data_height_pixels,
 		int16_t clip_start_x,
 		int16_t clip_start_y,
-		uint16_t clip_width,
-		uint16_t clip_height,
+		int16_t clip_width,
+		int16_t clip_height,
 		const uint8_t *data)
 {
 	uint16_t x;
@@ -164,8 +164,8 @@ void mw_hal_lcd_monochrome_bitmap_clip(int16_t image_start_x,
 		uint16_t bitmap_height,
 		int16_t clip_start_x,
 		int16_t clip_start_y,
-		uint16_t clip_width,
-		uint16_t clip_height,
+		int16_t clip_width,
+		int16_t clip_height,
 		mw_hal_lcd_colour_t fg_colour,
 		mw_hal_lcd_colour_t bg_colour,
 		const uint8_t *image_data)

@@ -76,7 +76,7 @@ static void check_box_paint_function(mw_handle_t control_handle, const mw_gl_dra
 	mw_ui_check_box_data_t *this_check_box = (mw_ui_check_box_data_t*)mw_get_control_instance_data(control_handle);
 
     /* set the box outline, text and X colour depending on enabled state */   
-    if (mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_IS_ENABLED)
+    if ((mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_IS_ENABLED) == MW_CONTROL_FLAG_IS_ENABLED)
 	{
 		mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 	}
@@ -88,7 +88,7 @@ static void check_box_paint_function(mw_handle_t control_handle, const mw_gl_dra
 	mw_gl_set_bg_transparency(MW_GL_BG_TRANSPARENT);
 	mw_gl_set_text_rotation(MW_GL_TEXT_ROTATION_0);
 
-    if (mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_LARGE_SIZE)
+    if ((mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_LARGE_SIZE) == MW_CONTROL_FLAG_LARGE_SIZE)
     {
     	height = MW_UI_CHECK_BOX_LARGE_HEIGHT;
 
@@ -133,7 +133,7 @@ static void check_box_paint_function(mw_handle_t control_handle, const mw_gl_dra
 		mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 		mw_gl_set_bg_transparency(MW_GL_BG_TRANSPARENT);
 
-	    if (mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_LARGE_SIZE)
+	    if ((mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_LARGE_SIZE) == MW_CONTROL_FLAG_LARGE_SIZE)
 	    {
 	    	mw_gl_monochrome_bitmap(draw_info, 2, 2, 24U, 24U, mw_bitmaps_tick_large);
 	    }
@@ -164,25 +164,26 @@ static void check_box_message_function(const mw_message_t *message)
 		
 	case MW_CHECK_BOX_SET_CHECKED_STATE_MESSAGE:
 		/* handle a transfer data message, which contains new number */
-		this_check_box->checked = message->message_data & 0x01U;
+		this_check_box->checked = ((message->message_data & 0x01U) == 0x01U);
 		break;
 
 	case MW_TOUCH_DOWN_MESSAGE:
 		/* handle a touch down event within this control */		
-		if (mw_get_control_flags(message->recipient_handle) & MW_CONTROL_FLAG_IS_ENABLED)
+		if ((mw_get_control_flags(message->recipient_handle) & MW_CONTROL_FLAG_IS_ENABLED) == MW_CONTROL_FLAG_IS_ENABLED)
 		{
 			this_check_box->checked = !this_check_box->checked;
 			mw_paint_control(message->recipient_handle);
 			mw_post_message(MW_CHECKBOX_STATE_CHANGE_MESSAGE,
 					message->recipient_handle,
 					mw_get_control_parent_window_handle(message->recipient_handle),
-					this_check_box->checked,
-					MW_UNUSED_MESSAGE_PARAMETER,
+					(uint32_t)this_check_box->checked,
+					NULL,
 					MW_WINDOW_MESSAGE);
 		}
 		break;
 
 	default:
+		/* keep MISRA happy */
 		break;
 	}
 }
@@ -194,12 +195,12 @@ static void check_box_message_function(const mw_message_t *message)
 mw_handle_t mw_ui_check_box_add_new(int16_t x,
 		int16_t y,
 		mw_handle_t parent_handle,
-		uint32_t flags,
+		uint16_t flags,
 		mw_ui_check_box_data_t *check_box_instance_data)
 {
 	mw_util_rect_t r;
 
-	if (flags & MW_CONTROL_FLAG_LARGE_SIZE)
+	if ((flags & MW_CONTROL_FLAG_LARGE_SIZE) == MW_CONTROL_FLAG_LARGE_SIZE)
 	{
 		mw_util_set_rect(&r, x, y, MW_UI_CHECK_BOX_LARGE_WIDTH, MW_UI_CHECK_BOX_LARGE_HEIGHT);
 	}

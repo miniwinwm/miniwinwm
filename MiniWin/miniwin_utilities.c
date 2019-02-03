@@ -132,12 +132,12 @@ char *mw_util_safe_strcpy(char *dest, size_t size, const char *src)
     if (dest == NULL || src == NULL)
     {
     	MW_ASSERT(false, "Null pointer argument");
-    	return (0);
+    	return (NULL);
     }
 
     if (size > 0U)
     {
-        for (i = 0U; i < size - 1 && src[i]; i++)
+        for (i = 0U; i < size - (size_t)1U && src[i]; i++)
         {
              dest[i] = src[i];
         }
@@ -149,7 +149,7 @@ char *mw_util_safe_strcpy(char *dest, size_t size, const char *src)
 
 char *mw_util_safe_strcat(char *dest, size_t size, const char *src)
 {
-	return (strncat(dest, src, size - strlen(dest) - 1));
+	return (strncat(dest, src, size - strlen(dest) - (size_t)1U));
 }
 
 uint16_t mw_util_change_bit(uint16_t word, uint8_t bit, bool state)
@@ -158,7 +158,7 @@ uint16_t mw_util_change_bit(uint16_t word, uint8_t bit, bool state)
 
 	if (bit < 16U)
 	{
-		mask = 1U << bit;
+		mask = (uint16_t)1U << bit;
 
 		if (state)
 		{
@@ -180,7 +180,7 @@ bool mw_util_get_bit(uint16_t word, uint8_t bit)
 
 	if (bit < 16U)
 	{
-		mask = 1U << bit;
+		mask = (uint16_t)1U << bit;
 		if ((word & mask) == mask)
 		{
 			result = true;
@@ -214,7 +214,7 @@ const char *mw_util_get_filename_ext(const char *filename)
 {
     const char *dot = strrchr(filename, '.');
 
-    if (!dot || dot == filename)
+    if (dot == NULL || dot == filename)
     {
     	return ("");
     }
@@ -229,7 +229,7 @@ int32_t mw_util_strcicmp(char const *a, char const *b)
     for (;; a++, b++)
     {
         d = (int32_t)(tolower((unsigned char)*a) - tolower((unsigned char)*b));
-        if (d != 0 || !*a)
+        if (d != 0 || *a == '\0')
         {
             return (d);
         }

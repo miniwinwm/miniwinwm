@@ -83,13 +83,13 @@ static void keypad_paint_function(mw_handle_t control_handle, const mw_gl_draw_i
 	mw_ui_keypad_data_t *this_keypad = (mw_ui_keypad_data_t*)mw_get_control_instance_data(control_handle);
 	mw_hal_lcd_colour_t highlighted_colour;
 	mw_hal_lcd_colour_t lowlighted_colour;
-	uint8_t row;
-	uint8_t column;
-	int8_t text_offset;
-	int8_t bitmap_offset;
-	uint8_t c;
+	int16_t row;
+	int16_t column;
+	int16_t text_offset;
+	int16_t bitmap_offset;
+	char c;
 
-	if (mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_LARGE_SIZE)
+	if ((mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_LARGE_SIZE) == MW_CONTROL_FLAG_LARGE_SIZE)
 	{
 		mw_gl_set_font(MW_GL_TITLE_FONT);
 		text_offset = MW_UI_KEYPAD_KEY_TEXT_LARGE_OFFSET;
@@ -110,9 +110,9 @@ static void keypad_paint_function(mw_handle_t control_handle, const mw_gl_draw_i
 	mw_gl_set_bg_transparency(MW_GL_BG_TRANSPARENT);
 	mw_gl_set_text_rotation(MW_GL_TEXT_ROTATION_0);
 
-	for (row = 0U; row < 4U; row++)
+	for (row = 0; row < 4; row++)
 	{
-		for (column = 0U; column < 3U; column++)
+		for (column = 0; column < 3; column++)
 		{
 			/* set colour of key box fill according to pressed state */
 			if (this_keypad->is_key_pressed && row == this_keypad->key_pressed_row && column == this_keypad->key_pressed_column)
@@ -125,7 +125,7 @@ static void keypad_paint_function(mw_handle_t control_handle, const mw_gl_draw_i
 			}
 
 			/* set fg colour according to control enabled state */
-			if (mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_IS_ENABLED)
+			if ((mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_IS_ENABLED) == MW_CONTROL_FLAG_IS_ENABLED)
 			{
 				mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 			}
@@ -148,8 +148,8 @@ static void keypad_paint_function(mw_handle_t control_handle, const mw_gl_draw_i
 				if (c == '\b')
 				{
 					mw_gl_monochrome_bitmap(draw_info,
-							(column * this_keypad->key_size) + bitmap_offset + 1U,
-							(row * this_keypad->key_size) + bitmap_offset + 1U,
+							(column * this_keypad->key_size) + bitmap_offset + 1,
+							(row * this_keypad->key_size) + bitmap_offset + 1,
 							MW_UI_KEYPAD_KEY_BITMAP_SIZE,
 							MW_UI_KEYPAD_KEY_BITMAP_SIZE,
 							mw_bitmaps_backspace_key);
@@ -157,8 +157,8 @@ static void keypad_paint_function(mw_handle_t control_handle, const mw_gl_draw_i
 				else
 				{
 					mw_gl_character(draw_info,
-							(column * this_keypad->key_size) + text_offset + 1U,
-							(row * this_keypad->key_size) + text_offset + 1U,
+							(column * this_keypad->key_size) + text_offset + 1,
+							(row * this_keypad->key_size) + text_offset + 1,
 							c);
 				}
 			}
@@ -196,23 +196,23 @@ static void keypad_paint_function(mw_handle_t control_handle, const mw_gl_draw_i
 
 			mw_gl_set_fg_colour(highlighted_colour);
 			mw_gl_vline(draw_info,
-					(column * this_keypad->key_size) + 1U,
-					(row * this_keypad->key_size) + 1U,
-					((row + 1U) * this_keypad->key_size) - 2U);
+					(column * this_keypad->key_size) + 1,
+					(row * this_keypad->key_size) + 1,
+					((row + 1) * this_keypad->key_size) - 2);
 			mw_gl_hline(draw_info,
-					(column * this_keypad->key_size) + 1U,
-					((column + 1U) * this_keypad->key_size) - 2U,
+					(column * this_keypad->key_size) + 1,
+					((column + 1) * this_keypad->key_size) - 2,
 					(row * this_keypad->key_size) + 1);
 
 			mw_gl_set_fg_colour(lowlighted_colour);
 			mw_gl_vline(draw_info,
-					((column + 1U) * this_keypad->key_size) - 2U,
-					(row * this_keypad->key_size) + 1U,
-					((row + 1U) * this_keypad->key_size) - 2U);
+					((column + 1) * this_keypad->key_size) - 2,
+					(row * this_keypad->key_size) + 1,
+					((row + 1) * this_keypad->key_size) - 2);
 			mw_gl_hline(draw_info,
-					(column * this_keypad->key_size) + 1U,
-					((column + 1U) * this_keypad->key_size) - 2U,
-					((row + 1U) * this_keypad->key_size) - 2U);
+					(column * this_keypad->key_size) + 1,
+					((column + 1) * this_keypad->key_size) - 2,
+					((row + 1) * this_keypad->key_size) - 2);
 		}
 	}
 
@@ -221,8 +221,8 @@ static void keypad_paint_function(mw_handle_t control_handle, const mw_gl_draw_i
 	{
 		mw_gl_set_fg_colour(MW_CONTROL_DISABLED_COLOUR);
 		mw_gl_character(draw_info,
-				(0U * this_keypad->key_size) + text_offset,
-				(3U * this_keypad->key_size) + text_offset,
+				(0 * this_keypad->key_size) + text_offset,
+				(3 * this_keypad->key_size) + text_offset,
 				'-');
 	}
 }
@@ -237,14 +237,14 @@ static void process_keypress(const mw_message_t *message)
 	mw_ui_keypad_data_t *this_keypad = (mw_ui_keypad_data_t*)mw_get_control_instance_data(message->recipient_handle);
 
 	/* special handling for negative key which can be disabled */
-	if (!(this_keypad->key_pressed_row == 3U && this_keypad->key_pressed_column == 0U && !this_keypad->enable_negative))
+	if (!(this_keypad->key_pressed_row == 3 && this_keypad->key_pressed_column == 0 && !this_keypad->enable_negative))
 	{
 		/* post message for keypress */
 		mw_post_message(MW_KEY_PRESSED_MESSAGE,
 				message->recipient_handle,
 				mw_get_control_parent_window_handle(message->recipient_handle),
-				(uint32_t)key_codes[(this_keypad->key_pressed_row * 3U) + this_keypad->key_pressed_column],
-				MW_UNUSED_MESSAGE_PARAMETER,
+				(uint32_t)key_codes[(this_keypad->key_pressed_row * 3) + this_keypad->key_pressed_column],
+				NULL,
 				MW_WINDOW_MESSAGE);
 
 		/* repaint pressed key area only */
@@ -262,6 +262,7 @@ static void process_keypress(const mw_message_t *message)
 static void keypad_message_function(const mw_message_t *message)
 {
 	mw_ui_keypad_data_t *this_keypad = (mw_ui_keypad_data_t*)mw_get_control_instance_data(message->recipient_handle);
+	uint32_t intermediate_uint32;
 
 	MW_ASSERT(message, "Null pointer argument");
 
@@ -272,7 +273,7 @@ static void keypad_message_function(const mw_message_t *message)
 		this_keypad->is_key_pressed = false;
 		this_keypad->holding_down = false;
 		this_keypad->timer_handle = MW_INVALID_HANDLE;
-		if (mw_get_control_flags(message->recipient_handle) & MW_CONTROL_FLAG_LARGE_SIZE)
+		if ((mw_get_control_flags(message->recipient_handle) & MW_CONTROL_FLAG_LARGE_SIZE) == MW_CONTROL_FLAG_LARGE_SIZE)
 		{
 			this_keypad->key_size = MW_UI_KEYPAD_KEY_LARGE_SIZE;
 		}
@@ -286,7 +287,7 @@ static void keypad_message_function(const mw_message_t *message)
 
 	case MW_TOUCH_DRAG_MESSAGE:
 	case MW_TOUCH_HOLD_DOWN_MESSAGE:
-		if (!(mw_get_control_flags(message->recipient_handle) & MW_CONTROL_FLAG_IS_ENABLED))
+		if ((mw_get_control_flags(message->recipient_handle) & MW_CONTROL_FLAG_IS_ENABLED) == 0U)
 		{
 			break;
 		}
@@ -314,21 +315,22 @@ static void keypad_message_function(const mw_message_t *message)
 
 	case MW_TOUCH_DOWN_MESSAGE:
 		/* handle a touch down event within this control */
-		if (!(mw_get_control_flags(message->recipient_handle) & MW_CONTROL_FLAG_IS_ENABLED))
+		if ((mw_get_control_flags(message->recipient_handle) & MW_CONTROL_FLAG_IS_ENABLED) == 0U)
 		{
 			break;
 		}
 
 		/* get key pressed number */
-		this_keypad->key_pressed_column = (message->message_data >> 16U) / this_keypad->key_size;
-		this_keypad->key_pressed_row = (message->message_data & 0xffffU) / this_keypad->key_size;
+		intermediate_uint32 = message->message_data & 0xffffU;
+		this_keypad->key_pressed_row = ((int16_t)intermediate_uint32 / this_keypad->key_size);
+		intermediate_uint32 = message->message_data >> 16U;
+		this_keypad->key_pressed_column = (int16_t)intermediate_uint32 / this_keypad->key_size;
 
 		this_keypad->touch_down_time = mw_tick_counter;
 		this_keypad->timer_handle = mw_set_timer(mw_tick_counter + MW_KEY_DOWN_TIME, message->recipient_handle, MW_CONTROL_MESSAGE);
 		this_keypad->is_key_pressed = true;
 		process_keypress(message);
 		break;
-
 
 	case MW_TOUCH_UP_MESSAGE:
 		if (this_keypad->holding_down)
@@ -339,6 +341,7 @@ static void keypad_message_function(const mw_message_t *message)
 		break;
 
 	default:
+		/* keep MISRA happy */
 		break;
 	}
 }
@@ -350,12 +353,12 @@ static void keypad_message_function(const mw_message_t *message)
 mw_handle_t mw_ui_keypad_add_new(int16_t x,
 		int16_t y,
 		mw_handle_t parent_handle,
-		uint32_t flags,
+		uint16_t flags,
 		mw_ui_keypad_data_t *keypad_instance_data)
 {
 	mw_util_rect_t r;
 
-	if (flags & MW_CONTROL_FLAG_LARGE_SIZE)
+	if ((flags & MW_CONTROL_FLAG_LARGE_SIZE) == MW_CONTROL_FLAG_LARGE_SIZE)
 	{
 		mw_util_set_rect(&r, x, y, MW_UI_KEYPAD_KEY_LARGE_SIZE * 3, MW_UI_KEYPAD_KEY_LARGE_SIZE * 4);
 	}

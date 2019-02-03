@@ -122,7 +122,7 @@ static void button_paint_function(mw_handle_t control_handle, const mw_gl_draw_i
 	mw_gl_set_text_rotation(MW_GL_TEXT_ROTATION_0);
 
 	/* set text colour according to enabled state */
-	if (mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_IS_ENABLED)
+	if ((mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_IS_ENABLED) == MW_CONTROL_FLAG_IS_ENABLED)
 	{
 		mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 	}
@@ -132,7 +132,7 @@ static void button_paint_function(mw_handle_t control_handle, const mw_gl_draw_i
 	}
 
 	/* get the text width */
-	if (mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_LARGE_SIZE)
+	if ((mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_LARGE_SIZE) == MW_CONTROL_FLAG_LARGE_SIZE)
 	{
 		mw_gl_set_font(MW_GL_TITLE_FONT);
 		text_width = (int16_t)mw_gl_get_string_width_pixels(this_button->button_label);
@@ -146,7 +146,7 @@ static void button_paint_function(mw_handle_t control_handle, const mw_gl_draw_i
 
 	if (this_button->button_down)
 	{
-		if (mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_LARGE_SIZE)
+		if ((mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_LARGE_SIZE) == MW_CONTROL_FLAG_LARGE_SIZE)
 		{
 			mw_gl_string(draw_info, text_x + 2, 11, this_button->button_label);
 		}
@@ -157,7 +157,7 @@ static void button_paint_function(mw_handle_t control_handle, const mw_gl_draw_i
 	}
 	else
 	{
-		if (mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_LARGE_SIZE)
+		if ((mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_LARGE_SIZE) == MW_CONTROL_FLAG_LARGE_SIZE)
 		{
 			mw_gl_string(draw_info, text_x, 9, this_button->button_label);
 		}
@@ -194,22 +194,23 @@ static void button_message_function(const mw_message_t *message)
 				message->recipient_handle,
 				mw_get_control_parent_window_handle(message->recipient_handle),
 				MW_UNUSED_MESSAGE_PARAMETER,
-				MW_UNUSED_MESSAGE_PARAMETER,
+				NULL,
 				MW_WINDOW_MESSAGE);
 		mw_paint_control(message->recipient_handle);
 		break;
 
 	case MW_TOUCH_DOWN_MESSAGE:
 		/* handle a touch down event within this control */	
-		if (mw_get_control_flags(message->recipient_handle) & MW_CONTROL_FLAG_IS_ENABLED)
+		if ((mw_get_control_flags(message->recipient_handle) & MW_CONTROL_FLAG_IS_ENABLED) == MW_CONTROL_FLAG_IS_ENABLED)
 		{
-			mw_set_timer(mw_tick_counter + MW_CONTROL_DOWN_TIME, message->recipient_handle, MW_CONTROL_MESSAGE);
+			(void)mw_set_timer(mw_tick_counter + MW_CONTROL_DOWN_TIME, message->recipient_handle, MW_CONTROL_MESSAGE);
 			this_button->button_down = true;
 			mw_paint_control(message->recipient_handle);
 		}
 		break;
 
 	default:
+		/* keep MISRA happy */
 		break;
 	}
 }
@@ -221,12 +222,12 @@ static void button_message_function(const mw_message_t *message)
 mw_handle_t mw_ui_button_add_new(int16_t x,
 		int16_t y,
 		mw_handle_t parent_handle,
-		uint32_t flags,
+		uint16_t flags,
 		mw_ui_button_data_t *button_instance_data)
 {
 	mw_util_rect_t r;
 
-	if (flags & MW_CONTROL_FLAG_LARGE_SIZE)
+	if ((flags & MW_CONTROL_FLAG_LARGE_SIZE) == MW_CONTROL_FLAG_LARGE_SIZE)
 	{
 		mw_util_set_rect(&r, x, y, MW_UI_BUTTON_LARGE_WIDTH, MW_UI_BUTTON_LARGE_HEIGHT);
 	}

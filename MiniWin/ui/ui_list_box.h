@@ -104,7 +104,7 @@ mw_handle_t mw_ui_list_box_add_new(int16_t x,
 		int16_t y,
 		int16_t width,
 		mw_handle_t parent_handle,
-		uint32_t flags,
+		uint16_t flags,
 		mw_ui_list_box_data_t *list_box_instance_data);
 
 #ifdef __cplusplus

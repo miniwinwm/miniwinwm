@@ -82,7 +82,7 @@ bool mw_message_queue_insert(const mw_message_t *incoming_message)
 	MW_ASSERT(items_in_queue < MW_MESSAGE_QUEUE_SIZE, "Message queue full");
 
 	/* there's space so copy in the new message */
-	memcpy(&message_queue[next_write_slot], incoming_message, sizeof(mw_message_t));
+	(void)memcpy(&message_queue[next_write_slot], incoming_message, sizeof(mw_message_t));
 	next_write_slot++;
 	if (next_write_slot == MW_MESSAGE_QUEUE_SIZE)
 	{
@@ -113,7 +113,7 @@ bool mw_message_queue_remove(mw_message_t *outgoing_message)
 	}
 
 	/* there is an item in the queue so copy it out */
-	memcpy(outgoing_message, &message_queue[next_read_slot], sizeof(mw_message_t));
+	(void)memcpy(outgoing_message, &message_queue[next_read_slot], sizeof(mw_message_t));
 	next_read_slot++;
 	if (next_read_slot == MW_MESSAGE_QUEUE_SIZE)
 	{

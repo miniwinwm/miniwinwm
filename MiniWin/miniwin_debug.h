@@ -45,7 +45,7 @@ SOFTWARE.
 #ifdef NDEBUG
 #define MW_ASSERT(test)
 #else
-#define MW_ASSERT(expression, message) mw_debug_print_assert(expression, __func__, __LINE__, message)
+#define MW_ASSERT(expression, message) mw_debug_print_assert((expression), __func__, __LINE__, message)
 #endif
 
 /************
@@ -64,7 +64,7 @@ SOFTWARE.
  * @param line_number The line number in the file the assertion failed on
  * @param message General purpose text to be displayed on assert failure
  */
-void mw_debug_print_assert(bool expression, const char *function_name, int32_t line_number, char *message);
+void mw_debug_print_assert(bool expression, const char *function_name, int32_t line_number, const char *message);
 
 #ifdef __cplusplus
 }

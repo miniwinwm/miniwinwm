@@ -44,10 +44,10 @@ SOFTWARE.
  */
  
 /* Memory allocation */
-#define MW_MAX_WINDOW_COUNT 				14               		/**< Maximum number of allowed windows; root window always takes 1 space */
-#define MW_MAX_CONTROL_COUNT				25              		/**< Total maximum number of allowed controls in all windows */
-#define MW_MAX_TIMER_COUNT					8               		/**< Maximum number of timers */
-#define MW_MESSAGE_QUEUE_SIZE				100              		/**< Maximum number of messages in message queue */
+#define MW_MAX_WINDOW_COUNT 				14U               		/**< Maximum number of allowed windows; root window always takes 1 space */
+#define MW_MAX_CONTROL_COUNT				24U              		/**< Total maximum number of allowed controls in all windows */
+#define MW_MAX_TIMER_COUNT					8U               		/**< Maximum number of timers */
+#define MW_MESSAGE_QUEUE_SIZE				100U              		/**< Maximum number of messages in message queue */
 
 /* Display rotation - one and only one of these must be defined */
 #define MW_DISPLAY_ROTATION_0
@@ -67,7 +67,7 @@ SOFTWARE.
 #define MW_ROOT_WIDTH 						mw_hal_lcd_get_display_height() /**< Width of root window */
 #define MW_ROOT_HEIGHT 						mw_hal_lcd_get_display_width()	/**< Height of root window */
 #endif
-#define MW_MAX_TITLE_SIZE 					14
+#define MW_MAX_TITLE_SIZE 					14U
 
 /* User interface colours */
 #define MW_TITLE_BAR_COLOUR_FOCUS			MW_HAL_LCD_BLUE    		/**< Colour of title bar of window with focus */
@@ -82,13 +82,13 @@ SOFTWARE.
 #define MW_CONTROL_DISABLED_COLOUR			MW_HAL_LCD_GREY5		/**< Colour to draw a control that is disabled */
 
 /* Timings */
-#define MW_CONTROL_DOWN_TIME				4               		/**< Time for animated controls down time in system ticks */
-#define MW_KEY_DOWN_TIME					3               		/**< Time for animated keys down time in system ticks */
-#define MW_TICKS_PER_SECOND					20						/**< The number of window timer ticks per second */
-#define MW_WINDOW_MIN_MAX_EFFECT_TIME		5						/**< Number of window ticks to show window minimise/maximise effect for */
-#define MW_CURSOR_PERIOD_TICKS				10						/**< Period between cursor change in system ticks */
-#define MW_TOUCH_INTERVAL_TICKS				2               		/**< Number of window ticks a touch has to be down for to count as a touch event */
-#define MW_HOLD_DOWN_DELAY_TICKS			10						/**< Time in ticks that a ui control starts repeating if held down */
+#define MW_CONTROL_DOWN_TIME				4U               		/**< Time for animated controls down time in system ticks */
+#define MW_KEY_DOWN_TIME					3U               		/**< Time for animated keys down time in system ticks */
+#define MW_TICKS_PER_SECOND					20U						/**< The number of window timer ticks per second */
+#define MW_WINDOW_MIN_MAX_EFFECT_TIME		5U						/**< Number of window ticks to show window minimise/maximise effect for */
+#define MW_CURSOR_PERIOD_TICKS				10U						/**< Period between cursor change in system ticks */
+#define MW_TOUCH_INTERVAL_TICKS				2U               		/**< Number of window ticks a touch has to be down for to count as a touch event */
+#define MW_HOLD_DOWN_DELAY_TICKS			10U						/**< Time in ticks that a ui control starts repeating if held down */
 
 /* Fonts */
 #define MW_FONT_12_INCLUDED					1						/**< Comment this in to include Courier 12 point font or out to exclude it */

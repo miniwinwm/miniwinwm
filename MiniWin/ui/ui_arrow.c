@@ -127,19 +127,19 @@ static void arrow_paint_function(mw_handle_t control_handle, const mw_gl_draw_in
 	mw_gl_vline(draw_info, mw_get_control_rect(control_handle).width - 2, 1, mw_get_control_rect(control_handle).height - 2);
 	mw_gl_hline(draw_info, 1, mw_get_control_rect(control_handle).width - 2, mw_get_control_rect(control_handle).height - 2);
 
-	if (mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_LARGE_SIZE)
+	if ((mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_LARGE_SIZE) == MW_CONTROL_FLAG_LARGE_SIZE)
 	{
-		memcpy(shape_x, shape_large_x_const, sizeof(shape_x));
-		memcpy(shape_y, shape_large_y_const, sizeof(shape_y));
+		(void)memcpy((shape_x), (shape_large_x_const), (sizeof(shape_x)));
+		(void)memcpy((shape_y), (shape_large_y_const), (sizeof(shape_y)));
 		arrow_size = MW_UI_ARROW_LARGE_SIZE;
 	}
 	else
 	{
-		memcpy(shape_x, shape_x_const, sizeof(shape_x));
-		memcpy(shape_y, shape_y_const, sizeof(shape_y));
+		(void)memcpy((shape_x), (shape_x_const), (sizeof(shape_x)));
+		(void)memcpy((shape_y), (shape_y_const), (sizeof(shape_y)));
 		arrow_size = MW_UI_ARROW_SIZE;
 	}
-	mw_gl_rotate_shape(ARROW_POINTS, shape_x, shape_y, this_arrow->mw_ui_arrow_direction);
+	mw_gl_rotate_shape((uint8_t)ARROW_POINTS, shape_x, shape_y, (int16_t)this_arrow->mw_ui_arrow_direction);
 
 	if (this_arrow->arrow_down)
 	{
@@ -150,7 +150,7 @@ static void arrow_paint_function(mw_handle_t control_handle, const mw_gl_draw_in
 		arrow_offset = arrow_size / 2;
 	}
 
-	if (mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_IS_ENABLED)
+	if ((mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_IS_ENABLED) == MW_CONTROL_FLAG_IS_ENABLED)
 	{
 		mw_gl_set_solid_fill_colour(MW_HAL_LCD_BLACK);
 	}
@@ -164,7 +164,7 @@ static void arrow_paint_function(mw_handle_t control_handle, const mw_gl_draw_in
 	mw_gl_set_line(MW_GL_SOLID_LINE);
 
 	mw_gl_poly(draw_info,
-			ARROW_POINTS,
+			(uint8_t)ARROW_POINTS,
 			shape_x,
 			shape_y,
 			arrow_offset,
@@ -195,8 +195,8 @@ static void arrow_message_function(const mw_message_t *message)
 		mw_post_message(MW_ARROW_PRESSED_MESSAGE,
 				message->recipient_handle,
 				mw_get_control_parent_window_handle(message->recipient_handle),
-				this_arrow->mw_ui_arrow_direction,
-				MW_UNUSED_MESSAGE_PARAMETER,
+				(uint32_t)this_arrow->mw_ui_arrow_direction,
+				NULL,
 				MW_WINDOW_MESSAGE);
 		mw_paint_control(message->recipient_handle);
 		break;
@@ -210,15 +210,15 @@ static void arrow_message_function(const mw_message_t *message)
 			mw_post_message(MW_ARROW_PRESSED_MESSAGE,
 					message->recipient_handle,
 					mw_get_control_parent_window_handle(message->recipient_handle),
-					this_arrow->mw_ui_arrow_direction,
-					MW_UNUSED_MESSAGE_PARAMETER,
+					(uint32_t)this_arrow->mw_ui_arrow_direction,
+					NULL,
 					MW_WINDOW_MESSAGE);
 		}
 		break;
 
 	case MW_TOUCH_DOWN_MESSAGE:
 		/* handle a touch down event within this control */	
-		if (mw_get_control_flags(message->recipient_handle) & MW_CONTROL_FLAG_IS_ENABLED)
+		if ((mw_get_control_flags(message->recipient_handle) & MW_CONTROL_FLAG_IS_ENABLED) == MW_CONTROL_FLAG_IS_ENABLED)
 		{
 			this_arrow->timer_handle = mw_set_timer(mw_tick_counter + MW_CONTROL_DOWN_TIME, message->recipient_handle, MW_CONTROL_MESSAGE);
 			this_arrow->arrow_down = true;
@@ -228,6 +228,7 @@ static void arrow_message_function(const mw_message_t *message)
 		break;
 
 	default:
+		/* keep MISRA happy */
 		break;
 	}
 }
@@ -239,12 +240,12 @@ static void arrow_message_function(const mw_message_t *message)
 mw_handle_t mw_ui_arrow_add_new(int16_t x,
 		int16_t y,
 		mw_handle_t parent_handle,
-		uint32_t flags,
+		uint16_t flags,
 		mw_ui_arrow_data_t *arrow_instance_data)
 {
 	mw_util_rect_t r;
 
-	if (flags & MW_CONTROL_FLAG_LARGE_SIZE)
+	if ((flags & MW_CONTROL_FLAG_LARGE_SIZE) == MW_CONTROL_FLAG_LARGE_SIZE)
 	{
 		mw_util_set_rect(&r, x, y, MW_UI_ARROW_LARGE_SIZE + 1, MW_UI_ARROW_LARGE_SIZE + 1);
 	}

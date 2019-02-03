@@ -84,7 +84,7 @@ static void label_paint_function(mw_handle_t control_handle, const mw_gl_draw_in
 			mw_get_control_rect(control_handle).height);
 
     /* set label text colour according to enabled state */
-	if (mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_IS_ENABLED)
+	if ((mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_IS_ENABLED) == MW_CONTROL_FLAG_IS_ENABLED)
 	{
 		mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 	}
@@ -97,7 +97,7 @@ static void label_paint_function(mw_handle_t control_handle, const mw_gl_draw_in
 	mw_gl_set_bg_transparency(MW_GL_BG_TRANSPARENT);    
 	mw_gl_set_text_rotation(MW_GL_TEXT_ROTATION_0);
 
-	if (mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_LARGE_SIZE)
+	if ((mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_LARGE_SIZE) == MW_CONTROL_FLAG_LARGE_SIZE)
 	{
 		mw_gl_set_font(MW_GL_TITLE_FONT);
 		mw_gl_string(draw_info, MW_UI_LABEL_LARGE_X_OFFSET, 1, this_label->label);
@@ -124,7 +124,7 @@ static void label_message_function(const mw_message_t *message)
 	{
 	case MW_LABEL_SET_LABEL_TEXT_MESSAGE:
 		/* message pointer field contains pointer to new text */
-		if (message->message_pointer)
+		if (message->message_pointer != NULL)
 		{
 			(void)mw_util_safe_strcpy(this_label->label, MW_UI_LABEL_MAX_CHARS, (char *)message->message_pointer);
 		}
@@ -135,6 +135,7 @@ static void label_message_function(const mw_message_t *message)
 		break;
 
 	default:
+		/* keep MISRA happy */
 		break;
 	}
 }
@@ -147,12 +148,12 @@ mw_handle_t mw_ui_label_add_new(int16_t x,
 		int16_t y,
 		int16_t width,
 		mw_handle_t parent_handle,
-		uint32_t flags,
+		uint16_t flags,
 		mw_ui_label_data_t *label_instance_data)
 {
 	mw_util_rect_t r;
 
-	if (flags & MW_CONTROL_FLAG_LARGE_SIZE)
+	if ((flags & MW_CONTROL_FLAG_LARGE_SIZE) == MW_CONTROL_FLAG_LARGE_SIZE)
 	{
 		mw_util_set_rect(&r, x, y, width, MW_UI_LABEL_LARGE_HEIGHT);
 	}

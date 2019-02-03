@@ -196,7 +196,7 @@ void BSP_ACCELERO_Reset(void)
 {
   if(AcceleroDrv->Reset != NULL)
   {
-    AcceleroDrv->Reset();
+   AcceleroDrv->Reset();
   }
 }
 

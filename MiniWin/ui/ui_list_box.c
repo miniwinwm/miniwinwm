@@ -77,8 +77,9 @@ static void list_box_paint_function(mw_handle_t control_handle, const mw_gl_draw
 	int16_t row_height;
 	int16_t icon_x_offset;
 	int16_t text_x_offset;
+	bool intermediate_bool;
 
-	if (mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_LARGE_SIZE)
+	if ((mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_LARGE_SIZE) == MW_CONTROL_FLAG_LARGE_SIZE)
 	{
 		mw_gl_set_font(MW_GL_TITLE_FONT);
 		row_height = MW_UI_LIST_BOX_LARGE_ROW_HEIGHT;
@@ -126,7 +127,7 @@ static void list_box_paint_function(mw_handle_t control_handle, const mw_gl_draw
 			mw_gl_hline(draw_info,
 				2,
 				mw_get_control_rect(control_handle).width - 4,
-				row_height * i);
+				row_height * (int16_t)i);
 		}
 
 		if (i >= this_list_box->number_of_items)
@@ -135,39 +136,39 @@ static void list_box_paint_function(mw_handle_t control_handle, const mw_gl_draw
 		}
 
 	    /* if this item is selected draw the background in control down colour */
-		if(this_list_box->line_is_selected && (this_list_box->selection - this_list_box->lines_to_scroll) == i)
+		if (this_list_box->line_is_selected && (this_list_box->selection - this_list_box->lines_to_scroll) == i)
 		{
 			mw_gl_set_solid_fill_colour(MW_CONTROL_DOWN_COLOUR);
 			mw_gl_set_border(MW_GL_BORDER_OFF);
 			mw_gl_rectangle(draw_info,
 					2,
-					row_height * i + 1,
+					row_height * (int16_t)i + 1,
 					mw_get_control_rect(control_handle).width - 4,
 					row_height - 2);
 			mw_gl_set_line(MW_GL_SOLID_LINE);
 			mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 			mw_gl_vline(draw_info,
 					1,
-					row_height * i + 1U,
-					row_height * (i + 1U) - 1);
+					row_height * (int16_t)i + 1,
+					row_height * ((int16_t)i + 1) - 1);
 			mw_gl_hline(draw_info,
 					1,
 					mw_get_control_rect(control_handle).width - 2,
-					row_height * i + 1U);
+					row_height * (int16_t)i + 1);
 			mw_gl_set_fg_colour(MW_HAL_LCD_WHITE);
 			mw_gl_vline(draw_info,
 					mw_get_control_rect(control_handle).width - 3,
-					row_height * i + 1U,
-					row_height * i + row_height - 1);
+					row_height * (int16_t)i + 1,
+					row_height * (int16_t)i + row_height - 1);
 			mw_gl_hline(draw_info,
 					1,
 					mw_get_control_rect(control_handle).width - 3,
-					row_height * (i + 1U) - 1);
+					row_height * ((int16_t)i + 1) - 1);
 		}
 
 		/* set up text colour on enabled state - from control and individual items bitfield */
-		if ((mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_IS_ENABLED) &&
-	    		mw_util_get_bit(this_list_box->line_enables, i))
+		intermediate_bool = (mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_IS_ENABLED) == MW_CONTROL_FLAG_IS_ENABLED;
+		if (mw_util_get_bit(this_list_box->line_enables, i) && intermediate_bool)
 		{
 			mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 		}
@@ -177,14 +178,14 @@ static void list_box_paint_function(mw_handle_t control_handle, const mw_gl_draw
 		}
 
 		/* draw the item label text and icon */
-		if (mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_LARGE_SIZE)
+		if ((mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_LARGE_SIZE) == MW_CONTROL_FLAG_LARGE_SIZE)
 		{
 			/* large text and icon */
 			/* check if there is an icon on this row */
 			if (this_list_box->list_box_entries[i + this_list_box->lines_to_scroll].icon != NULL)
 			{
 				/* there's an icon so update text offset */
-				text_x_offset = MW_UI_LIST_BOX_LARGE_LABEL_X_OFFSET + MW_UI_LIST_BOX_LARGE_ICON_SIZE;
+				text_x_offset = (int16_t)MW_UI_LIST_BOX_LARGE_LABEL_X_OFFSET + (int16_t)MW_UI_LIST_BOX_LARGE_ICON_SIZE;
 
 				/* draw icon */
 				mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
@@ -192,7 +193,7 @@ static void list_box_paint_function(mw_handle_t control_handle, const mw_gl_draw
 				{
 					mw_gl_monochrome_bitmap(draw_info,
 							icon_x_offset + 2,
-							row_height * i + MW_UI_LIST_BOX_LARGE_LABEL_Y_OFFSET,
+							row_height * (int16_t)i + MW_UI_LIST_BOX_LARGE_LABEL_Y_OFFSET,
 							MW_UI_LIST_BOX_LARGE_ICON_SIZE,
 							MW_UI_LIST_BOX_LARGE_ICON_SIZE,
 							this_list_box->list_box_entries[i + this_list_box->lines_to_scroll].icon);
@@ -201,7 +202,7 @@ static void list_box_paint_function(mw_handle_t control_handle, const mw_gl_draw
 				{
 					mw_gl_monochrome_bitmap(draw_info,
 							icon_x_offset,
-							row_height * i + MW_UI_LIST_BOX_LARGE_LABEL_Y_OFFSET - 2,
+							row_height * (int16_t)i + MW_UI_LIST_BOX_LARGE_LABEL_Y_OFFSET - 2,
 							MW_UI_LIST_BOX_LARGE_ICON_SIZE,
 							MW_UI_LIST_BOX_LARGE_ICON_SIZE,
 							this_list_box->list_box_entries[i + this_list_box->lines_to_scroll].icon);
@@ -217,14 +218,14 @@ static void list_box_paint_function(mw_handle_t control_handle, const mw_gl_draw
 			{
 				mw_gl_string(draw_info,
 						text_x_offset + 2,
-						row_height * i + MW_UI_LIST_BOX_LARGE_LABEL_Y_OFFSET + 2,
+						row_height * (int16_t)i + MW_UI_LIST_BOX_LARGE_LABEL_Y_OFFSET + 2,
 						this_list_box->list_box_entries[i + this_list_box->lines_to_scroll].label);
 			}
 			else
 			{
 				mw_gl_string(draw_info,
 						text_x_offset,
-						row_height * i + MW_UI_LIST_BOX_LARGE_LABEL_Y_OFFSET,
+						row_height * (int16_t)i + MW_UI_LIST_BOX_LARGE_LABEL_Y_OFFSET,
 						this_list_box->list_box_entries[i + this_list_box->lines_to_scroll].label);
 			}
 		}
@@ -235,7 +236,7 @@ static void list_box_paint_function(mw_handle_t control_handle, const mw_gl_draw
 			if (this_list_box->list_box_entries[i + this_list_box->lines_to_scroll].icon != NULL)
 			{
 				/* there's an icon so update text offset */
-				text_x_offset = MW_UI_LIST_BOX_LABEL_X_OFFSET * 2 + MW_UI_LIST_BOX_ICON_SIZE;
+				text_x_offset = (int16_t)MW_UI_LIST_BOX_LABEL_X_OFFSET * (int16_t)2 + (int16_t)MW_UI_LIST_BOX_ICON_SIZE;
 
 				/* draw icon */
 				mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
@@ -243,7 +244,7 @@ static void list_box_paint_function(mw_handle_t control_handle, const mw_gl_draw
 				{
 					mw_gl_monochrome_bitmap(draw_info,
 							icon_x_offset + 1,
-							row_height * i + MW_UI_LIST_BOX_LABEL_Y_OFFSET,
+							row_height * (int16_t)i + MW_UI_LIST_BOX_LABEL_Y_OFFSET,
 							MW_UI_LIST_BOX_ICON_SIZE,
 							MW_UI_LIST_BOX_ICON_SIZE,
 							this_list_box->list_box_entries[i + this_list_box->lines_to_scroll].icon);				}
@@ -251,7 +252,7 @@ static void list_box_paint_function(mw_handle_t control_handle, const mw_gl_draw
 				{
 					mw_gl_monochrome_bitmap(draw_info,
 							icon_x_offset,
-							row_height * i + MW_UI_LIST_BOX_LABEL_Y_OFFSET - 1,
+							row_height * (int16_t)i + MW_UI_LIST_BOX_LABEL_Y_OFFSET - 1,
 							MW_UI_LIST_BOX_ICON_SIZE,
 							MW_UI_LIST_BOX_ICON_SIZE,
 							this_list_box->list_box_entries[i + this_list_box->lines_to_scroll].icon);
@@ -267,14 +268,14 @@ static void list_box_paint_function(mw_handle_t control_handle, const mw_gl_draw
 			{
 				mw_gl_string(draw_info,
 						text_x_offset + 1,
-						row_height * i + MW_UI_LIST_BOX_LABEL_Y_OFFSET + 1,
+						row_height * (int16_t)i + MW_UI_LIST_BOX_LABEL_Y_OFFSET + 1,
 						this_list_box->list_box_entries[i + this_list_box->lines_to_scroll].label);
 			}
 			else
 			{
 				mw_gl_string(draw_info,
 						text_x_offset,
-						row_height * i + MW_UI_LIST_BOX_LABEL_Y_OFFSET,
+						row_height * (int16_t)i + MW_UI_LIST_BOX_LABEL_Y_OFFSET,
 						this_list_box->list_box_entries[i + this_list_box->lines_to_scroll].label);
 			}
 		}
@@ -291,10 +292,13 @@ static void list_box_message_function(const mw_message_t *message)
 	int16_t touch_y;
 	mw_ui_list_box_data_t *this_list_box = (mw_ui_list_box_data_t*)mw_get_control_instance_data(message->recipient_handle);
 	int16_t row_height;
+	bool intermediate_bool;
+	uint32_t intermediate_uint32;
+	int16_t line_number;
 
 	MW_ASSERT(message, "Null pointer argument");
 
-	if (mw_get_control_flags(message->recipient_handle) & MW_CONTROL_FLAG_LARGE_SIZE)
+	if ((mw_get_control_flags(message->recipient_handle) & MW_CONTROL_FLAG_LARGE_SIZE) == MW_CONTROL_FLAG_LARGE_SIZE)
 	{
 		row_height = MW_UI_LIST_BOX_LARGE_ROW_HEIGHT;
 	}
@@ -307,7 +311,7 @@ static void list_box_message_function(const mw_message_t *message)
 	{
 	case MW_CONTROL_CREATED_MESSAGE:
 		{
-			uint32_t message_data;
+			uint32_t message_data = 0U;
 
 			/* initialise the control */
 			this_list_box->line_is_selected = false;
@@ -316,17 +320,16 @@ static void list_box_message_function(const mw_message_t *message)
 			this_list_box->invalid_rect.width = mw_get_control_rect(message->recipient_handle).width;
 
 			/* send message about whether scrolling is needed */
-			message_data = this_list_box->number_of_items > this_list_box->number_of_lines;
-			message_data <<= 16U;
-			if (message_data)
+			if (this_list_box->number_of_items > this_list_box->number_of_lines)
 			{
-				message_data |= (this_list_box->number_of_items - this_list_box->number_of_lines);
+				message_data = 0x010000;
+				message_data |= ((uint32_t)this_list_box->number_of_items - (uint32_t)this_list_box->number_of_lines);
 			}
 			mw_post_message(MW_LIST_BOX_SCROLLING_REQUIRED_MESSAGE,
 					message->recipient_handle,
 					mw_get_control_parent_window_handle(message->recipient_handle),
 					message_data,
-					MW_UNUSED_MESSAGE_PARAMETER,
+					NULL,
 					MW_WINDOW_MESSAGE);
 		}
 		break;
@@ -341,9 +344,11 @@ static void list_box_message_function(const mw_message_t *message)
 		else
 		{
 			/* yes so recalculate vertical scroll lines from last scroll bar position recorded */
-			this_list_box->lines_to_scroll = (message->message_data *
-					(this_list_box->number_of_items - this_list_box->number_of_lines)) /
-					UINT8_MAX;
+			  intermediate_uint32 = (message->message_data *
+					((uint32_t)this_list_box->number_of_items - (uint32_t)this_list_box->number_of_lines)) /
+					(uint32_t)UINT8_MAX;
+			  this_list_box->lines_to_scroll = (uint8_t)intermediate_uint32;
+
 		}
 		break;
 
@@ -357,7 +362,7 @@ static void list_box_message_function(const mw_message_t *message)
 		else
 		{
 			/* yes so set new scroll position */
-			this_list_box->lines_to_scroll = message->message_data;
+			this_list_box->lines_to_scroll = (uint8_t)message->message_data;
 
 			/* check that the new scroll position doesn't exceed maximum possible */
 			if (this_list_box->lines_to_scroll > (this_list_box->number_of_items - this_list_box->number_of_lines))
@@ -369,31 +374,30 @@ static void list_box_message_function(const mw_message_t *message)
 
 	case MW_LIST_BOX_SET_ENTRIES_MESSAGE:
 		{
-			uint32_t message_data;
+			uint32_t message_data = 0U;
 
-			if (message->message_pointer)
+			if (message->message_pointer != NULL)
 			{
-				this_list_box->number_of_items = message->message_data;
+				this_list_box->number_of_items = (uint8_t)message->message_data;
 				this_list_box->list_box_entries = (mw_ui_list_box_entry *)message->message_pointer;
 				this_list_box->lines_to_scroll = 0U;
 
 				/* send message about whether scrolling is needed */
-				message_data = this_list_box->number_of_items > this_list_box->number_of_lines;
-				message_data <<= 16U;
-				if (message_data)
+				if (this_list_box->number_of_items > this_list_box->number_of_lines)
 				{
-					message_data |= (this_list_box->number_of_items - this_list_box->number_of_lines);
+					message_data = 0x010000;
+					message_data |= ((uint32_t)this_list_box->number_of_items - (uint32_t)this_list_box->number_of_lines);
 				}
 				mw_post_message(MW_LIST_BOX_SCROLLING_REQUIRED_MESSAGE,
 						message->recipient_handle,
 						mw_get_control_parent_window_handle(message->recipient_handle),
 						message_data,
-						MW_UNUSED_MESSAGE_PARAMETER,
+						NULL,
 						MW_WINDOW_MESSAGE);
 			}
 			else
 			{
-				MW_ASSERT(false, "Null pointer");
+				MW_ASSERT((bool)false, "Null pointer");
 			}
 		}
 		break;
@@ -405,7 +409,7 @@ static void list_box_message_function(const mw_message_t *message)
 				message->recipient_handle,
 				mw_get_control_parent_window_handle(message->recipient_handle),
 				this_list_box->selection,
-				MW_UNUSED_MESSAGE_PARAMETER,
+				NULL,
 				MW_WINDOW_MESSAGE);
 		mw_paint_control_rect(message->recipient_handle, &this_list_box->invalid_rect);
 		break;
@@ -413,25 +417,29 @@ static void list_box_message_function(const mw_message_t *message)
 	case MW_TOUCH_DOWN_MESSAGE:
 		/* handle a touch down event within this control */		
 		touch_y = (int16_t)message->message_data;
-		
+		line_number = touch_y / row_height;
+
 		/* check if the control is enabled and this particular line is enabled and
 		 * there's an entry on this line */
-		if ((mw_get_control_flags(message->recipient_handle) & MW_CONTROL_FLAG_IS_ENABLED) &&
-				mw_util_get_bit(this_list_box->line_enables, touch_y / row_height) &&
-				(touch_y / row_height) < this_list_box->number_of_items)
+		intermediate_bool = (mw_get_control_flags(message->recipient_handle) & MW_CONTROL_FLAG_IS_ENABLED) == MW_CONTROL_FLAG_IS_ENABLED;
+
+		if (mw_util_get_bit(this_list_box->line_enables, (uint8_t)line_number) &&
+				intermediate_bool &&
+				line_number < (int16_t)this_list_box->number_of_items)
 		{
 			this_list_box->line_is_selected = true;
-			this_list_box->selection = touch_y / row_height + this_list_box->lines_to_scroll;
+			this_list_box->selection = (uint8_t)line_number + this_list_box->lines_to_scroll;
 
 			this_list_box->invalid_rect.y = row_height * (touch_y / row_height);
 			this_list_box->invalid_rect.height = row_height;
 			mw_paint_control_rect(message->recipient_handle, &this_list_box->invalid_rect);
 
-			mw_set_timer(mw_tick_counter + MW_CONTROL_DOWN_TIME, message->recipient_handle, MW_CONTROL_MESSAGE);
+			(void)mw_set_timer(mw_tick_counter + MW_CONTROL_DOWN_TIME, message->recipient_handle, MW_CONTROL_MESSAGE);
 		}
 		break;
 
 	default:
+		/* keep MISRA happy */
 		break;
 	}
 }
@@ -444,7 +452,7 @@ mw_handle_t mw_ui_list_box_add_new(int16_t x,
 		int16_t y,
 		int16_t width,
 		mw_handle_t parent_handle,
-		uint32_t flags,
+		uint16_t flags,
 		mw_ui_list_box_data_t *list_box_instance_data)
 {
 	mw_util_rect_t r;
@@ -453,7 +461,7 @@ mw_handle_t mw_ui_list_box_add_new(int16_t x,
 	/* check for null parameters */
 	if (list_box_instance_data == NULL)
 	{
-		MW_ASSERT(false, "Null pointer argument");
+		MW_ASSERT((bool)false, "Null pointer argument");
 		return (MW_INVALID_HANDLE);
 	}
 
@@ -462,12 +470,12 @@ mw_handle_t mw_ui_list_box_add_new(int16_t x,
 	{
 		if (list_box_instance_data->list_box_entries[i].label == NULL)
 		{
-			MW_ASSERT(false, "Null pointer value in array");
+			MW_ASSERT((bool)false, "Null pointer value in array");
 			return (MW_INVALID_HANDLE);
 		}
 	}
 
-	if (flags & MW_CONTROL_FLAG_LARGE_SIZE)
+	if ((flags & MW_CONTROL_FLAG_LARGE_SIZE) == MW_CONTROL_FLAG_LARGE_SIZE)
 	{
 		/* check for a sensible width */
 		if (width < MW_UI_LIST_BOX_LARGE_MIN_WIDTH)
@@ -479,7 +487,7 @@ mw_handle_t mw_ui_list_box_add_new(int16_t x,
 				x,
 				y,
 				width,
-				MW_UI_LIST_BOX_LARGE_ROW_HEIGHT * list_box_instance_data->number_of_lines);
+				MW_UI_LIST_BOX_LARGE_ROW_HEIGHT * (int16_t)list_box_instance_data->number_of_lines);
 	}
 	else
 	{
@@ -493,7 +501,7 @@ mw_handle_t mw_ui_list_box_add_new(int16_t x,
 				x,
 				y,
 				width,
-				MW_UI_LIST_BOX_ROW_HEIGHT * list_box_instance_data->number_of_lines);
+				MW_UI_LIST_BOX_ROW_HEIGHT * (int16_t)list_box_instance_data->number_of_lines);
 	}
 
 	return (mw_add_control(&r,

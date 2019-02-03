@@ -65,8 +65,8 @@ SOFTWARE.
 #define MW_ROOT_WINDOW_ID 							0U       							/**< This window always exists and is created on initialisation */
 #define MW_ROOT_WINDOW_HANDLE						1U       							/**< This window always has this handle and is set on initialisation */
 #define MW_FIRST_USER_WINDOW_ID 					(MW_ROOT_WINDOW_ID + 1U)      		/**< User window identifiers are from this value upwards */
-#define MW_TITLE_BAR_ICON_SIZE						14U									/**< Size of title bar small icons, which are square */
-#define MW_TITLE_BAR_ICON_SIZE_LARGE				20U									/**< Size of title bar large icons, which are square */
+#define MW_TITLE_BAR_ICON_SIZE						14									/**< Size of title bar small icons, which are square */
+#define MW_TITLE_BAR_ICON_SIZE_LARGE				20									/**< Size of title bar large icons, which are square */
 #define MW_TITLE_BAR_ICON_OFFSET					(MW_TITLE_BAR_ICON_SIZE + 2)		/**< Distance between each title bar icon */
 #define MW_TITLE_BAR_ICON_OFFSET_LARGE				(MW_TITLE_BAR_ICON_SIZE_LARGE + 3)	/**< Distance between each title bar large icon */
 #define MW_DESKTOP_ICONS_PER_ROW					4           						/**< Number of icons of minimized windows to show across bottom of screen */
@@ -838,7 +838,7 @@ void mw_user_root_message_function(const mw_message_t *message);
  * your application's main function, or MiniWin thread first call if running in
  * a thread.
  */
-void mw_init();
+void mw_init(void);
 
 /**
  * Returns the state of initializtion process
@@ -1238,7 +1238,7 @@ void mw_cancel_timer(mw_handle_t timer_handle);
  * @param message_pointer Pointer field to a general purpose pointer
  * @param recipient_type Recipient type of message, window, control or system
  */
-void mw_post_message(uint8_t message_id,
+void mw_post_message(mw_message_id_t message_id,
 		mw_handle_t sender_handle,
 		mw_handle_t recipient_handle,
 		uint32_t message_data,
@@ -1255,7 +1255,7 @@ bool mw_process_message(void);
 /**
  * Paint everything.
  */
-void mw_paint_all();
+void mw_paint_all(void);
 
 /**
  * Show a busy string as defined in minwin_user.h when a long process is locking the user interface

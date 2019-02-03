@@ -80,7 +80,7 @@ typedef struct
 mw_handle_t mw_ui_button_add_new(int16_t x,
 		int16_t y,
 		mw_handle_t parent_handle,
-		uint32_t flags,
+		uint16_t flags,
 		mw_ui_button_data_t *button_instance_data);
 
 #ifdef __cplusplus

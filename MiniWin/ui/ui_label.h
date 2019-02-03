@@ -81,7 +81,7 @@ mw_handle_t mw_ui_label_add_new(int16_t x,
 		int16_t y,
 		int16_t width,
 		mw_handle_t parent_handle,
-		uint32_t flags,
+		uint16_t flags,
 		mw_ui_label_data_t *label_instance_data);
 
 #ifdef __cplusplus
