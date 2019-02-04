@@ -24,8 +24,8 @@ SOFTWARE.
 
 */
 
-#ifndef _HAL_DELAY_H
-#define _HAL_DELAY_H
+#ifndef HAL_DELAY_H
+#define HAL_DELAY_H
 
 #ifdef __cplusplus
  extern "C" {

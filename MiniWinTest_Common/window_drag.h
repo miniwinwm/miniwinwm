@@ -24,8 +24,8 @@ SOFTWARE.
 
 */
 
-#ifndef _WINDOW_DRAG_H
-#define _WINDOW_DRAG_H
+#ifndef WINDOW_DRAG_H
+#define WINDOW_DRAG_H
 
 #ifdef __cplusplus
  extern "C" {

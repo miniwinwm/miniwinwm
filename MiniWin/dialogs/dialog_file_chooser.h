@@ -24,8 +24,8 @@ SOFTWARE.
 
 */
 
-#ifndef _DIALOG_FILE_CHOOSER_H
-#define _DIALOG_FILE_CHOOSER_H
+#ifndef DIALOG_FILE_CHOOSER_H
+#define DIALOG_FILE_CHOOSER_H
 
 #ifdef __cplusplus
  extern "C" {

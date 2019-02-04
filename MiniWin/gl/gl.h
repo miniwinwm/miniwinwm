@@ -24,8 +24,8 @@ SOFTWARE.
 
 */
 
-#ifndef _GL_H
-#define _GL_H
+#ifndef GL_H
+#define GL_H
 
 #ifdef __cplusplus
  extern "C" {

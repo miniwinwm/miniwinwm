@@ -24,8 +24,8 @@ SOFTWARE.
 
 */
 
-#ifndef _MINWIN_UTILITIES_H
-#define _MINWIN_UTILITIES_H
+#ifndef MINWIN_UTILITIES_H
+#define MINWIN_UTILITIES_H
 
 #ifdef __cplusplus
  extern "C" {

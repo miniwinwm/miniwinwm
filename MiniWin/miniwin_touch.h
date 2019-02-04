@@ -24,8 +24,8 @@ SOFTWARE.
 
 */
 
-#ifndef _MINWIN_TOUCH_H
-#define _MINWIN_TOUCH_H
+#ifndef MINWIN_TOUCH_H
+#define MINWIN_TOUCH_H
 
 #ifdef __cplusplus
  extern "C" {

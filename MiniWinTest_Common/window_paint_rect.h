@@ -24,8 +24,8 @@ SOFTWARE.
 
 */
 
-#ifndef _WINDOW_PAINT_RECT_H
-#define _WINDOW_PAINT_RECT_H
+#ifndef WINDOW_PAINT_RECT_H
+#define WINDOW_PAINT_RECT_H
 
 #ifdef __cplusplus
  extern "C" {

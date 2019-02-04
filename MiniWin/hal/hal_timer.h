@@ -24,8 +24,8 @@ SOFTWARE.
 
 */
 
-#ifndef _HAL_TIMER_H
-#define _HAL_TIMER_H
+#ifndef HAL_TIMER_H
+#define HAL_TIMER_H
 
 #ifdef __cplusplus
  extern "C" {

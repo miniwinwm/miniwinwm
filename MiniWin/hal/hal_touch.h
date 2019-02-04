@@ -24,8 +24,8 @@ SOFTWARE.
 
 */
 
-#ifndef _HAL_TOUCH_H
-#define _HAL_TOUCH_H
+#ifndef HAL_TOUCH_H
+#define HAL_TOUCH_H
 
 #ifdef __cplusplus
  extern "C" {

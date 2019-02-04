@@ -24,8 +24,8 @@ SOFTWARE.
 
 */
 
-#ifndef _HAL_INIT_H
-#define _HAL_INIT_H
+#ifndef HAL_INIT_H
+#define HAL_INIT_H
 
 #ifdef __cplusplus
  extern "C" {

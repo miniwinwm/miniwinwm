@@ -24,8 +24,8 @@ SOFTWARE.
 
 */
 
-#ifndef _WINDOW_SCROLL_H
-#define _WINDOW_SCROLL_H
+#ifndef WINDOW_SCROLL_H
+#define WINDOW_SCROLL_H
 
 #ifdef __cplusplus
  extern "C" {

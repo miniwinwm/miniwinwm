@@ -24,8 +24,8 @@ SOFTWARE.
 
 */
 
-#ifndef _WINDOW_YIELD_H
-#define _WINDOW_YIELD_H
+#ifndef WINDOW_YIELD_H
+#define WINDOW_YIELD_H
 
 #ifdef __cplusplus
  extern "C" {

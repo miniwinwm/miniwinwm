@@ -24,8 +24,8 @@ SOFTWARE.
 
 */
 
-#ifndef _WINDOW_IMAGE_H
-#define _WINDOW_IMAGE_H
+#ifndef WINDOW_IMAGE_H
+#define WINDOW_IMAGE_H
 
 #ifdef __cplusplus
  extern "C" {

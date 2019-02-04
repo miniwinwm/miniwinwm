@@ -24,8 +24,8 @@ SOFTWARE.
 
 */
 
-#ifndef _WINDOW_TEST_H
-#define _WINDOW_TEST_H
+#ifndef WINDOW_TEST_H
+#define WINDOW_TEST_H
 
 #ifdef __cplusplus
  extern "C" {

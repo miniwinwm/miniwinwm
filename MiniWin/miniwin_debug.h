@@ -24,8 +24,8 @@ SOFTWARE.
 
 */
 
-#ifndef _MINWIN_DEBUG_H
-#define _MINWIN_DEBUG_H
+#ifndef MINWIN_DEBUG_H
+#define MINWIN_DEBUG_H
 
 #ifdef __cplusplus
  extern "C" {

@@ -24,8 +24,8 @@ SOFTWARE.
 
 */
 
-#ifndef _UI_KEYPAD_H
-#define _UI_KEYPAD_H
+#ifndef UI_KEYPAD_H
+#define UI_KEYPAD_H
 
 #ifdef __cplusplus
  extern "C" {

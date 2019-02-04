@@ -24,8 +24,8 @@ SOFTWARE.
 
 */
 
-#ifndef _MINWIN_MESSAGE_QUEUE_H
-#define _MINWIN_MESSAGE_QUEUE_H
+#ifndef MINWIN_MESSAGE_QUEUE_H
+#define MINWIN_MESSAGE_QUEUE_H
 
 #ifdef __cplusplus
  extern "C" {

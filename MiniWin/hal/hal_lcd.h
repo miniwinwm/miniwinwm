@@ -24,8 +24,8 @@ SOFTWARE.
 
 */
 
-#ifndef _HAL_LCD_H
-#define _HAL_LCD_H
+#ifndef HAL_LCD_H
+#define HAL_LCD_H
 
 #ifdef __cplusplus
  extern "C" {

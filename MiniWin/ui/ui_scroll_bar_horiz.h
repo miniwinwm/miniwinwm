@@ -24,8 +24,8 @@ SOFTWARE.
 
 */
 
-#ifndef _UI_SCROLL_BAR_HORIZ_H
-#define _UI_SCROLL_BAR_HORIZ_H
+#ifndef UI_SCROLL_BAR_HORIZ_H
+#define UI_SCROLL_BAR_HORIZ_H
 
 #ifdef __cplusplus
  extern "C" {

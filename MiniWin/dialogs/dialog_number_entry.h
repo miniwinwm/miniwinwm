@@ -24,8 +24,8 @@ SOFTWARE.
 
 */
 
-#ifndef _DIALOG_NUMBER_ENTRY_H
-#define _DIALOG_NUMBER_ENTRY_H
+#ifndef DIALOG_NUMBER_ENTRY_H
+#define DIALOG_NUMBER_ENTRY_H
 
 #ifdef __cplusplus
  extern "C" {

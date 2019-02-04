@@ -24,8 +24,8 @@ SOFTWARE.
 
 */
 
-#ifndef _WINDOW_GYRO_Z_H
-#define _WINDOW_GYRO_Z_H
+#ifndef WINDOW_GYRO_Z_H
+#define WINDOW_GYRO_Z_H
 
 #ifdef __cplusplus
  extern "C" {

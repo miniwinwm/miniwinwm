@@ -24,8 +24,8 @@ SOFTWARE.
 
 */
 
-#ifndef _UI_SCROLLABLE_TEXT_BOX_H
-#define _UI_SCROLLABLE_TEXT_BOX_H
+#ifndef UI_SCROLLABLE_TEXT_BOX_H
+#define UI_SCROLLABLE_TEXT_BOX_H
 
 #ifdef __cplusplus
  extern "C" {

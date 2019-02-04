@@ -24,8 +24,8 @@ SOFTWARE.
 
 */
 
-#ifndef _MINIWIN_DIALOG_COMMON_H
-#define _MINIWIN_DIALOG_COMMON_H
+#ifndef DIALOG_COMMON_H
+#define DIALOG_COMMON_H
 
 #ifdef __cplusplus
  extern "C" {

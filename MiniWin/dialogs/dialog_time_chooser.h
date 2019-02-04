@@ -24,8 +24,8 @@ SOFTWARE.
 
 */
 
-#ifndef _DIALOG_TIME_CHOOSER_H
-#define _DIALOG_TIME_CHOOSER_H
+#ifndef DIALOG_TIME_CHOOSER_H
+#define DIALOG_TIME_CHOOSER_H
 
 #ifdef __cplusplus
  extern "C" {

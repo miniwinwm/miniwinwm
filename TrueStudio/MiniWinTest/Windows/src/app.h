@@ -24,8 +24,8 @@ SOFTWARE.
 
 */
 
-#ifndef _APP_H
-#define _APP_H
+#ifndef APP_H
+#define APP_H
 
 #ifdef __cplusplus
  extern "C" {

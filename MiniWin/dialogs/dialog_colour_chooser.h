@@ -24,8 +24,8 @@ SOFTWARE.
 
 */
 
-#ifndef _DIALOG_COLOUR_CHOOSER_H
-#define _DIALOG_COLOUR_CHOOSER_H
+#ifndef DIALOG_COLOUR_CHOOSER_H
+#define DIALOG_COLOUR_CHOOSER_H
 
 #ifdef __cplusplus
  extern "C" {

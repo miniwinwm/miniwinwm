@@ -24,8 +24,8 @@ SOFTWARE.
 
 */
 
-#ifndef _UI_PROGRESS_BAR_H
-#define _UI_PROGRESS_BAR_H
+#ifndef UI_PROGRESS_BAR_H
+#define UI_PROGRESS_BAR_H
 
 #ifdef __cplusplus
  extern "C" {

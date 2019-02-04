@@ -24,8 +24,8 @@ SOFTWARE.
 
 */
 
-#ifndef _DIALOG_DATE_CHOOSER_H
-#define _DIALOG_DATE_CHOOSER_H
+#ifndef DIALOG_DATE_CHOOSER_H
+#define DIALOG_DATE_CHOOSER_H
 
 #ifdef __cplusplus
  extern "C" {

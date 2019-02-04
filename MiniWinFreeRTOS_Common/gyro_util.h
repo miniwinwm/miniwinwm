@@ -24,8 +24,8 @@ SOFTWARE.
 
 */
 
-#ifndef _GYRO_UTIL_H
-#define _GYRO_UTIL_H
+#ifndef GYRO_UTIL_H
+#define GYRO_UTIL_H
 
 #ifdef __cplusplus
  extern "C" {

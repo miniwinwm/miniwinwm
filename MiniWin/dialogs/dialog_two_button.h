@@ -24,8 +24,8 @@ SOFTWARE.
 
 */
 
-#ifndef _DIALOG_TWO_BUTTON_H
-#define _DIALOG_TWO_BUTTON_H
+#ifndef DIALOG_TWO_BUTTON_H
+#define DIALOG_TWO_BUTTON_H
 
 #ifdef __cplusplus
  extern "C" {

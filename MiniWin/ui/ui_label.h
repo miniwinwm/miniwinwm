@@ -24,8 +24,8 @@ SOFTWARE.
 
 */
 
-#ifndef _UI_LABEL_H
-#define _UI_LABEL_H
+#ifndef UI_LABEL_H
+#define UI_LABEL_H
 
 #ifdef __cplusplus
  extern "C" {

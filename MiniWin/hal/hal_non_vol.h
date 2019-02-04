@@ -24,8 +24,8 @@ SOFTWARE.
 
 */
 
-#ifndef _HAL_NON_VOL_H
-#define _HAL_NON_VOL_H
+#ifndef HAL_NON_VOL_H
+#define HAL_NON_VOL_H
 
 #ifdef __cplusplus
  extern "C" {

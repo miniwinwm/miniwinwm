@@ -24,8 +24,8 @@ SOFTWARE.
 
 */
 
-#ifndef _WINDOW_TT_FONT_TEXT_BOX_ARROWS_H
-#define _WINDOW_TT_FONT_TEXT_BOX_ARROWS_H
+#ifndef WINDOW_TT_FONT_TEXT_BOX_ARROWS_H
+#define WINDOW_TT_FONT_TEXT_BOX_ARROWS_H
 
 #ifdef __cplusplus
  extern "C" {
