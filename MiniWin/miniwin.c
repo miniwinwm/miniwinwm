@@ -312,7 +312,7 @@ static uint8_t find_empty_window_slot(void)
 	for (i = MW_FIRST_USER_WINDOW_ID; i < MW_MAX_WINDOW_COUNT; i++)
 	{
 		/* an empty slot is identified by is_used being zero */
-	    if (!(mw_all_windows[i].window_flags & MW_WINDOW_FLAG_IS_USED))
+	    if ((mw_all_windows[i].window_flags & MW_WINDOW_FLAG_IS_USED) == 0U)
 	    {
 			/* empty slot found */
 	        return (i);
@@ -374,7 +374,7 @@ static void set_window_details(const mw_util_rect_t *rect,
 	mw_all_windows[window_id].vert_scroll_pos = 0U;
 	mw_all_windows[window_id].window_handle = window_handle;
 	mw_all_windows[window_id].instance_data = instance_data;
-	if (window_flags & MW_WINDOW_FLAG_LARGE_SIZE)
+	if ((window_flags & MW_WINDOW_FLAG_LARGE_SIZE) == MW_WINDOW_FLAG_LARGE_SIZE)
 	{
 		mw_all_windows[window_id].title_bar_height = MW_TITLE_BAR_HEIGHT_LARGE;
 	}
@@ -408,7 +408,7 @@ static bool check_window_dimensions(int16_t new_width,
 	int16_t icon_offset;
 
 	/* get menu bar height, scroll bar narrow dimension and scroll bar slider size depending on large flag */
-	if (flags & MW_WINDOW_FLAG_LARGE_SIZE)
+	if ((flags & MW_WINDOW_FLAG_LARGE_SIZE) == MW_WINDOW_FLAG_LARGE_SIZE)
 	{
 		menu_bar_height = MW_LARGE_MENU_BAR_HEIGHT;
 		scroll_bar_slider_size = MW_SCROLL_BAR_LARGE_SLIDER_SIZE;
@@ -429,10 +429,10 @@ static bool check_window_dimensions(int16_t new_width,
 	window_minimum_height = 1;
 
 	/* check for a border first when calculating minimum height */
-	if (flags & MW_WINDOW_FLAG_HAS_BORDER)
+	if ((flags & MW_WINDOW_FLAG_HAS_BORDER) == MW_WINDOW_FLAG_HAS_BORDER)
 	{
 		/* has border */
-		if (flags & MW_WINDOW_FLAG_HAS_TITLE_BAR)
+		if ((flags & MW_WINDOW_FLAG_HAS_TITLE_BAR) == MW_WINDOW_FLAG_HAS_TITLE_BAR)
 		{
 			/* title bar present so add title bar height and one border thickness */
 			window_minimum_height += (title_bar_height + MW_BORDER_WIDTH);
@@ -446,7 +446,7 @@ static bool check_window_dimensions(int16_t new_width,
 	else
 	{
 		/* no border present */
-		if (flags & MW_WINDOW_FLAG_HAS_TITLE_BAR)
+		if ((flags & MW_WINDOW_FLAG_HAS_TITLE_BAR) == MW_WINDOW_FLAG_HAS_TITLE_BAR)
 		{
 			/* title bar present so add title bar height */
 			window_minimum_height += title_bar_height;
@@ -454,24 +454,25 @@ static bool check_window_dimensions(int16_t new_width,
 	}
 	
 	/* check for menu bar */
-	if (flags & MW_WINDOW_FLAG_HAS_MENU_BAR)
+	if ((flags & MW_WINDOW_FLAG_HAS_MENU_BAR) == MW_WINDOW_FLAG_HAS_MENU_BAR)
 	{
 		/* menu bar present so add its height */
 		window_minimum_height += menu_bar_height;
 	}
 
 	/* check for scroll bars */
-	if ((flags & MW_WINDOW_FLAG_HAS_HORIZ_SCROLL_BAR) && (flags & MW_WINDOW_FLAG_HAS_VERT_SCROLL_BAR))
+	if ((flags & MW_WINDOW_FLAG_HAS_HORIZ_SCROLL_BAR) == MW_WINDOW_FLAG_HAS_HORIZ_SCROLL_BAR &&
+			(flags & MW_WINDOW_FLAG_HAS_VERT_SCROLL_BAR) == MW_WINDOW_FLAG_HAS_VERT_SCROLL_BAR)
 	{
 		/* both scroll bars present so add scroll bar narrow dimension and slider size*/
 		window_minimum_height += (scroll_bar_narrow_dimension + scroll_bar_slider_size);
 	}
-	else if (flags & MW_WINDOW_FLAG_HAS_VERT_SCROLL_BAR)
+	else if ((flags & MW_WINDOW_FLAG_HAS_VERT_SCROLL_BAR) == MW_WINDOW_FLAG_HAS_VERT_SCROLL_BAR)
 	{
 		/* only vert scroll bar present so add slider size */
 		window_minimum_height += (scroll_bar_slider_size);
 	}
-	else if (flags & MW_WINDOW_FLAG_HAS_HORIZ_SCROLL_BAR)
+	else if ((flags & MW_WINDOW_FLAG_HAS_HORIZ_SCROLL_BAR) == MW_WINDOW_FLAG_HAS_HORIZ_SCROLL_BAR)
 	{
 		/* only horiz scroll bar present so add scroll bar narrow dimension */
 		window_minimum_height += (scroll_bar_narrow_dimension);
@@ -485,24 +486,25 @@ static bool check_window_dimensions(int16_t new_width,
 	window_minimum_width = 1;
 
 	/* check for border present */
-	if (flags & MW_WINDOW_FLAG_HAS_BORDER)
+	if ((flags & MW_WINDOW_FLAG_HAS_BORDER) == MW_WINDOW_FLAG_HAS_BORDER)
 	{
 		/* border present so add twice border width */
 		window_minimum_width += (MW_BORDER_WIDTH * 2);
 	}
 
 	/* check for scroll bars */
-	if ((flags & MW_WINDOW_FLAG_HAS_HORIZ_SCROLL_BAR) && (flags & MW_WINDOW_FLAG_HAS_VERT_SCROLL_BAR))
+	if ((flags & MW_WINDOW_FLAG_HAS_HORIZ_SCROLL_BAR) == MW_WINDOW_FLAG_HAS_HORIZ_SCROLL_BAR &&
+			(flags & MW_WINDOW_FLAG_HAS_VERT_SCROLL_BAR) == MW_WINDOW_FLAG_HAS_VERT_SCROLL_BAR)
 	{
 		/* both scroll bars present so add scroll bar narrow dimension and slider size*/
 		window_minimum_width += (scroll_bar_narrow_dimension + scroll_bar_slider_size);
 	}
-	else if (flags & MW_WINDOW_FLAG_HAS_HORIZ_SCROLL_BAR)
+	else if ((flags & MW_WINDOW_FLAG_HAS_HORIZ_SCROLL_BAR) == MW_WINDOW_FLAG_HAS_HORIZ_SCROLL_BAR)
 	{
 		/* only horiz scroll bar present so add slider size */
 		window_minimum_width += (scroll_bar_slider_size);
 	}
-	else if (flags & MW_WINDOW_FLAG_HAS_VERT_SCROLL_BAR)
+	else if ((flags & MW_WINDOW_FLAG_HAS_VERT_SCROLL_BAR) == MW_WINDOW_FLAG_HAS_VERT_SCROLL_BAR)
 	{
 		/* only vert scroll bar present so add scroll bar narrow dimension */
 		window_minimum_width += (scroll_bar_narrow_dimension);
@@ -514,7 +516,7 @@ static bool check_window_dimensions(int16_t new_width,
 
 	/* if a title bar is specified there must be space for the icons but title bar width is in parallel with the
 	 * other width giving features, so use which of the two (title bar or previously calculated width) is bigger */
-	if (flags & MW_WINDOW_FLAG_HAS_TITLE_BAR)
+	if ((flags & MW_WINDOW_FLAG_HAS_TITLE_BAR) == MW_WINDOW_FLAG_HAS_TITLE_BAR)
 	{
 		if (window_minimum_width < (icon_offset * 4 + 1))
 		{
@@ -559,7 +561,7 @@ static void calculate_new_window_size_details(mw_handle_t window_handle, const m
 	(void)memcpy(&(mw_all_windows[window_id].window_rect), rect, sizeof(mw_util_rect_t));
 
 	/* get menu bar height depending on large flag */
-	if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_LARGE_SIZE)
+	if ((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_LARGE_SIZE) == MW_WINDOW_FLAG_LARGE_SIZE)
 	{
 		menu_bar_height = MW_LARGE_MENU_BAR_HEIGHT;
 	}
@@ -569,7 +571,7 @@ static void calculate_new_window_size_details(mw_handle_t window_handle, const m
 	}
 
 	/* get scroll bar narrow dimension depending on if large window flag set */
-	if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_LARGE_SIZE)
+	if ((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_LARGE_SIZE) == MW_WINDOW_FLAG_LARGE_SIZE)
 	{
 		scroll_bar_narrow_dimension = MW_SCROLL_BAR_LARGE_NARROW_DIMENSION;
 	}
@@ -579,7 +581,7 @@ static void calculate_new_window_size_details(mw_handle_t window_handle, const m
 	}
 
 	/* find out border width; depends on if there is a border */
-	if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER)
+	if ((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER) == MW_WINDOW_FLAG_HAS_BORDER)
 	{
 		border_width = MW_BORDER_WIDTH;
 	}
@@ -592,7 +594,7 @@ static void calculate_new_window_size_details(mw_handle_t window_handle, const m
 	mw_all_windows[window_id].client_rect.x = rect->x + border_width;
 
 	/* set client rect y */
-	if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_TITLE_BAR)
+	if ((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_TITLE_BAR) == MW_WINDOW_FLAG_HAS_TITLE_BAR)
 	{
 		mw_all_windows[window_id].client_rect.y = rect->y + mw_all_windows[window_id].title_bar_height;
 	}
@@ -600,20 +602,20 @@ static void calculate_new_window_size_details(mw_handle_t window_handle, const m
 	{
 		mw_all_windows[window_id].client_rect.y = rect->y + border_width;
 	}
-	if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_MENU_BAR)
+	if ((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_MENU_BAR) == MW_WINDOW_FLAG_HAS_MENU_BAR)
 	{
 		mw_all_windows[window_id].client_rect.y += menu_bar_height;
 	}
 
 	/* set client rect width */
 	mw_all_windows[window_id].client_rect.width = rect->width - 2 * border_width;
-	if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_VERT_SCROLL_BAR)
+	if ((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_VERT_SCROLL_BAR) == MW_WINDOW_FLAG_HAS_VERT_SCROLL_BAR)
 	{
 		mw_all_windows[window_id].client_rect.width -= scroll_bar_narrow_dimension;
 	}
 
 	/* set client rect height */
-	if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_TITLE_BAR)
+	if ((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_TITLE_BAR) == MW_WINDOW_FLAG_HAS_TITLE_BAR)
 	{
 		mw_all_windows[window_id].client_rect.height = rect->height - mw_all_windows[window_id].title_bar_height - border_width;
 	}
@@ -621,11 +623,11 @@ static void calculate_new_window_size_details(mw_handle_t window_handle, const m
 	{
 		mw_all_windows[window_id].client_rect.height = rect->height - 2 * border_width;
 	}
-	if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_MENU_BAR)
+	if ((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_MENU_BAR) == MW_WINDOW_FLAG_HAS_MENU_BAR)
 	{
 		mw_all_windows[window_id].client_rect.height -= menu_bar_height;
 	}
-	if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_HORIZ_SCROLL_BAR)
+	if ((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_HORIZ_SCROLL_BAR) == MW_WINDOW_FLAG_HAS_HORIZ_SCROLL_BAR)
 	{
 		mw_all_windows[window_id].client_rect.height -= scroll_bar_narrow_dimension;
 	}
@@ -644,7 +646,7 @@ static uint8_t find_empty_control_slot(void)
 	for (i = 0U; i < MW_MAX_CONTROL_COUNT; i++)
 	{
 		/* an empty slot is identified by is_used being zero */	
-	    if (!(mw_all_controls[i].control_flags & MW_CONTROL_FLAG_IS_USED))
+	    if ((mw_all_controls[i].control_flags & MW_CONTROL_FLAG_IS_USED) == 0U)
 	    {
 			/* an empty slot has been found */
 	        return (i);
@@ -835,8 +837,8 @@ void add_minimised_window_to_list(mw_handle_t window_handle)
 	}
 
 	/* don't add invisible, unused or already minimised windows */
-	if ((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_VISIBLE) &&
-			(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_USED))
+	if ((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_VISIBLE) == MW_WINDOW_FLAG_IS_VISIBLE &&
+			(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_USED) == MW_WINDOW_FLAG_IS_USED)
 	{
 		for (i = 1U; i < MW_MAX_WINDOW_COUNT; i++)
 		{
@@ -1072,9 +1074,9 @@ static uint8_t find_next_z_order(uint8_t z_order)
 	for (i = MW_FIRST_USER_WINDOW_ID; i < MW_MAX_WINDOW_COUNT; i++)
 	{
 		/* ignore unused windows invisible minimised*/
-		if ((mw_all_windows[i].window_flags & MW_WINDOW_FLAG_IS_USED) &&
-				(mw_all_windows[i].window_flags & MW_WINDOW_FLAG_IS_VISIBLE) &&
-				!(mw_all_windows[i].window_flags & MW_WINDOW_FLAG_IS_MINIMISED))
+		if ((mw_all_windows[i].window_flags & MW_WINDOW_FLAG_IS_USED) == MW_WINDOW_FLAG_IS_USED &&
+				(mw_all_windows[i].window_flags & MW_WINDOW_FLAG_IS_VISIBLE) == MW_WINDOW_FLAG_IS_VISIBLE &&
+				(mw_all_windows[i].window_flags & MW_WINDOW_FLAG_IS_MINIMISED) == 0U)
 		{
 			/* check if this window's z order is > z order searching against & < previous max z order */
 			if (mw_all_windows[i].z_order < next_z_order && mw_all_windows[i].z_order > z_order)
@@ -1101,9 +1103,9 @@ static uint8_t find_highest_z_order(void)
 	for (i = MW_FIRST_USER_WINDOW_ID; i < MW_MAX_WINDOW_COUNT; i++)
 	{
 		/* ignore unused windows */
-		if ((mw_all_windows[i].window_flags & MW_WINDOW_FLAG_IS_USED) &&
-				(mw_all_windows[i].window_flags & MW_WINDOW_FLAG_IS_VISIBLE) &&
-				!(mw_all_windows[i].window_flags & MW_WINDOW_FLAG_IS_MINIMISED))
+		if ((mw_all_windows[i].window_flags & MW_WINDOW_FLAG_IS_USED) == MW_WINDOW_FLAG_IS_USED &&
+				(mw_all_windows[i].window_flags & MW_WINDOW_FLAG_IS_VISIBLE) == MW_WINDOW_FLAG_IS_VISIBLE &&
+				(mw_all_windows[i].window_flags & MW_WINDOW_FLAG_IS_MINIMISED) == 0U)
 		{
 			if (mw_all_windows[i].z_order > highest_z_order)
 			{
@@ -1132,9 +1134,9 @@ static mw_handle_t find_window_point_is_in(int16_t touch_x, int16_t touch_y)
 	for (i = MW_FIRST_USER_WINDOW_ID; i < MW_MAX_WINDOW_COUNT; i++)
 	{
 		/* ignore unused invisible or minimised windows */
-		if (!(mw_all_windows[i].window_flags & MW_WINDOW_FLAG_IS_USED) ||
-				!(mw_all_windows[i].window_flags & MW_WINDOW_FLAG_IS_VISIBLE) ||
-				(mw_all_windows[i].window_flags & MW_WINDOW_FLAG_IS_MINIMISED))
+		if ((mw_all_windows[i].window_flags & MW_WINDOW_FLAG_IS_USED) == 0U ||
+				(mw_all_windows[i].window_flags & MW_WINDOW_FLAG_IS_VISIBLE) == 0U ||
+				(mw_all_windows[i].window_flags & MW_WINDOW_FLAG_IS_MINIMISED) == MW_WINDOW_FLAG_IS_MINIMISED)
 		{
 			continue;
 		}
@@ -1170,7 +1172,7 @@ static mw_handle_t find_control_point_is_in(mw_handle_t window_handle, int16_t p
 	for (i = MW_MAX_CONTROL_COUNT - 1; i >= 0; i--)
 	{
 		/* ignore unused controls and controls with a different parent window to that identified above */
-		if (!(mw_all_controls[i].control_flags & MW_CONTROL_FLAG_IS_USED) ||
+		if ((mw_all_controls[i].control_flags & MW_CONTROL_FLAG_IS_USED) == 0U ||
 				mw_all_controls[i].parent_handle != window_handle)
 		{
 			continue;
@@ -1178,7 +1180,7 @@ static mw_handle_t find_control_point_is_in(mw_handle_t window_handle, int16_t p
 
 		/* check next control's rect and visibility */
 		if (mw_util_is_point_in_rect(&mw_all_controls[i].control_rect, point_x, point_y) &&
-				(mw_all_controls[i].control_flags & MW_CONTROL_FLAG_IS_VISIBLE))
+				(mw_all_controls[i].control_flags & MW_CONTROL_FLAG_IS_VISIBLE) == MW_CONTROL_FLAG_IS_VISIBLE)
 		{
 			/* a control has been identified that this touch message occurred in */
 			control_found = mw_all_controls[i].control_handle;
@@ -1218,9 +1220,9 @@ static void find_rect_window_intersections(const mw_util_rect_t *r, uint16_t *ho
 	for (i = 0U; i < MW_MAX_WINDOW_COUNT; i++)
 	{
 		/* ignore unused invisible or minimised windows */
-		if (!(mw_all_windows[i].window_flags & MW_WINDOW_FLAG_IS_USED) ||
-				!(mw_all_windows[i].window_flags & MW_WINDOW_FLAG_IS_VISIBLE) ||
-				(mw_all_windows[i].window_flags & MW_WINDOW_FLAG_IS_MINIMISED))
+		if ((mw_all_windows[i].window_flags & MW_WINDOW_FLAG_IS_USED) == 0U ||
+				(mw_all_windows[i].window_flags & MW_WINDOW_FLAG_IS_VISIBLE) == 0U ||
+				(mw_all_windows[i].window_flags & MW_WINDOW_FLAG_IS_MINIMISED) == MW_WINDOW_FLAG_IS_MINIMISED)
 		{
 			continue;
 		}
@@ -1378,9 +1380,9 @@ static uint8_t find_number_of_displayed_windows(void)
 
 	for (i = MW_FIRST_USER_WINDOW_ID; i < MW_MAX_WINDOW_COUNT; i++)
 	{
-		if ((mw_all_windows[i].window_flags & MW_WINDOW_FLAG_IS_VISIBLE) &&
-				(mw_all_windows[i].window_flags & MW_WINDOW_FLAG_IS_USED) &&
-				!(mw_all_windows[i].window_flags & MW_WINDOW_FLAG_IS_MINIMISED))
+		if ((mw_all_windows[i].window_flags & MW_WINDOW_FLAG_IS_VISIBLE) == MW_WINDOW_FLAG_IS_VISIBLE &&
+				(mw_all_windows[i].window_flags & MW_WINDOW_FLAG_IS_USED) == MW_WINDOW_FLAG_IS_USED &&
+				(mw_all_windows[i].window_flags & MW_WINDOW_FLAG_IS_MINIMISED) == 0U)
 		{
 			displayed_windows++;
 		}
@@ -1407,9 +1409,9 @@ static bool find_if_window_is_overlapped(mw_handle_t window_handle)
 	/* iterate through all windows */
 	for (i = 0U; i < MW_MAX_WINDOW_COUNT;i++)
 	{
-		if (!(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_USED) ||
-				(!(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_VISIBLE)) ||
-				(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_MINIMISED) ||
+		if ((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_USED) == 0U ||
+				(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_VISIBLE) == 0U ||
+				(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_MINIMISED) == MW_WINDOW_FLAG_IS_MINIMISED ||
 				mw_all_windows[i].z_order < mw_all_windows[window_id].z_order)
 		{
 			continue;
@@ -1517,7 +1519,7 @@ static void draw_title_bar(mw_handle_t window_handle, const mw_gl_draw_info_t *d
 			mw_all_windows[window_id].title_bar_height);
 
 	/* draw the icons if the window has focus and isn't modal */
-	if (window_with_focus_handle == window_handle && !(mw_all_windows[window_with_focus_id].window_flags & MW_WINDOW_FLAG_IS_MODAL))
+	if (window_with_focus_handle == window_handle && (mw_all_windows[window_with_focus_id].window_flags & MW_WINDOW_FLAG_IS_MODAL) == 0U)
 	{
 		/* window close icon */
 		mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
@@ -1594,7 +1596,7 @@ static void draw_titlebar_text(mw_handle_t window_handle, const mw_gl_draw_info_
 	MW_ASSERT(window_id < MW_MAX_WINDOW_COUNT, "Bad window handle");
 
 	/* check for large size */
-	if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_LARGE_SIZE)
+	if ((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_LARGE_SIZE) == MW_WINDOW_FLAG_LARGE_SIZE)
 	{
 		title_x_offset = MW_TITLE_X_OFFSET_LARGE;
 		title_y_offset = MW_TITLE_Y_OFFSET_LARGE;
@@ -1613,7 +1615,7 @@ static void draw_titlebar_text(mw_handle_t window_handle, const mw_gl_draw_info_
 	}
 	else
 	{
-		if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_MODAL)
+		if ((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_MODAL) == MW_WINDOW_FLAG_IS_MODAL)
 		{
 			mw_gl_set_fg_colour(MW_TITLE_TEXT_COLOUR_MODAL);
 		}
@@ -1626,7 +1628,7 @@ static void draw_titlebar_text(mw_handle_t window_handle, const mw_gl_draw_info_
 	mw_gl_set_bg_transparency(MW_GL_BG_TRANSPARENT);
 	mw_gl_set_text_rotation(MW_GL_TEXT_ROTATION_0);
 	mw_gl_set_font(MW_GL_TITLE_FONT);
-	if ((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_MODAL) || (window_handle != window_with_focus_handle))
+	if ((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_MODAL) == MW_WINDOW_FLAG_IS_MODAL || (window_handle != window_with_focus_handle))
 	{
 		mw_gl_string(draw_info, title_modal_x_offset, title_y_offset, mw_all_windows[window_id].title);
 	}
@@ -1659,11 +1661,11 @@ static void draw_menu_bar(const mw_gl_draw_info_t *draw_info, mw_handle_t window
 
 	/* check for large size and set font and menu bar dimensions appropriately */
 	menu_bar_width = mw_all_windows[window_id].client_rect.width;
-	if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_LARGE_SIZE)
+	if ((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_LARGE_SIZE) == MW_WINDOW_FLAG_LARGE_SIZE)
 	{
 		menu_bar_height = MW_LARGE_MENU_BAR_HEIGHT;
 	    mw_gl_set_font(MW_GL_TITLE_FONT);
-		if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_VERT_SCROLL_BAR)
+		if ((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_VERT_SCROLL_BAR) == MW_WINDOW_FLAG_HAS_VERT_SCROLL_BAR)
 		{
 			menu_bar_width += MW_SCROLL_BAR_LARGE_NARROW_DIMENSION;
 		}
@@ -1672,7 +1674,7 @@ static void draw_menu_bar(const mw_gl_draw_info_t *draw_info, mw_handle_t window
 	{
 		menu_bar_height = MW_MENU_BAR_HEIGHT;
 	    mw_gl_set_font(MW_GL_FONT_9);
-		if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_VERT_SCROLL_BAR)
+		if ((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_VERT_SCROLL_BAR) == MW_WINDOW_FLAG_HAS_VERT_SCROLL_BAR)
 		{
 			menu_bar_width += MW_SCROLL_BAR_NARROW_DIMENSION;
 		}
@@ -1697,14 +1699,14 @@ static void draw_menu_bar(const mw_gl_draw_info_t *draw_info, mw_handle_t window
 	mw_gl_set_line(MW_GL_SOLID_LINE);
 
     /* draw each item */
-	if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER)
+	if ((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER) == MW_WINDOW_FLAG_HAS_BORDER)
 	{
 		next_pos = MW_BORDER_WIDTH;
 	}
 	for (i = 0U; i < mw_all_windows[window_id].menu_bar_items_count; i++)
 	{
         /* check if this item is selected */
-		if ((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_MENU_BAR_ITEM_IS_SELECTED) &&
+		if ((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_MENU_BAR_ITEM_IS_SELECTED) == MW_WINDOW_FLAG_MENU_BAR_ITEM_IS_SELECTED &&
 				mw_all_windows[window_id].menu_bar_selected_item == i)
 		{
             /* it is so draw rectangle background for this item in control down colour */
@@ -1747,7 +1749,7 @@ static void draw_menu_bar(const mw_gl_draw_info_t *draw_info, mw_handle_t window
 		}
 
 		/* set up text colour on enabled state - from control and individual items bitfield */
-	    if ((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_MENU_BAR_ENABLED) &&
+	    if ((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_MENU_BAR_ENABLED) == MW_WINDOW_FLAG_MENU_BAR_ENABLED &&
 	    		mw_util_get_bit(mw_all_windows[window_id].menu_bar_item_enables, i))
 	    {
 	        mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
@@ -1789,7 +1791,7 @@ static void draw_horizontal_window_scroll_bar(const mw_gl_draw_info_t *draw_info
 	MW_ASSERT(window_id < MW_MAX_WINDOW_COUNT, "Bad window handle");
 
 	/* get scroll bar narrow dimension and slider size depending on if large window flag set */
-	if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_LARGE_SIZE)
+	if ((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_LARGE_SIZE) == MW_WINDOW_FLAG_LARGE_SIZE)
 	{
 		scroll_bar_narrow_dimension = MW_SCROLL_BAR_LARGE_NARROW_DIMENSION;
 		scroll_bar_slider_size = MW_SCROLL_BAR_LARGE_SLIDER_SIZE;
@@ -1805,7 +1807,7 @@ static void draw_horizontal_window_scroll_bar(const mw_gl_draw_info_t *draw_info
 	mw_gl_set_line(MW_GL_SOLID_LINE);
 	mw_gl_clear_pattern();
 	mw_gl_set_solid_fill_colour(MW_CONTROL_UP_COLOUR);
-	if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HORIZ_SCROLL_BAR_ENABLED)
+	if ((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HORIZ_SCROLL_BAR_ENABLED) == MW_WINDOW_FLAG_HORIZ_SCROLL_BAR_ENABLED)
 	{
 		mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 	}
@@ -1823,7 +1825,7 @@ static void draw_horizontal_window_scroll_bar(const mw_gl_draw_info_t *draw_info
 			scroll_bar_narrow_dimension);
 
 	/* don't draw slider if disabled */
-	if (!(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HORIZ_SCROLL_BAR_ENABLED))
+	if ((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HORIZ_SCROLL_BAR_ENABLED) == 0U)
 	{
 		return;
 	}
@@ -1901,7 +1903,7 @@ static void draw_vertical_window_scroll_bar(const mw_gl_draw_info_t *draw_info, 
 	MW_ASSERT(window_id < MW_MAX_WINDOW_COUNT, "Bad window handle");
 
 	/* get scroll bar narrow dimension and slider size depending on if large window flag set */
-	if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_LARGE_SIZE)
+	if ((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_LARGE_SIZE) == MW_WINDOW_FLAG_LARGE_SIZE)
 	{
 		scroll_bar_narrow_dimension = MW_SCROLL_BAR_LARGE_NARROW_DIMENSION;
 		scroll_bar_slider_size = MW_SCROLL_BAR_LARGE_SLIDER_SIZE;
@@ -1917,7 +1919,7 @@ static void draw_vertical_window_scroll_bar(const mw_gl_draw_info_t *draw_info, 
 	mw_gl_set_line(MW_GL_SOLID_LINE);
 	mw_gl_clear_pattern();
 	mw_gl_set_solid_fill_colour(MW_CONTROL_UP_COLOUR);
-	if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_VERT_SCROLL_BAR_ENABLED)
+	if ((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_VERT_SCROLL_BAR_ENABLED) == MW_WINDOW_FLAG_VERT_SCROLL_BAR_ENABLED)
 	{
 		mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 	}
@@ -1934,7 +1936,7 @@ static void draw_vertical_window_scroll_bar(const mw_gl_draw_info_t *draw_info, 
 			mw_all_windows[window_id].client_rect.height);
 
 	/* don't draw slider if disabled */
-	if (!(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_VERT_SCROLL_BAR_ENABLED))
+	if ((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_VERT_SCROLL_BAR_ENABLED) == 0U)
 	{
 		return;
 	}
@@ -2008,7 +2010,7 @@ static void paint_window_frame_and_client_with_z_order(uint8_t z_order)
 		/* only look at windows that are used */
 		if ((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_VISIBLE) &&
 				(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_USED) &&
-				!(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_MINIMISED))
+				(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_MINIMISED) == 0U)
 		{
 			/* check if next window is required z order */
 			if (mw_all_windows[window_id].z_order == z_order)
@@ -2054,9 +2056,9 @@ static void do_paint_window_frame(mw_handle_t window_handle, uint8_t components)
 	}
 
     /* check if this window is used, visible, not root and not minimised; if not give up */
-	if (!(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_USED) ||
-			(!(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_VISIBLE)) ||
-			(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_MINIMISED) ||
+	if ((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_USED) == 0U ||
+			(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_VISIBLE) == 0U ||
+			(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_MINIMISED) == MW_WINDOW_FLAG_IS_MINIMISED ||
 			window_id == MW_ROOT_WINDOW_ID)
 	{
 		return;
@@ -2147,21 +2149,21 @@ static void do_paint_window_frame2(mw_handle_t window_handle, uint8_t components
 	draw_info.origin_y = mw_all_windows[window_id].window_rect.y;
 
 	/* draw menu bar */
-	if ((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_MENU_BAR) &&
-			(components & MW_WINDOW_FRAME_COMPONENT_MENU_BAR))
+	if ((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_MENU_BAR) == MW_WINDOW_FLAG_HAS_MENU_BAR &&
+			(components & MW_WINDOW_FRAME_COMPONENT_MENU_BAR) == MW_WINDOW_FRAME_COMPONENT_MENU_BAR)
 	{
 		draw_menu_bar(&draw_info, window_handle);
 	}
 
 	/* draw border */
-  	if ((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER) &&
-  			((components & MW_WINDOW_FRAME_COMPONENT_BORDER) || (components & MW_WINDOW_FRAME_COMPONENT_MENU_BAR)))
+  	if ((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_BORDER) == MW_WINDOW_FLAG_HAS_BORDER &&
+  			((components & MW_WINDOW_FRAME_COMPONENT_BORDER) == MW_WINDOW_FRAME_COMPONENT_BORDER || (components & MW_WINDOW_FRAME_COMPONENT_MENU_BAR) == MW_WINDOW_FRAME_COMPONENT_MENU_BAR))
   	{
   		mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
   		mw_gl_set_line(MW_GL_SOLID_LINE);
 
         /* draw two shorter left/right sides */
-  		if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_TITLE_BAR)
+  		if ((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_TITLE_BAR) == MW_WINDOW_FLAG_HAS_TITLE_BAR)
   		{
   			mw_gl_vline(&draw_info,
   					0,
@@ -2197,28 +2199,28 @@ static void do_paint_window_frame2(mw_handle_t window_handle, uint8_t components
   	}
 
 	/* draw title bar if this window has one */
-	if ((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_TITLE_BAR) &&
-			(components & MW_WINDOW_FRAME_COMPONENT_TITLE_BAR))
+	if ((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_TITLE_BAR) == MW_WINDOW_FLAG_HAS_TITLE_BAR &&
+			(components & MW_WINDOW_FRAME_COMPONENT_TITLE_BAR) == MW_WINDOW_FRAME_COMPONENT_TITLE_BAR)
 	{
 		draw_title_bar(window_handle, &draw_info);
 	}
 
 	/* draw no, 1 or both scroll bars */
-	if ((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_HORIZ_SCROLL_BAR) &&
-			(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_VERT_SCROLL_BAR))
+	if ((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_HORIZ_SCROLL_BAR) == MW_WINDOW_FLAG_HAS_HORIZ_SCROLL_BAR &&
+			(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_VERT_SCROLL_BAR) == MW_WINDOW_FLAG_HAS_VERT_SCROLL_BAR)
 	{
 		/* draw horizontal and vertical scroll bars */
-		if (components & MW_WINDOW_FRAME_COMPONENT_HORIZ_SCROLL_BAR)
+		if ((components & MW_WINDOW_FRAME_COMPONENT_HORIZ_SCROLL_BAR) == MW_WINDOW_FRAME_COMPONENT_HORIZ_SCROLL_BAR)
 		{
 			draw_horizontal_window_scroll_bar(&draw_info, window_handle);
 		}
-		if (components & MW_WINDOW_FRAME_COMPONENT_VERT_SCROLL_BAR)
+		if ((components & MW_WINDOW_FRAME_COMPONENT_VERT_SCROLL_BAR) == MW_WINDOW_FRAME_COMPONENT_VERT_SCROLL_BAR)
 		{
 			draw_vertical_window_scroll_bar(&draw_info, window_handle);
 		}
 
 		/* fill in that little square at bottom right */
-		if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_LARGE_SIZE)
+		if ((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_LARGE_SIZE) == MW_WINDOW_FLAG_LARGE_SIZE)
 		{
 			scroll_bar_narrow_dimension = MW_SCROLL_BAR_LARGE_NARROW_DIMENSION;
 		}
@@ -2238,14 +2240,14 @@ static void do_paint_window_frame2(mw_handle_t window_handle, uint8_t components
 				scroll_bar_narrow_dimension,
 				scroll_bar_narrow_dimension);
 	}
-	else if ((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_HORIZ_SCROLL_BAR) &&
-				(components & MW_WINDOW_FRAME_COMPONENT_HORIZ_SCROLL_BAR))
+	else if ((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_HORIZ_SCROLL_BAR) == MW_WINDOW_FLAG_HAS_HORIZ_SCROLL_BAR &&
+				(components & MW_WINDOW_FRAME_COMPONENT_HORIZ_SCROLL_BAR) == MW_WINDOW_FRAME_COMPONENT_HORIZ_SCROLL_BAR)
 	{
 		/* draw horizontal scroll bar only */
 		draw_horizontal_window_scroll_bar(&draw_info, window_handle);
 	}
-	else if ((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_VERT_SCROLL_BAR) &&
-				(components & MW_WINDOW_FRAME_COMPONENT_VERT_SCROLL_BAR))
+	else if ((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_VERT_SCROLL_BAR) == MW_WINDOW_FLAG_HAS_VERT_SCROLL_BAR &&
+				(components & MW_WINDOW_FRAME_COMPONENT_VERT_SCROLL_BAR) == MW_WINDOW_FRAME_COMPONENT_VERT_SCROLL_BAR)
 	{
 		/* draw vertical scroll bar only */
 		draw_vertical_window_scroll_bar(&draw_info, window_handle);
@@ -2281,9 +2283,9 @@ static void do_paint_window_client(mw_handle_t window_handle)
 	MW_ASSERT(window_id < MW_MAX_WINDOW_COUNT, "Bad window handle");
 
     /* check if this window is used, visible and not minimised; if not give up */
-	if (!(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_USED) ||
-			(!(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_VISIBLE)) ||
-			(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_MINIMISED))
+	if ((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_USED) == 0U ||
+			(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_VISIBLE) == 0U ||
+			(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_MINIMISED) == MW_WINDOW_FLAG_IS_MINIMISED)
 	{
 		return;
 	}
@@ -2379,9 +2381,9 @@ static void do_paint_window_client_rect(mw_handle_t window_handle, const mw_util
 	MW_ASSERT(window_id < MW_MAX_WINDOW_COUNT, "Bad window handle");
 
     /* check if this window is used, visible and not minimised; if not give up */
-	if (!(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_USED) ||
-			(!(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_VISIBLE)) ||
-			(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_MINIMISED) ||
+	if ((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_USED) == 0U ||
+			(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_VISIBLE) == 0U ||
+			(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_MINIMISED) == MW_WINDOW_FLAG_IS_MINIMISED ||
 			window_id == MW_ROOT_WINDOW_ID)
 	{
 		return;
@@ -2543,8 +2545,8 @@ static void paint_all_controls_in_window(mw_handle_t window_handle)
 	{
         /* ignore controls not used, not visible and not belonging to specified window */
 		if (mw_all_controls[i].parent_handle == window_handle &&
-				(mw_all_controls[i].control_flags & MW_CONTROL_FLAG_IS_USED) &&
-				(mw_all_controls[i].control_flags & MW_CONTROL_FLAG_IS_VISIBLE))
+				(mw_all_controls[i].control_flags & MW_CONTROL_FLAG_IS_USED) == MW_CONTROL_FLAG_IS_USED &&
+				(mw_all_controls[i].control_flags & MW_CONTROL_FLAG_IS_VISIBLE) == MW_CONTROL_FLAG_IS_VISIBLE)
 		{
 			do_paint_control(mw_all_controls[i].control_handle);
 		}
@@ -2571,8 +2573,8 @@ static void paint_all_controls_in_window_rect(mw_handle_t window_handle, const m
 	{
         /* ignore controls not used, not visible and not belonging to specified window */
 		if (mw_all_controls[i].parent_handle == window_handle &&
-				(mw_all_controls[i].control_flags & MW_CONTROL_FLAG_IS_USED) &&
-				(mw_all_controls[i].control_flags & MW_CONTROL_FLAG_IS_VISIBLE))
+				(mw_all_controls[i].control_flags & MW_CONTROL_FLAG_IS_USED) == MW_CONTROL_FLAG_IS_USED &&
+				(mw_all_controls[i].control_flags & MW_CONTROL_FLAG_IS_VISIBLE) == MW_CONTROL_FLAG_IS_VISIBLE)
 		{
 			do_paint_control_rect(mw_all_controls[i].control_handle, invalid_rect);
 		}
@@ -2616,9 +2618,9 @@ static void do_paint_control_rect(mw_handle_t control_handle, const mw_util_rect
 	MW_ASSERT(parent_window_id < MW_MAX_WINDOW_COUNT, "Bad window handle");
 
     /* check if this control is used, visible and not parent window not minimised; if not give up */
-	if (!(mw_all_controls[control_id].control_flags & MW_CONTROL_FLAG_IS_VISIBLE) ||
-			!(mw_all_controls[control_id].control_flags & MW_CONTROL_FLAG_IS_USED) ||
-			(mw_all_windows[parent_window_id].window_flags & MW_WINDOW_FLAG_IS_MINIMISED))
+	if ((mw_all_controls[control_id].control_flags & MW_CONTROL_FLAG_IS_VISIBLE) == 0U ||
+			(mw_all_controls[control_id].control_flags & MW_CONTROL_FLAG_IS_USED) == 0U ||
+			(mw_all_windows[parent_window_id].window_flags & MW_WINDOW_FLAG_IS_MINIMISED) == MW_WINDOW_FLAG_IS_MINIMISED)
 	{
 		return;
 	}
@@ -2734,9 +2736,9 @@ static void do_paint_control(mw_handle_t control_handle)
 	}
 
     /* check if this control is used, visible, parent window not minimised and parent window exists; if not give up */
-	if (!(mw_all_controls[control_id].control_flags & MW_CONTROL_FLAG_IS_VISIBLE) ||
-			!(mw_all_controls[control_id].control_flags & MW_CONTROL_FLAG_IS_USED) ||
-			(mw_all_windows[parent_window_id].window_flags & MW_WINDOW_FLAG_IS_MINIMISED))
+	if ((mw_all_controls[control_id].control_flags & MW_CONTROL_FLAG_IS_VISIBLE) == 0U ||
+			(mw_all_controls[control_id].control_flags & MW_CONTROL_FLAG_IS_USED) == 0U ||
+			(mw_all_windows[parent_window_id].window_flags & MW_WINDOW_FLAG_IS_MINIMISED) == MW_WINDOW_FLAG_IS_MINIMISED)
 	{
 		return;
 	}
@@ -3240,7 +3242,7 @@ static void process_touch_message(mw_message_id_t touch_message_id, int16_t touc
 		if (control_to_receive_message_id < MW_MAX_CONTROL_COUNT)
 		{
 			/* only send message to control if it is enabled */
-			if (mw_all_controls[control_to_receive_message_id].control_flags & MW_CONTROL_FLAG_IS_ENABLED)
+			if ((mw_all_controls[control_to_receive_message_id].control_flags & MW_CONTROL_FLAG_IS_ENABLED) == MW_CONTROL_FLAG_IS_ENABLED)
 			{
 				/* touch occurred in a control so send touch message to that control */
 				client_x = touch_x - mw_all_controls[control_to_receive_message_id].control_rect.x;
@@ -3455,7 +3457,7 @@ static bool check_and_process_touch_on_window_without_focus(uint8_t window_id)
 		}
 
 		/* check if the touch event should now be passed on to the window */
-		if (!(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_TOUCH_FOCUS_AND_EVENT))
+		if ((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_TOUCH_FOCUS_AND_EVENT) == 0U)
 		{
 			/* it shouldn't so this touch event has now been consumed */
 			return (true);
@@ -3522,7 +3524,7 @@ static bool check_and_process_touch_on_window_border(uint8_t window_id, int16_t 
 			return (true);
 		}
 
-		if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_TITLE_BAR)
+		if ((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_TITLE_BAR) == MW_WINDOW_FLAG_HAS_TITLE_BAR)
 		{
 			/* check for a touch on left border */
 			if (touch_x < mw_all_windows[window_id].window_rect.x + MW_BORDER_WIDTH &&
@@ -3576,8 +3578,8 @@ static bool check_and_process_touch_on_window_border(uint8_t window_id, int16_t 
  */
 static bool check_and_process_touch_on_dual_scroll_bars_corner_zone(uint8_t window_id, int16_t touch_x, int16_t touch_y)
 {
-	if ((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_VERT_SCROLL_BAR) &&
-			(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_HORIZ_SCROLL_BAR))
+	if ((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_VERT_SCROLL_BAR) == MW_WINDOW_FLAG_HAS_VERT_SCROLL_BAR &&
+			(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_HORIZ_SCROLL_BAR) == MW_WINDOW_FLAG_HAS_HORIZ_SCROLL_BAR)
 	{
 		if (touch_x > mw_all_windows[window_id].client_rect.x + mw_all_windows[window_id].client_rect.width &&
 				touch_y > mw_all_windows[window_id].client_rect.y +	mw_all_windows[window_id].client_rect.height)
@@ -3605,7 +3607,7 @@ static bool check_and_process_touch_on_vert_window_scroll_bar(uint8_t window_id,
 	int16_t scaled_touch;
 
 	/* check if touch occurred in vertical scroll bar */
-	if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_VERT_SCROLL_BAR)
+	if ((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_VERT_SCROLL_BAR) == MW_WINDOW_FLAG_HAS_VERT_SCROLL_BAR)
 	{
 		if ((touch_x > mw_all_windows[window_id].client_rect.x +
 				mw_all_windows[window_id].client_rect.width &&
@@ -3613,7 +3615,7 @@ static bool check_and_process_touch_on_vert_window_scroll_bar(uint8_t window_id,
 				!check_bounds)
 		{
 			/* check if scroll bar disabled */
-			if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_VERT_SCROLL_BAR_ENABLED)
+			if ((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_VERT_SCROLL_BAR_ENABLED) == MW_WINDOW_FLAG_VERT_SCROLL_BAR_ENABLED)
 			{
 				/* enabled so post message and redraw scroll bar */
 				if (touch_message_id == MW_TOUCH_DOWN_MESSAGE || touch_message_id == MW_TOUCH_DRAG_MESSAGE)
@@ -3666,7 +3668,7 @@ static bool check_and_process_touch_on_horiz_window_scroll_bar(uint8_t window_id
 	int16_t scaled_touch;
 
 	/* check if touch occurred in horizontal scroll bar */
-	if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_HORIZ_SCROLL_BAR)
+	if ((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_HORIZ_SCROLL_BAR) == MW_WINDOW_FLAG_HAS_HORIZ_SCROLL_BAR)
 	{
 		if ((touch_y > mw_all_windows[window_id].client_rect.y +
 				mw_all_windows[window_id].client_rect.height &&
@@ -3674,7 +3676,7 @@ static bool check_and_process_touch_on_horiz_window_scroll_bar(uint8_t window_id
 				!check_bounds)
 		{
 			/* check if scroll bar disabled */
-			if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HORIZ_SCROLL_BAR_ENABLED)
+			if ((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HORIZ_SCROLL_BAR_ENABLED) == MW_WINDOW_FLAG_HORIZ_SCROLL_BAR_ENABLED)
 			{
 				/* enabled so post message and redraw scroll bar */
 				if (touch_message_id == MW_TOUCH_DOWN_MESSAGE || touch_message_id == MW_TOUCH_DRAG_MESSAGE)
@@ -3725,11 +3727,11 @@ static bool check_and_process_touch_on_menu_bar(uint8_t window_id, int16_t touch
 	uint8_t i;
 
 	/* check if touch occurred on menu bar */
-	if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_MENU_BAR)
+	if ((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_MENU_BAR) == MW_WINDOW_FLAG_HAS_MENU_BAR)
 	{
 		if (touch_y < mw_all_windows[window_id].client_rect.y &&
 				touch_y > (mw_all_windows[window_id].client_rect.y - MW_MENU_BAR_HEIGHT) &&
-				(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_MENU_BAR_ENABLED))
+				(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_MENU_BAR_ENABLED) == MW_WINDOW_FLAG_MENU_BAR_ENABLED)
 		{
 			if (touch_message_id == MW_TOUCH_DOWN_MESSAGE)
 			{
@@ -3737,7 +3739,7 @@ static bool check_and_process_touch_on_menu_bar(uint8_t window_id, int16_t touch
 				for (i = 0U; i < mw_all_windows[window_id].menu_bar_items_count; i++)
 				{
 					/* setting font needed for getting font width */
-					if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_LARGE_SIZE)
+					if ((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_LARGE_SIZE) == MW_WINDOW_FLAG_LARGE_SIZE)
 					{
 					    mw_gl_set_font(MW_GL_TITLE_FONT);
 					}
@@ -3797,7 +3799,7 @@ static bool check_and_process_touch_on_title_bar(uint8_t window_id, int16_t touc
 	int16_t icon_offset;
 
 	/* check for large size */
-	if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_LARGE_SIZE)
+	if ((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_LARGE_SIZE) == MW_WINDOW_FLAG_LARGE_SIZE)
 	{
 		icon_size = MW_TITLE_BAR_ICON_SIZE_LARGE;
 		icon_offset = MW_TITLE_BAR_ICON_OFFSET_LARGE;
@@ -3811,9 +3813,9 @@ static bool check_and_process_touch_on_title_bar(uint8_t window_id, int16_t touc
 	if (touch_y < mw_all_windows[window_id].client_rect.y)
 	{
 		/* touch was above client rect */
-		if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_TITLE_BAR)
+		if ((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_HAS_TITLE_BAR) == MW_WINDOW_FLAG_HAS_TITLE_BAR)
 		{
-			if (!(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_MODAL))
+			if ((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_MODAL) == 0U)
 			{
 				/* touch event occurred on title bar so check if it occurred on close icon */
 				if (touch_x > (mw_all_windows[window_id].window_rect.x +
@@ -3823,7 +3825,7 @@ static bool check_and_process_touch_on_title_bar(uint8_t window_id, int16_t touc
 					if (touch_message_id == MW_TOUCH_DOWN_MESSAGE)
 					{
 						/* it was touch down and window isn't modal so close window if it's allowed */
-						if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_CAN_BE_CLOSED)
+						if ((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_CAN_BE_CLOSED) == MW_WINDOW_FLAG_CAN_BE_CLOSED)
 						{
 							/* it's allowed, close it */
 							mw_remove_window(mw_all_windows[window_id].window_handle);
@@ -3949,9 +3951,10 @@ static void set_focus(void)
 	for (i = 0U; i < MW_MAX_WINDOW_COUNT; i++)
 	{
 		/* check window is used, visible, not minimised and has a z order higher than current highest z order */
-		if ((mw_all_windows[i].window_flags & MW_WINDOW_FLAG_IS_USED) &&
-				(mw_all_windows[i].window_flags & MW_WINDOW_FLAG_IS_VISIBLE) &&
-				!(mw_all_windows[i].window_flags & MW_WINDOW_FLAG_IS_MINIMISED) && mw_all_windows[i].z_order > highest_z_order_found)
+		if ((mw_all_windows[i].window_flags & MW_WINDOW_FLAG_IS_USED) == MW_WINDOW_FLAG_IS_USED &&
+				(mw_all_windows[i].window_flags & MW_WINDOW_FLAG_IS_VISIBLE) == MW_WINDOW_FLAG_IS_VISIBLE &&
+				(mw_all_windows[i].window_flags & MW_WINDOW_FLAG_IS_MINIMISED) == 0U &&
+				mw_all_windows[i].z_order > highest_z_order_found)
 		{
 			/* new highest z order found so save it */
 			highest_z_order_found = mw_all_windows[i].z_order;
@@ -4000,7 +4003,7 @@ static void set_focus(void)
 	for (i = 0U; i < MW_MAX_CONTROL_COUNT; i++)
 	{
 		if (mw_all_controls[i].parent_handle == window_with_focus_handle &&
-				(mw_all_controls[i].control_flags & MW_CONTROL_FLAG_IS_USED))
+				(mw_all_controls[i].control_flags & MW_CONTROL_FLAG_IS_USED) == MW_CONTROL_FLAG_IS_USED)
 		{
 			mw_post_message(MW_CONTROL_GAINED_FOCUS_MESSAGE,
 					MW_UNUSED_MESSAGE_PARAMETER,
@@ -4036,9 +4039,9 @@ static void rationalize_z_orders(void)
 		for (i = MW_FIRST_USER_WINDOW_ID; i < MW_MAX_WINDOW_COUNT; i++)
 		{
 			/* if this window's z order is equal to the next existing z order then make this window's z order the next available z order */
-			if (mw_all_windows[i].z_order == next_z_order_existing && (mw_all_windows[i].window_flags & MW_WINDOW_FLAG_IS_USED) &&
-					(mw_all_windows[i].window_flags & MW_WINDOW_FLAG_IS_VISIBLE) &&
-					!(mw_all_windows[i].window_flags & MW_WINDOW_FLAG_IS_MINIMISED))
+			if (mw_all_windows[i].z_order == next_z_order_existing && (mw_all_windows[i].window_flags & MW_WINDOW_FLAG_IS_USED) == MW_WINDOW_FLAG_IS_USED &&
+					(mw_all_windows[i].window_flags & MW_WINDOW_FLAG_IS_VISIBLE) == MW_WINDOW_FLAG_IS_VISIBLE &&
+					(mw_all_windows[i].window_flags & MW_WINDOW_FLAG_IS_MINIMISED) == 0U)
 			{
 				mw_all_windows[i].z_order = next_z_order_rationalized;
 				
@@ -4220,7 +4223,7 @@ mw_handle_t mw_add_window(mw_util_rect_t *rect,
 	}
 
 	/* check optional parameters */
-	if ((window_flags & MW_WINDOW_FLAG_HAS_MENU_BAR) && (!menu_bar_items || !*menu_bar_items || menu_bar_items_count == 0U))
+	if ((window_flags & MW_WINDOW_FLAG_HAS_MENU_BAR) == MW_WINDOW_FLAG_HAS_MENU_BAR && (!menu_bar_items || !*menu_bar_items || menu_bar_items_count == 0U))
 	{
 		MW_ASSERT((bool)false, "Non-sensical arguments");
 		return (MW_INVALID_HANDLE);
@@ -4264,7 +4267,7 @@ mw_handle_t mw_add_window(mw_util_rect_t *rect,
 			instance_data);
 
    	/* check if created minimised */
-   	if (window_flags & MW_WINDOW_FLAG_IS_MINIMISED)
+   	if ((window_flags & MW_WINDOW_FLAG_IS_MINIMISED) == MW_WINDOW_FLAG_IS_MINIMISED)
    	{
 		add_minimised_window_to_list(mw_all_windows[new_window_id].window_handle);
    	}
@@ -4365,17 +4368,17 @@ void mw_set_window_visible(mw_handle_t window_handle, bool visible)
 	}
 
 	/* ignore if not used */
-	if (!(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_USED))
+	if ((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_USED) == 0U)
 	{
 		return;
 	}
 
 	/* ignore if no change */
-	if (visible && (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_VISIBLE))
+	if (visible && (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_VISIBLE) == MW_WINDOW_FLAG_IS_VISIBLE)
 	{
 		return;
 	}
-	if (!visible && !(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_VISIBLE))
+	if (!visible && (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_VISIBLE) == 0U)
 	{
 		return;
 	}
@@ -4385,7 +4388,7 @@ void mw_set_window_visible(mw_handle_t window_handle, bool visible)
 	{
 		/* setting visible */
 		mw_all_windows[window_id].window_flags |= MW_WINDOW_FLAG_IS_VISIBLE;
-		if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_MINIMISED)
+		if ((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_MINIMISED) == MW_WINDOW_FLAG_IS_MINIMISED)
 		{
 			add_minimised_window_to_list(window_handle);
 		}
@@ -4398,7 +4401,7 @@ void mw_set_window_visible(mw_handle_t window_handle, bool visible)
 	{
 		/* setting invisible */
 		mw_all_windows[window_id].window_flags &= ~MW_WINDOW_FLAG_IS_VISIBLE;
-		if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_MINIMISED)
+		if ((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_MINIMISED) == MW_WINDOW_FLAG_IS_MINIMISED)
 		{
 			remove_minimised_window_from_list(window_handle);
 		}
@@ -4430,7 +4433,7 @@ void mw_set_window_minimised(mw_handle_t window_handle, bool minimised)
 	}
 
 	/* ignore if not used or no change */
-	if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_USED)
+	if ((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_USED) == MW_WINDOW_FLAG_IS_USED)
 	{
 		/* set window minimised state */
 		if (minimised)
@@ -4477,7 +4480,7 @@ void mw_reposition_window(mw_handle_t window_handle, int16_t new_x, int16_t new_
 	for (i = 0U; i < MW_MAX_CONTROL_COUNT; i++)
 	{
 		/* find controls that are used and have this window as parent */
-		if (mw_all_controls[i].parent_handle == window_handle && (mw_all_controls[i].control_flags & MW_CONTROL_FLAG_IS_USED))
+		if (mw_all_controls[i].parent_handle == window_handle && (mw_all_controls[i].control_flags & MW_CONTROL_FLAG_IS_USED) == MW_CONTROL_FLAG_IS_USED)
 		{
 			/* move the control */
 			mw_all_controls[i].control_rect.x += (new_x - mw_all_windows[window_id].window_rect.x);
@@ -4550,8 +4553,8 @@ bool mw_is_any_window_modal(void)
 	/* search through all windows */
 	for (i = MW_FIRST_USER_WINDOW_ID; i < MW_MAX_WINDOW_COUNT; i++)
 	{
-		if ((mw_all_windows[i].window_flags & MW_WINDOW_FLAG_IS_MODAL) &&
-				(mw_all_windows[i].window_flags & MW_WINDOW_FLAG_IS_USED))
+		if ((mw_all_windows[i].window_flags & MW_WINDOW_FLAG_IS_MODAL) == MW_WINDOW_FLAG_IS_MODAL &&
+				(mw_all_windows[i].window_flags & MW_WINDOW_FLAG_IS_USED) == MW_WINDOW_FLAG_IS_USED)
 		{
 			return (true);
 		}
@@ -4581,9 +4584,9 @@ void mw_set_window_modal(mw_handle_t window_handle, bool modal)
 	else
 	{
 		/* can't set an invisible unused or minimised window modal */
-		if (!(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_VISIBLE) ||
-				!(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_USED) ||
-				(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_MINIMISED))
+		if ((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_VISIBLE) == 0U ||
+				(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_USED) == 0U ||
+				(mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_MINIMISED) == MW_WINDOW_FLAG_IS_MINIMISED)
 		{
 			return;
 		}
@@ -4866,7 +4869,7 @@ void mw_remove_window(mw_handle_t window_handle)
 	mw_all_windows[window_id].window_flags &= ~MW_WINDOW_FLAG_IS_USED;
 
 	/* remove this window from the minimised list */
-	if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_MINIMISED)
+	if ((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_MINIMISED) == MW_WINDOW_FLAG_IS_MINIMISED)
 	{
 		remove_minimised_window_from_list(mw_all_windows[window_id].window_handle);
 	}
@@ -4976,7 +4979,7 @@ mw_handle_t mw_add_control(mw_util_rect_t *rect,
 	}
 
 	/* cannot add a control to an unused window */
-	if (!(mw_all_windows[parent_window_id].window_flags & MW_WINDOW_FLAG_IS_USED))
+	if ((mw_all_windows[parent_window_id].window_flags & MW_WINDOW_FLAG_IS_USED) == 0U)
 	{
 		MW_ASSERT((bool)false, "Can't add control to unused window");
 		return (MW_INVALID_HANDLE);
@@ -5063,17 +5066,17 @@ void mw_set_control_visible(mw_handle_t control_handle, bool visible)
 	}
 
 	/* ignore if not used */
-	if (!(mw_all_controls[control_id].control_flags & MW_CONTROL_FLAG_IS_USED))
+	if ((mw_all_controls[control_id].control_flags & MW_CONTROL_FLAG_IS_USED) == 0U)
 	{
 		return;
 	}
 
 	/* ignore if no change */
-	if (visible && (mw_all_controls[control_id].control_flags & MW_CONTROL_FLAG_IS_VISIBLE))
+	if (visible && (mw_all_controls[control_id].control_flags & MW_CONTROL_FLAG_IS_VISIBLE) == MW_CONTROL_FLAG_IS_VISIBLE)
 	{
 		return;
 	}
-	if (!visible && !(mw_all_controls[control_id].control_flags & MW_CONTROL_FLAG_IS_VISIBLE))
+	if (!visible && (mw_all_controls[control_id].control_flags & MW_CONTROL_FLAG_IS_VISIBLE) == 0U)
 	{
 		return;
 	}
@@ -5111,7 +5114,7 @@ void mw_set_control_enabled(mw_handle_t control_handle, bool enabled)
 	}
 
 	/* ignore if control is not used */
-	if (mw_all_controls[control_id].control_flags & MW_CONTROL_FLAG_IS_USED)
+	if ((mw_all_controls[control_id].control_flags & MW_CONTROL_FLAG_IS_USED) == MW_CONTROL_FLAG_IS_USED)
 	{
 		if (enabled)
 		{
@@ -5406,9 +5409,9 @@ void mw_post_message(mw_message_id_t message_id,
 
 	/* do not send messages to unused windows */
 	if ((new_message.message_recipient_type == MW_WINDOW_MESSAGE &&
-			(mw_all_windows[recipient_id].window_flags & MW_WINDOW_FLAG_IS_USED)) ||
+			(mw_all_windows[recipient_id].window_flags & MW_WINDOW_FLAG_IS_USED) == MW_WINDOW_FLAG_IS_USED) ||
 		(new_message.message_recipient_type == MW_CONTROL_MESSAGE &&
-				(mw_all_controls[recipient_id].control_flags & MW_CONTROL_FLAG_IS_USED)) ||
+				(mw_all_controls[recipient_id].control_flags & MW_CONTROL_FLAG_IS_USED) == MW_CONTROL_FLAG_IS_USED) ||
 		new_message.message_recipient_type == MW_SYSTEM_MESSAGE)
 	{
 		/* add this message to the queue */
@@ -5478,7 +5481,7 @@ bool mw_process_message(void)
 					if (window_id < MW_MAX_WINDOW_COUNT)
 					{
 						/* check window is used */
-						if (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_USED)
+						if ((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_USED) == MW_WINDOW_FLAG_IS_USED)
 						{
 							mw_post_message(MW_TIMER_MESSAGE,
 									MW_UNUSED_MESSAGE_PARAMETER,
@@ -5498,7 +5501,7 @@ bool mw_process_message(void)
 					if (control_id < MW_MAX_CONTROL_COUNT)
 					{
 						/* check control is used */
-						if (mw_all_controls[control_id].control_flags & MW_CONTROL_FLAG_IS_USED)
+						if ((mw_all_controls[control_id].control_flags & MW_CONTROL_FLAG_IS_USED) == MW_CONTROL_FLAG_IS_USED)
 						{
 							mw_post_message(MW_TIMER_MESSAGE,
 									MW_UNUSED_MESSAGE_PARAMETER,
