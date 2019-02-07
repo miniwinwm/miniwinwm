@@ -214,14 +214,14 @@ static void mw_dialog_text_entry_message_function(const mw_message_t *message)
 		{
 			mw_dialog_text_entry_data.cursor_rect.height = 22;
 			mw_dialog_text_entry_data.character_pitch = TITLE_FONT_FIXED_CHARACTER_PITCH;
-			memcpy(&mw_dialog_text_entry_data.text_rect, &text_display_rect_large, sizeof(text_display_rect_large));
+			(void)memcpy(&mw_dialog_text_entry_data.text_rect, &text_display_rect_large, sizeof(text_display_rect_large));
 		}
 		else
 		{
 			mw_dialog_text_entry_data.cursor_rect.height = 13;
 			mw_gl_set_font(MW_GL_FONT_9);
 			mw_dialog_text_entry_data.character_pitch = (int16_t)mw_gl_get_font_width() + 1;
-			memcpy(&mw_dialog_text_entry_data.text_rect, &text_display_rect, sizeof(text_display_rect));
+			(void)memcpy(&mw_dialog_text_entry_data.text_rect, &text_display_rect, sizeof(text_display_rect));
 		}
 
 		/* set cursor rect values */
@@ -265,7 +265,7 @@ static void mw_dialog_text_entry_message_function(const mw_message_t *message)
 					}
 					else
 					{
-						memmove(&mw_dialog_text_entry_data.text_buffer[mw_dialog_text_entry_data.cursor_position - 1U],
+						(void)memmove(&mw_dialog_text_entry_data.text_buffer[mw_dialog_text_entry_data.cursor_position - 1U],
 										&mw_dialog_text_entry_data.text_buffer[mw_dialog_text_entry_data.cursor_position],
 										current_length - mw_dialog_text_entry_data.cursor_position + 1U);
 						if (mw_dialog_text_entry_data.cursor_position > 0U)
@@ -289,7 +289,7 @@ static void mw_dialog_text_entry_message_function(const mw_message_t *message)
 					else
 					{
 						/* move everything from cursor onwards along and insert character */
-						memmove(&mw_dialog_text_entry_data.text_buffer[mw_dialog_text_entry_data.cursor_position + 1U],
+						(void)memmove(&mw_dialog_text_entry_data.text_buffer[mw_dialog_text_entry_data.cursor_position + 1U],
 										&mw_dialog_text_entry_data.text_buffer[mw_dialog_text_entry_data.cursor_position],
 										current_length - mw_dialog_text_entry_data.cursor_position);
 						mw_dialog_text_entry_data.text_buffer[mw_dialog_text_entry_data.cursor_position] = (char)message->message_data;
@@ -322,7 +322,7 @@ static void mw_dialog_text_entry_message_function(const mw_message_t *message)
 					MW_UNUSED_MESSAGE_PARAMETER,
 					mw_dialog_text_entry_data.owner_window_handle,
 					MW_UNUSED_MESSAGE_PARAMETER,
-					MW_UNUSED_MESSAGE_PARAMETER,
+					NULL,
 					MW_WINDOW_MESSAGE);
 		}
 		else
@@ -356,9 +356,9 @@ mw_handle_t mw_create_window_dialog_text_entry(int16_t x,
 	mw_util_rect_t rect;
 
 	/* check pointer parameters */
-	if (!title || !initial_text)
+	if (title == NULL || initial_text == NULL)
 	{
-		MW_ASSERT(false, "Null pointer argument");
+		MW_ASSERT((bool)false, "Null pointer argument");
 		return (MW_INVALID_HANDLE);
 	}
 

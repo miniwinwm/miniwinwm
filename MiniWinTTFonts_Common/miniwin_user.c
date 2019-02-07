@@ -176,7 +176,7 @@ void mw_user_init(void)
 			&text_box_scroll_bar_data);
 
 	/* create button */
-	mw_util_safe_strcpy(button_scroll_bar_data.button_label, MW_UI_BUTTON_LABEL_MAX_CHARS, "Change");
+	(void)mw_util_safe_strcpy(button_scroll_bar_data.button_label, MW_UI_BUTTON_LABEL_MAX_CHARS, "Change");
 	button_scroll_bar_handle = mw_ui_button_add_new(10,
 			150,
 			window_tt_font_text_box_scroll_bar_handle,

@@ -141,7 +141,7 @@ static void text_box_message_function(const mw_message_t *message)
 					message->recipient_handle,
 					mw_get_control_parent_window_handle(message->recipient_handle),
 					message_data,
-					MW_UNUSED_MESSAGE_PARAMETER,
+					NULL,
 					MW_WINDOW_MESSAGE);
 		}
 		break;
@@ -218,12 +218,12 @@ static void text_box_message_function(const mw_message_t *message)
 						message->recipient_handle,
 						mw_get_control_parent_window_handle(message->recipient_handle),
 						message_data,
-						MW_UNUSED_MESSAGE_PARAMETER,
+						NULL,
 						MW_WINDOW_MESSAGE);
 			}
 			else
 			{
-				MW_ASSERT(false, "Null pointer argument");
+				MW_ASSERT((bool)false, "Null pointer argument");
 			}
 		}
 		break;
@@ -248,7 +248,7 @@ mw_handle_t mw_ui_text_box_add_new(mw_util_rect_t *control_rect,
 			text_box_instance_data->tt_font == NULL ||
 			text_box_instance_data->text == NULL)
 	{
-		MW_ASSERT(false, "Null pointer argument");
+		MW_ASSERT((bool)false, "Null pointer argument");
 		return MW_INVALID_HANDLE;
 	}
 

@@ -138,7 +138,7 @@ static void mw_dialog_one_button_message_function(const mw_message_t *message)
 				MW_UNUSED_MESSAGE_PARAMETER,
 				mw_dialog_one_button_data.owner_window_handle,
 				MW_UNUSED_MESSAGE_PARAMETER,
-				MW_UNUSED_MESSAGE_PARAMETER,
+				NULL,
 				MW_WINDOW_MESSAGE);
 		break;
 
@@ -164,9 +164,9 @@ mw_handle_t mw_create_window_dialog_one_button(int16_t x,
 	uint16_t window_client_width;
 
 	/* check pointer parameters */
-	if (!title || !message || !button_label)
+	if (title == NULL || message == NULL || button_label == NULL)
 	{
-		MW_ASSERT(false, "Null pointer argument");
+		MW_ASSERT((bool)false, "Null pointer argument");
 		return (MW_INVALID_HANDLE);
 	}
 

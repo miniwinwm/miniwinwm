@@ -198,7 +198,7 @@ void mw_user_init(void)
 	mw_set_menu_bar_items_enabled_state(window_test_handle, mw_util_change_bit(MW_ALL_ITEMS_ENABLED, 0, false));
 
 	/* create a check box control and add it to the ui test window */
-	mw_util_safe_strcpy(check_box_1_data.label, MW_UI_CHECK_BOX_LABEL_MAX_CHARS, "Check");
+	(void)mw_util_safe_strcpy(check_box_1_data.label, MW_UI_CHECK_BOX_LABEL_MAX_CHARS, "Check");
 	check_box_1_handle = mw_ui_check_box_add_new(10,
 			20,
 			window_test_handle,
@@ -206,7 +206,7 @@ void mw_user_init(void)
 			&check_box_1_data);
 
 	/* create a large check box control and add it to the ui test window */
-	mw_util_safe_strcpy(check_box_1_large_data.label, MW_UI_CHECK_BOX_LABEL_MAX_CHARS, "Check");
+	(void)mw_util_safe_strcpy(check_box_1_large_data.label, MW_UI_CHECK_BOX_LABEL_MAX_CHARS, "Check");
 	check_box_1_large_handle = mw_ui_check_box_add_new(30,
 			235,
 			window_test_handle,
@@ -228,7 +228,7 @@ void mw_user_init(void)
 			&arrow_1_large_data);
 
 	/* create a button control and add it to the ui test window */
-	mw_util_safe_strcpy(button_1_data.button_label, MW_UI_BUTTON_LABEL_MAX_CHARS, "Go Big");
+	(void)mw_util_safe_strcpy(button_1_data.button_label, MW_UI_BUTTON_LABEL_MAX_CHARS, "Go Big");
 	button_1_handle = mw_ui_button_add_new(140,
 			80,
 			window_test_handle,
@@ -236,7 +236,7 @@ void mw_user_init(void)
 			&button_1_data);
 
 	/* create a large button control and add it to the ui test window */
-	mw_util_safe_strcpy(button_1_large_data.button_label, MW_UI_BUTTON_LABEL_MAX_CHARS, "Go Small");
+	(void)mw_util_safe_strcpy(button_1_large_data.button_label, MW_UI_BUTTON_LABEL_MAX_CHARS, "Go Small");
 	button_1_large_handle = mw_ui_button_add_new(130,
 			235,
 			window_test_handle,
@@ -286,7 +286,7 @@ void mw_user_init(void)
 			&list_box_1_data);
 
 	/* create a label control and add it to the ui test window */
-	mw_util_safe_strcpy(label_1_data.label, MW_UI_LABEL_MAX_CHARS, "0");
+	(void)mw_util_safe_strcpy(label_1_data.label, MW_UI_LABEL_MAX_CHARS, "0");
 	label_1_handle = mw_ui_label_add_new(120,
 			5,
 			20,
@@ -295,7 +295,7 @@ void mw_user_init(void)
 			&label_1_data);
 
 	/* create a large label control and add it to the ui test window */
-	mw_util_safe_strcpy(label_1_large_data.label, MW_UI_LABEL_MAX_CHARS, "0");
+	(void)mw_util_safe_strcpy(label_1_large_data.label, MW_UI_LABEL_MAX_CHARS, "0");
 	label_1_large_handle = mw_ui_label_add_new(175,
 			5,
 			20,

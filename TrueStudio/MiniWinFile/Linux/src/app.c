@@ -212,7 +212,7 @@ uint8_t find_folder_entries(char* path,
 				}
 
 	            list_box_settings_entries[i].icon = file_entry_icon;
-	            mw_util_safe_strcpy(list_box_settings_entries[i].label, MAX_FILENAME_LENGTH + 1, directory_entry->d_name);
+	            (void)mw_util_safe_strcpy(list_box_settings_entries[i].label, MAX_FILENAME_LENGTH + 1, directory_entry->d_name);
 				i++;
 			}
 			else if (directory_entry->d_type == DT_DIR)
@@ -227,7 +227,7 @@ uint8_t find_folder_entries(char* path,
 					continue;
 				}
 	        	list_box_settings_entries[i].icon = folder_entry_icon;
-	            mw_util_safe_strcpy(list_box_settings_entries[i].label, MAX_FILENAME_LENGTH + 1, directory_entry->d_name);
+	        	(void)mw_util_safe_strcpy(list_box_settings_entries[i].label, MAX_FILENAME_LENGTH + 1, directory_entry->d_name);
 				i++;
 			}
 			else

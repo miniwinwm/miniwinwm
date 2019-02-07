@@ -74,7 +74,7 @@ static void scroll_bar_horiz_paint_function(mw_handle_t control_handle, const mw
 	int16_t narrow_dimension;
 	int16_t slider_size;
 
-	if (mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_LARGE_SIZE)
+	if ((mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_LARGE_SIZE) == MW_CONTROL_FLAG_LARGE_SIZE)
 	{
 		narrow_dimension = MW_SCROLL_BAR_LARGE_NARROW_DIMENSION;
 		slider_size = MW_SCROLL_BAR_LARGE_SLIDER_SIZE;
@@ -95,7 +95,7 @@ static void scroll_bar_horiz_paint_function(mw_handle_t control_handle, const mw
 		mw_gl_set_line(MW_GL_SOLID_LINE);
 		mw_gl_clear_pattern();
 		mw_gl_set_solid_fill_colour(MW_CONTROL_UP_COLOUR);
-		if (mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_IS_ENABLED)
+		if ((mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_IS_ENABLED) == MW_CONTROL_FLAG_IS_ENABLED)
 		{
 			mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 		}
@@ -110,7 +110,7 @@ static void scroll_bar_horiz_paint_function(mw_handle_t control_handle, const mw
 				narrow_dimension);
 
 		/* only paint slider if enabled */
-		if (mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_IS_ENABLED)
+		if ((mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_IS_ENABLED) == MW_CONTROL_FLAG_IS_ENABLED)
 		{
 			scroll_bar_horiz_slider_left = (mw_get_control_rect(control_handle).width - slider_size) *
 					this_scroll_bar_horiz->scroll_position / UINT8_MAX;
@@ -176,7 +176,7 @@ static void scroll_bar_horiz_message_function(const mw_message_t *message)
 				message->recipient_handle,
 				mw_get_control_parent_window_handle(message->recipient_handle),
 				MW_UNUSED_MESSAGE_PARAMETER,
-				MW_UNUSED_MESSAGE_PARAMETER,
+				NULL,
 				MW_WINDOW_MESSAGE);
 		break;
 
@@ -202,7 +202,7 @@ static void scroll_bar_horiz_message_function(const mw_message_t *message)
 						message->recipient_handle,
 						mw_get_control_parent_window_handle(message->recipient_handle),
 						this_scroll_bar_horiz->scroll_position,
-						MW_UNUSED_MESSAGE_PARAMETER,
+						NULL,
 						MW_WINDOW_MESSAGE);
 
 			}
@@ -227,7 +227,7 @@ mw_handle_t mw_ui_scroll_bar_horiz_add_new(int16_t x,
 {
 	mw_util_rect_t r;
 
-	if (flags & MW_CONTROL_FLAG_LARGE_SIZE)
+	if ((flags & MW_CONTROL_FLAG_LARGE_SIZE) == MW_CONTROL_FLAG_LARGE_SIZE)
 	{
 		mw_util_set_rect(&r, x, y, width, MW_SCROLL_BAR_LARGE_NARROW_DIMENSION);
 	}

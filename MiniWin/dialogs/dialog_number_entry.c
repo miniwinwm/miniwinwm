@@ -186,7 +186,7 @@ static void mw_dialog_number_entry_paint_function(mw_handle_t window_handle, con
 		mw_gl_set_font(MW_GL_FONT_9);
 	}
 
-	if (mw_dialog_number_entry_data.is_negative && strcmp(mw_dialog_number_entry_data.number_buffer, "0") !=0)
+	if (strcmp(mw_dialog_number_entry_data.number_buffer, "0") !=0 && mw_dialog_number_entry_data.is_negative)
 	{
 		/* draw negative sign and number */
 		mw_gl_character(draw_info,
@@ -237,13 +237,13 @@ static void mw_dialog_number_entry_message_function(const mw_message_t *message)
 		{
 			mw_dialog_number_entry_data.cursor_rect.y = 4;
 			mw_dialog_number_entry_data.cursor_rect.height = 17;
-			memcpy(&mw_dialog_number_entry_data.number_rect, &number_display_rect_large, sizeof(number_display_rect_large));
+			(void)memcpy(&mw_dialog_number_entry_data.number_rect, &number_display_rect_large, sizeof(number_display_rect_large));
 		}
 		else
 		{
 			mw_dialog_number_entry_data.cursor_rect.y = 6;
 			mw_dialog_number_entry_data.cursor_rect.height = 11;
-			memcpy(&mw_dialog_number_entry_data.number_rect, &number_display_rect, sizeof(number_display_rect));
+			(void)memcpy(&mw_dialog_number_entry_data.number_rect, &number_display_rect, sizeof(number_display_rect));
 		}
 
 		/* set cursor rect values */
@@ -321,7 +321,7 @@ static void mw_dialog_number_entry_message_function(const mw_message_t *message)
 						MW_UNUSED_MESSAGE_PARAMETER,
 						mw_dialog_number_entry_data.owner_window_handle,
 						MW_UNUSED_MESSAGE_PARAMETER,
-						MW_UNUSED_MESSAGE_PARAMETER,
+						NULL,
 						MW_WINDOW_MESSAGE);
 			}
 			else
@@ -330,7 +330,7 @@ static void mw_dialog_number_entry_message_function(const mw_message_t *message)
 				/* insert - sign if required */
 				if (mw_dialog_number_entry_data.is_negative)
 				{
-					memmove(mw_dialog_number_entry_data.number_buffer,
+					(void)memmove(mw_dialog_number_entry_data.number_buffer,
 							mw_dialog_number_entry_data.number_buffer + 1U,
 							1 + strlen(mw_dialog_number_entry_data.number_buffer));
 					mw_dialog_number_entry_data.number_buffer[0U] = '-';
@@ -365,16 +365,16 @@ mw_handle_t mw_create_window_dialog_number_entry(int16_t x,
 	mw_util_rect_t rect;
 
 	/* check pointer parameters */
-	if (!title)
+	if (title == NULL)
 	{
-		MW_ASSERT(false, "Null pointer argument");
+		MW_ASSERT((bool)false, "Null pointer argument");
 		return (MW_INVALID_HANDLE);
 	}
 
 	/* check negative/initial number sanity */
 	if (!enable_negative && initial_number < 0)
 	{
-		MW_ASSERT(false, "Nonsense arguments");
+		MW_ASSERT((bool)false, "Nonsense arguments");
 		return (MW_INVALID_HANDLE);
 	}
 

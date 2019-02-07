@@ -144,7 +144,7 @@ static bool add_text_window(char *path_and_filename)
 
 	if (!path_and_filename)
 	{
-		MW_ASSERT(false, "Null pointer");
+		MW_ASSERT((bool)false, "Null pointer");
 		return false;
 	}
 
@@ -156,7 +156,7 @@ static bool add_text_window(char *path_and_filename)
 	filename = strrchr(path_and_filename, '/');
 	if (!filename)
 	{
-		MW_ASSERT(false, "No filename found");
+		MW_ASSERT((bool)false, "No filename found");
 		return false;
 	}
 	filename++;
@@ -177,7 +177,7 @@ static bool add_text_window(char *path_and_filename)
 
 			window_file_data.text_windows_data[i].text_window_handle  = new_window_handle;
 
-			mw_util_safe_strcpy(window_file_data.text_windows_data[i].path_and_filename_text,
+			(void)mw_util_safe_strcpy(window_file_data.text_windows_data[i].path_and_filename_text,
 					MAX_FOLDER_AND_FILENAME_LENGTH,
 					path_and_filename);
 
@@ -207,7 +207,7 @@ static bool add_image_window(char *path_and_filename)
 
 	if (!path_and_filename)
 	{
-		MW_ASSERT(false, "Null pointer");
+		MW_ASSERT((bool)false, "Null pointer");
 		return false;
 	}
 
@@ -219,7 +219,7 @@ static bool add_image_window(char *path_and_filename)
 	filename = strrchr(path_and_filename, '/');
 	if (!filename)
 	{
-		MW_ASSERT(false, "No filename found");
+		MW_ASSERT((bool)false, "No filename found");
 		return false;
 	}
 	filename++;
@@ -241,7 +241,7 @@ static bool add_image_window(char *path_and_filename)
 
 			window_file_data.image_windows_data[i].image_window_handle  = new_window_handle;
 
-			mw_util_safe_strcpy(window_file_data.image_windows_data[i].path_and_filename_image,
+			(void)mw_util_safe_strcpy(window_file_data.image_windows_data[i].path_and_filename_image,
 					MAX_FOLDER_AND_FILENAME_LENGTH,
 					path_and_filename);
 
@@ -475,10 +475,10 @@ void window_file_message_function(const mw_message_t *message)
 
 	case MW_DIALOG_FILE_CHOOSER_FOLDER_OK_MESSAGE:
 		{
-			mw_util_safe_strcpy(window_file_data.create_path_and_filename,
+			(void)mw_util_safe_strcpy(window_file_data.create_path_and_filename,
 					MAX_FOLDER_AND_FILENAME_LENGTH,
 					(char *)message->message_pointer);
-			mw_create_window_dialog_text_entry(5, 10, "New file name", "", false, message->recipient_handle);
+			(void)mw_create_window_dialog_text_entry(5, 10, "New file name", "", false, message->recipient_handle);
 		}
 		break;
 

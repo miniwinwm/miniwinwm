@@ -69,7 +69,7 @@ void mw_util_set_rect(mw_util_rect_t *r, int16_t x, int16_t y, int16_t width, in
 {
 	if (!r)
 	{
-		MW_ASSERT(false, "Null pointer argument");
+		MW_ASSERT((bool)false, "Null pointer argument");
 		return;
 	}
 
@@ -83,7 +83,7 @@ bool mw_util_is_point_in_rect(const mw_util_rect_t *r, int16_t x, int16_t y)
 {
 	if (!r)
 	{
-		MW_ASSERT(false, "Null pointer argument");
+		MW_ASSERT((bool)false, "Null pointer argument");
 		return (false);
 	}
 
@@ -99,7 +99,7 @@ bool mw_util_do_rects_coincide(const mw_util_rect_t *a, const mw_util_rect_t *b)
 {
 	if (!a || !b)
 	{
-		MW_ASSERT(false, "Null pointer argument");
+		MW_ASSERT((bool)false, "Null pointer argument");
 		return (false);
 	}
 
@@ -110,7 +110,7 @@ bool mw_util_does_rect_a_obscure_rect_b(const mw_util_rect_t *a, const mw_util_r
 {
 	if (!a || !b)
 	{
-		MW_ASSERT(false, "Null pointer argument");
+		MW_ASSERT((bool)false, "Null pointer argument");
 		return (false);
 	}
 
@@ -131,7 +131,7 @@ char *mw_util_safe_strcpy(char *dest, size_t size, const char *src)
 
     if (dest == NULL || src == NULL)
     {
-    	MW_ASSERT(false, "Null pointer argument");
+    	MW_ASSERT((bool)false, "Null pointer argument");
     	return (NULL);
     }
 
@@ -190,24 +190,33 @@ bool mw_util_get_bit(uint16_t word, uint8_t bit)
 	return (result);
 }
 
-int mw_util_compare_int16_t(const void *a, const void *b)
-{
-	if (a == NULL || b == NULL)
-	{
-		MW_ASSERT(false, "Null pointer argument");
-		return (0);
-	}
 
-	if (*(int16_t*)a < *(int16_t*)b)
-	{
-		return (-1);
-	}
-	if (*(int16_t*)a == *(int16_t*)b)
-	{
-		return (0);
-	}
-  
-	return (1);
+void mw_util_shell_sort(int16_t *array, uint16_t n)
+{
+    int16_t temp;
+    uint16_t increment;
+    uint16_t i;
+    uint16_t j;
+
+    for (increment = n/2U; increment > 0U; increment /= 2U)
+    {
+        for (i = increment; i < n; i++)
+        {
+        	temp = array[i];
+            for (j = i; j >= increment; j -= increment)
+            {
+                if(temp < array[j-increment])
+                {
+                	array[j] = array[j-increment];
+                }
+                else
+                {
+                    break;
+                }
+            }
+            array[j] = temp;
+        }
+    }
 }
 
 const char *mw_util_get_filename_ext(const char *filename)
@@ -240,9 +249,9 @@ int32_t mw_util_strcicmp(char const *a, char const *b)
 
 void mw_util_limit_point_to_rect_size(int16_t *x, int16_t *y, const mw_util_rect_t *r)
 {
-	if (!x || !y || !r)
+	if (x == NULL || y == NULL || r == NULL)
 	{
-		MW_ASSERT(false, "Null pointer");
+		MW_ASSERT((bool)false, "Null pointer");
 		return;
 	}
 
@@ -262,4 +271,46 @@ void mw_util_limit_point_to_rect_size(int16_t *x, int16_t *y, const mw_util_rect
 	{
 		*y = r->height - 1;
 	}
+}
+
+
+char* itoa(int32_t value, char* result, int32_t base)
+{
+	/* check that the base if valid */
+	if (base < 2 || base > 36)
+	{
+		*result = '\0';
+		return (result);
+	}
+
+	char *ptr = result;
+	char *ptr1 = result;
+	char tmp_char;
+	int32_t tmp_value;
+
+	do
+	{
+		tmp_value = value;
+		value /= base;
+		*ptr = "zyxwvutsrqponmlkjihgfedcba9876543210123456789abcdefghijklmnopqrstuvwxyz" [35 + (tmp_value - value * base)];
+		ptr++;
+	} while (value);
+
+	/* apply negative sign */
+	if (tmp_value < 0)
+	{
+		*ptr++ = '-';
+	}
+	*ptr = '\0';
+	ptr--;
+
+	while (ptr1 < ptr)
+	{
+		tmp_char = *ptr;
+		*ptr--= *ptr1;
+		*ptr1 = tmp_char;
+		ptr1++;
+	}
+
+	return (result);
 }

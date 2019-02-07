@@ -146,7 +146,7 @@ void window_text_paint_function(mw_handle_t window_handle, const mw_gl_draw_info
 	text_window_data = (text_window_data_t *)mw_get_window_instance_data(window_handle);
 	if (text_window_data == NULL)
 	{
-		MW_ASSERT(false, "Couldn't find window instance data");
+		MW_ASSERT((bool)false, "Couldn't find window instance data");
 		return;
 	}
 
@@ -224,7 +224,7 @@ void window_text_message_function(const mw_message_t *message)
 	text_window_data = (text_window_data_t *)mw_get_window_instance_data(message->recipient_handle);
 	if (text_window_data == NULL)
 	{
-		MW_ASSERT(false, "Couldn't find window instance data");
+		MW_ASSERT((bool)false, "Couldn't find window instance data");
 		return;
 	}
 

@@ -73,7 +73,7 @@ mw_handle_t mw_ui_scroll_bar_vert_add_new(int16_t x,
 		int16_t y,
 		int16_t height,
 		mw_handle_t parent_handle,
-		uint32_t flags,
+		uint16_t flags,
 		mw_ui_scroll_bar_vert_data_t *scroll_bar_vert_instance_data);
 
 #ifdef __cplusplus

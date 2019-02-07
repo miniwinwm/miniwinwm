@@ -242,7 +242,7 @@ static void mw_dialog_file_chooser_message_function(const mw_message_t *message)
 						MW_UNUSED_MESSAGE_PARAMETER,
 						mw_dialog_file_chooser_data.owner_window_handle,
 						MW_UNUSED_MESSAGE_PARAMETER,
-						MW_UNUSED_MESSAGE_PARAMETER,
+						NULL,
 						MW_WINDOW_MESSAGE);
 			}
 			else
@@ -305,7 +305,7 @@ static void mw_dialog_file_chooser_message_function(const mw_message_t *message)
 					0,
 					mw_dialog_file_chooser_data.list_box_file_handle,
 					mw_dialog_file_chooser_data.lines_to_scroll,
-					MW_UNUSED_MESSAGE_PARAMETER,
+					NULL,
 					MW_CONTROL_MESSAGE);
 			mw_paint_control(mw_dialog_file_chooser_data.list_box_file_handle);
 		}
@@ -329,7 +329,7 @@ static void mw_dialog_file_chooser_message_function(const mw_message_t *message)
 					0,
 					mw_dialog_file_chooser_data.list_box_file_handle,
 					mw_dialog_file_chooser_data.lines_to_scroll,
-					MW_UNUSED_MESSAGE_PARAMETER,
+					NULL,
 					MW_CONTROL_MESSAGE);
 			mw_paint_control(mw_dialog_file_chooser_data.list_box_file_handle);
 		}
@@ -474,9 +474,9 @@ mw_handle_t mw_create_window_dialog_file_chooser(int16_t x,
 	uint8_t i;
 
 	/* check pointer parameters */
-	if (!title)
+	if (title == NULL)
 	{
-		MW_ASSERT(false, "Null pointer argument");
+		MW_ASSERT((bool)false, "Null pointer argument");
 		return (MW_INVALID_HANDLE);
 	}
 

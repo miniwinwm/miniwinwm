@@ -113,6 +113,7 @@ static void update_arrow_enable_states(void)
 	}
 	else
 	{
+		/* keep MISRA happy */
 	}
 
 	mw_set_control_enabled(mw_dialog_time_chooser_data.arrow_hour_up_handle, true);
@@ -128,6 +129,7 @@ static void update_arrow_enable_states(void)
 	}
 	else
 	{
+		/* keep MISRA happy */
 	}
 
 	mw_paint_control(mw_dialog_time_chooser_data.arrow_minute_up_handle);
@@ -222,7 +224,7 @@ static void mw_dialog_time_chooser_message_function(const mw_message_t *message)
 		}
 		else
 		{
-			MW_ASSERT(false, "Unknown control id");
+			MW_ASSERT((bool)false, "Unknown control id");
 		}
 
 		/* enable or disable arrow controls as required */
@@ -254,7 +256,7 @@ static void mw_dialog_time_chooser_message_function(const mw_message_t *message)
 					mw_dialog_time_chooser_data.owner_window_handle,
 					(uint32_t)(mw_dialog_time_chooser_data.current_time_hours << 8U |
 						mw_dialog_time_chooser_data.current_time_mins),
-					MW_UNUSED_MESSAGE_PARAMETER,
+					NULL,
 					MW_WINDOW_MESSAGE);
 		}
 		else if (message->sender_handle == mw_dialog_time_chooser_data.button_cancel_handle)
@@ -264,12 +266,12 @@ static void mw_dialog_time_chooser_message_function(const mw_message_t *message)
 					MW_UNUSED_MESSAGE_PARAMETER,
 					mw_dialog_time_chooser_data.owner_window_handle,
 					MW_UNUSED_MESSAGE_PARAMETER,
-					MW_UNUSED_MESSAGE_PARAMETER,
+					NULL,
 					MW_WINDOW_MESSAGE);
 		}
 		else
 		{
-			MW_ASSERT(false, "Unknown control id");
+			MW_ASSERT((bool)false, "Unknown control id");
 		}
 		break;
 

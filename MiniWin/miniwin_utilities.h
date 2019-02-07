@@ -141,13 +141,13 @@ uint16_t mw_util_change_bit(uint16_t word, uint8_t bit, bool state);
 bool mw_util_get_bit(uint16_t word, uint8_t bit);
 
 /**
- * Signed 16 bit integer compare function for q sort
+ * Sort algorithm for uint16_t data
  *
- * @param a First item to compare
- * @param b Second item to compare
- * @return -1 if a < b, 0 if a == b, 1 if a > b
+ * @param array The array of data to sort
+ * @param n The number of items in the array
  */
-int mw_util_compare_int16_t(const void *a, const void *b);
+void mw_util_shell_sort(int16_t *array, uint16_t n);
+
 
 /**
  * Finds the file name extension following a . in a file name.

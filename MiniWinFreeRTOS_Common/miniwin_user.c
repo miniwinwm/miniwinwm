@@ -115,7 +115,7 @@ void mw_user_init(void)
 				MW_WINDOW_FLAG_CAN_BE_CLOSED | MW_WINDOW_FLAG_IS_VISIBLE,
 			NULL);
 
-	mw_util_safe_strcpy(label_gyro_x_data.label, MW_UI_LABEL_MAX_CHARS, "0");
+	(void)mw_util_safe_strcpy(label_gyro_x_data.label, MW_UI_LABEL_MAX_CHARS, "0");
 	label_gyro_x_handle = mw_ui_label_add_new(100,
 			5,
 			MW_UI_BUTTON_WIDTH,
@@ -123,14 +123,14 @@ void mw_user_init(void)
 			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_LARGE_SIZE,
 			&label_gyro_x_data);
 
-	mw_util_safe_strcpy(button_gyro_x_data.button_label, MW_UI_BUTTON_LABEL_MAX_CHARS, "Zero");
+	(void)mw_util_safe_strcpy(button_gyro_x_data.button_label, MW_UI_BUTTON_LABEL_MAX_CHARS, "Zero");
 	button_gyro_x_handle = mw_ui_button_add_new(100,
 			40,
 			window_gyro_x_handle,
 			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
 			&button_gyro_x_data);
 
-	mw_util_set_rect(&r, 20, 110, 160, 100);
+	(void)mw_util_set_rect(&r, 20, 110, 160, 100);
 	window_gyro_y_handle = mw_add_window(&r,
 			"Gyro Y",
 			window_gyro_y_paint_function,
@@ -141,7 +141,7 @@ void mw_user_init(void)
 				MW_WINDOW_FLAG_CAN_BE_CLOSED | MW_WINDOW_FLAG_IS_VISIBLE,
 			NULL);
 
-	mw_util_safe_strcpy(label_gyro_y_data.label, MW_UI_LABEL_MAX_CHARS, "0");
+	(void)mw_util_safe_strcpy(label_gyro_y_data.label, MW_UI_LABEL_MAX_CHARS, "0");
 	label_gyro_y_handle = mw_ui_label_add_new(100,
 			5,
 			MW_UI_BUTTON_WIDTH,
@@ -149,14 +149,14 @@ void mw_user_init(void)
 			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_LARGE_SIZE,
 			&label_gyro_y_data);
 
-	mw_util_safe_strcpy(button_gyro_y_data.button_label, MW_UI_BUTTON_LABEL_MAX_CHARS, "Zero");
+	(void)mw_util_safe_strcpy(button_gyro_y_data.button_label, MW_UI_BUTTON_LABEL_MAX_CHARS, "Zero");
 	button_gyro_y_handle = mw_ui_button_add_new(100,
 			40,
 			window_gyro_y_handle,
 			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
 			&button_gyro_y_data);
 
-	mw_util_set_rect(&r, 40, 220, 160, 100);
+	(void)mw_util_set_rect(&r, 40, 220, 160, 100);
 	window_gyro_z_handle = mw_add_window(&r,
 			"Gyro Z",
 			window_gyro_z_paint_function,
@@ -167,7 +167,7 @@ void mw_user_init(void)
 				MW_WINDOW_FLAG_CAN_BE_CLOSED | MW_WINDOW_FLAG_IS_VISIBLE,
 			NULL);
 
-	mw_util_safe_strcpy(label_gyro_z_data.label, MW_UI_LABEL_MAX_CHARS, "0");
+	(void)mw_util_safe_strcpy(label_gyro_z_data.label, MW_UI_LABEL_MAX_CHARS, "0");
 	label_gyro_z_handle = mw_ui_label_add_new(100,
 			5,
 			MW_UI_BUTTON_WIDTH,

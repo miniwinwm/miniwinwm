@@ -109,28 +109,28 @@ void mw_user_init(void)
 			MW_WINDOW_FLAG_HAS_BORDER | MW_WINDOW_FLAG_HAS_TITLE_BAR | MW_WINDOW_FLAG_IS_VISIBLE,
 			NULL);
 
-	mw_util_safe_strcpy(button_open_data.button_label, MW_UI_BUTTON_LABEL_MAX_CHARS, "Open");
+	(void)mw_util_safe_strcpy(button_open_data.button_label, MW_UI_BUTTON_LABEL_MAX_CHARS, "Open");
 	button_open_handle = mw_ui_button_add_new(20,
 			75,
 			window_file_handle,
 			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
 			&button_open_data);
 
-	mw_util_safe_strcpy(button_set_clock_data.button_label, MW_UI_BUTTON_LABEL_MAX_CHARS, "Set");
+	(void)mw_util_safe_strcpy(button_set_clock_data.button_label, MW_UI_BUTTON_LABEL_MAX_CHARS, "Set");
 	button_set_clock_handle = mw_ui_button_add_new(95,
 			25,
 			window_file_handle,
 			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
 			&button_set_clock_data);
 
-	mw_util_safe_strcpy(button_create_data.button_label, MW_UI_BUTTON_LABEL_MAX_CHARS, "Create");
+	(void)mw_util_safe_strcpy(button_create_data.button_label, MW_UI_BUTTON_LABEL_MAX_CHARS, "Create");
 	button_create_handle = mw_ui_button_add_new(90,
 			75,
 			window_file_handle,
 			MW_CONTROL_FLAG_IS_VISIBLE,
 			&button_create_data);
 
-	mw_util_safe_strcpy(label_time_data.label,
+	(void)mw_util_safe_strcpy(label_time_data.label,
 			MW_UI_LABEL_MAX_CHARS,
 			"Waiting...");
 	label_time_handle = mw_ui_label_add_new(10,
@@ -140,7 +140,7 @@ void mw_user_init(void)
 			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
 			&label_time_data);
 
-	mw_util_safe_strcpy(label_date_data.label,
+	(void)mw_util_safe_strcpy(label_date_data.label,
 			MW_UI_LABEL_MAX_CHARS,
 			"Waiting...");
 	label_date_handle = mw_ui_label_add_new(10,

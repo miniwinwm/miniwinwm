@@ -304,7 +304,7 @@ static void mw_dialog_date_chooser_message_function(const mw_message_t *message)
 		}
 		else
 		{
-			MW_ASSERT(false, "Unknown control id");
+			MW_ASSERT((bool)false, "Unknown control id");
 		}
 
 		/* enable or disable arrow controls as required */
@@ -337,7 +337,7 @@ static void mw_dialog_date_chooser_message_function(const mw_message_t *message)
 					(uint32_t)mw_dialog_date_chooser_data.current_date_year << 16U |
 							(uint32_t)mw_dialog_date_chooser_data.current_date_month << 8U |
 							mw_dialog_date_chooser_data.current_date_date,
-					MW_UNUSED_MESSAGE_PARAMETER,
+					NULL,
 					MW_WINDOW_MESSAGE);
 		}
 		else if (message->sender_handle == mw_dialog_date_chooser_data.button_cancel_handle)
@@ -347,12 +347,12 @@ static void mw_dialog_date_chooser_message_function(const mw_message_t *message)
 					MW_UNUSED_MESSAGE_PARAMETER,
 					mw_dialog_date_chooser_data.owner_window_handle,
 					MW_UNUSED_MESSAGE_PARAMETER,
-					MW_UNUSED_MESSAGE_PARAMETER,
+					NULL,
 					MW_WINDOW_MESSAGE);
 		}
 		else
 		{
-			MW_ASSERT(false, "Unknown control id");
+			MW_ASSERT((bool)false, "Unknown control id");
 		}
 
 		break;

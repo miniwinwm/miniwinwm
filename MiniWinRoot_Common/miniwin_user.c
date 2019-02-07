@@ -166,14 +166,14 @@ void mw_user_init(void)
         0 | MW_WINDOW_FLAG_HAS_BORDER | MW_WINDOW_FLAG_HAS_TITLE_BAR | MW_WINDOW_FLAG_IS_VISIBLE,
         NULL);
 
-    mw_util_safe_strcpy(button_B1_data.button_label, MW_UI_BUTTON_LABEL_MAX_CHARS, "Button1");
+    (void)mw_util_safe_strcpy(button_B1_data.button_label, MW_UI_BUTTON_LABEL_MAX_CHARS, "Button1");
     button_B1_handle = mw_ui_button_add_new(10,
         10,
         window_W1_handle,
         0 | MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
         &button_B1_data);
 
-    mw_util_safe_strcpy(button_B2_data.button_label, MW_UI_BUTTON_LABEL_MAX_CHARS, "Button2");
+    (void)mw_util_safe_strcpy(button_B2_data.button_label, MW_UI_BUTTON_LABEL_MAX_CHARS, "Button2");
     button_B2_handle = mw_ui_button_add_new(10,
         10,
         MW_ROOT_WINDOW_HANDLE,

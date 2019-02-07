@@ -130,7 +130,7 @@ static void label_message_function(const mw_message_t *message)
 		}
 		else
 		{
-			MW_ASSERT(false, "Null pointer argument");
+			MW_ASSERT((bool)false, "Null pointer argument");
 		}
 		break;
 

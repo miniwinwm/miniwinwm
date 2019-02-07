@@ -1346,8 +1346,8 @@ static void find_rect_window_intersections(const mw_util_rect_t *r, uint16_t *ho
 	}
 
 	/* sort the arrays of intersections */
-	qsort(vertical_edges, *vert_edges_count, sizeof(int16_t), mw_util_compare_int16_t);
-	qsort(horizontal_edges, *horiz_edges_count, sizeof(int16_t), mw_util_compare_int16_t);
+	mw_util_shell_sort(vertical_edges, *vert_edges_count);
+	mw_util_shell_sort(horizontal_edges, *horiz_edges_count);
 }
 
 /**

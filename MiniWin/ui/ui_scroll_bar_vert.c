@@ -74,7 +74,7 @@ static void scroll_bar_vert_paint_function(mw_handle_t control_handle, const mw_
 	int16_t narrow_dimension;
 	int16_t slider_size;
 
-	if (mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_LARGE_SIZE)
+	if ((mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_LARGE_SIZE) == MW_CONTROL_FLAG_LARGE_SIZE)
 	{
 		narrow_dimension = MW_SCROLL_BAR_LARGE_NARROW_DIMENSION;
 		slider_size = MW_SCROLL_BAR_LARGE_SLIDER_SIZE;
@@ -110,7 +110,7 @@ static void scroll_bar_vert_paint_function(mw_handle_t control_handle, const mw_
 				mw_get_control_rect(control_handle).height);
 
 		/* only paint slider if enabled */
-		if (mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_IS_ENABLED)
+		if ((mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_IS_ENABLED) == MW_CONTROL_FLAG_IS_ENABLED)
 		{
 			scroll_bar_vert_slider_top = (mw_get_control_rect(control_handle).height - slider_size) *
 					this_scroll_bar_vert->scroll_position / UINT8_MAX;
@@ -176,14 +176,14 @@ static void scroll_bar_vert_message_function(const mw_message_t *message)
 				message->recipient_handle,
 				mw_get_control_parent_window_handle(message->recipient_handle),
 				MW_UNUSED_MESSAGE_PARAMETER,
-				MW_UNUSED_MESSAGE_PARAMETER,
+				NULL,
 				MW_WINDOW_MESSAGE);
 		break;
 
 	case MW_TOUCH_DOWN_MESSAGE:
 	case MW_TOUCH_DRAG_MESSAGE:
 		/* respond to a down or drag event by recalculating the new slider position from the touch coordinate */
-		if (mw_get_control_flags(message->recipient_handle) & MW_CONTROL_FLAG_IS_ENABLED)
+		if ((mw_get_control_flags(message->recipient_handle) & MW_CONTROL_FLAG_IS_ENABLED) == MW_CONTROL_FLAG_IS_ENABLED)
 		{
 			touch_y = (int16_t)(message->message_data & 0xffffU);
 
@@ -201,7 +201,7 @@ static void scroll_bar_vert_message_function(const mw_message_t *message)
 						message->recipient_handle,
 						mw_get_control_parent_window_handle(message->recipient_handle),
 						this_scroll_bar_vert->scroll_position,
-						MW_UNUSED_MESSAGE_PARAMETER,
+						NULL,
 						MW_WINDOW_MESSAGE);
 			}
 		}
@@ -220,7 +220,7 @@ mw_handle_t mw_ui_scroll_bar_vert_add_new(int16_t x,
 		int16_t y,
 		int16_t height,
 		mw_handle_t parent_handle,
-		uint32_t flags,
+		uint16_t flags,
 		mw_ui_scroll_bar_vert_data_t *scroll_bar_vert_instance_data)
 {
 	mw_util_rect_t r;

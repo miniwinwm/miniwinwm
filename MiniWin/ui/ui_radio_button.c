@@ -82,7 +82,7 @@ static void radio_button_paint_function(mw_handle_t control_handle, const mw_gl_
 	mw_gl_set_text_rotation(MW_GL_TEXT_ROTATION_0);
 
 	/* set size dependent values */
-	if (mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_LARGE_SIZE)
+	if ((mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_LARGE_SIZE) == MW_CONTROL_FLAG_LARGE_SIZE)
 	{
 		height = MW_UI_RADIO_BUTTON_LARGE_HEIGHT;
 		box_size = MW_UI_RADIO_BUTTON_LARGE_BOX_SIZE;
@@ -98,7 +98,7 @@ static void radio_button_paint_function(mw_handle_t control_handle, const mw_gl_
 	for (i = 0U; i < this_radio_radio_button->number_of_items; i++)
 	{
         /* set the box outline and text colour depending on enabled state */
-		if (mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_IS_ENABLED)
+		if ((mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_IS_ENABLED) == MW_CONTROL_FLAG_IS_ENABLED)
 		{
 			mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 		}
@@ -108,7 +108,7 @@ static void radio_button_paint_function(mw_handle_t control_handle, const mw_gl_
 		}
 
 		/* check size this control is being drawn at and draw appropriate text*/
-		if (mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_LARGE_SIZE)
+		if ((mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_LARGE_SIZE) == MW_CONTROL_FLAG_LARGE_SIZE)
 		{
 			/* draw the label text */
 			mw_gl_string(draw_info,
@@ -157,7 +157,7 @@ static void radio_button_paint_function(mw_handle_t control_handle, const mw_gl_
 		if (i == this_radio_radio_button->selected_radio_button)
 		{
             /* it is so set the box fill colour according to enabled state */
-			if (mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_IS_ENABLED)
+			if ((mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_IS_ENABLED) == MW_CONTROL_FLAG_IS_ENABLED)
 			{
 				mw_gl_set_solid_fill_colour(MW_HAL_LCD_BLACK);
 			}
@@ -189,7 +189,7 @@ static void radio_button_message_function(const mw_message_t *message)
 	MW_ASSERT(message, "Null pointer argument");
 
 	/* set size dependent values */
-	if (mw_get_control_flags(message->recipient_handle) & MW_CONTROL_FLAG_LARGE_SIZE)
+	if ((mw_get_control_flags(message->recipient_handle) & MW_CONTROL_FLAG_LARGE_SIZE) == MW_CONTROL_FLAG_LARGE_SIZE)
 	{
 		height = MW_UI_RADIO_BUTTON_LARGE_HEIGHT;
 	}
@@ -215,7 +215,7 @@ static void radio_button_message_function(const mw_message_t *message)
 
 	case MW_TOUCH_DOWN_MESSAGE:
 		/* handle a touch down event within this control */		
-		if (mw_get_control_flags(message->recipient_handle) & MW_CONTROL_FLAG_IS_ENABLED)
+		if ((mw_get_control_flags(message->recipient_handle) & MW_CONTROL_FLAG_IS_ENABLED) == MW_CONTROL_FLAG_IS_ENABLED)
 		{
 			/* find which button was touched */
 			this_radio_radio_button->selected_radio_button = (message->message_data & 0xffff) / height;
@@ -225,7 +225,7 @@ static void radio_button_message_function(const mw_message_t *message)
 					message->recipient_handle,
 					mw_get_control_parent_window_handle(message->recipient_handle),
 					this_radio_radio_button->selected_radio_button,
-					MW_UNUSED_MESSAGE_PARAMETER,
+					NULL,
 					MW_WINDOW_MESSAGE);
 			mw_paint_control(message->recipient_handle);
 		}
@@ -244,7 +244,7 @@ mw_handle_t mw_ui_radio_button_add_new(int16_t x,
 		int16_t y,
 		int16_t width,
 		mw_handle_t parent_handle,
-		uint32_t flags,
+		uint16_t flags,
 		mw_ui_radio_button_data_t *radio_button_instance_data)
 {
 	mw_util_rect_t r;
@@ -254,14 +254,14 @@ mw_handle_t mw_ui_radio_button_add_new(int16_t x,
 	if (radio_button_instance_data == NULL ||
 			radio_button_instance_data->radio_button_labels == NULL)
 	{
-		MW_ASSERT(false, "Null pointer argument");
+		MW_ASSERT((bool)false, "Null pointer argument");
 		return (MW_INVALID_HANDLE);
 	}
 
 	/* check for 0 entries */
 	if (radio_button_instance_data->number_of_items == 0U)
 	{
-		MW_ASSERT(false, "Zero argument");
+		MW_ASSERT((bool)false, "Zero argument");
 		return (MW_INVALID_HANDLE);
 	}
 
@@ -270,12 +270,12 @@ mw_handle_t mw_ui_radio_button_add_new(int16_t x,
 	{
 		if (radio_button_instance_data->radio_button_labels[i] == NULL)
 		{
-			MW_ASSERT(false, "Null pointer value in array");
+			MW_ASSERT((bool)false, "Null pointer value in array");
 			return (MW_INVALID_HANDLE);
 		}
 	}
 
-	if (flags & MW_CONTROL_FLAG_LARGE_SIZE)
+	if ((flags & MW_CONTROL_FLAG_LARGE_SIZE) == MW_CONTROL_FLAG_LARGE_SIZE)
 	{
 		if (width < MW_UI_RADIO_BUTTON_LARGE_HEIGHT)
 		{

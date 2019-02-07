@@ -162,7 +162,7 @@ static void mw_dialog_colour_chooser_message_function(const mw_message_t *messag
 				message->recipient_handle,
 				mw_dialog_colour_chooser_data.horiz_scroll_bar_red_handle,
 				mw_dialog_colour_chooser_data.displayed_colour >> 16U,
-				MW_UNUSED_MESSAGE_PARAMETER,
+				NULL,
 				MW_CONTROL_MESSAGE);
 		mw_paint_control(mw_dialog_colour_chooser_data.horiz_scroll_bar_red_handle);
 
@@ -170,7 +170,7 @@ static void mw_dialog_colour_chooser_message_function(const mw_message_t *messag
 				message->recipient_handle,
 				mw_dialog_colour_chooser_data.horiz_scroll_bar_green_handle,
 				(mw_dialog_colour_chooser_data.displayed_colour & 0xff00U) >> 8U,
-				MW_UNUSED_MESSAGE_PARAMETER,
+				NULL,
 				MW_CONTROL_MESSAGE);
 		mw_paint_control(mw_dialog_colour_chooser_data.horiz_scroll_bar_green_handle);
 
@@ -178,7 +178,7 @@ static void mw_dialog_colour_chooser_message_function(const mw_message_t *messag
 				message->recipient_handle,
 				mw_dialog_colour_chooser_data.horiz_scroll_bar_blue_handle,
 				mw_dialog_colour_chooser_data.displayed_colour & 0xffU,
-				MW_UNUSED_MESSAGE_PARAMETER,
+				NULL,
 				MW_CONTROL_MESSAGE);
 		mw_paint_control(mw_dialog_colour_chooser_data.horiz_scroll_bar_blue_handle);
 		break;
@@ -225,7 +225,7 @@ static void mw_dialog_colour_chooser_message_function(const mw_message_t *messag
 						message->recipient_handle,
 						mw_dialog_colour_chooser_data.owner_window_handle,
 						mw_dialog_colour_chooser_data.displayed_colour,
-						MW_UNUSED_MESSAGE_PARAMETER,
+						NULL,
 						MW_WINDOW_MESSAGE);
 			}
 			else
@@ -235,7 +235,7 @@ static void mw_dialog_colour_chooser_message_function(const mw_message_t *messag
 						message->recipient_handle,
 						mw_dialog_colour_chooser_data.owner_window_handle,
 						MW_UNUSED_MESSAGE_PARAMETER,
-						MW_UNUSED_MESSAGE_PARAMETER,
+						NULL,
 						MW_WINDOW_MESSAGE);
 			}
 		}
@@ -260,9 +260,9 @@ mw_handle_t mw_create_window_dialog_colour_chooser(int16_t x,
 	mw_util_rect_t rect;
 
 	/* check pointer parameters */
-	if (!title)
+	if (title == NULL)
 	{
-		MW_ASSERT(false, "Null pointer argument");
+		MW_ASSERT((bool)false, "Null pointer argument");
 		return (MW_INVALID_HANDLE);
 	}
 
