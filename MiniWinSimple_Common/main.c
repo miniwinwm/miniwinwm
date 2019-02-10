@@ -71,7 +71,7 @@ int main(void)
 	/* initialize miniwin */
 	mw_init();
 
-	while(true)
+	while (true)
 	{
 		/* do non-miniwin parts of application main loop processing */
     	app_main_loop_process();

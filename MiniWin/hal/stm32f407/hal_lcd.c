@@ -241,7 +241,6 @@ void mw_hal_lcd_filled_rectangle(int16_t start_x,
 	uint16_t x;
 	uint16_t y;
 
-	/* set window in lcd hardware */
 	end_x = start_x + width - 1;
 	end_y = start_y + height - 1;
 

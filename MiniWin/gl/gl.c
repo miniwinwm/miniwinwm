@@ -282,7 +282,7 @@ static void filled_poly(const mw_gl_draw_info_t *draw_info, uint8_t poly_corners
 	int16_t y;
 	int16_t node_x[MW_GL_MAX_POLY_CORNERS - 1U];
 	int16_t y_min = INT16_MAX;
-	uint16_t y_max = INT16_MIN;
+	int16_t y_max = INT16_MIN;
 	uint16_t x;
 
 	MW_ASSERT(draw_info != NULL, "Null pointer argument");
