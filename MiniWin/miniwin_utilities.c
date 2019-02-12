@@ -273,43 +273,97 @@ void mw_util_limit_point_to_rect_size(int16_t *x, int16_t *y, const mw_util_rect
 	}
 }
 
-
-char* itoa(int32_t value, char* result, int32_t base)
+char* mw_util_safe_itoa(int32_t value, char *const result, uint8_t buffer_length, int32_t base, bool do_padding, uint8_t width, char pad_character)
 {
-	/* check that the base if valid */
-	if (base < 2 || base > 36)
+	char *interator_pointer = result;
+	//char *const original_start_pointer = result;
+	char *swap_pointer = result;
+	char swap_char;
+	int32_t predivision_value;
+	uint8_t next_pad_position;
+
+	if (result == NULL)
 	{
-		*result = '\0';
-		return (result);
+		MW_ASSERT((bool)false, "Null pointer");
+		return ("");
 	}
 
-	char *ptr = result;
-	char *ptr1 = result;
-	char tmp_char;
-	int32_t tmp_value;
+	*result = '\0';
+	if (buffer_length < 2)
+	{
+		MW_ASSERT((bool)false, "No buffer space");
+		return ("");
+	}
 
+	if (base < 2 || base > 16)
+	{
+		MW_ASSERT((bool)false, "Illegal base");
+		return ("");
+	}
+
+	if (do_padding && width > (buffer_length - 1))
+	{
+		MW_ASSERT((bool)false, "Insufficient buffer space");
+		return ("");
+	}
+
+	/* do the base conversion */
 	do
 	{
-		tmp_value = value;
+		predivision_value = value;
 		value /= base;
-		*ptr = "zyxwvutsrqponmlkjihgfedcba9876543210123456789abcdefghijklmnopqrstuvwxyz" [35 + (tmp_value - value * base)];
-		ptr++;
-	} while (value);
+		if (interator_pointer - result < (buffer_length - 1))
+		{
+			*interator_pointer = "FEDCBA9876543210123456789ABCDEF"[15 + (predivision_value - value * base)];
+			interator_pointer++;
+		}
+		else
+		{
+			/* overflow so give up */
+			*result = '\0';
+			return ("");
+			break;
+		}
+	}
+	while (value);
+
+	/* do padding if required */
+	*interator_pointer = '\0';
+	if (do_padding)
+	{
+		for (next_pad_position = strlen(result); next_pad_position < width; next_pad_position++)
+		{
+			*interator_pointer = pad_character;
+			interator_pointer++;
+		}
+	}
 
 	/* apply negative sign */
-	if (tmp_value < 0)
+	if (predivision_value < 0)
 	{
-		*ptr++ = '-';
+		if (interator_pointer - result < buffer_length - 1)
+		{
+			*interator_pointer++ = '-';
+		}
+		else
+		{
+			/* overflow so give up */
+			*result = '\0';
+			return ("");
+		}
 	}
-	*ptr = '\0';
-	ptr--;
+	*interator_pointer = '\0';
+	interator_pointer--;
 
-	while (ptr1 < ptr)
+	/* reverse string */
+	swap_pointer = result;
+	while (swap_pointer < interator_pointer)
 	{
-		tmp_char = *ptr;
-		*ptr--= *ptr1;
-		*ptr1 = tmp_char;
-		ptr1++;
+		swap_char = *interator_pointer;
+		*interator_pointer = *swap_pointer;
+		interator_pointer--;
+		*swap_pointer = swap_char;
+		swap_pointer++;
 	}
 
 	return (result);

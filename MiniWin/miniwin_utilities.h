@@ -175,6 +175,23 @@ int32_t mw_util_strcicmp(char const *a, char const *b);
  */
 void mw_util_limit_point_to_rect_size(int16_t *x, int16_t *y, const mw_util_rect_t *r);
 
+/**
+ * Convert a signed integer value to text equivalent specifying base from 2 to 16
+ *
+ * @param value The numerical value to convert
+ * @param result Buffer to hold the converted text
+ * @param buffer_length The number of bytes available in result buffer including terminating null
+ * @param base The base to use for the conversion
+ * @param do_padding If to do padding
+ * @param width The width to do padding to. If a negative sign is needed this is extra. Negative sign is to left of padding.
+ * @param pad_character The character to use for padding
+ * @return Pointer to the result buffer
+ * @note If do_padding is false then width and pad_character are ignored.
+ * @note If there is not enough space in the buffer for the number and sign or nuimber, sign and padding if
+ *       padding is specified then this function sets result o empty string and returns an empty string.
+ */
+char* mw_util_safe_itoa(int32_t value, char *const result, uint8_t buffer_length, int32_t base, bool do_padding, uint8_t width, char pad_character);
+
 #ifdef __cplusplus
 }
 #endif

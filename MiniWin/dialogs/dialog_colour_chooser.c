@@ -28,7 +28,6 @@ SOFTWARE.
 *** INCLUDES ***
 ***************/
 
-#include <stdio.h>
 #include "dialogs/dialog_common.h"
 #include "miniwin.h"
 #include "ui/ui_common.h"
@@ -36,6 +35,8 @@ SOFTWARE.
 /****************
 *** CONSTANTS ***
 ****************/
+
+#define COLOUR_TEXT_BUFFER_SIZE 		12U
 
 /************
 *** TYPES ***
@@ -98,7 +99,7 @@ static void mw_dialog_colour_chooser_message_function(const mw_message_t *messag
  */
 static void mw_dialog_colour_chooser_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_t *draw_info)
 {
-	char text_buffer[12U];
+	char text_buffer[COLOUR_TEXT_BUFFER_SIZE];
 
 	mw_gl_set_fill(MW_GL_FILL);
 	mw_gl_set_solid_fill_colour(MW_HAL_LCD_WHITE);
@@ -117,7 +118,8 @@ static void mw_dialog_colour_chooser_paint_function(mw_handle_t window_handle, c
 	mw_gl_set_solid_fill_colour(mw_dialog_colour_chooser_data.displayed_colour);
 	mw_gl_set_line(MW_GL_SOLID_LINE);
 	mw_gl_set_border(MW_GL_BORDER_ON);
-	(void)sprintf(text_buffer, "0x%06X", (unsigned int)mw_dialog_colour_chooser_data.displayed_colour);
+	mw_util_safe_strcpy(text_buffer, COLOUR_TEXT_BUFFER_SIZE, "0x");
+	(void)mw_util_safe_itoa((int32_t)mw_dialog_colour_chooser_data.displayed_colour, text_buffer + 2, COLOUR_TEXT_BUFFER_SIZE - 2, 16, true, 6, '0');
 
 	if (mw_dialog_colour_chooser_data.large_size)
 	{

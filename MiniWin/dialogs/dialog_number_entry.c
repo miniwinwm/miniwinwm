@@ -498,7 +498,8 @@ mw_handle_t mw_create_window_dialog_number_entry(int16_t x,
 	{
 		initial_number =-initial_number;
 	}
-	(void)sprintf(mw_dialog_number_entry_data.number_buffer, "%u", (unsigned int)initial_number);
+	(void)mw_util_safe_itoa(initial_number, mw_dialog_number_entry_data.number_buffer, MW_DIALOG_MAX_NUMBER_LENGTH + 1, 10, false, 0, '0');
+
 	mw_dialog_number_entry_data.large_size = large_size;
 
 	/* owner window needs its title bar redrawing */

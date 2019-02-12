@@ -93,7 +93,8 @@ void mw_debug_print_assert(bool expression, const char *function_name, int32_t l
 
 	mw_gl_string(&draw_info, 0, 0, "ASSERT FAILED");
 	mw_gl_string(&draw_info, 0, (int16_t)mw_gl_get_font_height() + 1, function_name);
-	(void)sprintf(number_buffer, "line: %d", (int)line_number);
+	(void)mw_util_safe_itoa(line_number, number_buffer, 15, 10, false, 0, ' ');
+
 	mw_gl_string(&draw_info, 0, 2 * ((int16_t)mw_gl_get_font_height() + 1), number_buffer);
 	mw_gl_string(&draw_info, 0, 3 * ((int16_t)mw_gl_get_font_height() + 1), message);
 
