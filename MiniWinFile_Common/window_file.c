@@ -31,7 +31,6 @@ SOFTWARE.
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
-#include <stdio.h>
 #include <time.h>
 #include "miniwin.h"
 #include "dialogs/dialog_common.h"
@@ -83,6 +82,8 @@ extern volatile uint32_t mw_tick_counter;
 **********************/
 
 static window_file_data_t window_file_data;
+static char time_text[MW_UI_LABEL_MAX_CHARS + 1];
+static char date_text[MW_UI_LABEL_MAX_CHARS + 1];
 
 /********************************
 *** LOCAL FUNCTION PROTOTYPES ***
@@ -91,8 +92,6 @@ static window_file_data_t window_file_data;
 static bool add_text_window(char *path_and_filename);
 static bool add_image_window(char *path_and_filename);
 static void create_new_file(mw_handle_t response_window_handle);
-static char time_text[MW_UI_LABEL_MAX_CHARS + 1];
-static char date_text[MW_UI_LABEL_MAX_CHARS + 1];
 
 /**********************
 *** LOCAL FUNCTIONS ***
@@ -319,13 +318,17 @@ void window_file_message_function(const mw_message_t *message)
 	case MW_TIMER_MESSAGE:
 		{
 			struct tm t = app_get_time_date();
+			char temp_buffer[3];
 
-			snprintf(time_text,
-					MW_UI_LABEL_MAX_CHARS,
-					"%02d:%02d:%02d",
-					t.tm_hour,
-					t.tm_min,
-					t.tm_sec);
+			(void)mw_util_safe_itoa(t.tm_hour, temp_buffer, 3U, 10, true, 2, '0');
+			(void)mw_util_safe_strcpy(time_text, MW_UI_LABEL_MAX_CHARS + 1, temp_buffer);
+			(void)mw_util_safe_strcat(time_text, MW_UI_LABEL_MAX_CHARS + 1, ":");
+			(void)mw_util_safe_itoa(t.tm_min, temp_buffer, 3U, 10, true, 2, '0');
+			(void)mw_util_safe_strcat(time_text, MW_UI_LABEL_MAX_CHARS + 1, temp_buffer);
+			(void)mw_util_safe_strcat(time_text, MW_UI_LABEL_MAX_CHARS + 1, ":");
+			(void)mw_util_safe_itoa(t.tm_sec, temp_buffer, 3U, 10, true, 2, '0');
+			(void)mw_util_safe_strcat(time_text, MW_UI_LABEL_MAX_CHARS + 1, temp_buffer);
+
 			mw_post_message(MW_LABEL_SET_LABEL_TEXT_MESSAGE,
 					message->recipient_handle,
 					label_time_handle,
@@ -334,12 +337,15 @@ void window_file_message_function(const mw_message_t *message)
 					MW_CONTROL_MESSAGE);
 			mw_paint_control(label_time_handle);
 
-			snprintf(date_text,
-					MW_UI_LABEL_MAX_CHARS,
-					"%02d/%02d/%02d",
-					t.tm_mday,
-					t.tm_mon,
-					t.tm_year);
+			(void)mw_util_safe_itoa(t.tm_mday, temp_buffer, 3U, 10, true, 2, '0');
+			(void)mw_util_safe_strcpy(date_text, MW_UI_LABEL_MAX_CHARS + 1, temp_buffer);
+			(void)mw_util_safe_strcat(date_text, MW_UI_LABEL_MAX_CHARS + 1, "/");
+			(void)mw_util_safe_itoa(t.tm_mon, temp_buffer, 3U, 10, true, 2, '0');
+			(void)mw_util_safe_strcat(date_text, MW_UI_LABEL_MAX_CHARS + 1, temp_buffer);
+			(void)mw_util_safe_strcat(date_text, MW_UI_LABEL_MAX_CHARS + 1, "/");
+			(void)mw_util_safe_itoa(t.tm_year % 100, temp_buffer, 3U, 10, true, 2, '0');
+			(void)mw_util_safe_strcat(date_text, MW_UI_LABEL_MAX_CHARS + 1, temp_buffer);
+
 			mw_post_message(MW_LABEL_SET_LABEL_TEXT_MESSAGE,
 					message->recipient_handle,
 					label_date_handle,

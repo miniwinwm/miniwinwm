@@ -30,7 +30,6 @@ SOFTWARE.
 
 #include <stdint.h>
 #include <stdbool.h>
-#include <stdio.h>
 #include "miniwin.h"
 
 /****************
@@ -198,14 +197,14 @@ void window_temp_paint_function(mw_handle_t window_handle, const mw_gl_draw_info
 	mw_gl_set_fg_colour(0x54c2);
 	for (y = 10; y <= 26; y += 4)
 	{
-		sprintf(buf, "%u", y);
+		(void)mw_util_safe_itoa(y, buf, 3, 10, false, 2, '0');
 		mw_gl_string(draw_info, 13, 128 - (y - 10) * 5, buf);
 	}
 
 	/* top graph x axis labels */
 	for (x = 0; x <= 24; x += 4)
 	{
-		sprintf(buf, "%02u", x);
+		(void)mw_util_safe_itoa(x, buf, 3, 10, true, 2, '0');
 		mw_gl_string(draw_info, 25 + x * 8 , 135, buf);
 	}
 
@@ -274,14 +273,15 @@ void window_temp_paint_function(mw_handle_t window_handle, const mw_gl_draw_info
 	mw_gl_set_fg_colour(0x54c2);
 	for (y = 10; y <= 26; y += 4)
 	{
-		sprintf(buf, "%u", y);
+		(void)mw_util_safe_itoa(y, buf, 3, 10, false, 2, '0');
+
 		mw_gl_string(draw_info, 13, 258 - (y - 10) * 5, buf);
 	}
 
 	/* bottom graph x axis labels */
 	for (x = 0; x <= 7; x++)
 	{
-		sprintf(buf, "%02u", x);
+		(void)mw_util_safe_itoa(x, buf, 3, 10, true, 2, '0');
 		mw_gl_string(draw_info, 25 + x * 28 , 265, buf);
 	}
 

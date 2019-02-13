@@ -28,7 +28,6 @@ SOFTWARE.
 *** INCLUDES ***
 ***************/
 
-#include <stdio.h>
 #include "miniwin.h"
 
 /****************
@@ -110,16 +109,16 @@ void window_drag_paint_function(mw_handle_t window_handle, const mw_gl_draw_info
 	mw_gl_set_text_rotation(MW_GL_TEXT_ROTATION_0);
 	mw_gl_set_font(MW_GL_FONT_9);
 
-	sprintf(text_buffer, "%u", window_drag_data.touch_x);
+	(void)mw_util_safe_itoa(window_drag_data.touch_x, text_buffer, 5, 10, false, 0, ' ');
 	mw_gl_string(draw_info, 1, 1, text_buffer);
-	sprintf(text_buffer, "%u", window_drag_data.touch_y);
+	(void)mw_util_safe_itoa(window_drag_data.touch_y, text_buffer, 5, 10, false, 0, ' ');
 	mw_gl_string(draw_info, 22, 1, text_buffer);
 	mw_gl_string(draw_info, 43, 1, window_drag_data.event_text_buffer);
-	sprintf(text_buffer, "%u", window_drag_data.scroll_h);
+	(void)mw_util_safe_itoa(window_drag_data.scroll_h, text_buffer, 5, 10, false, 0, ' ');
 	mw_gl_string(draw_info, 72, 1, text_buffer);
-	sprintf(text_buffer, "%u", window_drag_data.scroll_v);
+	(void)mw_util_safe_itoa(window_drag_data.scroll_v, text_buffer, 5, 10, false, 0, ' ');
 	mw_gl_string(draw_info, 93, 1, text_buffer);
-	sprintf(text_buffer, "%u", window_drag_data.scroll_control);
+	(void)mw_util_safe_itoa(window_drag_data.scroll_control, text_buffer, 5, 10, false, 0, ' ');
 	mw_gl_string(draw_info, 114, 1, text_buffer);
 
 	if (window_drag_data.next_point == 0)

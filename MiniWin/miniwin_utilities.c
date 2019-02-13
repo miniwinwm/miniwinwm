@@ -273,7 +273,7 @@ void mw_util_limit_point_to_rect_size(int16_t *x, int16_t *y, const mw_util_rect
 	}
 }
 
-char* mw_util_safe_itoa(int32_t value, char *const result, uint8_t buffer_length, int32_t base, bool do_padding, uint8_t width, char pad_character)
+char* mw_util_safe_itoa(int32_t value, char *const result, size_t buffer_length, int32_t base, bool do_padding, uint8_t width, char pad_character)
 {
 	char *interator_pointer = result;
 	//char *const original_start_pointer = result;

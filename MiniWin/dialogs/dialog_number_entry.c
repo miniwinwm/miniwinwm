@@ -29,7 +29,6 @@ SOFTWARE.
 ***************/
 
 #include <ctype.h>
-#include <stdio.h>
 #include <string.h>
 #include "dialogs/dialog_common.h"
 #include "miniwin.h"

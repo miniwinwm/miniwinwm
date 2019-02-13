@@ -28,7 +28,6 @@ SOFTWARE.
 *** INCLUDES ***
 ***************/
 
-#include <stdio.h>
 #include "miniwin.h"
 
 /****************
@@ -146,7 +145,9 @@ void window_scroll_paint_function(mw_handle_t window_handle, const mw_gl_draw_in
 				c = ' ';
 			}
 		}
-		sprintf(buf, "%2d ", line);
+		(void)mw_util_safe_itoa(line, buf, 4, 10, true, 2, ' ');
+		(void)mw_util_safe_strcat(buf, 4, " ");
+
 		mw_gl_string(draw_info,
 				0,
 				line_y - scroll_offset_y,

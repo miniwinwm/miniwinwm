@@ -28,7 +28,6 @@ SOFTWARE.
 *** INCLUDES ***
 ***************/
 
-#include <stdio.h>
 #include <string.h>
 #include <math.h>
 #include "miniwin.h"
@@ -110,7 +109,7 @@ void window_gyro_y_paint_function(mw_handle_t window_handle, const mw_gl_draw_in
 	mw_gl_set_fill(MW_GL_FILL);
 	mw_gl_set_solid_fill_colour(MW_HAL_LCD_BLUE);
 	mw_gl_set_border(MW_GL_BORDER_ON);
-	memcpy(shape_x, shape_x_const, sizeof(shape_x));
+	(void)memcpy(shape_x, shape_x_const, sizeof(shape_x));
 	for (i = 0; i < SHAPE_POINTS; i++)
 	{
 		shape_x[i] *= 100.0f * cos((float)offset_adjusted_angle / (float)(180.0 / M_PI));
@@ -159,7 +158,7 @@ void window_gyro_y_message_function(const mw_message_t *message)
 					/* it has so redraw */
 					window_gyro_y_data.previous_drawn_angle = offset_adjusted_angle;
 
-					sprintf(window_gyro_y_data.text_transfer_buffer, "%d", (int)offset_adjusted_angle);
+					(void)mw_util_safe_itoa((int32_t)offset_adjusted_angle, window_gyro_y_data.text_transfer_buffer, 10, 10, false, 0, ' ');
 					mw_post_message(MW_LABEL_SET_LABEL_TEXT_MESSAGE,
 							message->recipient_handle,
 							label_gyro_y_handle,

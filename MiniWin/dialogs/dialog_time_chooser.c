@@ -28,7 +28,6 @@ SOFTWARE.
 *** INCLUDES ***
 ***************/
 
-#include <stdio.h>
 #include <string.h>
 #include "miniwin.h"
 #include "dialogs/dialog_common.h"
@@ -149,6 +148,7 @@ static void mw_dialog_time_chooser_paint_function(mw_handle_t window_handle, con
 {
 	char text_hour[16];
 	char text_min[16];
+	char temp_buffer[3];
 
 	mw_gl_set_fill(MW_GL_FILL);
 	mw_gl_set_solid_fill_colour(MW_HAL_LCD_WHITE);
@@ -164,8 +164,12 @@ static void mw_dialog_time_chooser_paint_function(mw_handle_t window_handle, con
 	mw_gl_set_bg_transparency(MW_GL_BG_TRANSPARENT);
 	mw_gl_set_text_rotation(MW_GL_TEXT_ROTATION_0);
 
-	(void)snprintf(text_hour, 16U, "Hour: %u", (unsigned int)mw_dialog_time_chooser_data.current_time_hours);
-	(void)snprintf(text_min, 16U, "Minute: %u", (unsigned int)mw_dialog_time_chooser_data.current_time_mins);
+	(void)mw_util_safe_itoa(mw_dialog_time_chooser_data.current_time_hours, temp_buffer, 3U, 10, false, 0, '0');
+	(void)mw_util_safe_strcpy(text_hour, 16, "Hour: ");
+	(void)mw_util_safe_strcat(text_hour, 16, temp_buffer);
+	(void)mw_util_safe_itoa(mw_dialog_time_chooser_data.current_time_mins, temp_buffer, 3U, 10, false, 0, '0');
+	(void)mw_util_safe_strcpy(text_min, 16, "Minute: ");
+	(void)mw_util_safe_strcat(text_min, 16, temp_buffer);
 
 	if (mw_dialog_time_chooser_data.large_size)
 	{

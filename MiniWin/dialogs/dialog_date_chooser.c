@@ -29,7 +29,6 @@ SOFTWARE.
 ***************/
 
 #include <string.h>
-#include <stdio.h>
 #include "miniwin.h"
 #include "dialogs/dialog_common.h"
 #include "ui/ui_common.h"
@@ -210,6 +209,7 @@ static void mw_dialog_date_chooser_paint_function(mw_handle_t window_handle, con
 	char text_year[16];
 	char text_month[16];
 	char text_date[16];
+	char temp_buffer[5];
 
 	mw_gl_set_fill(MW_GL_FILL);
 	mw_gl_set_solid_fill_colour(MW_HAL_LCD_WHITE);
@@ -225,9 +225,17 @@ static void mw_dialog_date_chooser_paint_function(mw_handle_t window_handle, con
 	mw_gl_set_bg_transparency(MW_GL_BG_TRANSPARENT);
 	mw_gl_set_text_rotation(MW_GL_TEXT_ROTATION_0);
 
-	(void)snprintf(text_year, 16, "Year: %04u", (unsigned int)mw_dialog_date_chooser_data.current_date_year);
-	(void)snprintf(text_month, 16, "Month: %u", (unsigned int)mw_dialog_date_chooser_data.current_date_month);
-	(void)snprintf(text_date, 16, "Date: %u", (unsigned int)mw_dialog_date_chooser_data.current_date_date);
+	(void)mw_util_safe_itoa(mw_dialog_date_chooser_data.current_date_year, temp_buffer, 5U, 10, true, 4, '0');
+	(void)mw_util_safe_strcpy(text_year, 16, "Year: ");
+	(void)mw_util_safe_strcat(text_year, 16, temp_buffer);
+
+	(void)mw_util_safe_itoa(mw_dialog_date_chooser_data.current_date_month, temp_buffer, 5U, 10, false, 0, '0');
+	(void)mw_util_safe_strcpy(text_month, 16, "Month: ");
+	(void)mw_util_safe_strcat(text_month, 16, temp_buffer);
+
+	(void)mw_util_safe_itoa(mw_dialog_date_chooser_data.current_date_date, temp_buffer, 5U, 10, false, 0, '0');
+	(void)mw_util_safe_strcpy(text_date, 16, "Date: ");
+	(void)mw_util_safe_strcat(text_date, 16, temp_buffer);
 
 	if (mw_dialog_date_chooser_data.large_size)
 	{

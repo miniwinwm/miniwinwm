@@ -28,7 +28,6 @@ SOFTWARE.
 *** INCLUDES ***
 ***************/
 
-#include <stdio.h>
 #include <string.h>
 #include "miniwin.h"
 #include "ui/ui_common.h"
@@ -109,8 +108,8 @@ void window_gyro_z_paint_function(mw_handle_t window_handle, const mw_gl_draw_in
 	mw_gl_set_fill(MW_GL_FILL);
 	mw_gl_set_solid_fill_colour(MW_HAL_LCD_RED);
 	mw_gl_set_border(MW_GL_BORDER_ON);
-	memcpy(shape_x, shape_x_const, sizeof(shape_x));
-	memcpy(shape_y, shape_y_const, sizeof(shape_y));
+	(void)memcpy(shape_x, shape_x_const, sizeof(shape_x));
+	(void)memcpy(shape_y, shape_y_const, sizeof(shape_y));
 	mw_gl_rotate_shape(SHAPE_POINTS, shape_x, shape_y, offset_adjusted_angle);
 	mw_gl_poly(draw_info, SHAPE_POINTS, shape_x, shape_y, 40, 40);
 }
@@ -155,7 +154,8 @@ void window_gyro_z_message_function(const mw_message_t *message)
 					/* it has so redraw */
 					window_gyro_z_data.previous_drawn_angle = offset_adjusted_angle;
 
-					sprintf(window_gyro_z_data.text_transfer_buffer, "%d", (int)offset_adjusted_angle);
+					(void)mw_util_safe_itoa((int32_t)offset_adjusted_angle, window_gyro_z_data.text_transfer_buffer, 10, 10, false, 0, ' ');
+
 					mw_post_message(MW_LABEL_SET_LABEL_TEXT_MESSAGE,
 							message->recipient_handle,
 							label_gyro_z_handle,

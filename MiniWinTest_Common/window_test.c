@@ -29,7 +29,6 @@ SOFTWARE.
 ***************/
 
 #include <string.h>
-#include <stdio.h>
 #include "miniwin.h"
 
 /****************
@@ -383,7 +382,7 @@ void window_test_message_function(const mw_message_t *message)
 		{
 			window_test_data.i = 0;
 		}
-		sprintf(window_test_data.transfer_buffer, "%d", window_test_data.i);
+		(void)mw_util_safe_itoa(window_test_data.i, window_test_data.transfer_buffer, 10, 10, false, 0, ' ');
 		if (window_test_data.large_controls)
 		{
 			mw_post_message(MW_LABEL_SET_LABEL_TEXT_MESSAGE,

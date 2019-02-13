@@ -188,9 +188,9 @@ void mw_util_limit_point_to_rect_size(int16_t *x, int16_t *y, const mw_util_rect
  * @return Pointer to the result buffer
  * @note If do_padding is false then width and pad_character are ignored.
  * @note If there is not enough space in the buffer for the number and sign or nuimber, sign and padding if
- *       padding is specified then this function sets result o empty string and returns an empty string.
+ *       padding is specified then this function sets result to empty string and returns an empty string.
  */
-char* mw_util_safe_itoa(int32_t value, char *const result, uint8_t buffer_length, int32_t base, bool do_padding, uint8_t width, char pad_character);
+char* mw_util_safe_itoa(int32_t value, char *const result, size_t buffer_length, int32_t base, bool do_padding, uint8_t width, char pad_character);
 
 #ifdef __cplusplus
 }

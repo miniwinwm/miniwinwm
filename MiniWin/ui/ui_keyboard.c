@@ -29,7 +29,6 @@ SOFTWARE.
 ***************/
 
 #include <string.h>
-#include <stdio.h>
 #include "miniwin.h"
 
 /****************
