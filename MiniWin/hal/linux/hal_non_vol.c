@@ -31,7 +31,8 @@ SOFTWARE.
 ***************/
 
 #include <stdint.h>
-#include <stdio.h>
+#include <fcntl.h>
+#include <unistd.h>
 
 /****************
 *** CONSTANTS ***
@@ -71,25 +72,25 @@ void mw_hal_non_vol_init(void)
 
 void mw_hal_non_vol_load(uint8_t *data, uint16_t length)
 {
-	FILE *settings;
+	int settings_file_descriptor;
 
-	settings = fopen("settings.bin", "rb");
-	if (settings)
+	settings_file_descriptor = open("settings.bin", O_RDONLY);
+	if (settings_file_descriptor != -1)
 	{
-		(void)fread(data, 1, length, settings);
-		(void)fclose(settings);
+		(void)read(settings_file_descriptor, (char *)data, (unsigned int)length);
+		(void)close(settings_file_descriptor);
 	}
 }
 
 void mw_hal_non_vol_save(uint8_t *data, uint16_t length)
 {
-	FILE *settings;
+	int settings_file_descriptor;
 
-	settings = fopen("settings.bin", "wb");
-	if (settings)
+	settings_file_descriptor = creat("settings.bin", S_IWUSR | S_IRUSR);
+	if (settings_file_descriptor != -1)
 	{
-		(void)fwrite(data, 1, length, settings);
-		(void)fclose(settings);
+		(void)write(settings_file_descriptor, (char *)data, (unsigned int)length);
+		(void)close(settings_file_descriptor);
 	}
 }
 

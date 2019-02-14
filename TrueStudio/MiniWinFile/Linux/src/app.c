@@ -32,7 +32,7 @@ SOFTWARE.
 #include <unistd.h>
 #include <dirent.h>
 #include <string.h>
-#include <stdio.h>
+#include <fcntl.h>
 #include <time.h>
 #include "miniwin.h"
 #include "app.h"
@@ -61,7 +61,7 @@ GC graphical_context;
 *** LOCAL VARIABLES ***
 **********************/
 
-static FILE *file_handle;		/**< File to access */
+static int file_descriptor;
 static char root_folder[MAX_FOLDER_AND_FILENAME_LENGTH];
 
 /********************************
@@ -124,66 +124,65 @@ void app_main_loop_process(void)
 
 bool app_file_open(char *path_and_filename)
 {
-	bool result = false;
-
-	file_handle = fopen(path_and_filename, "rb");
-
-	if (file_handle != NULL)
+	file_descriptor = open(path_and_filename, O_RDONLY);
+	if (file_descriptor == -1)
 	{
-		result = true;
+		return (false);
 	}
-
-	return (result);
+	return (true);
 }
 
 bool app_file_create(char *path_and_filename)
 {
-	bool result = false;
-
-	file_handle = fopen(path_and_filename, "w");
-
-	if (file_handle != NULL)
+	file_descriptor = creat(path_and_filename, S_IWUSR | S_IRUSR);
+	if (file_descriptor == -1)
 	{
-		result = true;
+		return (false);
 	}
-
-	return (result);
+	return (true);
 }
 
 uint32_t app_file_size(void)
 {
-	uint32_t size;
+	off_t size;
 
-	(void)fseek(file_handle, 0L, SEEK_END);
-	size = (uint32_t)ftell(file_handle);
-	(void)fseek(file_handle, 0L, SEEK_SET);
+	size = lseek(file_descriptor, 0, SEEK_END);
+	lseek(file_descriptor, 0, SEEK_SET);
 
-	return (size);
+	return ((uint32_t)size);
 }
 
 uint8_t app_file_getc(void)
 {
-	return ((uint8_t)fgetc(file_handle));
+	uint8_t byte;
+
+	app_file_read(&byte, 1U);
+
+	return (byte);
 }
 
 void app_file_read(uint8_t *buffer, uint32_t count)
 {
-	(void)fread(buffer, 1, count, file_handle);
+	(void)read(file_descriptor, (char *)buffer, (unsigned int)count);
 }
 
 void app_file_write(uint8_t *buffer, uint32_t count)
 {
-	(void)fwrite(buffer, 1, count, file_handle);
+	(void)write(file_descriptor, (char *)buffer, (unsigned int)count);
 }
 
 uint32_t app_file_seek(uint32_t position)
 {
-	return ((uint32_t)fseek(file_handle, position, SEEK_SET));
+	if ((off_t)-1 == lseek(file_descriptor, (off_t)position, SEEK_SET))
+	{
+		return (1U);
+	}
+	return (0U);
 }
 
 void app_file_close(void)
 {
-	(void)fclose(file_handle);
+	(void)close(file_descriptor);
 }
 
 uint8_t find_folder_entries(char* path,
