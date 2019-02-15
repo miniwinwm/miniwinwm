@@ -117,6 +117,7 @@ mw_hal_touch_state_t mw_touch_get_display_touch(int16_t* x, int16_t* y)
 	(void)getDisplayPoint(&display_point, &raw_point, mw_settings_get_calibration_matrix());
 
 	/* limit touch point to display size */
+#if defined(MW_DISPLAY_ROTATION_0) || defined(MW_DISPLAY_ROTATION_180)
 	if (display_point.x >= (INT_32)mw_hal_lcd_get_display_width())
 	{
 		display_point.x = (INT_32)mw_hal_lcd_get_display_width() - 1;
@@ -125,6 +126,16 @@ mw_hal_touch_state_t mw_touch_get_display_touch(int16_t* x, int16_t* y)
 	{
 		display_point.y = (INT_32)mw_hal_lcd_get_display_height() - 1;
 	}
+#else
+	if (display_point.x >= (INT_32)mw_hal_lcd_get_display_height())
+	{
+		display_point.x = (INT_32)mw_hal_lcd_get_display_height() - 1;
+	}
+	if (display_point.y >= (INT_32)mw_hal_lcd_get_display_width())
+	{
+		display_point.y = (INT_32)mw_hal_lcd_get_display_width() - 1;
+	}
+#endif
 	if (display_point.x < 0)
 	{
 		display_point.x = 0;
