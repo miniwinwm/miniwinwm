@@ -49,7 +49,7 @@ typedef struct
 	mw_handle_t button_handle;						/**< Control handle of button */
 	mw_handle_t owner_window_handle;				/**< Window handle to send response message to */
 	mw_handle_t one_button_dialog_window_handle;	/**< Handle of one button dialog window */
-	char *message;									/**< Text to display in dialog */
+	const char *message;							/**< Text to display in dialog */
 	mw_ui_button_data_t button_data;				/**< Instance data of button */
 	bool large_size;								/**< True for large size false for standard size */
 } mw_dialog_one_button_data_t;
@@ -57,10 +57,6 @@ typedef struct
 /***********************
 *** GLOBAL VARIABLES ***
 ***********************/
-
-/*************************
-*** EXTERNAL VARIABLES ***
-**************************/
 
 /**********************
 *** LOCAL VARIABLES ***
@@ -154,9 +150,9 @@ static void mw_dialog_one_button_message_function(const mw_message_t *message)
 mw_handle_t mw_create_window_dialog_one_button(int16_t x,
 		int16_t y,
 		int16_t width,
-		char *title,
-		char *message,
-		char *button_label,
+		const char *title,
+		const char *message,
+		const char *button_label,
 		bool large_size,
 		mw_handle_t owner_window_handle)
 {

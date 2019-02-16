@@ -28,6 +28,7 @@ SOFTWARE.
 *** INCLUDES ***
 ***************/
 
+#include <stdlib.h>
 #include "miniwin.h"
 
 /****************
@@ -41,10 +42,6 @@ SOFTWARE.
 /***********************
 *** GLOBAL VARIABLES ***
 ***********************/
-
-/*************************
-*** EXTERNAL VARIABLES ***
-**************************/
 
 /**********************
 *** LOCAL VARIABLES ***
@@ -69,7 +66,7 @@ static void radio_button_message_function(const mw_message_t *message);
  */
 static void radio_button_paint_function(mw_handle_t control_handle, const mw_gl_draw_info_t *draw_info)
 {
-	uint8_t i;
+	int16_t i;
 	mw_ui_radio_button_data_t *this_radio_radio_button = (mw_ui_radio_button_data_t*)mw_get_control_instance_data(control_handle);
 	int16_t height;
 	int16_t box_size;
@@ -95,7 +92,7 @@ static void radio_button_paint_function(mw_handle_t control_handle, const mw_gl_
 		mw_gl_set_font(MW_GL_FONT_9);
 	}
 
-	for (i = 0U; i < this_radio_radio_button->number_of_items; i++)
+	for (i = 0; i < (int16_t)this_radio_radio_button->number_of_items; i++)
 	{
         /* set the box outline and text colour depending on enabled state */
 		if ((mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_IS_ENABLED) == MW_CONTROL_FLAG_IS_ENABLED)
@@ -154,7 +151,7 @@ static void radio_button_paint_function(mw_handle_t control_handle, const mw_gl_
 				i * height + box_size - 2);
         
         /* check if this radio_button is selected */
-		if (i == this_radio_radio_button->selected_radio_button)
+		if (i == (int16_t)this_radio_radio_button->selected_radio_button)
 		{
             /* it is so set the box fill colour according to enabled state */
 			if ((mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_IS_ENABLED) == MW_CONTROL_FLAG_IS_ENABLED)
@@ -185,6 +182,7 @@ static void radio_button_message_function(const mw_message_t *message)
 {
 	mw_ui_radio_button_data_t *this_radio_radio_button = (mw_ui_radio_button_data_t*)mw_get_control_instance_data(message->recipient_handle);
 	int16_t height;
+	uint32_t misra_temp;
 
 	MW_ASSERT(message, "Null pointer argument");
 
@@ -209,7 +207,7 @@ static void radio_button_message_function(const mw_message_t *message)
 		/* handle a transfer data message, which contains new position */
 		if (message->message_data < this_radio_radio_button->number_of_items)
 		{
-			this_radio_radio_button->selected_radio_button  = message->message_data;
+			this_radio_radio_button->selected_radio_button  = (uint8_t)message->message_data;
 		}
 		break;
 
@@ -218,7 +216,8 @@ static void radio_button_message_function(const mw_message_t *message)
 		if ((mw_get_control_flags(message->recipient_handle) & MW_CONTROL_FLAG_IS_ENABLED) == MW_CONTROL_FLAG_IS_ENABLED)
 		{
 			/* find which button was touched */
-			this_radio_radio_button->selected_radio_button = (message->message_data & 0xffff) / height;
+			misra_temp = (message->message_data & 0xffffU) / (uint32_t)height;
+			this_radio_radio_button->selected_radio_button = (uint8_t)misra_temp;
 			
 			/* send control response message */
 			mw_post_message(MW_RADIO_BUTTON_ITEM_SELECTED_MESSAGE,
@@ -232,6 +231,7 @@ static void radio_button_message_function(const mw_message_t *message)
 		break;
 
 	default:
+		/* keep MISRA happy */
 		break;
 	}
 }
@@ -281,7 +281,7 @@ mw_handle_t mw_ui_radio_button_add_new(int16_t x,
 		{
 			return (MW_INVALID_HANDLE);
 		}
-		mw_util_set_rect(&r, x, y, width, MW_UI_RADIO_BUTTON_LARGE_HEIGHT * radio_button_instance_data->number_of_items);
+		mw_util_set_rect(&r, x, y, width, MW_UI_RADIO_BUTTON_LARGE_HEIGHT * (int16_t)radio_button_instance_data->number_of_items);
 	}
 	else
 	{
@@ -289,7 +289,7 @@ mw_handle_t mw_ui_radio_button_add_new(int16_t x,
 		{
 			return (MW_INVALID_HANDLE);
 		}
-		mw_util_set_rect(&r, x, y, width, MW_UI_RADIO_BUTTON_HEIGHT * radio_button_instance_data->number_of_items);
+		mw_util_set_rect(&r, x, y, width, MW_UI_RADIO_BUTTON_HEIGHT * (int16_t)radio_button_instance_data->number_of_items);
 	}
 
 	return (mw_add_control(&r,

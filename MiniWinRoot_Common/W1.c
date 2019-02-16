@@ -29,6 +29,7 @@ SOFTWARE.
 ***************/
 
 #include "miniwin.h"
+#include "miniwin_user.h"
 
 /****************
 *** CONSTANTS ***
@@ -45,12 +46,6 @@ typedef struct
 /***********************
 *** GLOBAL VARIABLES ***
 ***********************/
-
-/*************************
-*** EXTERNAL VARIABLES ***
-**************************/
-
-extern mw_handle_t button_B1_handle;
 
 /**********************
 *** LOCAL VARIABLES ***

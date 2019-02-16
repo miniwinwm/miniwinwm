@@ -80,6 +80,10 @@ SOFTWARE.
 
 typedef uint32_t mw_hal_lcd_colour_t;      		/**< Integer type that can hold the display driver's colour depth */
 
+/*************************
+*** EXTERNAL VARIABLES ***
+*************************/
+
 /***************************
 *** FUNCTIONS PROTOTYPES ***
 ***************************/

@@ -29,6 +29,7 @@ SOFTWARE.
 ***************/
 
 #include "miniwin.h"
+#include "miniwin_user.h"
 #include "window_tt_font.h"
 
 /****************
@@ -38,10 +39,6 @@ SOFTWARE.
 /************
 *** TYPES ***
 ************/
-
-/*************************
-*** EXTERNAL VARIABLES ***
-**************************/
 
 /**********************
 *** LOCAL VARIABLES ***

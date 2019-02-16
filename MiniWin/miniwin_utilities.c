@@ -45,10 +45,6 @@ SOFTWARE.
 *** GLOBAL VARIABLES ***
 ***********************/
 
-/*************************
-*** EXTERNAL VARIABLES ***
-**************************/
-
 /**********************
 *** LOCAL VARIABLES ***
 **********************/
@@ -137,7 +133,7 @@ char *mw_util_safe_strcpy(char *dest, size_t size, const char *src)
 
     if (size > 0U)
     {
-        for (i = 0U; i < size - (size_t)1U && src[i]; i++)
+        for (i = (size_t)0; i < size - (size_t)1 && src[i] != '\0'; i++)
         {
              dest[i] = src[i];
         }
@@ -149,16 +145,21 @@ char *mw_util_safe_strcpy(char *dest, size_t size, const char *src)
 
 char *mw_util_safe_strcat(char *dest, size_t size, const char *src)
 {
-	return (strncat(dest, src, size - strlen(dest) - (size_t)1U));
+	return (strncat((dest), (src), (size - strlen(dest) - (size_t)1U)));
 }
 
 uint16_t mw_util_change_bit(uint16_t word, uint8_t bit, bool state)
 {
 	uint16_t mask;
+	uint8_t i;
 
 	if (bit < 16U)
 	{
-		mask = (uint16_t)1U << bit;
+		mask = 1U;
+		for (i = 0U; i < bit; i++)
+		{
+			mask <<= 1U;
+		}
 
 		if (state)
 		{
@@ -177,10 +178,16 @@ bool mw_util_get_bit(uint16_t word, uint8_t bit)
 {
 	uint16_t mask;
 	bool result = false;
+	uint8_t i;
 
 	if (bit < 16U)
 	{
-		mask = (uint16_t)1U << bit;
+		mask = 1U;
+		for (i = 0U; i < bit; i++)
+		{
+			mask <<= 1U;
+		}
+
 		if ((word & mask) == mask)
 		{
 			result = true;
@@ -221,7 +228,7 @@ void mw_util_shell_sort(int16_t *array, uint16_t n)
 
 const char *mw_util_get_filename_ext(const char *filename)
 {
-    const char *dot = strrchr(filename, '.');
+    const char *dot = strrchr(filename, (long)'.');
 
     if (dot == NULL || dot == filename)
     {
@@ -237,7 +244,7 @@ int32_t mw_util_strcicmp(char const *a, char const *b)
 
     for (;; a++, b++)
     {
-        d = (int32_t)(tolower((unsigned char)*a) - tolower((unsigned char)*b));
+        d = (int32_t)tolower((unsigned char)*a) - (int32_t)tolower((unsigned char)*b);
         if (d != 0 || *a == '\0')
         {
             return (d);
@@ -276,35 +283,34 @@ void mw_util_limit_point_to_rect_size(int16_t *x, int16_t *y, const mw_util_rect
 char* mw_util_safe_itoa(int32_t value, char *const result, size_t buffer_length, int32_t base, bool do_padding, uint8_t width, char pad_character)
 {
 	char *interator_pointer = result;
-	//char *const original_start_pointer = result;
 	char *swap_pointer = result;
 	char swap_char;
 	int32_t predivision_value;
-	uint8_t next_pad_position;
+	uint32_t next_pad_position;
 
 	if (result == NULL)
 	{
 		MW_ASSERT((bool)false, "Null pointer");
-		return ("");
+		return NULL;
 	}
 
 	*result = '\0';
-	if (buffer_length < 2)
+	if (buffer_length < (size_t)2)
 	{
 		MW_ASSERT((bool)false, "No buffer space");
-		return ("");
+		return (result);
 	}
 
 	if (base < 2 || base > 16)
 	{
 		MW_ASSERT((bool)false, "Illegal base");
-		return ("");
+		return (result);
 	}
 
-	if (do_padding && width > (buffer_length - 1))
+	if (do_padding && width > (buffer_length - (size_t)1))
 	{
 		MW_ASSERT((bool)false, "Insufficient buffer space");
-		return ("");
+		return (result);
 	}
 
 	/* do the base conversion */
@@ -312,7 +318,7 @@ char* mw_util_safe_itoa(int32_t value, char *const result, size_t buffer_length,
 	{
 		predivision_value = value;
 		value /= base;
-		if (interator_pointer - result < (buffer_length - 1))
+		if ((size_t)interator_pointer - (size_t)result < (buffer_length - (size_t)1))
 		{
 			*interator_pointer = "FEDCBA9876543210123456789ABCDEF"[15 + (predivision_value - value * base)];
 			interator_pointer++;
@@ -321,11 +327,11 @@ char* mw_util_safe_itoa(int32_t value, char *const result, size_t buffer_length,
 		{
 			/* overflow so give up */
 			*result = '\0';
-			return ("");
+			return (result);
 			break;
 		}
 	}
-	while (value);
+	while (value != 0);
 
 	/* do padding if required */
 	*interator_pointer = '\0';
@@ -341,7 +347,7 @@ char* mw_util_safe_itoa(int32_t value, char *const result, size_t buffer_length,
 	/* apply negative sign */
 	if (predivision_value < 0)
 	{
-		if (interator_pointer - result < buffer_length - 1)
+		if ((size_t)interator_pointer - (size_t)result < buffer_length - (size_t)1)
 		{
 			*interator_pointer++ = '-';
 		}
@@ -349,7 +355,7 @@ char* mw_util_safe_itoa(int32_t value, char *const result, size_t buffer_length,
 		{
 			/* overflow so give up */
 			*result = '\0';
-			return ("");
+			return (result);
 		}
 	}
 	*interator_pointer = '\0';

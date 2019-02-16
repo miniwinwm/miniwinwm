@@ -28,6 +28,7 @@ SOFTWARE.
 *** INCLUDES ***
 ***************/
 
+#include <stdlib.h>
 #include "miniwin.h"
 
 /****************
@@ -41,10 +42,6 @@ SOFTWARE.
 /***********************
 *** GLOBAL VARIABLES ***
 ***********************/
-
-/*************************
-*** EXTERNAL VARIABLES ***
-**************************/
 
 /**********************
 *** LOCAL VARIABLES ***

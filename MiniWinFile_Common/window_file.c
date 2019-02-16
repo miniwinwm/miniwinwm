@@ -33,6 +33,7 @@ SOFTWARE.
 #include <string.h>
 #include <time.h>
 #include "miniwin.h"
+#include "miniwin_user.h"
 #include "dialogs/dialog_common.h"
 #include "app.h"
 #include "window_text.h"
@@ -65,17 +66,6 @@ typedef struct
 /***********************
 *** GLOBAL VARIABLES ***
 ***********************/
-
-/*************************
-*** EXTERNAL VARIABLES ***
-**************************/
-
-extern mw_handle_t button_open_handle;
-extern mw_handle_t button_set_clock_handle;
-extern mw_handle_t button_create_handle;
-extern mw_handle_t label_time_handle;
-extern mw_handle_t label_date_handle;
-extern volatile uint32_t mw_tick_counter;
 
 /**********************
 *** LOCAL VARIABLES ***

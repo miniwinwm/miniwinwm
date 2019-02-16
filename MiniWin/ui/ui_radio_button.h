@@ -68,6 +68,10 @@ typedef struct
 	uint8_t selected_radio_button;		/**< the currently selected radio_button */
 } mw_ui_radio_button_data_t;
 
+/*************************
+*** EXTERNAL VARIABLES ***
+*************************/
+
 /***************************
 *** FUNCTIONS PROTOTYPES ***
 ***************************/

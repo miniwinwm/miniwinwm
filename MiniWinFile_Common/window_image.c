@@ -29,6 +29,7 @@ SOFTWARE.
 ***************/
 
 #include "miniwin.h"
+#include "miniwin_user.h"
 #include "dialogs/dialog_common.h"
 #include "gl/gl.h"
 #include "app.h"
@@ -48,12 +49,6 @@ SOFTWARE.
 /***********************
 *** GLOBAL VARIABLES ***
 ***********************/
-
-/*************************
-*** EXTERNAL VARIABLES ***
-**************************/
-
-extern mw_handle_t window_file_handle;
 
 /**********************
 *** LOCAL VARIABLES ***

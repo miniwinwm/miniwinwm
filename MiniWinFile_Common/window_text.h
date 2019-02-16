@@ -42,9 +42,13 @@ SOFTWARE.
 *** CONSTANTS ***
 ****************/
 
- /************
- *** TYPES ***
- ************/
+/************
+*** TYPES ***
+************/
+
+/*************************
+*** EXTERNAL VARIABLES ***
+*************************/
 
  /**
   * Structure holding instance data for text displaying window

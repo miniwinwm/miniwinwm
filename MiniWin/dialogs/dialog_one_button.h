@@ -41,9 +41,13 @@ SOFTWARE.
 *** CONSTANTS ***
 ****************/
 
- /************
- *** TYPES ***
- ************/
+/************
+*** TYPES ***
+************/
+
+/*************************
+*** EXTERNAL VARIABLES ***
+*************************/
 
 /***************************
 *** FUNCTIONS PROTOTYPES ***
@@ -72,9 +76,9 @@ SOFTWARE.
  mw_handle_t mw_create_window_dialog_one_button(int16_t x,
 		int16_t y,
 		int16_t width,
-		char *title,
-		char *message,
-		char *button_label,
+		const char *title,
+		const char *message,
+		const char *button_label,
 		bool large_size,
 		mw_handle_t owner_window_handle);
 

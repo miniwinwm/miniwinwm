@@ -43,6 +43,12 @@ SOFTWARE.
 *** TYPES ***
 ************/
 
+/*************************
+*** EXTERNAL VARIABLES ***
+*************************/
+
+extern volatile uint32_t mw_tick_counter;
+
 /***************************
 *** FUNCTIONS PROTOTYPES ***
 ***************************/

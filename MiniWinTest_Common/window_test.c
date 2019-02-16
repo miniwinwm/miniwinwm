@@ -30,6 +30,7 @@ SOFTWARE.
 
 #include <string.h>
 #include "miniwin.h"
+#include "miniwin_user.h"
 
 /****************
 *** CONSTANTS ***
@@ -57,32 +58,6 @@ typedef struct
 /***********************
 *** GLOBAL VARIABLES ***
 ***********************/
-
-/*************************
-*** EXTERNAL VARIABLES ***
-**************************/
-
-extern volatile uint32_t mw_tick_counter;
-extern mw_handle_t label_1_handle;
-extern mw_handle_t progress_bar_1_handle;
-extern mw_handle_t list_box_1_handle;
-extern mw_handle_t check_box_1_handle;
-extern mw_handle_t arrow_1_handle;
-extern mw_handle_t button_1_handle;
-extern mw_handle_t scroll_bar_vert_1_handle;
-extern mw_handle_t scroll_bar_vert_2_handle;
-extern mw_handle_t scroll_bar_horiz_1_handle;
-extern mw_handle_t list_box_3_handle;
-extern mw_handle_t radio_button_1_handle;
-extern mw_handle_t check_box_1_large_handle;
-extern mw_handle_t arrow_1_large_handle;
-extern mw_handle_t button_1_large_handle;
-extern mw_handle_t radio_button_1_large_handle;
-extern mw_handle_t scroll_bar_vert_1_large_handle;
-extern mw_handle_t scroll_bar_vert_2_large_handle;
-extern mw_handle_t scroll_bar_horiz_1_large_handle;
-extern mw_handle_t label_1_large_handle;
-extern mw_handle_t list_box_3_large_handle;
 
 /**********************
 *** LOCAL VARIABLES ***

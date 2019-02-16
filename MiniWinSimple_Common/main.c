@@ -28,6 +28,7 @@ SOFTWARE.
 *** INCLUDES ***
 ***************/
 
+#include "main.h"
 #include "miniwin.h"
 #include "app.h"
 
@@ -42,10 +43,6 @@ SOFTWARE.
 /***********************
 *** GLOBAL VARIABLES ***
 ***********************/
-
-/*************************
-*** EXTERNAL VARIABLES ***
-**************************/
 
 /**********************
 *** LOCAL VARIABLES ***
@@ -77,6 +74,6 @@ int main(void)
     	app_main_loop_process();
 
     	/* do miniwin message processing */
-		mw_process_message();
+		(void)mw_process_message();
 	}
 }

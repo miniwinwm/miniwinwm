@@ -28,6 +28,7 @@ SOFTWARE.
 *** INCLUDES ***
 ***************/
 
+#include <stdlib.h>
 #include "miniwin.h"
 
 /****************
@@ -41,10 +42,6 @@ SOFTWARE.
 /***********************
 *** GLOBAL VARIABLES ***
 ***********************/
-
-/*************************
-*** EXTERNAL VARIABLES ***
-**************************/
 
 /**********************
 *** LOCAL VARIABLES ***
@@ -122,7 +119,7 @@ static void text_box_message_function(const mw_message_t *message)
 			uint32_t message_data;
 
 			/* initialise the control */
-			this_text_box->lines_to_scroll = 0U;
+			this_text_box->lines_to_scroll = 0;
 
 			/* get height of rendered text in pixels without actually rendering it */
 			this_text_box->text_height_pixels = mw_gl_tt_get_render_text_lines(mw_get_control_rect(message->recipient_handle).width,
@@ -131,11 +128,11 @@ static void text_box_message_function(const mw_message_t *message)
 					this_text_box->text);
 
 			/* send message about whether scrolling is needed */
-			message_data = this_text_box->text_height_pixels > mw_get_control_rect(message->recipient_handle).height;
+			message_data = (uint32_t)(this_text_box->text_height_pixels > mw_get_control_rect(message->recipient_handle).height);
 			message_data <<= 16U;
-			if (message_data)
+			if (message_data != 0U)
 			{
-				message_data |= (this_text_box->text_height_pixels - mw_get_control_rect(message->recipient_handle).height);
+				message_data |= ((uint32_t)this_text_box->text_height_pixels - (uint32_t)mw_get_control_rect(message->recipient_handle).height);
 			}
 			mw_post_message(MW_TEXT_BOX_SCROLLING_REQUIRED_MESSAGE,
 					message->recipient_handle,
@@ -148,32 +145,34 @@ static void text_box_message_function(const mw_message_t *message)
 
 	case MW_TEXT_BOX_SCROLL_BAR_POSITION_MESSAGE:
 		{
-			uint16_t max_scroll_lines;
+			int16_t max_scroll_lines;
+			uint32_t misra_temp;
 
 			/* check if scrolling is appropriate */
 			if (this_text_box->text_height_pixels <= mw_get_control_rect(message->recipient_handle).height)
 			{
 				/* no, so set scroll pixels to zero */
-				this_text_box->lines_to_scroll = 0U;
+				this_text_box->lines_to_scroll = 0;
 			}
 			else
 			{
 				/* yes so recalculate vertical scroll pixels from last scroll bar position recorded */
 				max_scroll_lines = this_text_box->text_height_pixels - mw_get_control_rect(message->recipient_handle).height;
-				this_text_box->lines_to_scroll = (max_scroll_lines * message->message_data) / UINT8_MAX;
+				misra_temp = ((uint32_t)max_scroll_lines * message->message_data) / (uint32_t)UINT8_MAX;
+				this_text_box->lines_to_scroll = (int16_t)misra_temp;
 			}
 		}
 		break;
 
 	case MW_TEXT_BOX_LINES_TO_SCROLL_MESSAGE:
 		{
-			uint16_t max_scroll_lines;
+			int16_t max_scroll_lines;
 
 			/* check if scrolling is appropriate */
 			if (this_text_box->text_height_pixels <= mw_get_control_rect(message->recipient_handle).height)
 			{
 				/* no, so set scroll pixels to zero */
-				this_text_box->lines_to_scroll = 0U;
+				this_text_box->lines_to_scroll = 0;
 			}
 			else
 			{
@@ -181,7 +180,7 @@ static void text_box_message_function(const mw_message_t *message)
 				max_scroll_lines = this_text_box->text_height_pixels - mw_get_control_rect(message->recipient_handle).height;
 
 				/* check that the new scroll position doesn't exceed maximum possible */
-				this_text_box->lines_to_scroll = message->message_data;
+				this_text_box->lines_to_scroll = (int16_t)message->message_data;
 				if (this_text_box->lines_to_scroll > max_scroll_lines)
 				{
 					this_text_box->lines_to_scroll = max_scroll_lines;
@@ -195,10 +194,10 @@ static void text_box_message_function(const mw_message_t *message)
 			uint32_t message_data;
 
 			/* message pointer field contains pointer to new text */
-			if (message->message_pointer)
+			if (message->message_pointer != NULL)
 			{
 				this_text_box->text = (char *)(message->message_pointer);
-				this_text_box->lines_to_scroll = 0U;
+				this_text_box->lines_to_scroll = 0;
 				mw_paint_control(message->recipient_handle);
 
 				/* get height of rendered text in pixels without actually rendering it */
@@ -208,11 +207,11 @@ static void text_box_message_function(const mw_message_t *message)
 						this_text_box->text);
 
 				/* send message about whether scrolling is needed */
-				message_data = this_text_box->text_height_pixels > mw_get_control_rect(message->recipient_handle).height;
+				message_data = (uint32_t)(this_text_box->text_height_pixels > mw_get_control_rect(message->recipient_handle).height);
 				message_data <<= 16U;
-				if (message_data)
+				if (message_data != 0U)
 				{
-					message_data |= (this_text_box->text_height_pixels - mw_get_control_rect(message->recipient_handle).height);
+					message_data |= ((uint32_t)this_text_box->text_height_pixels - (uint32_t)mw_get_control_rect(message->recipient_handle).height);
 				}
 				mw_post_message(MW_TEXT_BOX_SCROLLING_REQUIRED_MESSAGE,
 						message->recipient_handle,
@@ -229,6 +228,7 @@ static void text_box_message_function(const mw_message_t *message)
 		break;
 
 	default:
+		/* keep MISRA happy */
 		break;
 	}
 }
@@ -239,7 +239,7 @@ static void text_box_message_function(const mw_message_t *message)
 
 mw_handle_t mw_ui_text_box_add_new(mw_util_rect_t *control_rect,
 		mw_handle_t parent_handle,
-		uint32_t flags,
+		uint16_t flags,
 		mw_ui_text_box_data_t *text_box_instance_data)
 {
 	/* check for null parameters */

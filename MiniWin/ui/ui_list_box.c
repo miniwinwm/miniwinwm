@@ -43,12 +43,6 @@ SOFTWARE.
 *** GLOBAL VARIABLES ***
 ***********************/
 
-/*************************
-*** EXTERNAL VARIABLES ***
-**************************/
-
-extern volatile uint32_t mw_tick_counter;
-
 /**********************
 *** LOCAL VARIABLES ***
 **********************/

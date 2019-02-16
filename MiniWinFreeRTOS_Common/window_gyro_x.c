@@ -31,9 +31,10 @@ SOFTWARE.
 #include <string.h>
 #include <math.h>
 #include "miniwin.h"
+#include "miniwin_user.h"
+#include "main.h"
 #include "ui/ui_common.h"
 #include "FreeRTOS.h"
-#include "message_buffer.h"
 #include "gyro_util.h"
 
 /****************
@@ -56,14 +57,6 @@ typedef struct
 	int16_t angle_offset;			/**< Offset set using zero button */
 	int16_t previous_drawn_angle;	/**< The previous angle shown on the display */
 } window_gyro_x_data_t;
-
-/*************************
-*** EXTERNAL VARIABLES ***
-**************************/
-
-extern mw_handle_t label_gyro_x_handle;
-extern MessageBufferHandle_t gyro_x_message_buffer;
-extern volatile uint32_t mw_tick_counter;
 
 /**********************
 *** LOCAL VARIABLES ***

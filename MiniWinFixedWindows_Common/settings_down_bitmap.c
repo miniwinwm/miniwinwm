@@ -133,10 +133,6 @@ const uint8_t settings_down_bitmap[] = {
 *** GLOBAL VARIABLES ***
 ***********************/
 
-/*************************
-*** EXTERNAL VARIABLES ***
-*************************/
-
 /**********************
 *** LOCAL VARIABLES ***
 **********************/

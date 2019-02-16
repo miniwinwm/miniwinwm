@@ -65,6 +65,10 @@ SOFTWARE.
  	uint8_t vert_scroll_bar_position;				/**< Scroll bar position as reported by the scroll bar, 0 - UINT8_MAX */
  } window_tt_font_data_t;
 
+/*************************
+*** EXTERNAL VARIABLES ***
+*************************/
+
 /***************************
 *** FUNCTIONS PROTOTYPES ***
 ***************************/

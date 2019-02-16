@@ -58,6 +58,10 @@ typedef struct
 	int16_t height;         /**< Height, bottom coordinate is y + height - 1 */
 } mw_util_rect_t;
 
+/*************************
+*** EXTERNAL VARIABLES ***
+*************************/
+
 /***************************
 *** FUNCTIONS PROTOTYPES ***
 ***************************/

@@ -54,6 +54,10 @@ typedef struct
 	uint8_t scroll_position;			/**< the scroll position as a proportion of 0xff */  
 } mw_ui_scroll_bar_horiz_data_t;
 
+/*************************
+*** EXTERNAL VARIABLES ***
+*************************/
+
 /***************************
 *** FUNCTIONS PROTOTYPES ***
 ***************************/
@@ -73,7 +77,7 @@ mw_handle_t mw_ui_scroll_bar_horiz_add_new(int16_t x,
 		int16_t y,
 		int16_t width,
 		mw_handle_t parent_handle,
-		uint32_t flags,
+		uint16_t flags,
 		mw_ui_scroll_bar_horiz_data_t *scroll_bar_horiz_instance_data);
 
 #ifdef __cplusplus

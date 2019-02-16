@@ -28,6 +28,7 @@ SOFTWARE.
 *** INCLUDES ***
 ***************/
 
+#include "main.h"
 #include "miniwin.h"
 #include "app.h"
 #include "FreeRTOS.h"
@@ -50,10 +51,6 @@ SOFTWARE.
 MessageBufferHandle_t gyro_x_message_buffer;
 MessageBufferHandle_t gyro_y_message_buffer;
 MessageBufferHandle_t gyro_z_message_buffer;
-
-/*************************
-*** EXTERNAL VARIABLES ***
-**************************/
 
 /**********************
 *** LOCAL VARIABLES ***

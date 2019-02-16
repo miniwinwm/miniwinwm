@@ -83,6 +83,10 @@ typedef struct
 	int16_t key_size;							/**< Size of individual key depending on if large size or standard size */
 } mw_ui_keyboard_data_t;
 
+/*************************
+*** EXTERNAL VARIABLES ***
+*************************/
+
 /***************************
 *** FUNCTIONS PROTOTYPES ***
 ***************************/

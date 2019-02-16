@@ -58,10 +58,6 @@ typedef struct
 *** GLOBAL VARIABLES ***
 ***********************/
 
-/*************************
-*** EXTERNAL VARIABLES ***
-**************************/
-
 /**********************
 *** LOCAL VARIABLES ***
 **********************/
@@ -82,12 +78,12 @@ static settings_t settings;                  /**< Structure containing the setti
 
 void mw_settings_load(void)
 {
-	mw_hal_non_vol_load((uint8_t *)&settings, sizeof(settings));
+	mw_hal_non_vol_load((uint8_t *)&settings, (uint16_t)sizeof(settings));
 }
 
 void mw_settings_save(void)
 {
-	mw_hal_non_vol_save((uint8_t *)&settings, sizeof(settings));
+	mw_hal_non_vol_save((uint8_t *)&settings, (uint16_t)sizeof(settings));
 }
 
 bool mw_settings_is_initialised(void)
@@ -120,5 +116,5 @@ void mw_settings_set_calibration_matrix(const MATRIX *new_calibration_matrix)
 {
 	MW_ASSERT(new_calibration_matrix, "Null pointer argument");
 
-	(void)memcpy(&settings.calibration_matrix, new_calibration_matrix, sizeof(MATRIX));
+	(void)memcpy((&settings.calibration_matrix), (new_calibration_matrix), (sizeof(MATRIX)));
 }

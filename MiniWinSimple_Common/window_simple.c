@@ -29,6 +29,8 @@ SOFTWARE.
 ***************/
 
 #include "miniwin.h"
+#include "miniwin_user.h"
+#include "window_simple.h"
 
 /****************
 *** CONSTANTS ***
@@ -40,17 +42,10 @@ SOFTWARE.
 
 typedef struct
 {
-	uint16_t circle_x;			/**< X coordinate of where to draw circle */
-	uint16_t circle_y;			/**< Y coordinate of where to draw circle */
+	int16_t circle_x;			/**< X coordinate of where to draw circle */
+	int16_t circle_y;			/**< Y coordinate of where to draw circle */
 	bool draw_circle;			/**< If to draw circle */
 } window_simple_data_t;
-
-/*************************
-*** EXTERNAL VARIABLES ***
-**************************/
-
-extern mw_handle_t button_handle;
-extern mw_handle_t label_handle;
 
 /**********************
 *** LOCAL VARIABLES ***
@@ -96,6 +91,8 @@ void window_simple_paint_function(mw_handle_t window_handle, const mw_gl_draw_in
 
 void window_simple_message_function(const mw_message_t *message)
 {
+	uint32_t misra_temp;
+
 	MW_ASSERT(message, "Null pointer parameter");
 
 	switch (message->message_id)
@@ -105,8 +102,9 @@ void window_simple_message_function(const mw_message_t *message)
 		break;
 
 	case MW_TOUCH_DOWN_MESSAGE:
-		window_simple_data.circle_x = message->message_data >> 16;
-		window_simple_data.circle_y = message->message_data;
+		misra_temp = message->message_data >> 16U;
+		window_simple_data.circle_x = (int16_t)misra_temp;
+		window_simple_data.circle_y = (int16_t)message->message_data;
 		window_simple_data.draw_circle = true;
 		mw_paint_window_client(message->recipient_handle);
 		break;
@@ -114,7 +112,7 @@ void window_simple_message_function(const mw_message_t *message)
 	case MW_BUTTON_PRESSED_MESSAGE:
 		if (message->sender_handle == button_handle)
 		{
-			mw_create_window_dialog_one_button(20,
+			(void)mw_create_window_dialog_one_button(20,
 					50,
 					150,
 					"Title",
@@ -136,6 +134,7 @@ void window_simple_message_function(const mw_message_t *message)
 		break;
 
 	default:
+		/* keep MISRA happy */
 		break;
 	}
 }

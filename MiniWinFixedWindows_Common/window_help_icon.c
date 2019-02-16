@@ -31,6 +31,7 @@ SOFTWARE.
 #include <stdint.h>
 #include <stdbool.h>
 #include "miniwin.h"
+#include "miniwin_user.h"
 
 /****************
 *** CONSTANTS ***
@@ -45,15 +46,6 @@ typedef struct
 	bool touch_down;
 
 } window_help_icon_data_t;
-
-
-/*************************
-*** EXTERNAL VARIABLES ***
-**************************/
-
-extern const uint8_t help_bitmap[];
-extern const uint8_t help_down_bitmap[];
-extern volatile uint32_t mw_tick_counter;
 
 /**********************
 *** LOCAL VARIABLES ***

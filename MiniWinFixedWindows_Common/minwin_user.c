@@ -30,6 +30,7 @@ SOFTWARE.
 
 #include <string.h>
 #include "miniwin.h"
+#include "miniwin_user.h"
 #include "window_date_icon.h"
 #include "window_file_icon.h"
 #include "window_help_icon.h"
@@ -39,13 +40,6 @@ SOFTWARE.
 #include "window_temp.h"
 #include "window_settings.h"
 #include "window_file.h"
-
-/*************************
-*** EXTERNAL VARIABLES ***
-**************************/
-
-extern const uint8_t mw_bitmaps_file_icon_large[];
-extern const uint8_t mw_bitmaps_folder_icon_large[];
 
 /****************
 *** CONSTANTS ***

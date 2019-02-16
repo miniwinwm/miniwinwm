@@ -182,6 +182,10 @@ typedef struct
 	mw_util_rect_t clip_rect;           /**< Clip rect that will be applied to points requested to be plotted, in coordinates relative to offset_x, offset_y */
 } mw_gl_draw_info_t;
 
+/*************************
+*** EXTERNAL VARIABLES ***
+*************************/
+
 /***************************
 *** FUNCTIONS PROTOTYPES ***
 ***************************/
@@ -519,7 +523,7 @@ void mw_gl_tt_render_text(const mw_gl_draw_info_t *draw_info,
 		mw_gl_tt_font_justification_t justification,
 		const struct mf_rlefont_s *rle_font,
 		const char *tt_text,
-		uint16_t vert_scroll_pixels);
+		int16_t vert_scroll_pixels);
 
 /**
  * Calculate the number of vertical pixels that would be used when rendering justified true type text in a box
@@ -530,7 +534,7 @@ void mw_gl_tt_render_text(const mw_gl_draw_info_t *draw_info,
  * @param tt_text Pointer to the text
  * @return The number of pixel lines to render the text
  */
-uint16_t mw_gl_tt_get_render_text_lines(uint16_t width,
+int16_t mw_gl_tt_get_render_text_lines(int16_t width,
 		mw_gl_tt_font_justification_t justification,
 		const struct mf_rlefont_s *rle_font,
 		const char *tt_text);

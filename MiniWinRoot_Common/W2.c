@@ -29,6 +29,7 @@ SOFTWARE.
 ***************/
 
 #include "miniwin.h"
+#include "miniwin_user.h"
 
 /****************
 *** CONSTANTS ***
@@ -45,14 +46,6 @@ typedef struct
 /***********************
 *** GLOBAL VARIABLES ***
 ***********************/
-
-/*************************
-*** EXTERNAL VARIABLES ***
-**************************/
-
-extern mw_handle_t list_box_LB1_handle;
-extern mw_handle_t window_W2_handle;
-extern mw_hal_lcd_colour_t desktop_colour;
 
 /**********************
 *** LOCAL VARIABLES ***

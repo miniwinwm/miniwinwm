@@ -29,6 +29,7 @@ SOFTWARE.
 ***************/
 
 #include "miniwin.h"
+#include "miniwin_user.h"
 #include "window_gyro_x.h"
 #include "window_gyro_y.h"
 #include "window_gyro_z.h"
@@ -57,10 +58,6 @@ mw_handle_t button_gyro_y_handle;
 mw_handle_t label_gyro_y_handle;
 mw_handle_t button_gyro_z_handle;
 mw_handle_t label_gyro_z_handle;
-
-/*************************
-*** EXTERNAL VARIABLES ***
-**************************/
 
 /**********************
 *** LOCAL VARIABLES ***

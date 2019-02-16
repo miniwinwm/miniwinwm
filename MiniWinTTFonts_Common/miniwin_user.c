@@ -29,6 +29,7 @@ SOFTWARE.
 ***************/
 
 #include "miniwin.h"
+#include "miniwin_user.h"
 #include "window_tt_font.h"
 #include "window_tt_font_text_box.h"
 #include "window_tt_font_text_box_scroll_bar.h"
@@ -70,14 +71,6 @@ mw_handle_t text_box_arrows_handle;
 mw_handle_t button_arrows_handle;
 mw_handle_t arrow_up;
 mw_handle_t arrow_down;
-
-/*************************
-*** EXTERNAL VARIABLES ***
-**************************/
-
-extern const struct mf_rlefont_s mf_rlefont_DejaVuSans12;
-extern const struct mf_rlefont_s mf_rlefont_BLKCHCRY16;
-extern const struct mf_rlefont_s mf_rlefont_BLKCHCRY16bw;
 
 /**********************
 *** LOCAL VARIABLES ***

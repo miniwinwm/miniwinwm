@@ -61,6 +61,10 @@ SOFTWARE.
  	int16_t touch_down_y;												/**< y position of touch down */
  } image_window_data_t;
 
+/*************************
+*** EXTERNAL VARIABLES ***
+*************************/
+
 /***************************
 *** FUNCTIONS PROTOTYPES ***
 ***************************/

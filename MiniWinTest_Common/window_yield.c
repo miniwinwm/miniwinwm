@@ -30,6 +30,7 @@ SOFTWARE.
 
 #include <stdlib.h>
 #include "miniwin.h"
+#include "miniwin_user.h"
 
 /****************
 *** CONSTANTS ***
@@ -56,12 +57,6 @@ typedef struct
 /***********************
 *** GLOBAL VARIABLES ***
 ***********************/
-
-/*************************
-*** EXTERNAL VARIABLES ***
-**************************/
-
-extern volatile uint32_t mw_tick_counter;
 
 /**********************
 *** LOCAL VARIABLES ***

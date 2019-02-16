@@ -85,6 +85,10 @@ typedef struct
 	uint8_t lines_to_scroll;						/**< The number of entries down to start showing entries */
 } mw_ui_list_box_data_t;
 
+/*************************
+*** EXTERNAL VARIABLES ***
+*************************/
+
 /***************************
 *** FUNCTIONS PROTOTYPES ***
 ***************************/

@@ -43,9 +43,13 @@ SOFTWARE.
 
 #define FILE_LIST_BOX_MAX_ENTRIES 	16	/**< The maximum number of files or folders that can be displayed in the list box of a folder's contents */
 
- /************
- *** TYPES ***
- ************/
+/************
+*** TYPES ***
+************/
+
+/*************************
+*** EXTERNAL VARIABLES ***
+*************************/
 
 /***************************
 *** FUNCTIONS PROTOTYPES ***

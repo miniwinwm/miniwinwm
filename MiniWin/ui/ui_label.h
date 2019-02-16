@@ -39,7 +39,7 @@ SOFTWARE.
 *** CONSTANTS ***
 ****************/
 
-#define MW_UI_LABEL_MAX_CHARS		40
+#define MW_UI_LABEL_MAX_CHARS		40U
 
 #define MW_UI_LABEL_HEIGHT			12
 #define MW_UI_LABEL_X_OFFSET		2
@@ -61,6 +61,10 @@ typedef struct
   
 	/* Non-user modifiable fields */
 } mw_ui_label_data_t;
+
+/*************************
+*** EXTERNAL VARIABLES ***
+*************************/
 
 /***************************
 *** FUNCTIONS PROTOTYPES ***

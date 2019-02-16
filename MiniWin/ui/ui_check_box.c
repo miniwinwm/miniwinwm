@@ -28,6 +28,7 @@ SOFTWARE.
 *** INCLUDES ***
 ***************/
 
+#include <stdlib.h>
 #include "miniwin.h"
 
 /****************
@@ -41,13 +42,6 @@ SOFTWARE.
 /***********************
 *** GLOBAL VARIABLES ***
 ***********************/
-
-/*************************
-*** EXTERNAL VARIABLES ***
-**************************/
-
-extern const uint8_t mw_bitmaps_tick[];
-extern const uint8_t mw_bitmaps_tick_large[];
 
 /**********************
 *** LOCAL VARIABLES ***

@@ -71,6 +71,10 @@ typedef struct
 	uint32_t touch_down_time;								/**< Time in ticks the arrow was first pressed down */
 } mw_ui_arrow_data_t;
 
+/*************************
+*** EXTERNAL VARIABLES ***
+*************************/
+
 /***************************
 *** FUNCTIONS PROTOTYPES ***
 ***************************/
@@ -89,7 +93,7 @@ mw_handle_t mw_ui_arrow_add_new(int16_t x,
 		int16_t y,
 		mw_handle_t parent_handle,
 		uint16_t flags,
-		mw_ui_arrow_data_t *button_instance_data);
+		mw_ui_arrow_data_t *arrow_instance_data);
 
 #ifdef __cplusplus
 }

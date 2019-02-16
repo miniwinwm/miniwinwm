@@ -104,9 +104,13 @@ SOFTWARE.
 #define MW_BUSY_TEXT						"BUSY..."				/**< Text to display when screen is not responsive because of long operation */
 #define MW_CALIBRATE_TEXT					"Touch centre of cross"	/**< Text to display in touch screen calibrate screen */
 
- /************
- *** TYPES ***
- ************/
+/************
+*** TYPES ***
+************/
+
+/*************************
+*** EXTERNAL VARIABLES ***
+*************************/
 
 /***************************
 *** FUNCTIONS PROTOTYPES ***

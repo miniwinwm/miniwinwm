@@ -29,12 +29,9 @@ SOFTWARE.
 ***************/
 
 #include "miniwin.h"
+#include "miniwin_user.h"
 #include "window_file.h"
 #include "window_text.h"
-
-/*************************
-*** EXTERNAL VARIABLES ***
-**************************/
 
 /****************
 *** CONSTANTS ***

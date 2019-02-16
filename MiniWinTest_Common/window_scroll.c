@@ -29,6 +29,7 @@ SOFTWARE.
 ***************/
 
 #include "miniwin.h"
+#include "miniwin_user.h"
 
 /****************
 *** CONSTANTS ***
@@ -55,10 +56,6 @@ typedef struct
 #define LINES 80
 #define COLUMNS 80
 #define DATA_WIDTH (COLUMNS * (mw_gl_get_font_width() + 1))
-
-/*************************
-*** EXTERNAL VARIABLES ***
-**************************/
 
 /**********************
 *** LOCAL VARIABLES ***

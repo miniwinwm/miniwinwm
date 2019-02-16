@@ -31,6 +31,7 @@ SOFTWARE.
 #include <stdint.h>
 #include <stdbool.h>
 #include "miniwin.h"
+#include "miniwin_user.h"
 
 /****************
 *** CONSTANTS ***
@@ -56,22 +57,6 @@ typedef struct
 	folder_shown_t folder_shown;		/**< The current folder on display in the list box */
 	uint16_t max_scrollable_lines;		/**< Maximum number of lines list box can be scrolled */
 } file_data_t;
-
-
-/*************************
-*** EXTERNAL VARIABLES ***
-**************************/
-
-extern mw_handle_t list_box_file_handle;
-extern mw_handle_t label_file_handle;
-extern mw_handle_t arrow_file_up_handle;
-extern mw_handle_t arrow_file_down_handle;
-extern mw_ui_list_box_entry list_box_file_entries_root[];
-extern mw_ui_list_box_entry list_box_file_entries_images[];
-extern mw_ui_list_box_entry list_box_file_entries_docs[];
-extern const uint8_t list_box_file_entries_root_count;
-extern const uint8_t list_box_file_entries_images_count;
-extern const uint8_t list_box_file_entries_docs_count;
 
 /**********************
 *** LOCAL VARIABLES ***

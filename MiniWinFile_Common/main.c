@@ -28,6 +28,7 @@ SOFTWARE.
 *** INCLUDES ***
 ***************/
 
+#include "main.h"
 #include "miniwin.h"
 #include "app.h"
 
@@ -42,10 +43,6 @@ SOFTWARE.
 /***********************
 *** GLOBAL VARIABLES ***
 ***********************/
-
-/*************************
-*** EXTERNAL VARIABLES ***
-*************************/
 
 /**********************
 *** LOCAL VARIABLES ***

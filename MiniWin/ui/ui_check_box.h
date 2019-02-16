@@ -39,7 +39,7 @@ SOFTWARE.
 *** CONSTANTS ***
 ****************/
 
-#define MW_UI_CHECK_BOX_LABEL_MAX_CHARS			10
+#define MW_UI_CHECK_BOX_LABEL_MAX_CHARS			10U
 
 #define MW_UI_CHECK_BOX_WIDTH					85
 #define MW_UI_CHECK_BOX_HEIGHT					15
@@ -66,6 +66,10 @@ typedef struct
 	/* Non-user modifiable fields */
 	bool checked;										/**< if the check box is checked */  
 } mw_ui_check_box_data_t;
+
+/*************************
+*** EXTERNAL VARIABLES ***
+*************************/
 
 /***************************
 *** FUNCTIONS PROTOTYPES ***

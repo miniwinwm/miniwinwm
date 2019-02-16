@@ -29,6 +29,7 @@ SOFTWARE.
 ***************/
 
 #include "miniwin.h"
+#include "miniwin_user.h"
 #include "window_tt_font_text_box.h"
 
 /****************
@@ -48,10 +49,6 @@ typedef struct
 
 	/* Non user-modifiable values */
 } window_tt_font_text_box_data_t;
-
-/*************************
-*** EXTERNAL VARIABLES ***
-**************************/
 
 /**********************
 *** LOCAL VARIABLES ***

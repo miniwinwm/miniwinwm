@@ -29,6 +29,7 @@ SOFTWARE.
 ***************/
 
 #include "miniwin.h"
+#include "miniwin_user.h"
 #include "window_tt_font_text_box_scroll_bar.h"
 
 /****************
@@ -48,14 +49,6 @@ SOFTWARE.
 
  	/* Non user-modifiable values */
  } window_tt_font_text_box_scroll_bar_data_t;
-
-/*************************
-*** EXTERNAL VARIABLES ***
-**************************/
-
-extern mw_handle_t button_scroll_bar_handle;
-extern mw_handle_t text_box_scroll_bar_handle;
-extern mw_handle_t vert_scroll_bar_handle;
 
 /**********************
 *** LOCAL VARIABLES ***

@@ -31,6 +31,7 @@ SOFTWARE.
 #include <stdint.h>
 #include <stdbool.h>
 #include "miniwin.h"
+#include "miniwin_user.h"
 
 /****************
 *** CONSTANTS ***
@@ -48,17 +49,6 @@ typedef struct
 	uint8_t lines_to_scroll;		/**< Number of lines list box is scrolled */
 	uint16_t max_scrollable_lines;		/**< Maximum number of lines list box can be scrolled */
 } settings_data_t;
-
-
-/*************************
-*** EXTERNAL VARIABLES ***
-**************************/
-
-extern mw_handle_t list_box_settings_handle;
-extern mw_handle_t label_settings_handle;
-extern mw_handle_t arrow_settings_up;
-extern mw_handle_t arrow_settings_down;
-extern mw_ui_list_box_entry list_box_settings_entries[];
 
 /**********************
 *** LOCAL VARIABLES ***

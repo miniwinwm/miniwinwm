@@ -782,6 +782,32 @@ typedef struct mw_message_tag
 	void *message_pointer;				/**< Pointer value passed to recipient with a message; this pointer is message specific and can be used for anything */
 } mw_message_t;
 
+/*************************
+*** EXTERNAL VARIABLES ***
+*************************/
+
+extern volatile uint32_t mw_tick_counter;
+extern const uint8_t mw_bitmaps_close_icon[];
+extern const uint8_t mw_bitmaps_maximise_icon[];
+extern const uint8_t mw_bitmaps_minimise_icon[];
+extern const uint8_t mw_bitmaps_resize_icon[];
+extern const uint8_t mw_bitmaps_close_icon_large[];
+extern const uint8_t mw_bitmaps_maximise_icon_large[];
+extern const uint8_t mw_bitmaps_minimise_icon_large[];
+extern const uint8_t mw_bitmaps_resize_icon_large[];
+extern const uint8_t mw_bitmaps_tick[];
+extern const uint8_t mw_bitmaps_tick_large[];
+extern const uint8_t mw_bitmaps_backspace_key[];
+extern const uint8_t mw_bitmaps_shift_key[];
+extern const uint8_t mw_bitmaps_num_key[];
+extern const uint8_t mw_bitmaps_sym_key[];
+extern const uint8_t mw_bitmaps_let_key[];
+extern const uint8_t mw_bitmaps_file_icon_small[];
+extern const uint8_t mw_bitmaps_folder_icon_small[];
+extern const uint8_t mw_bitmaps_file_icon_large[];
+extern const uint8_t mw_bitmaps_folder_icon_large[];
+
+
 /***************************
 *** FUNCTIONS PROTOTYPES ***
 ***************************/
@@ -874,7 +900,7 @@ bool mw_find_if_any_window_slots_free(void);
  * @warning Do not call from within any paint function
  */
 mw_handle_t mw_add_window(mw_util_rect_t *rect,
-		char *title,
+		const char *title,
 		mw_paint_func_p paint_func,
 		mw_message_func_p message_func,
 		const char **menu_bar_items,
@@ -1200,13 +1226,6 @@ void *mw_get_control_instance_data(mw_handle_t control_handle);
  * @return The returned flags bitfield
  */
 uint16_t mw_get_control_flags(mw_handle_t control_handle);
-
-/**
- * Find if there are any free control slots in array of controls
- *
- * @return true if there are else false
- */
-bool mw_find_if_any_control_slots_free(void);
 
 /**
  * Set a timer if there is space for it in the array of timers.

@@ -56,9 +56,13 @@ typedef struct
 	mw_hal_lcd_colour_t bg_colour;					/**< Background colour - this is the colour of the box behind the glyph */
 
 	/* Non-user modifiable fields */
-	uint16_t lines_to_scroll;						/**< Pixel lines to scroll the rendered text up */
+	int16_t lines_to_scroll;						/**< Pixel lines to scroll the rendered text up */
 	int16_t text_height_pixels;						/**< Height of all the rendered text in pixels, including that part which doesn't fit in the box */
 } mw_ui_text_box_data_t;
+
+/*************************
+*** EXTERNAL VARIABLES ***
+*************************/
 
 /***************************
 *** FUNCTIONS PROTOTYPES ***
@@ -75,7 +79,7 @@ typedef struct
  */
 mw_handle_t mw_ui_text_box_add_new(mw_util_rect_t *control_rect,
 		mw_handle_t parent_handle,
-		uint32_t flags,
+		uint16_t flags,
 		mw_ui_text_box_data_t *text_box_instance_data);
 
 #ifdef __cplusplus

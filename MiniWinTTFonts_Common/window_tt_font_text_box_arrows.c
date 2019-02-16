@@ -29,6 +29,7 @@ SOFTWARE.
 ***************/
 
 #include "miniwin.h"
+#include "miniwin_user.h"
 #include "window_tt_font_text_box_arrows.h"
 
 /****************
@@ -52,15 +53,6 @@ typedef struct
 	 uint16_t lines_to_scroll;				/*<< Lines to scroll in pixels */
 	 uint16_t max_scollable_lines;			/**< Maximum number of pixel lines the text can be scrolled */
 } window_tt_font_text_box_arrows_data_t;
-
-/*************************
-*** EXTERNAL VARIABLES ***
-**************************/
-
-extern mw_handle_t button_arrows_handle;
-extern mw_handle_t text_box_arrows_handle;
-extern mw_handle_t arrow_up;
-extern mw_handle_t arrow_down;
 
 /**********************
 *** LOCAL VARIABLES ***

@@ -43,12 +43,6 @@ SOFTWARE.
 *** GLOBAL VARIABLES ***
 ***********************/
 
-/*************************
-*** EXTERNAL VARIABLES ***
-**************************/
-
-extern volatile uint32_t mw_tick_counter;
-
 /**********************
 *** LOCAL VARIABLES ***
 **********************/
@@ -140,7 +134,7 @@ static void button_paint_function(mw_handle_t control_handle, const mw_gl_draw_i
 	else
 	{
 		mw_gl_set_font(MW_GL_FONT_9);
-		text_width = strlen(this_button->button_label) * ((int16_t)mw_gl_get_font_width() + 1);
+		text_width = (int16_t)strlen(this_button->button_label) * ((int16_t)mw_gl_get_font_width() + 1);
 	}
 	text_x = (mw_get_control_rect(control_handle).width - text_width) / 2;
 

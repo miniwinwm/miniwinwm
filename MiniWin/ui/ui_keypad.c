@@ -28,6 +28,7 @@ SOFTWARE.
 *** INCLUDES ***
 ***************/
 
+#include <stdlib.h>
 #include "miniwin.h"
 
 /****************
@@ -48,13 +49,6 @@ static const char key_codes[] = 				"789456123-0\b";	/**< The actual characters 
 /***********************
 *** GLOBAL VARIABLES ***
 ***********************/
-
-/*************************
-*** EXTERNAL VARIABLES ***
-**************************/
-
-extern volatile uint32_t mw_tick_counter;
-extern const uint8_t mw_bitmaps_backspace_key[];
 
 /**********************
 *** LOCAL VARIABLES ***

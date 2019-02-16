@@ -43,9 +43,13 @@ SOFTWARE.
 
 #define MW_DIALOG_MAX_NUMBER_LENGTH 9
 
- /************
- *** TYPES ***
- ************/
+/************
+*** TYPES ***
+************/
+
+/*************************
+*** EXTERNAL VARIABLES ***
+*************************/
 
 /***************************
 *** FUNCTIONS PROTOTYPES ***

@@ -56,6 +56,10 @@ typedef struct
 	/* Non-user modifiable fields */
 } mw_ui_progress_bar_data_t;
 
+/*************************
+*** EXTERNAL VARIABLES ***
+*************************/
+
 /***************************
 *** FUNCTIONS PROTOTYPES ***
 ***************************/

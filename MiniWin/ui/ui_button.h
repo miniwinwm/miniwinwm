@@ -39,7 +39,7 @@ SOFTWARE.
 *** CONSTANTS ***
 ****************/
 
-#define MW_UI_BUTTON_LABEL_MAX_CHARS	10
+#define MW_UI_BUTTON_LABEL_MAX_CHARS	10U
 
 #define MW_UI_BUTTON_WIDTH				50
 #define MW_UI_BUTTON_HEIGHT				15
@@ -62,6 +62,10 @@ typedef struct
 	/* Non-user modifiable fields */
 	bool button_down;										/**< set when the button is down */
 } mw_ui_button_data_t;
+
+/*************************
+*** EXTERNAL VARIABLES ***
+*************************/
 
 /***************************
 *** FUNCTIONS PROTOTYPES ***

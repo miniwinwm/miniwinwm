@@ -28,6 +28,7 @@ SOFTWARE.
 *** INCLUDES ***
 ***************/
 
+#include <stdlib.h>
 #include "miniwin.h"
 
 /****************
@@ -41,10 +42,6 @@ SOFTWARE.
 /***********************
 *** GLOBAL VARIABLES ***
 ***********************/
-
-/*************************
-*** EXTERNAL VARIABLES ***
-**************************/
 
 /**********************
 *** LOCAL VARIABLES ***
@@ -86,62 +83,64 @@ static void scroll_bar_horiz_paint_function(mw_handle_t control_handle, const mw
 	}
 
 	/* check if there's enough parent client rect height to draw the bar */
-	if (mw_get_window_client_rect(mw_get_control_parent_window_handle(control_handle)).height > narrow_dimension &&
-			mw_get_window_client_rect(mw_get_control_parent_window_handle(control_handle)).width > slider_size)
+	if (mw_get_window_client_rect(mw_get_control_parent_window_handle(control_handle)).height > narrow_dimension)
 	{
-		/* draw the bar */
-		mw_gl_set_fill(MW_GL_FILL);
-		mw_gl_set_border(MW_GL_BORDER_ON);
-		mw_gl_set_line(MW_GL_SOLID_LINE);
-		mw_gl_clear_pattern();
-		mw_gl_set_solid_fill_colour(MW_CONTROL_UP_COLOUR);
-		if ((mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_IS_ENABLED) == MW_CONTROL_FLAG_IS_ENABLED)
+		if (mw_get_window_client_rect(mw_get_control_parent_window_handle(control_handle)).width > slider_size)
 		{
-			mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
-		}
-		else
-		{
-			mw_gl_set_fg_colour(MW_CONTROL_DISABLED_COLOUR);
-		}
-		mw_gl_rectangle(draw_info,
-				0,
-				0,
-				mw_get_control_rect(control_handle).width,
-				narrow_dimension);
-
-		/* only paint slider if enabled */
-		if ((mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_IS_ENABLED) == MW_CONTROL_FLAG_IS_ENABLED)
-		{
-			scroll_bar_horiz_slider_left = (mw_get_control_rect(control_handle).width - slider_size) *
-					this_scroll_bar_horiz->scroll_position / UINT8_MAX;
-
-			mw_gl_set_solid_fill_colour(MW_CONTROL_DOWN_COLOUR);
-			mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
+			/* draw the bar */
+			mw_gl_set_fill(MW_GL_FILL);
+			mw_gl_set_border(MW_GL_BORDER_ON);
+			mw_gl_set_line(MW_GL_SOLID_LINE);
+			mw_gl_clear_pattern();
+			mw_gl_set_solid_fill_colour(MW_CONTROL_UP_COLOUR);
+			if ((mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_IS_ENABLED) == MW_CONTROL_FLAG_IS_ENABLED)
+			{
+				mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
+			}
+			else
+			{
+				mw_gl_set_fg_colour(MW_CONTROL_DISABLED_COLOUR);
+			}
 			mw_gl_rectangle(draw_info,
-					scroll_bar_horiz_slider_left + 1,
-					1,
-					slider_size - 2,
-					narrow_dimension - 2);
+					0,
+					0,
+					mw_get_control_rect(control_handle).width,
+					narrow_dimension);
 
-			/* draw 3d effect */
-			mw_gl_set_fg_colour(MW_HAL_LCD_WHITE);
-			mw_gl_vline(draw_info,
-					scroll_bar_horiz_slider_left + 2,
-					2,
-					slider_size - 3);
-			mw_gl_hline(draw_info,
-					scroll_bar_horiz_slider_left + 2,
-					scroll_bar_horiz_slider_left + slider_size - 4,
-					2);
-			mw_gl_set_fg_colour(MW_HAL_LCD_GREY7);
-			mw_gl_vline(draw_info,
-					scroll_bar_horiz_slider_left + slider_size - 3,
-					2,
-					slider_size - 4);
-			mw_gl_hline(draw_info,
-					scroll_bar_horiz_slider_left + 3,
-					scroll_bar_horiz_slider_left + slider_size - 3,
-					narrow_dimension - 3);
+			/* only paint slider if enabled */
+			if ((mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_IS_ENABLED) == MW_CONTROL_FLAG_IS_ENABLED)
+			{
+				scroll_bar_horiz_slider_left = (mw_get_control_rect(control_handle).width - slider_size) *
+						(int16_t)this_scroll_bar_horiz->scroll_position / UINT8_MAX;
+
+				mw_gl_set_solid_fill_colour(MW_CONTROL_DOWN_COLOUR);
+				mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
+				mw_gl_rectangle(draw_info,
+						scroll_bar_horiz_slider_left + 1,
+						1,
+						slider_size - 2,
+						narrow_dimension - 2);
+
+				/* draw 3d effect */
+				mw_gl_set_fg_colour(MW_HAL_LCD_WHITE);
+				mw_gl_vline(draw_info,
+						scroll_bar_horiz_slider_left + 2,
+						2,
+						slider_size - 3);
+				mw_gl_hline(draw_info,
+						scroll_bar_horiz_slider_left + 2,
+						scroll_bar_horiz_slider_left + slider_size - 4,
+						2);
+				mw_gl_set_fg_colour(MW_HAL_LCD_GREY7);
+				mw_gl_vline(draw_info,
+						scroll_bar_horiz_slider_left + slider_size - 3,
+						2,
+						slider_size - 4);
+				mw_gl_hline(draw_info,
+						scroll_bar_horiz_slider_left + 3,
+						scroll_bar_horiz_slider_left + slider_size - 3,
+						narrow_dimension - 3);
+			}
 		}
 	}
 }
@@ -156,6 +155,7 @@ static void scroll_bar_horiz_message_function(const mw_message_t *message)
 	mw_ui_scroll_bar_horiz_data_t *this_scroll_bar_horiz = (mw_ui_scroll_bar_horiz_data_t*)mw_get_control_instance_data(message->recipient_handle);
 	int16_t touch_x;
 	uint8_t new_scroll_position;
+	uint32_t misra_temp;
 
 	MW_ASSERT(message, "Null pointer argument");
 
@@ -182,15 +182,16 @@ static void scroll_bar_horiz_message_function(const mw_message_t *message)
 
 	case MW_TOUCH_DOWN_MESSAGE:
 	case MW_TOUCH_DRAG_MESSAGE:
-		/* respond to a down or drag event by recalulating the new slider position from the touch coordinate */
-		if (mw_get_control_flags(message->recipient_handle) & MW_CONTROL_FLAG_IS_ENABLED)
+		/* respond to a down or drag event by recalculating the new slider position from the touch coordinate */
+		if ((mw_get_control_flags(message->recipient_handle) & MW_CONTROL_FLAG_IS_ENABLED) == MW_CONTROL_FLAG_IS_ENABLED)
 		{
-			touch_x = (int16_t)(message->message_data >> 16U);
+			misra_temp = message->message_data >> 16U;
+			touch_x = (int16_t)misra_temp;
 
 			/* scale touch point to middle 90% of scroll bar length */
 			touch_x = mw_ui_common_scale_scroll_bar_touch_point(mw_get_control_rect(message->recipient_handle).width, touch_x);
 
-			new_scroll_position = (uint8_t)(UINT8_MAX * touch_x / (uint32_t)mw_get_control_rect(message->recipient_handle).width);
+			new_scroll_position = (uint8_t)((uint32_t)UINT8_MAX * (uint32_t)touch_x / (uint32_t)mw_get_control_rect(message->recipient_handle).width);
 			if (new_scroll_position != this_scroll_bar_horiz->scroll_position)
 			{
 				/* only repaint if the scroll slider position has changed */
@@ -210,6 +211,7 @@ static void scroll_bar_horiz_message_function(const mw_message_t *message)
 		break;
 
 	default:
+		/* keep MISRA happy */
 		break;
 	}
 }
@@ -222,7 +224,7 @@ mw_handle_t mw_ui_scroll_bar_horiz_add_new(int16_t x,
 		int16_t y,
 		int16_t width,
 		mw_handle_t parent_handle,
-		uint32_t flags,
+		uint16_t flags,
 		mw_ui_scroll_bar_horiz_data_t *scroll_bar_horiz_instance_data)
 {
 	mw_util_rect_t r;

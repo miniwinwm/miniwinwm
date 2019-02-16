@@ -28,7 +28,9 @@ SOFTWARE.
 *** INCLUDES ***
 ***************/
 
+#include <stdlib.h>
 #include "miniwin.h"
+#include "miniwin_user.h"
 #include "window_simple.h"
 
 /****************
@@ -49,10 +51,6 @@ mw_handle_t window_simple_handle;
 /* controls */
 mw_handle_t button_handle;
 mw_handle_t label_handle;
-
-/*************************
-*** EXTERNAL VARIABLES ***
-**************************/
 
 /**********************
 *** LOCAL VARIABLES ***

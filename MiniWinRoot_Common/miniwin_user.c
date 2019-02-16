@@ -29,6 +29,7 @@ SOFTWARE.
 ***************/
 
 #include "miniwin.h"
+#include "miniwin_user.h"
 #include "W1.h"
 #include "W2.h"
 
@@ -58,12 +59,6 @@ mw_handle_t button_B2_handle;
 mw_handle_t list_box_LB1_handle;
 
 mw_hal_lcd_colour_t desktop_colour = MW_HAL_LCD_PURPLE;			/**< Current root window background colour */
-
-/*************************
-*** EXTERNAL VARIABLES ***
-**************************/
-
-extern const uint8_t logo_array[];
 
 /**********************
 *** LOCAL VARIABLES ***

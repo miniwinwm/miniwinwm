@@ -31,6 +31,7 @@ SOFTWARE.
 #include <stdint.h>
 #include <stdbool.h>
 #include "miniwin.h"
+#include "miniwin_user.h"
 
 /****************
 *** CONSTANTS ***
@@ -51,11 +52,6 @@ static const float weekly_maxs[8] = {22.8f, 17.5f, 19.6f, 23.0f, 23.9f, 21.2f, 1
 typedef struct
 {
 } window_temp_data_t;
-
-
-/*************************
-*** EXTERNAL VARIABLES ***
-**************************/
 
 /**********************
 *** LOCAL VARIABLES ***

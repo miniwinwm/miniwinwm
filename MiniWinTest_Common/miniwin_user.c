@@ -30,6 +30,7 @@ SOFTWARE.
 
 #include <string.h>
 #include "miniwin.h"
+#include "miniwin_user.h"
 #include "window_drag.h"
 #include "window_gl.h"
 #include "window_scroll.h"
@@ -105,10 +106,6 @@ mw_handle_t scroll_bar_horiz_1_large_handle;
 mw_handle_t label_1_large_handle;
 mw_handle_t list_box_3_large_handle;
 mw_handle_t scroll_bar_vert_3_handle;
-
-/*************************
-*** EXTERNAL VARIABLES ***
-**************************/
 
 /**********************
 *** LOCAL VARIABLES ***

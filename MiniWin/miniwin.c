@@ -159,20 +159,6 @@ typedef struct
 *** GLOBAL VARIABLES ***
 ***********************/
 
-/*************************
-*** EXTERNAL VARIABLES ***
-**************************/
-
-extern const uint8_t mw_bitmaps_close_icon[];
-extern const uint8_t mw_bitmaps_maximise_icon[];
-extern const uint8_t mw_bitmaps_minimise_icon[];
-extern const uint8_t mw_bitmaps_resize_icon[];
-extern const uint8_t mw_bitmaps_close_icon_large[];
-extern const uint8_t mw_bitmaps_maximise_icon_large[];
-extern const uint8_t mw_bitmaps_minimise_icon_large[];
-extern const uint8_t mw_bitmaps_resize_icon_large[];
-extern volatile uint32_t mw_tick_counter;
-
 /**********************
 *** LOCAL VARIABLES ***
 **********************/
@@ -198,7 +184,7 @@ static mw_gl_draw_info_t draw_info_root;					/**< Fixed draw info structure for 
 /* new window functions */
 static uint8_t find_empty_window_slot(void);
 static void set_window_details(const mw_util_rect_t *rect,
-	char* title,
+	const char *title,
 	mw_paint_func_p paint_func,
 	uint8_t window_id,
 	mw_handle_t window_handle,
@@ -337,7 +323,7 @@ static uint8_t find_empty_window_slot(void)
  * @param instance_data Optional pointer to any extra window data that is instance specific, can be NULL if no instance data
 */
 static void set_window_details(const mw_util_rect_t *rect,
-		char* title,
+		const char *title,
 		mw_paint_func_p paint_func,
 		uint8_t window_id,
 		mw_handle_t window_handle,
@@ -4198,7 +4184,7 @@ bool mw_find_if_any_window_slots_free(void)
 }
 
 mw_handle_t mw_add_window(mw_util_rect_t *rect,
-		char *title,
+		const char *title,
 		mw_paint_func_p paint_func,
 		mw_message_func_p message_func,
 		const char **menu_bar_items,

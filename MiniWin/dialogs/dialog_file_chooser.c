@@ -78,15 +78,6 @@ typedef struct
 *** GLOBAL VARIABLES ***
 ***********************/
 
-/*************************
-*** EXTERNAL VARIABLES ***
-**************************/
-
-extern const uint8_t mw_bitmaps_file_icon_small[];
-extern const uint8_t mw_bitmaps_folder_icon_small[];
-extern const uint8_t mw_bitmaps_file_icon_large[];
-extern const uint8_t mw_bitmaps_folder_icon_large[];
-
 /**********************
 *** LOCAL VARIABLES ***
 **********************/

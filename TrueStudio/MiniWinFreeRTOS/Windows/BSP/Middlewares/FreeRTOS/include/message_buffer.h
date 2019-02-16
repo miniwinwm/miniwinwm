@@ -75,7 +75,7 @@ extern "C" {
  * then be used as a parameter to xMessageBufferSend(), xMessageBufferReceive(),
  * etc.
  */
-typedef void * MessageBufferHandle_t;
+typedef void *MessageBufferHandle_t;
 
 /*-----------------------------------------------------------*/
 

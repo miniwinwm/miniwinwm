@@ -46,6 +46,10 @@ SOFTWARE.
 *** TYPES ***
 ************/
 
+/*************************
+*** EXTERNAL VARIABLES ***
+*************************/
+
 /**
  * Enumeration of touch states
  */

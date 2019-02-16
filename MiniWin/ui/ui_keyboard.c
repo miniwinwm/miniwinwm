@@ -50,17 +50,6 @@ static const char keyboards[4U][3U][11U] = {
 *** GLOBAL VARIABLES ***
 ***********************/
 
-/*************************
-*** EXTERNAL VARIABLES ***
-**************************/
-
-extern volatile uint32_t mw_tick_counter;
-extern const uint8_t mw_bitmaps_backspace_key[];
-extern const uint8_t mw_bitmaps_shift_key[];
-extern const uint8_t mw_bitmaps_num_key[];
-extern const uint8_t mw_bitmaps_sym_key[];
-extern const uint8_t mw_bitmaps_let_key[];
-
 /**********************
 *** LOCAL VARIABLES ***
 **********************/

@@ -49,12 +49,6 @@ static const int16_t shape_large_y_const[] = {8, -7, 8};
 *** GLOBAL VARIABLES ***
 ***********************/
 
-/*************************
-*** EXTERNAL VARIABLES ***
-**************************/
-
-extern volatile uint32_t mw_tick_counter;
-
 /**********************
 *** LOCAL VARIABLES ***
 **********************/

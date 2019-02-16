@@ -54,6 +54,10 @@ typedef struct
 	uint8_t scroll_position;			/**< the scroll position as a proportion of 0xff */
 } mw_ui_scroll_bar_vert_data_t;
 
+/*************************
+*** EXTERNAL VARIABLES ***
+*************************/
+
 /***************************
 *** FUNCTIONS PROTOTYPES ***
 ***************************/
