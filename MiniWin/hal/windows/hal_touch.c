@@ -48,14 +48,6 @@ SOFTWARE.
 *** GLOBAL VARIABLES ***
 ***********************/
 
-/*************************
-*** EXTERNAL VARIABLES ***
-**************************/
-
-extern bool mouse_down;
-extern SHORT mx;
-extern SHORT my;
-
 /**********************
 *** LOCAL VARIABLES ***
 **********************/

@@ -81,7 +81,7 @@ bool mw_hal_touch_is_recalibration_required(void);
  *
  * @return One of mw_hal_touch_state_t.
  */
-mw_hal_touch_state_t mw_hal_touch_get_state();
+mw_hal_touch_state_t mw_hal_touch_get_state(void);
 
 /**
  * Get a touch screen reading

@@ -46,7 +46,7 @@ SOFTWARE.
 /**
  * User configurable value
  */
-#define MW_GL_MAX_POLY_CORNERS 				5                   	/**< Maximum number of corner coordinate points to a polygon */
+#define MW_GL_MAX_POLY_CORNERS 				5U                   	/**< Maximum number of corner coordinate points to a polygon */
 #define MW_GL_SEGMENT_FILL_ANGLE_STEP_SIZE	5                   	/**< Step angle when filling a circular segment with triangles */
 #define MW_GL_MAX_X							(MW_ROOT_WIDTH - 1)     /**< Maximum x pixel coordinate */
 #define MW_GL_MAX_Y							(MW_ROOT_HEIGHT - 1)    /**< Maximum y pixel coordinate */
@@ -163,7 +163,7 @@ typedef struct
 	mw_gl_pattern_t pattern;                /**< Pattern fill definition - 16x16 bits */
 	mw_gl_border_t border;                  /**< Whether to plot a border on shapes that are filled */
 	mw_gl_fill_t fill;                      /**< Whether to fill a shape with solid colour or pattern */
-	uint8_t pattern_set;                    /**< Whether a pattern has been set and used. If not set, fill will be solid colour */
+	bool pattern_set;                    	/**< Whether a pattern has been set and used. If not set, fill will be solid colour */
 	mw_gl_bg_transparent_t bg_transparent;  /**< Whether to clear the background of text or draw transparently */
 	mw_gl_font_t font;						/**< The current font in use */
 	mw_gl_text_rotation_t text_rotation;	/**< The current text rotation */
@@ -281,14 +281,14 @@ void mw_gl_set_text_rotation(mw_gl_text_rotation_t text_rotation);
  *
  * @return Width in pixels
  */
-uint8_t mw_gl_get_font_width(void);
+int16_t mw_gl_get_font_width(void);
 
 /**
  * Gets the current font's height in pixels excluding inter-line gap
  *
  * @return Width in pixels
  */
-uint8_t mw_gl_get_font_height(void);
+int16_t mw_gl_get_font_height(void);
 
 /**
  * Draw a single pixel taking into account pattern and solid fill colour.
@@ -306,7 +306,7 @@ void mw_gl_solid_fill_pixel(const mw_gl_draw_info_t *draw_info, int16_t x, int16
  * @param x X coordinate of the pixel to plot
  * @param y Y coordinate of the pixel to plot
  */
-void mw_gl_fg_pixel(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y);
+void mw_gl_fg_pixel(const mw_gl_draw_info_t *draw_info, int16_t client_x, int16_t client_y);
 
 /**
  * Plot a single pixel using the background colour.
@@ -315,7 +315,7 @@ void mw_gl_fg_pixel(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y);
  * @param x X coordinate of the pixel to plot
  * @param y Y coordinate of the pixel to plot
  */
-void mw_gl_bg_pixel(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y);
+void mw_gl_bg_pixel(const mw_gl_draw_info_t *draw_info, int16_t client_x, int16_t client_y);
 
 /**
  * Draw a horizontal line. Foreground colour, background colour and line style controlled by gc.
@@ -357,7 +357,7 @@ void mw_gl_line(const mw_gl_draw_info_t *draw_info, int16_t p1x, int16_t p1y, in
  * @param width Width of the rectangle
  * @param height Height of the rectangle
  */
-void mw_gl_rectangle(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y, int16_t width, int16_t height);
+void mw_gl_rectangle(const mw_gl_draw_info_t *draw_info, int16_t x_start, int16_t y_start, int16_t width, int16_t height);
 
 /**
  * Draw a single fixed width character. Foreground colour, background colour, font, rotation and transparency controlled by gc.
@@ -384,7 +384,7 @@ void mw_gl_string(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y, cons
  * @param s Null terminated string to calculate the width of
  * @return Width in pixels
  */
-uint16_t mw_gl_get_string_width_pixels(const char *s);
+int16_t mw_gl_get_string_width_pixels(const char *s);
 
 /**
  * Calculate the width in pixels of an array of strings of large proportional characters.
@@ -393,7 +393,7 @@ uint16_t mw_gl_get_string_width_pixels(const char *s);
  * @param count The number of entries in the array
  * @return Width in pixels
  */
-uint16_t mw_gl_largest_string_width(const char **s, uint16_t count);
+int16_t mw_gl_largest_string_width(const char **s, uint16_t count);
 
 /**
  * Draw a filled or unfilled circle.  Fill, border, line style and colours controlled by gc.

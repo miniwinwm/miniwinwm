@@ -139,6 +139,7 @@ static void mw_dialog_one_button_message_function(const mw_message_t *message)
 		break;
 
 	default:
+		/* keep MISRA happy */
 		break;
 	}
 }
@@ -157,7 +158,8 @@ mw_handle_t mw_create_window_dialog_one_button(int16_t x,
 		mw_handle_t owner_window_handle)
 {
 	mw_util_rect_t rect;
-	uint16_t window_client_width;
+	int16_t window_client_width;
+	mw_handle_t temp_handle;
 
 	/* check pointer parameters */
 	if (title == NULL || message == NULL || button_label == NULL)
@@ -220,7 +222,7 @@ mw_handle_t mw_create_window_dialog_one_button(int16_t x,
 			NULL,
 			0,
 			MW_WINDOW_FLAG_HAS_BORDER | MW_WINDOW_FLAG_HAS_TITLE_BAR |
-					MW_WINDOW_FLAG_IS_VISIBLE | MW_WINDOW_FLAG_IS_MODAL | (large_size ? MW_WINDOW_FLAG_LARGE_SIZE : 0U),
+					MW_WINDOW_FLAG_IS_VISIBLE | MW_WINDOW_FLAG_IS_MODAL | (uint32_t)(large_size ? MW_WINDOW_FLAG_LARGE_SIZE : 0U),
 			NULL);
 
 	/* check if window could be created */
@@ -238,21 +240,23 @@ mw_handle_t mw_create_window_dialog_one_button(int16_t x,
 			MW_UI_BUTTON_LABEL_MAX_CHARS, button_label);
 	if (large_size)
 	{
-		mw_dialog_one_button_data.button_handle = mw_ui_button_add_new(
+		temp_handle = mw_ui_button_add_new(
 				(window_client_width - MW_UI_BUTTON_LARGE_WIDTH) / 2,
 				35,
 				mw_dialog_one_button_data.one_button_dialog_window_handle,
 				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_LARGE_SIZE,
 				&mw_dialog_one_button_data.button_data);
+		mw_dialog_one_button_data.button_handle = temp_handle;
 	}
 	else
 	{
-		mw_dialog_one_button_data.button_handle = mw_ui_button_add_new(
+		temp_handle = mw_ui_button_add_new(
 				(window_client_width - MW_UI_BUTTON_WIDTH) / 2,
 				30,
 				mw_dialog_one_button_data.one_button_dialog_window_handle,
 				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
 				&mw_dialog_one_button_data.button_data);
+		mw_dialog_one_button_data.button_handle = temp_handle;
 	}
 
 	/* check if button could be created */

@@ -158,6 +158,7 @@ static void mw_dialog_two_button_message_function(const mw_message_t *message)
 		break;
 
 	default:
+		/* keep MISRA happy */
 		break;
 	}
 }
@@ -177,7 +178,8 @@ mw_handle_t mw_create_window_dialog_two_button(int16_t x,
 		mw_handle_t owner_window_handle)
 {
 	mw_util_rect_t rect;
-	uint16_t window_client_width;
+	int16_t window_client_width;
+	mw_handle_t temp_handle;
 
 	/* check pointer parameters */
 	if (title == NULL || message == NULL || button_1_label == NULL || button_2_label == NULL)
@@ -234,7 +236,7 @@ mw_handle_t mw_create_window_dialog_two_button(int16_t x,
 			NULL,
 			0,
 			MW_WINDOW_FLAG_HAS_BORDER | MW_WINDOW_FLAG_HAS_TITLE_BAR |
-					MW_WINDOW_FLAG_IS_VISIBLE | MW_WINDOW_FLAG_IS_MODAL | (large_size ? MW_WINDOW_FLAG_LARGE_SIZE : 0U),
+					MW_WINDOW_FLAG_IS_VISIBLE | MW_WINDOW_FLAG_IS_MODAL | (uint32_t)(large_size ? MW_WINDOW_FLAG_LARGE_SIZE : 0U),
 			NULL);
 
 	/* check if window could be created */
@@ -255,35 +257,40 @@ mw_handle_t mw_create_window_dialog_two_button(int16_t x,
 
 	if (large_size)
 	{
-		mw_dialog_two_button_data.button_1_handle = mw_ui_button_add_new(
+		temp_handle = mw_ui_button_add_new(
 				(window_client_width - BUTTON_LARGE_GAP) / 2 - MW_UI_BUTTON_LARGE_WIDTH,
 				35,
 				mw_dialog_two_button_data.two_button_dialog_window_handle,
 				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_LARGE_SIZE,
 				&mw_dialog_two_button_data.button_1_data);
 
-		mw_dialog_two_button_data.button_2_handle = mw_ui_button_add_new(
+		mw_dialog_two_button_data.button_1_handle = temp_handle;
+
+		temp_handle = mw_ui_button_add_new(
 				(window_client_width / 2) + BUTTON_LARGE_GAP / 2,
 				35,
 				mw_dialog_two_button_data.two_button_dialog_window_handle,
 				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_LARGE_SIZE,
 				&mw_dialog_two_button_data.button_2_data);
+		mw_dialog_two_button_data.button_2_handle = temp_handle;
 	}
 	else
 	{
-		mw_dialog_two_button_data.button_1_handle = mw_ui_button_add_new(
+		temp_handle = mw_ui_button_add_new(
 				(window_client_width - BUTTON_GAP) / 2 - MW_UI_BUTTON_WIDTH,
 				30,
 				mw_dialog_two_button_data.two_button_dialog_window_handle,
 				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
 				&mw_dialog_two_button_data.button_1_data);
+		mw_dialog_two_button_data.button_1_handle = temp_handle;
 
-		mw_dialog_two_button_data.button_2_handle = mw_ui_button_add_new(
+		temp_handle = mw_ui_button_add_new(
 				(window_client_width / 2) + BUTTON_GAP / 2,
 				30,
 				mw_dialog_two_button_data.two_button_dialog_window_handle,
 				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
 				&mw_dialog_two_button_data.button_2_data);
+		mw_dialog_two_button_data.button_2_handle = temp_handle;
 	}
 
 	/* check if controls could be created */

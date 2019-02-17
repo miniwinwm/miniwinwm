@@ -90,7 +90,7 @@ void mw_hal_touch_init(void)
     FT5406_Init(&touch_handle, I2C2);
 
     /* Give touch hardware time to settle to prevent false touch at startup */
-    mw_hal_delay_ms(50);
+    mw_hal_delay_ms(50U);
 }
 
 bool mw_hal_touch_is_recalibration_required(void)

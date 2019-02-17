@@ -137,6 +137,7 @@ void window_paint_rect_paint_function(mw_handle_t window_handle, const mw_gl_dra
 		break;
 
 	default:
+		/* keep MISRA happy */
 		break;
 	}
 }

@@ -50,6 +50,10 @@ SOFTWARE.
 	 GYRO_READING_Z = 2
  } gyro_reading_t;
 
+/*************************
+*** EXTERNAL VARIABLES ***
+*************************/
+
 /***************************
 *** FUNCTIONS PROTOTYPES ***
 ***************************/

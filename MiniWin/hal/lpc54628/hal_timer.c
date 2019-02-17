@@ -40,7 +40,7 @@ SOFTWARE.
 ****************/
 
 #define APP_BOARD_TEST_LED_PORT 2U
-#define APP_BOARD_TEST_LED_PIN 2U
+#define APP_BOARD_TEST_LED_PIN 	2U
 
 /************
 *** TYPES ***

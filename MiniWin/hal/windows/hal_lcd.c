@@ -34,6 +34,7 @@ SOFTWARE.
 #include <stdint.h>
 #include <stdbool.h>
 #include "hal/hal_lcd.h"
+#include "app.h"
 
 /****************
 *** CONSTANTS ***
@@ -50,15 +51,10 @@ SOFTWARE.
 *** GLOBAL VARIABLES ***
 ***********************/
 
-/*************************
-*** EXTERNAL VARIABLES ***
-**************************/
-
 /**********************
 *** LOCAL VARIABLES ***
 **********************/
 
-extern HWND hwnd;
 static HDC hdc;
 
 /********************************

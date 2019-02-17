@@ -38,8 +38,8 @@ SOFTWARE.
 *** CONSTANTS ***
 ****************/
 
-const mw_util_rect_t number_display_rect = {24, 5, 65, 14};
-const mw_util_rect_t number_display_rect_large = {48, 3, 130, 19};
+static const mw_util_rect_t number_display_rect = {24, 5, 65, 14};
+static const mw_util_rect_t number_display_rect_large = {48, 3, 130, 19};
 
 /************
 *** TYPES ***
@@ -179,7 +179,7 @@ static void mw_dialog_number_entry_paint_function(mw_handle_t window_handle, con
 		mw_gl_set_font(MW_GL_FONT_9);
 	}
 
-	if (strcmp(mw_dialog_number_entry_data.number_buffer, "0") !=0 && mw_dialog_number_entry_data.is_negative)
+	if (strcmp((mw_dialog_number_entry_data.number_buffer), ("0")) != 0 && mw_dialog_number_entry_data.is_negative)
 	{
 		/* draw negative sign and number */
 		mw_gl_character(draw_info,
@@ -223,20 +223,20 @@ static void mw_dialog_number_entry_message_function(const mw_message_t *message)
 	switch (message->message_id)
 	{
 	case MW_WINDOW_CREATED_MESSAGE:
-		mw_set_timer(mw_tick_counter + MW_CURSOR_PERIOD_TICKS, message->recipient_handle, MW_WINDOW_MESSAGE);
+		(void)mw_set_timer(mw_tick_counter + MW_CURSOR_PERIOD_TICKS, message->recipient_handle, MW_WINDOW_MESSAGE);
 
 		/* set size specific values */
 		if (mw_dialog_number_entry_data.large_size)
 		{
 			mw_dialog_number_entry_data.cursor_rect.y = 4;
 			mw_dialog_number_entry_data.cursor_rect.height = 17;
-			(void)memcpy(&mw_dialog_number_entry_data.number_rect, &number_display_rect_large, sizeof(number_display_rect_large));
+			(void)memcpy((&mw_dialog_number_entry_data.number_rect), (&number_display_rect_large), (sizeof(number_display_rect_large)));
 		}
 		else
 		{
 			mw_dialog_number_entry_data.cursor_rect.y = 6;
 			mw_dialog_number_entry_data.cursor_rect.height = 11;
-			(void)memcpy(&mw_dialog_number_entry_data.number_rect, &number_display_rect, sizeof(number_display_rect));
+			(void)memcpy((&mw_dialog_number_entry_data.number_rect), (&number_display_rect), (sizeof(number_display_rect)));
 		}
 
 		/* set cursor rect values */
@@ -247,31 +247,31 @@ static void mw_dialog_number_entry_message_function(const mw_message_t *message)
 	case MW_TIMER_MESSAGE:
 		mw_dialog_number_entry_data.draw_cursor = !mw_dialog_number_entry_data.draw_cursor;
 		mw_paint_window_client_rect(message->recipient_handle, &mw_dialog_number_entry_data.cursor_rect);
-		mw_set_timer(mw_tick_counter + MW_CURSOR_PERIOD_TICKS, message->recipient_handle, MW_WINDOW_MESSAGE);
+		(void)mw_set_timer(mw_tick_counter + MW_CURSOR_PERIOD_TICKS, message->recipient_handle, MW_WINDOW_MESSAGE);
 		break;
 
 	case MW_KEY_PRESSED_MESSAGE:
 		{
-			uint8_t current_length;
+			int16_t current_length;
 
-			if (isdigit(message->message_data) || message->message_data == '-' || message->message_data == '\b')
+			if ((message->message_data >= (uint32_t)'0' && message->message_data <= (uint32_t)'9') || message->message_data == (uint32_t)'-' || message->message_data == (uint32_t)'\b')
 			{
-				current_length = strlen(mw_dialog_number_entry_data.number_buffer);
+				current_length = (int16_t)strlen(mw_dialog_number_entry_data.number_buffer);
 
-				if (message->message_data == '-')
+				if (message->message_data == (uint32_t)'-')
 				{
 					mw_dialog_number_entry_data.is_negative = !mw_dialog_number_entry_data.is_negative;
 				}
-				else if (message->message_data == '\b')
+				else if (message->message_data == (uint32_t)'\b')
 				{
-					if (current_length == 1U)
+					if (current_length == 1)
 					{
 						mw_dialog_number_entry_data.is_negative = false;
-						strcpy(mw_dialog_number_entry_data.number_buffer, "0");
+						(void)strcpy((mw_dialog_number_entry_data.number_buffer), ("0"));
 					}
 					else
 					{
-						mw_dialog_number_entry_data.number_buffer[current_length - 1U] = '\0';
+						mw_dialog_number_entry_data.number_buffer[current_length - 1] = '\0';
 					}
 				}
 				else
@@ -288,7 +288,7 @@ static void mw_dialog_number_entry_message_function(const mw_message_t *message)
 						{
 							/* append entered digit to existing digits */
 							mw_dialog_number_entry_data.number_buffer[current_length] = (char)message->message_data;
-							mw_dialog_number_entry_data.number_buffer[current_length + 1U] = '\0';
+							mw_dialog_number_entry_data.number_buffer[current_length + 1] = '\0';
 						}
 					}
 				}
@@ -301,6 +301,9 @@ static void mw_dialog_number_entry_message_function(const mw_message_t *message)
 
 	case MW_BUTTON_PRESSED_MESSAGE:
 		{
+			char *destination;
+			const char *source;
+
 			/* remove all controls and window */
 			mw_remove_window(mw_dialog_number_entry_data.number_entry_dialog_window_handle);
 
@@ -323,9 +326,11 @@ static void mw_dialog_number_entry_message_function(const mw_message_t *message)
 				/* insert - sign if required */
 				if (mw_dialog_number_entry_data.is_negative)
 				{
-					(void)memmove(mw_dialog_number_entry_data.number_buffer,
-							mw_dialog_number_entry_data.number_buffer + 1U,
-							1 + strlen(mw_dialog_number_entry_data.number_buffer));
+					destination = mw_dialog_number_entry_data.number_buffer;
+					source = mw_dialog_number_entry_data.number_buffer + 1U;
+					(void)memmove((destination),
+							(source),
+							((size_t)1 + strlen(mw_dialog_number_entry_data.number_buffer)));
 					mw_dialog_number_entry_data.number_buffer[0U] = '-';
 				}
 				mw_post_message(MW_DIALOG_NUMBER_ENTRY_OK_MESSAGE,
@@ -339,6 +344,7 @@ static void mw_dialog_number_entry_message_function(const mw_message_t *message)
 		break;
 
 	default:
+		/* keep MISRA happy */
 		break;
 	}
 }
@@ -356,6 +362,7 @@ mw_handle_t mw_create_window_dialog_number_entry(int16_t x,
 		mw_handle_t owner_window_handle)
 {
 	mw_util_rect_t rect;
+	mw_handle_t temp_handle;
 
 	/* check pointer parameters */
 	if (title == NULL)
@@ -415,7 +422,7 @@ mw_handle_t mw_create_window_dialog_number_entry(int16_t x,
 			NULL,
 			0,
 			MW_WINDOW_FLAG_HAS_BORDER | MW_WINDOW_FLAG_HAS_TITLE_BAR |
-					MW_WINDOW_FLAG_IS_VISIBLE | MW_WINDOW_FLAG_IS_MODAL | (large_size ? MW_WINDOW_FLAG_LARGE_SIZE : 0U),
+					MW_WINDOW_FLAG_IS_VISIBLE | MW_WINDOW_FLAG_IS_MODAL | (uint32_t)(large_size ? MW_WINDOW_FLAG_LARGE_SIZE : 0U),
 			NULL);
 
 	/* check if window could be created */
@@ -435,43 +442,49 @@ mw_handle_t mw_create_window_dialog_number_entry(int16_t x,
 	/* create controls */
 	if (large_size)
 	{
-		mw_dialog_number_entry_data.keypad_handle = mw_ui_keypad_add_new(49,
+		temp_handle = mw_ui_keypad_add_new(49,
 				26,
 				mw_dialog_number_entry_data.number_entry_dialog_window_handle,
 				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_LARGE_SIZE,
 				&mw_dialog_number_entry_data.mw_ui_keypad_data);
+		mw_dialog_number_entry_data.keypad_handle = temp_handle;
 
-		mw_dialog_number_entry_data.button_ok_handle = mw_ui_button_add_new(5,
+		temp_handle = mw_ui_button_add_new(5,
 				192,
 				mw_dialog_number_entry_data.number_entry_dialog_window_handle,
 				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_LARGE_SIZE,
 				&mw_dialog_number_entry_data.button_ok_data);
+		mw_dialog_number_entry_data.button_ok_handle = temp_handle;
 
-		mw_dialog_number_entry_data.button_cancel_handle = mw_ui_button_add_new(113,
+		temp_handle = mw_ui_button_add_new(113,
 				192,
 				mw_dialog_number_entry_data.number_entry_dialog_window_handle,
 				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_LARGE_SIZE,
 				&mw_dialog_number_entry_data.button_cancel_data);
+		mw_dialog_number_entry_data.button_cancel_handle = temp_handle;
 	}
 	else
 	{
-		mw_dialog_number_entry_data.keypad_handle = mw_ui_keypad_add_new(27,
+		temp_handle = mw_ui_keypad_add_new(27,
 				25,
 				mw_dialog_number_entry_data.number_entry_dialog_window_handle,
 				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
 				&mw_dialog_number_entry_data.mw_ui_keypad_data);
+		mw_dialog_number_entry_data.keypad_handle = temp_handle;
 
-		mw_dialog_number_entry_data.button_ok_handle = mw_ui_button_add_new(5,
+		temp_handle = mw_ui_button_add_new(5,
 				110,
 				mw_dialog_number_entry_data.number_entry_dialog_window_handle,
 				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
 				&mw_dialog_number_entry_data.button_ok_data);
+		mw_dialog_number_entry_data.button_ok_handle = temp_handle;
 
-		mw_dialog_number_entry_data.button_cancel_handle = mw_ui_button_add_new(58,
+		temp_handle = mw_ui_button_add_new(58,
 				110,
 				mw_dialog_number_entry_data.number_entry_dialog_window_handle,
 				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
 				&mw_dialog_number_entry_data.button_cancel_data);
+		mw_dialog_number_entry_data.button_cancel_handle = temp_handle;
 	}
 
 	/* check if controls could be created */

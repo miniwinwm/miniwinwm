@@ -35,7 +35,9 @@ SOFTWARE.
 *** INCLUDES ***
 ***************/
 
+#include <windows.h>
 #include <time.h>
+#include "miniwin.h"
 
 /****************
 *** CONSTANTS ***
@@ -47,6 +49,15 @@ SOFTWARE.
 /************
 *** TYPES ***
 ************/
+
+/*************************
+*** EXTERNAL VARIABLES ***
+*************************/
+
+extern HWND hwnd;
+extern bool mouse_down;
+extern SHORT mx;
+extern SHORT my;
 
 /***************************
 *** FUNCTIONS PROTOTYPES ***

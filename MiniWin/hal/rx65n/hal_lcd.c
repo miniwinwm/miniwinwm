@@ -29,9 +29,9 @@ SOFTWARE.
 *** INCLUDES ***
 ***************/
 
+#include <stdlib.h>
 #include "hal/hal_lcd.h"
 #include "miniwin_config.h"
-#include <stdlib.h>
 #include "r_smc_entry.h"
 #include "r_glcdc_rx_if.h"
 #include "r_pinset.h"
@@ -50,10 +50,6 @@ SOFTWARE.
 /***********************
 *** GLOBAL VARIABLES ***
 ***********************/
-
-/*************************
-*** EXTERNAL VARIABLES ***
-**************************/
 
 /**********************
 *** LOCAL VARIABLES ***
@@ -234,26 +230,27 @@ void mw_hal_lcd_colour_bitmap_clip(int16_t image_start_x,
 		int16_t clip_height,
 		const uint8_t *data)
 {
-	uint16_t x;
-	uint16_t y;
+	int16_t x;
+	int16_t y;
 	mw_hal_lcd_colour_t pixel_colour;
 
-	for (y = 0; y < image_data_height_pixels; y++)
+	for (y = 0; y < (int16_t)image_data_height_pixels; y++)
 	{
-		for (x = 0; x < image_data_width_pixels; x++)
+		for (x = 0; x < (int16_t)image_data_width_pixels; x++)
 		{
 			if (x + image_start_x >= clip_start_x &&
 					x + image_start_x < clip_start_x + clip_width &&
 					y + image_start_y >= clip_start_y &&
 					y + image_start_y < clip_start_y + clip_height)
 			{
-				pixel_colour = *(data + (x + y * image_data_width_pixels) * 3);
-				pixel_colour |= *(1 + data + (x + y * image_data_width_pixels) * 3) << 8;
-				pixel_colour |= *(2 + data + (x + y * image_data_width_pixels) * 3) << 16;
+				pixel_colour = *(2 + data + (x + y * (int16_t)image_data_width_pixels) * 3);
+				pixel_colour <<= 8;
+				pixel_colour += *(1 + data + (x + y * (int16_t)image_data_width_pixels) * 3);
+				pixel_colour <<= 8;
+				pixel_colour += *(data + (x + y * (int16_t)image_data_width_pixels) * 3);
 				mw_hal_lcd_pixel(x + image_start_x, y + image_start_y, pixel_colour);
 			}
 		}
-
 	}
 }
 

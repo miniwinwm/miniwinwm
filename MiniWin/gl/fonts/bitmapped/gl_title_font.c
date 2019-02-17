@@ -37,7 +37,7 @@ SOFTWARE.
 /**
  * Positions of start of data for each character in the title font bitmap following
  */
-const uint16_t mw_title_font_positions[] =
+const int16_t mw_title_font_positions[] =
 {0,    /* space  */
 5,     /* ! */
 8,     /* " */

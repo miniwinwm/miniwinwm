@@ -35,6 +35,8 @@ SOFTWARE.
 *** INCLUDES ***
 ***************/
 
+#include <windows.h>
+
 /****************
 *** CONSTANTS ***
 ****************/
@@ -43,19 +45,28 @@ SOFTWARE.
 *** TYPES ***
 ************/
 
+/*************************
+*** EXTERNAL VARIABLES ***
+*************************/
+
+extern HWND hwnd;
+extern bool mouse_down;
+extern SHORT mx;
+extern SHORT my;
+
 /***************************
 *** FUNCTIONS PROTOTYPES ***
 ***************************/
 
-/**
- * Function called from main to perform application initializations
- */
-void app_init(void);
+ /**
+  * Function called from main to perform application initializations
+  */
+ void app_init(void);
 
-/**
- * Function called from main to perform application main loop processing
- */
-void app_main_loop_process(void);
+ /**
+  * Function called from main to perform application main loop processing
+  */
+ void app_main_loop_process(void);
 
 #ifdef __cplusplus
 }

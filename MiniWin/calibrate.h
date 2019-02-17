@@ -27,8 +27,8 @@
  *
  */
 
-#ifndef _CALIBRATE_H_
-#define _CALIBRATE_H_
+#ifndef CALIBRATE_H_
+#define CALIBRATE_H_
 
 #ifdef __cplusplus
  extern "C" {
@@ -118,4 +118,4 @@ EXTERN int getDisplayPoint( POINT_T * display,
 }
 #endif
 
-#endif  /* _CALIBRATE_H_ */
+#endif  /* CALIBRATE_H_ */

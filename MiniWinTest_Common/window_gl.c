@@ -44,22 +44,22 @@ static const int16_t shape_y_const[] = {-10, 10, 5, 10};
 /* width = 18
    height = 16 */
 static const uint8_t snail[]={
-255, 255, 128,
-255, 255, 0,
-129, 255, 128,
-60, 255, 0,
-126, 127, 128,
-97, 63, 0,
-76, 191, 128,
-94, 177, 0,
-88, 170, 128,
-95, 32, 0,
-76, 42, 128,
-97, 133, 0,
-48, 3, 128,
-128, 7, 0,
-0, 15, 128,
-0, 15, 0
+255U, 255U, 128U,
+255U, 255U, 0U,
+129U, 255U, 128U,
+60U, 255U, 0U,
+126U, 127U, 128U,
+97U, 63U, 0U,
+76U, 191U, 128U,
+94U, 177U, 0U,
+88U, 170U, 128U,
+95U, 32U, 0U,
+76U, 42U, 128U,
+97U, 133U, 0U,
+48U, 3U, 128U,
+128U, 7U, 0U,
+0U, 15U, 128U,
+0U, 15U, 0U
 };
 
 /************
@@ -171,6 +171,7 @@ void window_gl_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_t
 		/* check general line solid and with line style and clipping */
 		mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 		mw_gl_set_line(MW_GL_SOLID_LINE);
+		mw_gl_line(draw_info, -10, -100, 1000, 1000);
 		mw_gl_line(draw_info, 10, 10, 100, 100);
 		mw_gl_line(draw_info, 10, 20, mw_get_window_client_rect(window_handle).width * 2, 110);
 		mw_gl_line(draw_info, 10, 30, 100, mw_get_window_client_rect(window_handle).height * 2);

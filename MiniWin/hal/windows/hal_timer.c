@@ -48,10 +48,6 @@ SOFTWARE.
 
 volatile uint32_t mw_tick_counter;
 
-/*************************
-*** EXTERNAL VARIABLES ***
-**************************/
-
 /**********************
 *** LOCAL VARIABLES ***
 **********************/

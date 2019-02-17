@@ -28,6 +28,7 @@ SOFTWARE.
 *** INCLUDES ***
 ***************/
 
+#include <stdlib.h>
 #include "dialogs/dialog_common.h"
 #include "miniwin.h"
 #include "ui/ui_common.h"
@@ -114,8 +115,8 @@ static void mw_dialog_colour_chooser_paint_function(mw_handle_t window_handle, c
 	mw_gl_set_solid_fill_colour(mw_dialog_colour_chooser_data.displayed_colour);
 	mw_gl_set_line(MW_GL_SOLID_LINE);
 	mw_gl_set_border(MW_GL_BORDER_ON);
-	mw_util_safe_strcpy(text_buffer, COLOUR_TEXT_BUFFER_SIZE, "0x");
-	(void)mw_util_safe_itoa((int32_t)mw_dialog_colour_chooser_data.displayed_colour, text_buffer + 2, COLOUR_TEXT_BUFFER_SIZE - 2, 16, true, 6, '0');
+	(void)mw_util_safe_strcpy(text_buffer, COLOUR_TEXT_BUFFER_SIZE, "0x");
+	(void)mw_util_safe_itoa((int32_t)mw_dialog_colour_chooser_data.displayed_colour, text_buffer + 2, (size_t)(COLOUR_TEXT_BUFFER_SIZE - 2U), 16, true, 6U, '0');
 
 	if (mw_dialog_colour_chooser_data.large_size)
 	{
@@ -197,6 +198,10 @@ static void mw_dialog_colour_chooser_message_function(const mw_message_t *messag
 			mw_dialog_colour_chooser_data.displayed_colour &= 0xffff00U;
 			mw_dialog_colour_chooser_data.displayed_colour |= (message->message_data);
 		}
+		else
+		{
+			/* keep MISRA happy */
+		}
 		if (mw_dialog_colour_chooser_data.large_size)
 		{
 			mw_paint_window_client_rect(mw_dialog_colour_chooser_data.colour_chooser_dialog_window_handle, &paint_rect_large);
@@ -240,6 +245,7 @@ static void mw_dialog_colour_chooser_message_function(const mw_message_t *messag
 		break;
 
 	default:
+		/* keep MISRA happy */
 		break;
 	}
 }
@@ -256,6 +262,7 @@ mw_handle_t mw_create_window_dialog_colour_chooser(int16_t x,
 		mw_handle_t owner_window_handle)
 {
 	mw_util_rect_t rect;
+	mw_handle_t temp_handle;
 
 	/* check pointer parameters */
 	if (title == NULL)
@@ -305,7 +312,7 @@ mw_handle_t mw_create_window_dialog_colour_chooser(int16_t x,
 			NULL,
 			0U,
 			MW_WINDOW_FLAG_HAS_BORDER | MW_WINDOW_FLAG_HAS_TITLE_BAR |
-					MW_WINDOW_FLAG_IS_VISIBLE | MW_WINDOW_FLAG_IS_MODAL | (large_size ? MW_WINDOW_FLAG_LARGE_SIZE : 0),
+					MW_WINDOW_FLAG_IS_VISIBLE | MW_WINDOW_FLAG_IS_MODAL | (uint32_t)(large_size ? MW_WINDOW_FLAG_LARGE_SIZE : 0U),
 			NULL);
 
 	/* check if window could be created */
@@ -323,73 +330,83 @@ mw_handle_t mw_create_window_dialog_colour_chooser(int16_t x,
 
 	if (large_size)
 	{
-		mw_dialog_colour_chooser_data.horiz_scroll_bar_red_handle = mw_ui_scroll_bar_horiz_add_new(35,
+		temp_handle = mw_ui_scroll_bar_horiz_add_new(35,
 				40,
 				175,
 				mw_dialog_colour_chooser_data.colour_chooser_dialog_window_handle,
 				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_LARGE_SIZE,
 				&mw_dialog_colour_chooser_data.horiz_scroll_bar_red_data);
+		mw_dialog_colour_chooser_data.horiz_scroll_bar_red_handle = temp_handle;
 
-		mw_dialog_colour_chooser_data.horiz_scroll_bar_green_handle = mw_ui_scroll_bar_horiz_add_new(35,
+		temp_handle = mw_ui_scroll_bar_horiz_add_new(35,
 				75,
 				175,
 				mw_dialog_colour_chooser_data.colour_chooser_dialog_window_handle,
 				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_LARGE_SIZE,
 				&mw_dialog_colour_chooser_data.horiz_scroll_bar_green_data);
+		mw_dialog_colour_chooser_data.horiz_scroll_bar_green_handle = temp_handle;
 
-		mw_dialog_colour_chooser_data.horiz_scroll_bar_blue_handle = mw_ui_scroll_bar_horiz_add_new(35,
+		temp_handle = mw_ui_scroll_bar_horiz_add_new(35,
 				110,
 				175,
 				mw_dialog_colour_chooser_data.colour_chooser_dialog_window_handle,
 				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_LARGE_SIZE,
 				&mw_dialog_colour_chooser_data.horiz_scroll_bar_blue_data);
+		mw_dialog_colour_chooser_data.horiz_scroll_bar_blue_handle = temp_handle;
 
-		mw_dialog_colour_chooser_data.button_ok_handle = mw_ui_button_add_new(5,
+		temp_handle = mw_ui_button_add_new(5,
 				140,
 				mw_dialog_colour_chooser_data.colour_chooser_dialog_window_handle,
 				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_LARGE_SIZE,
 				&mw_dialog_colour_chooser_data.button_ok_data);
+		mw_dialog_colour_chooser_data.button_ok_handle = temp_handle;
 
-		mw_dialog_colour_chooser_data.button_cancel_handle = mw_ui_button_add_new(110,
+		temp_handle = mw_ui_button_add_new(110,
 				140,
 				mw_dialog_colour_chooser_data.colour_chooser_dialog_window_handle,
 				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_LARGE_SIZE,
 				&mw_dialog_colour_chooser_data.button_cancel_data);
+		mw_dialog_colour_chooser_data.button_cancel_handle = temp_handle;
 	}
 	else
 	{
-		mw_dialog_colour_chooser_data.horiz_scroll_bar_red_handle = mw_ui_scroll_bar_horiz_add_new(23,
+		temp_handle = mw_ui_scroll_bar_horiz_add_new(23,
 				30,
 				120,
 				mw_dialog_colour_chooser_data.colour_chooser_dialog_window_handle,
 				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
 				&mw_dialog_colour_chooser_data.horiz_scroll_bar_red_data);
+		mw_dialog_colour_chooser_data.horiz_scroll_bar_red_handle = temp_handle;
 
-		mw_dialog_colour_chooser_data.horiz_scroll_bar_green_handle = mw_ui_scroll_bar_horiz_add_new(23,
+		temp_handle = mw_ui_scroll_bar_horiz_add_new(23,
 				50,
 				120,
 				mw_dialog_colour_chooser_data.colour_chooser_dialog_window_handle,
 				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
 				&mw_dialog_colour_chooser_data.horiz_scroll_bar_green_data);
+		mw_dialog_colour_chooser_data.horiz_scroll_bar_green_handle = temp_handle;
 
-		mw_dialog_colour_chooser_data.horiz_scroll_bar_blue_handle = mw_ui_scroll_bar_horiz_add_new(23,
+		temp_handle = mw_ui_scroll_bar_horiz_add_new(23,
 				70,
 				120,
 				mw_dialog_colour_chooser_data.colour_chooser_dialog_window_handle,
 				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
 				&mw_dialog_colour_chooser_data.horiz_scroll_bar_blue_data);
+		mw_dialog_colour_chooser_data.horiz_scroll_bar_blue_handle = temp_handle;
 
-		mw_dialog_colour_chooser_data.button_ok_handle = mw_ui_button_add_new(10,
+		temp_handle = mw_ui_button_add_new(10,
 				90,
 				mw_dialog_colour_chooser_data.colour_chooser_dialog_window_handle,
 				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
 				&mw_dialog_colour_chooser_data.button_ok_data);
+		mw_dialog_colour_chooser_data.button_ok_handle = temp_handle;
 
-		mw_dialog_colour_chooser_data.button_cancel_handle = mw_ui_button_add_new(85,
+		temp_handle = mw_ui_button_add_new(85,
 				90,
 				mw_dialog_colour_chooser_data.colour_chooser_dialog_window_handle,
 				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
 				&mw_dialog_colour_chooser_data.button_cancel_data);
+		mw_dialog_colour_chooser_data.button_cancel_handle = temp_handle;
 	}
 
 	/* check if controls could be created */

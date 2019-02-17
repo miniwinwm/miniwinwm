@@ -748,9 +748,18 @@ typedef enum
  */
 typedef uint32_t mw_handle_t;
 
-/* forward declare message struct and its typedef */
-struct mw_message_tag;
-typedef struct mw_message_tag mw_message_t;
+/**
+ * Message queue message information structure
+ */
+typedef struct mw_message_tag
+{
+	mw_handle_t sender_handle;			/**< Handle of sender of message, not always used  */
+	mw_handle_t recipient_handle;       /**< Handle of recipient of message, not always used */
+	mw_message_id_t message_id;       	/**< Identifier of the message; this is a system identifier or a user defined identifier */
+	mw_message_recipient_type_t message_recipient_type;        /**< Type of recipient this message is for */
+	uint32_t message_data;              /**< Data value passed to recipient with a message; this is message specific and can be used for anything */
+	void *message_pointer;				/**< Pointer value passed to recipient with a message; this pointer is message specific and can be used for anything */
+} mw_message_t;
 
 /**
  * Function signature definition for the paint function that every window and control must implement
@@ -768,19 +777,6 @@ typedef void (*mw_paint_func_p)(mw_handle_t window_handle, const mw_gl_draw_info
  * @note Do not call this directly from user code
  */
 typedef void (*mw_message_func_p)(const mw_message_t *user_message);
-
-/**
- * Message queue message information structure
- */
-typedef struct mw_message_tag
-{
-	mw_handle_t sender_handle;			/**< Handle of sender of message, not always used  */
-	mw_handle_t recipient_handle;       /**< Handle of recipient of message, not always used */
-	mw_message_id_t message_id;       	/**< Identifier of the message; this is a system identifier or a user defined identifier */
-	mw_message_recipient_type_t message_recipient_type;        /**< Type of recipient this message is for */
-	uint32_t message_data;              /**< Data value passed to recipient with a message; this is message specific and can be used for anything */
-	void *message_pointer;				/**< Pointer value passed to recipient with a message; this pointer is message specific and can be used for anything */
-} mw_message_t;
 
 /*************************
 *** EXTERNAL VARIABLES ***
@@ -1044,7 +1040,7 @@ void mw_set_window_vert_scroll_bar_enabled_state(mw_handle_t window_handle, bool
  * @param enabled The new position
  * @note User must do a paint of the scroll bar for the change to be seen
  */
-void mw_set_window_horiz_scroll_bar_position(mw_handle_t window_handle, uint8_t position);
+void mw_set_position_window_horiz_scroll_bar(mw_handle_t window_handle, uint8_t position);
 
 /**
  * Set a window vertical scroll bar position
@@ -1053,7 +1049,7 @@ void mw_set_window_horiz_scroll_bar_position(mw_handle_t window_handle, uint8_t 
  * @param enabled The new position
  * @note User must do a paint of the scroll bar for the change to be seen
  */
-void mw_set_window_vert_scroll_bar_position(mw_handle_t window_handle, uint8_t position);
+void mw_set_position_window_vert_scroll_bar(mw_handle_t window_handle, uint8_t position);
 
 /**
  * Add a message to the message queue to get a window frame painted. This
@@ -1113,7 +1109,7 @@ void *mw_get_window_instance_data(mw_handle_t window_handle);
  * @param window_handle Handle of the window to get flags bitfield for.
  * @return The returned flags bitfield
  */
-uint16_t mw_get_window_flags(mw_handle_t window_handle);
+uint32_t mw_get_window_flags(mw_handle_t window_handle);
 
 /**
  * Set the window's title bar text

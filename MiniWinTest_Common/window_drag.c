@@ -30,6 +30,7 @@ SOFTWARE.
 
 #include "miniwin.h"
 #include "miniwin_user.h"
+#include "window_drag.h"
 
 /****************
 *** CONSTANTS ***
@@ -46,14 +47,14 @@ SOFTWARE.
  */
 typedef struct 
 {
-	uint8_t points_count;								/**< Number of points recorded */
-	uint16_t points[2][POINTS_COUNT_MAX];				/**< The recorded points */
-	uint8_t next_point;									/**< Next location in array to save a drag point */
+	int8_t points_count;								/**< Number of points recorded */
+	int16_t points[2][POINTS_COUNT_MAX];				/**< The recorded points */
+	int8_t next_point;									/**< Next location in array to save a drag point */
 	uint8_t scroll_h;									/**< Horizontal window horizontal scroll bar position */
 	uint8_t scroll_v;									/**< Vertical window vertical scroll position */
 	char event_text_buffer[10];							/**< Buffer for text of event */
-	uint8_t touch_x;									/**< Latest touch x position */
-	uint8_t touch_y;									/**< Latest touch y position */
+	int16_t touch_x;									/**< Latest touch x position */
+	int16_t touch_y;									/**< Latest touch y position */
 	uint8_t scroll_control;								/**< Control scroll bar position */
 } window_drag_data_t;
 
@@ -81,10 +82,10 @@ static window_drag_data_t window_drag_data;
 
 void window_drag_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_t *draw_info)
 {
-	uint8_t p;
-	uint8_t i;
-	uint16_t previous_x;
-	uint16_t previous_y;
+	int8_t p;
+	int8_t i;
+	int16_t previous_x;
+	int16_t previous_y;
 	char text_buffer[5];
 
 	MW_ASSERT(draw_info, "Null pointer parameter");
@@ -106,16 +107,16 @@ void window_drag_paint_function(mw_handle_t window_handle, const mw_gl_draw_info
 	mw_gl_set_text_rotation(MW_GL_TEXT_ROTATION_0);
 	mw_gl_set_font(MW_GL_FONT_9);
 
-	(void)mw_util_safe_itoa(window_drag_data.touch_x, text_buffer, 5, 10, false, 0, ' ');
+	(void)mw_util_safe_itoa((int32_t)window_drag_data.touch_x, text_buffer, (size_t)5, 10, false, 0U, ' ');
 	mw_gl_string(draw_info, 1, 1, text_buffer);
-	(void)mw_util_safe_itoa(window_drag_data.touch_y, text_buffer, 5, 10, false, 0, ' ');
+	(void)mw_util_safe_itoa((int32_t)window_drag_data.touch_y, text_buffer, (size_t)5, 10, false, 0U, ' ');
 	mw_gl_string(draw_info, 22, 1, text_buffer);
 	mw_gl_string(draw_info, 43, 1, window_drag_data.event_text_buffer);
-	(void)mw_util_safe_itoa(window_drag_data.scroll_h, text_buffer, 5, 10, false, 0, ' ');
+	(void)mw_util_safe_itoa((int32_t)window_drag_data.scroll_h, text_buffer, (size_t)5, 10, false, 0U, ' ');
 	mw_gl_string(draw_info, 72, 1, text_buffer);
-	(void)mw_util_safe_itoa(window_drag_data.scroll_v, text_buffer, 5, 10, false, 0, ' ');
+	(void)mw_util_safe_itoa((int32_t)window_drag_data.scroll_v, text_buffer, (size_t)5, 10, false, 0U, ' ');
 	mw_gl_string(draw_info, 93, 1, text_buffer);
-	(void)mw_util_safe_itoa(window_drag_data.scroll_control, text_buffer, 5, 10, false, 0, ' ');
+	(void)mw_util_safe_itoa((int32_t)window_drag_data.scroll_control, text_buffer, (size_t)5, 10, false, 0U, ' ');
 	mw_gl_string(draw_info, 114, 1, text_buffer);
 
 	if (window_drag_data.next_point == 0)
@@ -130,7 +131,7 @@ void window_drag_paint_function(mw_handle_t window_handle, const mw_gl_draw_info
 	mw_gl_set_fg_colour(MW_HAL_LCD_RED);
 	mw_gl_set_line(MW_GL_SOLID_LINE);
 
-	for (i = 0; i < window_drag_data.points_count -1 ; i++)
+	for (i = 0; i < window_drag_data.points_count - 1 ; i++)
 	{
 		previous_x = window_drag_data.points[0][p];
 		previous_y = window_drag_data.points[1][p];
@@ -154,6 +155,8 @@ void window_drag_paint_function(mw_handle_t window_handle, const mw_gl_draw_info
 
 void window_drag_message_function(const mw_message_t *message)
 {
+	uint32_t temp_uint32;
+
 	MW_ASSERT(message, "Null pointer argument");
 
 	switch (message->message_id)
@@ -164,58 +167,63 @@ void window_drag_message_function(const mw_message_t *message)
 		window_drag_data.touch_x = 0;
 		window_drag_data.touch_y = 0;
 		window_drag_data.scroll_control = 0;
-		mw_util_safe_strcpy(window_drag_data.event_text_buffer, sizeof(window_drag_data.event_text_buffer), "NONE");
+		window_drag_data.points_count = 0;
+		(void)mw_util_safe_strcpy(window_drag_data.event_text_buffer, sizeof(window_drag_data.event_text_buffer), "NONE");
 		break;
 
 	case MW_TOUCH_DOWN_MESSAGE:
-		mw_util_safe_strcpy(window_drag_data.event_text_buffer, sizeof(window_drag_data.event_text_buffer), "DOWN");
+		(void)mw_util_safe_strcpy(window_drag_data.event_text_buffer, sizeof(window_drag_data.event_text_buffer), "DOWN");
 		window_drag_data.points_count = 0;
 		window_drag_data.next_point = 0;
-		window_drag_data.touch_x = message->message_data >> 16;
-		window_drag_data.touch_y = message->message_data & 0xffff;
+		temp_uint32 = message->message_data >> 16;
+		window_drag_data.touch_x = (int16_t)temp_uint32;
+		temp_uint32 = message->message_data & 0xffffU;
+		window_drag_data.touch_y = (int16_t)temp_uint32;
 		mw_paint_window_client(message->recipient_handle);
 		break;
 
 	case MW_CONTROL_VERT_SCROLL_BAR_SCROLLED_MESSAGE:
-		window_drag_data.scroll_control = message->message_data;
-		mw_util_safe_strcpy(window_drag_data.event_text_buffer, sizeof(window_drag_data.event_text_buffer), "CSCR");
+		window_drag_data.scroll_control = (uint8_t)message->message_data;
+		(void)mw_util_safe_strcpy(window_drag_data.event_text_buffer, sizeof(window_drag_data.event_text_buffer), "CSCR");
 		mw_paint_window_client(message->recipient_handle);
 		break;
 
 	case MW_TOUCH_HOLD_DOWN_MESSAGE:
-		mw_util_safe_strcpy(window_drag_data.event_text_buffer, sizeof(window_drag_data.event_text_buffer), "HOLD");
+		(void)mw_util_safe_strcpy(window_drag_data.event_text_buffer, sizeof(window_drag_data.event_text_buffer), "HOLD");
 		mw_paint_window_client(message->recipient_handle);
 		break;
 
 	case MW_TOUCH_UP_MESSAGE:
-		mw_util_safe_strcpy(window_drag_data.event_text_buffer, sizeof(window_drag_data.event_text_buffer), "UP");
+		(void)mw_util_safe_strcpy(window_drag_data.event_text_buffer, sizeof(window_drag_data.event_text_buffer), "UP");
 		mw_paint_window_client(message->recipient_handle);
 		break;
 
 	case MW_WINDOW_VERT_SCROLL_BAR_SCROLLED_MESSAGE:
-		mw_util_safe_strcpy(window_drag_data.event_text_buffer, sizeof(window_drag_data.event_text_buffer), "VSCR");
-		window_drag_data.scroll_v = message->message_data;
+		(void)mw_util_safe_strcpy(window_drag_data.event_text_buffer, sizeof(window_drag_data.event_text_buffer), "VSCR");
+		window_drag_data.scroll_v = (uint8_t)message->message_data;
 		mw_paint_window_client(message->recipient_handle);
 		break;
 
 	case MW_WINDOW_HORIZ_SCROLL_BAR_SCROLLED_MESSAGE:
-		mw_util_safe_strcpy(window_drag_data.event_text_buffer, sizeof(window_drag_data.event_text_buffer), "HSCR");
-		window_drag_data.scroll_h = message->message_data;
+		(void)mw_util_safe_strcpy(window_drag_data.event_text_buffer, sizeof(window_drag_data.event_text_buffer), "HSCR");
+		window_drag_data.scroll_h = (uint8_t)message->message_data;
 		mw_paint_window_client(message->recipient_handle);
 		break;
 
 	case MW_TOUCH_DRAG_MESSAGE:
-		window_drag_data.touch_x = message->message_data >> 16;
-		window_drag_data.touch_y = message->message_data & 0xffff;
-		mw_util_safe_strcpy(window_drag_data.event_text_buffer, 5, "DRAG");
+		temp_uint32 = message->message_data >> 16;
+		window_drag_data.touch_x = (int16_t)temp_uint32;
+		temp_uint32 = message->message_data & 0xffffU;
+		window_drag_data.touch_y = (int16_t)temp_uint32;
+		(void)mw_util_safe_strcpy(window_drag_data.event_text_buffer, 5, "DRAG");
 		window_drag_data.points_count++;
 		if (window_drag_data.points_count > POINTS_COUNT_MAX)
 		{
 			window_drag_data.points_count = POINTS_COUNT_MAX;
 		}
 
-		window_drag_data.points[0][window_drag_data.next_point] = (int16_t)(message->message_data >> 16);
-		window_drag_data.points[1][window_drag_data.next_point] = (int16_t)(message->message_data & 0xffff);
+		window_drag_data.points[0][window_drag_data.next_point] = window_drag_data.touch_x;
+		window_drag_data.points[1][window_drag_data.next_point] = window_drag_data.touch_y;
 		window_drag_data.next_point++;
 		if (window_drag_data.next_point == POINTS_COUNT_MAX)
 		{
@@ -225,6 +233,7 @@ void window_drag_message_function(const mw_message_t *message)
 		break;
 
 	default:
+		/* keep MISRA happy */
 		break;
 	}
 }

@@ -43,6 +43,10 @@ SOFTWARE.
 *** TYPES ***
 ************/
 
+/*************************
+*** EXTERNAL VARIABLES ***
+*************************/
+
  typedef enum
  {
 	 GYRO_READING_X = 0,

@@ -178,7 +178,9 @@ void mw_user_init(void)
 			NULL);
 
 	/* process waiting messages to reduce queue contents */
-	while (mw_process_message());
+	while (mw_process_message())
+	{
+	}
 
 	/* create the new ui test window */
 	mw_util_set_rect(&r, 0, 10, 220, 140);
@@ -187,7 +189,7 @@ void mw_user_init(void)
 			window_test_paint_function,
 			window_test_message_function,
 			menu_bar_labels,
-			MENU_BAR_1_ITEMS_COUNT,
+			(uint8_t)MENU_BAR_1_ITEMS_COUNT,
 			MW_WINDOW_FLAG_HAS_BORDER | MW_WINDOW_FLAG_HAS_TITLE_BAR | MW_WINDOW_FLAG_IS_VISIBLE |
 				MW_WINDOW_FLAG_HAS_MENU_BAR | MW_WINDOW_FLAG_MENU_BAR_ENABLED,
 			NULL);
@@ -251,7 +253,7 @@ void mw_user_init(void)
 			&progress_bar_1_data);
 
 	/* create a new radio buttons control and add it to the ui test window */
-	radio_button_1_data.number_of_items = RADIO_BUTTON_1_ITEMS_COUNT;
+	radio_button_1_data.number_of_items = (uint8_t)RADIO_BUTTON_1_ITEMS_COUNT;
 	radio_button_1_data.radio_button_labels = radio_button_labels;
 	radio_button_1_handle = mw_ui_radio_button_add_new(150,
 			10,
@@ -261,7 +263,7 @@ void mw_user_init(void)
 			&radio_button_1_data);
 
 	/* create a new large radio buttons control and add it to the ui test window */
-	radio_button_1_large_data.number_of_items = RADIO_BUTTON_1_ITEMS_COUNT;
+	radio_button_1_large_data.number_of_items = (uint8_t)RADIO_BUTTON_1_ITEMS_COUNT;
 	radio_button_1_large_data.radio_button_labels = radio_button_labels;
 	radio_button_1_large_handle = mw_ui_radio_button_add_new(10,
 			125,
@@ -271,8 +273,8 @@ void mw_user_init(void)
 			&radio_button_1_large_data);
 
 	/* create a new list box control and add it to the ui test window, y position to be directly under the menu bar, control invisible for now */
-	list_box_1_data.number_of_lines = LIST_BOX_1_ITEMS_COUNT;
-	list_box_1_data.number_of_items = LIST_BOX_1_ITEMS_COUNT;
+	list_box_1_data.number_of_lines = (uint8_t)LIST_BOX_1_ITEMS_COUNT;
+	list_box_1_data.number_of_items = (uint8_t)LIST_BOX_1_ITEMS_COUNT;
 	list_box_1_data.list_box_entries = list_box_1_entries;
 	list_box_1_data.line_enables = mw_util_change_bit(MW_ALL_ITEMS_ENABLED, 1, false);
 	list_box_1_handle = mw_ui_list_box_add_new(0,
@@ -333,8 +335,8 @@ void mw_user_init(void)
 			&scroll_bar_vert_1_large_data);
 
 	/* create a new list box control and add it to the ui test window */
-	list_box_3_data.number_of_lines = 3;
-	list_box_3_data.number_of_items = LIST_BOX_3_ITEMS_COUNT;
+	list_box_3_data.number_of_lines = 3U;
+	list_box_3_data.number_of_items = (uint8_t)LIST_BOX_3_ITEMS_COUNT;
 	list_box_3_data.list_box_entries = list_box_3_entries;
 	list_box_3_data.line_enables = MW_ALL_ITEMS_ENABLED;
 	list_box_3_handle = mw_ui_list_box_add_new(60,
@@ -345,8 +347,8 @@ void mw_user_init(void)
 			&list_box_3_data);
 
 	/* create a new large list box control and add it to the ui test window */
-	list_box_3_large_data.number_of_lines = 3;
-	list_box_3_large_data.number_of_items = LIST_BOX_3_ITEMS_COUNT;
+	list_box_3_large_data.number_of_lines = 3U;
+	list_box_3_large_data.number_of_items = (uint8_t)LIST_BOX_3_ITEMS_COUNT;
 	list_box_3_large_data.list_box_entries = list_box_3_entries;
 	list_box_3_large_data.line_enables = MW_ALL_ITEMS_ENABLED;
 	list_box_3_large_handle = mw_ui_list_box_add_new(10,
@@ -359,7 +361,7 @@ void mw_user_init(void)
 	/* create a new vertical scroll bar for the list box*/
 	scroll_bar_vert_2_handle = mw_ui_scroll_bar_vert_add_new(127,
 			30,
-			MW_UI_LIST_BOX_ROW_HEIGHT * list_box_3_data.number_of_lines,
+			(int16_t)MW_UI_LIST_BOX_ROW_HEIGHT * (int16_t)list_box_3_data.number_of_lines,
 			window_test_handle,
 			MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_IS_VISIBLE,
 			&scroll_bar_vert_2_data);
@@ -367,13 +369,15 @@ void mw_user_init(void)
 	/* create a new large vertical scroll bar for the large list box*/
 	scroll_bar_vert_2_large_handle = mw_ui_scroll_bar_vert_add_new(139,
 			30,
-			MW_UI_LIST_BOX_LARGE_ROW_HEIGHT * list_box_3_large_data.number_of_lines,
+			(int16_t)MW_UI_LIST_BOX_LARGE_ROW_HEIGHT * (int16_t)list_box_3_large_data.number_of_lines,
 			window_test_handle,
 			MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_LARGE_SIZE,
 			&scroll_bar_vert_2_large_data);
 
 	/* process waiting messages to reduce queue contents */
-	while (mw_process_message());
+	while (mw_process_message())
+	{
+	}
 
 	/* create the new drag test window */
 	mw_util_set_rect(&r, 20, 120, 180, 190);
@@ -398,10 +402,9 @@ void mw_user_init(void)
 			&scroll_bar_vert_3_data);
 
 	/* process waiting messages to reduce queue contents */
-	while (mw_process_message());
-
-	/* process waiting messages to reduce queue contents */
-	while (mw_process_message());
+	while (mw_process_message())
+	{
+	}
 
 	mw_util_set_rect(&r, 20, 220, 100, 95);
 	window_scroll_handle = mw_add_window(&r,
@@ -417,7 +420,9 @@ void mw_user_init(void)
 				MW_WINDOW_FLAG_IS_MINIMISED,
 			NULL);
 
-	while (mw_process_message());
+	while (mw_process_message())
+	{
+	}
 
 	mw_util_set_rect(&r, 20, 100, 120, 120);
 	window_scroll_handle = mw_add_window(&r,
@@ -432,7 +437,9 @@ void mw_user_init(void)
 			NULL);
 
 	/* process waiting messages to reduce queue contents */
-	while (mw_process_message());
+	while (mw_process_message())
+	{
+	}
 
 	mw_util_set_rect(&r, 20, 150, 180, 120);
 	window_paint_rect_handle = mw_add_window(&r,
@@ -446,8 +453,8 @@ void mw_user_init(void)
 			NULL);
 
 	/* create a new list box control and add it to the paint rect window */
-	list_box_2_data.number_of_lines = LIST_BOX_2_ITEMS_COUNT;
-	list_box_2_data.number_of_items = LIST_BOX_2_ITEMS_COUNT;
+	list_box_2_data.number_of_lines = (uint8_t)LIST_BOX_2_ITEMS_COUNT;
+	list_box_2_data.number_of_items = (uint8_t)LIST_BOX_2_ITEMS_COUNT;
 	list_box_2_data.list_box_entries = list_box_2_entries;
 	list_box_2_data.line_enables = MW_ALL_ITEMS_ENABLED;
 	list_box_2_handle = mw_ui_list_box_add_new(100,

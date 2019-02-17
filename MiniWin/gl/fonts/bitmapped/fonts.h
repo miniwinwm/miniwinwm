@@ -36,8 +36,8 @@
   */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __FONTS_H
-#define __FONTS_H
+#ifndef FONTS_H
+#define FONTS_H
 
 #ifdef __cplusplus
  extern "C" {
@@ -104,7 +104,7 @@ typedef struct _tFont
 }
 #endif
   
-#endif /* __FONTS_H */
+#endif /* FONTS_H */
  
 /**
   * @}

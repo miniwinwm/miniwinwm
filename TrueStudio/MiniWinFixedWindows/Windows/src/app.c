@@ -52,10 +52,6 @@ bool mouse_down = false;
 SHORT mx;
 SHORT my;
 
-/*************************
-*** EXTERNAL VARIABLES ***
-**************************/
-
 /**********************
 *** LOCAL VARIABLES ***
 **********************/

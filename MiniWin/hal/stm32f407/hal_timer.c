@@ -48,10 +48,6 @@ SOFTWARE.
 volatile uint32_t mw_tick_counter;
 TIM_HandleTypeDef Tim3Handle;
 
-/*************************
-*** EXTERNAL VARIABLES ***
-**************************/
-
 /**********************
 *** LOCAL VARIABLES ***
 **********************/

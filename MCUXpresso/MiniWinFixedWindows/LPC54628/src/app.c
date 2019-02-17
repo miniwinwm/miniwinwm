@@ -64,10 +64,6 @@ static spifi_command_t command[] = {
 *** GLOBAL VARIABLES ***
 ***********************/
 
-/*************************
-*** EXTERNAL VARIABLES ***
-**************************/
-
 /**********************
 *** LOCAL VARIABLES ***
 **********************/

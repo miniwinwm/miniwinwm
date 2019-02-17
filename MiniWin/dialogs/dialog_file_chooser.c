@@ -203,18 +203,19 @@ static void mw_dialog_file_chooser_paint_function(mw_handle_t window_handle, con
 static void mw_dialog_file_chooser_message_function(const mw_message_t *message)
 {
 	MW_ASSERT(message, "Null pointer argument");
+	uint8_t temp_uint8;
 
 	switch (message->message_id)
 	{
 	case MW_WINDOW_CREATED_MESSAGE:
-		mw_dialog_file_chooser_data.folder_depth =
-				get_folder_depth(mw_dialog_file_chooser_data.folder_path);
+		temp_uint8 = get_folder_depth(mw_dialog_file_chooser_data.folder_path);
+		mw_dialog_file_chooser_data.folder_depth = temp_uint8;
 		update_folder_entries(mw_dialog_file_chooser_data.folders_only);
 		break;
 
 	case MW_LIST_BOX_SCROLLING_REQUIRED_MESSAGE:
-		mw_set_control_enabled(mw_dialog_file_chooser_data.arrow_file_down_handle, message->message_data >> 16U);
-		mw_dialog_file_chooser_data.max_scroll_lines = message->message_data & 0xffffU;
+		mw_set_control_enabled(mw_dialog_file_chooser_data.arrow_file_down_handle, message->message_data >> 16U == 1U);
+		mw_dialog_file_chooser_data.max_scroll_lines = (uint16_t)(message->message_data & 0xffffU);
 		mw_paint_control(mw_dialog_file_chooser_data.arrow_file_down_handle);
 		break;
 
@@ -278,7 +279,7 @@ static void mw_dialog_file_chooser_message_function(const mw_message_t *message)
 
 	case MW_ARROW_PRESSED_MESSAGE:
 		/* an arrow has been pressed */
-		if (message->message_data == MW_UI_ARROW_UP && mw_dialog_file_chooser_data.lines_to_scroll > 0U)
+		if (message->message_data == (uint32_t)MW_UI_ARROW_UP && mw_dialog_file_chooser_data.lines_to_scroll > 0U)
 		{
 			/* up arrow, scroll list box up is ok to do so */
 			mw_dialog_file_chooser_data.lines_to_scroll--;
@@ -300,7 +301,7 @@ static void mw_dialog_file_chooser_message_function(const mw_message_t *message)
 					MW_CONTROL_MESSAGE);
 			mw_paint_control(mw_dialog_file_chooser_data.list_box_file_handle);
 		}
-		else if (message->message_data == MW_UI_ARROW_DOWN &&
+		else if (message->message_data == (uint32_t)MW_UI_ARROW_DOWN &&
 				mw_dialog_file_chooser_data.lines_to_scroll < mw_dialog_file_chooser_data.max_scroll_lines)
 		{
 			/* down arrow, scroll list box down is ok to do so */
@@ -324,12 +325,12 @@ static void mw_dialog_file_chooser_message_function(const mw_message_t *message)
 					MW_CONTROL_MESSAGE);
 			mw_paint_control(mw_dialog_file_chooser_data.list_box_file_handle);
 		}
-		else if (message->message_data == MW_UI_ARROW_LEFT)
+		else if (message->message_data == (uint32_t)MW_UI_ARROW_LEFT)
 		{
 			/* left arrow, go up a folder path */
-			*strrchr(mw_dialog_file_chooser_data.folder_path, '/') = '\0';
-			*strrchr(mw_dialog_file_chooser_data.folder_path, '/') = '\0';
-			strcat(mw_dialog_file_chooser_data.folder_path, "/");
+			*strrchr(mw_dialog_file_chooser_data.folder_path, (long)'/') = '\0';
+			*strrchr(mw_dialog_file_chooser_data.folder_path, (long)'/') = '\0';
+			(void)strcat((mw_dialog_file_chooser_data.folder_path), ("/"));
 			mw_dialog_file_chooser_data.folder_depth--;
 			mw_dialog_file_chooser_data.lines_to_scroll = 0U;
 
@@ -359,12 +360,16 @@ static void mw_dialog_file_chooser_message_function(const mw_message_t *message)
 			}
 			mw_paint_control(mw_dialog_file_chooser_data.list_box_file_handle);
 		}
+		else
+		{
+			/* keep MISRA happy */
+		}
 		break;
 
 	case MW_LIST_BOX_ITEM_PRESSED_MESSAGE:
 		{
 			/* list box item pressed, get the item chosen number */
-			uint8_t item_chosen = message->message_data;
+			uint8_t item_chosen = (uint8_t)message->message_data;
 
 			if ((mw_dialog_file_chooser_data.list_box_file_data.list_box_entries[item_chosen].icon ==
 					mw_bitmaps_folder_icon_large && mw_dialog_file_chooser_data.large_size) ||
@@ -440,11 +445,13 @@ static void mw_dialog_file_chooser_message_function(const mw_message_t *message)
 			}
 			else
 			{
+				/* keep MISRA happy */
 			}
 		}
 		break;
 
 	default:
+		/* keep MISRA happy */
 		break;
 	}
 }
@@ -463,6 +470,7 @@ mw_handle_t mw_create_window_dialog_file_chooser(int16_t x,
 {
 	mw_util_rect_t rect;
 	uint8_t i;
+	mw_handle_t temp_handle;
 
 	/* check pointer parameters */
 	if (title == NULL)
@@ -514,7 +522,7 @@ mw_handle_t mw_create_window_dialog_file_chooser(int16_t x,
 			NULL,
 			0,
 			MW_WINDOW_FLAG_HAS_BORDER | MW_WINDOW_FLAG_HAS_TITLE_BAR |
-					MW_WINDOW_FLAG_IS_VISIBLE | MW_WINDOW_FLAG_IS_MODAL | (large_size ? MW_WINDOW_FLAG_LARGE_SIZE : 0U),
+					MW_WINDOW_FLAG_IS_VISIBLE | MW_WINDOW_FLAG_IS_MODAL | (uint32_t)(large_size ? MW_WINDOW_FLAG_LARGE_SIZE : 0U),
 			NULL);
 
 	/* check if window could be created */
@@ -552,95 +560,109 @@ mw_handle_t mw_create_window_dialog_file_chooser(int16_t x,
 	/* create controls */
 	if (large_size)
 	{
-		mw_dialog_file_chooser_data.arrow_file_up_handle = mw_ui_arrow_add_new(182,
+		temp_handle = mw_ui_arrow_add_new(182,
 				5,
 				mw_dialog_file_chooser_data.file_chooser_dialog_window_handle,
 				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_LARGE_SIZE,
 				&mw_dialog_file_chooser_data.arrow_up_file_data);
+		mw_dialog_file_chooser_data.arrow_file_up_handle = temp_handle;
 
-		mw_dialog_file_chooser_data.arrow_file_down_handle = mw_ui_arrow_add_new(182,
+		temp_handle = mw_ui_arrow_add_new(182,
 				112,
 				mw_dialog_file_chooser_data.file_chooser_dialog_window_handle,
 				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_LARGE_SIZE,
 				&mw_dialog_file_chooser_data.arrow_down_file_data);
+		mw_dialog_file_chooser_data.arrow_file_down_handle = temp_handle;
 
-		mw_dialog_file_chooser_data.arrow_file_back_handle = mw_ui_arrow_add_new(182,
+		temp_handle = mw_ui_arrow_add_new(182,
 				58,
 				mw_dialog_file_chooser_data.file_chooser_dialog_window_handle,
 				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_LARGE_SIZE,
 				&mw_dialog_file_chooser_data.arrow_back_file_data);
+		mw_dialog_file_chooser_data.arrow_file_back_handle = temp_handle;
 
-		mw_dialog_file_chooser_data.list_box_file_handle = mw_ui_list_box_add_new(5,
+		temp_handle = mw_ui_list_box_add_new(5,
 				5,
 				170,
 				mw_dialog_file_chooser_data.file_chooser_dialog_window_handle,
 				MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_LARGE_SIZE,
 				&mw_dialog_file_chooser_data.list_box_file_data);
+		mw_dialog_file_chooser_data.list_box_file_handle = temp_handle;
 
-		mw_dialog_file_chooser_data.button_ok_handle = mw_ui_button_add_new(5,
+		temp_handle = mw_ui_button_add_new(5,
 				175,
 				mw_dialog_file_chooser_data.file_chooser_dialog_window_handle,
 				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_LARGE_SIZE,
 				&mw_dialog_file_chooser_data.button_ok_data);
+		mw_dialog_file_chooser_data.button_ok_handle = temp_handle;
 
-		mw_dialog_file_chooser_data.button_cancel_handle = mw_ui_button_add_new(112,
+		temp_handle = mw_ui_button_add_new(112,
 				175,
 				mw_dialog_file_chooser_data.file_chooser_dialog_window_handle,
 				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_LARGE_SIZE,
 				&mw_dialog_file_chooser_data.button_cancel_data);
+		mw_dialog_file_chooser_data.button_cancel_handle = temp_handle;
 
-		mw_dialog_file_chooser_data.label_choice_handle = mw_ui_label_add_new(5,
+		temp_handle = mw_ui_label_add_new(5,
 				150,
 				209,
 				mw_dialog_file_chooser_data.file_chooser_dialog_window_handle,
 				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_LARGE_SIZE,
 				&mw_dialog_file_chooser_data.label_choice_data);
+		mw_dialog_file_chooser_data.label_choice_handle = temp_handle;
 	}
 	else
 	{
-		mw_dialog_file_chooser_data.arrow_file_up_handle = mw_ui_arrow_add_new(130,
+		temp_handle = mw_ui_arrow_add_new(130,
 				5,
 				mw_dialog_file_chooser_data.file_chooser_dialog_window_handle,
 				MW_CONTROL_FLAG_IS_VISIBLE,
 				&mw_dialog_file_chooser_data.arrow_up_file_data);
+		mw_dialog_file_chooser_data.arrow_file_up_handle = temp_handle;
 
-		mw_dialog_file_chooser_data.arrow_file_down_handle = mw_ui_arrow_add_new(130,
+		temp_handle = mw_ui_arrow_add_new(130,
 				59,
 				mw_dialog_file_chooser_data.file_chooser_dialog_window_handle,
 				MW_CONTROL_FLAG_IS_VISIBLE,
 				&mw_dialog_file_chooser_data.arrow_down_file_data);
+		mw_dialog_file_chooser_data.arrow_file_down_handle = temp_handle;
 
-		mw_dialog_file_chooser_data.arrow_file_back_handle = mw_ui_arrow_add_new(130,
+		temp_handle = mw_ui_arrow_add_new(130,
 				31,
 				mw_dialog_file_chooser_data.file_chooser_dialog_window_handle,
 				MW_CONTROL_FLAG_IS_VISIBLE,
 				&mw_dialog_file_chooser_data.arrow_back_file_data);
+		mw_dialog_file_chooser_data.arrow_file_back_handle = temp_handle;
 
-		mw_dialog_file_chooser_data.list_box_file_handle = mw_ui_list_box_add_new(5,
+		temp_handle = mw_ui_list_box_add_new(5,
 				5,
 				120,
 				mw_dialog_file_chooser_data.file_chooser_dialog_window_handle,
 				MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_IS_VISIBLE,
 				&mw_dialog_file_chooser_data.list_box_file_data);
+		mw_dialog_file_chooser_data.list_box_file_handle = temp_handle;
 
-		mw_dialog_file_chooser_data.button_ok_handle = mw_ui_button_add_new(5,
+		temp_handle = mw_ui_button_add_new(5,
 				97,
 				mw_dialog_file_chooser_data.file_chooser_dialog_window_handle,
 				MW_CONTROL_FLAG_IS_VISIBLE,
 				&mw_dialog_file_chooser_data.button_ok_data);
+		mw_dialog_file_chooser_data.button_ok_handle = temp_handle;
 
-		mw_dialog_file_chooser_data.button_cancel_handle = mw_ui_button_add_new(95,
+		temp_handle = mw_ui_button_add_new(95,
 				97,
 				mw_dialog_file_chooser_data.file_chooser_dialog_window_handle,
 				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
 				&mw_dialog_file_chooser_data.button_cancel_data);
+		mw_dialog_file_chooser_data.button_cancel_handle = temp_handle;
 
-		mw_dialog_file_chooser_data.label_choice_handle = mw_ui_label_add_new(5,
+		temp_handle = mw_ui_label_add_new(5,
 				80,
 				142,
 				mw_dialog_file_chooser_data.file_chooser_dialog_window_handle,
 				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
 				&mw_dialog_file_chooser_data.label_choice_data);
+		mw_dialog_file_chooser_data.label_choice_handle = temp_handle;
 	}
 
 	/* check if controls could be created */
