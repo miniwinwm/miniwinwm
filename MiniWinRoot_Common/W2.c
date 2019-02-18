@@ -30,6 +30,7 @@ SOFTWARE.
 
 #include "miniwin.h"
 #include "miniwin_user.h"
+#include "W2.h"
 
 /****************
 *** CONSTANTS ***
@@ -120,6 +121,7 @@ void window_W2_message_function(const mw_message_t *message)
 		break;
 
     default:
-        break;
+		/* keep MISRA happy */
+    	break;
     }
 }

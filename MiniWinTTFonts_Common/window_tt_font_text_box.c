@@ -88,6 +88,7 @@ void window_tt_font_text_box_message_function(const mw_message_t *message)
 	switch (message->message_id)
 	{
 	default:
+		/* keep MISRA happy */
 		break;
 	}
 }

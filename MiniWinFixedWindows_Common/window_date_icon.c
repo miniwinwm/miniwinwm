@@ -32,6 +32,7 @@ SOFTWARE.
 #include <stdbool.h>
 #include "miniwin.h"
 #include "miniwin_user.h"
+#include "window_date_icon.h"
 
 /****************
 *** CONSTANTS ***
@@ -110,6 +111,7 @@ void window_date_icon_message_function(const mw_message_t *message)
 		break;
 
 	default:
+		/* keep MISRA happy */
 		break;
 	}
 }

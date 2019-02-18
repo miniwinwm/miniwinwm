@@ -35,6 +35,7 @@ SOFTWARE.
 *** INCLUDES ***
 ***************/
 
+#include <X11/Xlib.h>
 #include <linux/limits.h>
 #include <time.h>
 #include "ui/ui_common.h"
@@ -50,6 +51,14 @@ SOFTWARE.
 /************
 *** TYPES ***
 ************/
+
+/*************************
+*** EXTERNAL VARIABLES ***
+*************************/
+
+extern Display *display;
+extern Window frame_window;
+extern GC graphical_context;
 
 /***************************
 *** FUNCTIONS PROTOTYPES ***

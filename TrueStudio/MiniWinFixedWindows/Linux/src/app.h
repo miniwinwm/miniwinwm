@@ -35,6 +35,8 @@ SOFTWARE.
 *** INCLUDES ***
 ***************/
 
+#include <X11/Xlib.h>
+
 /****************
 *** CONSTANTS ***
 ****************/
@@ -42,6 +44,14 @@ SOFTWARE.
 /************
 *** TYPES ***
 ************/
+
+/*************************
+*** EXTERNAL VARIABLES ***
+*************************/
+
+extern Display *display;
+extern Window frame_window;
+extern GC graphical_context;
 
 /***************************
 *** FUNCTIONS PROTOTYPES ***

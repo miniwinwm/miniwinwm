@@ -30,6 +30,7 @@ SOFTWARE.
 
 #include "miniwin.h"
 #include "miniwin_user.h"
+#include "window_scroll.h"
 
 /****************
 *** CONSTANTS ***
@@ -174,6 +175,7 @@ void window_scroll_message_function(const mw_message_t *message)
 		break;
 
 	default:
+		/* keep MISRA happy */
 		break;
 	}
 }

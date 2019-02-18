@@ -271,10 +271,10 @@ int main(int argc, char **argv)
 				"#ifdef __cplusplus\n"
 				" extern \"C\" {\n"
 				"#endif\n\n"
-				"#define MW_MAX_WINDOW_COUNT 				" << max_window_count << "               		/**< Maximum number of allowed windows; root window always takes 1 space */\n"
-				"#define MW_MAX_CONTROL_COUNT				" << max_control_count << "              		/**< Total maximum number of allowed controls in all windows */\n"
-				"#define MW_MAX_TIMER_COUNT					" << max_timer_count << "              			/**< Maximum number of timers */\n"
-				"#define MW_MESSAGE_QUEUE_SIZE				" << max_message_count << "              		/**< Maximum number of messages in message queue */\n"
+				"#define MW_MAX_WINDOW_COUNT 				" << max_window_count << "U               		/**< Maximum number of allowed windows; root window always takes 1 space */\n"
+				"#define MW_MAX_CONTROL_COUNT				" << max_control_count << "U              		/**< Total maximum number of allowed controls in all windows */\n"
+				"#define MW_MAX_TIMER_COUNT					" << max_timer_count << "U              		/**< Maximum number of timers */\n"
+				"#define MW_MESSAGE_QUEUE_SIZE				" << max_message_count << "U              		/**< Maximum number of messages in message queue */\n"
 				"#define MW_DISPLAY_ROTATION_0\n"
 				"/* #define MW_DISPLAY_ROTATION_90 */\n"
 				"/* #define MW_DISPLAY_ROTATION_180 */\n"
@@ -286,7 +286,7 @@ int main(int argc, char **argv)
 				"#define MW_ROOT_WIDTH 						mw_hal_lcd_get_display_height() /**< Width of root window */\n"
 				"#define MW_ROOT_HEIGHT 						mw_hal_lcd_get_display_width()	/**< Height of root window */\n"
 				"#endif\n"
-				"#define MW_MAX_TITLE_SIZE 					14              		/**< Maximum window title bar title size in characters */\n"
+				"#define MW_MAX_TITLE_SIZE 					14U              		/**< Maximum window title bar title size in characters */\n"
 				"#define MW_TITLE_BAR_COLOUR_FOCUS			MW_HAL_LCD_BLUE    		/**< Colour of title bar of window with focus */\n"
 				"#define MW_TITLE_BAR_COLOUR_NO_FOCUS		MW_HAL_LCD_GREY5    	/**< Colour of title bars of windows without focus */\n"
 				"#define MW_TITLE_BAR_COLOUR_MODAL			MW_HAL_LCD_RED			/**< Colour of title bar of modal window */\n"
@@ -297,13 +297,13 @@ int main(int argc, char **argv)
 				"#define MW_CONTROL_SEPARATOR_COLOUR			MW_HAL_LCD_GREY3		/**< Separator between control items colour */\n"
 				"#define MW_CONTROL_DOWN_COLOUR				MW_HAL_LCD_GREY4    	/**< Animated controls down colour */\n"
 				"#define MW_CONTROL_DISABLED_COLOUR			MW_HAL_LCD_GREY5		/**< Colour to draw a control that is disabled */\n"
-				"#define MW_CONTROL_DOWN_TIME				4               		/**< Time for animated controls down time in system ticks */\n"
-				"#define MW_KEY_DOWN_TIME					3               		/**< Time for animated keys down time in system ticks */\n"
-				"#define MW_TICKS_PER_SECOND					20						/**< The number of window timer ticks per second */\n"
-				"#define MW_WINDOW_MIN_MAX_EFFECT_TIME		5						/**< Number of window ticks to show window minimise/maximise effect for */\n"
-				"#define MW_CURSOR_PERIOD_TICKS				10						/**< Period between cursor change in system ticks */\n"
-				"#define MW_TOUCH_INTERVAL_TICKS				2               		/**< Number of window ticks a touch has to be down for to count as a touch event */\n"
-				"#define MW_HOLD_DOWN_DELAY_TICKS			10						/**< Time in ticks that a ui control starts repeating if held down */\n"
+				"#define MW_CONTROL_DOWN_TIME				4U               		/**< Time for animated controls down time in system ticks */\n"
+				"#define MW_KEY_DOWN_TIME					3U               		/**< Time for animated keys down time in system ticks */\n"
+				"#define MW_TICKS_PER_SECOND					20U						/**< The number of window timer ticks per second */\n"
+				"#define MW_WINDOW_MIN_MAX_EFFECT_TIME		5U						/**< Number of window ticks to show window minimise/maximise effect for */\n"
+				"#define MW_CURSOR_PERIOD_TICKS				10U						/**< Period between cursor change in system ticks */\n"
+				"#define MW_TOUCH_INTERVAL_TICKS				2U               		/**< Number of window ticks a touch has to be down for to count as a touch event */\n"
+				"#define MW_HOLD_DOWN_DELAY_TICKS			10U						/**< Time in ticks that a ui control starts repeating if held down */\n"
 				"#define MW_FONT_12_INCLUDED											/**< Comment this in to include Courier 12 point font or out to exclude it */\n"
 				"#define MW_FONT_16_INCLUDED											/**< Comment this in to include Courier 16 point font or out to exclude it */\n"
 				"#define MW_FONT_20_INCLUDED											/**< Comment this in to include Courier 20 point font or out to exclude it */\n"
@@ -321,6 +321,152 @@ int main(int argc, char **argv)
     // check large size flag
     bool large_size = json["LargeSize"].bool_value();
 
+    // create miniwin_user.h
+	std::ofstream outfileUserHeader("../../" + json["TargetName"].string_value() + "/" + json["TargetName"].string_value() + "_Common/miniwin_user.h");
+	if (!outfileUserHeader.is_open())
+	{
+		cout << "Could not create file\n";
+		exit(1);
+	}
+    
+	outfileUserHeader << "#ifndef MINIWIN_USER_H\n"
+			"#define MINIWIN_USER_H\n\n"
+			"#ifdef __cplusplus\n"
+			" extern \"C\" {\n"
+			"#endif\n\n";
+    
+    for (auto &window : json["Windows"].array_items())
+    {
+		if (window["Buttons"].array_items().size() > 0)
+		{
+    		for (auto& button : window["Buttons"].array_items())
+			{
+		    	outfileUserHeader << 
+					"extern mw_handle_t button_" + button["Name"].string_value() + "_handle;\n";
+			}
+		}
+		
+    	// create labels extern references
+		if (window["Labels"].array_items().size() > 0)
+		{
+    		for (auto& label : window["Labels"].array_items())
+			{
+		    	outfileUserHeader << 
+					"extern mw_handle_t label_" + label["Name"].string_value() + "_handle;\n";
+			}
+		}		
+		
+    	// create check boxes extern references
+		if (window["CheckBoxes"].array_items().size() > 0)
+		{
+    		for (auto& check_box : window["CheckBoxes"].array_items())
+			{
+		    	outfileUserHeader << 
+					"extern mw_handle_t check_box_" + check_box["Name"].string_value() + "_handle;\n";
+			}
+		}			
+		
+		// create arrows extern references
+		if (window["Arrows"].array_items().size() > 0)
+		{
+    		for (auto& arrow : window["Arrows"].array_items())
+			{
+		    	outfileUserHeader << 
+					"extern mw_handle_t arrow_" + arrow["Name"].string_value() + "_handle;\n";
+			}
+		}		
+				
+    	// create progress bars extern references
+		if (window["ProgressBars"].array_items().size() > 0)
+		{
+    		for (auto& progress_bar : window["ProgressBars"].array_items())
+			{
+		    	outfileUserHeader << 
+					"extern mw_handle_t progress_bar_" + progress_bar["Name"].string_value() + "_handle;\n";
+			}
+		}		
+		
+    	// create horizontal scroll bars extern references
+		if (window["ScrollBarsHoriz"].array_items().size() > 0)
+		{
+    		for (auto& scroll_bar_horiz : window["ScrollBarsHoriz"].array_items())
+			{
+		    	outfileUserHeader << 
+					"extern mw_handle_t scroll_bar_horiz_" + scroll_bar_horiz["Name"].string_value() + "_handle;\n";
+			}
+		}		
+		
+    	// create vertical scroll bars extern references
+		if (window["ScrollBarsVert"].array_items().size() > 0)
+		{
+    		for (auto& scroll_bar_vert : window["ScrollBarsVert"].array_items())
+			{
+		    	outfileUserHeader << 
+					"extern mw_handle_t scroll_bar_vert_" + scroll_bar_vert["Name"].string_value() + "_handle;\n";
+			}
+		}		
+		
+    	// create radio buttons extern references
+		if (window["RadioButtons"].array_items().size() > 0)
+		{
+    		for (auto& radio_button : window["RadioButtons"].array_items())
+			{
+		    	outfileUserHeader << 
+					"extern mw_handle_t radio_button_" + radio_button["Name"].string_value() + "_handle;\n";
+			}
+		}		
+		
+    	// create list boxes extern references
+		if (window["ListBoxes"].array_items().size() > 0)
+		{
+    		for (auto& list_box : window["ListBoxes"].array_items())
+			{
+		    	outfileUserHeader << 
+					"extern mw_handle_t list_box_" + list_box["Name"].string_value() + "_handle;\n";
+			}
+		}						
+		
+    	// create text boxes extern references
+		if (window["TextBoxes"].array_items().size() > 0)
+		{
+    		for (auto& text_box : window["TextBoxes"].array_items())
+			{
+		    	outfileUserHeader << 
+					"extern mw_handle_t text_box_" + text_box["Name"].string_value() + "_handle;\n";
+			}
+		}			
+		
+    	// create scrolling list boxes extern references
+		if (window["ScrollingListBoxes"].array_items().size() > 0)
+		{
+    		for (auto& scrolling_list_box : window["ScrollingListBoxes"].array_items())
+			{
+		    	outfileUserHeader << 
+					"extern mw_handle_t scrolling_list_box_" + scrolling_list_box["Name"].string_value() + "_handle;\n";
+		    	outfileUserHeader << 
+					"extern mw_handle_t scrolling_list_box_scroll_bar_vert_" + scrolling_list_box["Name"].string_value() + "_handle;\n";				
+			}
+		}			
+		
+    	// create scrolling text boxes extern references
+		if (window["ScrollingTextBoxes"].array_items().size() > 0)
+		{
+    		for (auto& scrolling_text_box : window["ScrollingTextBoxes"].array_items())
+			{
+		    	outfileUserHeader << 
+					"extern mw_handle_t scrolling_text_box_" + scrolling_text_box["Name"].string_value() + "_handle;\n";
+		    	outfileUserHeader << 
+					"extern mw_handle_t scrolling_text_box_scroll_bar_vert_" + scrolling_text_box["Name"].string_value() + "_handle;\n";				
+			}
+		}						
+	}
+
+				outfileUserHeader << "\n#ifdef __cplusplus\n"
+				"}\n"
+				"#endif\n\n"
+				"#endif\n";    
+   	outfileUserHeader.close();
+
 	// create miniwin_user.c
 	std::ofstream outfileUserSource("../../" + json["TargetName"].string_value() + "/" + json["TargetName"].string_value() + "_Common/miniwin_user.c");
 	if (!outfileUserSource.is_open())
@@ -334,6 +480,7 @@ int main(int argc, char **argv)
 	
 	// include header files
 	outfileUserSource << "#include \"miniwin.h\"\n";
+	outfileUserSource << "#include \"miniwin_user.h\"\n";	
 	for (auto &window : json["Windows"].array_items())
     {
 		outfileUserSource << "#include \"";
@@ -1600,136 +1747,14 @@ int main(int argc, char **argv)
     		exit(1);
     	}
     	outfileWindowSource << "/* " << windowName + ".c generated by MiniWin code generator. */\n\n" 
-					"#include \"miniwin.h\"\n\n";
+					"#include \"miniwin.h\"\n"
+					"#include \"miniwin_user.h\"\n"
+					"#include \"" << windowName + ".h\"\n\n";
     	outfileWindowSource << "typedef struct\n{    /* Add your data members here */\n} window_" << windowName << "_data_t;\n\n";
     	outfileWindowSource << "static window_" << windowName << "_data_t window_" << windowName << "_data;\n\n";
     	    	
-    	// create buttons extern references
-		if (window["Buttons"].array_items().size() > 0)
-		{
-    		for (auto& button : window["Buttons"].array_items())
-			{
-		    	outfileWindowSource << 
-					"extern mw_handle_t button_" + button["Name"].string_value() + "_handle;\n";
-			}
-		}
-		
-    	// create labels extern references
-		if (window["Labels"].array_items().size() > 0)
-		{
-    		for (auto& label : window["Labels"].array_items())
-			{
-		    	outfileWindowSource << 
-					"extern mw_handle_t label_" + label["Name"].string_value() + "_handle;\n";
-			}
-		}		
-		
-    	// create check boxes extern references
-		if (window["CheckBoxes"].array_items().size() > 0)
-		{
-    		for (auto& check_box : window["CheckBoxes"].array_items())
-			{
-		    	outfileWindowSource << 
-					"extern mw_handle_t check_box_" + check_box["Name"].string_value() + "_handle;\n";
-			}
-		}			
-		
-		// create arrows extern references
-		if (window["Arrows"].array_items().size() > 0)
-		{
-    		for (auto& arrow : window["Arrows"].array_items())
-			{
-		    	outfileWindowSource << 
-					"extern mw_handle_t arrow_" + arrow["Name"].string_value() + "_handle;\n";
-			}
-		}		
-				
-    	// create progress bars extern references
-		if (window["ProgressBars"].array_items().size() > 0)
-		{
-    		for (auto& progress_bar : window["ProgressBars"].array_items())
-			{
-		    	outfileWindowSource << 
-					"extern mw_handle_t progress_bar_" + progress_bar["Name"].string_value() + "_handle;\n";
-			}
-		}		
-		
-    	// create horizontal scroll bars extern references
-		if (window["ScrollBarsHoriz"].array_items().size() > 0)
-		{
-    		for (auto& scroll_bar_horiz : window["ScrollBarsHoriz"].array_items())
-			{
-		    	outfileWindowSource << 
-					"extern mw_handle_t scroll_bar_horiz_" + scroll_bar_horiz["Name"].string_value() + "_handle;\n";
-			}
-		}		
-		
-    	// create vertical scroll bars extern references
-		if (window["ScrollBarsVert"].array_items().size() > 0)
-		{
-    		for (auto& scroll_bar_vert : window["ScrollBarsVert"].array_items())
-			{
-		    	outfileWindowSource << 
-					"extern mw_handle_t scroll_bar_vert_" + scroll_bar_vert["Name"].string_value() + "_handle;\n";
-			}
-		}		
-		
-    	// create radio buttons extern references
-		if (window["RadioButtons"].array_items().size() > 0)
-		{
-    		for (auto& radio_button : window["RadioButtons"].array_items())
-			{
-		    	outfileWindowSource << 
-					"extern mw_handle_t radio_button_" + radio_button["Name"].string_value() + "_handle;\n";
-			}
-		}		
-		
-    	// create list boxes extern references
-		if (window["ListBoxes"].array_items().size() > 0)
-		{
-    		for (auto& list_box : window["ListBoxes"].array_items())
-			{
-		    	outfileWindowSource << 
-					"extern mw_handle_t list_box_" + list_box["Name"].string_value() + "_handle;\n";
-			}
-		}						
-		
-    	// create text boxes extern references
-		if (window["TextBoxes"].array_items().size() > 0)
-		{
-    		for (auto& text_box : window["TextBoxes"].array_items())
-			{
-		    	outfileWindowSource << 
-					"extern mw_handle_t text_box_" + text_box["Name"].string_value() + "_handle;\n";
-			}
-		}			
-		
-    	// create scrolling list boxes extern references
-		if (window["ScrollingListBoxes"].array_items().size() > 0)
-		{
-    		for (auto& scrolling_list_box : window["ScrollingListBoxes"].array_items())
-			{
-		    	outfileWindowSource << 
-					"extern mw_handle_t scrolling_list_box_" + scrolling_list_box["Name"].string_value() + "_handle;\n";
-		    	outfileWindowSource << 
-					"extern mw_handle_t scrolling_list_box_scroll_bar_vert_" + scrolling_list_box["Name"].string_value() + "_handle;\n";				
-			}
-		}			
-		
-    	// create scrolling text boxes extern references
-		if (window["ScrollingTextBoxes"].array_items().size() > 0)
-		{
-    		for (auto& scrolling_text_box : window["ScrollingTextBoxes"].array_items())
-			{
-		    	outfileWindowSource << 
-					"extern mw_handle_t scrolling_text_box_" + scrolling_text_box["Name"].string_value() + "_handle;\n";
-		    	outfileWindowSource << 
-					"extern mw_handle_t scrolling_text_box_scroll_bar_vert_" + scrolling_text_box["Name"].string_value() + "_handle;\n";				
-			}
-		}				
-    	    	
     	outfileWindowSource << 
-    	            "\nvoid window_" << windowName << "_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_t *draw_info)\n" 
+    	            "void window_" << windowName << "_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_t *draw_info)\n" 
     				"{\n    MW_ASSERT(draw_info, \"Null pointer parameter\");\n\n" 
     				"    /* Fill window's client area with solid white */\n" 
 					"    mw_gl_set_fill(MW_GL_FILL);\n" 
@@ -2040,6 +2065,7 @@ int main(int argc, char **argv)
        				
        	outfileWindowSource << 
 					"    default:\n" 
+					"        /* keep MISRA happy\n"
 					"        break;\n    }\n}\n";
     	outfileWindowSource.close();
 
@@ -2088,13 +2114,37 @@ int main(int argc, char **argv)
 		exit(1);
 	}
 
-	outfileMainSource << "#include \"miniwin.h\"\n#include \"app.h\"\n\n"
+	outfileMainSource << "#include \"main.h\"\n"
+				"#include \"miniwin.h\"\n"	
+				"#include \"app.h\"\n\n"
 				"int main(void)\n{\n"
 				"	app_init();\n	mw_init();\n\n"
 				"	while (true)\n	{\n"
-				"		app_main_loop_process();\n		mw_process_message();\n"
+				"		app_main_loop_process();\n		(void)mw_process_message();\n"
 				"	}\n}\n";
 	outfileMainSource.close();
+	
+	// create main.h source file
+	std::ofstream outfileMainHeader("../../" + json["TargetName"].string_value() + "/" + json["TargetName"].string_value() + "_Common/main.h", std::ios::binary);
+
+	if (!outfileMainHeader.is_open())
+	{
+		cout << "Could not create file\n";
+		exit(1);
+	}
+
+	outfileMainHeader << "#ifndef MAIN_H\n"
+				"#define MAIN_H\n"
+				"\n"
+				"#ifdef __cplusplus\n"
+				" extern \"C\" {\n"
+				"#endif\n\n"
+				"int main(void);\n\n"
+				"#ifdef __cplusplus\n"
+				"}\n"
+				"#endif\n\n"
+				"#endif\n";						
+	outfileMainHeader.close();
 
     // create app.h header file
 	std::ofstream outfileAppHeader("../../" + json["TargetName"].string_value() + "/" + json["TargetType"].string_value() + "/src/app.h", std::ios::binary);
@@ -2105,18 +2155,40 @@ int main(int argc, char **argv)
 		exit(1);
 	}
 	
-	outfileAppHeader << "#ifndef APP_H\n"
-			"#define APP_H\n"
-			"\n"
-			"#ifdef __cplusplus\n"
-			" extern \"C\" {\n"
-			"#endif\n\n"
-			"void app_init(void);\n"
-			"void app_main_loop_process(void);\n\n"
-			"#ifdef __cplusplus\n"
-			"}\n"
-			"#endif\n\n"
-			"#endif\n";
+	if (json["TargetType"].string_value() == "Linux")
+	{ 
+		outfileAppHeader << "#ifndef APP_H\n"
+				"#define APP_H\n"
+				"\n"
+				"#ifdef __cplusplus\n"
+				" extern \"C\" {\n"
+				"#endif\n\n"
+				"#include <X11/Xlib.h>\n\n"
+				"extern Display *display;\n"
+				"extern Window frame_window;\n"
+				"extern GC graphical_context;\n\n"
+				"void app_init(void);\n"
+				"void app_main_loop_process(void);\n\n"
+				"#ifdef __cplusplus\n"
+				"}\n"
+				"#endif\n\n"
+				"#endif\n";		
+	}
+	else
+	{	
+		outfileAppHeader << "#ifndef APP_H\n"
+				"#define APP_H\n"
+				"\n"
+				"#ifdef __cplusplus\n"
+				" extern \"C\" {\n"
+				"#endif\n\n"
+				"void app_init(void);\n"
+				"void app_main_loop_process(void);\n\n"
+				"#ifdef __cplusplus\n"
+				"}\n"
+				"#endif\n\n"
+				"#endif\n";
+	}
 	outfileAppHeader.close();
 
 	// create app.c source file
@@ -2129,8 +2201,8 @@ int main(int argc, char **argv)
 	}	
 	if (json["TargetType"].string_value() == "Linux")
 	{ 
-			outfileAppSource << "#include <X11/Xlib.h>\n"
-			"#include \"miniwin.h\"\n\n"
+			outfileAppSource << "#include \"miniwin.h\"\n"
+			"#include \"app.h\"\n\n"
 			"Display *display;\n"
 			"Window frame_window;\n"
 			"GC graphical_context;\n\n"
@@ -2147,8 +2219,8 @@ int main(int argc, char **argv)
 			"		XRootWindow(display, 0),\n"
 			"		0,\n"
 			"		0,\n" 
-			"		MW_ROOT_WIDTH,\n"
-			"		MW_ROOT_HEIGHT,\n"
+			"		(unsigned int)MW_ROOT_WIDTH,\n"
+			"		(unsigned int)MW_ROOT_HEIGHT,\n"
 			"		5,\n"
 			"		depth,\n"
 			"		InputOutput,\n" 
@@ -2157,9 +2229,9 @@ int main(int argc, char **argv)
 			"		&frame_attributes);\n\n"
 			"	XStoreName(display, frame_window, \"MiniWin Sim\");\n\n"
 			"	XSelectInput(display, frame_window, ExposureMask | StructureNotifyMask);\n\n"
-			"	graphical_context = XCreateGC( display, frame_window, 0, 0 );\n\n"
+			"	graphical_context = XCreateGC(display, frame_window, 0U, NULL);\n\n"
 			"	XMapWindow(display, frame_window);\n"
-			"	XFlush(display);\n"
+			"	(void)XFlush(display);\n"
 			"}\n\n"
 			"void app_main_loop_process(void)\n"
 			"{\n"

@@ -32,6 +32,7 @@ SOFTWARE.
 #include <stdbool.h>
 #include "miniwin.h"
 #include "miniwin_user.h"
+#include "window_settings_icon.h"
 
 /****************
 *** CONSTANTS ***
@@ -125,6 +126,7 @@ void window_settings_icon_message_function(const mw_message_t *message)
 		break;
 
 	default:
+		/* keep MISRA happy */
 		break;
 	}
 }

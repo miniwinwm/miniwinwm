@@ -62,7 +62,7 @@ SOFTWARE.
   */
  typedef struct
  {
-	 const char *label;								/**< The text to show on a list box line */
+	 char *label;									/**< The text to show on a list box line */
 	 const uint8_t *icon;							/**< The icon to show on a list box line, or NULL if no icon */
  } mw_ui_list_box_entry;
 

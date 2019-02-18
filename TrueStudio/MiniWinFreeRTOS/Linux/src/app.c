@@ -52,11 +52,6 @@ SOFTWARE.
 Display *display;
 Window frame_window;
 GC graphical_context;
-
-/*************************
-*** EXTERNAL VARIABLES ***
-**************************/
-
 extern XEvent event;
 
 /**********************
@@ -81,7 +76,6 @@ void app_init(void)
 	static int depth;
 	static XSetWindowAttributes frame_attributes;
 
-	XInitThreads();
 	display = XOpenDisplay(NULL);
 	visual = DefaultVisual(display, 0);
 	depth  = DefaultDepth(display, 0);
@@ -93,8 +87,8 @@ void app_init(void)
 		XRootWindow(display, 0),
 		0, 
 		0, 
-		MW_ROOT_WIDTH + 20,
-		MW_ROOT_HEIGHT,
+		(unsigned int)MW_ROOT_WIDTH,
+		(unsigned int)MW_ROOT_HEIGHT,
 		5, 
 		depth,
 		InputOutput, 
@@ -104,11 +98,12 @@ void app_init(void)
 
 	XStoreName(display, frame_window, "MiniWin Sim");
 
-	graphical_context = XCreateGC( display, frame_window, 0, 0 );
+	XSelectInput(display, frame_window, ExposureMask | StructureNotifyMask);
 
-	XSelectInput(display, frame_window, KeyPressMask);
+	graphical_context = XCreateGC(display, frame_window, 0U, NULL);
+
 	XMapWindow(display, frame_window);
-	XFlush(display);
+	(void)XFlush(display);
 }
 
 void app_main_loop_process(void)

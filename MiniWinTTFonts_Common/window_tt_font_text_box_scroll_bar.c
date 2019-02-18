@@ -132,6 +132,7 @@ void window_tt_font_text_box_scroll_bar_message_function(const mw_message_t *mes
 		break;
 
 	default:
+		/* keep MISRA happy */
 		break;
 	}
 }

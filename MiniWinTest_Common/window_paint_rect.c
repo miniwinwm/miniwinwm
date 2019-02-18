@@ -30,6 +30,7 @@ SOFTWARE.
 
 #include "miniwin.h"
 #include "miniwin_user.h"
+#include "window_paint_rect.h"
 
 /****************
 *** CONSTANTS ***

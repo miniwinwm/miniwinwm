@@ -31,6 +31,7 @@ SOFTWARE.
 #include <string.h>
 #include "miniwin.h"
 #include "miniwin_user.h"
+#include "window_gl.h"
 
 /****************
 *** CONSTANTS ***
@@ -1002,6 +1003,7 @@ void window_gl_message_function(const mw_message_t *message)
 		break;
 
 	default:
+		/* keep MISRA happy */
 		break;
 	}
 }

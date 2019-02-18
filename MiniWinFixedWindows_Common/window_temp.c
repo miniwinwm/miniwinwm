@@ -32,6 +32,7 @@ SOFTWARE.
 #include <stdbool.h>
 #include "miniwin.h"
 #include "miniwin_user.h"
+#include "window_temp.h"
 
 /****************
 *** CONSTANTS ***
@@ -322,6 +323,7 @@ void window_temp_message_function(const mw_message_t *message)
 		break;
 
 	default:
+		/* keep MISRA happy */
 		break;
 	}
 }

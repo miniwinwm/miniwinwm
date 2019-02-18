@@ -186,6 +186,7 @@ void window_tt_font_text_box_arrows_message_function(const mw_message_t *message
 		break;
 
 	default:
+		/* keep MISRA happy */
 		break;
 	}
 }

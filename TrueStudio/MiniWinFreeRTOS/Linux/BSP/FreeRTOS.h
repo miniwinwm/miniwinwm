@@ -1,6 +1,10 @@
 #ifndef FREE_RTOS_H
 #define FREE_RTOS_H
 
+#include <stdint.h>
+#include <stdbool.h>
+#include <stddef.h>
+
 #define configMINIMAL_STACK_SIZE 1
 #define configTIMER_TASK_STACK_DEPTH 1
 typedef uint8_t StackType_t;
@@ -22,6 +26,5 @@ void xTaskCreateStatic(void (main_thread)(void *), char *name, uint32_t ss, void
 uint32_t xSemaphoreCreateMutexStatic(uint32_t *);
 void xSemaphoreGive(uint32_t);
 bool xSemaphoreTake(uint32_t, uint32_t);
-
 
 #endif

@@ -153,6 +153,7 @@ void window_tt_font_message_function(const mw_message_t *message)
 		break;
 
 	default:
+		/* keep MISRA happy */
 		break;
 	}
 }

@@ -47,10 +47,6 @@ Display *display;
 Window frame_window;
 GC graphical_context;
 
-/*************************
-*** EXTERNAL VARIABLES ***
-**************************/
-
 /**********************
 *** LOCAL VARIABLES ***
 **********************/
@@ -84,8 +80,8 @@ void app_init(void)
 		XRootWindow(display, 0),
 		0, 
 		0, 
-		MW_ROOT_WIDTH,
-		MW_ROOT_HEIGHT,
+		(unsigned int)MW_ROOT_WIDTH,
+		(unsigned int)MW_ROOT_HEIGHT,
 		5, 
 		depth,
 		InputOutput, 
@@ -97,12 +93,13 @@ void app_init(void)
 
 	XSelectInput(display, frame_window, ExposureMask | StructureNotifyMask);
 
-	graphical_context = XCreateGC( display, frame_window, 0, 0 );
+	graphical_context = XCreateGC(display, frame_window, 0U, NULL);
 
 	XMapWindow(display, frame_window);
-	XFlush(display);
+	(void)XFlush(display);
 }
 
 void app_main_loop_process(void)
 {
 }
+

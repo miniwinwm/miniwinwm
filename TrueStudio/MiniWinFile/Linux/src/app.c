@@ -53,10 +53,6 @@ Display *display;
 Window frame_window;
 GC graphical_context;
 
-/*************************
-*** EXTERNAL VARIABLES ***
-**************************/
-
 /**********************
 *** LOCAL VARIABLES ***
 **********************/
@@ -81,9 +77,6 @@ void app_init(void)
 	static	Visual *visual;
 	static int depth;
 	static XSetWindowAttributes frame_attributes;
-	
-	(void)strcpy(root_folder, getenv("HOME"));
-	(void)strcat(root_folder, "/");
 
 	display = XOpenDisplay(NULL);
 	visual = DefaultVisual(display, 0);
@@ -92,24 +85,26 @@ void app_init(void)
 	frame_attributes.background_pixel = XBlackPixel(display, 0);
 
 	/* create the application window */
-	frame_window = XCreateWindow(display,
+	frame_window = XCreateWindow(display, 
 		XRootWindow(display, 0),
-		0,
-		0,
-		MW_ROOT_WIDTH,
-		MW_ROOT_HEIGHT,
-		5,
+		0, 
+		0, 
+		(unsigned int)MW_ROOT_WIDTH,
+		(unsigned int)MW_ROOT_HEIGHT,
+		5, 
 		depth,
-		InputOutput,
-		visual,
+		InputOutput, 
+		visual, 
 		CWBackPixel,
 		&frame_attributes);
 
-	(void)XStoreName(display, frame_window, "MiniWin Sim");
+	XStoreName(display, frame_window, "MiniWin Sim");
 
-	graphical_context = XCreateGC( display, frame_window, 0, 0 );
+	XSelectInput(display, frame_window, ExposureMask | StructureNotifyMask);
 
-	(void)XMapWindow(display, frame_window);
+	graphical_context = XCreateGC(display, frame_window, 0U, NULL);
+
+	XMapWindow(display, frame_window);
 	(void)XFlush(display);
 }
 

@@ -29,6 +29,7 @@ SOFTWARE.
 ***************/
 
 #include <stdint.h>
+#include "gyro_util.h"
 
 /****************
 *** CONSTANTS ***

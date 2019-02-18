@@ -36,6 +36,7 @@ SOFTWARE.
 #include "ui/ui_common.h"
 #include "FreeRTOS.h"
 #include "gyro_util.h"
+#include "window_gyro_x.h"
 
 /****************
 *** CONSTANTS ***
@@ -171,6 +172,7 @@ void window_gyro_x_message_function(const mw_message_t *message)
 		break;
 
 	default:
+		/* keep MISRA happy */
 		break;
 	}
 }

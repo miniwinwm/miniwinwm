@@ -35,6 +35,8 @@ SOFTWARE.
 *** INCLUDES ***
 ***************/
 
+#include <X11/Xlib.h>
+
 /****************
 *** CONSTANTS ***
 ****************/
@@ -49,6 +51,15 @@ SOFTWARE.
 	 GYRO_READING_Y = 1,
 	 GYRO_READING_Z = 2
  } gyro_reading_t;
+
+
+/*************************
+*** EXTERNAL VARIABLES ***
+*************************/
+
+extern Display *display;
+extern Window frame_window;
+extern GC graphical_context;
 
 /***************************
 *** FUNCTIONS PROTOTYPES ***
