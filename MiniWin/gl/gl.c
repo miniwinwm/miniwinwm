@@ -175,7 +175,7 @@ static void filled_rectangle(const mw_gl_draw_info_t *draw_info, int16_t client_
 {
 	int16_t overlap;
 
-	MW_ASSERT(draw_info != NULL, "Null pointer argument");
+	MW_ASSERT(draw_info, "Null pointer argument");
 
 	if (draw_info->clip_rect.width == 0 || draw_info->clip_rect.height == 0)
 	{
@@ -366,7 +366,7 @@ static void filled_poly(const mw_gl_draw_info_t *draw_info, uint8_t poly_corners
 				}
 				if (gc.pattern_set)
 				{
-					for (x = 0; x <= node_x[i + 1U]  -node_x[i] + 1; x++)
+					for (x = 0; x <= node_x[i + 1U] - node_x[i] + 1; x++)
 					{
 						mw_gl_solid_fill_pixel(draw_info, x + node_x[i], y + y_offset);
 					}
@@ -492,12 +492,12 @@ static void filled_circle(const mw_gl_draw_info_t *draw_info, int16_t centre_x, 
 	{
 		if (decision < 0)
 		{
-			decision += (x_point << 1) + 3;
+			decision += (x_point * 2) + 3;
 			x_point++;
 		}
 		else
 		{
-			decision += ((x_point - y_point) << 1) + 5;
+			decision += ((x_point - y_point) * 2) + 5;
 			x_point++;
 			y_point--;
 		}
@@ -558,12 +558,12 @@ static void circle_bres(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y
 	{
 		if (decision < 0)
 		{
-			decision += (x_point << 1U) + 3;
+			decision += (x_point * 2) + 3;
 			x_point++;
 		}
 		else
 		{
-			decision += ((x_point - y_point) << 1U) + 5;
+			decision += ((x_point - y_point) * 2) + 5;
 			x_point++;
 			y_point--;
 		}
@@ -593,17 +593,23 @@ static void circle_bres(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y
  */
 static void filled_segment(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y, int16_t radius, int16_t start_angle, int16_t end_angle, int16_t angle_step_size)
 {
-	int16_t old_x = x + (int16_t)(sin((float)start_angle / DEGREES_IN_RAD) * (float)radius);
-	int16_t old_y = y - (int16_t)(cos((float)start_angle / DEGREES_IN_RAD) * (float)radius);
+	int16_t old_x;
+	int16_t old_y;
 	int16_t i;
 	float angle;
 	int16_t triangle_corners_x[3];
 	int16_t triangle_corners_y[3];
+	float temp_float;
 
 	MW_ASSERT(draw_info, "Null pointer argument");
 
-	triangle_corners_x[0U] = x;
-	triangle_corners_y[0U] = y;
+	temp_float = sinf((float)start_angle / DEGREES_IN_RAD) * (float)radius;
+	old_x = x + (int16_t)temp_float;
+	temp_float = cosf((float)start_angle / DEGREES_IN_RAD) * (float)radius;
+	old_y = y - (int16_t)temp_float;
+
+	triangle_corners_x[0] = x;
+	triangle_corners_y[0] = y;
 
 	if (start_angle > end_angle)
 	{
@@ -613,10 +619,12 @@ static void filled_segment(const mw_gl_draw_info_t *draw_info, int16_t x, int16_
 	for (i = start_angle + angle_step_size; i <= end_angle; i += angle_step_size)
 	{
 		angle = (float)i / DEGREES_IN_RAD;
-		triangle_corners_x[1U] = x + (int16_t)(sin(angle) * (float)radius);
-		triangle_corners_y[1U] = y - (int16_t)(cos(angle) * (float)radius);
-		triangle_corners_x[2U] = old_x;
-		triangle_corners_y[2U] = old_y;
+		temp_float = sinf(angle) * (float)radius;
+		triangle_corners_x[1] = x + (int16_t)temp_float;
+		temp_float = cosf(angle) * (float)radius;
+		triangle_corners_y[1] = y - (int16_t)temp_float;
+		triangle_corners_x[2] = old_x;
+		triangle_corners_y[2] = old_y;
 
 		filled_poly(draw_info, 3, triangle_corners_x, triangle_corners_y, 0, 0);
 
@@ -627,10 +635,14 @@ static void filled_segment(const mw_gl_draw_info_t *draw_info, int16_t x, int16_
 	i -= angle_step_size;
 	if ( i <end_angle)
 	{
-		triangle_corners_x[1] = x + (int16_t)(sin(end_angle / DEGREES_IN_RAD) * (float)radius);
-		triangle_corners_y[1] = y - (int16_t)(cos(end_angle / DEGREES_IN_RAD) * (float)radius);
-		triangle_corners_x[2] = x + (int16_t)(sin(i / DEGREES_IN_RAD) * (float)radius);
-		triangle_corners_y[2] = y - (int16_t)(cos(i / DEGREES_IN_RAD) * (float)radius);
+		temp_float = sinf((float)end_angle / DEGREES_IN_RAD) * (float)radius;
+		triangle_corners_x[1] = x + (int16_t)temp_float;
+		temp_float = cosf((float)end_angle / DEGREES_IN_RAD) * (float)radius;
+		triangle_corners_y[1] = y - (int16_t)temp_float;
+		temp_float = sinf((float)i / DEGREES_IN_RAD) * (float)radius;
+		triangle_corners_x[2] = x + (int16_t)temp_float;
+		temp_float = cosf((float)i / DEGREES_IN_RAD) * (float)radius;
+		triangle_corners_y[2] = y - (int16_t)temp_float;
 
 		filled_poly(draw_info, 3, triangle_corners_x, triangle_corners_y, 0, 0);
 	}
@@ -677,7 +689,6 @@ static void draw_character_0_degrees(const mw_gl_draw_info_t *draw_info, int16_t
 	}
 
 	character_byte_width = font_width / 8 + (int16_t)(font_width % 8 > 0 ? 1 : 0);
-
 	byte_pos = ((int16_t)c - (int16_t)' ') * font_height * character_byte_width;
 
 	for (char_y = 0; char_y < mw_gl_get_font_height(); char_y++)
@@ -723,14 +734,17 @@ static void draw_character_90_degrees(const mw_gl_draw_info_t *draw_info, int16_
 	int16_t char_y;
 	uint32_t mask;
 	uint32_t word;
-	uint8_t character_byte_width;
-	uint16_t byte_pos;
-	uint8_t byte;
+	int16_t character_byte_width;
+	int16_t byte_pos;
+	int16_t byte;
+	int16_t font_width = mw_gl_get_font_width();
+	int16_t font_height = mw_gl_get_font_height();
+	int16_t i;
 
-	if (x - mw_gl_get_font_height() >= draw_info->clip_rect.x + draw_info->clip_rect.width ||
+	if (x - font_height >= draw_info->clip_rect.x + draw_info->clip_rect.width ||
 			y >= draw_info->clip_rect.y + draw_info->clip_rect.height ||
 			x <= draw_info->clip_rect.x ||
-			y + mw_gl_get_font_width() <= draw_info->clip_rect.y)
+			y + font_width <= draw_info->clip_rect.y)
 	{
 		return;
 	}
@@ -738,32 +752,35 @@ static void draw_character_90_degrees(const mw_gl_draw_info_t *draw_info, int16_
 	if (gc.bg_transparent == MW_GL_BG_NOT_TRANSPARENT)
 	{
 		filled_rectangle(draw_info,
-				x - mw_gl_get_font_height(),
+				x - font_height,
 				y,
-				mw_gl_get_font_height() + 1,
-				mw_gl_get_font_width() + 1,
+				font_height + 1,
+				font_width + 1,
 				gc.bg_colour);
 	}
 
-	character_byte_width = mw_gl_get_font_width() / 8 + (mw_gl_get_font_width() % 8 > 0);
-	byte_pos = (c - ' ') * mw_gl_get_font_height() * character_byte_width;
+	character_byte_width = font_width / 8 + (int16_t)(font_width % 8 > 0 ? 1 : 0);
+	byte_pos = ((int16_t)c - (int16_t)' ') * font_height * character_byte_width;
 
-	for (char_y = 0; char_y < mw_gl_get_font_height(); char_y++)
+	for (char_y = 0; char_y < font_height; char_y++)
 	{
 		word = 0U;
-		for (byte = 0U; byte < character_byte_width; byte++)
+		for (byte = 0; byte < character_byte_width; byte++)
 		{
 			word <<= 8U;
 			word |= (uint32_t)get_font_data()[byte_pos];
 			byte_pos++;
 		}
 
-		word <<= ((4U - character_byte_width) * 8U);
+		for (i = 0; i < 4 - character_byte_width; i++)
+		{
+			word <<= 8;
+		}
 		mask = 0x80000000U;
 
-		for (char_x = 0; char_x < mw_gl_get_font_width(); char_x++)
+		for (char_x = 0; char_x < font_width; char_x++)
 		{
-			if (word & mask)
+			if ((word & mask) == mask)
 			{
 	   			mw_gl_fg_pixel(draw_info, x - char_y, y + char_x);
 			}
@@ -788,14 +805,17 @@ static void draw_character_180_degrees(const mw_gl_draw_info_t *draw_info, int16
 	int16_t char_y;
 	uint32_t mask;
 	uint32_t word;
-	uint8_t character_byte_width;
-	uint16_t byte_pos;
-	uint8_t byte;
+	int16_t character_byte_width;
+	int16_t byte_pos;
+	int16_t byte;
+	int16_t font_width = mw_gl_get_font_width();
+	int16_t font_height = mw_gl_get_font_height();
+	int16_t i;
 
 	if (x <= draw_info->clip_rect.x ||
 			y <= draw_info->clip_rect.y ||
-			x - mw_gl_get_font_width() + 1 >= draw_info->clip_rect.x + draw_info->clip_rect.width ||
-			y - mw_gl_get_font_height() + 1 >= draw_info->clip_rect.y +  draw_info->clip_rect.height)
+			x - font_width + 1 >= draw_info->clip_rect.x + draw_info->clip_rect.width ||
+			y - font_height + 1 >= draw_info->clip_rect.y +  draw_info->clip_rect.height)
 	{
 		return;
 	}
@@ -803,32 +823,35 @@ static void draw_character_180_degrees(const mw_gl_draw_info_t *draw_info, int16
 	if (gc.bg_transparent == MW_GL_BG_NOT_TRANSPARENT)
 	{
 		filled_rectangle(draw_info,
-				x - mw_gl_get_font_width(),
-				y - mw_gl_get_font_height(),
-				(uint16_t)mw_gl_get_font_width() + 1,
-				(uint16_t)mw_gl_get_font_height() + 1,
+				x - font_width,
+				y - font_height,
+				font_width + 1,
+				mw_gl_get_font_height() + 1,
 				gc.bg_colour);
 	}
 
-	character_byte_width = mw_gl_get_font_width() / 8U + (mw_gl_get_font_width() % 8U > 0U);
-	byte_pos = (c - ' ') * mw_gl_get_font_height() * character_byte_width;
+	character_byte_width = font_width / 8 + (int16_t)(font_width % 8 > 0 ? 1 : 0);
+	byte_pos = ((int16_t)c - (int16_t)' ') * font_height * character_byte_width;
 
-	for (char_y = 0; char_y < mw_gl_get_font_height(); char_y++)
+	for (char_y = 0; char_y < font_height; char_y++)
 	{
 		word = 0U;
-		for (byte = 0U; byte < character_byte_width; byte++)
+		for (byte = 0; byte < character_byte_width; byte++)
 		{
 			word <<= 8U;
 			word |= (uint32_t)get_font_data()[byte_pos];
 			byte_pos++;
 		}
 
-		word <<= ((4U - character_byte_width) * 8U);
+		for (i = 0; i < 4 - character_byte_width; i++)
+		{
+			word <<= 8;
+		}
 		mask = 0x80000000U;
 
-		for (char_x = 0; char_x < mw_gl_get_font_width(); char_x++)
+		for (char_x = 0; char_x < font_width; char_x++)
 		{
-			if (word & mask)
+			if ((word & mask) == mask)
 			{
 				mw_gl_fg_pixel(draw_info, x - char_x, y - char_y);
 			}
@@ -853,14 +876,17 @@ static void draw_character_270_degrees(const mw_gl_draw_info_t *draw_info, int16
 	int16_t char_y;
 	uint32_t mask;
 	uint32_t word;
-	uint8_t character_byte_width;
-	uint16_t byte_pos;
-	uint8_t byte;
+	int16_t character_byte_width;
+	int16_t byte_pos;
+	int16_t byte;
+	int16_t font_width = mw_gl_get_font_width();
+	int16_t font_height = mw_gl_get_font_height();
+	int16_t i;
 
 	if (x >= draw_info->clip_rect.x + draw_info->clip_rect.width ||
 			y <= draw_info->clip_rect.y ||
-			x + mw_gl_get_font_height() + 1 <= draw_info->clip_rect.x ||
-			y - mw_gl_get_font_width() + 1 >= draw_info->clip_rect.y +  draw_info->clip_rect.height)
+			x + font_height + 1 <= draw_info->clip_rect.x ||
+			y - font_width + 1 >= draw_info->clip_rect.y +  draw_info->clip_rect.height)
 	{
 		return;
 	}
@@ -869,31 +895,34 @@ static void draw_character_270_degrees(const mw_gl_draw_info_t *draw_info, int16
 	{
 		filled_rectangle(draw_info,
 				x,
-				y - mw_gl_get_font_width(),
-				mw_gl_get_font_height() + 1,
-				mw_gl_get_font_width() + 1,
+				y - font_width,
+				font_height + 1,
+				font_width + 1,
 				gc.bg_colour);
 	}
 
-	character_byte_width = mw_gl_get_font_width() / 8 + (mw_gl_get_font_width() % 8 > 0);
-	byte_pos = (c - ' ') * mw_gl_get_font_height() * character_byte_width;
+	character_byte_width = font_width / 8 + (int16_t)(font_width % 8 > 0 ? 1 : 0);
+	byte_pos = ((int16_t)c - (int16_t)' ') * font_height * character_byte_width;
 
 	for (char_y = 0; char_y < mw_gl_get_font_height(); char_y++)
 	{
 		word = 0U;
-		for (byte = 0U; byte < character_byte_width; byte++)
+		for (byte = 0; byte < character_byte_width; byte++)
 		{
 			word <<= 8U;
 			word |= (uint32_t)get_font_data()[byte_pos];
 			byte_pos++;
 		}
 
-		word <<= ((4U - character_byte_width) * 8U);
+		for (i = 0; i < 4 - character_byte_width; i++)
+		{
+			word <<= 8;
+		}
 		mask = 0x80000000U;
 
-		for (char_x = 0; char_x < mw_gl_get_font_width(); char_x++)
+		for (char_x = 0; char_x < font_width; char_x++)
 		{
-			if (word & mask)
+			if ((word & mask) == mask)
 			{
 	   			mw_gl_fg_pixel(draw_info, x + char_y, y - char_x);
 			}
@@ -2009,8 +2038,8 @@ void mw_gl_character(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y, c
 	/* check for proportional title font as handled differently */
 	if (gc.font == MW_GL_TITLE_FONT)
 	{
-		character_buffer[0U] = c;
-		character_buffer[1U] = '\0';
+		character_buffer[0] = c;
+		character_buffer[1] = '\0';
 		title_font_string(draw_info, x, y, character_buffer);
 		return;
 	}
@@ -2120,7 +2149,7 @@ int16_t mw_gl_largest_string_width(const char **s, uint16_t count)
 	if (s == NULL || *s == NULL)
 	{
 		MW_ASSERT((bool)false, "Null pointer argument");
-		return (0U);
+		return (0);
 	}
 
 	for (i = 0; i < count; i++)
@@ -2137,7 +2166,7 @@ int16_t mw_gl_largest_string_width(const char **s, uint16_t count)
 
 void mw_gl_circle(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y, int16_t radius)
 {
-	uint8_t outline_required = true;
+	bool outline_required = true;
 
 	if (draw_info == NULL)
 	{
@@ -2170,7 +2199,7 @@ void mw_gl_circle(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y, int1
 void mw_gl_poly(const mw_gl_draw_info_t *draw_info, uint8_t poly_corners, const int16_t *poly_x, const int16_t *poly_y, int16_t x_offset, int16_t y_offset)
 {
 	uint8_t i;
-	uint8_t draw_outline = true;
+	bool draw_outline = true;
 
 	if (draw_info == NULL || poly_x == NULL || poly_y == NULL)
 	{
@@ -2178,7 +2207,7 @@ void mw_gl_poly(const mw_gl_draw_info_t *draw_info, uint8_t poly_corners, const 
 		return;
 	}
 
-	if (gc.fill == MW_GL_FILL && poly_corners > 2)
+	if (gc.fill == MW_GL_FILL && poly_corners > 2U)
 	{
 		filled_poly(draw_info, poly_corners, poly_x, poly_y, x_offset, y_offset);
 		if (gc.border == MW_GL_BORDER_OFF)
@@ -2189,7 +2218,7 @@ void mw_gl_poly(const mw_gl_draw_info_t *draw_info, uint8_t poly_corners, const 
 
 	if (draw_outline)
 	{
-		for (i = 0; i < poly_corners - 1; i++)
+		for (i = 0U; i < poly_corners - 1U; i++)
 		{
 			mw_gl_line(draw_info, poly_x[i] + x_offset, poly_y[i] + y_offset, poly_x[i+ 1] + x_offset, poly_y[i + 1] + y_offset);
 		}
@@ -2244,6 +2273,7 @@ void mw_gl_arc(const mw_gl_draw_info_t *draw_info, int16_t centre_x, int16_t cen
 	int16_t x;
 	int16_t y;
 	uint16_t mask = 0x8000U;
+	float temp_float;
 
 	if (draw_info == NULL)
 	{
@@ -2275,9 +2305,11 @@ void mw_gl_arc(const mw_gl_draw_info_t *draw_info, int16_t centre_x, int16_t cen
 	end_angle_rads = (float)end_angle / DEGREES_IN_RAD;
 	for (angle = (float)start_angle_rads; angle <= (float)end_angle_rads; angle += angle_step)
 	{
-		x = centre_x + (int16_t)((float)radius * sin(angle));
-		y = centre_y - (int16_t)((float)radius * cos(angle));
-		if (mask&gc.line)
+		temp_float = (float)radius * sinf(angle);
+		x = centre_x + (int16_t)temp_float;
+		temp_float = (float)radius * cosf(angle);
+		y = centre_y - (int16_t)temp_float;
+		if (((uint16_t)gc.line & mask) == mask)
 		{
 			mw_gl_fg_pixel(draw_info, x, y);
 		}
@@ -2295,7 +2327,7 @@ void mw_gl_arc(const mw_gl_draw_info_t *draw_info, int16_t centre_x, int16_t cen
 
 void mw_gl_rounded_rectangle(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y, int16_t width, int16_t height, int16_t corner_radius)
 {
-	uint8_t outline_required = true;
+	bool outline_required = true;
 	mw_gl_border_t border_old;
 
 	if (draw_info == NULL)
@@ -2343,7 +2375,9 @@ void mw_gl_rounded_rectangle(const mw_gl_draw_info_t *draw_info, int16_t x, int1
 
 void mw_gl_segment(const mw_gl_draw_info_t *draw_info, int16_t centre_x, int16_t centre_y, int16_t radius, int16_t start_angle, int16_t end_angle)
 {
-	uint8_t outline_required = true;
+	bool outline_required = true;
+	float temp_float_1;
+	float temp_float_2;
 
 	if (draw_info == NULL)
 	{
@@ -2362,17 +2396,23 @@ void mw_gl_segment(const mw_gl_draw_info_t *draw_info, int16_t centre_x, int16_t
 
 	if (outline_required)
 	{
-		mw_gl_line(draw_info,
-				centre_x,
-				centre_y,
-				centre_x + (int16_t)(sin((float)start_angle / DEGREES_IN_RAD) * (float)radius),
-				centre_y - (int16_t)(cos((float)start_angle / DEGREES_IN_RAD) * (float)radius));
+		temp_float_1 = sinf((float)start_angle / DEGREES_IN_RAD) * (float)radius;
+		temp_float_2 = cosf((float)start_angle / DEGREES_IN_RAD) * (float)radius;
 
 		mw_gl_line(draw_info,
 				centre_x,
 				centre_y,
-				centre_x + (int16_t)(sin((float)end_angle / DEGREES_IN_RAD) * (float)radius),
-				centre_y - (int16_t)(cos((float)end_angle / DEGREES_IN_RAD) * (float)radius));
+				centre_x + (int16_t)temp_float_1,
+				centre_y - (int16_t)temp_float_2);
+
+		temp_float_1 = sinf((float)end_angle / DEGREES_IN_RAD) * (float)radius;
+		temp_float_2 = cosf((float)end_angle / DEGREES_IN_RAD) * (float)radius;
+
+		mw_gl_line(draw_info,
+				centre_x,
+				centre_y,
+				centre_x + (int16_t)temp_float_1,
+				centre_y - (int16_t)temp_float_2);
 
 		mw_gl_arc(draw_info, centre_x, centre_y, radius, start_angle, end_angle);
 	}
@@ -2385,6 +2425,14 @@ void mw_gl_monochrome_bitmap(const mw_gl_draw_info_t *draw_info,
 		uint16_t image_data_height_pixels,
 		const uint8_t *image_data)
 {
+	int16_t x;
+	int16_t y;
+	uint8_t a;
+	bool colour;
+	uint8_t image_byte;
+	uint8_t mask;
+	uint16_t array_width;
+
 	if (draw_info == NULL || image_data == NULL)
 	{
 		MW_ASSERT((bool)false, "Null pointer argument");
@@ -2399,44 +2447,36 @@ void mw_gl_monochrome_bitmap(const mw_gl_draw_info_t *draw_info,
 	}
 
 	/* check for being completely off window */
-	if (start_x + image_data_width_pixels <= draw_info->clip_rect.x ||
-			start_y + image_data_height_pixels <= draw_info->clip_rect.y)
+	if (start_x + (int16_t)image_data_width_pixels <= draw_info->clip_rect.x ||
+			start_y + (int16_t)image_data_height_pixels <= draw_info->clip_rect.y)
 	{
 		return;
 	}
 
 	if (gc.bg_transparent == MW_GL_BG_TRANSPARENT)
 	{
-		int16_t x;
-		int16_t y;
-		uint8_t a;
-		uint8_t colour;
-		uint8_t image_byte;
-		uint8_t mask;
-		uint8_t array_width;
-
-		array_width = image_data_width_pixels >> 3U;
+		array_width = image_data_width_pixels / 8U;
 		if (image_data_width_pixels % 8U > 0U)
 		{
 			array_width++;
 		}
 
-		for (y = 0; y < image_data_height_pixels; y++)
+		for (y = 0; y < (int16_t)image_data_height_pixels; y++)
 		{
 			for (a = 0; a < array_width; a++)
 			{
-				image_byte = image_data[y * array_width + a];
+				image_byte = image_data[y * (int16_t)array_width + (int16_t)a];
 				mask = 0x80U;
 				for (x = 0; x < 8; x++)
 				{
-					if ((a << 3U) + x == image_data_width_pixels)
+					if ((int16_t)a * 8 + x == (int16_t)image_data_width_pixels)
 					{
 						break;
 					}
-					colour = !(image_byte & mask);
-					if (colour)
+					colour = (image_byte & mask) == 0U;
+					if (colour == true)
 					{
-						mw_gl_fg_pixel(draw_info, (a << 3) + x + start_x, y + start_y);
+						mw_gl_fg_pixel(draw_info, (int16_t)a * 8 + x + start_x, y + start_y);
 					}
 					mask >>= 1U;
 				}
