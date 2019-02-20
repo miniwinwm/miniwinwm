@@ -35,7 +35,7 @@ SOFTWARE.
 *** CONSTANTS ***
 ****************/
 
-static const char keyboards[4U][3U][11U] = {
+static const char keyboards[4][3][11] = {
 {"QWERTYUIOP ", "ASDFGHJKL\b ", " ZXCVBNM .,"},
 {"qwertyuiop ", "asdfghjkl\b ", " zxcvbnm .,"},
 {"1234567890 ", "!\"#$%^&*@\b ", "()+-/=., <>"},

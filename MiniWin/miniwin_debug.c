@@ -68,7 +68,7 @@ void mw_debug_print_assert(bool expression, const char *function_name, int32_t l
     draw_info.clip_rect.width = MW_ROOT_WIDTH;
     draw_info.clip_rect.height = MW_ROOT_HEIGHT;
 
-    char number_buffer[15U];
+    char number_buffer[15];
 
     if (expression)
     {

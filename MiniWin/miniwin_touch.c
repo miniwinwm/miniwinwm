@@ -152,14 +152,14 @@ void mw_touch_calibrate(MATRIX *matrix)
 	int16_t minimum_screen_dimension = MW_ROOT_WIDTH < MW_ROOT_HEIGHT ? MW_ROOT_WIDTH : MW_ROOT_HEIGHT;
 	int16_t touch_cross_size = minimum_screen_dimension / 6;
 
-	POINT_T raw_points[3U];
-	POINT_T display_points[3U];
-	display_points[0U].x = touch_cross_size;
-	display_points[0U].y = touch_cross_size;
-	display_points[1U].x = MW_ROOT_WIDTH - (INT_32)touch_cross_size;
-	display_points[1U].y = touch_cross_size;
-	display_points[2U].x = MW_ROOT_WIDTH - (INT_32)touch_cross_size;
-	display_points[2U].y = MW_ROOT_HEIGHT - (INT_32)touch_cross_size;
+	POINT_T raw_points[3];
+	POINT_T display_points[3];
+	display_points[0].x = touch_cross_size;
+	display_points[0].y = touch_cross_size;
+	display_points[1].x = MW_ROOT_WIDTH - (INT_32)touch_cross_size;
+	display_points[1].y = touch_cross_size;
+	display_points[2].x = MW_ROOT_WIDTH - (INT_32)touch_cross_size;
+	display_points[2].y = MW_ROOT_HEIGHT - (INT_32)touch_cross_size;
 	uint16_t x;
 	uint16_t y;
 
@@ -173,8 +173,8 @@ void mw_touch_calibrate(MATRIX *matrix)
 	while (!mw_hal_touch_get_point(&x, &y))
 	{
 	}
-	raw_points[0U].x = (INT_32)x;
-	raw_points[0U].y = (INT_32)y;
+	raw_points[0].x = (INT_32)x;
+	raw_points[0].y = (INT_32)y;
 	while (mw_hal_touch_get_state() == MW_HAL_TOUCH_STATE_DOWN)
 	{
 	}
@@ -187,8 +187,8 @@ void mw_touch_calibrate(MATRIX *matrix)
 	while (!mw_hal_touch_get_point(&x, &y))
 	{
 	}
-	raw_points[1U].x = (INT_32)x;
-	raw_points[1U].y = (INT_32)y;
+	raw_points[1].x = (INT_32)x;
+	raw_points[1].y = (INT_32)y;
 	while (mw_hal_touch_get_state() == MW_HAL_TOUCH_STATE_DOWN)
 	{
 	}
@@ -201,8 +201,8 @@ void mw_touch_calibrate(MATRIX *matrix)
 	while (!mw_hal_touch_get_point(&x, &y))
 	{
 	}
-	raw_points[2U].x = (INT_32)x;
-	raw_points[2U].y = (INT_32)y;
+	raw_points[2].x = (INT_32)x;
+	raw_points[2].y = (INT_32)y;
 	while (mw_hal_touch_get_state() == MW_HAL_TOUCH_STATE_DOWN)
 	{
 	}

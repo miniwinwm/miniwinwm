@@ -108,7 +108,7 @@ static int16_t get_cursor_x_coordinate(void)
  */
 static void mw_dialog_text_entry_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_t *draw_info)
 {
-	char c[2U] = {0};
+	char c[2] = {0};
 	int16_t i;
 
 	mw_gl_set_fill(MW_GL_FILL);
@@ -163,7 +163,7 @@ static void mw_dialog_text_entry_paint_function(mw_handle_t window_handle, const
 		/* draw text */
 		for (i = 0; i < (int16_t)strlen(mw_dialog_text_entry_data.text_buffer); i++)
 		{
-			c[0U] = mw_dialog_text_entry_data.text_buffer[i];
+			c[0] = mw_dialog_text_entry_data.text_buffer[i];
 			mw_gl_string(draw_info, text_display_rect_large.x + 4 + i * TITLE_FONT_FIXED_CHARACTER_PITCH, 10, c);
 		}
 	}

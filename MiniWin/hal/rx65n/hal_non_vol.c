@@ -79,7 +79,7 @@ void mw_hal_non_vol_save(uint8_t *data, uint16_t length)
 	uint32_t pages = (uint32_t)words / 0x10U;
 	pages += ((uint32_t)length % 0x10U > 0U) ? 1U : 0U;
 	uint32_t page;
-	uint32_t buffer[0x10U];
+	uint32_t buffer[0x10];
 
 	/* write settings */
 	(void)R_FLASH_Open();

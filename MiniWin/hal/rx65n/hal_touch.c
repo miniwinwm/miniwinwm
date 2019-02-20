@@ -52,11 +52,11 @@ SOFTWARE.
 
 static sci_iic_info_t i2c_info;
 static volatile bool busy = false;
-static uint8_t i2c_buffer[7U];
+static uint8_t i2c_buffer[7];
 static uint16_t received_x;
 static uint16_t received_y;
-static uint8_t touch_controller_i2c_address[1U] = {0x38U};
-static uint8_t i2c_register_address[1U];
+static uint8_t touch_controller_i2c_address[1] = {0x38U};
+static uint8_t i2c_register_address[1];
 static volatile bool touched = false;
 static bool first_touch_received = false;
 
@@ -130,7 +130,7 @@ mw_hal_touch_state_t mw_hal_touch_get_state(void)
 
 	/* touch interrupt line is unreliable so interrogate touch module for a touch down */
 	i2c_info.callbackfunc = &touch_state_callback;
-	i2c_register_address[0U] = 2U;
+	i2c_register_address[0] = 2U;
 	i2c_info.cnt1st = 1U;
 	i2c_info.cnt2nd = 1U;
 	i2c_info.p_data1st = i2c_register_address;
@@ -170,7 +170,7 @@ bool mw_hal_touch_get_point(uint16_t* x, uint16_t* y)
 		return true;
 	}
 
-	i2c_register_address[0U] = 2U;
+	i2c_register_address[0] = 2U;
 	i2c_info.cnt1st = 1U;
 	i2c_info.cnt2nd = 7U;
 	i2c_info.p_data1st = i2c_register_address;
@@ -195,7 +195,7 @@ bool mw_hal_touch_get_point(uint16_t* x, uint16_t* y)
 
 static void touch_state_callback(void)
 {
-	if (i2c_buffer[0U] > 0U)
+	if (i2c_buffer[0] > 0U)
 	{
 		touched = true;
 	}
@@ -208,10 +208,10 @@ static void touch_state_callback(void)
 
 static void touch_position_callback(void)
 {
-	if (i2c_buffer[0U] > 0U)
+	if (i2c_buffer[0] > 0U)
 	{
-		received_x = ((uint16_t)(i2c_buffer[1U]) & 0x000FU) << 8U | (uint16_t)i2c_buffer[2U];
-		received_y = ((uint16_t)(i2c_buffer[3U]) & 0x000FU) << 8U | (uint16_t)i2c_buffer[4U];
+		received_x = ((uint16_t)(i2c_buffer[1]) & 0x000FU) << 8U | (uint16_t)i2c_buffer[2];
+		received_y = ((uint16_t)(i2c_buffer[3]) & 0x000FU) << 8U | (uint16_t)i2c_buffer[4];
 		touched = true;
 	}
 	else
