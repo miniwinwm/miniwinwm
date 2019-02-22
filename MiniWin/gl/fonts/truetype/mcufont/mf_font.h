@@ -62,8 +62,8 @@ struct mf_font_s
 };
 
 /* The flag definitions for the font.flags field. */
-#define MF_FONT_FLAG_MONOSPACE 0x01
-#define MF_FONT_FLAG_BW        0x02
+#define MF_FONT_FLAG_MONOSPACE 0x01U
+#define MF_FONT_FLAG_BW        0x02U
 
 /* Lookup structure for searching fonts by name. */
 struct mf_font_list_s

@@ -147,6 +147,15 @@
 							<inputType id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gpp.inputType.1439012405" name="Compiler Input CPP" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gpp.inputType"/>
 						</tool>
 					</fileInfo>
+					<fileInfo id="com.renesas.cdt.managedbuild.renesas.ccrx.hardwaredebug.configuration.1846396468.415482583" name="gl_title_font.c" rcbsApplicability="disable" resourcePath="Miniwin/gl/fonts/bitmapped/gl_title_font.c" toolsToInvoke="com.renesas.cdt.managedbuild.renesas.ccrx.base.compiler.1404762451.1937395296">
+						<tool id="com.renesas.cdt.managedbuild.renesas.ccrx.base.compiler.1404762451.1937395296" name="Compiler" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.base.compiler.1404762451">
+							<option id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.checkSourceByMisraC.1982439304" name="Check the source code by MISRA-C" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.checkSourceByMisraC" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.checkSourceByMisraC.misra2012" valueType="enumerated"/>
+							<option id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misraDisplayRule.198850276" name="Apply rule" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misraDisplayRule" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misraDisplayRule.applyAllRequired" valueType="enumerated"/>
+							<option id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misra2012Rule.1497914261" name="Apply rule_2012:" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misra2012Rule" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misra2012Rule.applyAllRequired" valueType="enumerated"/>
+							<inputType id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gcc.inputType.1507311529" name="Compiler Input C" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gcc.inputType"/>
+							<inputType id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gpp.inputType.868793335" name="Compiler Input CPP" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gpp.inputType"/>
+						</tool>
+					</fileInfo>
 					<fileInfo id="com.renesas.cdt.managedbuild.renesas.ccrx.hardwaredebug.configuration.1846396468.1872265002" name="gl.c" rcbsApplicability="disable" resourcePath="Miniwin/gl/gl.c" toolsToInvoke="com.renesas.cdt.managedbuild.renesas.ccrx.base.compiler.1404762451.1386128786">
 						<tool id="com.renesas.cdt.managedbuild.renesas.ccrx.base.compiler.1404762451.1386128786" name="Compiler" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.base.compiler.1404762451">
 							<option id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.checkSourceByMisraC.990415556" name="Check the source code by MISRA-C" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.checkSourceByMisraC" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.checkSourceByMisraC.misra2012" valueType="enumerated"/>
@@ -210,4 +219,5 @@
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
 	<storageModule moduleId="refreshScope"/>
+	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
 </cproject>

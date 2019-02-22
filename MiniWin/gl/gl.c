@@ -35,6 +35,7 @@ SOFTWARE.
 #include "hal/hal_delay.h"
 #include "gl/gl.h"
 #include "gl/fonts/bitmapped/fonts.h"
+#include "gl/fonts/bitmapped/gl_title_font.h"
 #include "gl/fonts/truetype/mcufont/mcufont.h"
 
 /****************
@@ -55,7 +56,7 @@ typedef struct
 	const mw_gl_draw_info_t *draw_info;				/**< Draw info structure to be passed on to pixel plotting routine */
     const struct mf_font_s *font;					/**< Run-length encoded font structure to use for text rendering */
     mw_util_rect_t bounding_box;					/**< The bounding box to render the text in to */
-    uint16_t bottom;								/**< Bottom line in pixels of bounding box, y + height */
+    int16_t bottom;									/**< Bottom line in pixels of bounding box, y + height */
     uint8_t fg_red;									/**< Foreground colour to plot text, red component */
     uint8_t fg_green;								/**< Foreground colour to plot text, green component */
     uint8_t fg_blue;								/**< Foreground colour to plot text, blue component */
@@ -63,8 +64,8 @@ typedef struct
     uint8_t bg_green;								/**< Background colour to plot text, green component */
     uint8_t bg_blue;								/**< Background colour to plot text, blue component */
     mw_gl_tt_font_justification_t justification;	/**< Rendering justification used */
-    uint16_t rendered_line_count;					/**< How many lines in pixels that have been rendered so far */
-    uint16_t vert_scroll_pixels;					/**< How many pixel lines to scroll the text up */
+    int16_t rendered_line_count;					/**< How many lines in pixels that have been rendered so far */
+    int16_t vert_scroll_pixels;						/**< How many pixel lines to scroll the text up */
 } tt_font_state_t;
 
 /***********************
@@ -75,8 +76,6 @@ typedef struct
 *** EXTERNAL VARIABLES ***
 **************************/
 
-extern const int16_t mw_title_font_positions[];   	/**< Positions of start of character data of proportional fonts */
-extern const uint8_t mw_title_font_bitmap[];      	/**< 16 high proportional title font, widths vary */
 extern const sFONT Font9;							/**< Information structure for font */
 extern const sFONT Font12;							/**< Information structure for font */
 extern const sFONT Font16;							/**< Information structure for font */
@@ -95,7 +94,7 @@ static mw_gl_gc_t gc;                       		/**< The graphics context used to 
 
 static void pixel(const mw_gl_draw_info_t *draw_info, int16_t client_x, int16_t client_y, mw_hal_lcd_colour_t colour);
 static void filled_rectangle(const mw_gl_draw_info_t *draw_info, int16_t client_x, int16_t client_y, int16_t width, int16_t height, mw_hal_lcd_colour_t colour);
-static void filled_poly(const mw_gl_draw_info_t *draw_info, uint8_t poly_corners, const int16_t *poly_x, const int16_t *poly_y, int16_t x_offset, int16_t y_offset);
+static void filled_poly(const mw_gl_draw_info_t *draw_info, uint16_t poly_corners, const int16_t *poly_x, const int16_t *poly_y, int16_t x_offset, int16_t y_offset);
 static void arc_bres(const mw_gl_draw_info_t *draw_info, int16_t centre_x, int16_t centre_y, int16_t radius, int16_t start_angle, int16_t end_angle);
 static void arc_point(const mw_gl_draw_info_t *draw_info, int16_t centre_x, int16_t centre_y, int16_t x, int16_t y, int16_t start_angle, int16_t end_angle);
 static void filled_circle(const mw_gl_draw_info_t *draw_info, int16_t centre_x, int16_t centre_y, int16_t radius);
@@ -129,6 +128,8 @@ static void pixel(const mw_gl_draw_info_t *draw_info, int16_t client_x, int16_t 
 {
 	int16_t display_x;
 	int16_t display_y;
+	int16_t root_width = MW_ROOT_WIDTH;
+	int16_t root_height = MW_ROOT_HEIGHT;
 
 	MW_ASSERT(draw_info, "Null pointer argument");
 
@@ -155,7 +156,7 @@ static void pixel(const mw_gl_draw_info_t *draw_info, int16_t client_x, int16_t 
 	display_x = client_x + draw_info->origin_x;
 	display_y = client_y + draw_info->origin_y;
 
-	if (display_x >= 0 && display_x < MW_ROOT_WIDTH && display_y >= 0 && display_y < MW_ROOT_HEIGHT)
+	if (display_x >= 0 && display_x < root_width && display_y >= 0 && display_y < root_height)
 	{
 		mw_hal_lcd_pixel(display_x, display_y, colour);
 	}
@@ -174,6 +175,8 @@ static void pixel(const mw_gl_draw_info_t *draw_info, int16_t client_x, int16_t 
 static void filled_rectangle(const mw_gl_draw_info_t *draw_info, int16_t client_x, int16_t client_y, int16_t width, int16_t height, mw_hal_lcd_colour_t colour)
 {
 	int16_t overlap;
+	int16_t gl_max_x = MW_GL_MAX_X;
+	int16_t gl_max_y = MW_GL_MAX_Y;
 
 	MW_ASSERT(draw_info, "Null pointer argument");
 
@@ -224,13 +227,13 @@ static void filled_rectangle(const mw_gl_draw_info_t *draw_info, int16_t client_
 		return;
 	}
 
-	if (draw_info->origin_x + draw_info->clip_rect.x > MW_GL_MAX_X ||
-			draw_info->origin_y + draw_info->clip_rect.y > MW_GL_MAX_Y)
+	if (draw_info->origin_x + draw_info->clip_rect.x > gl_max_x ||
+			draw_info->origin_y + draw_info->clip_rect.y > gl_max_y)
 	{
 		return;
 	}
 
-	if (draw_info->origin_x + client_x > MW_GL_MAX_X || draw_info->origin_y + client_y > MW_GL_MAX_Y)
+	if (draw_info->origin_x + client_x > gl_max_x || draw_info->origin_y + client_y > gl_max_y)
 	{
 		return;
 	}
@@ -273,25 +276,27 @@ static void filled_rectangle(const mw_gl_draw_info_t *draw_info, int16_t client_
  * @param y_offset Fixed value to add to every member of poly_y 
  * @param colour Colour to draw the pixel
  */
-static void filled_poly(const mw_gl_draw_info_t *draw_info, uint8_t poly_corners, const int16_t *poly_x, const int16_t *poly_y, int16_t x_offset, int16_t y_offset)
+static void filled_poly(const mw_gl_draw_info_t *draw_info, uint16_t poly_corners, const int16_t *poly_x, const int16_t *poly_y, int16_t x_offset, int16_t y_offset)
 {
-	uint8_t i;
-	uint8_t j;
+	uint16_t i;
+	uint16_t j;
 	int16_t swap;
-	int16_t line_node_count;
+	uint16_t line_node_count;
 	int16_t y;
 	int16_t node_x[MW_GL_MAX_POLY_CORNERS - 1U];
 	int16_t y_min = INT16_MAX;
 	int16_t y_max = INT16_MIN;
-	uint16_t x;
+	int16_t x;
+	float temp_float;
 
 	MW_ASSERT(draw_info, "Null pointer argument");
 	MW_ASSERT(poly_x, "Null pointer argument");
 	MW_ASSERT(poly_y, "Null pointer argument");
 	MW_ASSERT(poly_corners <= MW_GL_MAX_POLY_CORNERS, "Too many points in polygon shape");
+	MW_ASSERT(poly_corners >= 3U, "Too few points in polygon shape");
 
 	/* find y range of shape */
-	for (i = 0U; i < poly_corners; i++)
+	for (i = 0; i < poly_corners; i++)
 	{
 		if (poly_y[i]<y_min)
 		{
@@ -318,29 +323,33 @@ static void filled_poly(const mw_gl_draw_info_t *draw_info, uint8_t poly_corners
 		{
 			if ((poly_y[i] < y && poly_y[j] >= y) || (poly_y[j] < y && poly_y[i] >= y))
 			{
-				float temp = (float)(y - poly_y[i]) / (float)((poly_y[j] - poly_y[i]));
-				node_x[line_node_count++] = (int32_t)(poly_x[i] + temp * ((poly_x[j] - poly_x[i])));
+				temp_float = ((float)y - (float)poly_y[i]) / ((float)poly_y[j] - (float)poly_y[i]);
+				temp_float *= ((float)poly_x[j] - (float)poly_x[i]);
+				node_x[line_node_count++] = poly_x[i] + (int16_t)temp_float;
 			}
 			j = i;
 		}
 
 		/* sort the nodes, via a simple bubble sort */
-		i = 0U;
-		while (i < line_node_count - 1)
+		if (line_node_count > 1U)
 		{
-			if (node_x[i] > node_x[i + 1U])
+			i = 0U;
+			while (i < line_node_count - 1U)
 			{
-				swap = node_x[i];
-				node_x[i] = node_x[i + 1U];
-				node_x[i + 1U] = swap;
-				if (i > 0U)
+				if (node_x[i] > node_x[i + 1U])
 				{
-					i--;
+					swap = node_x[i];
+					node_x[i] = node_x[i + 1U];
+					node_x[i + 1U] = swap;
+					if (i > 0U)
+					{
+						i--;
+					}
 				}
-			}
-			else
-			{
-				i++;
+				else
+				{
+					i++;
+				}
 			}
 		}
 
@@ -360,9 +369,9 @@ static void filled_poly(const mw_gl_draw_info_t *draw_info, uint8_t poly_corners
 				{
 					node_x[i] = 0;
 				}
-				if (node_x[i + 1] > MW_GL_MAX_X)
+				if (node_x[i + 1U] > MW_GL_MAX_X)
 				{
-					node_x[i + 1] = MW_GL_MAX_Y;
+					node_x[i + 1U] = MW_GL_MAX_Y;
 				}
 				if (gc.pattern_set)
 				{
@@ -373,7 +382,7 @@ static void filled_poly(const mw_gl_draw_info_t *draw_info, uint8_t poly_corners
 				}
 				else
 				{
-					filled_rectangle(draw_info, node_x[i], y + y_offset, node_x[i + 1]-node_x[i] + 1, 1 , gc.solid_fill_colour);
+					filled_rectangle(draw_info, node_x[i], y + y_offset, node_x[i + 1U] - node_x[i] + 1, 1 , gc.solid_fill_colour);
 				}
 			}
 		}
@@ -408,12 +417,12 @@ static void arc_bres(const mw_gl_draw_info_t *draw_info, int16_t centre_x, int16
 	{
 		if (decision < 0)
 		{
-			decision += (x_point << 1) + 3;
+			decision += (x_point * 2) + 3;
 			x_point++;
 		}
 		else
 		{
-			decision += ((x_point - y_point) << 1) + 5;
+			decision += ((x_point - y_point) * 2) + 5;
 			x_point++;
 			y_point--;
 		}
@@ -443,10 +452,18 @@ static void arc_bres(const mw_gl_draw_info_t *draw_info, int16_t centre_x, int16
  */
 static void arc_point(const mw_gl_draw_info_t *draw_info, int16_t centre_x, int16_t centre_y, int16_t x, int16_t y, int16_t start_angle, int16_t end_angle)
 {
+	float temp_float;
+	int16_t temp_1_int16;
+	int16_t temp_2_int16;
+
 	MW_ASSERT(draw_info, "Null pointer argument");
 
 	/* calculate the angle the current point makes with the circle centre */
-	int16_t angle = (int16_t)(DEGREES_IN_RAD  *(atan2(centre_y - y, centre_x - x))) - 90;
+	temp_1_int16 = centre_y - y;
+	temp_2_int16 = centre_x - x;
+
+	temp_float = DEGREES_IN_RAD * atan2f((float)temp_1_int16, (float)temp_2_int16);
+	int16_t angle = (int16_t)temp_float - 90;
 	if (angle < 0)
 	{
 		angle += 360;
@@ -954,6 +971,7 @@ static void title_font_string(const mw_gl_draw_info_t *draw_info, int16_t x, int
 	int16_t next_char_start_position_along_string = 0;
 	int16_t position_across_character;
 	int16_t string_width_pixels;
+	uint16_t temp_uint16;
 
 	if (draw_info == NULL || s == NULL)
 	{
@@ -1065,12 +1083,13 @@ static void title_font_string(const mw_gl_draw_info_t *draw_info, int16_t x, int
 			}
 			c -= 32;
 
-			start_pos_in_bitmap = mw_title_font_positions[(uint8_t)c];
-			end_pos_in_bitmap = mw_title_font_positions[(uint8_t)c + 1U];
+			start_pos_in_bitmap = (int16_t)mw_title_font_positions[(uint8_t)c];
+			end_pos_in_bitmap = (int16_t)mw_title_font_positions[(uint8_t)c + 1U];
 
 			mask = 0x80U;
+			temp_uint16 = mw_title_font_positions[(uint8_t)c] & 0x07U;
 			/* the next line is MISRA compliant despite a warning because the shift operand cannot be > 7 */
-			mask >>= (mw_title_font_positions[(uint8_t)c] & 0x07U);
+			mask >>= (uint8_t)temp_uint16;
 
 			position_across_character = 0;
 			for (bitmap_x = start_pos_in_bitmap; bitmap_x < end_pos_in_bitmap; bitmap_x++)
@@ -1188,12 +1207,12 @@ static void tt_pixel_callback_anti_aliasing(int16_t x, int16_t y, uint8_t count,
 	tt_font_state_t *tt_font_state = (tt_font_state_t *)state;
 
 	/* check y value is still in box */
-    if ((int16_t)(y - tt_font_state->vert_scroll_pixels) >= (int16_t)tt_font_state->bottom)
+    if (y - tt_font_state->vert_scroll_pixels >= tt_font_state->bottom)
     {
     	return;
     }
 
-    if ((int16_t)(y - tt_font_state->vert_scroll_pixels) < 0U)
+    if (y - tt_font_state->vert_scroll_pixels < 0)
     {
     	return;
     }
@@ -1202,14 +1221,16 @@ static void tt_pixel_callback_anti_aliasing(int16_t x, int16_t y, uint8_t count,
 	y = y - tt_font_state->vert_scroll_pixels;
 
 	/* calculate alpha blended colour values */
-	alpha_red = ((tt_font_state->fg_red * alpha) + (tt_font_state->bg_red * (UINT8_MAX - alpha))) / UINT8_MAX;
-	alpha_green = ((tt_font_state->fg_green * alpha) + (tt_font_state->bg_green * (UINT8_MAX - alpha))) / UINT8_MAX;
-	alpha_blue = ((tt_font_state->fg_blue * alpha) + (tt_font_state->bg_blue * (UINT8_MAX - alpha))) / UINT8_MAX;
+	alpha_red = ((tt_font_state->fg_red * alpha) + (tt_font_state->bg_red * ((uint8_t)UINT8_MAX - alpha))) / (uint8_t)UINT8_MAX;
+	alpha_green = ((tt_font_state->fg_green * alpha) + (tt_font_state->bg_green * ((uint8_t)UINT8_MAX - alpha))) / (uint8_t)UINT8_MAX;
+	alpha_blue = ((tt_font_state->fg_blue * alpha) + (tt_font_state->bg_blue * ((uint8_t)UINT8_MAX - alpha))) / (uint8_t)UINT8_MAX;
 
-    while (count--)
+    while (count-- > 0U)
     {
     	/* set pixel colour with this value */
-    	mw_gl_set_fg_colour((alpha_red << 16U) + (alpha_green << 8U) + alpha_blue);
+    	mw_gl_set_fg_colour(((mw_hal_lcd_colour_t)alpha_red << 16U) +
+    			((mw_hal_lcd_colour_t)alpha_green << 8U) +
+				(mw_hal_lcd_colour_t)alpha_blue);
 
     	/* draw pixel */
         mw_gl_fg_pixel(tt_font_state->draw_info, x, y);
@@ -1234,7 +1255,7 @@ static uint8_t tt_character_callback(int16_t x, int16_t y, mf_char character, vo
 	tt_font_state_t *tt_font_state = (tt_font_state_t *)state;
 
 	/* render the character with anti-aliasing */
-	if (tt_font_state->font->flags & MF_FONT_FLAG_BW)
+	if ((tt_font_state->font->flags & MF_FONT_FLAG_BW) == MF_FONT_FLAG_BW)
 	{
 		return (mf_render_character(tt_font_state->font, x, y, character, tt_pixel_callback_no_anti_aliasing, state));
 	}
@@ -1272,7 +1293,7 @@ static void tt_pixel_callback_no_anti_aliasing(int16_t x, int16_t y, uint8_t cou
     /* do all pixels */
 	y = y - tt_font_state->vert_scroll_pixels;
 
-    while (count--)
+    while (count-- > 0U)
     {
     	/* draw pixel */
         mw_gl_fg_pixel(tt_font_state->draw_info, x, y);
@@ -1300,7 +1321,7 @@ static bool tt_line_callback(mf_str line, uint16_t count, void *state)
 			tt_font_state->bounding_box.x,
 			tt_font_state->bounding_box.y,
 			tt_font_state->bounding_box.width,
-			tt_font_state->font->line_height);
+			(int16_t)tt_font_state->font->line_height);
 
 	/* now check justification */
     if (tt_font_state->justification == MW_GL_TT_FULLY_JUSTIFIED)
@@ -1353,7 +1374,7 @@ static bool tt_line_callback(mf_str line, uint16_t count, void *state)
     }
 
     /* move next y value on by font height */
-    tt_font_state->bounding_box.y += tt_font_state->font->line_height;
+    tt_font_state->bounding_box.y += (int16_t)tt_font_state->font->line_height;
 
     /* check if y value is still in the text box */
     if (tt_font_state->bounding_box.y - tt_font_state->vert_scroll_pixels > tt_font_state->bottom)
@@ -2129,7 +2150,7 @@ int16_t mw_gl_get_string_width_pixels(const char *s)
 	{
 		for (i = 0U; i < strlen(s); i++)
 		{
-			width += mw_title_font_positions[s[i] - ' ' + 1] - mw_title_font_positions[s[i] - ' '];
+			width += (int16_t)mw_title_font_positions[s[i] - ' ' + 1] - (int16_t)mw_title_font_positions[s[i] - ' '];
 		}
 	}
 	else
@@ -2220,7 +2241,7 @@ void mw_gl_poly(const mw_gl_draw_info_t *draw_info, uint8_t poly_corners, const 
 	{
 		for (i = 0U; i < poly_corners - 1U; i++)
 		{
-			mw_gl_line(draw_info, poly_x[i] + x_offset, poly_y[i] + y_offset, poly_x[i+ 1] + x_offset, poly_y[i + 1] + y_offset);
+			mw_gl_line(draw_info, poly_x[i] + x_offset, poly_y[i] + y_offset, poly_x[i + 1U] + x_offset, poly_y[i + 1U] + y_offset);
 		}
 		mw_gl_line(draw_info, poly_x[i] + x_offset, poly_y[i] + y_offset, poly_x[0] + x_offset, poly_y[0] + y_offset);
 	}
@@ -2520,8 +2541,8 @@ void mw_gl_colour_bitmap(const mw_gl_draw_info_t *draw_info,
 	}
 
 	/* check for right edge being to left of clip rect or bottom edge being above rect */
-	if (start_x + image_data_width_pixels - 1 < draw_info->clip_rect.x ||
-			start_y + image_data_height_pixels - 1 < draw_info->clip_rect.y)
+	if (start_x + (int16_t)image_data_width_pixels - 1 < draw_info->clip_rect.x ||
+			start_y + (int16_t)image_data_height_pixels - 1 < draw_info->clip_rect.y)
 	{
 		return;
 	}
@@ -2545,6 +2566,7 @@ void mw_gl_tt_render_text(const mw_gl_draw_info_t *draw_info,
 		int16_t vert_scroll_pixels)
 {
 	tt_font_state_t tt_font_state;
+	mw_hal_lcd_colour_t temp_lcd_colour;;
 
 	/* check parameters */
 	if (draw_info == NULL || rle_font == NULL || tt_text == NULL || text_rect == NULL)
@@ -2562,14 +2584,20 @@ void mw_gl_tt_render_text(const mw_gl_draw_info_t *draw_info,
 	tt_font_state.vert_scroll_pixels = vert_scroll_pixels;
 
 	/* set up alpha blending values */
-	if (!(rle_font->font.flags & MF_FONT_FLAG_BW))
+	if ((rle_font->font.flags & MF_FONT_FLAG_BW) == 0U)
 	{
-		tt_font_state.fg_red = (gc.fg_colour & 0xff0000U) >> 16U;
-		tt_font_state.fg_green = (gc.fg_colour & 0xff00U) >> 8U;
-		tt_font_state.fg_blue = gc.fg_colour & 0xffU;
-		tt_font_state.bg_red = (gc.bg_colour & 0xff0000U) >> 16U;
-		tt_font_state.bg_green = (gc.bg_colour & 0xff00U) >> 8U;
-		tt_font_state.bg_blue = gc.bg_colour & 0xffU;
+		temp_lcd_colour = (gc.fg_colour & 0xff0000U) >> 16U;
+		tt_font_state.fg_red = (uint8_t)temp_lcd_colour;
+		temp_lcd_colour = (gc.fg_colour & 0xff00U) >> 8U;
+		tt_font_state.fg_green = (uint8_t)temp_lcd_colour;
+		temp_lcd_colour = gc.fg_colour & 0xffU;
+		tt_font_state.fg_blue = (uint8_t)temp_lcd_colour;
+		temp_lcd_colour = (gc.bg_colour & 0xff0000U) >> 16U;
+		tt_font_state.bg_red = (uint8_t)temp_lcd_colour;
+		temp_lcd_colour = (gc.bg_colour & 0xff00U) >> 8U;
+		tt_font_state.bg_green = (uint8_t)temp_lcd_colour;
+		temp_lcd_colour = gc.bg_colour & 0xffU;
+		tt_font_state.bg_blue = (uint8_t)temp_lcd_colour;
 	}
 
 	/* set up gc for drawing background in line draw callback */
@@ -2613,7 +2641,7 @@ int16_t mw_gl_tt_get_render_text_lines(int16_t width,
 	tt_font_state.font = &rle_font->font;
 	tt_font_state.bounding_box.width = width;
 	tt_font_state.justification = justification;
-	tt_font_state.rendered_line_count = 0U;
+	tt_font_state.rendered_line_count = 0;
 
 	/* dummy render tt text */
 	mf_wordwrap(tt_font_state.font,
@@ -2622,5 +2650,5 @@ int16_t mw_gl_tt_get_render_text_lines(int16_t width,
 			tt_dummy_line_callback,
 			&tt_font_state);
 
-	return (tt_font_state.rendered_line_count * tt_font_state.font->line_height);
+	return (tt_font_state.rendered_line_count * (int16_t)tt_font_state.font->line_height);
 }
