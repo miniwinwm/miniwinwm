@@ -117,9 +117,9 @@ int main( int argc, char* argv[] )
 	 for (int w = 0; w < width; w++)
 	 {
 		 RGBApixel pixel = sourceImage.GetPixel(w,h);
-		 fs << "0x" << hex << setw(2) << setfill('0') << (int)pixel.Blue;
-		 fs << ", 0x" << hex << setw(2) << setfill('0') << (int)pixel.Green;
-		 fs << ", 0x" << hex << setw(2) << setfill('0') << (int)pixel.Red;
+		 fs << "0x" << hex << setw(2) << setfill('0') << (int)pixel.Blue << "U";
+		 fs << ", 0x" << hex << setw(2) << setfill('0') << (int)pixel.Green << "U";
+		 fs << ", 0x" << hex << setw(2) << setfill('0') << (int)pixel.Red << "U";
 
 		 pixels++;
 		 if (pixels < width * height)
@@ -146,10 +146,6 @@ int main( int argc, char* argv[] )
  fs << "/***********************" << endl;
  fs << "*** GLOBAL VARIABLES ***" << endl;
  fs << "***********************/" << endl;
- fs << endl;
- fs << "/*************************" << endl;
- fs << "*** EXTERNAL VARIABLES ***" << endl;
- fs << "*************************/" << endl;
  fs << endl;
  fs << "/**********************" << endl;
  fs << "*** LOCAL VARIABLES ***" << endl;

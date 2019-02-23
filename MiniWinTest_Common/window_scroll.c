@@ -40,14 +40,13 @@ SOFTWARE.
 *** TYPES ***
 ************/
 
-
 /**
  * Window data structure 
  */
 typedef struct 
 {
-	uint16_t scroll_x;				/**< X scroll proportion */
-	uint16_t scroll_y;				/**< Y scroll proportion */
+	int16_t scroll_x;				/**< X scroll proportion */
+	int16_t scroll_y;				/**< Y scroll proportion */
 } window_scroll_data_t;
 
 /***********************
@@ -84,10 +83,10 @@ void window_scroll_paint_function(mw_handle_t window_handle, const mw_gl_draw_in
 	int16_t line_y;
 	int16_t scroll_offset_x;
 	int16_t scroll_offset_y;
-	uint8_t c;
+	int16_t c;
 	char buf[4];
 
-	MW_ASSERT(draw_info, "Null pointer parameter");
+	MW_ASSERT(draw_info != (void*)0, "Null pointer parameter");
 
 	mw_gl_set_fg_colour(MW_HAL_LCD_YELLOW);
 	mw_gl_set_bg_colour(MW_HAL_LCD_BLACK);
@@ -131,17 +130,12 @@ void window_scroll_paint_function(mw_handle_t window_handle, const mw_gl_draw_in
 				break;
 			}
 
-			c = (line * 80 + column) % ('~' - ' ') + ' ';
+			c = (line * 80 + column) % ((int16_t)'~' - (int16_t)' ') + (int16_t)' ';
 
 			mw_gl_character(draw_info,
 					column_x - scroll_offset_x,
 					line_y - scroll_offset_y,
-					c);
-			c++;
-			if (c > '~')
-			{
-				c = ' ';
-			}
+					(char)c);
 		}
 		(void)mw_util_safe_itoa(line, buf, 4, 10, true, 2, ' ');
 		(void)mw_util_safe_strcat(buf, 4, " ");
@@ -155,7 +149,7 @@ void window_scroll_paint_function(mw_handle_t window_handle, const mw_gl_draw_in
 
 void window_scroll_message_function(const mw_message_t *message)
 {
-	MW_ASSERT(message, "Null pointer argument");
+	MW_ASSERT(message != (void*)0, "Null pointer argument");
 
 	switch (message->message_id)
 	{
@@ -165,12 +159,12 @@ void window_scroll_message_function(const mw_message_t *message)
 		break;
 
 	case MW_WINDOW_VERT_SCROLL_BAR_SCROLLED_MESSAGE:
-		window_scroll_data.scroll_y = message->message_data;
+		window_scroll_data.scroll_y = (int16_t)message->message_data;
 		mw_paint_window_client(message->recipient_handle);
 		break;
 
 	case MW_WINDOW_HORIZ_SCROLL_BAR_SCROLLED_MESSAGE:
-		window_scroll_data.scroll_x = message->message_data;
+		window_scroll_data.scroll_x = (int16_t)message->message_data;
 		mw_paint_window_client(message->recipient_handle);
 		break;
 

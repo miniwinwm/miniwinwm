@@ -71,6 +71,8 @@ static void scroll_bar_vert_paint_function(mw_handle_t control_handle, const mw_
 	int16_t narrow_dimension;
 	int16_t slider_size;
 
+	MW_ASSERT(draw_info != (void*)0, "Null pointer argument");
+
 	if ((mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_LARGE_SIZE) == MW_CONTROL_FLAG_LARGE_SIZE)
 	{
 		narrow_dimension = MW_SCROLL_BAR_LARGE_NARROW_DIMENSION;
@@ -157,7 +159,7 @@ static void scroll_bar_vert_message_function(const mw_message_t *message)
 	uint8_t new_scroll_position;
 	uint32_t misra_temp;
 
-	MW_ASSERT(message, "Null pointer argument");
+	MW_ASSERT(message != (void*)0, "Null pointer argument");
 
 	switch (message->message_id)
 	{

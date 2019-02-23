@@ -495,20 +495,24 @@ int main(int argc, char **argv)
 		{
 			continue;
 		}
+        
+        uint32_t i=0;
+        for (auto &menu_item_label : window["MenuItems"].array_items())
+	    {
+	    	outfileUserSource << "static char " << window["Name"].string_value() << "_menu_bar_label_" << 
+                i << "[] = \"" << menu_item_label.string_value() << "\";\n";
+            i++;
+	    }
 
 		all_identifier_names.push_back(window["Name"].string_value() + "_menu_bar_labels");
-		outfileUserSource << "static const char *" << window["Name"].string_value() << "_menu_bar_labels[] = {";
-		uint32_t i = 0;
-	    for (auto &menu_item_label : window["MenuItems"].array_items())
+		outfileUserSource << "static char *" << window["Name"].string_value() << "_menu_bar_labels[] = {";
+	    for (i = 0; i < window["MenuItems"].array_items().size(); i++) 
 	    {
-	    	outfileUserSource << "\"";
-	    	outfileUserSource << menu_item_label.string_value();
-	    	outfileUserSource << "\"";
+        	outfileUserSource << window["Name"].string_value() << "_menu_bar_label_" << i;
 	    	if (i < window["MenuItems"].array_items().size() - 1)
 	    	{
 	    		outfileUserSource << ", ";
 	    	}
-	    	i++;
 	    }
 	    outfileUserSource << "};\n";
     }
@@ -523,20 +527,23 @@ int main(int argc, char **argv)
 				continue;
 			}
 
-			all_identifier_names.push_back("radio_button_" + radio_button["Name"].string_value() + "_labels");
-			outfileUserSource << "static const char *radio_button_" << radio_button["Name"].string_value() << "_labels[] = {";
-			uint32_t i = 0;
-			for (auto &label : radio_button["Labels"].array_items())
+            uint32_t i=0;
+            for (auto &label : radio_button["Labels"].array_items())
 			{
-				outfileUserSource << "\"";
-				outfileUserSource << label.string_value();
-				outfileUserSource << "\"";
+                outfileUserSource << "static char " << "radio_button_" << radio_button["Name"].string_value() + "_label_" << 
+                    i << "[] = \"" << label.string_value() << "\";\n";
+                i++;
+            }
+			all_identifier_names.push_back("radio_button_" + radio_button["Name"].string_value() + "_labels");
+			outfileUserSource << "static char *radio_button_" << radio_button["Name"].string_value() << "_labels[] = {";
+    	    for (i = 0; i < radio_button["Labels"].array_items().size(); i++) 
+    	    {
+            	outfileUserSource << "radio_button_" << radio_button["Name"].string_value() + "_label_" << i;
 				if (i < radio_button["Labels"].array_items().size() - 1)
 				{
 					outfileUserSource << ", ";
 				}
-				i++;
-			}
+    	    }
 			outfileUserSource << "};\n";
 		}
     }
@@ -902,7 +909,7 @@ int main(int argc, char **argv)
         else
         {
         	outfileUserSource << window["Name"].string_value() << "_menu_bar_labels" 
-				",\n        sizeof(" << window["Name"].string_value() << "_menu_bar_labels)/sizeof(char *),\n        0"; 
+				",\n        sizeof(" << window["Name"].string_value() << "_menu_bar_labels)/sizeof(char *),\n        0U"; 
         }
 				
 		if (window["Border"].bool_value())
@@ -981,7 +988,7 @@ int main(int argc, char **argv)
 			outfileUserSource << "    button_" << button["Name"].string_value() << "_handle = mw_ui_button_add_new(" << button["X"].int_value() << ",\n" 
 				"        " << button["Y"].int_value() << ",\n" 
 			    "        window_" << window["Name"].string_value() << "_handle,\n" 
-			    "        0";
+			    "        0U";
 			if (button["Visible"].bool_value())
 			{
 				outfileUserSource << " | MW_CONTROL_FLAG_IS_VISIBLE";
@@ -1029,7 +1036,7 @@ int main(int argc, char **argv)
 				"        " << label["Y"].int_value() << ",\n" 
 				"        " << label["Width"].int_value() << ",\n" 
 			    "        window_" << window["Name"].string_value() << "_handle,\n" 
-			    "        0";
+			    "        0U";
 			if (label["Visible"].bool_value())
 			{
 				outfileUserSource << " | MW_CONTROL_FLAG_IS_VISIBLE";
@@ -1071,7 +1078,7 @@ int main(int argc, char **argv)
 			outfileUserSource << "    check_box_" << check_box["Name"].string_value() << "_handle = mw_ui_check_box_add_new(" << check_box["X"].int_value() << ",\n" 
 				"        " << check_box["Y"].int_value() << ",\n" 
 			    "        window_" << window["Name"].string_value() << "_handle,\n" 
-			    "        0";
+			    "        0U";
 			if (check_box["Visible"].bool_value())
 			{
 				outfileUserSource << " | MW_CONTROL_FLAG_IS_VISIBLE";
@@ -1125,7 +1132,7 @@ int main(int argc, char **argv)
 			outfileUserSource << "    arrow_" << arrow["Name"].string_value() << "_handle = mw_ui_arrow_add_new(" << arrow["X"].int_value() << ",\n" 
 				"        " << arrow["Y"].int_value() << ",\n" 
 			    "        window_" << window["Name"].string_value() << "_handle,\n" 
-			    "        0";
+			    "        0U";
 			if (arrow["Visible"].bool_value())
 			{
 				outfileUserSource << " | MW_CONTROL_FLAG_IS_VISIBLE";
@@ -1177,7 +1184,7 @@ int main(int argc, char **argv)
 				"        " << progress_bar["Width"].int_value() << ",\n" 
 				"        " << progress_bar["Height"].int_value() << ",\n" 
 			    "        window_" << window["Name"].string_value() << "_handle,\n" 
-			    "        0";
+			    "        0U";
 			if (progress_bar["Visible"].bool_value())
 			{
 				outfileUserSource << " | MW_CONTROL_FLAG_IS_VISIBLE";
@@ -1223,7 +1230,7 @@ int main(int argc, char **argv)
 				"        " << scroll_bar_horiz["Y"].int_value() << ",\n" 
 				"        " << scroll_bar_horiz["Width"].int_value() << ",\n" 
 			    "        window_" << window["Name"].string_value() << "_handle,\n" 
-			    "        0";
+			    "        0U";
 			if (scroll_bar_horiz["Visible"].bool_value())
 			{
 				outfileUserSource << " | MW_CONTROL_FLAG_IS_VISIBLE";
@@ -1269,7 +1276,7 @@ int main(int argc, char **argv)
 				"        " << scroll_bar_vert["Y"].int_value() << ",\n" 
 				"        " << scroll_bar_vert["Height"].int_value() << ",\n" 
 			    "        window_" << window["Name"].string_value() << "_handle,\n" 
-			    "        0";
+			    "        0U";
 			if (scroll_bar_vert["Visible"].bool_value())
 			{
 				outfileUserSource << " | MW_CONTROL_FLAG_IS_VISIBLE";
@@ -1324,7 +1331,7 @@ int main(int argc, char **argv)
 				"        " << radio_button["Y"].int_value() << ",\n" 
 				"        " << radio_button["Width"].int_value() << ",\n" 
 			    "        window_" << window["Name"].string_value() << "_handle,\n" 
-			    "        0";
+			    "        0U";
 			if (radio_button["Visible"].bool_value())
 			{
 				outfileUserSource << " | MW_CONTROL_FLAG_IS_VISIBLE";
@@ -1386,7 +1393,7 @@ int main(int argc, char **argv)
 				"        " << list_box["Y"].int_value() << ",\n" 
 				"        " << list_box["Width"].int_value() << ",\n" 
 			    "        window_" << window["Name"].string_value() << "_handle,\n" 
-			    "        0";
+			    "        0U";
 			if (list_box["Visible"].bool_value())
 			{
 				outfileUserSource << " | MW_CONTROL_FLAG_IS_VISIBLE";
@@ -1489,7 +1496,7 @@ int main(int argc, char **argv)
 					(text_box["Height"].int_value()) << ");\n" <<					
 					"    text_box_" << text_box["Name"].string_value() << "_handle = mw_ui_text_box_add_new(&r,\n" 
 					"        window_" << window["Name"].string_value() << "_handle,\n" 
-					"        0";
+					"        0U";
 			if (text_box["Visible"].bool_value())
 			{
 				outfileUserSource << " | MW_CONTROL_FLAG_IS_VISIBLE";
@@ -1551,7 +1558,7 @@ int main(int argc, char **argv)
 				"        " << scrolling_list_box["Y"].int_value() << ",\n" 
 				"        " << scrolling_list_box["Width"].int_value() << ",\n" 
 			    "        window_" << window["Name"].string_value() << "_handle,\n" 
-			    "        0";
+			    "        0U";
 			if (scrolling_list_box["Visible"].bool_value())
 			{
 				outfileUserSource << " | MW_CONTROL_FLAG_IS_VISIBLE";
@@ -1581,7 +1588,7 @@ int main(int argc, char **argv)
 					"        " << scrolling_list_box["Y"].int_value() << ",\n" 
 					"        " << scrolling_list_box["Lines"].int_value() << " * MW_UI_LIST_BOX_ROW_HEIGHT,\n" 
 					"        window_" << window["Name"].string_value() << "_handle,\n" 
-					"        0";
+					"        0U";
 			}
 			if (scrolling_list_box["Visible"].bool_value())
 			{
@@ -1685,7 +1692,7 @@ int main(int argc, char **argv)
 					(scrolling_text_box["Height"].int_value()) << ");\n" <<					
 					"    scrolling_text_box_" << scrolling_text_box["Name"].string_value() << "_handle = mw_ui_text_box_add_new(&r,\n" 
 					"        window_" << window["Name"].string_value() << "_handle,\n" 
-					"        0";
+					"        0U";
 			if (scrolling_text_box["Visible"].bool_value())
 			{
 				outfileUserSource << " | MW_CONTROL_FLAG_IS_VISIBLE";
@@ -1714,7 +1721,7 @@ int main(int argc, char **argv)
 					"        " << scrolling_text_box["Y"].int_value() << ",\n" 
 					"        " << scrolling_text_box["Height"].int_value() << ",\n" 
 					"        window_" << window["Name"].string_value() << "_handle,\n" 
-					"        0";
+					"        0U";
 			}
 			if (scrolling_text_box["Visible"].bool_value())
 			{
@@ -1755,7 +1762,7 @@ int main(int argc, char **argv)
     	    	
     	outfileWindowSource << 
     	            "void window_" << windowName << "_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_t *draw_info)\n" 
-    				"{\n    MW_ASSERT(draw_info, \"Null pointer parameter\");\n\n" 
+    				"{\n    MW_ASSERT(draw_info != (void*)0, \"Null pointer parameter\");\n\n" 
     				"    /* Fill window's client area with solid white */\n" 
 					"    mw_gl_set_fill(MW_GL_FILL);\n" 
 					"    mw_gl_set_solid_fill_colour(MW_HAL_LCD_WHITE);\n" 
@@ -1768,7 +1775,7 @@ int main(int argc, char **argv)
 					"    /* Add you window painting code here */\n}\n\n";
     	outfileWindowSource << 
     	            "void window_" << windowName << "_message_function(const mw_message_t *message)\n" 
-       				"{\n    MW_ASSERT(message, \"Null pointer parameter\");\n\n" 
+       				"{\n    MW_ASSERT(message != (void*)0, \"Null pointer parameter\");\n\n" 
        	            "    /* Next line stops compiler warnings as variable is currently unused */\n";
     	outfileWindowSource << 
     	            "    (void)window_" << windowName << "_data;\n\n" 
@@ -2065,7 +2072,7 @@ int main(int argc, char **argv)
        				
        	outfileWindowSource << 
 					"    default:\n" 
-					"        /* keep MISRA happy\n"
+					"        /* keep MISRA happy */\n"
 					"        break;\n    }\n}\n";
     	outfileWindowSource.close();
 
@@ -2182,6 +2189,11 @@ int main(int argc, char **argv)
 				"#ifdef __cplusplus\n"
 				" extern \"C\" {\n"
 				"#endif\n\n"
+                "#include <windows.h>\n\n"
+                "extern HWND hwnd;\n"
+                "extern bool mouse_down;\n"
+                "extern SHORT mx;\n"
+                "extern SHORT my;\n\n"
 				"void app_init(void);\n"
 				"void app_main_loop_process(void);\n\n"
 				"#ifdef __cplusplus\n"
@@ -2391,8 +2403,8 @@ int main(int argc, char **argv)
 	if (json["TargetType"].string_value() == "Windows")
 	{
 		outfileMake <<
-				"	del $(subst /,\\,$(OBJECTS))\n" 
-				"	del ${BINARY}\n";		
+				"	$(RM) $(subst /,\\,$(OBJECTS))\n" 
+				"	$(RM) ${BINARY}\n";		
 	}
 	else if (json["TargetType"].string_value() == "Linux")
 	{

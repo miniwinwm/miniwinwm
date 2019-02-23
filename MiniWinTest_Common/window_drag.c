@@ -88,7 +88,7 @@ void window_drag_paint_function(mw_handle_t window_handle, const mw_gl_draw_info
 	int16_t previous_y;
 	char text_buffer[5];
 
-	MW_ASSERT(draw_info, "Null pointer parameter");
+	MW_ASSERT(draw_info != (void*)0, "Null pointer parameter");
 
 	mw_gl_set_fill(MW_GL_FILL);
 	mw_gl_set_solid_fill_colour(MW_HAL_LCD_WHITE);
@@ -157,7 +157,7 @@ void window_drag_message_function(const mw_message_t *message)
 {
 	uint32_t temp_uint32;
 
-	MW_ASSERT(message, "Null pointer argument");
+	MW_ASSERT(message != (void*)0, "Null pointer argument");
 
 	switch (message->message_id)
 	{

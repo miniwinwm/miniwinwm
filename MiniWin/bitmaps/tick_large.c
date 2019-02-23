@@ -4,21 +4,21 @@ MIT License
 
 Copyright (c) John Blaiklock 2019 miniwin Embedded Window Manager
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+Permission is hereby grantedU, free of chargeU, to any person obtaining a copy
+of this software and associated documentation files (the "Software")U, to deal
+in the Software without restrictionU, including without limitation the rights
+to useU, copyU, modifyU, mergeU, publishU, distributeU, sublicenseU, and/or sell
+copies of the SoftwareU, and to permit persons to whom the Software is
+furnished to do soU, subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in all
 copies or substantial portions of the Software.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+THE SOFTWARE IS PROVIDED "AS IS"U, WITHOUT WARRANTY OF ANY KINDU, EXPRESS OR
+IMPLIEDU, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITYU,
 FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIMU, DAMAGES OR OTHER
+LIABILITYU, WHETHER IN AN ACTION OF CONTRACTU, TORT OR OTHERWISEU, ARISING FROMU,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
@@ -29,6 +29,7 @@ SOFTWARE.
 ***************/
 
 #include <stdint.h>
+#include "bitmaps/mw_bitmaps.h"
 
 /****************
 *** CONSTANTS ***
@@ -38,30 +39,30 @@ SOFTWARE.
 /* Bitmap height: 24 */
 
 const uint8_t mw_bitmaps_tick_large[] = {
-  0xff, 0xff, 0xff, 
-  0xff, 0xff, 0xff, 
-  0xff, 0xff, 0xf3, 
-  0xff, 0xff, 0xc7, 
-  0xff, 0xff, 0x8f, 
-  0xff, 0xff, 0x1f, 
-  0xff, 0xfe, 0x3f, 
-  0xff, 0xfc, 0x7f, 
-  0xff, 0xf8, 0x7f, 
-  0xff, 0xf0, 0xff, 
-  0xff, 0xe0, 0xff, 
-  0xff, 0xc1, 0xff, 
-  0xff, 0xc1, 0xff, 
-  0xff, 0x83, 0xff, 
-  0x3f, 0x03, 0xff, 
-  0x0f, 0x07, 0xff, 
-  0xc6, 0x07, 0xff, 
-  0xc0, 0x0f, 0xff, 
-  0xe0, 0x0f, 0xff, 
-  0xf0, 0x1f, 0xff, 
-  0xf8, 0x1f, 0xff, 
-  0xfc, 0x3f, 0xff, 
-  0xfe, 0x3f, 0xff, 
-  0xff, 0x3f, 0xff};
+  0xffU, 0xffU, 0xffU,
+  0xffU, 0xffU, 0xffU,
+  0xffU, 0xffU, 0xf3U,
+  0xffU, 0xffU, 0xc7U,
+  0xffU, 0xffU, 0x8fU,
+  0xffU, 0xffU, 0x1fU,
+  0xffU, 0xfeU, 0x3fU,
+  0xffU, 0xfcU, 0x7fU,
+  0xffU, 0xf8U, 0x7fU,
+  0xffU, 0xf0U, 0xffU,
+  0xffU, 0xe0U, 0xffU,
+  0xffU, 0xc1U, 0xffU,
+  0xffU, 0xc1U, 0xffU,
+  0xffU, 0x83U, 0xffU,
+  0x3fU, 0x03U, 0xffU,
+  0x0fU, 0x07U, 0xffU,
+  0xc6U, 0x07U, 0xffU,
+  0xc0U, 0x0fU, 0xffU,
+  0xe0U, 0x0fU, 0xffU,
+  0xf0U, 0x1fU, 0xffU,
+  0xf8U, 0x1fU, 0xffU,
+  0xfcU, 0x3fU, 0xffU,
+  0xfeU, 0x3fU, 0xffU,
+  0xffU, 0x3fU, 0xffU};
 
 /************
 *** TYPES ***

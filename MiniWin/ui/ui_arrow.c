@@ -81,6 +81,8 @@ static void arrow_paint_function(mw_handle_t control_handle, const mw_gl_draw_in
 	mw_hal_lcd_colour_t highlighted_colour;
 	mw_hal_lcd_colour_t lowlighted_colour;
 
+	MW_ASSERT(draw_info != (void*)0, "Null pointer argument");
+
     /* set the arrow box fill colour depending on up/down state */
 	if (this_arrow->arrow_down)
 	{
@@ -174,7 +176,7 @@ static void arrow_message_function(const mw_message_t *message)
 {
 	mw_ui_arrow_data_t *this_arrow = (mw_ui_arrow_data_t*)mw_get_control_instance_data(message->recipient_handle);
 
-	MW_ASSERT(message, "Null pointer argument");
+	MW_ASSERT(message != (void*)0, "Null pointer argument");
 
 	switch (message->message_id)
 	{

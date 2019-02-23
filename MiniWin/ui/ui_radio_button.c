@@ -71,6 +71,8 @@ static void radio_button_paint_function(mw_handle_t control_handle, const mw_gl_
 	int16_t height;
 	int16_t box_size;
 
+	MW_ASSERT(draw_info != (void*)0, "Null pointer argument");
+
 	mw_gl_set_fill(MW_GL_FILL);
 	mw_gl_set_line(MW_GL_SOLID_LINE);
 	mw_gl_set_border(MW_GL_BORDER_ON);
@@ -184,7 +186,7 @@ static void radio_button_message_function(const mw_message_t *message)
 	int16_t height;
 	uint32_t misra_temp;
 
-	MW_ASSERT(message, "Null pointer argument");
+	MW_ASSERT(message != (void*)0, "Null pointer argument");
 
 	/* set size dependent values */
 	if ((mw_get_control_flags(message->recipient_handle) & MW_CONTROL_FLAG_LARGE_SIZE) == MW_CONTROL_FLAG_LARGE_SIZE)

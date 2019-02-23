@@ -6,9 +6,9 @@ CXXFLAGS = -g -I../EasyBMP
 
 BMPConv24Colour.exe: $(OBJ)
 	$(CXX) -o $@ $^ $(LDFLAGS)
-	del $(OBJ)
+	$(RM) $(OBJ)
 
 .PHONY: clean
 clean:
-	del BMPConv24Colour.exe
+	$(RM) BMPConv24Colour.exe
 

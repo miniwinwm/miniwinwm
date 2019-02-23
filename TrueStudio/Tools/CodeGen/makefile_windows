@@ -6,8 +6,8 @@ CXXFLAGS = -std=gnu++11 -g
 
 CodeGen.exe: $(obj)
 	$(CXX) -o $@ $^ $(LDFLAGS)
-	del $(obj)
+	$(RM) $(obj)
 
 .PHONY: clean
 clean:
-	del CodeGen.exe
+	$(RM) CodeGen.exe

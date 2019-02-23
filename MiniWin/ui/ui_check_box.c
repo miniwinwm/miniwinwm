@@ -69,6 +69,8 @@ static void check_box_paint_function(mw_handle_t control_handle, const mw_gl_dra
 	int16_t height;
 	mw_ui_check_box_data_t *this_check_box = (mw_ui_check_box_data_t*)mw_get_control_instance_data(control_handle);
 
+	MW_ASSERT(draw_info != (void*)0, "Null pointer argument");
+
     /* set the box outline, text and X colour depending on enabled state */   
     if ((mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_IS_ENABLED) == MW_CONTROL_FLAG_IS_ENABLED)
 	{
@@ -147,7 +149,7 @@ static void check_box_message_function(const mw_message_t *message)
 {
 	mw_ui_check_box_data_t *this_check_box = (mw_ui_check_box_data_t*)mw_get_control_instance_data(message->recipient_handle);
 
-	MW_ASSERT(message, "Null pointer argument");
+	MW_ASSERT(message != (void*)0, "Null pointer argument");
 
 	switch (message->message_id)
 	{

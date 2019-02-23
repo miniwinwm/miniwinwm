@@ -93,7 +93,7 @@ typedef enum
  */
 typedef struct
 {
-    const char **menu_bar_items;					/**< Pointer to array of menu bar entry labels */
+    char **menu_bar_items;							/**< Pointer to array of menu bar entry labels */
     mw_paint_func_p paint_func;         			/**< Pointer to window paint function */
     mw_message_func_p message_func;    			 	/**< Pointer to window message handler function */
     uint32_t window_flags;							/**< All the flags defining a window's description and state */
@@ -189,7 +189,7 @@ static void set_window_details(const mw_util_rect_t *rect,
 	uint8_t window_id,
 	mw_handle_t window_handle,
 	mw_message_func_p message_func,
-	const char **menu_bar_items,
+	char **menu_bar_items,
 	uint8_t menu_bar_items_count,
 	uint32_t window_flags,
 	void *instance_data);
@@ -328,7 +328,7 @@ static void set_window_details(const mw_util_rect_t *rect,
 		uint8_t window_id,
 		mw_handle_t window_handle,
 		mw_message_func_p message_func,
-		const char **menu_bar_items,
+		char **menu_bar_items,
 		uint8_t menu_bar_items_count,
 		uint32_t window_flags,
 		void *instance_data)
@@ -4215,7 +4215,7 @@ mw_handle_t mw_add_window(mw_util_rect_t *rect,
 		const char *title,
 		mw_paint_func_p paint_func,
 		mw_message_func_p message_func,
-		const char **menu_bar_items,
+		char **menu_bar_items,
 		uint8_t menu_bar_items_count,
 		uint32_t window_flags,
 		void *instance_data)
@@ -4842,8 +4842,6 @@ void mw_remove_window(mw_handle_t window_handle)
 	{
 		if (mw_all_controls[i].parent_handle == window_handle)
 		{
-			// todo remove
-			//mw_all_controls[i].control_flags &= (uint16_t)~MW_CONTROL_FLAG_IS_USED;
 			mw_remove_control(mw_all_controls[i].control_handle);
 		}
 	}
@@ -5186,63 +5184,6 @@ void mw_paint_control_rect(mw_handle_t control_handle, const mw_util_rect_t *rec
 
 void mw_remove_control(mw_handle_t control_handle)
 {
-#if 0
-	// todo remove
-	uint8_t i;
-	mw_message_t *message;
-	uint8_t control_id;
-
-	/* get control id from control handle and check it's in range */
-	control_id = get_control_id_for_handle(control_handle);
-	if (control_id >= MW_MAX_CONTROL_COUNT)
-	{
-		MW_ASSERT((bool)false, "Bad control handle");
-		return;
-	}
-
-	/* cancel all outstanding timers for this control */
-	for (i = 0U; i < MW_MAX_TIMER_COUNT; i++)
-	{
-		if (mw_all_timers[i].timer_handle != MW_INVALID_HANDLE &&
-				mw_all_timers[i].recipient_type == MW_CONTROL_MESSAGE &&
-				mw_all_timers[i].recipient_handle == control_handle)
-
-		{
-			/* timers are one shot so mark this timer as unused again */
-			mw_all_timers[i].timer_handle = MW_INVALID_HANDLE;
-		}
-	}
-
-	/* cancel timer messages already in message queue */
-	for (i = 0U; i < MW_MESSAGE_QUEUE_SIZE; i++)
-	{
-		message = mw_message_queue_get_ref_to_item_at_position(i);
-		MW_ASSERT(message, "Null message found in queue");
-
-		if (message != NULL)
-		{
-			if (message->message_id == MW_TIMER_MESSAGE &&
-					message->message_recipient_type == MW_CONTROL_MESSAGE &&
-					message->recipient_handle == control_handle)
-			{
-				/* this leaves the message in the message queue but marks it as to be ignored when the message is processed */
-				message->message_recipient_type = MW_CANCELLED_MESSAGE;
-			}
-		}
-	}
-
-	/* post control removed message to control message function */
-   	mw_post_message(MW_CONTROL_REMOVED_MESSAGE,
-   			MW_UNUSED_MESSAGE_PARAMETER,
-   			control_handle,
-   			MW_UNUSED_MESSAGE_PARAMETER,
-			NULL,
-   			MW_CONTROL_MESSAGE);
-
-	/* remove this control by marking it as unused */
-   	mw_all_controls[control_id].control_flags &= (uint16_t)(~MW_CONTROL_FLAG_IS_USED);
-#endif
-
 	uint8_t i;
 	mw_message_t *message;
 	uint8_t control_id;

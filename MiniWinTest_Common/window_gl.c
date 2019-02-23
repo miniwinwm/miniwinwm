@@ -37,31 +37,8 @@ SOFTWARE.
 *** CONSTANTS ***
 ****************/
 
-#define GL_TEST_TIME	 	14			/**< Time between tests in system ticks */
-#define SHAPE_POINTS 		(sizeof(shape_x_const) / sizeof(int16_t))
-static const int16_t shape_x_const[] = {0, -5, 0, 5};
-static const int16_t shape_y_const[] = {-10, 10, 5, 10};
-
-/* width = 18
-   height = 16 */
-static const uint8_t snail[]={
-255U, 255U, 128U,
-255U, 255U, 0U,
-129U, 255U, 128U,
-60U, 255U, 0U,
-126U, 127U, 128U,
-97U, 63U, 0U,
-76U, 191U, 128U,
-94U, 177U, 0U,
-88U, 170U, 128U,
-95U, 32U, 0U,
-76U, 42U, 128U,
-97U, 133U, 0U,
-48U, 3U, 128U,
-128U, 7U, 0U,
-0U, 15U, 128U,
-0U, 15U, 0U
-};
+#define GL_TEST_TIME	 	14U			/**< Time between tests in system ticks */
+#define SHAPE_POINTS 		(uint8_t)(sizeof(shape_x_const) / sizeof(int16_t))
 
 /************
 *** TYPES ***
@@ -85,8 +62,6 @@ typedef struct
 **********************/
 
 static window_gl_data_t window_GL_data;
-static int16_t shape_x[SHAPE_POINTS];
-static int16_t shape_y[SHAPE_POINTS];
 
 /********************************
 *** LOCAL FUNCTION PROTOTYPES ***
@@ -102,12 +77,36 @@ static int16_t shape_y[SHAPE_POINTS];
 
 void window_gl_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_t *draw_info)
 {
-	uint16_t x;
-	uint16_t y;
-	const uint16_t pattern[16]={0xffff, 0x83c1, 0x83c1, 0x83c1, 0x83c1, 0x83c1, 0xffff, 0xffff,
-			0xffff, 0xffff, 0x83c1, 0x83c1, 0x83c1, 0x83c1, 0x83c1, 0xffff};
+	/* width = 18
+	   height = 16 */
+	const uint8_t snail[] = {
+	255U, 255U, 128U,
+	255U, 255U, 0U,
+	129U, 255U, 128U,
+	60U, 255U, 0U,
+	126U, 127U, 128U,
+	97U, 63U, 0U,
+	76U, 191U, 128U,
+	94U, 177U, 0U,
+	88U, 170U, 128U,
+	95U, 32U, 0U,
+	76U, 42U, 128U,
+	97U, 133U, 0U,
+	48U, 3U, 128U,
+	128U, 7U, 0U,
+	0U, 15U, 128U,
+	0U, 15U, 0U
+	};
+	const int16_t shape_x_const[] = {0, -5, 0, 5};
+	const int16_t shape_y_const[] = {-10, 10, 5, 10};
+	const uint16_t pattern[16] = {0xffff, 0x83c1, 0x83c1, 0x83c1, 0x83c1, 0x83c1, 0xffff, 0xffff,
+			0xffff, 0xffff, 0x83c1, 0x83c1, 0x83c1, 0x83c1, 0x83c1, 0xffff};	int16_t shape_x[SHAPE_POINTS];
 
-	MW_ASSERT(draw_info, "Null pointer parameter");
+	int16_t shape_y[SHAPE_POINTS];
+	int16_t x;
+	int16_t y;
+
+	MW_ASSERT(draw_info != (void*)0, "Null pointer parameter");
 
 	mw_gl_set_fill(MW_GL_FILL);
 	mw_gl_set_solid_fill_colour(MW_HAL_LCD_WHITE);
@@ -158,7 +157,7 @@ void window_gl_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_t
 		mw_gl_set_solid_fill_colour(MW_HAL_LCD_GREEN);
 		mw_gl_set_bg_transparency(MW_GL_BG_NOT_TRANSPARENT);
 		mw_gl_clear_pattern();
-		for(y = 20; y < 40; y++)
+		for (y = 20; y < 40; y++)
 		{
 			for(x = 30; x < 50; x++)
 			{
@@ -861,9 +860,9 @@ void window_gl_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_t
 		mw_gl_set_line(MW_GL_SOLID_LINE);
 		mw_gl_set_fill(MW_GL_NO_FILL);
 		mw_gl_set_border(MW_GL_BORDER_ON);
-		memcpy(shape_x, shape_x_const, sizeof(shape_x));
-		memcpy(shape_y, shape_y_const, sizeof(shape_y));
-		mw_gl_poly(draw_info, SHAPE_POINTS, shape_x, shape_y, 150,150);
+		(void)memcpy((shape_x), (shape_x_const), (sizeof(shape_x)));
+		(void)memcpy((shape_y), (shape_y_const), (sizeof(shape_y)));
+		mw_gl_poly(draw_info, SHAPE_POINTS, shape_x, shape_y, 150, 150);
 		break;
 
 	case 50:
@@ -872,8 +871,8 @@ void window_gl_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_t
 		mw_gl_set_line(MW_GL_SOLID_LINE);
 		mw_gl_set_fill(MW_GL_NO_FILL);
 		mw_gl_set_border(MW_GL_BORDER_ON);
-		memcpy(shape_x, shape_x_const, sizeof(shape_x));
-		memcpy(shape_y, shape_y_const, sizeof(shape_y));
+		(void)memcpy((shape_x), (shape_x_const), (sizeof(shape_x)));
+		(void)memcpy((shape_y), (shape_y_const), (sizeof(shape_y)));
 		mw_gl_scale_shape(SHAPE_POINTS, shape_x, shape_y, 100, 100);
 		mw_gl_rotate_shape(SHAPE_POINTS, shape_x, shape_y, 45);
 		mw_gl_poly(draw_info, SHAPE_POINTS, shape_x, shape_y, 150,150);
@@ -885,8 +884,8 @@ void window_gl_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_t
 		mw_gl_set_line(MW_GL_SOLID_LINE);
 		mw_gl_set_fill(MW_GL_NO_FILL);
 		mw_gl_set_border(MW_GL_BORDER_ON);
-		memcpy(shape_x, shape_x_const, sizeof(shape_x));
-		memcpy(shape_y, shape_y_const, sizeof(shape_y));
+		(void)memcpy((shape_x), (shape_x_const), (sizeof(shape_x)));
+		(void)memcpy((shape_y), (shape_y_const), (sizeof(shape_y)));
 		mw_gl_scale_shape(SHAPE_POINTS, shape_x, shape_y, 100, 100);
 		mw_gl_rotate_shape(SHAPE_POINTS, shape_x, shape_y, -45);
 		mw_gl_poly(draw_info, SHAPE_POINTS, shape_x, shape_y, 150, 150);
@@ -898,8 +897,8 @@ void window_gl_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_t
 		mw_gl_set_line(MW_GL_SOLID_LINE);
 		mw_gl_set_fill(MW_GL_NO_FILL);
 		mw_gl_set_border(MW_GL_BORDER_ON);
-		memcpy(shape_x, shape_x_const, sizeof(shape_x));
-		memcpy(shape_y, shape_y_const, sizeof(shape_y));
+		(void)memcpy((shape_x), (shape_x_const), (sizeof(shape_x)));
+		(void)memcpy((shape_y), (shape_y_const), (sizeof(shape_y)));
 		mw_gl_scale_shape(SHAPE_POINTS, shape_x, shape_y, 100, 100);
 		mw_gl_rotate_shape(SHAPE_POINTS, shape_x, shape_y, 245);
 		mw_gl_poly(draw_info, SHAPE_POINTS, shape_x, shape_y, 150, 150);
@@ -911,8 +910,8 @@ void window_gl_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_t
 		mw_gl_set_line(MW_GL_SOLID_LINE);
 		mw_gl_set_fill(MW_GL_NO_FILL);
 		mw_gl_set_border(MW_GL_BORDER_ON);
-		memcpy(shape_x, shape_x_const, sizeof(shape_x));
-		memcpy(shape_y, shape_y_const, sizeof(shape_y));
+		(void)memcpy((shape_x), (shape_x_const), (sizeof(shape_x)));
+		(void)memcpy((shape_y), (shape_y_const), (sizeof(shape_y)));
 		mw_gl_scale_shape(SHAPE_POINTS, shape_x, shape_y, 100, 100);
 		mw_gl_rotate_shape(SHAPE_POINTS, shape_x, shape_y, 35);
 		mw_gl_poly(draw_info, SHAPE_POINTS, shape_x, shape_y, 150, 150);
@@ -987,7 +986,7 @@ void window_gl_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_t
 
 void window_gl_message_function(const mw_message_t *message)
 {
-	MW_ASSERT(message, "Null pointer argument");
+	MW_ASSERT(message != (void*)0, "Null pointer argument");
 
 	switch (message->message_id)
 	{

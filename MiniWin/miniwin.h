@@ -41,6 +41,7 @@ SOFTWARE.
 #include "miniwin_debug.h"
 #include "miniwin_settings.h"
 #include "gl/gl.h"
+#include "bitmaps/mw_bitmaps.h"
 
 /****************
 *** CONSTANTS ***
@@ -783,26 +784,6 @@ typedef void (*mw_message_func_p)(const mw_message_t *user_message);
 *************************/
 
 extern volatile uint32_t mw_tick_counter;
-extern const uint8_t mw_bitmaps_close_icon[];
-extern const uint8_t mw_bitmaps_maximise_icon[];
-extern const uint8_t mw_bitmaps_minimise_icon[];
-extern const uint8_t mw_bitmaps_resize_icon[];
-extern const uint8_t mw_bitmaps_close_icon_large[];
-extern const uint8_t mw_bitmaps_maximise_icon_large[];
-extern const uint8_t mw_bitmaps_minimise_icon_large[];
-extern const uint8_t mw_bitmaps_resize_icon_large[];
-extern const uint8_t mw_bitmaps_tick[];
-extern const uint8_t mw_bitmaps_tick_large[];
-extern const uint8_t mw_bitmaps_backspace_key[];
-extern const uint8_t mw_bitmaps_shift_key[];
-extern const uint8_t mw_bitmaps_num_key[];
-extern const uint8_t mw_bitmaps_sym_key[];
-extern const uint8_t mw_bitmaps_let_key[];
-extern const uint8_t mw_bitmaps_file_icon_small[];
-extern const uint8_t mw_bitmaps_folder_icon_small[];
-extern const uint8_t mw_bitmaps_file_icon_large[];
-extern const uint8_t mw_bitmaps_folder_icon_large[];
-
 
 /***************************
 *** FUNCTIONS PROTOTYPES ***
@@ -899,7 +880,7 @@ mw_handle_t mw_add_window(mw_util_rect_t *rect,
 		const char *title,
 		mw_paint_func_p paint_func,
 		mw_message_func_p message_func,
-		const char **menu_bar_items,
+		char **menu_bar_items,
 		uint8_t menu_bar_items_count,
 		uint32_t window_flags,
 		void *instance_data);

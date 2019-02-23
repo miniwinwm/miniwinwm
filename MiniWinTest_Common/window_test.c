@@ -46,8 +46,8 @@ SOFTWARE.
  */
 typedef struct
 {
-	uint16_t circle_x;				/**< X coordinate of user touch point which is where to draw circle */
-	uint16_t circle_y;				/**< Y coordinate of user touch point which is where to draw circle */
+	int16_t circle_x;				/**< X coordinate of user touch point which is where to draw circle */
+	int16_t circle_y;				/**< Y coordinate of user touch point which is where to draw circle */
 	bool draw_circle;				/**< If the screen has been touched and need to draw the circle */
 	uint8_t i;						/**< Value shown in label and progress bar progress */
 	char transfer_buffer[10];		/**< Buffer to transfer data to label */
@@ -80,7 +80,7 @@ static window_test_data_t window_test_data;
 
 void window_test_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_t *draw_info)
 {
-	MW_ASSERT(draw_info, "Null pointer parameter");
+	MW_ASSERT(draw_info != (void*)0, "Null pointer parameter");
 
 	mw_gl_set_fill(MW_GL_FILL);
 	mw_gl_set_solid_fill_colour(MW_HAL_LCD_WHITE);
@@ -103,7 +103,14 @@ void window_test_paint_function(mw_handle_t window_handle, const mw_gl_draw_info
 
 void window_test_message_function(const mw_message_t *message)
 {
-	MW_ASSERT(message, "Null pointer argument");
+	uint32_t temp_uint32;
+	static char dialog_2button_title[] = "Title";
+	static char dialog_2button_message[] = "This is a message";
+	static char ok_button_label[] = "OK";
+	static char cancel_button_label[] = "Cancel";
+	static char dialog_number_entry_title[] = "Number Entry";
+
+	MW_ASSERT(message != (void*)0, "Null pointer argument");
 
 	switch (message->message_id)
 	{
@@ -111,18 +118,19 @@ void window_test_message_function(const mw_message_t *message)
 		window_test_data.draw_circle = false;
 		window_test_data.i = 0;
 		window_test_data.large_controls = false;
-		mw_set_timer(mw_tick_counter + MW_TICKS_PER_SECOND, message->recipient_handle, MW_WINDOW_MESSAGE);
+		(void)mw_set_timer(mw_tick_counter + MW_TICKS_PER_SECOND, message->recipient_handle, MW_WINDOW_MESSAGE);
 		window_test_data.vert_scroll_bar_large_position = 0;
 		window_test_data.vert_scroll_bar_position = 0;
 		break;
 
 	case MW_TOUCH_DOWN_MESSAGE:
-		window_test_data.circle_x = message->message_data >> 16;
-		window_test_data.circle_y = message->message_data;
+		temp_uint32 = message->message_data >> 16;
+		window_test_data.circle_x = (int16_t)temp_uint32;
+		window_test_data.circle_y = (int16_t)message->message_data;
 		window_test_data.draw_circle = true;
 
 		/* remove pop up list box if visible */
-		if (mw_get_control_flags(list_box_1_handle) & MW_CONTROL_FLAG_IS_VISIBLE)
+		if ((mw_get_control_flags(list_box_1_handle) & MW_CONTROL_FLAG_IS_VISIBLE) == MW_CONTROL_FLAG_IS_VISIBLE)
 		{
 			mw_set_control_visible(list_box_1_handle, false);
 			mw_set_menu_bar_enabled_state(message->recipient_handle, true);
@@ -137,7 +145,7 @@ void window_test_message_function(const mw_message_t *message)
 
 		if (window_test_data.large_controls)
 		{
-			mw_resize_window(message->recipient_handle, 240, 310);
+			(void)mw_resize_window(message->recipient_handle, 240, 310);
 
 			/* set all standard sized controls invisible and large controls visible */
 			mw_set_control_visible(label_1_handle, false);
@@ -162,7 +170,7 @@ void window_test_message_function(const mw_message_t *message)
 		}
 		else
 		{
-			mw_resize_window(message->recipient_handle, 220, 140);
+			(void)mw_resize_window(message->recipient_handle, 220, 140);
 
 			/* set all standard sized controls visible and large controls invisible */
 			mw_set_control_visible(label_1_handle, true);
@@ -193,7 +201,7 @@ void window_test_message_function(const mw_message_t *message)
 
 	case MW_MENU_BAR_ITEM_PRESSED_MESSAGE:
 	    /* a menu bar item has been pressed */
-		if (message->message_data == 1)
+		if (message->message_data == 1U)
 		{
 			/* second item in menu bar pressed so set pop up list box visible */
 			mw_set_control_visible(list_box_1_handle, true);
@@ -210,10 +218,14 @@ void window_test_message_function(const mw_message_t *message)
 			/* repaint frame to update the menu bar */
 			mw_paint_window_frame(message->recipient_handle, MW_WINDOW_FRAME_COMPONENT_MENU_BAR);
 		}
-		else if (message->message_data == 2)
+		else if (message->message_data == 2U)
 		{
-			wm_set_window_title(message->recipient_handle, "Changed");
+			wm_set_window_title(message->recipient_handle, (char*)&"Changed");
 			mw_paint_window_frame(message->recipient_handle, MW_WINDOW_FRAME_COMPONENT_TITLE_BAR);
+		}
+		else
+		{
+			/* keep MISRA happy */
 		}
 		break;
 
@@ -221,35 +233,39 @@ void window_test_message_function(const mw_message_t *message)
 		/* a check box state has changed */
 		if (message->sender_handle == check_box_1_handle)
 		{
-			if (message->message_data)
+			if (message->message_data != 0U)
 			{
 				/* create a pop up 2 button dialog */
-				mw_create_window_dialog_two_button(20,
+				(void)mw_create_window_dialog_two_button(20,
 						50,
 						150,
-						"Title",
-						"This is a message",
-						"Ok",
-						"Cancel",
+						dialog_2button_title,
+						dialog_2button_message,
+						ok_button_label,
+						cancel_button_label,
 						false,
 						message->recipient_handle);
 			}
 		}
 		else if (message->sender_handle == check_box_1_large_handle)
 		{
-			if (message->message_data)
+			if (message->message_data != 0U)
 			{
 				/* create a pop up 2 button dialog */
-				mw_create_window_dialog_two_button(5,
+				(void)mw_create_window_dialog_two_button(5,
 						25,
 						220,
-						"Title",
-						"This is a message",
-						"Ok",
-						"Cancel",
+						dialog_2button_title,
+						dialog_2button_message,
+						ok_button_label,
+						cancel_button_label,
 						true,
 						message->recipient_handle);
 			}
+		}
+		else
+		{
+			/* keep MISRA happy */
 		}
 		break;
 
@@ -257,7 +273,7 @@ void window_test_message_function(const mw_message_t *message)
 		/* pop up list box item pressed */
 		if (message->sender_handle == list_box_1_handle)
 		{
-			if (message->message_data == 0)
+			if (message->message_data == 0U)
 			{
 				mw_send_window_to_back(message->recipient_handle);
 				mw_paint_all();
@@ -282,7 +298,7 @@ void window_test_message_function(const mw_message_t *message)
 					message->recipient_handle,
 					scroll_bar_horiz_1_handle,
 					window_test_data.vert_scroll_bar_position,
-					MW_UNUSED_MESSAGE_PARAMETER,
+					NULL,
 					MW_CONTROL_MESSAGE);
 			mw_paint_control(scroll_bar_horiz_1_handle);
 		}
@@ -292,9 +308,13 @@ void window_test_message_function(const mw_message_t *message)
 					message->recipient_handle,
 					scroll_bar_horiz_1_large_handle,
 					window_test_data.vert_scroll_bar_large_position,
-					MW_UNUSED_MESSAGE_PARAMETER,
+					NULL,
 					MW_CONTROL_MESSAGE);
 			mw_paint_control(scroll_bar_horiz_1_large_handle);
+		}
+		else
+		{
+			/* keep MISRA happy */
 		}
 		break;
 
@@ -305,7 +325,7 @@ void window_test_message_function(const mw_message_t *message)
 					message->recipient_handle,
 					scroll_bar_vert_1_large_handle,
 					message->message_data,
-					MW_UNUSED_MESSAGE_PARAMETER,
+					NULL,
 					MW_CONTROL_MESSAGE);
 			mw_paint_control(scroll_bar_vert_1_large_handle);
 		}
@@ -315,9 +335,13 @@ void window_test_message_function(const mw_message_t *message)
 					message->recipient_handle,
 					scroll_bar_vert_1_handle,
 					message->message_data,
-					MW_UNUSED_MESSAGE_PARAMETER,
+					NULL,
 					MW_CONTROL_MESSAGE);
 			mw_paint_control(scroll_bar_vert_1_handle);
+		}
+		else
+		{
+			/* keep MISRA happy */
 		}
 		break;
 
@@ -328,7 +352,7 @@ void window_test_message_function(const mw_message_t *message)
 					message->recipient_handle,
 					list_box_3_handle,
 					message->message_data,
-					MW_UNUSED_MESSAGE_PARAMETER,
+					NULL,
 					MW_CONTROL_MESSAGE);
 			mw_paint_control(list_box_3_handle);
 		}
@@ -338,27 +362,31 @@ void window_test_message_function(const mw_message_t *message)
 					message->recipient_handle,
 					list_box_3_large_handle,
 					message->message_data,
-					MW_UNUSED_MESSAGE_PARAMETER,
+					NULL,
 					MW_CONTROL_MESSAGE);
 			mw_paint_control(list_box_3_large_handle);
 		}
 		else if (message->sender_handle == scroll_bar_vert_1_large_handle)
 		{
-			window_test_data.vert_scroll_bar_large_position = message->message_data;
+			window_test_data.vert_scroll_bar_large_position = (uint8_t)message->message_data;
 		}
 		else if (message->sender_handle == scroll_bar_vert_1_handle)
 		{
-			window_test_data.vert_scroll_bar_position = message->message_data;
+			window_test_data.vert_scroll_bar_position = (uint8_t)message->message_data;
+		}
+		else
+		{
+			/* keep MISRA happy */
 		}
 		break;
 
 	case MW_TIMER_MESSAGE:
 		window_test_data.i++;
-		if (window_test_data.i > 100)
+		if (window_test_data.i > 100U)
 		{
-			window_test_data.i = 0;
+			window_test_data.i = 0U;
 		}
-		(void)mw_util_safe_itoa(window_test_data.i, window_test_data.transfer_buffer, 10, 10, false, 0, ' ');
+		(void)mw_util_safe_itoa((int32_t)window_test_data.i, window_test_data.transfer_buffer, 10, 10, false, 0, ' ');
 		if (window_test_data.large_controls)
 		{
 			mw_post_message(MW_LABEL_SET_LABEL_TEXT_MESSAGE,
@@ -384,19 +412,19 @@ void window_test_message_function(const mw_message_t *message)
 				message->recipient_handle,
 				progress_bar_1_handle,
 				window_test_data.i,
-				MW_UNUSED_MESSAGE_PARAMETER,
+				NULL,
 				MW_CONTROL_MESSAGE);
 
 		mw_paint_control(progress_bar_1_handle);
-		mw_set_timer(mw_tick_counter + MW_TICKS_PER_SECOND, message->recipient_handle, MW_WINDOW_MESSAGE);
+		(void)mw_set_timer(mw_tick_counter + MW_TICKS_PER_SECOND, message->recipient_handle, MW_WINDOW_MESSAGE);
 		break;
 
 	case MW_ARROW_PRESSED_MESSAGE:
 		if (window_test_data.large_controls)
 		{
-			 mw_create_window_dialog_number_entry(10,
+			 (void)mw_create_window_dialog_number_entry(10,
 					50,
-					"Number entry",
+					dialog_number_entry_title,
 					true,
 					-53,
 					true,
@@ -404,9 +432,9 @@ void window_test_message_function(const mw_message_t *message)
 		}
 		else
 		{
-			 mw_create_window_dialog_number_entry(10,
+			 (void)mw_create_window_dialog_number_entry(10,
 					50,
-					"Number entry",
+					dialog_number_entry_title,
 					false,
 					53,
 					false,

@@ -216,6 +216,8 @@ static void mw_dialog_date_chooser_paint_function(mw_handle_t window_handle, con
 	char text_date[16];
 	char temp_buffer[5];
 
+	MW_ASSERT(draw_info != (void*)0, "Null pointer argument");
+
 	mw_gl_set_fill(MW_GL_FILL);
 	mw_gl_set_solid_fill_colour(MW_HAL_LCD_WHITE);
 	mw_gl_set_border(MW_GL_BORDER_OFF);
@@ -266,7 +268,7 @@ static void mw_dialog_date_chooser_paint_function(mw_handle_t window_handle, con
  */
 static void mw_dialog_date_chooser_message_function(const mw_message_t *message)
 {
-	MW_ASSERT(message, "Null pointer argument");
+	MW_ASSERT(message != (void*)0, "Null pointer argument");
 
 	switch (message->message_id)
 	{

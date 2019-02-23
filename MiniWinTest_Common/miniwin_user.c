@@ -42,29 +42,53 @@ SOFTWARE.
 *** CONSTANTS ***
 ****************/
 
-static const char *menu_bar_labels[] = {"Cat", "Dog", "Gnu"};
+static char menu_bar_label_cat[] = "Cat";
+static char menu_bar_label_dog[] = "Dog";
+static char menu_bar_label_gnu[] = "Gnu";
+static char *menu_bar_labels[] = {menu_bar_label_cat, menu_bar_label_dog, menu_bar_label_gnu};
 #define MENU_BAR_1_ITEMS_COUNT				(sizeof(menu_bar_labels)/sizeof(char *))
-static const char *radio_button_labels[] = {"Elk", "Ant", "Hog"};
+
+static char radio_button_label_elk[] = "Elk";
+static char radio_button_label_ant[] = "Ant";
+static char radio_button_label_hog[] = "Hog";
+static char *radio_button_labels[] = {radio_button_label_elk, radio_button_label_ant, radio_button_label_hog};
 #define RADIO_BUTTON_1_ITEMS_COUNT			(sizeof(radio_button_labels)/sizeof(char *))
+
+static char list_box_label_to_back[] = "To Back";
+static char list_box_label_disabled[] = "Disabled";
 static const mw_ui_list_box_entry list_box_1_entries[] = {
-		{"To back", NULL},
-		{"Disabled", NULL}};
+		{list_box_label_to_back, NULL},
+		{list_box_label_disabled, NULL}};
 #define LIST_BOX_1_ITEMS_COUNT				(sizeof(list_box_1_entries)/sizeof(mw_ui_list_box_entry))
+
+static char list_box_label_line[] = "Line";
+static char list_box_label_square[] = "Square";
+static char list_box_label_cube[] = "Cube";
 static const mw_ui_list_box_entry list_box_2_entries[] = {
-		{"Line", NULL},
-		{"Square", NULL},
-		{"Cube", NULL}};
+		{list_box_label_line, NULL},
+		{list_box_label_square, NULL},
+		{list_box_label_cube, NULL}};
 #define LIST_BOX_2_ITEMS_COUNT				(sizeof(list_box_2_entries)/sizeof(mw_ui_list_box_entry))
+
+static char list_box_label_list[] = "List";
+static char list_box_label_button[] = "Button";
+static char list_box_label_menu[] = "Menu";
+static char list_box_label_label[] = "Label";
+static char list_box_label_scroll[] = "Scroll";
+static char list_box_label_window[] = "Window";
+static char list_box_label_control[] = "Control";
+static char list_box_label_icon[] = "Icon";
+static char list_box_label_root[] = "Root";
 static const mw_ui_list_box_entry list_box_3_entries[] = {
-		{"List", NULL},
-		{"Button", NULL},
-		{"Menu", NULL},
-		{"Label", NULL},
-		{"Scroll", NULL},
-		{"Window", NULL},
-		{"Control", NULL},
-		{"Icon", NULL},
-		{"Root", NULL}};
+		{list_box_label_list, NULL},
+		{list_box_label_button, NULL},
+		{list_box_label_menu, NULL},
+		{list_box_label_label, NULL},
+		{list_box_label_scroll, NULL},
+		{list_box_label_window, NULL},
+		{list_box_label_control, NULL},
+		{list_box_label_icon, NULL},
+		{list_box_label_root, NULL}};
 #define LIST_BOX_3_ITEMS_COUNT				(sizeof(list_box_3_entries)/sizeof(mw_ui_list_box_entry))
 
 /************

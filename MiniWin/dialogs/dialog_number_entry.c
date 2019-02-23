@@ -60,7 +60,7 @@ typedef struct
 	mw_ui_keypad_data_t mw_ui_keypad_data;			/**< Keypad control instance data */
 	mw_ui_button_data_t button_ok_data;				/**< Instance data of ok button */
 	mw_ui_button_data_t button_cancel_data;			/**< Instance data of cancel button */
-	char number_buffer[MW_DIALOG_MAX_NUMBER_LENGTH + 2U];	/**< MW_DIALOG_MAX_NUMBER_LENGTH digits, - sign, terminating null */
+	char number_buffer[MW_DIALOG_MAX_NUMBER_LENGTH + 2];	/**< MW_DIALOG_MAX_NUMBER_LENGTH digits, - sign, terminating null */
 	bool is_negative;								/**< If the number is negative */
 	bool large_size;								/**< True for large size false for standard size */
 	bool draw_cursor;								/**< if to draw cursor this timer tick or not */
@@ -124,6 +124,8 @@ static int16_t get_cursor_x_coordinate(void)
  */
 static void mw_dialog_number_entry_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_t *draw_info)
 {
+	MW_ASSERT(draw_info != (void*)0, "Null pointer argument");
+
 	mw_gl_set_fill(MW_GL_FILL);
 	mw_gl_set_solid_fill_colour(MW_HAL_LCD_WHITE);
 	mw_gl_set_border(MW_GL_BORDER_OFF);
@@ -218,7 +220,7 @@ static void mw_dialog_number_entry_paint_function(mw_handle_t window_handle, con
  */
 static void mw_dialog_number_entry_message_function(const mw_message_t *message)
 {
-	MW_ASSERT(message, "Null pointer argument");
+	MW_ASSERT(message != (void*)0, "Null pointer argument");
 
 	switch (message->message_id)
 	{

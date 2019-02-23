@@ -111,6 +111,8 @@ static void mw_dialog_text_entry_paint_function(mw_handle_t window_handle, const
 	char c[2] = {0};
 	int16_t i;
 
+	MW_ASSERT(draw_info != (void*)0, "Null pointer argument");
+
 	mw_gl_set_fill(MW_GL_FILL);
 	mw_gl_set_solid_fill_colour(MW_HAL_LCD_WHITE);
 	mw_gl_set_border(MW_GL_BORDER_OFF);
@@ -197,7 +199,7 @@ static void mw_dialog_text_entry_message_function(const mw_message_t *message)
 {
 	uint32_t temp_uint32;
 
-	MW_ASSERT(message, "Null pointer argument");
+	MW_ASSERT(message != (void*)0, "Null pointer argument");
 
 	switch (message->message_id)
 	{

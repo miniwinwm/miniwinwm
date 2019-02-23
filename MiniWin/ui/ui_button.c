@@ -72,6 +72,8 @@ static void button_paint_function(mw_handle_t control_handle, const mw_gl_draw_i
 	int16_t text_width;
 	int16_t text_x;
 
+	MW_ASSERT(draw_info != (void*)0, "Null pointer argument");
+
     /* set the button box fill colour depending on enabled state */    
 	if (this_button->button_down)
 	{
@@ -172,7 +174,7 @@ static void button_message_function(const mw_message_t *message)
 {
 	mw_ui_button_data_t *this_button = (mw_ui_button_data_t*)mw_get_control_instance_data(message->recipient_handle);
 
-	MW_ASSERT(message, "Null pointer argument");
+	MW_ASSERT(message != (void*)0, "Null pointer argument");
 
 	switch (message->message_id)
 	{

@@ -69,6 +69,8 @@ static void text_box_paint_function(mw_handle_t control_handle, const mw_gl_draw
 	mw_ui_text_box_data_t *this_text_box = (mw_ui_text_box_data_t*)mw_get_control_instance_data(control_handle);
 	mw_util_rect_t control_rect;
 
+	MW_ASSERT(draw_info != (void*)0, "Null pointer argument");
+
 	/* get control's client rect */
 	mw_util_set_rect(&control_rect,
 			0,
@@ -110,7 +112,7 @@ static void text_box_message_function(const mw_message_t *message)
 {
 	mw_ui_text_box_data_t *this_text_box = (mw_ui_text_box_data_t*)mw_get_control_instance_data(message->recipient_handle);
 
-	MW_ASSERT(message, "Null pointer argument");
+	MW_ASSERT(message != (void*)0, "Null pointer argument");
 
 	switch (message->message_id)
 	{

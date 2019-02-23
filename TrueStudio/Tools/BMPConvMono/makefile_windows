@@ -6,8 +6,8 @@ CXXFLAGS = -g -I../EasyBMP
 
 BMPConvMono.exe: $(OBJ)
 	$(CXX) -o $@ $^ $(LDFLAGS)
-	del $(OBJ)
+	$(RM) $(OBJ)
 
 .PHONY: clean
 clean:
-	del BMPConvMono.exe
+	$(RM) BMPConvMono.exe

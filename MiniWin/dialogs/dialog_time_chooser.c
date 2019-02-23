@@ -146,6 +146,8 @@ static void mw_dialog_time_chooser_paint_function(mw_handle_t window_handle, con
 	char text_min[16];
 	char temp_buffer[3];
 
+	MW_ASSERT(draw_info != (void*)0, "Null pointer argument");
+
 	mw_gl_set_fill(MW_GL_FILL);
 	mw_gl_set_solid_fill_colour(MW_HAL_LCD_WHITE);
 	mw_gl_set_border(MW_GL_BORDER_OFF);
@@ -189,7 +191,7 @@ static void mw_dialog_time_chooser_paint_function(mw_handle_t window_handle, con
  */
 static void mw_dialog_time_chooser_message_function(const mw_message_t *message)
 {
-	MW_ASSERT(message, "Null pointer argument");
+	MW_ASSERT(message != (void*)0, "Null pointer argument");
 
 	switch (message->message_id)
 	{

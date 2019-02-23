@@ -68,6 +68,8 @@ static void label_paint_function(mw_handle_t control_handle, const mw_gl_draw_in
 {
 	mw_ui_label_data_t *this_label = (mw_ui_label_data_t*)mw_get_control_instance_data(control_handle);
 
+	MW_ASSERT(draw_info != (void*)0, "Null pointer argument");
+
     /* draw the background */
 	mw_gl_set_solid_fill_colour(MW_CONTROL_UP_COLOUR);
 	mw_gl_set_fill(MW_GL_FILL);
@@ -115,7 +117,7 @@ static void label_message_function(const mw_message_t *message)
 {
 	mw_ui_label_data_t *this_label = (mw_ui_label_data_t*)mw_get_control_instance_data(message->recipient_handle);
 
-	MW_ASSERT(message, "Null pointer argument");
+	MW_ASSERT(message != (void*)0, "Null pointer argument");
 
 	switch (message->message_id)
 	{

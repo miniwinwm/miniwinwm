@@ -76,7 +76,7 @@ void window_paint_rect_paint_function(mw_handle_t window_handle, const mw_gl_dra
 	float x;
 	float y;
 
-	MW_ASSERT(draw_info, "Null pointer parameter");
+	MW_ASSERT(draw_info != (void*)0, "Null pointer parameter");
 
 	mw_gl_set_fill(MW_GL_FILL);
 	mw_gl_set_solid_fill_colour(MW_HAL_LCD_WHITE);
@@ -145,7 +145,7 @@ void window_paint_rect_paint_function(mw_handle_t window_handle, const mw_gl_dra
 
 void window_paint_rect_message_function(const mw_message_t *message)
 {
-	MW_ASSERT(message, "Null pointer argument");
+	MW_ASSERT(message != (void*)0, "Null pointer argument");
 
 	switch (message->message_id)
 	{
@@ -155,11 +155,12 @@ void window_paint_rect_message_function(const mw_message_t *message)
 
 	case MW_LIST_BOX_ITEM_PRESSED_MESSAGE:
 		/* pop up list box item pressed */
-		window_paint_rect_data.choice = message->message_data;
+		window_paint_rect_data.choice = (uint8_t)message->message_data;
 		mw_paint_window_client_rect(message->recipient_handle, &rect_to_repaint);
 		break;
 
 	default:
+		/* keep MISRA happy */
 		break;
 	}
 }

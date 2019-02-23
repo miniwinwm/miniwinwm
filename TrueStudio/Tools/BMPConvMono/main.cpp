@@ -128,11 +128,11 @@ int main( int argc, char* argv[] )
 		 {
              if (h == height - 1 && w == width - 1)
              {
-			    fs << "0x" << hex << setw(2) << setfill('0') << byte;
+			    fs << "0x" << hex << setw(2) << setfill('0') << byte << "U";
              }
              else
              {
-			    fs << "0x" << hex << setw(2) << setfill('0') << byte << ", ";
+			    fs << "0x" << hex << setw(2) << setfill('0') << byte << "U, ";
              }
 			 mask = 0x80;
 			 byte = 0;
@@ -143,11 +143,11 @@ int main( int argc, char* argv[] )
     {
         if (h == height-1)
         {
-	        fs << "0x" << hex << setw(2) << setfill('0') << byte;
+	        fs << "0x" << hex << setw(2) << setfill('0') << byte << "U";
         }
         else
         {
-	        fs << "0x" << hex << setw(2) << setfill('0') << byte << ",";
+	        fs << "0x" << hex << setw(2) << setfill('0') << byte << "U,";
         }
     }
 
@@ -171,10 +171,6 @@ int main( int argc, char* argv[] )
  fs << "/***********************" << endl;
  fs << "*** GLOBAL VARIABLES ***" << endl;
  fs << "***********************/" << endl;
- fs << endl;
- fs << "/*************************" << endl;
- fs << "*** EXTERNAL VARIABLES ***" << endl;
- fs << "*************************/" << endl;
  fs << endl;
  fs << "/**********************" << endl;
  fs << "*** LOCAL VARIABLES ***" << endl;

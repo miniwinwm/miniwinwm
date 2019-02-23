@@ -73,6 +73,8 @@ static void list_box_paint_function(mw_handle_t control_handle, const mw_gl_draw
 	int16_t text_x_offset;
 	bool intermediate_bool;
 
+	MW_ASSERT(draw_info != (void*)0, "Null pointer argument");
+
 	if ((mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_LARGE_SIZE) == MW_CONTROL_FLAG_LARGE_SIZE)
 	{
 		mw_gl_set_font(MW_GL_TITLE_FONT);
@@ -290,7 +292,7 @@ static void list_box_message_function(const mw_message_t *message)
 	uint32_t intermediate_uint32;
 	int16_t line_number;
 
-	MW_ASSERT(message, "Null pointer argument");
+	MW_ASSERT(message != (void*)0, "Null pointer argument");
 
 	if ((mw_get_control_flags(message->recipient_handle) & MW_CONTROL_FLAG_LARGE_SIZE) == MW_CONTROL_FLAG_LARGE_SIZE)
 	{

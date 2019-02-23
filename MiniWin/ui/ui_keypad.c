@@ -83,6 +83,8 @@ static void keypad_paint_function(mw_handle_t control_handle, const mw_gl_draw_i
 	int16_t bitmap_offset;
 	char c;
 
+	MW_ASSERT(draw_info != (void*)0, "Null pointer argument");
+
 	if ((mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_LARGE_SIZE) == MW_CONTROL_FLAG_LARGE_SIZE)
 	{
 		mw_gl_set_font(MW_GL_TITLE_FONT);
@@ -258,7 +260,7 @@ static void keypad_message_function(const mw_message_t *message)
 	mw_ui_keypad_data_t *this_keypad = (mw_ui_keypad_data_t*)mw_get_control_instance_data(message->recipient_handle);
 	uint32_t intermediate_uint32;
 
-	MW_ASSERT(message, "Null pointer argument");
+	MW_ASSERT(message != (void*)0, "Null pointer argument");
 
 	switch (message->message_id)
 	{
