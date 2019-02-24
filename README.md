@@ -6,6 +6,8 @@ MCUXpresso contains project files and application specific source files for the 
 
 TrueStudio contains project files and application specific source files for the example projects running on the STM32F429, STM32F407 dev boards and the Windows and Linux MiniWin simulators.
 
+e2studio contains project files and application specific source files for the example projects running on the Renesas RX65N Envision dev board.
+
 MiniWinFile_Common contains platform independant files for an example application. Builds for Windows and Linux simulators and embedded platforms.
 
 MiniWinFixedWindows_Common contains platform independant files for an example application. Builds for Windows and Linux simulators and embedded platforms.
