@@ -68,7 +68,7 @@ static window_help_icon_data_t window_help_icon_data;
 
 void window_help_icon_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_t *draw_info)
 {
-	MW_ASSERT(draw_info, "Null pointer parameter");
+	MW_ASSERT(draw_info != (void*)0, "Null pointer parameter");
 
 	if (window_help_icon_data.touch_down)
 	{
@@ -92,7 +92,7 @@ void window_help_icon_paint_function(mw_handle_t window_handle, const mw_gl_draw
 
 void window_help_icon_message_function(const mw_message_t *message)
 {
-	MW_ASSERT(message, "Null pointer parameter");
+	MW_ASSERT(message != (void*)0, "Null pointer parameter");
 
 	switch (message->message_id)
 	{

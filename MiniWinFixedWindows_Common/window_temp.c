@@ -81,7 +81,7 @@ void window_temp_paint_function(mw_handle_t window_handle, const mw_gl_draw_info
 	uint16_t y;
 	char buf[3];
 
-	MW_ASSERT(draw_info, "Null pointer parameter");
+	MW_ASSERT(draw_info != (void*)0, "Null pointer parameter");
 
 	/* white background */
 	mw_gl_set_fill(MW_GL_FILL);
@@ -307,7 +307,7 @@ void window_temp_paint_function(mw_handle_t window_handle, const mw_gl_draw_info
 
 void window_temp_message_function(const mw_message_t *message)
 {
-	MW_ASSERT(message, "Null pointer parameter");
+	MW_ASSERT(message != (void*)0, "Null pointer parameter");
 
 	switch (message->message_id)
 	{

@@ -63,7 +63,7 @@ SOFTWARE.
 
 void mw_util_set_rect(mw_util_rect_t *r, int16_t x, int16_t y, int16_t width, int16_t height)
 {
-	if (!r)
+	if (r == (void*)0)
 	{
 		MW_ASSERT((bool)false, "Null pointer argument");
 		return;
@@ -77,7 +77,7 @@ void mw_util_set_rect(mw_util_rect_t *r, int16_t x, int16_t y, int16_t width, in
 
 bool mw_util_is_point_in_rect(const mw_util_rect_t *r, int16_t x, int16_t y)
 {
-	if (!r)
+	if (r == (void*)0)
 	{
 		MW_ASSERT((bool)false, "Null pointer argument");
 		return (false);
@@ -93,7 +93,7 @@ bool mw_util_is_point_in_rect(const mw_util_rect_t *r, int16_t x, int16_t y)
 
 bool mw_util_do_rects_coincide(const mw_util_rect_t *a, const mw_util_rect_t *b)
 {
-	if (!a || !b)
+	if (a == (void*)0 || b == (void*)0)
 	{
 		MW_ASSERT((bool)false, "Null pointer argument");
 		return (false);
@@ -104,7 +104,7 @@ bool mw_util_do_rects_coincide(const mw_util_rect_t *a, const mw_util_rect_t *b)
 
 bool mw_util_does_rect_a_obscure_rect_b(const mw_util_rect_t *a, const mw_util_rect_t *b)
 {
-	if (!a || !b)
+	if (a == (void*)0 || b == (void*)0)
 	{
 		MW_ASSERT((bool)false, "Null pointer argument");
 		return (false);
@@ -125,10 +125,10 @@ char *mw_util_safe_strcpy(char *dest, size_t size, const char *src)
 {
     size_t i;
 
-    if (dest == NULL || src == NULL)
+    if (dest == (void*)0 || src == (void*)0)
     {
     	MW_ASSERT((bool)false, "Null pointer argument");
-    	return (NULL);
+    	return ((void*)0);
     }
 
     if (size > 0U)
@@ -145,6 +145,12 @@ char *mw_util_safe_strcpy(char *dest, size_t size, const char *src)
 
 char *mw_util_safe_strcat(char *dest, size_t size, const char *src)
 {
+    if (dest == (void*)0 || src == (void*)0)
+    {
+    	MW_ASSERT((bool)false, "Null pointer argument");
+    	return ((void*)0);
+    }
+
 	return (strncat((dest), (src), (size - strlen(dest) - (size_t)1U)));
 }
 
@@ -205,6 +211,12 @@ void mw_util_shell_sort(int16_t *array, uint16_t n)
     uint16_t i;
     uint16_t j;
 
+    if (array == (void*)0)
+    {
+    	MW_ASSERT((bool)false, "Null pointer argument");
+    	return;
+    }
+
     for (increment = n/2U; increment > 0U; increment /= 2U)
     {
         for (i = increment; i < n; i++)
@@ -228,9 +240,15 @@ void mw_util_shell_sort(int16_t *array, uint16_t n)
 
 const char *mw_util_get_filename_ext(const char *filename)
 {
+	if (filename == (void*)0)
+	{
+    	MW_ASSERT((bool)false, "Null pointer argument");
+    	return ("");
+	}
+
     const char *dot = strrchr(filename, (long)'.');
 
-    if (dot == NULL || dot == filename)
+    if (dot == (void*)0 || dot == filename)
     {
     	return ("");
     }
@@ -241,6 +259,11 @@ const char *mw_util_get_filename_ext(const char *filename)
 int32_t mw_util_strcicmp(char const *a, char const *b)
 {
 	int32_t d;
+
+	if (a == (void*)0 || b == (void*)0)
+	{
+		return (0);
+	}
 
     for (;; a++, b++)
     {
@@ -256,7 +279,7 @@ int32_t mw_util_strcicmp(char const *a, char const *b)
 
 void mw_util_limit_point_to_rect_size(int16_t *x, int16_t *y, const mw_util_rect_t *r)
 {
-	if (x == NULL || y == NULL || r == NULL)
+	if (x == (void*)0 || y == (void*)0 || r == (void*)0)
 	{
 		MW_ASSERT((bool)false, "Null pointer");
 		return;
@@ -288,10 +311,10 @@ char* mw_util_safe_itoa(int32_t value, char *const result, size_t buffer_length,
 	int32_t predivision_value;
 	uint32_t next_pad_position;
 
-	if (result == NULL)
+	if (result == (void*)0)
 	{
 		MW_ASSERT((bool)false, "Null pointer");
-		return NULL;
+		return (void*)0;
 	}
 
 	*result = '\0';

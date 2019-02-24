@@ -96,7 +96,7 @@ void mw_user_init(void)
 			window_simple_paint_function,
 			window_simple_message_function,
 			NULL,
-			0,
+			0U,
 			MW_WINDOW_FLAG_HAS_BORDER | MW_WINDOW_FLAG_HAS_TITLE_BAR |
 				MW_WINDOW_FLAG_CAN_BE_CLOSED | MW_WINDOW_FLAG_IS_VISIBLE,
 			NULL);

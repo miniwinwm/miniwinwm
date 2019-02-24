@@ -558,20 +558,25 @@ int main(int argc, char **argv)
 				continue;
 			}
 
+            uint32_t i=0;
+            for (auto &label : list_box["Labels"].array_items())
+			{
+                outfileUserSource << "static char " << "list_box_" << list_box["Name"].string_value() + "_label_" << 
+                    i << "[] = \"" << label.string_value() << "\";\n";
+                i++;
+            }
 			all_identifier_names.push_back("list_box_" + list_box["Name"].string_value() + "_entries");
 			outfileUserSource << "static const mw_ui_list_box_entry list_box_" << list_box["Name"].string_value() << "_entries[] = {";
-			uint32_t i = 0;
-			for (auto &label : list_box["Labels"].array_items())
-			{
-				outfileUserSource << "{\"";
-				outfileUserSource << label.string_value();
-				outfileUserSource << "\", NULL}";
+    	    for (i = 0; i < list_box["Labels"].array_items().size(); i++) 
+    	    {
+				outfileUserSource << "{";                
+            	outfileUserSource << "list_box_" << list_box["Name"].string_value() + "_label_" << i;
+				outfileUserSource << ", NULL}";
 				if (i < list_box["Labels"].array_items().size() - 1)
 				{
 					outfileUserSource << ", ";
 				}
-				i++;
-			}
+            }
 			outfileUserSource << "};\n";
 		}
     }
@@ -586,22 +591,27 @@ int main(int argc, char **argv)
 				continue;
 			}
 
+            uint32_t i=0;
+            for (auto &label : scrolling_list_box["Labels"].array_items())
+			{
+                outfileUserSource << "static char " << "scrolling_list_box_" << scrolling_list_box["Name"].string_value() + "_label_" << 
+                    i << "[] = \"" << label.string_value() << "\";\n";
+                i++;
+            }
 			all_identifier_names.push_back("scrolling_list_box_" + scrolling_list_box["Name"].string_value() + "_entries");
 			outfileUserSource << "static const mw_ui_list_box_entry scrolling_list_box_" << scrolling_list_box["Name"].string_value() << "_entries[] = {";
-			uint32_t i = 0;
-			for (auto &label : scrolling_list_box["Labels"].array_items())
-			{
-				outfileUserSource << "{\"";
-				outfileUserSource << label.string_value();
-				outfileUserSource << "\", NULL}";
+    	    for (i = 0; i < scrolling_list_box["Labels"].array_items().size(); i++) 
+    	    {
+				outfileUserSource << "{";                
+            	outfileUserSource << "scrolling_list_box_" << scrolling_list_box["Name"].string_value() + "_label_" << i;
+				outfileUserSource << ", NULL}";
 				if (i < scrolling_list_box["Labels"].array_items().size() - 1)
 				{
 					outfileUserSource << ", ";
 				}
-				i++;
-			}
+            }
 			outfileUserSource << "};\n";
-		}
+   		}
     }
    	outfileUserSource << endl;	   	
     
@@ -897,19 +907,25 @@ int main(int argc, char **argv)
         		(window["X"].int_value()) << ", " <<
 				(window["Y"].int_value()) << ", " <<
 				(window["Width"].int_value()) << ", " <<
-				(window["Height"].int_value()) << ");\n" 
-        		"    window_" << window["Name"].string_value() << "_handle = mw_add_window(&r,\n" 
+				(window["Height"].int_value()) << ");\n";
+        if (window["MenuItems"].array_items().size() > 0)
+        {
+        	outfileUserSource << "    size_t " << window["Name"].string_value() << "_menu_bar_count = " <<
+                "sizeof(" << window["Name"].string_value() << "_menu_bar_labels) / sizeof(char *);\n";
+        }             
+                        
+        outfileUserSource << "    window_" << window["Name"].string_value() << "_handle = mw_add_window(&r,\n" 
         		"        \"" << window["Title"].string_value() << "\", \n" \
         		"        window_" << window["Name"].string_value() << "_paint_function,\n" 
 				"        window_" << window["Name"].string_value() << "_message_function,\n        ";
         if (window["MenuItems"].array_items().size() == 0)
         {
-        	outfileUserSource << "NULL,\n        0,\n        0";
+        	outfileUserSource << "NULL,\n        0U,\n        0U";
         }
         else
         {
         	outfileUserSource << window["Name"].string_value() << "_menu_bar_labels" 
-				",\n        sizeof(" << window["Name"].string_value() << "_menu_bar_labels)/sizeof(char *),\n        0U"; 
+				",\n        (uint8_t)" << window["Name"].string_value() << "_menu_bar_count,\n        0U"; 
         }
 				
 		if (window["Border"].bool_value())
@@ -983,7 +999,7 @@ int main(int argc, char **argv)
 				exit(1);
 			}		
 			
-			outfileUserSource << "    mw_util_safe_strcpy(button_" << button["Name"].string_value() << "_data.button_label, MW_UI_BUTTON_LABEL_MAX_CHARS, \"" <<
+			outfileUserSource << "    (void)mw_util_safe_strcpy(button_" << button["Name"].string_value() << "_data.button_label, MW_UI_BUTTON_LABEL_MAX_CHARS, \"" <<
 				button["Label"].string_value() << "\");\n";
 			outfileUserSource << "    button_" << button["Name"].string_value() << "_handle = mw_ui_button_add_new(" << button["X"].int_value() << ",\n" 
 				"        " << button["Y"].int_value() << ",\n" 
@@ -1030,7 +1046,7 @@ int main(int argc, char **argv)
 				exit(1);
 			}			
 					
-			outfileUserSource << "    mw_util_safe_strcpy(label_" << label["Name"].string_value() << "_data.label, MW_UI_LABEL_MAX_CHARS, \"" <<
+			outfileUserSource << "    (void)mw_util_safe_strcpy(label_" << label["Name"].string_value() << "_data.label, MW_UI_LABEL_MAX_CHARS, \"" <<
 				label["Label"].string_value() << "\");\n";
 			outfileUserSource << "    label_" << label["Name"].string_value() << "_handle = mw_ui_label_add_new(" << label["X"].int_value() << ",\n" 
 				"        " << label["Y"].int_value() << ",\n" 
@@ -1073,7 +1089,7 @@ int main(int argc, char **argv)
 				exit(1);
 			}	
 						
-			outfileUserSource << "    mw_util_safe_strcpy(check_box_" << check_box["Name"].string_value() << "_data.label, MW_UI_CHECK_BOX_LABEL_MAX_CHARS, \"" <<
+			outfileUserSource << "    (void)mw_util_safe_strcpy(check_box_" << check_box["Name"].string_value() << "_data.label, MW_UI_CHECK_BOX_LABEL_MAX_CHARS, \"" <<
 				check_box["Label"].string_value() << "\");\n";
 			outfileUserSource << "    check_box_" << check_box["Name"].string_value() << "_handle = mw_ui_check_box_add_new(" << check_box["X"].int_value() << ",\n" 
 				"        " << check_box["Y"].int_value() << ",\n" 
@@ -1322,9 +1338,11 @@ int main(int argc, char **argv)
 				cout << "No Labels values for radio buttons " << radio_button["Name"].string_value() << " in window " << window["Name"].string_value() << endl;
 				exit(1);
 			}							
-						
-			outfileUserSource << "    radio_button_" << radio_button["Name"].string_value() << "_data.number_of_items = (sizeof(radio_button_" << 
-				radio_button["Name"].string_value() << "_labels)/sizeof(char *));\n";
+
+          	outfileUserSource << "    size_t radio_button_" << radio_button["Name"].string_value() << "_count = "
+                  "sizeof(radio_button_" << radio_button["Name"].string_value() << "_labels) / sizeof(char *);\n";
+			outfileUserSource << "    radio_button_" << radio_button["Name"].string_value() << "_data.number_of_items = (uint8_t)radio_button_" << 
+                radio_button["Name"].string_value() << "_count;\n";
 			outfileUserSource << "    radio_button_" << radio_button["Name"].string_value() << "_data.radio_button_labels = radio_button_" << 
 				radio_button["Name"].string_value() << "_labels;\n";
 			outfileUserSource << "    radio_button_" << radio_button["Name"].string_value() << "_handle = mw_ui_radio_button_add_new(" << radio_button["X"].int_value() << ",\n" 
@@ -1382,11 +1400,13 @@ int main(int argc, char **argv)
 				cout << "No Labels values for list box " << list_box["Name"].string_value() << " in window " << window["Name"].string_value() << endl;
 				exit(1);
 			}	
-											
+
+            outfileUserSource << "    size_t list_box_" << list_box["Name"].string_value() << "_count = "
+                "sizeof(list_box_" << list_box["Name"].string_value() << "_entries) / sizeof(mw_ui_list_box_entry);\n";
+			outfileUserSource << "    list_box_" << list_box["Name"].string_value() << "_data.number_of_items = (uint8_t)list_box_" << 
+                list_box["Name"].string_value() << "_count;\n";
 			outfileUserSource << "    list_box_" << list_box["Name"].string_value() << "_data.line_enables = MW_ALL_ITEMS_ENABLED;\n";
-			outfileUserSource << "    list_box_" << list_box["Name"].string_value() << "_data.number_of_lines = " << list_box["Lines"].int_value() << ";\n";
-			outfileUserSource << "    list_box_" << list_box["Name"].string_value() << "_data.number_of_items = (sizeof(list_box_" << 
-				list_box["Name"].string_value() << "_entries)/sizeof(mw_ui_list_box_entry));\n";
+			outfileUserSource << "    list_box_" << list_box["Name"].string_value() << "_data.number_of_lines = (uint8_t)" << list_box["Lines"].int_value() << ";\n";
 			outfileUserSource << "    list_box_" << list_box["Name"].string_value() << "_data.list_box_entries = list_box_" << 
 				list_box["Name"].string_value() << "_entries;\n";
 			outfileUserSource << "    list_box_" << list_box["Name"].string_value() << "_handle = mw_ui_list_box_add_new(" << list_box["X"].int_value() << ",\n" 
@@ -1548,10 +1568,12 @@ int main(int argc, char **argv)
 				exit(1);
 			}	
 
+            outfileUserSource << "    size_t scrolling_list_box_" << scrolling_list_box["Name"].string_value() << "_count = "
+                "sizeof(scrolling_list_box_" << scrolling_list_box["Name"].string_value() << "_entries) / sizeof(mw_ui_list_box_entry);\n";
+			outfileUserSource << "    scrolling_list_box_" << scrolling_list_box["Name"].string_value() << "_data.number_of_items = (uint8_t)scrolling_list_box_" << 
+                scrolling_list_box["Name"].string_value() << "_count;\n";
 			outfileUserSource << "    scrolling_list_box_" << scrolling_list_box["Name"].string_value() << "_data.line_enables = MW_ALL_ITEMS_ENABLED;\n";
 			outfileUserSource << "    scrolling_list_box_" << scrolling_list_box["Name"].string_value() << "_data.number_of_lines = " << scrolling_list_box["Lines"].int_value() << ";\n";
-			outfileUserSource << "    scrolling_list_box_" << scrolling_list_box["Name"].string_value() << "_data.number_of_items = (sizeof(scrolling_list_box_" << 
-				scrolling_list_box["Name"].string_value() << "_entries)/sizeof(mw_ui_list_box_entry));\n";
 			outfileUserSource << "    scrolling_list_box_" << scrolling_list_box["Name"].string_value() << "_data.list_box_entries = scrolling_list_box_" << 
 				scrolling_list_box["Name"].string_value() << "_entries;\n";
 			outfileUserSource << "    scrolling_list_box_" << scrolling_list_box["Name"].string_value() << "_handle = mw_ui_list_box_add_new(" << scrolling_list_box["X"].int_value() << ",\n" 
@@ -1961,7 +1983,7 @@ int main(int argc, char **argv)
 						"                message->recipient_handle,\n"
 						"                scrolling_list_box_" << scrolling_list_box_scroll_bar_vert["Name"].string_value() << "_handle,\n"
 						"                message->message_data,\n"
-						"                MW_UNUSED_MESSAGE_PARAMETER,\n"
+						"                NULL,\n"
 						"                MW_CONTROL_MESSAGE);\n"
 						"\n"
 						"            /* Paint the list box to show its new scrolled position */\n"
@@ -1988,7 +2010,7 @@ int main(int argc, char **argv)
 						"                message->recipient_handle,\n"
 						"                scrolling_text_box_" << scrolling_text_box_scroll_bar_vert["Name"].string_value() << "_handle,\n"
 						"                message->message_data,\n"
-						"                MW_UNUSED_MESSAGE_PARAMETER,\n"
+						"                NULL,\n"
 						"                MW_CONTROL_MESSAGE);\n"
 						"\n"
 						"            /* Paint the text box to show its new scrolled position */\n"

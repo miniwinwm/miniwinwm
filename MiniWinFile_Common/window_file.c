@@ -73,8 +73,8 @@ typedef struct
 **********************/
 
 static window_file_data_t window_file_data;
-static char time_text[MW_UI_LABEL_MAX_CHARS + 1];
-static char date_text[MW_UI_LABEL_MAX_CHARS + 1];
+static char time_text[MW_UI_LABEL_MAX_CHARS + 1U];
+static char date_text[MW_UI_LABEL_MAX_CHARS + 1U];
 
 /********************************
 *** LOCAL FUNCTION PROTOTYPES ***
@@ -252,7 +252,7 @@ static bool add_image_window(char *path_and_filename)
 
 void window_file_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_t *draw_info)
 {
-	MW_ASSERT(draw_info, "Null pointer parameter");
+	MW_ASSERT(draw_info != (void*)0, "Null pointer parameter");
 
 	mw_gl_set_fill(MW_GL_FILL);
 	mw_gl_set_line(MW_GL_SOLID_LINE);
@@ -285,7 +285,7 @@ void window_file_paint_function(mw_handle_t window_handle, const mw_gl_draw_info
 
 void window_file_message_function(const mw_message_t *message)
 {
-	MW_ASSERT(message, "Null pointer parameter");
+	MW_ASSERT(message != (void*)0, "Null pointer parameter");
 
 	switch (message->message_id)
 	{

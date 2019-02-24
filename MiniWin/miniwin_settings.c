@@ -114,7 +114,7 @@ MATRIX *mw_settings_get_calibration_matrix(void)
 
 void mw_settings_set_calibration_matrix(const MATRIX *new_calibration_matrix)
 {
-	MW_ASSERT(new_calibration_matrix, "Null pointer argument");
+	MW_ASSERT(new_calibration_matrix != (void*)0, "Null pointer argument");
 
 	(void)memcpy((&settings.calibration_matrix), (new_calibration_matrix), (sizeof(MATRIX)));
 }

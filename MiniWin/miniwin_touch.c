@@ -28,6 +28,7 @@ SOFTWARE.
 *** INCLUDES ***
 ***************/
 
+#include <stdlib.h>
 #include "miniwin_debug.h"
 #include "miniwin_settings.h"
 #include "miniwin_touch.h"
@@ -97,8 +98,8 @@ mw_hal_touch_state_t mw_touch_get_display_touch(int16_t* x, int16_t* y)
 	uint16_t raw_x;
 	uint16_t raw_y;
 
-	MW_ASSERT(x, "Null pointer argument");
-	MW_ASSERT(y, "Null pointer argument");
+	MW_ASSERT(x != (void*)0, "Null pointer argument");
+	MW_ASSERT(y != (void*)0, "Null pointer argument");
 
 	/* read touch point and check if valid */
 	if (!mw_hal_touch_get_point(&raw_x, &raw_y))
@@ -163,7 +164,7 @@ void mw_touch_calibrate(MATRIX *matrix)
 	uint16_t x;
 	uint16_t y;
 
-	MW_ASSERT(matrix, "Null pointer argument");
+	MW_ASSERT(matrix != (void*)0, "Null pointer argument");
 
     /* first point */
 	draw_cross((int16_t)display_points[0].x, (int16_t)display_points[0].y, touch_cross_size);

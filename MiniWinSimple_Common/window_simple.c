@@ -91,7 +91,7 @@ void window_simple_paint_function(mw_handle_t window_handle, const mw_gl_draw_in
 
 void window_simple_message_function(const mw_message_t *message)
 {
-	uint32_t misra_temp;
+	uint32_t temp_uint32;
 
 	MW_ASSERT(message != (void*)0, "Null pointer parameter");
 
@@ -102,8 +102,8 @@ void window_simple_message_function(const mw_message_t *message)
 		break;
 
 	case MW_TOUCH_DOWN_MESSAGE:
-		misra_temp = message->message_data >> 16U;
-		window_simple_data.circle_x = (int16_t)misra_temp;
+		temp_uint32 = message->message_data >> 16U;
+		window_simple_data.circle_x = (int16_t)temp_uint32;
 		window_simple_data.circle_y = (int16_t)message->message_data;
 		window_simple_data.draw_circle = true;
 		mw_paint_window_client(message->recipient_handle);

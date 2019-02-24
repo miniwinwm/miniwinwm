@@ -45,7 +45,7 @@ SOFTWARE.
 *** CONSTANTS ***
 ****************/
 
-static const char *radio_button_labels[] = {"12 Hour", "24 Hour"};
+static char *radio_button_labels[] = {"12 Hour", "24 Hour"};
 #define RADIO_BUTTON_ITEMS_COUNT			(sizeof(radio_button_labels)/sizeof(char *))
 const mw_ui_list_box_entry list_box_settings_entries[] = {
 		{"2 Minutes", NULL},

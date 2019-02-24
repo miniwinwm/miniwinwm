@@ -102,7 +102,7 @@ void window_tt_font_paint_function(mw_handle_t window_handle, const mw_gl_draw_i
 	mw_util_rect_t window_client_rect = mw_get_window_client_rect(window_handle);
 	mw_util_rect_t text_rect;
 
-	MW_ASSERT(draw_info && window_tt_font_data, "Null pointer parameter");
+	MW_ASSERT(draw_info != (void*)0 && window_tt_font_data != (void*)0, "Null pointer parameter");
 
 	mw_gl_set_fg_colour(window_tt_font_data->fg_colour);
 	mw_gl_set_bg_colour(window_tt_font_data->bg_colour);
@@ -133,7 +133,7 @@ void window_tt_font_message_function(const mw_message_t *message)
 {
 	window_tt_font_data_t *window_tt_font_data = (window_tt_font_data_t *)mw_get_window_instance_data(message->recipient_handle);
 
-	MW_ASSERT(message && window_tt_font_data, "Null pointer parameter");
+	MW_ASSERT(message != (void*)0 && window_tt_font_data != (void*)0, "Null pointer parameter");
 
 	switch (message->message_id)
 	{

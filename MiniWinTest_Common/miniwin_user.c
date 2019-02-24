@@ -46,20 +46,17 @@ static char menu_bar_label_cat[] = "Cat";
 static char menu_bar_label_dog[] = "Dog";
 static char menu_bar_label_gnu[] = "Gnu";
 static char *menu_bar_labels[] = {menu_bar_label_cat, menu_bar_label_dog, menu_bar_label_gnu};
-#define MENU_BAR_1_ITEMS_COUNT				(sizeof(menu_bar_labels)/sizeof(char *))
 
 static char radio_button_label_elk[] = "Elk";
 static char radio_button_label_ant[] = "Ant";
 static char radio_button_label_hog[] = "Hog";
 static char *radio_button_labels[] = {radio_button_label_elk, radio_button_label_ant, radio_button_label_hog};
-#define RADIO_BUTTON_1_ITEMS_COUNT			(sizeof(radio_button_labels)/sizeof(char *))
 
 static char list_box_label_to_back[] = "To Back";
 static char list_box_label_disabled[] = "Disabled";
 static const mw_ui_list_box_entry list_box_1_entries[] = {
 		{list_box_label_to_back, NULL},
 		{list_box_label_disabled, NULL}};
-#define LIST_BOX_1_ITEMS_COUNT				(sizeof(list_box_1_entries)/sizeof(mw_ui_list_box_entry))
 
 static char list_box_label_line[] = "Line";
 static char list_box_label_square[] = "Square";
@@ -68,7 +65,6 @@ static const mw_ui_list_box_entry list_box_2_entries[] = {
 		{list_box_label_line, NULL},
 		{list_box_label_square, NULL},
 		{list_box_label_cube, NULL}};
-#define LIST_BOX_2_ITEMS_COUNT				(sizeof(list_box_2_entries)/sizeof(mw_ui_list_box_entry))
 
 static char list_box_label_list[] = "List";
 static char list_box_label_button[] = "Button";
@@ -89,7 +85,6 @@ static const mw_ui_list_box_entry list_box_3_entries[] = {
 		{list_box_label_control, NULL},
 		{list_box_label_icon, NULL},
 		{list_box_label_root, NULL}};
-#define LIST_BOX_3_ITEMS_COUNT				(sizeof(list_box_3_entries)/sizeof(mw_ui_list_box_entry))
 
 /************
 *** TYPES ***
@@ -196,7 +191,7 @@ void mw_user_init(void)
 			window_gl_paint_function,
 			window_gl_message_function,
 			NULL,
-			0,
+			0U,
 			MW_WINDOW_FLAG_HAS_BORDER | MW_WINDOW_FLAG_HAS_TITLE_BAR |
 				MW_WINDOW_FLAG_CAN_BE_CLOSED | MW_WINDOW_FLAG_IS_VISIBLE,
 			NULL);
@@ -208,12 +203,13 @@ void mw_user_init(void)
 
 	/* create the new ui test window */
 	mw_util_set_rect(&r, 0, 10, 220, 140);
+	size_t menu_bar_count = sizeof(menu_bar_labels) / sizeof(char *);
 	window_test_handle = mw_add_window(&r,
 			"Test 2",
 			window_test_paint_function,
 			window_test_message_function,
 			menu_bar_labels,
-			(uint8_t)MENU_BAR_1_ITEMS_COUNT,
+			(uint8_t)menu_bar_count,
 			MW_WINDOW_FLAG_HAS_BORDER | MW_WINDOW_FLAG_HAS_TITLE_BAR | MW_WINDOW_FLAG_IS_VISIBLE |
 				MW_WINDOW_FLAG_HAS_MENU_BAR | MW_WINDOW_FLAG_MENU_BAR_ENABLED,
 			NULL);
@@ -277,7 +273,8 @@ void mw_user_init(void)
 			&progress_bar_1_data);
 
 	/* create a new radio buttons control and add it to the ui test window */
-	radio_button_1_data.number_of_items = (uint8_t)RADIO_BUTTON_1_ITEMS_COUNT;
+	size_t radio_button_1_count = sizeof(radio_button_labels) / sizeof(char *);
+	radio_button_1_data.number_of_items = (uint8_t)radio_button_1_count;
 	radio_button_1_data.radio_button_labels = radio_button_labels;
 	radio_button_1_handle = mw_ui_radio_button_add_new(150,
 			10,
@@ -287,7 +284,7 @@ void mw_user_init(void)
 			&radio_button_1_data);
 
 	/* create a new large radio buttons control and add it to the ui test window */
-	radio_button_1_large_data.number_of_items = (uint8_t)RADIO_BUTTON_1_ITEMS_COUNT;
+	radio_button_1_large_data.number_of_items = (uint8_t)radio_button_1_count;
 	radio_button_1_large_data.radio_button_labels = radio_button_labels;
 	radio_button_1_large_handle = mw_ui_radio_button_add_new(10,
 			125,
@@ -297,8 +294,9 @@ void mw_user_init(void)
 			&radio_button_1_large_data);
 
 	/* create a new list box control and add it to the ui test window, y position to be directly under the menu bar, control invisible for now */
-	list_box_1_data.number_of_lines = (uint8_t)LIST_BOX_1_ITEMS_COUNT;
-	list_box_1_data.number_of_items = (uint8_t)LIST_BOX_1_ITEMS_COUNT;
+	size_t list_box_1_count = sizeof(list_box_1_entries) / sizeof(mw_ui_list_box_entry);
+	list_box_1_data.number_of_lines = (uint8_t)list_box_1_count;
+	list_box_1_data.number_of_items = (uint8_t)list_box_1_count;
 	list_box_1_data.list_box_entries = list_box_1_entries;
 	list_box_1_data.line_enables = mw_util_change_bit(MW_ALL_ITEMS_ENABLED, 1, false);
 	list_box_1_handle = mw_ui_list_box_add_new(0,
@@ -359,8 +357,9 @@ void mw_user_init(void)
 			&scroll_bar_vert_1_large_data);
 
 	/* create a new list box control and add it to the ui test window */
+	size_t list_box_3_count = sizeof(list_box_3_entries) / sizeof(mw_ui_list_box_entry);
 	list_box_3_data.number_of_lines = 3U;
-	list_box_3_data.number_of_items = (uint8_t)LIST_BOX_3_ITEMS_COUNT;
+	list_box_3_data.number_of_items = (uint8_t)list_box_3_count;
 	list_box_3_data.list_box_entries = list_box_3_entries;
 	list_box_3_data.line_enables = MW_ALL_ITEMS_ENABLED;
 	list_box_3_handle = mw_ui_list_box_add_new(60,
@@ -372,7 +371,7 @@ void mw_user_init(void)
 
 	/* create a new large list box control and add it to the ui test window */
 	list_box_3_large_data.number_of_lines = 3U;
-	list_box_3_large_data.number_of_items = (uint8_t)LIST_BOX_3_ITEMS_COUNT;
+	list_box_3_large_data.number_of_items = (uint8_t)list_box_3_count;
 	list_box_3_large_data.list_box_entries = list_box_3_entries;
 	list_box_3_large_data.line_enables = MW_ALL_ITEMS_ENABLED;
 	list_box_3_large_handle = mw_ui_list_box_add_new(10,
@@ -410,7 +409,7 @@ void mw_user_init(void)
 			window_drag_paint_function,
 			window_drag_message_function,
 			NULL,
-			0,
+			0U,
 			MW_WINDOW_FLAG_HAS_BORDER | MW_WINDOW_FLAG_HAS_TITLE_BAR |
 				MW_WINDOW_FLAG_CAN_BE_CLOSED | MW_WINDOW_FLAG_IS_VISIBLE |
 				MW_WINDOW_FLAG_HAS_VERT_SCROLL_BAR | MW_WINDOW_FLAG_HAS_HORIZ_SCROLL_BAR |
@@ -436,7 +435,7 @@ void mw_user_init(void)
 			window_scroll_paint_function,
 			window_scroll_message_function,
 			NULL,
-			0,
+			0U,
 			MW_WINDOW_FLAG_HAS_BORDER | MW_WINDOW_FLAG_HAS_TITLE_BAR |
 				MW_WINDOW_FLAG_CAN_BE_CLOSED | MW_WINDOW_FLAG_IS_VISIBLE |
 				MW_WINDOW_FLAG_HAS_VERT_SCROLL_BAR | MW_WINDOW_FLAG_HAS_HORIZ_SCROLL_BAR |
@@ -454,7 +453,7 @@ void mw_user_init(void)
 			window_yield_paint_function,
 			window_yield_message_function,
 			NULL,
-			0,
+			0U,
 			MW_WINDOW_FLAG_HAS_BORDER | MW_WINDOW_FLAG_HAS_TITLE_BAR |
 				MW_WINDOW_FLAG_CAN_BE_CLOSED | MW_WINDOW_FLAG_IS_VISIBLE |
 				MW_WINDOW_FLAG_IS_MINIMISED,
@@ -471,14 +470,15 @@ void mw_user_init(void)
 			window_paint_rect_paint_function,
 			window_paint_rect_message_function,
 			NULL,
-			0,
+			0U,
 			MW_WINDOW_FLAG_HAS_BORDER | MW_WINDOW_FLAG_HAS_TITLE_BAR |
 				MW_WINDOW_FLAG_CAN_BE_CLOSED | MW_WINDOW_FLAG_IS_VISIBLE,
 			NULL);
 
 	/* create a new list box control and add it to the paint rect window */
-	list_box_2_data.number_of_lines = (uint8_t)LIST_BOX_2_ITEMS_COUNT;
-	list_box_2_data.number_of_items = (uint8_t)LIST_BOX_2_ITEMS_COUNT;
+	size_t list_box_2_count = sizeof(list_box_2_entries) / sizeof(mw_ui_list_box_entry);
+	list_box_2_data.number_of_lines = (uint8_t)list_box_2_count;
+	list_box_2_data.number_of_items = (uint8_t)list_box_2_count;
 	list_box_2_data.list_box_entries = list_box_2_entries;
 	list_box_2_data.line_enables = MW_ALL_ITEMS_ENABLED;
 	list_box_2_handle = mw_ui_list_box_add_new(100,

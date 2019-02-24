@@ -73,7 +73,7 @@ static uint8_t max_queue_usage;                             /**< Always increasi
 bool mw_message_queue_insert(const mw_message_t *incoming_message)
 {
 	/* check pointer */
-	MW_ASSERT(incoming_message, "Null pointer argument");
+	MW_ASSERT(incoming_message != (void*)0, "Null pointer argument");
 
 	/* check for space in the queue */
 	MW_ASSERT(items_in_queue < MW_MESSAGE_QUEUE_SIZE, "Message queue full");
@@ -101,7 +101,7 @@ bool mw_message_queue_insert(const mw_message_t *incoming_message)
 
 bool mw_message_queue_remove(mw_message_t *outgoing_message)
 {
-	MW_ASSERT(outgoing_message, "Null pointer argument");
+	MW_ASSERT(outgoing_message != (void*)0, "Null pointer argument");
 
 	/* check if there is anything in the queue */
 	if (items_in_queue == 0U)

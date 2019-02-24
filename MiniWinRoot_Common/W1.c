@@ -68,7 +68,7 @@ static window_W1_data_t window_W1_data;
 
 void window_W1_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_t *draw_info)
 {
-    MW_ASSERT(draw_info, "Null pointer parameter");
+    MW_ASSERT(draw_info != (void*)0, "Null pointer parameter");
 
     /* Fill window's client area with solid white */
     mw_gl_set_fill(MW_GL_FILL);
@@ -85,7 +85,7 @@ void window_W1_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_t
 
 void window_W1_message_function(const mw_message_t *message)
 {
-    MW_ASSERT(message, "Null pointer parameter");
+    MW_ASSERT(message != (void*)0, "Null pointer parameter");
 
     /* Next line stops compiler warnings as variable is currently unused */
     (void)window_W1_data;

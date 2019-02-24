@@ -122,8 +122,6 @@ static void get_file_dimensions(text_window_data_t* text_window_data)
 
 void window_text_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_t *draw_info)
 {
-	MW_ASSERT(draw_info, "Null pointer parameter");
-
 	uint32_t file_size;
 	uint16_t x_pos;
 	uint16_t y_pos;
@@ -137,9 +135,11 @@ void window_text_paint_function(mw_handle_t window_handle, const mw_gl_draw_info
 	uint32_t i;
 	text_window_data_t *text_window_data;
 
+	MW_ASSERT(draw_info != (void*)0, "Null pointer parameter");
+
 	/* get this window instance data pointer and check for not null */
 	text_window_data = (text_window_data_t *)mw_get_window_instance_data(window_handle);
-	if (text_window_data == NULL)
+	if (text_window_data == (void*)0)
 	{
 		MW_ASSERT((bool)false, "Couldn't find window instance data");
 		return;
@@ -213,11 +213,11 @@ void window_text_message_function(const mw_message_t *message)
 {
 	text_window_data_t *text_window_data;
 
-	MW_ASSERT(message, "Null pointer argument");
+	MW_ASSERT(message != (void*)0, "Null pointer argument");
 
 	/* get this window instance data pointer and check for not null */
 	text_window_data = (text_window_data_t *)mw_get_window_instance_data(message->recipient_handle);
-	if (text_window_data == NULL)
+	if (text_window_data == (void*)0)
 	{
 		MW_ASSERT((bool)false, "Couldn't find window instance data");
 		return;

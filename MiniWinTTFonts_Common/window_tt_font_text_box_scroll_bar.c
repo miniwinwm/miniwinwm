@@ -68,7 +68,7 @@ SOFTWARE.
 
 void window_tt_font_text_box_scroll_bar_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_t *draw_info)
 {
-	MW_ASSERT(draw_info, "Null pointer parameter");
+	MW_ASSERT(draw_info != (void*)0, "Null pointer parameter");
 
 	mw_gl_set_fill(MW_GL_FILL);
 	mw_gl_set_solid_fill_colour(MW_HAL_LCD_GREY4);
@@ -83,7 +83,7 @@ void window_tt_font_text_box_scroll_bar_paint_function(mw_handle_t window_handle
 
 void window_tt_font_text_box_scroll_bar_message_function(const mw_message_t *message)
 {
-	MW_ASSERT(message, "Null pointer parameter");
+	MW_ASSERT(message != (void*)0, "Null pointer parameter");
 
 	switch (message->message_id)
 	{

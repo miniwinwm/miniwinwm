@@ -79,7 +79,7 @@ static file_data_t file_data;
 
 void window_file_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_t *draw_info)
 {
-	MW_ASSERT(draw_info, "Null pointer parameter");
+	MW_ASSERT(draw_info != (void*)0, "Null pointer parameter");
 
 	mw_gl_set_fill(MW_GL_FILL);
 	mw_gl_set_solid_fill_colour(MW_CONTROL_UP_COLOUR);
@@ -110,7 +110,7 @@ void window_file_message_function(const mw_message_t *message)
 	uint8_t item_chosen;
 	bool folder_changed;
 
-	MW_ASSERT(message, "Null pointer parameter");
+	MW_ASSERT(message != (void*)0, "Null pointer parameter");
 
 	switch (message->message_id)
 	{

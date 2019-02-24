@@ -334,16 +334,16 @@ static void set_window_details(const mw_util_rect_t *rect,
 		void *instance_data)
 {
 	/* check arguments */
-	MW_ASSERT(rect, "Null pointer argument");
-	MW_ASSERT(title, "Null pointer argument");
-	MW_ASSERT(paint_func != (mw_paint_func_p)0, "Null pointer argument");
-	MW_ASSERT(message_func != (mw_message_func_p)0, "Null pointer argument");
+	MW_ASSERT(rect != (void*)0, "Null pointer argument");
+	MW_ASSERT(title != (void*)0, "Null pointer argument");
+	MW_ASSERT(paint_func != (void*)0, "Null pointer argument");
+	MW_ASSERT(message_func != (void*)0, "Null pointer argument");
 	MW_ASSERT(window_id < MW_MAX_WINDOW_COUNT, "Bad window handle");
 	MW_ASSERT(window_handle != MW_INVALID_HANDLE, "Illegal handle");
 	if ((window_flags & MW_WINDOW_FLAG_HAS_MENU_BAR) == MW_WINDOW_FLAG_HAS_MENU_BAR)
 	{
-		MW_ASSERT(menu_bar_items, "Null pointer argument");
-		MW_ASSERT(*menu_bar_items, "Null pointer argument");
+		MW_ASSERT(menu_bar_items != (void*)0, "Null pointer argument");
+		MW_ASSERT(*menu_bar_items != (void*)0, "Null pointer argument");
 		MW_ASSERT(menu_bar_items_count > 0U, "No menu bar items");
 	}
 
@@ -537,7 +537,7 @@ static void calculate_new_window_size_details(mw_handle_t window_handle, const m
 	int16_t menu_bar_height;
 	int16_t scroll_bar_narrow_dimension;
 
-	MW_ASSERT(rect, "Null pointer argument");
+	MW_ASSERT(rect != (void*)0, "Null pointer argument");
 
 	/* get window id from window handle and check it's in range */
 	window_id = get_window_id_for_handle(window_handle);
@@ -666,11 +666,11 @@ static void set_control_details(const mw_util_rect_t *rect,
 	uint8_t parent_window_id;
 
 	/* check arguments */
-	MW_ASSERT(rect, "Null pointer argument");
-	MW_ASSERT(paint_func != (mw_paint_func_p)0, "Null pointer argument");
-	MW_ASSERT(message_func != (mw_message_func_p)0, "Null pointer argument");
+	MW_ASSERT(rect != (void*)0, "Null pointer argument");
+	MW_ASSERT(paint_func != (void*)0, "Null pointer argument");
+	MW_ASSERT(message_func != (void*)0, "Null pointer argument");
 	MW_ASSERT(control_id < MW_MAX_CONTROL_COUNT, "Illegal control id");
-	MW_ASSERT(instance_data, "Null pointer argument");
+	MW_ASSERT(instance_data != (void*)0, "Null pointer argument");
 
 	/* get parent window id from parent window handle and check it's in range */
 	parent_window_id = get_window_id_for_handle(parent_handle);
@@ -719,7 +719,7 @@ static void root_message_function(const mw_message_t *message)
 	uint32_t x;
 	uint32_t y;
 
-	MW_ASSERT(message, "Null pointer argument");
+	MW_ASSERT(message != (void*)0, "Null pointer argument");
 
 	/* check if the messages sent to the root window is to be consumed by the system */
 	switch (message->message_id)
@@ -850,8 +850,8 @@ void add_minimised_window_to_list(mw_handle_t window_handle)
  */
 static void find_minimsed_icon_location(uint8_t icon_number, int16_t *x, int16_t *y)
 {
-	MW_ASSERT(x, "Null pointer argument");
-	MW_ASSERT(y, "Null pointer argument");
+	MW_ASSERT(x != (void*)0, "Null pointer argument");
+	MW_ASSERT(y != (void*)0, "Null pointer argument");
 
 	/* column position starts at left of screen and works right across screen */
 	*x = (int16_t)(((int16_t)icon_number % MW_DESKTOP_ICONS_PER_ROW) * MW_DESKTOP_ICON_WIDTH);
@@ -1206,9 +1206,9 @@ static void find_rect_window_intersections(const mw_util_rect_t *r, uint16_t *ho
 	bool self_top_found = false;
 	bool self_bottom_found = false;
 
-	MW_ASSERT(horiz_edges_count, "Null pointer argument");
-	MW_ASSERT(vert_edges_count, "Null pointer argument");
-	MW_ASSERT(r, "Null pointer argument");
+	MW_ASSERT(horiz_edges_count != (void*)0, "Null pointer argument");
+	MW_ASSERT(vert_edges_count != (void*)0, "Null pointer argument");
+	MW_ASSERT(r != (void*)0, "Null pointer argument");
 
 	/* clear the number of edges found */
 	*horiz_edges_count = 0U;
@@ -1459,7 +1459,7 @@ static void draw_title_bar(mw_handle_t window_handle, const mw_gl_draw_info_t *d
 	const uint8_t *resize_icon_bitmap;
 	const uint8_t *minimise_icon_bitmap;
 
-	MW_ASSERT(draw_info, "Null pointer argument");
+	MW_ASSERT(draw_info != (void*)0, "Null pointer argument");
 
 	/* get window id's from window handle and check they're in range */
 	window_id = get_window_id_for_handle(window_handle);
@@ -1590,7 +1590,7 @@ static void draw_titlebar_text(mw_handle_t window_handle, const mw_gl_draw_info_
 	int16_t title_modal_x_offset;
 	int16_t title_y_offset;
 
-	MW_ASSERT(draw_info, "Null pointer argument");
+	MW_ASSERT(draw_info != (void*)0, "Null pointer argument");
 
 	/* get window id from window handle and check it's in range */
 	window_id = get_window_id_for_handle(window_handle);
@@ -1654,7 +1654,7 @@ static void draw_menu_bar(const mw_gl_draw_info_t *draw_info, mw_handle_t window
 	int16_t selected_text_offset;
 	int16_t menu_bar_width;
 
-	MW_ASSERT(draw_info, "Null pointer argument");
+	MW_ASSERT(draw_info != (void*)0, "Null pointer argument");
 
 	/* get window id from window handle and check it's in range */
 	window_id = get_window_id_for_handle(window_handle);
@@ -1785,7 +1785,7 @@ static void draw_horizontal_window_scroll_bar(const mw_gl_draw_info_t *draw_info
 	int16_t scroll_bar_slider_size;
 	uint8_t window_id;
 
-	MW_ASSERT(draw_info, "Null pointer argument");
+	MW_ASSERT(draw_info != (void*)0, "Null pointer argument");
 
 	/* get window id from window handle and check it's in range */
 	window_id = get_window_id_for_handle(window_handle);
@@ -1897,7 +1897,7 @@ static void draw_vertical_window_scroll_bar(const mw_gl_draw_info_t *draw_info, 
 	int16_t scroll_bar_slider_size;
 	uint8_t window_id;
 
-	MW_ASSERT(draw_info, "Null pointer argument");
+	MW_ASSERT(draw_info != (void*)0, "Null pointer argument");
 
 	/* get window id from window handle and check it's in range */
 	window_id = get_window_id_for_handle(window_handle);
@@ -2136,7 +2136,7 @@ static void do_paint_window_frame2(mw_handle_t window_handle, uint8_t components
 	uint8_t window_id;
 	int16_t scroll_bar_narrow_dimension;
 
-	MW_ASSERT(invalid_rect, "Null pointer argument");
+	MW_ASSERT(invalid_rect != (void*)0, "Null pointer argument");
 
 	/* get window id from window handle and check it's in range */
 	window_id = get_window_id_for_handle(window_handle);
@@ -2375,7 +2375,7 @@ static void do_paint_window_client_rect(mw_handle_t window_handle, const mw_util
 	int16_t overlap;
 	uint8_t window_id;
 
-	MW_ASSERT(invalid_rect, "Null pointer argument");
+	MW_ASSERT(invalid_rect != (void*)0, "Null pointer argument");
 
 	/* get window id from window handle and check it's in range */
 	window_id = get_window_id_for_handle(window_handle);
@@ -2501,7 +2501,7 @@ static void do_paint_window_client2(mw_handle_t window_handle, const mw_util_rec
 	mw_gl_draw_info_t client_draw_info;
 	uint8_t window_id;
 
-	MW_ASSERT(invalid_rect, "Null pointer argument");
+	MW_ASSERT(invalid_rect != (void*)0, "Null pointer argument");
 
 	/* get window id from window handle and check it's in range */
 	window_id = get_window_id_for_handle(window_handle);
@@ -2605,7 +2605,7 @@ static void do_paint_control_rect(mw_handle_t control_handle, const mw_util_rect
 	uint8_t parent_window_id;
 	uint8_t control_id;
 
-	MW_ASSERT(invalid_rect, "Null pointer argument");
+	MW_ASSERT(invalid_rect != (void*)0, "Null pointer argument");
 
 	/* get control id from control handle and check it's in range */
 	control_id = get_control_id_for_handle(control_handle);
@@ -2807,7 +2807,7 @@ static void do_paint_control2(mw_handle_t control_handle, const mw_util_rect_t *
 	int16_t client_area_overspill;
 	uint8_t control_id;
 
-	MW_ASSERT(invalid_rect, "Null pointer argument");
+	MW_ASSERT(invalid_rect != (void*)0, "Null pointer argument");
 
 	/* get control id from control handle and check it's in range */
 	control_id = get_control_id_for_handle(control_handle);
@@ -3002,9 +3002,9 @@ static bool process_touch_event(mw_message_id_t *touch_message, int16_t *touch_x
 	mw_hal_touch_state_t touch_state;
 
 	/* check parameters for non-null */
-	MW_ASSERT(touch_message, "Null pointer");
-	MW_ASSERT(touch_x, "Null pointer");
-	MW_ASSERT(touch_y, "Null pointer");
+	MW_ASSERT(touch_message != (void*)0, "Null pointer");
+	MW_ASSERT(touch_x != (void*)0, "Null pointer");
+	MW_ASSERT(touch_y != (void*)0, "Null pointer");
 
 	/* check if it's time to process another touch event yet */
 	if (mw_tick_counter - previous_process_time < MW_TOUCH_INTERVAL_TICKS)
@@ -4223,7 +4223,7 @@ mw_handle_t mw_add_window(mw_util_rect_t *rect,
 	uint8_t new_window_id;
 
 	/* check compulsory parameters */
-	if (rect == NULL || paint_func == NULL || message_func == NULL || title == NULL)
+	if (rect == (void*)0 || paint_func == (void*)0 || message_func == (void*)0 || title == (void*)0)
 	{
 		MW_ASSERT((bool)false, "Null pointer argument");
 		return (MW_INVALID_HANDLE);
@@ -4783,7 +4783,7 @@ void mw_paint_window_client(mw_handle_t window_handle)
 void mw_paint_window_client_rect(mw_handle_t window_handle, const mw_util_rect_t *rect)
 {
 	/* check pointer not null */
-	if (!rect)
+	if (rect == (void*)0)
 	{
 		MW_ASSERT((bool)false, "Null pointer argument");
 		return;
@@ -4972,7 +4972,7 @@ mw_handle_t mw_add_control(mw_util_rect_t *rect,
 	mw_handle_t parent_window_id;
 
 	/* check for null parameters */
-	if (rect == NULL || instance_data == NULL || paint_func == NULL || message_func == NULL)
+	if (rect == (void*)0 || instance_data == (void*)0 || paint_func == (void*)0 || message_func == (void*)0)
 	{
 		MW_ASSERT((bool)false, "Null pointer argument");
 		return (MW_INVALID_HANDLE);
@@ -5213,9 +5213,9 @@ void mw_remove_control(mw_handle_t control_handle)
 	for (i = 0U; i < MW_MESSAGE_QUEUE_SIZE; i++)
 	{
 		message = mw_message_queue_get_ref_to_item_at_position(i);
-		MW_ASSERT(message, "Null message found in queue");
+		MW_ASSERT(message != (void*)0, "Null message found in queue");
 
-		if (message != NULL)
+		if (message != (void*)0)
 		{
 			if (message->recipient_handle == control_handle)
 			{
@@ -5370,9 +5370,9 @@ void mw_cancel_timer(mw_handle_t timer_handle)
 	for (i = 0U; i < MW_MESSAGE_QUEUE_SIZE; i++)
 	{
 		message = mw_message_queue_get_ref_to_item_at_position(i);
-		MW_ASSERT(message, "Null message found in queue");
+		MW_ASSERT(message != (void*)0, "Null message found in queue");
 
-		if (message != NULL)
+		if (message != (void*)0)
 		{
 			if (message->message_id == MW_TIMER_MESSAGE && message->message_data == timer_handle)
 			{

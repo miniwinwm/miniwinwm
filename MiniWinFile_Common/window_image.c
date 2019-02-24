@@ -88,11 +88,11 @@ void window_image_paint_function(mw_handle_t window_handle, const mw_gl_draw_inf
 	uint16_t x_scroll_pos;
 	uint16_t y_scroll_pos;
 
-	MW_ASSERT(draw_info, "Null pointer parameter");
+	MW_ASSERT(draw_info != (void*)0, "Null pointer parameter");
 
 	/* get this window instance data pointer and check for not null */
 	image_window_data = (image_window_data_t *)mw_get_window_instance_data(window_handle);
-	if (image_window_data == NULL)
+	if (image_window_data == (void*)0)
 	{
 		MW_ASSERT((bool)false, "Couldn't find window instance data");
 		return;
@@ -283,11 +283,11 @@ void window_image_message_function(const mw_message_t *message)
 {
 	image_window_data_t *image_window_data;
 
-	MW_ASSERT(message, "Null pointer argument");
+	MW_ASSERT(message != (void*)0, "Null pointer argument");
 
 	/* get this window instance data pointer and check for not null */
 	image_window_data = (image_window_data_t *)mw_get_window_instance_data(message->recipient_handle);
-	if (image_window_data == NULL)
+	if (image_window_data == (void*)0)
 	{
 		MW_ASSERT((bool)false, "Couldn't find window instance data");
 		return;
