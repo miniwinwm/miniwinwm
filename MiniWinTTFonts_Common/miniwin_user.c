@@ -28,6 +28,7 @@ SOFTWARE.
 *** INCLUDES ***
 ***************/
 
+#include <stdlib.h>
 #include "miniwin.h"
 #include "miniwin_user.h"
 #include "window_tt_font.h"
@@ -39,7 +40,7 @@ SOFTWARE.
 *** CONSTANTS ***
 ****************/
 
-const char *test_text = "A kitten is a juvenile cat. After being born, " \
+static char test_text[1000] = "A kitten is a juvenile cat. After being born, " \
 		"kittens are totally dependent on their mother for survival and " \
 		"they do not normally open their eyes until after seven to ten days. " \
 		"After about two weeks, kittens quickly develop and begin to explore " \
@@ -59,8 +60,8 @@ const char *test_text = "A kitten is a juvenile cat. After being born, " \
 mw_handle_t window_blkchcry_bw_font_handle;
 mw_handle_t window_blkchcry_font_handle;
 mw_handle_t window_tt_font_text_box_handle;
-mw_handle_t window_tt_font_text_box_scroll_bar_handle;
-mw_handle_t window_tt_font_text_box_arrows_handle;
+mw_handle_t window_tt_font_tbox_scroll_bar_handle;
+mw_handle_t window_tt_font_tbox_arrows_handle;
 
 /* controls */
 mw_handle_t text_box_handle;
@@ -69,8 +70,8 @@ mw_handle_t button_scroll_bar_handle;
 mw_handle_t vert_scroll_bar_handle;
 mw_handle_t text_box_arrows_handle;
 mw_handle_t button_arrows_handle;
-mw_handle_t arrow_up;
-mw_handle_t arrow_down;
+mw_handle_t arrow_up_handle;
+mw_handle_t arrow_down_handle;
 
 /**********************
 *** LOCAL VARIABLES ***
@@ -146,10 +147,10 @@ void mw_user_init(void)
 
 	/* create window containing a text box control, scroll bar and button */
 	mw_util_set_rect(&r, 0, 10, 210, 190);
-	window_tt_font_text_box_scroll_bar_handle = mw_add_window(&r,
+	window_tt_font_tbox_scroll_bar_handle = mw_add_window(&r,
 			"Text box 2",
-			window_tt_font_text_box_scroll_bar_paint_function,
-			window_tt_font_text_box_scroll_bar_message_function,
+			window_tt_font_tbox_sbar_paint_function,
+			window_tt_font_tbox_sbar_message_function,
 			NULL,
 			0,
 			MW_WINDOW_FLAG_HAS_BORDER | MW_WINDOW_FLAG_HAS_TITLE_BAR |
@@ -164,7 +165,7 @@ void mw_user_init(void)
 	text_box_scroll_bar_data.justification = MW_GL_TT_CENTRE_JUSTIFIED;
 	text_box_scroll_bar_data.tt_font = &mf_rlefont_DejaVuSans12;
 	text_box_scroll_bar_handle = mw_ui_text_box_add_new(&r,
-			window_tt_font_text_box_scroll_bar_handle,
+			window_tt_font_tbox_scroll_bar_handle,
 			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
 			&text_box_scroll_bar_data);
 
@@ -172,7 +173,7 @@ void mw_user_init(void)
 	(void)mw_util_safe_strcpy(button_scroll_bar_data.button_label, MW_UI_BUTTON_LABEL_MAX_CHARS, "Change");
 	button_scroll_bar_handle = mw_ui_button_add_new(10,
 			150,
-			window_tt_font_text_box_scroll_bar_handle,
+			window_tt_font_tbox_scroll_bar_handle,
 			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
 			&button_scroll_bar_data);
 
@@ -180,16 +181,16 @@ void mw_user_init(void)
 	vert_scroll_bar_handle = mw_ui_scroll_bar_vert_add_new(180,
 			10,
 			130,
-			window_tt_font_text_box_scroll_bar_handle,
+			window_tt_font_tbox_scroll_bar_handle,
 			MW_CONTROL_FLAG_IS_VISIBLE,
 			&vert_scroll_bar_data);
 
 	/* create window containing a text box control, arrows and button */
 	mw_util_set_rect(&r, 0, 10, 210, 190);
-	window_tt_font_text_box_arrows_handle = mw_add_window(&r,
+	window_tt_font_tbox_arrows_handle = mw_add_window(&r,
 			"Text box 3",
-			window_tt_font_text_box_arrows_paint_function,
-			window_tt_font_text_box_arrows_message_function,
+			window_tt_font_tbox_arrows_paint_function,
+			window_tt_font_tbox_arrows_message_function,
 			NULL,
 			0,
 			MW_WINDOW_FLAG_HAS_BORDER | MW_WINDOW_FLAG_HAS_TITLE_BAR |
@@ -204,29 +205,29 @@ void mw_user_init(void)
 	text_box_arrows_data.justification = MW_GL_TT_RIGHT_JUSTIFIED;
 	text_box_arrows_data.tt_font = &mf_rlefont_DejaVuSans12;
 	text_box_arrows_handle = mw_ui_text_box_add_new(&r,
-			window_tt_font_text_box_arrows_handle,
+			window_tt_font_tbox_arrows_handle,
 			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
 			&text_box_arrows_data);
 
 	/* create button */
-	mw_util_safe_strcpy(button_arrows_data.button_label, MW_UI_BUTTON_LABEL_MAX_CHARS, "Change");
+	(void)mw_util_safe_strcpy(button_arrows_data.button_label, MW_UI_BUTTON_LABEL_MAX_CHARS, "Change");
 	button_arrows_handle = mw_ui_button_add_new(10,
 			150,
-			window_tt_font_text_box_arrows_handle,
+			window_tt_font_tbox_arrows_handle,
 			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
 			&button_arrows_data);
 
 	arrow_up_data.mw_ui_arrow_direction = MW_UI_ARROW_UP;
-	arrow_up = mw_ui_arrow_add_new(180,
+	arrow_up_handle = mw_ui_arrow_add_new(180,
 			10,
-			window_tt_font_text_box_arrows_handle,
+			window_tt_font_tbox_arrows_handle,
 			MW_CONTROL_FLAG_IS_VISIBLE,
 			&arrow_up_data);
 
 	arrow_down_data.mw_ui_arrow_direction = MW_UI_ARROW_DOWN;
-	arrow_down = mw_ui_arrow_add_new(180,
+	arrow_down_handle = mw_ui_arrow_add_new(180,
 			125,
-			window_tt_font_text_box_arrows_handle,
+			window_tt_font_tbox_arrows_handle,
 			MW_CONTROL_FLAG_IS_VISIBLE,
 			&arrow_down_data);
 

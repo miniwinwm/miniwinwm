@@ -51,7 +51,7 @@ typedef struct
 	/* User modifiable fields */
 	const struct mf_rlefont_s *tt_font;				/**< The RLE encoded TrueType font description structure */
 	mw_gl_tt_font_justification_t justification;	/**< How the text is to be justified in the text box, left, centre, right or full */
-	const char *text;								/**< Pointer to the text to be rendered */
+	char *text;										/**< Pointer to the text to be rendered */
 	mw_hal_lcd_colour_t fg_colour;					/**< Foreground colour - this is the pixels comprising the rendered glyph */
 	mw_hal_lcd_colour_t bg_colour;					/**< Background colour - this is the colour of the box behind the glyph */
 

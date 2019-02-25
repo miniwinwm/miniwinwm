@@ -48,18 +48,18 @@ SOFTWARE.
 *************************/
 
 extern mw_handle_t window_blkchcry_bw_font_handle;
-extern  mw_handle_t window_blkchcry_font_handle;
-extern  mw_handle_t window_tt_font_text_box_handle;
-extern  mw_handle_t window_tt_font_text_box_scroll_bar_handle;
-extern  mw_handle_t window_tt_font_text_box_arrows_handle;
-extern  mw_handle_t text_box_handle;
-extern  mw_handle_t text_box_scroll_bar_handle;
-extern  mw_handle_t button_scroll_bar_handle;
-extern  mw_handle_t vert_scroll_bar_handle;
-extern  mw_handle_t text_box_arrows_handle;
-extern  mw_handle_t button_arrows_handle;
-extern  mw_handle_t arrow_up;
-extern  mw_handle_t arrow_down;
+extern mw_handle_t window_blkchcry_font_handle;
+extern mw_handle_t window_tt_font_text_box_handle;
+extern mw_handle_t window_tt_font_tbox_scroll_bar_handle;
+extern mw_handle_t window_tt_font_tbox_arrows_handle;
+extern mw_handle_t text_box_handle;
+extern mw_handle_t text_box_scroll_bar_handle;
+extern mw_handle_t button_scroll_bar_handle;
+extern mw_handle_t vert_scroll_bar_handle;
+extern mw_handle_t text_box_arrows_handle;
+extern mw_handle_t button_arrows_handle;
+extern mw_handle_t arrow_up_handle;
+extern mw_handle_t arrow_down_handle;
 extern const struct mf_rlefont_s mf_rlefont_DejaVuSans12;
 extern const struct mf_rlefont_s mf_rlefont_BLKCHCRY16;
 extern const struct mf_rlefont_s mf_rlefont_BLKCHCRY16bw;

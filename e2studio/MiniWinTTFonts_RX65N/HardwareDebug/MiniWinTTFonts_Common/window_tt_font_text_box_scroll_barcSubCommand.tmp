@@ -1,0 +1,13 @@
+-isa=rxv2
+-fpu
+-include="C:\PROGRA~2\Renesas\RX\3_1_0\include","C:\Users\John\Desktop\workspace\miniwinwm\e2studio\MiniWinTTFonts_RX65N\src\smc_gen\r_bsp","C:\Users\John\Desktop\workspace\miniwinwm\e2studio\MiniWinTTFonts_RX65N\src\smc_gen\r_config","C:\Users\John\Desktop\workspace\miniwinwm\e2studio\MiniWinTTFonts_RX65N\src\smc_gen\r_flash_rx","C:\Users\John\Desktop\workspace\miniwinwm\e2studio\MiniWinTTFonts_RX65N\src\smc_gen\r_flash_rx\src","C:\Users\John\Desktop\workspace\miniwinwm\e2studio\MiniWinTTFonts_RX65N\src\smc_gen\r_flash_rx\src\flash_type_1","C:\Users\John\Desktop\workspace\miniwinwm\e2studio\MiniWinTTFonts_RX65N\src\smc_gen\r_flash_rx\src\flash_type_2","C:\Users\John\Desktop\workspace\miniwinwm\e2studio\MiniWinTTFonts_RX65N\src\smc_gen\r_flash_rx\src\flash_type_3","C:\Users\John\Desktop\workspace\miniwinwm\e2studio\MiniWinTTFonts_RX65N\src\smc_gen\r_flash_rx\src\flash_type_4","C:\Users\John\Desktop\workspace\miniwinwm\e2studio\MiniWinTTFonts_RX65N\src\smc_gen\r_flash_rx\src\targets","C:\Users\John\Desktop\workspace\miniwinwm\e2studio\MiniWinTTFonts_RX65N\src\smc_gen\r_cmt_rx","C:\Users\John\Desktop\workspace\miniwinwm\e2studio\MiniWinTTFonts_RX65N\src\smc_gen\r_cmt_rx\src","C:\Users\John\Desktop\workspace\miniwinwm\e2studio\MiniWinTTFonts_RX65N\src\smc_gen\r_glcdc_rx","C:\Users\John\Desktop\workspace\miniwinwm\e2studio\MiniWinTTFonts_RX65N\src\smc_gen\r_gpio_rx","C:\Users\John\Desktop\workspace\miniwinwm\e2studio\MiniWinTTFonts_RX65N\src\smc_gen\r_gpio_rx\src","C:\Users\John\Desktop\workspace\miniwinwm\e2studio\MiniWinTTFonts_RX65N\src\smc_gen\r_sci_iic_rx","C:\Users\John\Desktop\workspace\miniwinwm\e2studio\MiniWinTTFonts_RX65N\src\smc_gen\r_sci_iic_rx\src","C:\Users\John\Desktop\workspace\miniwinwm\e2studio\MiniWinTTFonts_RX65N\src\smc_gen\general","C:\Users\John\Desktop\workspace\miniwinwm\e2studio\MiniWinTTFonts_RX65N\src\smc_gen\r_pincfg","C:\Users\John\Desktop\workspace\miniwinwm\MiniWin","C:\Users\John\Desktop\workspace\miniwinwm\MiniWin\gl\fonts\truetype\mcufont","C:\Users\John\Desktop\workspace\miniwinwm\MiniWinTTFonts_Common","C:\Users\John\Desktop\workspace\miniwinwm\e2studio\MiniWinTTFonts_RX65N\src"
+-define=RX65N
+-lang=c99
+-utf8
+-nomessage
+-output=obj
+-obj_path="MiniWinTTFonts_Common"
+-debug
+-outcode=utf8
+-misra2012=required
+-nologo 

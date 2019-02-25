@@ -28,6 +28,7 @@ SOFTWARE.
 *** INCLUDES ***
 ***************/
 
+#include <stdlib.h>
 #include "miniwin.h"
 #include "miniwin_user.h"
 #include "window_tt_font_text_box_scroll_bar.h"
@@ -48,6 +49,7 @@ SOFTWARE.
 	/* User-modifiable values */
 
  	/* Non user-modifiable values */
+	 char dummy;								/**< Some compilers do not allow empty structs */
  } window_tt_font_text_box_scroll_bar_data_t;
 
 /**********************
@@ -66,7 +68,7 @@ SOFTWARE.
 *** GLOBAL FUNCTIONS ***
 ***********************/
 
-void window_tt_font_text_box_scroll_bar_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_t *draw_info)
+void window_tt_font_tbox_sbar_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_t *draw_info)
 {
 	MW_ASSERT(draw_info != (void*)0, "Null pointer parameter");
 
@@ -81,7 +83,7 @@ void window_tt_font_text_box_scroll_bar_paint_function(mw_handle_t window_handle
 			mw_get_window_client_rect(window_handle).height);
 }
 
-void window_tt_font_text_box_scroll_bar_message_function(const mw_message_t *message)
+void window_tt_font_tbox_sbar_message_function(const mw_message_t *message)
 {
 	MW_ASSERT(message != (void*)0, "Null pointer parameter");
 
@@ -89,7 +91,7 @@ void window_tt_font_text_box_scroll_bar_message_function(const mw_message_t *mes
 	{
 	case MW_TEXT_BOX_SCROLLING_REQUIRED_MESSAGE:
 		/* enable/disable the scroll bar depending on if scrolling is required, i.e. text won't all fit in the control */
-		mw_set_control_enabled(vert_scroll_bar_handle, message->message_data);
+		mw_set_control_enabled(vert_scroll_bar_handle, (bool)message->message_data);
 		mw_paint_control(vert_scroll_bar_handle);
 		break;
 
@@ -99,7 +101,7 @@ void window_tt_font_text_box_scroll_bar_message_function(const mw_message_t *mes
 				message->recipient_handle,
 				text_box_scroll_bar_handle,
 				message->message_data,
-				MW_UNUSED_MESSAGE_PARAMETER,
+				NULL,
 				MW_CONTROL_MESSAGE);
 		mw_paint_control(text_box_scroll_bar_handle);
 		break;
@@ -112,7 +114,7 @@ void window_tt_font_text_box_scroll_bar_message_function(const mw_message_t *mes
 					message->recipient_handle,
 					vert_scroll_bar_handle,
 					0,
-					MW_UNUSED_MESSAGE_PARAMETER,
+					NULL,
 					MW_CONTROL_MESSAGE);
 			mw_paint_control(vert_scroll_bar_handle);
 

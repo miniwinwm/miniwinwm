@@ -48,6 +48,7 @@ typedef struct
 	/* User-modifiable values */
 
 	/* Non user-modifiable values */
+	char dummy;							/**< Some compilers do not allow empty structs */
 } window_tt_font_text_box_data_t;
 
 /**********************
@@ -87,6 +88,9 @@ void window_tt_font_text_box_message_function(const mw_message_t *message)
 
 	switch (message->message_id)
 	{
+	case MW_WINDOW_CREATED_MESSAGE:
+		break;
+
 	default:
 		/* keep MISRA happy */
 		break;

@@ -74,6 +74,6 @@ int main(void)
     	app_main_loop_process();
 
     	/* do miniwin message processing */
-		mw_process_message();
+		(void)mw_process_message();
 	}
 }

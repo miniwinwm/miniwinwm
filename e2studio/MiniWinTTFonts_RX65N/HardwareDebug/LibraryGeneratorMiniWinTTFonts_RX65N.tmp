@@ -1,0 +1,6 @@
+-isa=rxv2
+-fpu
+-lang=c99
+-head=runtime,math,mathf,stdio,stdlib,string
+-output="MiniWinTTFonts_RX65N.lib"
+-nologo
