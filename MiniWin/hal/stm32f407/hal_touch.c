@@ -41,7 +41,7 @@ SOFTWARE.
 
 #define CS_ON								(HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, GPIO_PIN_RESET))  /**< Touch screen digitizer chip select off */
 #define CS_OFF 								(HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, GPIO_PIN_SET)) 	/**< Touch screen digitizer chip select on */
-#define MW_HAL_TOUCH_READ_POINTS_COUNT		10														/**< Number of samples to take to reduce noise */
+#define MW_HAL_TOUCH_READ_POINTS_COUNT		10U														/**< Number of samples to take to reduce noise */
 
 /************
 *** TYPES ***
@@ -77,7 +77,7 @@ static uint8_t spi_transfer(uint8_t byte)
 {
 	uint8_t result;
 
-	HAL_SPI_TransmitReceive(&SpiHandle, &byte, &result, 1, 1000);
+	(void)HAL_SPI_TransmitReceive(&SpiHandle, &byte, &result, 1U, 1000U);
 
 	return (result);
 }
@@ -120,7 +120,7 @@ void mw_hal_touch_init(void)
 
 	/* SPI1 configuration */
 	SpiHandle.Instance = SPI2;
-	HAL_SPI_DeInit(&SpiHandle);
+	(void)HAL_SPI_DeInit(&SpiHandle);
 	SpiHandle.Init.Direction = SPI_DIRECTION_2LINES;
 	SpiHandle.Init.Mode = SPI_MODE_MASTER;
 	SpiHandle.Init.DataSize = SPI_DATASIZE_8BIT;
@@ -130,7 +130,7 @@ void mw_hal_touch_init(void)
 	SpiHandle.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_16;
 	SpiHandle.Init.FirstBit = SPI_FIRSTBIT_MSB;
 	SpiHandle.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
-	HAL_SPI_Init(&SpiHandle);
+	(void)HAL_SPI_Init(&SpiHandle);
 
 	BSP_PB_Init(BUTTON_KEY, BUTTON_MODE_GPIO);
 }
@@ -160,19 +160,19 @@ bool mw_hal_touch_get_point(uint16_t* x, uint16_t* y)
 	uint8_t touch_count;
 
 	CS_ON;
-	touch_count = 0;
+	touch_count = 0U;
 	do
 	{
-		spi_transfer(0xd0);
-		mw_hal_delay_us(1);
-		x_raw = spi_transfer(0) << 8;
-		x_raw |= spi_transfer(0);
+		spi_transfer(0xd0U);
+		mw_hal_delay_us(1U);
+		x_raw = (uint16_t)spi_transfer(0U) << 8;
+		x_raw |= (uint16_t)spi_transfer(0U);
 		x_raw >>= 3;
 
-		spi_transfer(0x90);
-		mw_hal_delay_us(1);
-		y_raw = spi_transfer(0) << 8;
-		y_raw |= spi_transfer(0);
+		spi_transfer(0x90U);
+		mw_hal_delay_us(1U);
+		y_raw = (uint16_t)spi_transfer(0U) << 8;
+		y_raw |= (uint16_t)spi_transfer(0U);
 		y_raw >>= 3;
 
 		databuffer[0][touch_count] = x_raw;
@@ -180,6 +180,7 @@ bool mw_hal_touch_get_point(uint16_t* x, uint16_t* y)
 		touch_count++;
 	}
 	while (mw_hal_touch_get_state() == MW_HAL_TOUCH_STATE_DOWN && touch_count < MW_HAL_TOUCH_READ_POINTS_COUNT);
+
 	CS_OFF;
 
 	if (touch_count != MW_HAL_TOUCH_READ_POINTS_COUNT)
@@ -190,12 +191,12 @@ bool mw_hal_touch_get_point(uint16_t* x, uint16_t* y)
 	do
 	{
 		sorted = true;
-		for (i = 0; i < touch_count - 1; i++)
+		for (i = 0U; i < touch_count - 1U; i++)
 		{
-			if(databuffer[0][i] > databuffer[0][i + 1])
+			if(databuffer[0][i] > databuffer[0][i + 1U])
 			{
-				swap_value = databuffer[0][i + 1];
-				databuffer[0][i + 1] = databuffer[0][i];
+				swap_value = databuffer[0][i + 1U];
+				databuffer[0][i + 1U] = databuffer[0][i];
 				databuffer[0][i] = swap_value;
 				sorted = false;
 			}
@@ -206,12 +207,12 @@ bool mw_hal_touch_get_point(uint16_t* x, uint16_t* y)
 	do
 	{
 		sorted = true;
-		for (i = 0; i < touch_count - 1; i++)
+		for (i = 0U; i < touch_count - 1U; i++)
 		{
-			if (databuffer[1][i] > databuffer[1][i + 1])
+			if (databuffer[1][i] > databuffer[1][i + 1U])
 			{
-				swap_value = databuffer[1][i + 1];
-				databuffer[1][i + 1] = databuffer[1][i];
+				swap_value = databuffer[1][i + 1U];
+				databuffer[1][i + 1U] = databuffer[1][i];
 				databuffer[1][i] = swap_value;
 				sorted = false;
 			}
@@ -219,8 +220,8 @@ bool mw_hal_touch_get_point(uint16_t* x, uint16_t* y)
 	}
 	while (!sorted);
 
-	*x = (databuffer[0][4]+databuffer[0][5]) / 8;
-	*y = (databuffer[1][4]+databuffer[1][5]) / 8;
+	*x = (databuffer[0][4] + databuffer[0][5]) / 8U;
+	*y = (databuffer[1][4] + databuffer[1][5]) / 8U;
 
 	return (true);
 }

@@ -52,6 +52,7 @@ static const float weekly_maxs[8] = {22.8f, 17.5f, 19.6f, 23.0f, 23.9f, 21.2f, 1
 
 typedef struct
 {
+	char dummy;		/* some compilers treat empty structs as errors */
 } window_temp_data_t;
 
 /**********************
@@ -76,10 +77,12 @@ static window_temp_data_t window_temp_data;
 
 void window_temp_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_t *draw_info)
 {
-	uint8_t i;
-	uint16_t x;
-	uint16_t y;
+	int16_t i;
+	int16_t x;
+	int16_t y;
 	char buf[3];
+	float temp_float_1;
+	float temp_float_2;
 
 	MW_ASSERT(draw_info != (void*)0, "Null pointer parameter");
 
@@ -208,12 +211,15 @@ void window_temp_paint_function(mw_handle_t window_handle, const mw_gl_draw_info
 	/* top graph graph line */
 	mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 	mw_gl_set_line(MW_GL_SOLID_LINE);
+
 	for (i = 0; i < 24; i++)
 	{
+		temp_float_1 = (daily_temps[i] - 10.0f) * 5.0f;
+		temp_float_2 = (daily_temps[i + 1] - 10.0f) * 5.0f;
 		mw_gl_line(draw_info, 30 + i * 8,
-				130 - (daily_temps[i] - 10) * 5,
+				130 - (int16_t)temp_float_1,
 				30 + (i + 1) * 8,
-				130 - (daily_temps[i + 1] - 10) * 5);
+				130 - (int16_t)temp_float_2);
 	}
 
 	/* bottom graph background */
@@ -287,10 +293,12 @@ void window_temp_paint_function(mw_handle_t window_handle, const mw_gl_draw_info
 	mw_gl_set_line(MW_GL_SOLID_LINE);
 	for (i = 0; i < 7; i++)
 	{
+		temp_float_1 = (weekly_mins[i] - 10.0f) * 5.0f;
+		temp_float_2 = (weekly_mins[i + 1] - 10.0f) * 5.0f;
 		mw_gl_line(draw_info, 30 + i * 28,
-				260 - (weekly_mins[i] - 10) * 5,
+				260 - (int16_t)temp_float_1,
 				30 + (i + 1) * 28,
-				260 - (weekly_mins[i + 1] - 10) * 5);
+				260 - (int16_t)temp_float_2);
 	}
 
 	/* bottom graph mins graph line */
@@ -298,10 +306,12 @@ void window_temp_paint_function(mw_handle_t window_handle, const mw_gl_draw_info
 	mw_gl_set_line(MW_GL_SOLID_LINE);
 	for (i = 0; i < 7; i++)
 	{
+		temp_float_1 = (weekly_maxs[i] - 10.0f) * 5.0f;
+		temp_float_2 = (weekly_maxs[i + 1] - 10.0f) * 5.0f;
 		mw_gl_line(draw_info, 30 + i * 28,
-				260 - (weekly_maxs[i] - 10) * 5,
+				260 - (int16_t)temp_float_1,
 				30 + (i + 1) * 28,
-				260 - (weekly_maxs[i + 1] - 10) * 5);
+				260 - (int16_t)temp_float_2);
 	}
 }
 

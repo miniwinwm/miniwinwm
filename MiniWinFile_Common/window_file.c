@@ -31,7 +31,6 @@ SOFTWARE.
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
-#include <time.h>
 #include "miniwin.h"
 #include "miniwin_user.h"
 #include "dialogs/dialog_common.h"
@@ -44,8 +43,8 @@ SOFTWARE.
 *** CONSTANTS ***
 ****************/
 
-#define TEXT_WINDOW_COUNT			3		/**< Maximum number of text windows concurrently open */
-#define IMAGE_WINDOW_COUNT			2		/**< Maximum number of image windows concurrently open */
+#define TEXT_WINDOW_COUNT			3U		/**< Maximum number of text windows concurrently open */
+#define IMAGE_WINDOW_COUNT			2U		/**< Maximum number of image windows concurrently open */
 #define TEXT_FILE_EXTENSION			"txt"	/**< Text file extension */
 #define IMAGE_FILE_EXTENSION		"bmp"	/**< Image file extension */
 
@@ -60,7 +59,7 @@ typedef struct
 {
 	text_window_data_t text_windows_data[TEXT_WINDOW_COUNT];				/**< Array of window instance data structures for text windows */
 	image_window_data_t image_windows_data[IMAGE_WINDOW_COUNT];				/**< Array of window instance data structures for image windows */
-	struct tm set_time;														/**< Time/date from dialogs to send to hardware clock */
+	mw_time_t set_time;														/**< Time/date from dialogs to send to hardware clock */
 	char create_path_and_filename[MAX_FOLDER_AND_FILENAME_LENGTH + 1];		/**< Path and file name for file to create */
 } window_file_data_t;
 
@@ -75,6 +74,17 @@ typedef struct
 static window_file_data_t window_file_data;
 static char time_text[MW_UI_LABEL_MAX_CHARS + 1U];
 static char date_text[MW_UI_LABEL_MAX_CHARS + 1U];
+static char button_yes_label[] = "Yes";
+static char button_no_label[] = "No";
+static char button_ok_label[] = "OK";
+static char button_warning_label[] = "Warning";
+static char no_more_windows_message[] = "No more windows.";
+static char choose_file_message[] = "Choose file";
+static char choose_folder_message[] = "Choose folder";
+static char file_already_exists_message[] = "File already exists. Overwrite?";
+static char creating_file_message[] = "Creating file";
+static char new_file_name_message[] = "New file name";
+static char empty_message[] = "";
 
 /********************************
 *** LOCAL FUNCTION PROTOTYPES ***
@@ -97,7 +107,7 @@ static void create_new_file(mw_handle_t response_window_handle)
 	{
 		app_file_write((uint8_t *)"Created by MiniWin File example app.\n", 37);
 		app_file_close();
-		mw_create_window_dialog_one_button(20,
+		(void)mw_create_window_dialog_one_button(20,
 				20,
 				175,
 				"File create",
@@ -108,7 +118,7 @@ static void create_new_file(mw_handle_t response_window_handle)
 	}
 	else
 	{
-		mw_create_window_dialog_one_button(20,
+		(void)mw_create_window_dialog_one_button(20,
 				20,
 				150,
 				"File create",
@@ -132,7 +142,7 @@ static bool add_text_window(char *path_and_filename)
 	uint8_t i;
 	char *filename;
 
-	if (!path_and_filename)
+	if (path_and_filename == NULL)
 	{
 		MW_ASSERT((bool)false, "Null pointer");
 		return false;
@@ -143,8 +153,8 @@ static bool add_text_window(char *path_and_filename)
 		return false;
 	}
 
-	filename = strrchr(path_and_filename, '/');
-	if (!filename)
+	filename = strrchr(path_and_filename, (long)'/');
+	if (filename == NULL)
 	{
 		MW_ASSERT((bool)false, "No filename found");
 		return false;
@@ -206,8 +216,8 @@ static bool add_image_window(char *path_and_filename)
 		return false;
 	}
 
-	filename = strrchr(path_and_filename, '/');
-	if (!filename)
+	filename = strrchr(path_and_filename, (long)'/');
+	if (filename == NULL)
 	{
 		MW_ASSERT((bool)false, "No filename found");
 		return false;
@@ -302,23 +312,23 @@ void window_file_message_function(const mw_message_t *message)
 				window_file_data.image_windows_data[i].image_window_handle = MW_INVALID_HANDLE;
 			}
 
-			mw_set_timer(mw_tick_counter + 20, message->recipient_handle, MW_WINDOW_MESSAGE);
+			(void)mw_set_timer(mw_tick_counter + 20U, message->recipient_handle, MW_WINDOW_MESSAGE);
 		}
 		break;
 
 	case MW_TIMER_MESSAGE:
 		{
-			struct tm t = app_get_time_date();
+			mw_time_t time_now = app_get_time_date();
 			char temp_buffer[3];
 
-			(void)mw_util_safe_itoa(t.tm_hour, temp_buffer, 3U, 10, true, 2, '0');
-			(void)mw_util_safe_strcpy(time_text, MW_UI_LABEL_MAX_CHARS + 1, temp_buffer);
-			(void)mw_util_safe_strcat(time_text, MW_UI_LABEL_MAX_CHARS + 1, ":");
-			(void)mw_util_safe_itoa(t.tm_min, temp_buffer, 3U, 10, true, 2, '0');
-			(void)mw_util_safe_strcat(time_text, MW_UI_LABEL_MAX_CHARS + 1, temp_buffer);
-			(void)mw_util_safe_strcat(time_text, MW_UI_LABEL_MAX_CHARS + 1, ":");
-			(void)mw_util_safe_itoa(t.tm_sec, temp_buffer, 3U, 10, true, 2, '0');
-			(void)mw_util_safe_strcat(time_text, MW_UI_LABEL_MAX_CHARS + 1, temp_buffer);
+			(void)mw_util_safe_itoa((int32_t)time_now.tm_hour, temp_buffer, (size_t)3, 10, true, 2U, '0');
+			(void)mw_util_safe_strcpy(time_text, (size_t)MW_UI_LABEL_MAX_CHARS + (size_t)1, temp_buffer);
+			(void)mw_util_safe_strcat(time_text, (size_t)MW_UI_LABEL_MAX_CHARS + (size_t)1, ":");
+			(void)mw_util_safe_itoa((int32_t)time_now.tm_min, temp_buffer, (size_t)3, 10, true, 2U, '0');
+			(void)mw_util_safe_strcat(time_text, (size_t)MW_UI_LABEL_MAX_CHARS + (size_t)1, temp_buffer);
+			(void)mw_util_safe_strcat(time_text, (size_t)MW_UI_LABEL_MAX_CHARS + (size_t)1, ":");
+			(void)mw_util_safe_itoa((int32_t)time_now.tm_sec, temp_buffer, (size_t)3, 10, true, 2U, '0');
+			(void)mw_util_safe_strcat(time_text, (size_t)MW_UI_LABEL_MAX_CHARS + (size_t)1, temp_buffer);
 
 			mw_post_message(MW_LABEL_SET_LABEL_TEXT_MESSAGE,
 					message->recipient_handle,
@@ -328,14 +338,14 @@ void window_file_message_function(const mw_message_t *message)
 					MW_CONTROL_MESSAGE);
 			mw_paint_control(label_time_handle);
 
-			(void)mw_util_safe_itoa(t.tm_mday, temp_buffer, 3U, 10, true, 2, '0');
-			(void)mw_util_safe_strcpy(date_text, MW_UI_LABEL_MAX_CHARS + 1, temp_buffer);
-			(void)mw_util_safe_strcat(date_text, MW_UI_LABEL_MAX_CHARS + 1, "/");
-			(void)mw_util_safe_itoa(t.tm_mon, temp_buffer, 3U, 10, true, 2, '0');
-			(void)mw_util_safe_strcat(date_text, MW_UI_LABEL_MAX_CHARS + 1, temp_buffer);
-			(void)mw_util_safe_strcat(date_text, MW_UI_LABEL_MAX_CHARS + 1, "/");
-			(void)mw_util_safe_itoa(t.tm_year % 100, temp_buffer, 3U, 10, true, 2, '0');
-			(void)mw_util_safe_strcat(date_text, MW_UI_LABEL_MAX_CHARS + 1, temp_buffer);
+			(void)mw_util_safe_itoa((int32_t)time_now.tm_mday, temp_buffer, (size_t)3, 10, true, 2U, '0');
+			(void)mw_util_safe_strcpy(date_text, (size_t)MW_UI_LABEL_MAX_CHARS + (size_t)1, temp_buffer);
+			(void)mw_util_safe_strcat(date_text, (size_t)MW_UI_LABEL_MAX_CHARS + (size_t)1, "/");
+			(void)mw_util_safe_itoa((int32_t)time_now.tm_mon, temp_buffer, (size_t)3, 10, true, 2U, '0');
+			(void)mw_util_safe_strcat(date_text, (size_t)MW_UI_LABEL_MAX_CHARS + (size_t)1, temp_buffer);
+			(void)mw_util_safe_strcat(date_text, (size_t)MW_UI_LABEL_MAX_CHARS + (size_t)1, "/");
+			(void)mw_util_safe_itoa((int32_t)time_now.tm_year % (int32_t)100, temp_buffer, (size_t)3, 10, true, 2U, '0');
+			(void)mw_util_safe_strcat(date_text, (size_t)MW_UI_LABEL_MAX_CHARS + (size_t)1, temp_buffer);
 
 			mw_post_message(MW_LABEL_SET_LABEL_TEXT_MESSAGE,
 					message->recipient_handle,
@@ -345,16 +355,16 @@ void window_file_message_function(const mw_message_t *message)
 					MW_CONTROL_MESSAGE);
 			mw_paint_control(label_date_handle);
 
-			mw_set_timer(mw_tick_counter + 20, message->recipient_handle, MW_WINDOW_MESSAGE);
+			(void)mw_set_timer(mw_tick_counter + 20U, message->recipient_handle, MW_WINDOW_MESSAGE);
 		}
 		break;
 
 	case MW_BUTTON_PRESSED_MESSAGE:
 		if (message->sender_handle == button_open_handle)
 		{
-			mw_create_window_dialog_file_chooser(70,
+			(void)mw_create_window_dialog_file_chooser(70,
 					100,
-					"Choose File",
+					choose_file_message,
 					app_get_root_folder_path(),
 					false,
 					false,
@@ -362,7 +372,7 @@ void window_file_message_function(const mw_message_t *message)
 		}
 		else if (message->sender_handle == button_set_clock_handle)
 		{
-			mw_create_window_dialog_time_chooser(70,
+			(void)mw_create_window_dialog_time_chooser(70,
 					120,
 					0,
 					0,
@@ -371,9 +381,9 @@ void window_file_message_function(const mw_message_t *message)
 		}
 		else if (message->sender_handle == button_create_handle)
 		{
-			mw_create_window_dialog_file_chooser(70,
+			(void)mw_create_window_dialog_file_chooser(70,
 					120,
-					"Choose Folder",
+					choose_folder_message,
 					app_get_root_folder_path(),
 					true,
 					false,
@@ -381,14 +391,19 @@ void window_file_message_function(const mw_message_t *message)
 		}
 		else
 		{
+			/* keep MISRA happy */
 		}
 		break;
 
 	case MW_DIALOG_DATE_CHOOSER_OK_MESSAGE:
 		{
-			window_file_data.set_time.tm_mday = (int)(message->message_data & 0xff);
-			window_file_data.set_time.tm_mon = (int)((message->message_data >> 8U) & 0xff);
-			window_file_data.set_time.tm_year = (int)(message->message_data >> 16U);
+			uint32_t temp_uint32;
+			temp_uint32 = message->message_data & 0xffU;
+			window_file_data.set_time.tm_mday = (uint8_t)temp_uint32;
+			temp_uint32 = (message->message_data >> 8) & 0xffU;
+			window_file_data.set_time.tm_mon = (uint8_t)temp_uint32;
+			temp_uint32 = message->message_data >> 16;
+			window_file_data.set_time.tm_year = (uint16_t)temp_uint32;
 			app_set_time_date(window_file_data.set_time);
 
 			/* enable the create button now time/date set */
@@ -399,11 +414,15 @@ void window_file_message_function(const mw_message_t *message)
 
 	case MW_DIALOG_TIME_CHOOSER_OK_MESSAGE:
 		{
-			window_file_data.set_time.tm_sec = 0;
-			window_file_data.set_time.tm_hour = (int)(message->message_data >> 8);
-			window_file_data.set_time.tm_min = (int)(message->message_data & 0xff);
+			uint32_t temp_uint32;
 
-			mw_create_window_dialog_date_chooser(70,
+			window_file_data.set_time.tm_sec = 0U;
+			temp_uint32 = message->message_data >> 8;
+			window_file_data.set_time.tm_hour = (uint8_t)temp_uint32;
+			temp_uint32 = message->message_data & 0xffU;
+			window_file_data.set_time.tm_min = (uint8_t)temp_uint32;
+
+			(void)mw_create_window_dialog_date_chooser(70,
 					100,
 					1,
 					1,
@@ -441,12 +460,12 @@ void window_file_message_function(const mw_message_t *message)
 			else
 			{
 				/* format not supported, show dialog warning */
-				mw_create_window_dialog_one_button(20,
+				(void)mw_create_window_dialog_one_button(20,
 						50,
 						150,
-						"Warning",
+						button_warning_label,
 						"Format not supported.",
-						"OK",
+						button_ok_label,
 						false,
 						message->recipient_handle);
 			}
@@ -454,12 +473,12 @@ void window_file_message_function(const mw_message_t *message)
 			if (format_supported && !window_added)
 			{
 				/* format supported but window couldn't be added, show warning */
-				mw_create_window_dialog_one_button(20,
+				(void)mw_create_window_dialog_one_button(20,
 						50,
 						150,
-						"Warning",
-						"No more windows.",
-						"OK",
+						button_warning_label,
+						no_more_windows_message,
+						button_ok_label,
 						false,
 						message->recipient_handle);
 			}
@@ -475,22 +494,22 @@ void window_file_message_function(const mw_message_t *message)
 			(void)mw_util_safe_strcpy(window_file_data.create_path_and_filename,
 					MAX_FOLDER_AND_FILENAME_LENGTH,
 					(char *)message->message_pointer);
-			(void)mw_create_window_dialog_text_entry(5, 10, "New file name", "", false, message->recipient_handle);
+			(void)mw_create_window_dialog_text_entry(5, 10, new_file_name_message, empty_message, false, message->recipient_handle);
 		}
 		break;
 
 	case MW_DIALOG_TEXT_ENTRY_OK_MESSAGE:
 		{
 			/* add trailing / to path if it isn't there */
-			if (window_file_data.create_path_and_filename[strlen(window_file_data.create_path_and_filename) - 1] != '/')
+			if (window_file_data.create_path_and_filename[strlen(window_file_data.create_path_and_filename) - (size_t)1] != '/')
 			{
-				mw_util_safe_strcat(window_file_data.create_path_and_filename,
+				(void)mw_util_safe_strcat(window_file_data.create_path_and_filename,
 						MAX_FOLDER_AND_FILENAME_LENGTH,
 						"/");
 			}
 
 			/* add file name */
-			mw_util_safe_strcat(window_file_data.create_path_and_filename,
+			(void)mw_util_safe_strcat(window_file_data.create_path_and_filename,
 					MAX_FOLDER_AND_FILENAME_LENGTH,
 					(char *)message->message_pointer);
 
@@ -501,13 +520,13 @@ void window_file_message_function(const mw_message_t *message)
 				app_file_close();
 
 				/* ask if to overwrite */
-				mw_create_window_dialog_two_button(20,
+				(void)mw_create_window_dialog_two_button(20,
 						20,
 						210,
-						"Creating file",
-						"File already exists. Overwrite?",
-						"Yes",
-						"No",
+						creating_file_message,
+						file_already_exists_message,
+						button_yes_label,
+						button_no_label,
 						false,
 						message->recipient_handle);
 			}
@@ -522,7 +541,7 @@ void window_file_message_function(const mw_message_t *message)
 	case MW_DIALOG_TWO_BUTTONS_DISMISSED_MESSAGE:
 		{
 			/* check response from dialog asking if to overwrite existing file when creating a new one */
-			if (message->message_data == 0)
+			if (message->message_data == 0U)
 			{
 				/* left button is yes response so create file */
 				create_new_file(message->recipient_handle);
@@ -533,7 +552,7 @@ void window_file_message_function(const mw_message_t *message)
 
 	case MW_USER_1_MESSAGE:
 		/* message received from image window when the image file cannot be decoded */
-		mw_create_window_dialog_one_button(20,
+		(void)mw_create_window_dialog_one_button(20,
 				50,
 				150,
 				"Warning",

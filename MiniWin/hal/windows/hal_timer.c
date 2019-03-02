@@ -32,6 +32,7 @@ SOFTWARE.
 
 #include <windows.h>
 #include <stdint.h>
+#include <stdbool.h>
 #include "hal/hal_timer.h"
 
 /****************
@@ -66,9 +67,9 @@ volatile uint32_t mw_tick_counter;
 
 DWORD WINAPI tf(void* data)
 {
-	while(1)
+	while (true)
 	{
-		Sleep(50);
+		Sleep(50U);
 		mw_hal_timer_fired();
 	}
 }
@@ -78,10 +79,9 @@ void mw_hal_timer_fired(void)
 	mw_tick_counter++;
 }
 
-
 void mw_hal_timer_init(void)
 {
-	(void)CreateThread(NULL, 0, tf, NULL, 0, NULL);
+	(void)CreateThread(NULL, 0U, tf, NULL, 0U, NULL);
 }
 
 #endif

@@ -45,36 +45,60 @@ SOFTWARE.
 *** CONSTANTS ***
 ****************/
 
-static char *radio_button_labels[] = {"12 Hour", "24 Hour"};
-#define RADIO_BUTTON_ITEMS_COUNT			(sizeof(radio_button_labels)/sizeof(char *))
+static char radio_button_label_0[] = "12 Hour";
+static char radio_button_label_1[] = "24 Hour";
+static char *radio_button_labels[] = {radio_button_label_0, radio_button_label_1};
+
+static char list_box_settings_label_0[] = "2 Minutes";
+static char list_box_settings_label_1[] = "5 Minutes";
+static char list_box_settings_label_2[] = "15 Minutes";
+static char list_box_settings_label_3[] = "30 Minutes";
+static char list_box_settings_label_4[] = "1 Hour";
+static char list_box_settings_label_5[] = "2 Hours";
+static char list_box_settings_label_6[] = "4 Hours";
+static char list_box_settings_label_7[] = "6 Hours";
+static char list_box_settings_label_8[] = "12 Hours";
 const mw_ui_list_box_entry list_box_settings_entries[] = {
-		{"2 Minutes", NULL},
-		{"5 Minutes",  NULL},
-		{"15 Minutes",  NULL},
-		{"30 Minutes",  NULL},
-		{"1 Hour",  NULL},
-		{"2 Hours",  NULL},
-		{"4 Hours",  NULL},
-		{"6 Hours",  NULL},
-		{"12 Hours", NULL}};
-#define LIST_BOX_SETTINGS_ITEMS_COUNT		(sizeof(list_box_settings_entries)/sizeof(mw_ui_list_box_entry))
+		{list_box_settings_label_0, NULL},
+		{list_box_settings_label_1, NULL},
+		{list_box_settings_label_2, NULL},
+		{list_box_settings_label_3, NULL},
+		{list_box_settings_label_4, NULL},
+		{list_box_settings_label_5, NULL},
+		{list_box_settings_label_6, NULL},
+		{list_box_settings_label_7, NULL},
+		{list_box_settings_label_8, NULL}};
+
+static char list_box_files_label_0[] = "Images";
+static char list_box_files_label_1[] = "Documents";
+static char list_box_files_label_2[] = "License.txt";
+static char list_box_files_label_3[] = "Readme.txt";
 const mw_ui_list_box_entry list_box_file_entries_root[] = {
-		{"Images", mw_bitmaps_folder_icon_large},
-		{"Documents",  mw_bitmaps_folder_icon_large},
-		{"License.txt",  mw_bitmaps_file_icon_large},
-		{"Readme.txt",  mw_bitmaps_file_icon_large}};
-const uint8_t list_box_file_entries_root_count = (sizeof(list_box_file_entries_root)/sizeof(mw_ui_list_box_entry));
+		{list_box_files_label_0, mw_bitmaps_folder_icon_large},
+		{list_box_files_label_1,  mw_bitmaps_folder_icon_large},
+		{list_box_files_label_2,  mw_bitmaps_file_icon_large},
+		{list_box_files_label_3,  mw_bitmaps_file_icon_large}};
+const size_t list_box_file_entries_root_count = (sizeof(list_box_file_entries_root) / sizeof(mw_ui_list_box_entry));
+
+static char list_box_images_label_0[] = "..";
+static char list_box_images_label_1[] = "image1.jpg";
+static char list_box_images_label_2[] = "image2.jpg";
 const mw_ui_list_box_entry list_box_file_entries_images[] = {
-		{"..", mw_bitmaps_folder_icon_large},
-		{"image1.jpg",  mw_bitmaps_file_icon_large},
-		{"image2.jpg",  mw_bitmaps_file_icon_large}};
-const uint8_t list_box_file_entries_images_count = (sizeof(list_box_file_entries_images)/sizeof(mw_ui_list_box_entry));
+		{list_box_images_label_0, mw_bitmaps_folder_icon_large},
+		{list_box_images_label_1,  mw_bitmaps_file_icon_large},
+		{list_box_images_label_2,  mw_bitmaps_file_icon_large}};
+const size_t list_box_file_entries_images_count = (sizeof(list_box_file_entries_images) / sizeof(mw_ui_list_box_entry));
+
+static char list_box_docs_label_0[] = "..";
+static char list_box_docs_label_1[] = "doc1.doc";
+static char list_box_docs_label_2[] = "doc2.doc";
+static char list_box_docs_label_3[] = "doc3.doc";
 const mw_ui_list_box_entry list_box_file_entries_docs[] = {
-		{"..", mw_bitmaps_folder_icon_large},
-		{"doc1.doc",  mw_bitmaps_file_icon_large},
-		{"doc2.doc",  mw_bitmaps_file_icon_large},
-		{"doc3.doc",  mw_bitmaps_file_icon_large}};
-const uint8_t list_box_file_entries_docs_count = (sizeof(list_box_file_entries_docs)/sizeof(mw_ui_list_box_entry));
+		{list_box_docs_label_0, mw_bitmaps_folder_icon_large},
+		{list_box_docs_label_1,  mw_bitmaps_file_icon_large},
+		{list_box_docs_label_2,  mw_bitmaps_file_icon_large},
+		{list_box_docs_label_3,  mw_bitmaps_file_icon_large}};
+const size_t list_box_file_entries_docs_count = (sizeof(list_box_file_entries_docs) / sizeof(mw_ui_list_box_entry));
 
 /************
 *** TYPES ***
@@ -158,6 +182,7 @@ void mw_user_root_message_function(const mw_message_t *message)
 void mw_user_init(void)
 {
 	mw_util_rect_t r;
+	size_t temp_size;
 
 	/* create date icon window with no title bar or border */
 	mw_util_set_rect(&r, 10, 1, 104, 104);
@@ -237,7 +262,7 @@ void mw_user_init(void)
 			NULL);
 
 	/* create temperature graph window back button */
-	mw_util_safe_strcpy(button_temp_back_data.button_label, MW_UI_BUTTON_LABEL_MAX_CHARS, "BACK");
+	(void)mw_util_safe_strcpy(button_temp_back_data.button_label, MW_UI_BUTTON_LABEL_MAX_CHARS, "BACK");
 	button_temp_back_handle = mw_ui_button_add_new(70,
 			285,
 			window_temp_handle,
@@ -256,7 +281,7 @@ void mw_user_init(void)
 			NULL);
 
 	/* create settings window ok button */
-	mw_util_safe_strcpy(button_settings_ok_data.button_label, MW_UI_BUTTON_LABEL_MAX_CHARS, "OK");
+	(void)mw_util_safe_strcpy(button_settings_ok_data.button_label, MW_UI_BUTTON_LABEL_MAX_CHARS, "OK");
 	button_settings_ok_handle = mw_ui_button_add_new(70,
 			285,
 			window_settings_handle,
@@ -264,7 +289,7 @@ void mw_user_init(void)
 			&button_settings_ok_data);
 
 	/* create settings window check box */
-	mw_util_safe_strcpy(check_box_settings_ok_data.label, MW_UI_CHECK_BOX_LABEL_MAX_CHARS, "GMT");
+	(void)mw_util_safe_strcpy(check_box_settings_ok_data.label, MW_UI_CHECK_BOX_LABEL_MAX_CHARS, "GMT");
 	check_box_settings_handle = mw_ui_check_box_add_new(20,
 			30,
 			window_settings_handle,
@@ -272,7 +297,8 @@ void mw_user_init(void)
 			&check_box_settings_ok_data);
 
 	/* create settings window radio buttons */
-	radio_button_settings_data.number_of_items = RADIO_BUTTON_ITEMS_COUNT;
+	temp_size = sizeof(radio_button_labels) / sizeof(char *);
+	radio_button_settings_data.number_of_items = (uint8_t)temp_size;
 	radio_button_settings_data.radio_button_labels = radio_button_labels;
 	radio_button_settings_handle = mw_ui_radio_button_add_new(20,
 			70,
@@ -282,7 +308,7 @@ void mw_user_init(void)
 			&radio_button_settings_data);
 
 	/* create settings window label */
-	mw_util_safe_strcpy(label_settings_data.label, MW_UI_LABEL_MAX_CHARS, "Period: Not set");
+	(void)mw_util_safe_strcpy(label_settings_data.label, MW_UI_LABEL_MAX_CHARS, "Period: Not set");
 	label_settings_handle = mw_ui_label_add_new(20,
 			160,
 			110,
@@ -291,8 +317,9 @@ void mw_user_init(void)
 			&label_settings_data);
 
 	/* create a list box */
+	temp_size = sizeof(list_box_settings_entries) / sizeof(mw_ui_list_box_entry);
 	list_box_settings_data.number_of_lines = 3;
-	list_box_settings_data.number_of_items = LIST_BOX_SETTINGS_ITEMS_COUNT;
+	list_box_settings_data.number_of_items = (uint8_t)temp_size;
 	list_box_settings_data.list_box_entries = list_box_settings_entries;
 	list_box_settings_data.line_enables = MW_ALL_ITEMS_ENABLED;
 	list_box_settings_handle = mw_ui_list_box_add_new(20,
@@ -328,7 +355,7 @@ void mw_user_init(void)
 			NULL);
 
 	/* create file window ok button */
-	mw_util_safe_strcpy(button_file_ok_data.button_label, MW_UI_BUTTON_LABEL_MAX_CHARS, "OK");
+	(void)mw_util_safe_strcpy(button_file_ok_data.button_label, MW_UI_BUTTON_LABEL_MAX_CHARS, "OK");
 	button_file_ok_handle = mw_ui_button_add_new(70,
 			285,
 			window_file_handle,
@@ -336,7 +363,7 @@ void mw_user_init(void)
 			&button_file_ok_data);
 
 	/* create file window label */
-	mw_util_safe_strcpy(label_file_data.label, MW_UI_LABEL_MAX_CHARS, "File: Not set");
+	(void)mw_util_safe_strcpy(label_file_data.label, MW_UI_LABEL_MAX_CHARS, "File: Not set");
 	label_file_handle = mw_ui_label_add_new(20,
 			160,
 			110,
@@ -346,7 +373,7 @@ void mw_user_init(void)
 
 	/* create a list box for folder listing */
 	list_box_file_data.number_of_lines = 3;
-	list_box_file_data.number_of_items = list_box_file_entries_root_count;
+	list_box_file_data.number_of_items = (uint8_t)list_box_file_entries_root_count;
 	list_box_file_data.list_box_entries = list_box_file_entries_root;
 	list_box_file_data.line_enables = MW_ALL_ITEMS_ENABLED;
 	list_box_file_handle = mw_ui_list_box_add_new(20,

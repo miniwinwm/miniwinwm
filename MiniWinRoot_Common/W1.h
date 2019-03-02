@@ -24,8 +24,8 @@ SOFTWARE.
 
 */
 
-#ifndef _W1_H
-#define _W1_H
+#ifndef W1_H
+#define W1_H
 
 #ifdef __cplusplus
  extern "C" {

@@ -35,6 +35,8 @@ SOFTWARE.
 *** INCLUDES ***
 ***************/
 
+#include "miniwin.h"
+
 /****************
 *** CONSTANTS ***
 ****************/
@@ -82,14 +84,12 @@ extern const uint8_t help_down_bitmap[];
 extern const uint8_t file_bitmap[];
 extern const uint8_t file_down_bitmap[];
 extern const mw_ui_list_box_entry list_box_file_entries_images[];
-extern const uint8_t list_box_file_entries_images_count;
+extern const size_t list_box_file_entries_images_count;
 extern const mw_ui_list_box_entry list_box_file_entries_root[];
-extern const uint8_t list_box_file_entries_root_count;
+extern const size_t list_box_file_entries_root_count;
 extern const mw_ui_list_box_entry list_box_file_entries_docs[];
-extern const uint8_t list_box_file_entries_docs_count;
+extern const size_t list_box_file_entries_docs_count;
 extern const mw_ui_list_box_entry list_box_settings_entries[];
-extern const uint8_t mw_bitmaps_file_icon_large[];
-extern const uint8_t mw_bitmaps_folder_icon_large[];
 
 /***************************
 *** FUNCTIONS PROTOTYPES ***

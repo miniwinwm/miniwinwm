@@ -28,6 +28,7 @@ SOFTWARE.
 *** INCLUDES ***
 ***************/
 
+#include <stdlib.h>
 #include "miniwin.h"
 #include "miniwin_user.h"
 #include "dialogs/dialog_common.h"
@@ -40,7 +41,7 @@ SOFTWARE.
 ****************/
 
 #define BITMAP_TRASFER_BUFFER_SIZE		16
-#define BASIC_BMP_FILE_HEADER_SIZE		0x36
+#define BASIC_BMP_FILE_HEADER_SIZE		0x36U
 
 /************
 *** TYPES ***
@@ -71,13 +72,13 @@ static uint8_t bitmap_buffer[BITMAP_TRASFER_BUFFER_SIZE * MW_GL_BITMAP_BYTES_PER
 void window_image_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_t *draw_info)
 {
 	uint32_t file_size;
-	uint16_t client_width;
-	uint16_t client_height;
+	int16_t client_width;
+	int16_t client_height;
 	bool success;
 	uint8_t file_buffer[4];
 	uint32_t file_data_offset;
-	uint16_t x_pos;
-	uint16_t y_pos;
+	int16_t x_pos;
+	int16_t y_pos;
 	uint16_t x;
 	uint32_t row_size;
 	uint32_t row_start_address;
@@ -115,10 +116,10 @@ void window_image_paint_function(mw_handle_t window_handle, const mw_gl_draw_inf
 		{
 			if (app_file_getc() == 'B' && app_file_getc() == 'M')
 			{
-				app_file_seek(10);
-				app_file_read(file_buffer, 4);
+				(void)app_file_seek(10U);
+				app_file_read(file_buffer, 4U);
 				file_data_offset = file_buffer[0] + (file_buffer[1] << 8U) + (file_buffer[2] << 16U) + (file_buffer[3] << 24U);
-				app_file_read(file_buffer, 4);
+				app_file_read(file_buffer, 4U);
 				if (file_buffer[0] + (file_buffer[1] << 8U) + (file_buffer[2] << 16U) + (file_buffer[3] << 24) == 40)
 				{
 					/* Windows BITMAPINFOHEADER */
@@ -162,7 +163,7 @@ void window_image_paint_function(mw_handle_t window_handle, const mw_gl_draw_inf
 
 							row_start_address = file_data_offset + row_size * ((image_window_data->image_height - 1) - y_pos - y_scroll_pos);
 							row_start_address += x_scroll_pos * 3;
-							app_file_seek(row_start_address);
+							(void)app_file_seek(row_start_address);
 
 							if (client_width > image_window_data->image_width)
 							{
@@ -265,7 +266,7 @@ void window_image_paint_function(mw_handle_t window_handle, const mw_gl_draw_inf
 				window_handle,
 				window_file_handle,
 				MW_UNUSED_MESSAGE_PARAMETER,
-				MW_UNUSED_MESSAGE_PARAMETER,
+				NULL,
 				MW_WINDOW_MESSAGE);
 
 		/* remove this window and let file window know */
@@ -274,7 +275,7 @@ void window_image_paint_function(mw_handle_t window_handle, const mw_gl_draw_inf
 				window_handle,
 				window_file_handle,
 				MW_UNUSED_MESSAGE_PARAMETER,
-				MW_UNUSED_MESSAGE_PARAMETER,
+				NULL,
 				MW_WINDOW_MESSAGE);
 	}
 }
@@ -301,11 +302,11 @@ void window_image_message_function(const mw_message_t *message)
 		break;
 
 	case MW_WINDOW_VERT_SCROLL_BAR_SCROLLED_MESSAGE:
-		image_window_data->y_scroll_pos = message->message_data;
+		image_window_data->y_scroll_pos = (uint8_t)message->message_data;
 		break;
 
 	case MW_WINDOW_HORIZ_SCROLL_BAR_SCROLLED_MESSAGE:
-		image_window_data->x_scroll_pos = message->message_data;
+		image_window_data->x_scroll_pos = (uint8_t)message->message_data;
 		break;
 
 	case MW_TOUCH_UP_MESSAGE:
@@ -317,7 +318,7 @@ void window_image_message_function(const mw_message_t *message)
 				message->recipient_handle,
 				window_file_handle,
 				MW_UNUSED_MESSAGE_PARAMETER,
-				MW_UNUSED_MESSAGE_PARAMETER,
+				NULL,
 				MW_WINDOW_MESSAGE);
 		break;
 

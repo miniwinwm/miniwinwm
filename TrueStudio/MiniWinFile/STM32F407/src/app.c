@@ -231,7 +231,7 @@ uint32_t app_file_size(void)
 	return ((uint32_t)f_size(&file_handle));
 }
 
-uint8_t app_file_getc()
+uint8_t app_file_getc(void)
 {
 	uint8_t byte;
 	UINT bytes_read;
@@ -334,38 +334,41 @@ uint8_t find_folder_entries(char *path,
     return (i);
 }
 
-struct tm app_get_time_date(void)
+mw_time_t app_get_time_date(void)
 {
 	RTC_DateTypeDef rtc_date;
 	RTC_TimeTypeDef rtc_time;
-	struct tm stdlib_tm;
+	mw_time_t time_now;
 
 	(void)HAL_RTC_GetTime(&rtc_handle, &rtc_time, FORMAT_BIN);
 	(void)HAL_RTC_GetDate(&rtc_handle, &rtc_date, FORMAT_BIN);
 
-	stdlib_tm.tm_hour = rtc_time.Hours;
-	stdlib_tm.tm_min = rtc_time.Minutes;
-	stdlib_tm.tm_sec = rtc_time.Seconds;
-	stdlib_tm.tm_year = rtc_date.Year + 2000;
-	stdlib_tm.tm_mon = rtc_date.Month;
-	stdlib_tm.tm_mday = rtc_date.Date;
+	time_now.tm_hour = rtc_time.Hours;
+	time_now.tm_min = rtc_time.Minutes;
+	time_now.tm_sec = rtc_time.Seconds;
+	time_now.tm_year = (uint16_t)rtc_date.Year + 2000U;
+	time_now.tm_mon = rtc_date.Month;
+	time_now.tm_mday = rtc_date.Date;
 
-	return (stdlib_tm);
+	return (time_now);
 }
 
-void app_set_time_date(struct tm tm)
+void app_set_time_date(mw_time_t new_time)
 {
+	uint16_t temp_uint16;
+
 	RTC_DateTypeDef  hal_date_structure;
 	RTC_TimeTypeDef  hal_time_structure;
 
-	hal_date_structure.Year = tm.tm_year - 2000;
-	hal_date_structure.Month = tm.tm_mon;
-	hal_date_structure.Date = tm.tm_mday;
+	temp_uint16 = new_time.tm_year - 2000U;
+	hal_date_structure.Year = (uint8_t)temp_uint16;
+	hal_date_structure.Month = new_time.tm_mon;
+	hal_date_structure.Date = new_time.tm_mday;
 	hal_date_structure.WeekDay = RTC_WEEKDAY_MONDAY;	/* must be set to something even if not correct for the date */
 	(void)HAL_RTC_SetDate(&rtc_handle, &hal_date_structure, FORMAT_BIN);
 
-	hal_time_structure.Hours = tm.tm_hour;
-	hal_time_structure.Minutes = tm.tm_min;
+	hal_time_structure.Hours = new_time.tm_hour;
+	hal_time_structure.Minutes = new_time.tm_min;
 	hal_time_structure.Seconds = 0x00U;
 	hal_time_structure.TimeFormat = RTC_HOURFORMAT12_AM;
 	hal_time_structure.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
@@ -375,17 +378,17 @@ void app_set_time_date(struct tm tm)
 
 DWORD get_fattime (void)
 {
-	DWORD fattime = 0;
-	struct tm tm;
+	uint32_t fattime = 0U;
+	mw_time_t time_now;
 
-	tm = app_get_time_date();
+	time_now = app_get_time_date();
 
-	fattime = (tm.tm_year - 1980) << 25U;
-	fattime |= tm.tm_mon << 21U;
-	fattime |= tm.tm_mday << 16U;
-	fattime |= tm.tm_hour << 11U;
-	fattime |= tm.tm_min << 5U;
-	fattime |= tm.tm_sec / 2;
+	fattime = (time_now.tm_year - 1980U) << 25;
+	fattime |= time_now.tm_mon << 21;
+	fattime |= time_now.tm_mday << 16;
+	fattime |= time_now.tm_hour << 11;
+	fattime |= time_now.tm_min << 5;
+	fattime |= time_now.tm_sec / 2;
 
-	return (fattime);
+	return ((DWORD)fattime);
 }

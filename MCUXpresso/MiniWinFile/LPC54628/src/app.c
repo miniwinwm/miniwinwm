@@ -29,7 +29,6 @@ SOFTWARE.
 ***************/
 
 #include <string.h>
-#include <time.h>
 #include "ff.h"
 #include "fsl_rtc.h"
 #include "fsl_iocon.h"
@@ -219,7 +218,7 @@ uint32_t app_file_size(void)
 	return (size);
 }
 
-uint8_t app_file_getc()
+uint8_t app_file_getc(void)
 {
 	uint8_t byte = 0U;
 	UINT bytes_read;
@@ -347,23 +346,23 @@ uint8_t find_folder_entries(char *path,
     return (i);
 }
 
-struct tm app_get_time_date(void)
+mw_time_t app_get_time_date(void)
 {
-	struct tm stdlib_tm;
+	mw_time_t time_now;
     rtc_datetime_t date;
 
     RTC_GetDatetime(RTC, &date);
-    stdlib_tm.tm_year = date.year;
-    stdlib_tm.tm_mon = date.month;
-    stdlib_tm.tm_mday = date.day;
-    stdlib_tm.tm_hour = date.hour;
-    stdlib_tm.tm_min =  date.minute;
-    stdlib_tm.tm_sec = date.second;
+    time_now.tm_year = date.year;
+    time_now.tm_mon = date.month;
+    time_now.tm_mday = date.day;
+    time_now.tm_hour = date.hour;
+    time_now.tm_min =  date.minute;
+    time_now.tm_sec = date.second;
 
-	return (stdlib_tm);
+	return (time_now);
 }
 
-void app_set_time_date(struct tm tm)
+void app_set_time_date(mw_time_t new_time)
 {
     rtc_datetime_t date;
 
@@ -371,11 +370,11 @@ void app_set_time_date(struct tm tm)
     RTC_StopTimer(RTC);
 
     /* set rtc time */
-    date.year = tm.tm_year;
-    date.month = tm.tm_mon;
-    date.day = tm.tm_mday;
-    date.hour = tm.tm_hour;
-    date.minute = tm.tm_min;
+    date.year = new_time.tm_year;
+    date.month = new_time.tm_mon;
+    date.day = new_time.tm_mday;
+    date.hour = new_time.tm_hour;
+    date.minute = new_time.tm_min;
     date.second = 0U;
     (void)RTC_SetDatetime(RTC, &date);
 
@@ -385,17 +384,17 @@ void app_set_time_date(struct tm tm)
 
 DWORD get_fattime(void)
 {
-	DWORD fattime = 0;
-	struct tm tm;
+	uint32_t fattime = 0U;
+	mw_time_t time_now;
 
-	tm = app_get_time_date();
+	time_now = app_get_time_date();
 
-	fattime = (tm.tm_year - 1980) << 25U;
-	fattime |= tm.tm_mon << 21U;
-	fattime |= tm.tm_mday << 16U;
-	fattime |= tm.tm_hour << 11U;
-	fattime |= tm.tm_min << 5U;
-	fattime |= tm.tm_sec / 2;
+	fattime = (time_now.tm_year - 1980U) << 25;
+	fattime |= time_now.tm_mon << 21;
+	fattime |= time_now.tm_mday << 16;
+	fattime |= time_now.tm_hour << 11;
+	fattime |= time_now.tm_min << 5;
+	fattime |= time_now.tm_sec / 2;
 
-	return (fattime);
+	return ((DWORD)fattime);
 }

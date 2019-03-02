@@ -31,7 +31,7 @@ SOFTWARE.
 ***************/
 
 #include <stdint.h>
-#include <stdio.h>
+#include <windows.h>
 
 /****************
 *** CONSTANTS ***
@@ -67,20 +67,32 @@ void mw_hal_non_vol_init(void)
 
 void mw_hal_non_vol_load(uint8_t *data, uint16_t length)
 {
-	FILE *settings;
+    DWORD dwBytesRead;
 
-	settings = fopen("settings.bin", "rb");
-	(void)fread(data, 1, length, settings);
-	(void)fclose(settings);
+	HANDLE hFile = CreateFile("settings.bin",
+                       GENERIC_READ,
+                       0U,
+                       NULL,
+					   OPEN_EXISTING,
+                       FILE_ATTRIBUTE_NORMAL,
+                       NULL);
+	(void)ReadFile(hFile, (LPVOID)data, (DWORD)length, &dwBytesRead, NULL);
+    CloseHandle(hFile);
 }
 
 void mw_hal_non_vol_save(uint8_t *data, uint16_t length)
 {
-	FILE *settings;
+    DWORD dwBytesWritten;
 
-	settings = fopen("settings.bin", "wb");
-	(void)fwrite(data, 1, length, settings);
-	(void)fclose(settings);
+	HANDLE hFile = CreateFile("settings.bin",
+                       GENERIC_WRITE,
+                       0U,
+                       NULL,
+					   CREATE_ALWAYS,
+                       FILE_ATTRIBUTE_NORMAL,
+                       NULL);
+    (void)WriteFile(hFile, (PCVOID)data, (DWORD)length, &dwBytesWritten, NULL);
+    CloseHandle(hFile);
 }
 
 #endif

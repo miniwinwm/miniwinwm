@@ -28,6 +28,7 @@ SOFTWARE.
 *** INCLUDES ***
 ***************/
 
+#include <stdlib.h>
 #include "miniwin.h"
 #include "miniwin_user.h"
 #include "W1.h"
@@ -37,7 +38,11 @@ SOFTWARE.
 *** CONSTANTS ***
 ****************/
 
-static const mw_ui_list_box_entry list_box_LB1_entries[] = {{"Root Colour", NULL}, {"Test 1", NULL}, {"Test 2", NULL}};
+static char list_box_LB1_label_0[] = "Root Colour";
+static char list_box_LB1_label_1[] = "Test 1";
+static char list_box_LB1_label_2[] = "Test 2";
+
+static const mw_ui_list_box_entry list_box_LB1_entries[] = {{list_box_LB1_label_0, NULL}, {list_box_LB1_label_1, NULL}, {list_box_LB1_label_2, NULL}};
 #define ROOT_BITMAP_WIDTH	66
 #define ROOT_BITMAP_HEIGHT	92
 
@@ -120,18 +125,21 @@ void mw_user_root_paint_function(const mw_gl_draw_info_t *draw_info)
 
 void mw_user_root_message_function(const mw_message_t *message)
 {
+	uint32_t temp_uint32;
+
     switch (message->message_id)
 	{
 	case MW_TOUCH_DOWN_MESSAGE:
 		mw_set_window_visible(window_W2_handle, true);
-		mw_reposition_window(window_W2_handle, message->message_data >> 16, message->message_data & 0xffff);
+		temp_uint32 = message->message_data >> 16;
+		mw_reposition_window(window_W2_handle, (int16_t)temp_uint32, (int16_t)message->message_data);
 		mw_paint_all();
 		break;
 
 	case MW_BUTTON_PRESSED_MESSAGE:
 		if (message->sender_handle == button_B2_handle)
 		{
-			mw_create_window_dialog_one_button(20,
+			(void)mw_create_window_dialog_one_button(20,
 					50,
 					150,
 					"Titulus",
@@ -143,6 +151,7 @@ void mw_user_root_message_function(const mw_message_t *message)
 		break;
 
 	default:
+		/* keep MISRA happy */
 		break;
 	}
 }
@@ -150,6 +159,7 @@ void mw_user_root_message_function(const mw_message_t *message)
 void mw_user_init(void)
 {
     mw_util_rect_t r;
+    size_t temp_size;
 
     mw_util_set_rect(&r, 15, 35, 200, 180);
     window_W1_handle = mw_add_window(&r,
@@ -158,21 +168,21 @@ void mw_user_init(void)
         window_W1_message_function,
         NULL,
         0,
-        0 | MW_WINDOW_FLAG_HAS_BORDER | MW_WINDOW_FLAG_HAS_TITLE_BAR | MW_WINDOW_FLAG_IS_VISIBLE,
+        0U | MW_WINDOW_FLAG_HAS_BORDER | MW_WINDOW_FLAG_HAS_TITLE_BAR | MW_WINDOW_FLAG_IS_VISIBLE,
         NULL);
 
     (void)mw_util_safe_strcpy(button_B1_data.button_label, MW_UI_BUTTON_LABEL_MAX_CHARS, "Button1");
     button_B1_handle = mw_ui_button_add_new(10,
         10,
         window_W1_handle,
-        0 | MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
+        0U | MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
         &button_B1_data);
 
     (void)mw_util_safe_strcpy(button_B2_data.button_label, MW_UI_BUTTON_LABEL_MAX_CHARS, "Button2");
     button_B2_handle = mw_ui_button_add_new(10,
         10,
         MW_ROOT_WINDOW_HANDLE,
-        0 | MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
+        0U | MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
         &button_B2_data);
 
     mw_util_set_rect(&r, 0, 0, 80, 42);
@@ -185,15 +195,16 @@ void mw_user_init(void)
         0,
         NULL);
 
+    temp_size = sizeof(list_box_LB1_entries) / sizeof(mw_ui_list_box_entry);
     list_box_LB1_data.line_enables = MW_ALL_ITEMS_ENABLED;
-    list_box_LB1_data.number_of_lines = 3;
-    list_box_LB1_data.number_of_items = (sizeof(list_box_LB1_entries)/sizeof(mw_ui_list_box_entry));
+    list_box_LB1_data.number_of_lines = 3U;
+    list_box_LB1_data.number_of_items = (uint8_t)temp_size;
     list_box_LB1_data.list_box_entries = list_box_LB1_entries;
     list_box_LB1_handle = mw_ui_list_box_add_new(0,
         0,
         80,
         window_W2_handle,
-        0 | MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
+        0U | MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
         &list_box_LB1_data);
 
     mw_paint_all();

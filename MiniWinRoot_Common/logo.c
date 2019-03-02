@@ -3,6 +3,7 @@
 ***************/
 
 #include <stdint.h>
+#include "miniwin_user.h"
 
 /****************
 *** CONSTANTS ***

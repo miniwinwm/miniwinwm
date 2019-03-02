@@ -41,7 +41,8 @@ SOFTWARE.
 ************/
 
 typedef struct
-{    /* Add your data members here */
+{
+	char dummy;		/* some compilers treat empty structs as errors */
 } window_W2_data_t;
 
 /***********************

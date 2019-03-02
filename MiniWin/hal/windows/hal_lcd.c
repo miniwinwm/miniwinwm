@@ -71,7 +71,7 @@ static HDC hdc;
 
 void mw_hal_lcd_init(void)
 {
-	Sleep(600);
+	Sleep(600U);
 }
 
 int16_t mw_hal_lcd_get_display_width(void)
@@ -87,8 +87,8 @@ int16_t mw_hal_lcd_get_display_height(void)
 void mw_hal_lcd_pixel(int16_t x, int16_t y, mw_hal_lcd_colour_t colour)
 {
 	hdc = GetDC(hwnd);
-	uint8_t r = (colour & 0xff0000U) >> 16U;
-	uint8_t g = (colour & 0xff00U) >> 8U;
+	uint8_t r = (colour & 0xff0000U) >> 16;
+	uint8_t g = (colour & 0xff00U) >> 8;
 	uint8_t b = colour & 0xffU;
 
 	(void)SetPixel(hdc, x, y, RGB(r, g, b));
@@ -131,8 +131,8 @@ void mw_hal_lcd_colour_bitmap_clip(int16_t image_start_x,
 		int16_t clip_height,
 		const uint8_t *data)
 {
-	uint16_t x;
-	uint16_t y;
+	int16_t x;
+	int16_t y;
 	mw_hal_lcd_colour_t pixel_colour;
 
 	for (y = 0; y < image_data_height_pixels; y++)

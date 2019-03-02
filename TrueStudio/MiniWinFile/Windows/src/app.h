@@ -164,14 +164,14 @@ void app_file_close(void);
  *
  * @return The date and time, year in xxxx format, date 1-31, month 1-12
  */
-struct tm app_get_time_date(void);
+mw_time_t app_get_time_date(void);
 
 /**
  * Set the date and time from hardware
  *
- * @param tm The date and time, year in xxxx format, date 1-31, month 1-12
+ * @param new_time The date and time, year in xxxx format, date 1-31, month 1-12
  */
-void app_set_time_date(struct tm tm);
+void app_set_time_date(mw_time_t new_time);
 
 #ifdef __cplusplus
 }

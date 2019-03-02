@@ -80,8 +80,8 @@ bool mw_hal_touch_get_point(uint16_t* x, uint16_t* y)
 		return false;
 	}
 
-	*x = mx;
-	*y = my;
+	*x = (uint16_t)mx;
+	*y = (uint16_t)my;
 
 	return (true);
 }

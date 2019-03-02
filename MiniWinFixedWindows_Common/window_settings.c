@@ -30,6 +30,7 @@ SOFTWARE.
 
 #include <stdint.h>
 #include <stdbool.h>
+#include <stdlib.h>
 #include "miniwin.h"
 #include "miniwin_user.h"
 #include "window_settings.h"
@@ -100,6 +101,7 @@ void window_settings_paint_function(mw_handle_t window_handle, const mw_gl_draw_
 void window_settings_message_function(const mw_message_t *message)
 {
 	uint8_t list_box_item_chosen;
+	uint32_t temp_uint32;
 
 	MW_ASSERT(message != (void*)0, "Null pointer parameter");
 
@@ -111,8 +113,10 @@ void window_settings_message_function(const mw_message_t *message)
 		break;
 
 	case MW_LIST_BOX_SCROLLING_REQUIRED_MESSAGE:
-		mw_set_control_enabled(arrow_settings_down, message->message_data >> 16);
-		settings_data.max_scrollable_lines = message->message_data & 0xffff;
+		temp_uint32 = message->message_data >> 16;
+		mw_set_control_enabled(arrow_settings_down, (bool)temp_uint32);
+		temp_uint32 = message->message_data & 0xffffU;
+		settings_data.max_scrollable_lines = (uint16_t)temp_uint32;
 		mw_paint_control(arrow_settings_down);
 		break;
 
@@ -126,7 +130,7 @@ void window_settings_message_function(const mw_message_t *message)
 
 	case MW_LIST_BOX_ITEM_PRESSED_MESSAGE:
 		/* list box item pressed */
-		list_box_item_chosen = message->message_data;
+		list_box_item_chosen = (uint8_t)message->message_data;
 		mw_post_message(MW_LABEL_SET_LABEL_TEXT_MESSAGE,
 				message->recipient_handle,
 				label_settings_handle,
@@ -138,12 +142,12 @@ void window_settings_message_function(const mw_message_t *message)
 
 	case MW_ARROW_PRESSED_MESSAGE:
 		/* an arrow has been pressed */
-		if (message->message_data == MW_UI_ARROW_UP && settings_data.lines_to_scroll > 0)
+		if ((mw_ui_arrow_direction_t)message->message_data == MW_UI_ARROW_UP && settings_data.lines_to_scroll > 0U)
 		{
 			/* up arrow, scroll list box up is ok to do so */
 			settings_data.lines_to_scroll--;
 
-			if (settings_data.lines_to_scroll == 0)
+			if (settings_data.lines_to_scroll == 0U)
 			{
 				mw_set_control_enabled(arrow_settings_up, false);
 				mw_paint_control(arrow_settings_up);
@@ -156,11 +160,11 @@ void window_settings_message_function(const mw_message_t *message)
 					MW_UNUSED_MESSAGE_PARAMETER,
 					list_box_settings_handle,
 					settings_data.lines_to_scroll,
-					MW_UNUSED_MESSAGE_PARAMETER,
+					NULL,
 					MW_CONTROL_MESSAGE);
 			mw_paint_control(list_box_settings_handle);
 		}
-		else if (message->message_data == MW_UI_ARROW_DOWN &&
+		else if ((mw_ui_arrow_direction_t)message->message_data == MW_UI_ARROW_DOWN &&
 					settings_data.lines_to_scroll < settings_data.max_scrollable_lines)
 		{
 			/* down arrow, scroll list box down if ok to do so */
@@ -179,9 +183,13 @@ void window_settings_message_function(const mw_message_t *message)
 					MW_UNUSED_MESSAGE_PARAMETER,
 					list_box_settings_handle,
 					settings_data.lines_to_scroll,
-					MW_UNUSED_MESSAGE_PARAMETER,
+					NULL,
 					MW_CONTROL_MESSAGE);
 			mw_paint_control(list_box_settings_handle);
+		}
+		else
+		{
+			/* keep MISRA happy */
 		}
 		break;
 

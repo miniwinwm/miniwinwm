@@ -39,7 +39,7 @@ SOFTWARE.
 
 #define LCD_DISPLAY_WIDTH_PIXELS	240							/**< This is the width of the display in pixels irrespective of user specified display rotation */
 #define LCD_DISPLAY_HEIGHT_PIXELS	320							/**< This is the height of the display in pixels irrespective of user specified display rotation */
-#define LCD_FRAME_BUFFER_LAYER0     (LCD_FRAME_BUFFER+0x130000)
+#define LCD_FRAME_BUFFER_LAYER0     (LCD_FRAME_BUFFER + 0x130000U)
 #define LCD_FRAME_BUFFER_LAYER1     LCD_FRAME_BUFFER
 
 /************
@@ -71,15 +71,15 @@ void mw_hal_lcd_init(void)
     BSP_LCD_Init();
 
     /* Layer2 Init */
-    BSP_LCD_LayerDefaultInit(1, LCD_FRAME_BUFFER_LAYER1);
-    BSP_LCD_SelectLayer(1);
-    BSP_LCD_SetLayerVisible(1, DISABLE);
+    BSP_LCD_LayerDefaultInit(1U, LCD_FRAME_BUFFER_LAYER1);
+    BSP_LCD_SelectLayer(1U);
+    BSP_LCD_SetLayerVisible(1U, DISABLE);
 
     /* Layer1 Init */
-    BSP_LCD_LayerDefaultInit(0, LCD_FRAME_BUFFER_LAYER0);
-    BSP_LCD_SelectLayer(0);
+    BSP_LCD_LayerDefaultInit(0U, LCD_FRAME_BUFFER_LAYER0);
+    BSP_LCD_SelectLayer(0U);
     BSP_LCD_Clear(LCD_COLOR_WHITE);
-    BSP_LCD_SetLayerVisible(0, ENABLE);
+    BSP_LCD_SetLayerVisible(0U, ENABLE);
 
     BSP_LCD_DisplayOn();
 }
@@ -114,13 +114,13 @@ void mw_hal_lcd_filled_rectangle(int16_t start_x,
 		mw_hal_lcd_colour_t colour)
 {
 #if defined(MW_DISPLAY_ROTATION_0)
-	BSP_LCD_FillRect(start_x, start_y, width, height, colour);
+	BSP_LCD_FillRect((uint16_t)start_x, (uint16_t)start_y, (uint16_t)width, (uint16_t)height, (uint32_t)colour);
 #elif defined(MW_DISPLAY_ROTATION_90)
-	BSP_LCD_FillRect(start_y, LCD_DISPLAY_HEIGHT_PIXELS - start_x - width, height, width, colour);
+	BSP_LCD_FillRect((uint16_t)start_y, (uint16_t)LCD_DISPLAY_HEIGHT_PIXELS - (uint16_t)start_x - (uint16_t)width, (uint16_t)height, (uint16_t)width, (uint32_t)colour);
 #elif defined (MW_DISPLAY_ROTATION_180)
-	BSP_LCD_FillRect(LCD_DISPLAY_WIDTH_PIXELS - start_x - width, LCD_DISPLAY_HEIGHT_PIXELS - start_y - height, width, height, colour);
+	BSP_LCD_FillRect((uint16_t)LCD_DISPLAY_WIDTH_PIXELS - (uint16_t)start_x - (uint16_t)width, (uint16_t)LCD_DISPLAY_HEIGHT_PIXELS - (uint16_t)start_y - (uint16_t)height, (uint16_t)width, (uint16_t)height, (uint32_t)colour);
 #elif defined (MW_DISPLAY_ROTATION_270)
-	BSP_LCD_FillRect(LCD_DISPLAY_WIDTH_PIXELS - start_y - height, start_x, height, width, colour);
+	BSP_LCD_FillRect((uint16_t)LCD_DISPLAY_WIDTH_PIXELS - (uint16_t)start_y - (uint16_t)height, (uint16_t)start_x, (uint16_t)height, (uint16_t)width, (uint32_t)colour);
 #endif
 }
 
@@ -134,42 +134,39 @@ void mw_hal_lcd_colour_bitmap_clip(int16_t image_start_x,
 		int16_t clip_height,
 		const uint8_t *data)
 {
-	uint16_t x;
-	uint16_t y;
+	int16_t x;
+	int16_t y;
 	mw_hal_lcd_colour_t pixel_colour;
-	const uint8_t *pixel_address;
 
 	/* check if pixels in data buffer are all to be drawn and if so use bitmap draw routine */
 	if (image_start_x >= clip_start_x &&
 			image_start_y >= clip_start_y &&
-			image_start_x + image_data_width_pixels < clip_start_x + clip_width &&
-			image_start_y + image_data_height_pixels < clip_start_y + clip_height)
+			image_start_x + (int16_t)image_data_width_pixels < clip_start_x + clip_width &&
+			image_start_y + (int16_t)image_data_height_pixels < clip_start_y + clip_height)
 	{
-		BSP_LCD_DrawBitmap24(image_start_x,
-				image_start_y,
-				image_data_width_pixels,
-				image_data_height_pixels,
+		BSP_LCD_DrawBitmap24((uint16_t)image_start_x,
+				(uint16_t)image_start_y,
+				(uint16_t)image_data_width_pixels,
+				(uint16_t)image_data_height_pixels,
 				data);
 		return;
 	}
 
-	for (y = 0; y < image_data_height_pixels; y++)
+	for (y = 0; y < (int16_t)image_data_height_pixels; y++)
 	{
-		for (x = 0; x < image_data_width_pixels; x++)
+		for (x = 0; x < (int16_t)image_data_width_pixels; x++)
 		{
 			if (x + image_start_x >= clip_start_x &&
 					x + image_start_x < clip_start_x + clip_width &&
 					y + image_start_y >= clip_start_y &&
 					y + image_start_y < clip_start_y + clip_height)
 			{
-				pixel_address = (data + (y * image_data_width_pixels * 3) + x * 3);
-				pixel_colour = (uint32_t)*pixel_address;
-				pixel_address++;
-				pixel_colour += ((uint32_t)(*pixel_address)) << 8;
-				pixel_address++;
-				pixel_colour += ((uint32_t)(*pixel_address)) << 16;
-
-				BSP_LCD_DrawPixel(x + image_start_x, y + image_start_y, pixel_colour);
+				pixel_colour = *(2 + data + (x + y * (int16_t)image_data_width_pixels) * 3);
+				pixel_colour <<= 8;
+				pixel_colour += *(1 + data + (x + y * (int16_t)image_data_width_pixels) * 3);
+				pixel_colour <<= 8;
+				pixel_colour += *(data + (x + y * (int16_t)image_data_width_pixels) * 3);
+				mw_hal_lcd_pixel(x + image_start_x, y + image_start_y, pixel_colour);
 			}
 		}
 	}
@@ -189,19 +186,18 @@ void mw_hal_lcd_monochrome_bitmap_clip(int16_t image_start_x,
 {
 	int16_t x;
 	int16_t y;
-	uint8_t a;
-	uint8_t colour;
+	int16_t a;
 	uint8_t image_byte;
 	uint8_t mask;
-	uint8_t array_width_bytes;
+	int16_t array_width_bytes;
 
-	array_width_bytes = bitmap_width >> 3;
-	if (bitmap_width % 8 > 0)
+	array_width_bytes = (int16_t)bitmap_width / 8;
+	if (bitmap_width % 8U > 0U)
 	{
 		array_width_bytes++;
 	}
 
-	for (y = 0; y < bitmap_height; y++)
+	for (y = 0; y < (int16_t)bitmap_height; y++)
 	{
 		for (a = 0; a < array_width_bytes; a++)
 		{
@@ -209,23 +205,22 @@ void mw_hal_lcd_monochrome_bitmap_clip(int16_t image_start_x,
 			mask = 0x80;
 			for (x = 0; x < 8; x++)
 			{
-				if ((a << 3) + x == bitmap_width)
+				if ((a * 8) + x == (int16_t)bitmap_width)
 				{
 					break;
 				}
-				if ((a << 3) + x + image_start_x >= clip_start_x &&
-						(a << 3) + x + image_start_x < clip_start_x + clip_width &&
+				if ((a * 8) + x + image_start_x >= clip_start_x &&
+						(a * 8) + x + image_start_x < clip_start_x + clip_width &&
 						y + image_start_y >= clip_start_y &&
 						y + image_start_y < clip_start_y + clip_height)
 				{
-					colour = !(image_byte & mask);
-					if (colour)
+					if ((image_byte & mask) == 0U)
 					{
-						mw_hal_lcd_pixel((a << 3) + x + image_start_x, y + image_start_y, fg_colour);
+						mw_hal_lcd_pixel((a * 8) + x + image_start_x, y + image_start_y, fg_colour);
 					}
 					else
 					{
-						mw_hal_lcd_pixel((a << 3) + x + image_start_x, y + image_start_y, bg_colour);
+						mw_hal_lcd_pixel((a * 8) + x + image_start_x, y + image_start_y, bg_colour);
 					}
 				}
 				mask >>= 1;

@@ -70,36 +70,36 @@ void mw_hal_non_vol_init(void)
 
 void mw_hal_non_vol_load(uint8_t *data, uint16_t length)
 {
-	(void)memcpy(data, (uint8_t *)(CONFIG_ADDRESS), length);
+	(void)memcpy((data), ((uint8_t *)(CONFIG_ADDRESS)), (length));
 }
 
 void mw_hal_non_vol_save(uint8_t *data, uint16_t length)
 {
-	uint32_t words = (length / sizeof(uint32_t)) + ((length % sizeof(uint32_t)) ? 1 : 0);
+	uint32_t words = ((uint32_t)length / (uint32_t)sizeof(uint32_t)) + (((uint32_t)length % (uint32_t)sizeof(uint32_t)) ? 1U : 0U);
 	uint32_t *data2 = (uint32_t *)data;
 	uint32_t address;
 	uint32_t index;
 	uint32_t sector_error;
 	FLASH_EraseInitTypeDef erase_init_struct;
 
-	HAL_FLASH_Unlock();
+	(void)HAL_FLASH_Unlock();
 
 	/* erase sector */
 	erase_init_struct.TypeErase = FLASH_TYPEERASE_SECTORS;
 	erase_init_struct.VoltageRange = FLASH_VOLTAGE_RANGE_3;
 	erase_init_struct.Sector = CONFIG_SECTOR;
-	erase_init_struct.NbSectors = 1;
-	HAL_FLASHEx_Erase(&erase_init_struct, &sector_error);
+	erase_init_struct.NbSectors = 1U;
+	(void)HAL_FLASHEx_Erase(&erase_init_struct, &sector_error);
 
 	/* write settings */
 	address = CONFIG_ADDRESS;
-	for (index = 0; index < words; index++)
+	for (index = 0U; index < words; index++)
 	{
-		HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD, address, data2[index]);
-		address += sizeof(uint32_t);
+		(void)HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD, address, data2[index]);
+		address += (uint32_t)sizeof(uint32_t);
 	}
 
-	HAL_FLASH_Lock();
+	(void)HAL_FLASH_Lock();
 }
 
 #endif

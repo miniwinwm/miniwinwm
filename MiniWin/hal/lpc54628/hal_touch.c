@@ -87,7 +87,7 @@ void mw_hal_touch_init(void)
     I2C_MasterInit(I2C2, &masterConfig, I2C_MASTER_CLOCK_FREQUENCY);
 
     /* initialize the touch controller */
-    FT5406_Init(&touch_handle, I2C2);
+    (void)FT5406_Init(&touch_handle, I2C2);
 
     /* Give touch hardware time to settle to prevent false touch at startup */
     mw_hal_delay_ms(50U);
@@ -95,7 +95,7 @@ void mw_hal_touch_init(void)
 
 bool mw_hal_touch_is_recalibration_required(void)
 {
-	return (!GPIO_PinRead(GPIO, APP_BOARD_USER_BUTTON_PORT, APP_BOARD_USER_BUTTON_PIN));
+	return (GPIO_PinRead(GPIO, APP_BOARD_USER_BUTTON_PORT, APP_BOARD_USER_BUTTON_PIN) == 0U);
 }
 
 bool mw_hal_touch_get_point(uint16_t* x, uint16_t* y)
@@ -104,7 +104,7 @@ bool mw_hal_touch_get_point(uint16_t* x, uint16_t* y)
     int cursorPosX;
     int cursorPosY;
 
-	FT5406_GetSingleTouch(&touch_handle, &touch_event, &cursorPosX, &cursorPosY);
+	(void)FT5406_GetSingleTouch(&touch_handle, &touch_event, &cursorPosX, &cursorPosY);
 
     if (touch_event == kTouch_Down || touch_event == kTouch_Contact)
 	{
@@ -123,7 +123,7 @@ mw_hal_touch_state_t mw_hal_touch_get_state(void)
     int cursorPosX;
     int cursorPosY;
 
-    FT5406_GetSingleTouch(&touch_handle, &touch_event, &cursorPosX, &cursorPosY);
+    (void)FT5406_GetSingleTouch(&touch_handle, &touch_event, &cursorPosX, &cursorPosY);
 
     if (touch_event == kTouch_Down || touch_event == kTouch_Contact)
 	{

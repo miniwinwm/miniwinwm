@@ -102,7 +102,7 @@ void window_time_icon_message_function(const mw_message_t *message)
 
 	case MW_TOUCH_DOWN_MESSAGE:
 		window_time_icon_data.touch_down = true;
-		mw_set_timer(mw_tick_counter + MW_CONTROL_DOWN_TIME, message->recipient_handle, MW_WINDOW_MESSAGE);
+		(void)mw_set_timer(mw_tick_counter + MW_CONTROL_DOWN_TIME, message->recipient_handle, MW_WINDOW_MESSAGE);
 		mw_paint_window_client(message->recipient_handle);
 		break;
 

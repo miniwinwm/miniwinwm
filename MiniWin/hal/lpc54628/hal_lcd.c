@@ -108,7 +108,7 @@ void mw_hal_lcd_init(void)
     lcdc_config_t lcdConfig;
 
     /* clear the screen buffers */
-    (void)memset(s_frameBuf0, 0, LCD_DISPLAY_WIDTH_PIXELS * LCD_DISPLAY_HEIGHT_PIXELS * sizeof(uint32_t));
+    (void)memset((s_frameBuf0), 0, ((size_t)LCD_DISPLAY_WIDTH_PIXELS * (size_t)LCD_DISPLAY_HEIGHT_PIXELS * sizeof(uint32_t)));
 
     /* route Main clock to lcd */
     CLOCK_AttachClk(kMAIN_CLK_to_LCD_CLK);
@@ -153,13 +153,13 @@ int16_t mw_hal_lcd_get_display_height(void)
 void mw_hal_lcd_pixel(int16_t x, int16_t y, mw_hal_lcd_colour_t colour)
 {
 #if defined(MW_DISPLAY_ROTATION_0)
-	s_frameBuf0[y][x] = colour;
+	s_frameBuf0[y][x] = (uint32_t)colour;
 #elif defined(MW_DISPLAY_ROTATION_90)
-	s_frameBuf0[LCD_DISPLAY_HEIGHT_PIXELS - 1U - x][y] = colour;
+	s_frameBuf0[LCD_DISPLAY_HEIGHT_PIXELS - 1 - x][y] = (uint32_t)colour;
 #elif defined (MW_DISPLAY_ROTATION_180)
-	s_frameBuf0[LCD_DISPLAY_HEIGHT_PIXELS - 1U - y][LCD_DISPLAY_WIDTH_PIXELS - x - 1U] = colour;
+	s_frameBuf0[LCD_DISPLAY_HEIGHT_PIXELS - 1 - y][LCD_DISPLAY_WIDTH_PIXELS - x - 1] = (uint32_t)colour;
 #elif defined (MW_DISPLAY_ROTATION_270)
-	s_frameBuf0[x][LCD_DISPLAY_WIDTH_PIXELS - 1U - y] = colour;
+	s_frameBuf0[x][LCD_DISPLAY_WIDTH_PIXELS - 1 - y] = (uint32_t)colour;
 #endif
 }
 
@@ -169,21 +169,21 @@ void mw_hal_lcd_filled_rectangle(int16_t start_x,
 		int16_t height,
 		mw_hal_lcd_colour_t colour)
 {
-	uint16_t x;
-	uint16_t y;
+	int16_t x;
+	int16_t y;
 
 	for (x = start_x; x < start_x + width; x++)
 	{
 		for (y = start_y; y < start_y + height; y++)
 		{
 #if defined(MW_DISPLAY_ROTATION_0)
-			s_frameBuf0[y][x] = colour;
+			s_frameBuf0[y][x] = (uint32_t)colour;
 #elif defined(MW_DISPLAY_ROTATION_90)
-			s_frameBuf0[LCD_DISPLAY_HEIGHT_PIXELS - 1U - x][y] = colour;
+			s_frameBuf0[LCD_DISPLAY_HEIGHT_PIXELS - 1 - x][y] = (uint32_t)colour;
 #elif defined (MW_DISPLAY_ROTATION_180)
-			s_frameBuf0[LCD_DISPLAY_HEIGHT_PIXELS - 1U - y][LCD_DISPLAY_WIDTH_PIXELS - x - 1U] = colour;
+			s_frameBuf0[LCD_DISPLAY_HEIGHT_PIXELS - 1 - y][LCD_DISPLAY_WIDTH_PIXELS - x - 1] = (uint32_t)colour;
 #elif defined (MW_DISPLAY_ROTATION_270)
-			s_frameBuf0[x][LCD_DISPLAY_WIDTH_PIXELS - 1U - y] = colour;
+			s_frameBuf0[x][LCD_DISPLAY_WIDTH_PIXELS - 1 - y] = (uint32_t)colour;
 #endif
 		}
 	}
@@ -199,26 +199,27 @@ void mw_hal_lcd_colour_bitmap_clip(int16_t image_start_x,
 		int16_t clip_height,
 		const uint8_t *data)
 {
-	uint16_t x;
-	uint16_t y;
+	int16_t x;
+	int16_t y;
 	mw_hal_lcd_colour_t pixel_colour;
 
-	for (y = 0U; y < image_data_height_pixels; y++)
+	for (y = 0; y < (int16_t)image_data_height_pixels; y++)
 	{
-		for (x = 0U; x < image_data_width_pixels; x++)
+		for (x = 0; x < (int16_t)image_data_width_pixels; x++)
 		{
 			if (x + image_start_x >= clip_start_x &&
 					x + image_start_x < clip_start_x + clip_width &&
 					y + image_start_y >= clip_start_y &&
 					y + image_start_y < clip_start_y + clip_height)
 			{
-				pixel_colour = *(data + (x + y * image_data_width_pixels) * 3U);
-				pixel_colour |= *(1 + data + (x + y * image_data_width_pixels) * 3U) << 8U;
-				pixel_colour |= *(2 + data + (x + y * image_data_width_pixels) * 3U) << 16U;
+				pixel_colour = *(2 + data + (x + y * (int16_t)image_data_width_pixels) * 3);
+				pixel_colour <<= 8;
+				pixel_colour += *(1 + data + (x + y * (int16_t)image_data_width_pixels) * 3);
+				pixel_colour <<= 8;
+				pixel_colour += *(data + (x + y * (int16_t)image_data_width_pixels) * 3);
 				mw_hal_lcd_pixel(x + image_start_x, y + image_start_y, pixel_colour);
 			}
 		}
-
 	}
 }
 
@@ -236,49 +237,48 @@ void mw_hal_lcd_monochrome_bitmap_clip(int16_t image_start_x,
 {
 	int16_t x;
 	int16_t y;
-	uint8_t a;
-	uint8_t colour;
+	int16_t a;
 	uint8_t image_byte;
 	uint8_t mask;
-	uint8_t array_width_bytes;
+	int16_t array_width_bytes;
 
-	array_width_bytes = bitmap_width >> 3U;
+	array_width_bytes = (int16_t)bitmap_width / 8;
 	if (bitmap_width % 8U > 0U)
 	{
 		array_width_bytes++;
 	}
 
-	for (y = 0U; y < bitmap_height; y++)
+	for (y = 0; y < (int16_t)bitmap_height; y++)
 	{
-		for (a = 0U; a < array_width_bytes; a++)
+		for (a = 0; a < array_width_bytes; a++)
 		{
 			image_byte = image_data[y * array_width_bytes + a];
-			mask = 0x80U;
-			for (x = 0U; x < 8U; x++)
+			mask = 0x80;
+			for (x = 0; x < 8; x++)
 			{
-				if ((a << 3U) + x == bitmap_width)
+				if ((a * 8) + x == (int16_t)bitmap_width)
 				{
 					break;
 				}
-				if ((a << 3U) + x + image_start_x >= clip_start_x &&
-						(a << 3U) + x + image_start_x < clip_start_x + clip_width &&
+				if ((a * 8) + x + image_start_x >= clip_start_x &&
+						(a * 8) + x + image_start_x < clip_start_x + clip_width &&
 						y + image_start_y >= clip_start_y &&
 						y + image_start_y < clip_start_y + clip_height)
 				{
-					colour = !(image_byte & mask);
-					if (colour)
+					if ((image_byte & mask) == 0U)
 					{
-						mw_hal_lcd_pixel((a << 3U) + x + image_start_x, y + image_start_y, fg_colour);
+						mw_hal_lcd_pixel((a * 8) + x + image_start_x, y + image_start_y, fg_colour);
 					}
 					else
 					{
-						mw_hal_lcd_pixel((a << 3U) + x + image_start_x, y + image_start_y, bg_colour);
+						mw_hal_lcd_pixel((a * 8) + x + image_start_x, y + image_start_y, bg_colour);
 					}
 				}
-				mask >>= 1U;
+				mask >>= 1;
 			}
 		}
 	}
 }
+
 
 #endif

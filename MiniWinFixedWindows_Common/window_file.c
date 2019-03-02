@@ -30,6 +30,7 @@ SOFTWARE.
 
 #include <stdint.h>
 #include <stdbool.h>
+#include <stdlib.h>
 #include "miniwin.h"
 #include "miniwin_user.h"
 #include "window_file.h"
@@ -109,6 +110,7 @@ void window_file_message_function(const mw_message_t *message)
 {
 	uint8_t item_chosen;
 	bool folder_changed;
+	uint32_t temp_uint32;
 
 	MW_ASSERT(message != (void*)0, "Null pointer parameter");
 
@@ -118,13 +120,15 @@ void window_file_message_function(const mw_message_t *message)
 		break;
 
 	case MW_LIST_BOX_SCROLLING_REQUIRED_MESSAGE:
-		mw_set_control_enabled(arrow_file_down_handle, message->message_data >> 16);
-		file_data.max_scrollable_lines = message->message_data & 0xffff;
+		temp_uint32 = message->message_data >> 16;
+		mw_set_control_enabled(arrow_file_down_handle, (bool)temp_uint32);
+		temp_uint32 = message->message_data & 0xffffU;
+		file_data.max_scrollable_lines = (uint16_t)temp_uint32;
 		mw_paint_control(arrow_file_down_handle);
 		break;
 
 	case MW_WINDOW_VISIBILITY_CHANGED_MESSAGE:
-		if (message->message_data)
+		if (message->message_data != 0U)
 		{
 			/* visibility gained */
 			mw_post_message(MW_LABEL_SET_LABEL_TEXT_MESSAGE,
@@ -140,7 +144,7 @@ void window_file_message_function(const mw_message_t *message)
 					message->recipient_handle,
 					list_box_file_handle,
 					0,
-					MW_UNUSED_MESSAGE_PARAMETER,
+					NULL,
 					MW_CONTROL_MESSAGE);
 			file_data.folder_shown = ROOT_FOLDER;
 
@@ -167,7 +171,7 @@ void window_file_message_function(const mw_message_t *message)
 
 	case MW_LIST_BOX_ITEM_PRESSED_MESSAGE:
 		/* list box item pressed, get the item chosen number */
-		item_chosen = message->message_data;
+		item_chosen = (uint8_t)message->message_data;
 
 		/* update label with text of item chosen */
 		switch (file_data.folder_shown)
@@ -198,6 +202,10 @@ void window_file_message_function(const mw_message_t *message)
 					(void *)list_box_file_entries_docs[item_chosen].label,
 					MW_CONTROL_MESSAGE);
 			break;
+
+		default:
+			/* keep MISRA happy */
+			break;
 		}
 		mw_paint_control(label_file_handle);
 
@@ -205,7 +213,7 @@ void window_file_message_function(const mw_message_t *message)
 		folder_changed = false;
 		if (file_data.folder_shown == ROOT_FOLDER)
 		{
-			if (item_chosen == 0)
+			if (item_chosen == 0U)
 			{
 				file_data.folder_shown = FOLDER_IMAGES;
 
@@ -218,7 +226,7 @@ void window_file_message_function(const mw_message_t *message)
 
 				folder_changed = true;
 			}
-			else if (item_chosen == 1)
+			else if (item_chosen == 1U)
 			{
 				file_data.folder_shown = FOLDER_DOCS;
 
@@ -231,8 +239,12 @@ void window_file_message_function(const mw_message_t *message)
 
 				folder_changed = true;
 			}
+			else
+			{
+				/* keep MISRA happy */
+			}
 		}
-		else if (item_chosen == 0)
+		else if (item_chosen == 0U)
 		{
 			file_data.folder_shown = ROOT_FOLDER;
 
@@ -245,6 +257,10 @@ void window_file_message_function(const mw_message_t *message)
 
 			folder_changed = true;
 		}
+		else
+		{
+			/* keep MISRA happy */
+		}
 
 		/* if folder changed update folder list box data and arrow enabled states and repaint all of them */
 		if (folder_changed)
@@ -252,7 +268,7 @@ void window_file_message_function(const mw_message_t *message)
 			file_data.lines_to_scroll = 0;
 
 			mw_set_control_enabled(arrow_file_up_handle, false);
-			if (file_data.max_scrollable_lines > 0)
+			if (file_data.max_scrollable_lines > 0U)
 			{
 				mw_set_control_enabled(arrow_file_down_handle, true);
 			}
@@ -268,12 +284,12 @@ void window_file_message_function(const mw_message_t *message)
 
 	case MW_ARROW_PRESSED_MESSAGE:
 		/* an arrow has been pressed */
-		if (message->message_data == MW_UI_ARROW_UP && file_data.lines_to_scroll > 0)
+		if ((mw_ui_arrow_direction_t)message->message_data == MW_UI_ARROW_UP && file_data.lines_to_scroll > 0U)
 		{
 			/* up arrow, scroll list box up is ok to do so */
 			file_data.lines_to_scroll--;
 
-			if (file_data.lines_to_scroll == 0)
+			if (file_data.lines_to_scroll == 0U)
 			{
 				mw_set_control_enabled(arrow_file_up_handle, false);
 				mw_paint_control(arrow_file_up_handle);
@@ -286,11 +302,11 @@ void window_file_message_function(const mw_message_t *message)
 					MW_UNUSED_MESSAGE_PARAMETER,
 					list_box_file_handle,
 					file_data.lines_to_scroll,
-					MW_UNUSED_MESSAGE_PARAMETER,
+					NULL,
 					MW_CONTROL_MESSAGE);
 			mw_paint_control(list_box_file_handle);
 		}
-		else if (message->message_data == MW_UI_ARROW_DOWN &&
+		else if ((mw_ui_arrow_direction_t)message->message_data == MW_UI_ARROW_DOWN &&
 					file_data.lines_to_scroll < file_data.max_scrollable_lines)
 		{
 			/* down arrow, scroll list box down is ok to do so */
@@ -309,9 +325,13 @@ void window_file_message_function(const mw_message_t *message)
 					MW_UNUSED_MESSAGE_PARAMETER,
 					list_box_file_handle,
 					file_data.lines_to_scroll,
-					MW_UNUSED_MESSAGE_PARAMETER,
+					NULL,
 					MW_CONTROL_MESSAGE);
 			mw_paint_control(list_box_file_handle);
+		}
+		else
+		{
+			/* keep MISRA happy */
 		}
 		break;
 

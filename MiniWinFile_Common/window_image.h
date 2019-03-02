@@ -53,8 +53,8 @@ SOFTWARE.
  {
  	char path_and_filename_image[MAX_FOLDER_AND_FILENAME_LENGTH + 1];	/**< Path and filename of image to display */
  	mw_handle_t image_window_handle;									/**< Handle of this window instance */
- 	uint16_t image_width;												/**< Width of displayed image */
- 	uint16_t image_height;												/**< Height of displayed image */
+ 	int16_t image_width;												/**< Width of displayed image */
+ 	int16_t image_height;												/**< Height of displayed image */
  	uint8_t x_scroll_pos;												/**< x scroll position from scroll bar as proportion of 0 - UINT8_MAX */
  	uint8_t y_scroll_pos;												/**< y scroll position from scroll bar as proportion of 0 - UINT8_MAX */
  	int16_t touch_down_x;												/**< x position of touch down */

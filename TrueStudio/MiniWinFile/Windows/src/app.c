@@ -32,7 +32,6 @@ SOFTWARE.
 #include <stdbool.h>
 #include <windows.h>
 #include <stdio.h>
-#include <time.h>
 #include "miniwin.h"
 #include "app.h"
 
@@ -175,7 +174,9 @@ void app_init(void)
 
 char *app_get_root_folder_path(void)
 {
-	return ("c:/");
+	static char root_folder_path[] = "c:/";
+
+	return (root_folder_path);
 }
 
 void app_main_loop_process(void)
@@ -322,18 +323,24 @@ uint8_t find_folder_entries(char* path,
 	return (i);
 }
 
-struct tm app_get_time_date(void)
+mw_time_t app_get_time_date(void)
 {
-	struct tm tm;
-	time_t t;
+	SYSTEMTIME local_time;
+	mw_time_t time_now;
 
-	(void)time(&t);
-	(void)memcpy(&tm, localtime(&t), sizeof(struct tm));
-	tm.tm_year += 1900;
-	return (tm);
+	GetLocalTime(&local_time);
+	time_now.tm_hour = (uint8_t)local_time.wHour;
+	time_now.tm_min = (uint8_t)local_time.wMinute;
+	time_now.tm_sec = (uint8_t)local_time.wSecond;
+	time_now.tm_year = (uint16_t)local_time.wYear;
+	time_now.tm_mon = (uint8_t)local_time.wMonth;
+	time_now.tm_mday = (uint8_t)local_time.wDay;
+
+	return (time_now);
 }
 
-void app_set_time_date(struct tm tm)
+void app_set_time_date(mw_time_t new_time)
 {
 	/* do nothing for windows build */
+	(void)new_time;
 }

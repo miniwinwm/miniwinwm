@@ -65,7 +65,7 @@ SOFTWARE.
 
 void mw_hal_touch_init(void)
 {
-	BSP_TS_Init(BSP_LCD_GetXSize(), BSP_LCD_GetYSize());
+	(void)BSP_TS_Init((uint16_t)BSP_LCD_GetXSize(), (uint16_t)BSP_LCD_GetYSize());
 	BSP_PB_Init(BUTTON_KEY, BUTTON_MODE_GPIO);
 }
 
@@ -81,7 +81,7 @@ mw_hal_touch_state_t mw_hal_touch_get_state()
 
 	BSP_TS_GetState(&touch_state);
 
-	if (touch_state.TouchDetected)
+	if (touch_state.TouchDetected != 0U)
 	{
 		return (MW_HAL_TOUCH_STATE_DOWN);
 	}
@@ -100,7 +100,7 @@ bool mw_hal_touch_get_point(uint16_t* x, uint16_t* y)
 
 	BSP_TS_GetState(&touch_state);
 
-	if (!touch_state.TouchDetected)
+	if (touch_state.TouchDetected == 0U)
 	{
 		return (false);
 	}

@@ -37,8 +37,8 @@ SOFTWARE.
 *** CONSTANTS ***
 ****************/
 
-#define FSL_FEATURE_EEPROM_PAGE_SIZE_BYTES (FSL_FEATURE_EEPROM_SIZE / FSL_FEATURE_EEPROM_PAGE_COUNT)
-#define FSL_FEATURE_EEPROM_PAGE_SIZE_WORDS (FSL_FEATURE_EEPROM_PAGE_SIZE_BYTES / sizeof(uint32_t))
+#define FSL_FEATURE_EEPROM_PAGE_SIZE_BYTES ((uint32_t)FSL_FEATURE_EEPROM_SIZE / (uint32_t)FSL_FEATURE_EEPROM_PAGE_COUNT)
+#define FSL_FEATURE_EEPROM_PAGE_SIZE_WORDS (FSL_FEATURE_EEPROM_PAGE_SIZE_BYTES / (uint32_t)sizeof(uint32_t))
 
 /************
 *** TYPES ***
@@ -78,28 +78,28 @@ void mw_hal_non_vol_init(void)
 
 void mw_hal_non_vol_load(uint8_t *data, uint16_t length)
 {
-	(void)memcpy(data, (uint8_t *)(FSL_FEATURE_EEPROM_BASE_ADDRESS), length);
+	(void)memcpy((data), ((uint8_t *)(FSL_FEATURE_EEPROM_BASE_ADDRESS)), ((size_t)length));
 }
 
 void mw_hal_non_vol_save(uint8_t *data, uint16_t length)
 {
-	uint32_t words = (length / sizeof(uint32_t)) + ((length % sizeof(uint32_t)) ? 1U : 0U);
-	uint32_t pages = (words / FSL_FEATURE_EEPROM_PAGE_SIZE_WORDS) + ((length % FSL_FEATURE_EEPROM_PAGE_SIZE_WORDS) ? 1 : 0);
+	uint32_t words = ((uint32_t)length / (uint32_t)sizeof(uint32_t)) + (((uint32_t)length % (uint32_t)sizeof(uint32_t)) > 0U ? 1U : 0U);
+	uint32_t pages = (words / FSL_FEATURE_EEPROM_PAGE_SIZE_WORDS) + (((uint32_t)length % FSL_FEATURE_EEPROM_PAGE_SIZE_WORDS) > 0U ? 1U : 0U);
 	uint32_t page;
 	uint32_t buffer[FSL_FEATURE_EEPROM_PAGE_SIZE_WORDS];
 
 	/* write settings */
 	for (page = 0U; page < pages; page++)
 	{
-		(void)memset((uint8_t *)buffer, 0, FSL_FEATURE_EEPROM_PAGE_SIZE_BYTES);
-		if (length < FSL_FEATURE_EEPROM_PAGE_SIZE_BYTES)
+		(void)memset(((uint8_t *)buffer), (0), ((size_t)FSL_FEATURE_EEPROM_PAGE_SIZE_BYTES));
+		if (length < (uint16_t)FSL_FEATURE_EEPROM_PAGE_SIZE_BYTES)
 		{
-			(void)memcpy((uint8_t *)buffer, data + (page * FSL_FEATURE_EEPROM_PAGE_SIZE_BYTES), length);
+			(void)memcpy(((uint8_t *)buffer), (data + (page * FSL_FEATURE_EEPROM_PAGE_SIZE_BYTES)), ((size_t)length));
 		}
 		else
 		{
-			(void)memcpy((uint8_t *)buffer, data + (page * FSL_FEATURE_EEPROM_PAGE_SIZE_BYTES), FSL_FEATURE_EEPROM_PAGE_SIZE_BYTES);
-			length -= FSL_FEATURE_EEPROM_PAGE_SIZE_BYTES;
+			(void)memcpy(((uint8_t *)buffer), (data + (page * FSL_FEATURE_EEPROM_PAGE_SIZE_BYTES)), ((size_t)FSL_FEATURE_EEPROM_PAGE_SIZE_BYTES));
+			length -= (uint16_t)FSL_FEATURE_EEPROM_PAGE_SIZE_BYTES;
 		}
 
 		(void)EEPROM_WritePage(EEPROM, page, buffer);

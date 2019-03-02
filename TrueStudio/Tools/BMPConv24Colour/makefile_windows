@@ -3,6 +3,7 @@ OBJ = $(SRC:.cpp=.o)
 
 LDFLAGS = 
 CXXFLAGS = -g -I../EasyBMP
+RM=cmd \\/C del
 
 BMPConv24Colour.exe: $(OBJ)
 	$(CXX) -o $@ $^ $(LDFLAGS)

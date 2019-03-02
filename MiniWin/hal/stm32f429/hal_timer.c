@@ -66,20 +66,20 @@ TIM_HandleTypeDef Tim3Handle;
 
 void mw_hal_timer_init(void)
 {
-	uint16_t uwPrescalerValue =  (uint32_t) ((SystemCoreClock /2) / 10000) - 1;
+	uint32_t uwPrescalerValue =  ((SystemCoreClock / 2U) / 10000U) - 1U;
 
 	__HAL_RCC_TIM3_CLK_ENABLE();
 
 	Tim3Handle.Instance = TIM3;
-	Tim3Handle.Init.Period = 500 - 1;
+	Tim3Handle.Init.Period = 500U - 1U;
 	Tim3Handle.Init.Prescaler = uwPrescalerValue;
-	Tim3Handle.Init.ClockDivision = 0;
+	Tim3Handle.Init.ClockDivision = 0U;
 	Tim3Handle.Init.CounterMode = TIM_COUNTERMODE_UP;
-	HAL_TIM_Base_Init(&Tim3Handle);
+	(void)HAL_TIM_Base_Init(&Tim3Handle);
 
-	HAL_NVIC_SetPriority(TIM3_IRQn, 0, 1);
+	HAL_NVIC_SetPriority(TIM3_IRQn, 0U, 1U);
 	HAL_NVIC_EnableIRQ(TIM3_IRQn);
-	HAL_TIM_Base_Start_IT(&Tim3Handle);
+	(void)HAL_TIM_Base_Start_IT(&Tim3Handle);
 }
 
 void mw_hal_timer_fired(void)

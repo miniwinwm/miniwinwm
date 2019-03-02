@@ -102,7 +102,7 @@ void window_file_icon_message_function(const mw_message_t *message)
 
 	case MW_TOUCH_DOWN_MESSAGE:
 		window_file_icon_data.touch_down = true;
-		mw_set_timer(mw_tick_counter + MW_CONTROL_DOWN_TIME, message->recipient_handle, MW_WINDOW_MESSAGE);
+		(void)mw_set_timer(mw_tick_counter + MW_CONTROL_DOWN_TIME, message->recipient_handle, MW_WINDOW_MESSAGE);
 		mw_paint_window_client(message->recipient_handle);
 		break;
 
@@ -112,7 +112,7 @@ void window_file_icon_message_function(const mw_message_t *message)
 			/* repaint the window up for a moment before switching to the new window, this is not necessary but makes the ui feel better */
 			window_file_icon_data.touch_down = false;
 			mw_paint_window_client(message->recipient_handle);
-			mw_set_timer(mw_tick_counter + MW_CONTROL_DOWN_TIME * 2, message->recipient_handle, MW_WINDOW_MESSAGE);
+			(void)mw_set_timer(mw_tick_counter + MW_CONTROL_DOWN_TIME * 2U, message->recipient_handle, MW_WINDOW_MESSAGE);
 		}
 		else
 		{
