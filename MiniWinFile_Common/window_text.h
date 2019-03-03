@@ -57,8 +57,8 @@ SOFTWARE.
  {
 	char path_and_filename_text[MAX_FOLDER_AND_FILENAME_LENGTH + 1];	/**< Path and filename of text to display */
 	mw_handle_t text_window_handle;										/**< Handle of this window instance */
- 	uint16_t max_line_width;											/**< Maximum width in characters of all lines in displayed text */
- 	uint16_t number_of_lines;											/**< Number of lines of text being displayed */
+ 	int16_t max_line_width;												/**< Maximum width in characters of all lines in displayed text */
+ 	int16_t number_of_lines;											/**< Number of lines of text being displayed */
  	int16_t x_scroll_pos;												/**< x scroll position as pixels */
  	int16_t y_scroll_pos;												/**< y scroll position as pixels */
  	int16_t last_drag_x;												/**< x position of last drag message */

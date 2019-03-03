@@ -28,6 +28,7 @@ SOFTWARE.
 *** INCLUDES ***
 ***************/
 
+#include <stdlib.h>
 #include "miniwin.h"
 #include "miniwin_user.h"
 #include "app.h"
@@ -67,7 +68,7 @@ static void get_file_dimensions(text_window_data_t* text_window_data)
 	uint8_t c;
 	uint32_t file_size;
 	uint32_t i;
-	uint16_t this_line_width;
+	int16_t this_line_width;
 
 	/* scan file to find number of lines and maximum width */
 	if (app_file_open(text_window_data->path_and_filename_text))
@@ -78,6 +79,7 @@ static void get_file_dimensions(text_window_data_t* text_window_data)
 		/* going to get maximum width and height of text so initialize to start values */
 		text_window_data->max_line_width = 0;
 		text_window_data->number_of_lines = 1;
+		this_line_width = 0;
 
 		/* loop through the whole file */
 		for (i = 0; i < file_size; i++)
@@ -86,7 +88,7 @@ static void get_file_dimensions(text_window_data_t* text_window_data)
 			c = app_file_getc();
 
 			/* check for line end */
-			if (c == '\n')
+			if (c == (uint8_t)'\n')
 			{
 				/* got a line end so check how long this line is compared to previous max line length */
 				if (this_line_width > text_window_data->max_line_width)
@@ -123,14 +125,14 @@ static void get_file_dimensions(text_window_data_t* text_window_data)
 void window_text_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_t *draw_info)
 {
 	uint32_t file_size;
-	uint16_t x_pos;
-	uint16_t y_pos;
+	int16_t x_pos;
+	int16_t y_pos;
 	int16_t char_box_x_start;
 	int16_t char_box_y_start;
 	int16_t char_box_x_end;
 	int16_t char_box_y_end;
-	uint16_t client_width;
-	uint16_t client_height;
+	int16_t client_width;
+	int16_t client_height;
 	char c;
 	uint32_t i;
 	text_window_data_t *text_window_data;
@@ -177,7 +179,7 @@ void window_text_paint_function(mw_handle_t window_handle, const mw_gl_draw_info
 		for (i = 0; i < file_size; i++)
 		{
 			/* get next character */
-			c = app_file_getc();
+			c = (char)app_file_getc();
 
 			/* need to check if next drawing position is on screen so get bounds of next character */
 			char_box_x_start = (int16_t)(x_pos - text_window_data->x_scroll_pos);
@@ -212,6 +214,7 @@ void window_text_paint_function(mw_handle_t window_handle, const mw_gl_draw_info
 void window_text_message_function(const mw_message_t *message)
 {
 	text_window_data_t *text_window_data;
+	uint32_t temp_uint32;
 
 	MW_ASSERT(message != (void*)0, "Null pointer argument");
 
@@ -228,17 +231,19 @@ void window_text_message_function(const mw_message_t *message)
 	case MW_WINDOW_CREATED_MESSAGE:
 		/* get maximum line width and number of lines of text */
 		get_file_dimensions(text_window_data);
-
-		/* deliberate fall through to next message handling */
+		break;
 
 	case MW_WINDOW_RESIZED_MESSAGE:
+		get_file_dimensions(text_window_data);
 		text_window_data->x_scroll_pos = 0;
 		text_window_data->y_scroll_pos = 0;
 		break;
 
 	case MW_TOUCH_DOWN_MESSAGE:
-		text_window_data->last_drag_x = (int16_t)(message->message_data >> 16U);
-		text_window_data->last_drag_y = (int16_t)(message->message_data & 0xffff);
+		temp_uint32 = message->message_data >> 16;
+		text_window_data->last_drag_x = (int16_t)temp_uint32;
+		temp_uint32 = message->message_data & 0xffffU;
+		text_window_data->last_drag_y = (int16_t)temp_uint32;
 		break;
 
 	case MW_TOUCH_DRAG_MESSAGE:
@@ -254,8 +259,10 @@ void window_text_message_function(const mw_message_t *message)
 			if (mw_get_window_client_rect(message->recipient_handle).width < text_window_data->max_line_width * (mw_gl_get_font_width() + 1))
 			{
 				/* calculate the number of pixels dragged in x dimension */
-				pixels_to_move = text_window_data->last_drag_x - (int16_t)(message->message_data >> 16U);
-				text_window_data->last_drag_x = (int16_t)(message->message_data >> 16U);
+				temp_uint32 = message->message_data >> 16;
+				pixels_to_move = text_window_data->last_drag_x - (int16_t)temp_uint32;
+				temp_uint32 = message->message_data >> 16;
+				text_window_data->last_drag_x = (int16_t)temp_uint32;
 
 				text_window_data->x_scroll_pos += pixels_to_move;
 
@@ -278,8 +285,9 @@ void window_text_message_function(const mw_message_t *message)
 			if (mw_get_window_client_rect(message->recipient_handle).height < text_window_data->number_of_lines * (mw_gl_get_font_height() + 1))
 			{
 				/* calculate the number of pixels dragged in y dimension */
-				pixels_to_move = text_window_data->last_drag_y - (int16_t)(message->message_data & 0xffff);
-				text_window_data->last_drag_y = (int16_t)(message->message_data & 0xffff);
+				temp_uint32 = message->message_data & 0xffffU;
+				pixels_to_move = text_window_data->last_drag_y - (int16_t)temp_uint32;
+				text_window_data->last_drag_y = (int16_t)temp_uint32;
 
 				text_window_data->y_scroll_pos += pixels_to_move;
 
@@ -312,7 +320,7 @@ void window_text_message_function(const mw_message_t *message)
 				message->recipient_handle,
 				window_file_handle,
 				MW_UNUSED_MESSAGE_PARAMETER,
-				MW_UNUSED_MESSAGE_PARAMETER,
+				NULL,
 				MW_WINDOW_MESSAGE);
 		break;
 

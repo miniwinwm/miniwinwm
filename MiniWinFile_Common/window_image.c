@@ -79,20 +79,21 @@ void window_image_paint_function(mw_handle_t window_handle, const mw_gl_draw_inf
 	uint32_t file_data_offset;
 	int16_t x_pos;
 	int16_t y_pos;
-	uint16_t x;
+	int16_t x;
 	uint32_t row_size;
 	uint32_t row_start_address;
 	uint32_t pixel;
 	image_window_data_t *image_window_data;
-	uint16_t x_pixels_to_plot;
-	uint16_t remainder;
-	uint16_t x_scroll_pos;
-	uint16_t y_scroll_pos;
+	int16_t x_pixels_to_plot;
+	int16_t remaining;
+	int16_t x_scroll_pos;
+	int16_t y_scroll_pos;
+	uint32_t temp_uint32;
 
 	MW_ASSERT(draw_info != (void*)0, "Null pointer parameter");
 
 	/* get this window instance data pointer and check for not null */
-	image_window_data = (image_window_data_t *)mw_get_window_instance_data(window_handle);
+	image_window_data = (image_window_data_t*)mw_get_window_instance_data(window_handle);
 	if (image_window_data == (void*)0)
 	{
 		MW_ASSERT((bool)false, "Couldn't find window instance data");
@@ -114,19 +115,22 @@ void window_image_paint_function(mw_handle_t window_handle, const mw_gl_draw_inf
 		file_size = app_file_size();
 		if (file_size >= BASIC_BMP_FILE_HEADER_SIZE)
 		{
-			if (app_file_getc() == 'B' && app_file_getc() == 'M')
+			app_file_read(file_buffer, 2U);
+			if (file_buffer[0] == (uint8_t)'B' && file_buffer[1] == (uint8_t)'M')
 			{
 				(void)app_file_seek(10U);
 				app_file_read(file_buffer, 4U);
-				file_data_offset = file_buffer[0] + (file_buffer[1] << 8U) + (file_buffer[2] << 16U) + (file_buffer[3] << 24U);
+				file_data_offset = (uint32_t)file_buffer[0] + ((uint32_t)file_buffer[1] << 8U) + ((uint32_t)file_buffer[2] << 16U) + ((uint32_t)file_buffer[3] << 24U);
 				app_file_read(file_buffer, 4U);
-				if (file_buffer[0] + (file_buffer[1] << 8U) + (file_buffer[2] << 16U) + (file_buffer[3] << 24) == 40)
+				if ((uint32_t)file_buffer[0] + ((uint32_t)file_buffer[1] << 8U) + ((uint32_t)file_buffer[2] << 16U) + ((uint32_t)file_buffer[3] << 24) == 40U)
 				{
 					/* Windows BITMAPINFOHEADER */
 					app_file_read(file_buffer, 4);
-					image_window_data->image_width = file_buffer[0] + (file_buffer[1] << 8U) + (file_buffer[2] << 16U) + (file_buffer[3] << 24U);
+					temp_uint32 = (uint32_t)file_buffer[0] + ((uint32_t)file_buffer[1] << 8U) + ((uint32_t)file_buffer[2] << 16U) + ((uint32_t)file_buffer[3] << 24U);
+					image_window_data->image_width = (int16_t)temp_uint32;
 					app_file_read(file_buffer, 4);
-					image_window_data->image_height = file_buffer[0] + (file_buffer[1] << 8U) + (file_buffer[2] << 16U) + (file_buffer[3] << 24U);
+					temp_uint32 = (uint32_t)file_buffer[0] + ((uint32_t)file_buffer[1] << 8U) + ((uint32_t)file_buffer[2] << 16U) + ((uint32_t)file_buffer[3] << 24U);
+					image_window_data->image_height = (int16_t)temp_uint32;
 
 					/* calculate the number of pixels to scroll the image vertically using the scroll bar position */
 					if (client_height > image_window_data->image_height)
@@ -135,7 +139,7 @@ void window_image_paint_function(mw_handle_t window_handle, const mw_gl_draw_inf
 					}
 					else
 					{
-						y_scroll_pos = (image_window_data->y_scroll_pos * (image_window_data->image_height - client_height)) / UINT8_MAX;
+						y_scroll_pos = ((int16_t)image_window_data->y_scroll_pos * (image_window_data->image_height - client_height)) / UINT8_MAX;
 					}
 
 					/* calculate the number of pixels to scroll the image horizontally using the scroll bar position */
@@ -145,12 +149,12 @@ void window_image_paint_function(mw_handle_t window_handle, const mw_gl_draw_inf
 					}
 					else
 					{
-						x_scroll_pos = (image_window_data->x_scroll_pos * (image_window_data->image_width - client_width)) / UINT8_MAX;
+						x_scroll_pos = ((int16_t)image_window_data->x_scroll_pos * (image_window_data->image_width - client_width)) / UINT8_MAX;
 					}
 
-					row_size = ((image_window_data->image_width * 3) + 3) & 0xfffffffcU;
+					row_size = (((uint32_t)image_window_data->image_width * 3U) + 3U) & 0xfffffffcU;
 					app_file_read(file_buffer, 4U);
-					if (file_buffer[0] + (file_buffer[1] << 8U) + (file_buffer[2] << 16U) + (file_buffer[3] << 24U) == 0x00180001U)
+					if ((uint32_t)file_buffer[0] + ((uint32_t)file_buffer[1] << 8U) + ((uint32_t)file_buffer[2] << 16U) + ((uint32_t)file_buffer[3] << 24U) == 0x00180001U)
 					{
 						success = true;
 
@@ -161,8 +165,8 @@ void window_image_paint_function(mw_handle_t window_handle, const mw_gl_draw_inf
 								break;
 							}
 
-							row_start_address = file_data_offset + row_size * ((image_window_data->image_height - 1) - y_pos - y_scroll_pos);
-							row_start_address += x_scroll_pos * 3;
+							row_start_address = file_data_offset + row_size * (((uint32_t)image_window_data->image_height - 1U) - (uint32_t)y_pos - (uint32_t)y_scroll_pos);
+							row_start_address += (uint32_t)x_scroll_pos * 3U;
 							(void)app_file_seek(row_start_address);
 
 							if (client_width > image_window_data->image_width)
@@ -188,12 +192,12 @@ void window_image_paint_function(mw_handle_t window_handle, const mw_gl_draw_inf
 								}
 								else
 								{
-									remainder = x_pixels_to_plot - x_pos;
+									remaining = x_pixels_to_plot - x_pos;
 
-									for (x = x_pos; x < x_pos + remainder; x++)
+									for (x = x_pos; x < x_pos + remaining; x++)
 									{
 										app_file_read(file_buffer, 3);
-										pixel = (file_buffer[0]) | (file_buffer[1] << 8U) | (file_buffer[2] << 16U);
+										pixel = ((uint32_t)file_buffer[0]) | ((uint32_t)file_buffer[1] << 8U) | ((uint32_t)file_buffer[2] << 16U);
 										mw_gl_set_fg_colour(pixel);
 										mw_gl_fg_pixel(draw_info, x, y_pos);
 									}
@@ -234,14 +238,17 @@ void window_image_paint_function(mw_handle_t window_handle, const mw_gl_draw_inf
 						}
 
 						/* bit underneath and to right */
-						if (image_window_data->image_height < mw_get_window_client_rect(window_handle).height &&
-								image_window_data->image_height < mw_get_window_client_rect(window_handle).height)
+						if (image_window_data->image_height < mw_get_window_client_rect(window_handle).height)
 						{
-							mw_gl_rectangle(draw_info,
-									image_window_data->image_width,
-									image_window_data->image_height,
-									mw_get_window_client_rect(window_handle).width - image_window_data->image_width,
-									mw_get_window_client_rect(window_handle).height - image_window_data->image_height);
+							if (image_window_data->image_height < mw_get_window_client_rect(window_handle).height)
+							{
+								mw_gl_rectangle(draw_info,
+										image_window_data->image_width,
+										image_window_data->image_height,
+										mw_get_window_client_rect(window_handle).width - image_window_data->image_width,
+										mw_get_window_client_rect(window_handle).height - image_window_data->image_height);
+
+							}
 						}
 
 						/* set enabled state of window scroll bars and repaint them */
