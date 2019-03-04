@@ -36,7 +36,6 @@ SOFTWARE.
 ***************/
 
 #include <windows.h>
-#include <time.h>
 #include "miniwin.h"
 
 /****************

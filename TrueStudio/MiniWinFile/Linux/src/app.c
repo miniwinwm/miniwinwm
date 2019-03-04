@@ -33,7 +33,9 @@ SOFTWARE.
 #include <dirent.h>
 #include <string.h>
 #include <fcntl.h>
-#include <time.h>
+#include <sys/ioctl.h>
+#include <linux/rtc.h>
+#include <unistd.h>
 #include "miniwin.h"
 #include "app.h"
 
@@ -240,20 +242,28 @@ uint8_t find_folder_entries(char* path,
 	return (i);
 }
 
-struct tm app_get_time_date(void)
+mw_time_t app_get_time_date(void)
 {
-	struct tm tm;
-	time_t t;
+	mw_time_t new_time;
+	struct rtc_time rtc_time;
+	int rtc_fd;
 
-	(void)time(&t);
-	(void)memcpy(&tm, localtime(&t), sizeof(struct tm));
-	tm.tm_year += 1900;
-	tm.tm_mon++;
+	rtc_fd = open("/dev/rtc", O_RDONLY);
+	(void)ioctl(rtc_fd, RTC_RD_TIME, &rtc_time);
+	(void)close(rtc_fd);
 
-	return (tm);
+	new_time.tm_sec = (uint8_t)rtc_time.tm_sec;
+	new_time.tm_min = (uint8_t)rtc_time.tm_min;
+	new_time.tm_hour = (uint8_t)rtc_time.tm_hour;
+	new_time.tm_mday = (uint8_t)rtc_time.tm_mday;
+	new_time.tm_mon = (uint8_t)rtc_time.tm_mon + 1;
+	new_time.tm_year = (uint16_t)rtc_time.tm_year + 1900;
+
+	return (new_time);
 }
 
-void app_set_time_date(struct tm tm)
+void app_set_time_date(mw_time_t new_time)
 {
 	/* do nothing for linux build */
+	(void)new_time;
 }

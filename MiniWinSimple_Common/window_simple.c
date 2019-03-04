@@ -102,7 +102,7 @@ void window_simple_message_function(const mw_message_t *message)
 		break;
 
 	case MW_TOUCH_DOWN_MESSAGE:
-		temp_uint32 = message->message_data >> 16U;
+		temp_uint32 = message->message_data >> 16;
 		window_simple_data.circle_x = (int16_t)temp_uint32;
 		window_simple_data.circle_y = (int16_t)message->message_data;
 		window_simple_data.draw_circle = true;
