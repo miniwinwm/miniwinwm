@@ -28,6 +28,7 @@ SOFTWARE.
 *** INCLUDES ***
 ***************/
 
+#include <stdlib.h>
 #include "miniwin.h"
 #include "miniwin_user.h"
 #include "window_gyro_x.h"
@@ -172,7 +173,7 @@ void mw_user_init(void)
 			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_LARGE_SIZE,
 			&label_gyro_z_data);
 
-	mw_util_safe_strcpy(button_gyro_z_data.button_label, MW_UI_BUTTON_LABEL_MAX_CHARS, "Zero");
+	(void)mw_util_safe_strcpy(button_gyro_z_data.button_label, MW_UI_BUTTON_LABEL_MAX_CHARS, "Zero");
 	button_gyro_z_handle = mw_ui_button_add_new(100,
 			40,
 			window_gyro_z_handle,

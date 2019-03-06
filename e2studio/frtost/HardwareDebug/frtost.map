@@ -1,0 +1,118 @@
+Renesas Optimizing Linker (W3.01.00 )             05-Mar-2019 22:35:32
+
+*** Options ***
+
+-subcommand=Linkerfrtost.tmp
+-noprelink
+-input=".\FreeRTOS/portable\port_asm.obj"
+-input=".\FreeRTOS\croutine.obj"
+-input=".\FreeRTOS\event_groups.obj"
+-input=".\FreeRTOS\list.obj"
+-input=".\FreeRTOS/portable\port.obj"
+-input=".\FreeRTOS\queue.obj"
+-input=".\FreeRTOS\stream_buffer.obj"
+-input=".\FreeRTOS\tasks.obj"
+-input=".\FreeRTOS\timers.obj"
+-input=".\src\frtost.obj"
+-input=".\src/smc_gen/general\r_cg_hardware_setup.obj"
+-input=".\src/smc_gen/general\r_smc_cgc.obj"
+-input=".\src/smc_gen/general\r_smc_cgc_user.obj"
+-input=".\src/smc_gen/general\r_smc_interrupt.obj"
+-input=".\src/smc_gen/r_bsp/board/generic_rx65n\dbsct.obj"
+-input=".\src/smc_gen/r_bsp/board/generic_rx65n\hwsetup.obj"
+-input=".\src/smc_gen/r_bsp/board/generic_rx65n\lowlvl.obj"
+-input=".\src/smc_gen/r_bsp/board/generic_rx65n\lowsrc.obj"
+-input=".\src/smc_gen/r_bsp/board/generic_rx65n\resetprg.obj"
+-input=".\src/smc_gen/r_bsp/board/generic_rx65n\sbrk.obj"
+-input=".\src/smc_gen/r_bsp/board/generic_rx65n\vecttbl.obj"
+-input=".\src/smc_gen/r_bsp/mcu/all\r_bsp_common.obj"
+-input=".\src/smc_gen/r_bsp/mcu/rx65n\cpu.obj"
+-input=".\src/smc_gen/r_bsp/mcu/rx65n\locking.obj"
+-input=".\src/smc_gen/r_bsp/mcu/rx65n\mcu_clocks.obj"
+-input=".\src/smc_gen/r_bsp/mcu/rx65n\mcu_init.obj"
+-input=".\src/smc_gen/r_bsp/mcu/rx65n\mcu_interrupts.obj"
+-input=".\src/smc_gen/r_bsp/mcu/rx65n\mcu_locks.obj"
+-input=".\src/smc_gen/r_bsp/mcu/rx65n\mcu_mapped_interrupts.obj"
+-input=".\src/smc_gen/r_bsp/mcu/rx65n\mcu_startup.obj"
+-input=".\src/smc_gen/r_pincfg\Pin.obj"
+-library=".\frtost.lib"
+-start=SU,SI,B_1,R_1,B_2,R_2,B,R/04,C_1,C_2,C,C$*,D*,W*,L,P*/0FFF00000,EXCEPTVECT/0FFFFFF80,RESETVECT/0FFFFFFFC
+-output="frtost.abs"
+-form=absolute
+-nomessage
+-vect=_undefined_interrupt_source_isr
+-list=frtost.map
+-nooptimize
+-rom=D=R,D_1=R_1,D_2=R_2
+-cpu=RAM=00000000-0003ffff,FIX=00080000-00083fff,FIX=00086000-00087fff,FIX=00088000-0009ffff,FIX=000a0000-000a3fff,RAM=000a4000-000a5fff,FIX=000a6000-000bffff,FIX=000c0000-000dffff,FIX=000e0000-000fffff,ROM=00100000-00107fff,FIX=007fc000-007fcfff,FIX=007fe000-007fffff,RAM=00800000-0085ffff,RAM=fe7f5d00-fe7f5d7f,RAM=fe7f7d70-fe7f7d9f,ROM=ffe00000-ffffffff
+-nologo
+
+*** Error information ***
+
+*** Mapping List ***
+
+SECTION                            START      END         SIZE   ALIGN
+SU
+                                  00000004  00001003      1000   4
+SI
+                                  00001004  00001403       400   4
+B_1
+                                  00001404  0000147b        78   1
+R_1
+                                  0000147c  000014cb        50   1
+B_2
+                                  000014cc  000014d3         8   2
+R_2
+                                  000014d4  000014d4         0   1
+B
+                                  000014d4  000027bb      12e8   4
+R
+                                  000027bc  000028f7       13c   4
+$ADDR_C_FE7F5D00
+                                  fe7f5d00  fe7f5d0b         c   1
+$ADDR_C_FE7F5D10
+                                  fe7f5d10  fe7f5d13         4   1
+$ADDR_C_FE7F5D20
+                                  fe7f5d20  fe7f5d23         4   1
+$ADDR_C_FE7F5D40
+                                  fe7f5d40  fe7f5d43         4   1
+$ADDR_C_FE7F5D48
+                                  fe7f5d48  fe7f5d4b         4   1
+$ADDR_C_FE7F5D50
+                                  fe7f5d50  fe7f5d5f        10   1
+$ADDR_C_FE7F5D64
+                                  fe7f5d64  fe7f5d67         4   1
+$ADDR_C_FE7F5D70
+                                  fe7f5d70  fe7f5d73         4   1
+C_1
+                                  fff00000  fff00000         0   1
+C_2
+                                  fff00000  fff00005         6   2
+C
+                                  fff00008  fff0007f        78   4
+C$DSEC
+                                  fff00080  fff000a3        24   4
+C$BSEC
+                                  fff000a4  fff000bb        18   4
+C$VECT
+                                  fff000bc  fff004bb       400   4
+D
+                                  fff004bc  fff005f7       13c   4
+D_1
+                                  fff005f8  fff00647        50   1
+D_2
+                                  fff00648  fff00648         0   1
+W
+                                  fff00648  fff00648         0   1
+W_1
+                                  fff00648  fff00648         0   1
+W_2
+                                  fff00648  fff00648         0   1
+L
+                                  fff00648  fff006a5        5e   4
+P
+                                  fff006a6  fff0470b      4066   1
+EXCEPTVECT
+                                  ffffff80  fffffffb        7c   4
+RESETVECT
+                                  fffffffc  ffffffff         4   4

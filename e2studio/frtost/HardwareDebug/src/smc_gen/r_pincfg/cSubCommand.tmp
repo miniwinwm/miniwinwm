@@ -1,0 +1,11 @@
+-isa=rxv2
+-fpu
+-include="C:\PROGRA~2\Renesas\RX\3_1_0\include","C:\Users\John\Desktop\workspace\miniwinwm\e2studio\frtost\src\smc_gen\r_bsp","C:\Users\John\Desktop\workspace\miniwinwm\e2studio\frtost\src\smc_gen\r_config","C:\Users\John\Desktop\workspace\miniwinwm\e2studio\frtost\src\smc_gen\general","C:\Users\John\Desktop\workspace\miniwinwm\e2studio\frtost\src\smc_gen\r_pincfg","C:\Users\John\Desktop\workspace\miniwinwm\e2studio\frtost\FreeRTOS\include","C:\Users\John\Desktop\workspace\miniwinwm\e2studio\frtost\FreeRTOS\portable"
+-lang=c99
+-utf8
+-nomessage
+-output=obj
+-obj_path="src/smc_gen/r_pincfg"
+-debug
+-outcode=utf8
+-nologo 

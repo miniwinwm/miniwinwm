@@ -1,0 +1,6 @@
+-isa=rxv2
+-fpu
+-include="C:\Users\John\Desktop\workspace\miniwinwm\e2studio\frtost\src\smc_gen\general","C:\Users\John\Desktop\workspace\miniwinwm\e2studio\frtost\src\smc_gen\r_pincfg"
+-utf8
+-debug
+-nologo 

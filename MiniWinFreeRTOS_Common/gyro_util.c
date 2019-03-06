@@ -71,6 +71,10 @@ int16_t gyro_util_rationalize_angle(int16_t angle)
 			angle -= 360;
 		}
 	}
+	else
+	{
+		/* keep MISRA happy */
+	}
 
 	return (angle);
 }

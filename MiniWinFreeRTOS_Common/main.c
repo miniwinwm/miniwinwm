@@ -124,14 +124,16 @@ static void miniwin_thread(void *parameters)
 	while (true)
 	{
     	/* do miniwin message processing */
-		if (!xSemaphoreTake(semaphore_handle, 10))
+		if (xSemaphoreTake(semaphore_handle, (TickType_t)10) == 0)
 		{
 			vTaskDelay(10U);
 			continue;
 		}
-		mw_process_message();
-		xSemaphoreGive(semaphore_handle);
 
+		(void)mw_process_message();
+
+		/* the next line cannot be made MISRA compliant because of the FreeRTOS API */
+		xSemaphoreGive(semaphore_handle);
 		vTaskDelay(10U);
 	}
 }
@@ -151,11 +153,13 @@ static void gyro_thread(void *parameters)
 	xLastWakeTime = xTaskGetTickCount();
 	while (true)
 	{
-		if (!xSemaphoreTake(semaphore_handle, 10U))
+		if (xSemaphoreTake(semaphore_handle, (TickType_t)10) == 0)
 		{
 			continue;
 		}
 		gyro_readings = app_get_gyro_readings();
+
+		/* the next line cannot be made MISRA compliant because of the FreeRTOS API */
 		xSemaphoreGive(semaphore_handle);
 
 		/* only send 1 in every 10 readings to window */
@@ -164,9 +168,20 @@ static void gyro_thread(void *parameters)
 		{
 			reading_counter = 0U;
 
-			xMessageBufferSend(gyro_x_message_buffer, (void *)&gyro_readings[GYRO_READING_X], sizeof(float), 0U);
-			xMessageBufferSend(gyro_y_message_buffer, (void *)&gyro_readings[GYRO_READING_Y], sizeof(float), 0U);
-			xMessageBufferSend(gyro_z_message_buffer, (void *)&gyro_readings[GYRO_READING_Z], sizeof(float), 0U);
+			/* the next 3 lines cannot be made MISRA compliant because of the FreeRTOS API */
+			(void)xMessageBufferSend((gyro_x_message_buffer),
+					((const void *)(gyro_readings + GYRO_READING_X)),
+					(sizeof(float)),
+					(0U));
+
+			(void)xMessageBufferSend((gyro_y_message_buffer),
+					((const void *)(gyro_readings + GYRO_READING_Y)),
+					(sizeof(float)),
+					(0U));
+			(void)xMessageBufferSend((gyro_z_message_buffer),
+					((const void *)(gyro_readings + GYRO_READING_Z)),
+					(sizeof(float)),
+					(0U));
 		}
 
 		/* pause thread until next reading */
@@ -183,33 +198,37 @@ int main(void)
 	/* initialize non-miniwin parts of the application */
 	app_init();
 
+	/* the next 3 lines cannot be made MISRA compliant because of the FreeRTOS API */
+
 	/* initialise the message buffers to send gyro reading data from gyro thread to gyro windows */
-	gyro_x_message_buffer = xMessageBufferCreateStatic(sizeof(gyro_x_message_storage_buffer),
-			gyro_x_message_storage_buffer,
-			&gyro_x_message_buffer_struct);
-	gyro_y_message_buffer = xMessageBufferCreateStatic(sizeof(gyro_y_message_storage_buffer),
-			gyro_y_message_storage_buffer,
-			&gyro_y_message_buffer_struct);
-	gyro_z_message_buffer = xMessageBufferCreateStatic(sizeof(gyro_z_message_storage_buffer),
-			gyro_z_message_storage_buffer,
-			&gyro_z_message_buffer_struct);
+	gyro_x_message_buffer = xMessageBufferCreateStatic((sizeof(gyro_x_message_storage_buffer)),
+			(gyro_x_message_storage_buffer),
+			((StaticStreamBuffer_t *)&gyro_x_message_buffer_struct));
+	gyro_y_message_buffer = xMessageBufferCreateStatic((sizeof(gyro_y_message_storage_buffer)),
+			(gyro_y_message_storage_buffer),
+			(&gyro_y_message_buffer_struct));
+	gyro_z_message_buffer = xMessageBufferCreateStatic((sizeof(gyro_z_message_storage_buffer)),
+			(gyro_z_message_storage_buffer),
+			(&gyro_z_message_buffer_struct));
 
 	/* initialize the mutex */
 	semaphore_handle = xSemaphoreCreateMutexStatic(&semaphore_buffer);
 
-	/* Create the led task */
-	xTaskCreateStatic(main_thread, "MAIN", 128U, NULL, 1, main_stack, &main_task_handle);
+	/* create the led task */
+	(void)xTaskCreateStatic(main_thread, "MAIN", 128U, NULL, 1, main_stack, &main_task_handle);
 
-	/* Create the gyro task */
-	xTaskCreateStatic(gyro_thread, "GYRO", 128U, NULL, 2, gyro_stack, &gyro_task_handle);
+	/* create the gyro task */
+	(void)xTaskCreateStatic(gyro_thread, "GYRO", 128U, NULL, 2, gyro_stack, &gyro_task_handle);
 
-	/* Create the miniwin task */
-	xTaskCreateStatic(miniwin_thread, "MINIWIN", 1024U, NULL, 1, miniwin_stack, &miniwin_task_handle);
+	/* create the miniwin task */
+	(void)xTaskCreateStatic(miniwin_thread, "MINIWIN", 1024U, NULL, 1, miniwin_stack, &miniwin_task_handle);
 
-	/* Start the scheduler */
+	/* start the scheduler */
 	vTaskStartScheduler();
 
-	while (true);
+	while (true)
+	{
+	}
 }
 
 /**

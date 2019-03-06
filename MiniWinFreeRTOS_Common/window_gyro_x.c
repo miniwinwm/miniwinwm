@@ -80,8 +80,9 @@ static window_gyro_x_data_t window_gyro_x_data;
 void window_gyro_x_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_t *draw_info)
 {
 	static int16_t shape_y[SHAPE_POINTS];
-	uint16_t offset_adjusted_angle;
+	int16_t offset_adjusted_angle;
 	uint8_t i;
+	float temp_float;
 
 	MW_ASSERT(draw_info != (void*)0, "Null pointer parameter");
 
@@ -103,13 +104,15 @@ void window_gyro_x_paint_function(mw_handle_t window_handle, const mw_gl_draw_in
 	mw_gl_set_fill(MW_GL_FILL);
 	mw_gl_set_solid_fill_colour(MW_HAL_LCD_GREEN);
 	mw_gl_set_border(MW_GL_BORDER_ON);
-	(void)memcpy(shape_y, shape_y_const, sizeof(shape_y));
-	for (i = 0; i < SHAPE_POINTS; i++)
+	(void)memcpy((shape_y), (shape_y_const), (sizeof(shape_y)));
+	for (i = 0; i < (uint8_t)SHAPE_POINTS; i++)
 	{
-		shape_y[i] *= 100.0f * cos((float)offset_adjusted_angle / (float)(180.0 / M_PI));
-		shape_y[i] /= 100;
+		temp_float = (float)shape_y[i];
+		temp_float *= 100.0f * cos((float)offset_adjusted_angle / (float)(180.0 / M_PI));
+		temp_float /= 100.0f;
+		shape_y[i] = (int16_t)temp_float;
 	}
-	mw_gl_poly(draw_info, SHAPE_POINTS, shape_x_const, shape_y, 40, 40);
+	mw_gl_poly(draw_info, (uint8_t)SHAPE_POINTS, shape_x_const, shape_y, 40, 40);
 }
 
 void window_gyro_x_message_function(const mw_message_t *message)
@@ -122,7 +125,7 @@ void window_gyro_x_message_function(const mw_message_t *message)
 		window_gyro_x_data.angle_offset = 0;
 		window_gyro_x_data.angle = 0;
 		window_gyro_x_data.previous_drawn_angle = 0;
-		mw_set_timer(mw_tick_counter + MW_TICKS_PER_SECOND / 4, message->recipient_handle, MW_WINDOW_MESSAGE);
+		(void)mw_set_timer(mw_tick_counter + MW_TICKS_PER_SECOND / 4U, message->recipient_handle, MW_WINDOW_MESSAGE);
 		break;
 
 	case MW_BUTTON_PRESSED_MESSAGE:
@@ -135,12 +138,13 @@ void window_gyro_x_message_function(const mw_message_t *message)
 			size_t bytes;
 			int16_t offset_adjusted_angle;
 
-			bytes = xMessageBufferReceive(gyro_x_message_buffer,
-		                              (void *)&angle,
-		                              sizeof(float),
-		                              0);
+			/* the next line cannot be made MISRA compliant because of the FreeRTOS API */
+			bytes = xMessageBufferReceive((gyro_x_message_buffer),
+		                              ((void *)&angle),
+		                              (sizeof(float)),
+		                              (0));
 
-			if (bytes > 0)
+			if (bytes > (size_t)0)
 			{
 				window_gyro_x_data.angle = (int16_t)angle;
 
@@ -167,7 +171,7 @@ void window_gyro_x_message_function(const mw_message_t *message)
 			}
 
 			/* reset timer */
-			mw_set_timer(mw_tick_counter + MW_TICKS_PER_SECOND / 4, message->recipient_handle, MW_WINDOW_MESSAGE);
+			(void)mw_set_timer(mw_tick_counter + MW_TICKS_PER_SECOND / 4U, message->recipient_handle, MW_WINDOW_MESSAGE);
 		}
 		break;
 

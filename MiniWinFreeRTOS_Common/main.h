@@ -54,6 +54,35 @@ SOFTWARE.
 *** FUNCTIONS PROTOTYPES ***
 ***************************/
 
+/**
+* Program entry point.
+*
+* return Will never return
+*/
+int main(void);
+
+/**
+ * FreeRTOS memory allocation for timer task
+ *
+ * @param ppxIdleTaskTCBBuffer Pointer to pointer of timer task TCB
+ * @param ppxIdleTaskStackBuffer Pointer to pointer of timer task stack
+ * @param pulIdleTaskStackSize Pointer to timer task stack size
+ */
+void vApplicationGetTimerTaskMemory(StaticTask_t **ppxTimerTaskTCBBuffer,
+	StackType_t **ppxTimerTaskStackBuffer,
+	uint32_t *pulTimerTaskStackSize);
+
+/**
+ * FreeRTOS memory allocation for idle task
+ *
+ * @param ppxIdleTaskTCBBuffer Pointer to pointer of idle task TCB
+ * @param ppxIdleTaskStackBuffer Pointer to pointer of idle task stack
+ * @param pulIdleTaskStackSize Pointer to idle task stack size
+ */
+void vApplicationGetIdleTaskMemory(StaticTask_t **ppxIdleTaskTCBBuffer,
+		StackType_t **ppxIdleTaskStackBuffer,
+		uint32_t *pulIdleTaskStackSize);
+
 /*************************
 *** EXTERNAL VARIABLES ***
 **************************/
@@ -61,13 +90,6 @@ SOFTWARE.
 extern MessageBufferHandle_t gyro_x_message_buffer;
 extern MessageBufferHandle_t gyro_y_message_buffer;
 extern MessageBufferHandle_t gyro_z_message_buffer;
-
-/**
- * Program entry point.
- *
- * return Will never return
- */
-int main(void);
 
 #ifdef __cplusplus
 }
