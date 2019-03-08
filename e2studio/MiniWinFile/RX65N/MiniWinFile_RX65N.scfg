@@ -51,13 +51,13 @@
 <Item current="true" id="pllSourceSelect.buttonDisable.1"/>
 <Item current="true" id="pll.isSelected"/>
 <Item current="12 MHz" id="pll.InputValue"/>
-<Item current="120.0 MHz" id="pll.OutputValue"/>
-<Item current="mul10-1" error="false" id="pll.multiplyBox"/>
+<Item current="240.0 MHz" id="pll.OutputValue"/>
+<Item current="mul20-1" error="false" id="pll.multiplyBox"/>
 <Item current="div1-1" error="false" id="pll.dividerBox"/>
 <Item current="12.0 MHz" error="false" id="pll.MiddleValue"/>
 <Item current="true" id="sckselector.isSelected"/>
-<Item current="120.0 MHz" id="sckselector.InputValue"/>
-<Item current="120.0 MHz" id="sckselector.OutputValue"/>
+<Item current="240.0 MHz" id="sckselector.InputValue"/>
+<Item current="240.0 MHz" id="sckselector.OutputValue"/>
 <Item current="swtpll" id="sckselector.radiobutton"/>
 <Item current="0" id="sckselector.CurrentValue"/>
 <Item current="false" id="sckselector.buttonDisable.0"/>
@@ -66,10 +66,10 @@
 <Item current="true" id="sckselector.buttonDisable.3"/>
 <Item current="true" id="sckselector.buttonDisable.4"/>
 <Item current="true" id="bckdivider.isSelected"/>
-<Item current="120.0 MHz" id="bckdivider.InputValue"/>
+<Item current="240.0 MHz" id="bckdivider.InputValue"/>
 <Item current="60.0 MHz" id="bckdivider.OutputValue"/>
 <Item current="sckselector.radiobutton.swtpll" id="bckdivider.Condition"/>
-<Item current="comboBox1-2" error="false" id="bckdivider.comboBox"/>
+<Item current="comboBox1-4" error="false" id="bckdivider.comboBox"/>
 <Item current="120.0 MHz" error="false" id="bckdivider.PreOutput"/>
 <Item current="iclkdivider" error="false" id="bckdivider.PreOutputController"/>
 <Item current="false" id="bckselector.selectBox"/>
@@ -77,46 +77,46 @@
 <Item current="" id="bckselector.OutputValue"/>
 <Item current="comboBox1-2" error="false" id="bckselector.comboBox"/>
 <Item current="true" id="fclkdivider.isSelected"/>
-<Item current="120.0 MHz" id="fclkdivider.InputValue"/>
+<Item current="240.0 MHz" id="fclkdivider.InputValue"/>
 <Item current="30.0 MHz" id="fclkdivider.OutputValue"/>
 <Item current="sckselector.radiobutton.swtpll" id="fclkdivider.Condition"/>
-<Item current="comboBox1-4" error="false" id="fclkdivider.comboBox"/>
+<Item current="comboBox1-8" error="false" id="fclkdivider.comboBox"/>
 <Item current="true" id="pclkcdivider.isSelected"/>
-<Item current="120.0 MHz" id="pclkcdivider.InputValue"/>
+<Item current="240.0 MHz" id="pclkcdivider.InputValue"/>
 <Item current="30.0 MHz" id="pclkcdivider.OutputValue"/>
 <Item current="sckselector.radiobutton.swtpll" id="pclkcdivider.Condition"/>
-<Item current="comboBox1-4" error="false" id="pclkcdivider.comboBox"/>
+<Item current="comboBox1-8" error="false" id="pclkcdivider.comboBox"/>
 <Item current="30.0 MHz" error="false" id="pclkcdivider.PreOutput"/>
 <Item current="pclkbdivider" error="false" id="pclkcdivider.PreOutputController"/>
 <Item current="true" id="pclkddivider.isSelected"/>
-<Item current="120.0 MHz" id="pclkddivider.InputValue"/>
+<Item current="240.0 MHz" id="pclkddivider.InputValue"/>
 <Item current="30.0 MHz" id="pclkddivider.OutputValue"/>
 <Item current="sckselector.radiobutton.swtpll" id="pclkddivider.Condition"/>
-<Item current="comboBox1-4" error="false" id="pclkddivider.comboBox"/>
+<Item current="comboBox1-8" error="false" id="pclkddivider.comboBox"/>
 <Item current="30.0 MHz" error="false" id="pclkddivider.PreOutput"/>
 <Item current="pclkbdivider" error="false" id="pclkddivider.PreOutputController"/>
 <Item current="true" id="pclkbdivider.isSelected"/>
-<Item current="120.0 MHz" id="pclkbdivider.InputValue"/>
+<Item current="240.0 MHz" id="pclkbdivider.InputValue"/>
 <Item current="30.0 MHz" id="pclkbdivider.OutputValue"/>
 <Item current="sckselector.radiobutton.swtpll" id="pclkbdivider.Condition"/>
-<Item current="comboBox1-4" error="false" id="pclkbdivider.comboBox"/>
+<Item current="comboBox1-8" error="false" id="pclkbdivider.comboBox"/>
 <Item current="60.0 MHz" error="false" id="pclkbdivider.PreOutput"/>
 <Item current="pclkadivider" error="false" id="pclkbdivider.PreOutputController"/>
 <Item current="true" id="pclkadivider.isSelected"/>
-<Item current="120.0 MHz" id="pclkadivider.InputValue"/>
+<Item current="240.0 MHz" id="pclkadivider.InputValue"/>
 <Item current="60.0 MHz" id="pclkadivider.OutputValue"/>
 <Item current="sckselector.radiobutton.swtpll" id="pclkadivider.Condition"/>
-<Item current="comboBox1-2" error="false" id="pclkadivider.comboBox"/>
-<Item current="false" id="uckdivider.selectBox"/>
-<Item current="120.0 MHz" id="uckdivider.InputValue"/>
-<Item current="" id="uckdivider.OutputValue"/>
+<Item current="comboBox1-4" error="false" id="pclkadivider.comboBox"/>
+<Item current="true" id="uckdivider.selectBox"/>
+<Item current="240.0 MHz" id="uckdivider.InputValue"/>
+<Item current="48.0 MHz" id="uckdivider.OutputValue"/>
 <Item current="sckselector.radiobutton.swtpll" id="uckdivider.Condition"/>
 <Item current="comboBox1-5" error="false" id="uckdivider.comboBox"/>
 <Item current="true" id="iclkdivider.isSelected"/>
-<Item current="120.0 MHz" id="iclkdivider.InputValue"/>
+<Item current="240.0 MHz" id="iclkdivider.InputValue"/>
 <Item current="120.0 MHz" id="iclkdivider.OutputValue"/>
 <Item current="sckselector.radiobutton.swtpll" id="iclkdivider.Condition"/>
-<Item current="comboBox1-1" error="false" id="iclkdivider.comboBox"/>
+<Item current="comboBox1-2" error="false" id="iclkdivider.comboBox"/>
 <Item current="true" id="fclk.isSelected"/>
 <Item current="30.0 MHz" id="fclk.InputValue"/>
 <Item current="30.0 MHz" id="fclk.OutputValue"/>
@@ -180,12 +180,12 @@
 <Item current="60.0" id="sdclk.CurrentValue"/>
 <Item current="true" id="sdclk.Disabled"/>
 <Item current="false" id="sdclk.SelectBoxDisabled"/>
-<Item current="false" id="uclk.isSelected"/>
-<Item current="" id="uclk.InputValue"/>
-<Item current="" id="uclk.OutputValue"/>
-<Item current="" id="uclk.frequencyTxt"/>
+<Item current="true" id="uclk.isSelected"/>
+<Item current="48.0 MHz" id="uclk.InputValue"/>
+<Item current="48.0 MHz" id="uclk.OutputValue"/>
+<Item current="48.0" id="uclk.frequencyTxt"/>
 <Item current="MHz" id="uclk.unitTxt"/>
-<Item current="true" id="uclk.Disabled"/>
+<Item current="false" id="uclk.Disabled"/>
 <Item current="true" id="cacmclk.isSelected"/>
 <Item current="12 MHz" id="cacmclk.InputValue"/>
 <Item current="12 MHz" id="cacmclk.OutputValue"/>
@@ -226,6 +226,7 @@
 <Item current="true" id="cacilsclk.Disabled"/>
 <Item current="32.768" id="cacsclk.CurrentValue"/>
 <Item current="32.768" id="rtcclk.CurrentValue"/>
+<Item current="48.0" id="uclk.CurrentValue"/>
 </tool>
 <tool id="Pins" version="1.0.1.0">
 <pinItem allocation="20" direction="None" id="XTAL" locked="false" status="0"/>
@@ -254,6 +255,8 @@
 <pinItem allocation="101$B" direction="None" id="LCD_DATA9" locked="false" status="0"/>
 <pinItem allocation="" direction="None" id="XCOUT" locked="false" status="0"/>
 <pinItem allocation="" direction="None" id="XCIN" locked="false" status="0"/>
+<pinItem allocation="43" direction="None" id="USB0_OVRCURA" locked="false" status="0"/>
+<pinItem allocation="40" direction="None" id="USB0_VBUSEN" locked="false" status="0"/>
 </tool>
 <tool id="Interrupt">
 <Item id="BSC_BUSERR" priority="15"/>
@@ -712,13 +715,79 @@
 <source description="Components supporting Firmware Integration Technology" display="Firmware Integration Technology" id="com.renesas.smc.tools.swcomponent.fit.source"/>
 <source description="Components supporting Firmware Integration Technology" display="Firmware Integration Technology" id="com.renesas.smc.tools.swcomponent.fit.source"/>
 </configuration>
-<configuration inuse="true" name="r_rtc_rx">
-<component description="Dependency : r_bsp version(s) 2.90, 3.00, 3.01, 3.10, 3.20, 3.30, 3.31, 3.40, 3.50, 3.60&#10;This driver supports 24-hour calendar mode operation. It does not support 12-hour am/pm or binary-count operation. Periodic interrupts, output clock, and alarm configurations are supported. For RX130, RX23x, RX64M, RX71M and so on, the timestamp capture facility is supported as well." detailDescription="Real-Time Clock driver" display="r_rtc_rx" id="r_rtc_rx2.73" version="2.73">
-<gridItem id="RTCOUT" selectedIndex="0"/>
-<gridItem id="RTCIC0" selectedIndex="0"/>
-<gridItem id="RTCIC1" selectedIndex="0"/>
-<gridItem id="RTCIC2" selectedIndex="0"/>
+<configuration inuse="true" name="r_usb_basic">
+<component description="Dependency : r_bsp version(s) 3.91&#10;The r_usb_basic package provides USB basic host and peripheral firmware" detailDescription="USB basic(low-level) driver" display="r_usb_basic" id="r_usb_basic1.24" version="1.24">
+<gridItem id="USB0_VBUSEN" selectedIndex="1"/>
+<gridItem id="USB0_OVRCURA" selectedIndex="1"/>
+<gridItem id="USB0_HOST" selectedIndex="1"/>
+<gridItem id="USB0_VBUS" selectedIndex="0"/>
+<gridItem id="USB0_PERI" selectedIndex="0"/>
+<gridItem id="USBA_VBUSEN" selectedIndex="0"/>
+<gridItem id="USBA_OVRCURA" selectedIndex="0"/>
+<gridItem id="USBA_HOST" selectedIndex="0"/>
+<gridItem id="USBA_VBUS" selectedIndex="0"/>
+<gridItem id="USBA_PERI" selectedIndex="0"/>
+<gridItem id="USB_CFG_MODE" selectedIndex="0"/>
+<gridItem id="USB_CFG_PARAM_CHECKING" selectedIndex="0"/>
+<gridItem id="USB_CFG_DEVICE_CLASS" selectedIndex="2"/>
+<gridItem id="USB_CFG_DTC" selectedIndex="1"/>
+<gridItem id="USB_CFG_DMA" selectedIndex="1"/>
+<gridItem id="USB_CFG_USB0_DMA_TX" selectedIndex="1"/>
+<gridItem id="USB_CFG_USB0_DMA_RX" selectedIndex="2"/>
+<gridItem id="USB_CFG_USB1_DMA_TX" selectedIndex="3"/>
+<gridItem id="USB_CFG_USB1_DMA_RX" selectedIndex="4"/>
+<gridItem id="USB_CFG_CLKSEL" selectedIndex="0"/>
+<gridItem id="USB_CFG_BUSWAIT" selectedIndex="7"/>
+<gridItem id="USB_CFG_INTERRUPT_PRIORITY" selectedIndex="2"/>
+<gridItem id="USB_CFG_MULTIPLE_TASKS" selectedIndex="0"/>
+<gridItem id="USB_CFG_VBUS" selectedIndex="0"/>
+<gridItem id="USB_CFG_BC" selectedIndex="1"/>
+<gridItem id="USB_CFG_DCP" selectedIndex="1"/>
+<gridItem id="USB_CFG_COMPLIANCE" selectedIndex="1"/>
+<gridItem id="USB_CFG_TPLCNT" selectedIndex="1"/>
+<gridItem id="USB_CFG_TPL" selectedIndex="USB_NOVENDOR, USB_NOPRODUCT"/>
+<gridItem id="USB_CFG_HUB_TPLCNT" selectedIndex="1"/>
+<gridItem id="USB_CFG_HUB_TPL" selectedIndex="USB_NOVENDOR, USB_NOPRODUCT"/>
+<gridItem id="USB_CFG_ELECTRICAL" selectedIndex="1"/>
+<gridItem id="USB_CFG_USE_USBIP" selectedIndex="0"/>
+<gridItem id="USB_CFG_CLASS_REQUEST" selectedIndex="0"/>
+<gridItem id="USB_CFG_DBLB" selectedIndex="0"/>
+<gridItem id="USB_CFG_CNTMD" selectedIndex="1"/>
 </component>
+<source description="Components supporting Firmware Integration Technology" display="Firmware Integration Technology" id="com.renesas.smc.tools.swcomponent.fit.source"/>
+<source description="Components supporting Firmware Integration Technology" display="Firmware Integration Technology" id="com.renesas.smc.tools.swcomponent.fit.source"/>
+</configuration>
+<configuration inuse="true" name="r_tfat_rx">
+<component description="Dependency : r_tfat_driver_rx version(s) 1.04&#10;Dependency : r_cmt_rx version(s) 3.21&#10;Dependency : r_sys_time_rx version(s) 1.00&#10;&#10;  " detailDescription="Open Source FAT File System." display="r_tfat_rx" id="r_tfat_rx3.04" version="3.04"/>
+<source description="Components supporting Firmware Integration Technology" display="Firmware Integration Technology" id="com.renesas.smc.tools.swcomponent.fit.source"/>
+<source description="Components supporting Firmware Integration Technology" display="Firmware Integration Technology" id="com.renesas.smc.tools.swcomponent.fit.source"/>
+</configuration>
+<configuration inuse="true" name="r_tfat_driver_rx">
+<component description="Dependency : r_cmt_rx version(s) 3.21&#10;Dependency : r_sys_time_rx version(s) 1.00&#10;Dependency : r_tfat_rx version(s) 3.03&#10;" detailDescription="Memory Driver Interface for Open Source FAT File System." display="r_tfat_driver_rx" id="r_tfat_driver_rx1.04" version="1.04">
+<gridItem id="TFAT_USB_DRIVE_NUM" selectedIndex="1"/>
+<gridItem id="TFAT_SDMEM_DRIVE_NUM" selectedIndex="0"/>
+<gridItem id="TFAT_USB_MINI_DRIVE_NUM" selectedIndex="0"/>
+<gridItem id="TFAT_DRIVE_ALLOC_NUM_0" selectedIndex="0"/>
+<gridItem id="TFAT_DRIVE_ALLOC_NUM_1" selectedIndex="3"/>
+<gridItem id="TFAT_DRIVE_ALLOC_NUM_2" selectedIndex="3"/>
+<gridItem id="TFAT_DRIVE_ALLOC_NUM_3" selectedIndex="3"/>
+<gridItem id="TFAT_DRIVE_ALLOC_NUM_4" selectedIndex="3"/>
+<gridItem id="TFAT_DRIVE_ALLOC_NUM_5" selectedIndex="3"/>
+<gridItem id="TFAT_DRIVE_ALLOC_NUM_6" selectedIndex="3"/>
+<gridItem id="TFAT_DRIVE_ALLOC_NUM_7" selectedIndex="3"/>
+<gridItem id="TFAT_DRIVE_ALLOC_NUM_8" selectedIndex="3"/>
+<gridItem id="TFAT_DRIVE_ALLOC_NUM_9" selectedIndex="3"/>
+</component>
+<source description="Components supporting Firmware Integration Technology" display="Firmware Integration Technology" id="com.renesas.smc.tools.swcomponent.fit.source"/>
+<source description="Components supporting Firmware Integration Technology" display="Firmware Integration Technology" id="com.renesas.smc.tools.swcomponent.fit.source"/>
+</configuration>
+<configuration inuse="true" name="r_sys_time_rx">
+<component description="Dependency : r_bsp version(s) 3.40&#10;Dependency : r_cmt_rx version(s) 3.00&#10;Generic system timer for RX MCUs using CMT module." detailDescription="Generic system timer for RX MCUs using CMT module." display="r_sys_time_rx" id="r_sys_time_rx1.00" version="1.00"/>
+<source description="Components supporting Firmware Integration Technology" display="Firmware Integration Technology" id="com.renesas.smc.tools.swcomponent.fit.source"/>
+<source description="Components supporting Firmware Integration Technology" display="Firmware Integration Technology" id="com.renesas.smc.tools.swcomponent.fit.source"/>
+</configuration>
+<configuration inuse="true" name="r_usb_hmsc">
+<component description="Dependency : r_bsp version(s) 3.91&#10;Dependency : r_usb_basic version(s) 1.24&#10;The r_usb_hmsc package provides USB Host mass storage class driver" detailDescription="USB Host Mass Storage Class" display="r_usb_hmsc" id="r_usb_hmsc1.24" version="1.24"/>
 <source description="Components supporting Firmware Integration Technology" display="Firmware Integration Technology" id="com.renesas.smc.tools.swcomponent.fit.source"/>
 <source description="Components supporting Firmware Integration Technology" display="Firmware Integration Technology" id="com.renesas.smc.tools.swcomponent.fit.source"/>
 </configuration>

@@ -5,26 +5,28 @@
 <Setting id="88" value="LCD_DATA1"/>
 <Setting id="89" value="LCD_DATA2"/>
 <Setting id="110" value="LCD_DATA15"/>
+<Setting id="90" value="LCD_DATA3"/>
+<Setting id="92" value="LCD_DATA4"/>
+<Setting id="94" value="LCD_DATA5"/>
+<Setting id="95" value="LCD_DATA6"/>
+<Setting id="96" value="LCD_DATA7"/>
+<Setting id="97" value="LCD_DATA8"/>
 <Setting id="101" value="LCD_DATA9"/>
 <Setting id="102" value="LCD_DATA10"/>
-<Setting id="90" value="LCD_DATA3"/>
 <Setting id="106" value="LCD_DATA11"/>
 <Setting id="7" value="SSCL6"/>
 <Setting id="80" value="LCD_CLK"/>
 <Setting id="107" value="LCD_DATA12"/>
 <Setting id="8" value="SSDA6"/>
-<Setting id="92" value="LCD_DATA4"/>
 <Setting id="108" value="LCD_DATA13"/>
 <Setting id="81" value="LCD_TCON0"/>
 <Setting id="109" value="LCD_DATA14"/>
-<Setting id="94" value="LCD_DATA5"/>
 <Setting id="83" value="LCD_TCON2"/>
-<Setting id="95" value="LCD_DATA6"/>
 <Setting id="84" value="LCD_TCON3"/>
-<Setting id="96" value="LCD_DATA7"/>
-<Setting id="97" value="LCD_DATA8"/>
+<Setting id="40" value="USB0_VBUSEN"/>
 <Setting id="20" value="XTAL"/>
 <Setting id="87" value="LCD_DATA0"/>
+<Setting id="43" value="USB0_OVRCURA"/>
 </Segment>
 <Segment id="Device">
 <Setting id="Series" value="RX600"/>
@@ -33,6 +35,7 @@
 <Setting id="PinCount" value="144"/>
 </Segment>
 <Segment id="Clock">
+<Setting id="UsbCLK" value="48000.0"/>
 <Setting id="PCLKD" value="30000.0"/>
 <Setting id="CacMCLK" value="12000.0"/>
 <Setting id="PCLKB" value="30000.0"/>
@@ -48,10 +51,14 @@
 <Segment id="Component">
 <Setting id="r_bsp" value="FIT"/>
 <Setting id="r_cmt_rx" value="FIT"/>
+<Setting id="r_tfat_rx" value="FIT"/>
 <Setting id="r_glcdc_rx" value="FIT"/>
+<Setting id="r_tfat_driver_rx" value="FIT"/>
 <Setting id="r_sci_iic_rx" value="FIT"/>
+<Setting id="r_usb_hmsc" value="FIT"/>
 <Setting id="r_gpio_rx" value="FIT"/>
-<Setting id="r_rtc_rx" value="FIT"/>
+<Setting id="r_sys_time_rx" value="FIT"/>
+<Setting id="r_usb_basic" value="FIT"/>
 <Setting id="r_flash_rx" value="FIT"/>
 </Segment>
 </QE>

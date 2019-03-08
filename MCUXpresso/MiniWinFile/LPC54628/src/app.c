@@ -313,19 +313,19 @@ uint8_t find_folder_entries(char *path,
             }
 
         	/* ignore if it's a hidden or system entry*/
-        	if ((file_info.fattrib & AM_HID) || (file_info.fattrib & AM_SYS))
+        	if ((file_info.fattrib & (BYTE)AM_HID) == AM_HID || (file_info.fattrib & (BYTE)AM_SYS) == AM_SYS)
         	{
         		continue;
         	}
 
         	/* ignore if not a folder and we want directories only */
-        	if (folders_only && !(file_info.fattrib & AM_DIR))
+        	if (folders_only && (file_info.fattrib & (BYTE)AM_DIR) == (BYTE)0)
         	{
         		continue;
         	}
 
         	(void)mw_util_safe_strcpy(list_box_settings_entries[i].label, MAX_FILENAME_LENGTH + 1U, file_info.fname);
-            if (file_info.fattrib & AM_DIR)
+            if ((file_info.fattrib & (BYTE)AM_DIR) == (BYTE)AM_DIR)
             {
             	/* it is a folder */
             	list_box_settings_entries[i].icon = folder_entry_icon;

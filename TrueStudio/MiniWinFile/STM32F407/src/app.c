@@ -285,41 +285,43 @@ uint8_t find_folder_entries(char *path,
     FRESULT result;
     DIR folder;
     FILINFO file_info;
-    UINT i;
+    UINT i = 0U;
 
-    i = 0U;
-    result = f_opendir(&folder, path);                       /* Open the folder */
+    /* open the folder */
+    result = f_opendir(&folder, path);
     if (result == FR_OK)
     {
         for (;;)
         {
-            result = f_readdir(&folder, &file_info);                   /* Read a folder item */
-            if (result != FR_OK || file_info.fname[0] == 0)
+        	/* read a folder item */
+            result = f_readdir(&folder, &file_info);
+            if (result != FR_OK || file_info.fname[0] == '\0')
             {
-            	break;  /* Break on error or end of dir */
+            	/* break on error or end of folder */
+            	break;
             }
 
-        	/* Ignore if it's a hidden or system entry*/
-        	if ((file_info.fattrib & AM_HID) || (file_info.fattrib & AM_SYS))
+        	/* ignore if it's a hidden or system entry*/
+        	if ((file_info.fattrib & (BYTE)AM_HID) == AM_HID || (file_info.fattrib & (BYTE)AM_SYS) == AM_SYS)
         	{
         		continue;
         	}
 
         	/* ignore if not a folder and we want directories only */
-        	if (folders_only && !(file_info.fattrib & AM_DIR))
+        	if (folders_only && (file_info.fattrib & (BYTE)AM_DIR) == (BYTE)0)
         	{
         		continue;
         	}
 
-            mw_util_safe_strcpy(list_box_settings_entries[i].label, MAX_FILENAME_LENGTH + 1U, file_info.fname);
-            if (file_info.fattrib & AM_DIR)
+            (void)mw_util_safe_strcpy(list_box_settings_entries[i].label, MAX_FILENAME_LENGTH + 1U, file_info.fname);
+            if ((file_info.fattrib & (BYTE)AM_DIR) == (BYTE)AM_DIR)
             {
-            	/* It is a folder */
+            	/* it is a folder */
             	list_box_settings_entries[i].icon = folder_entry_icon;
             }
             else
             {
-            	/* It is a file. */
+            	/* it is a file. */
                 list_box_settings_entries[i].icon = file_entry_icon;
             }
             i++;

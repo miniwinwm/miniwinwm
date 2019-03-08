@@ -22,7 +22,7 @@
 * Version      : 1.1.0
 * Device(s)    : R5F565NEDxFB
 * Description  : This file implements interrupt setting.
-* Creation Date: 2019-03-02
+* Creation Date: 2019-03-08
 ***********************************************************************************************************************/
 
 #ifndef SMC_INTERRUPT_H
