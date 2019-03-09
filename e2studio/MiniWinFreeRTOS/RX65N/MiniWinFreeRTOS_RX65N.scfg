@@ -51,13 +51,13 @@
 <Item current="true" id="pllSourceSelect.buttonDisable.1"/>
 <Item current="true" id="pll.isSelected"/>
 <Item current="12 MHz" id="pll.InputValue"/>
-<Item current="120.0 MHz" id="pll.OutputValue"/>
-<Item current="mul10-1" error="false" id="pll.multiplyBox"/>
+<Item current="240.0 MHz" id="pll.OutputValue"/>
+<Item current="mul20-1" error="false" id="pll.multiplyBox"/>
 <Item current="div1-1" error="false" id="pll.dividerBox"/>
 <Item current="12.0 MHz" error="false" id="pll.MiddleValue"/>
 <Item current="true" id="sckselector.isSelected"/>
-<Item current="120.0 MHz" id="sckselector.InputValue"/>
-<Item current="120.0 MHz" id="sckselector.OutputValue"/>
+<Item current="240.0 MHz" id="sckselector.InputValue"/>
+<Item current="240.0 MHz" id="sckselector.OutputValue"/>
 <Item current="swtpll" id="sckselector.radiobutton"/>
 <Item current="0" id="sckselector.CurrentValue"/>
 <Item current="false" id="sckselector.buttonDisable.0"/>
@@ -66,10 +66,10 @@
 <Item current="true" id="sckselector.buttonDisable.3"/>
 <Item current="true" id="sckselector.buttonDisable.4"/>
 <Item current="true" id="bckdivider.isSelected"/>
-<Item current="120.0 MHz" id="bckdivider.InputValue"/>
+<Item current="240.0 MHz" id="bckdivider.InputValue"/>
 <Item current="60.0 MHz" id="bckdivider.OutputValue"/>
 <Item current="sckselector.radiobutton.swtpll" id="bckdivider.Condition"/>
-<Item current="comboBox1-2" error="false" id="bckdivider.comboBox"/>
+<Item current="comboBox1-4" error="false" id="bckdivider.comboBox"/>
 <Item current="120.0 MHz" error="false" id="bckdivider.PreOutput"/>
 <Item current="iclkdivider" error="false" id="bckdivider.PreOutputController"/>
 <Item current="false" id="bckselector.selectBox"/>
@@ -77,46 +77,46 @@
 <Item current="" id="bckselector.OutputValue"/>
 <Item current="comboBox1-2" error="false" id="bckselector.comboBox"/>
 <Item current="true" id="fclkdivider.isSelected"/>
-<Item current="120.0 MHz" id="fclkdivider.InputValue"/>
+<Item current="240.0 MHz" id="fclkdivider.InputValue"/>
 <Item current="30.0 MHz" id="fclkdivider.OutputValue"/>
 <Item current="sckselector.radiobutton.swtpll" id="fclkdivider.Condition"/>
-<Item current="comboBox1-4" error="false" id="fclkdivider.comboBox"/>
+<Item current="comboBox1-8" error="false" id="fclkdivider.comboBox"/>
 <Item current="true" id="pclkcdivider.isSelected"/>
-<Item current="120.0 MHz" id="pclkcdivider.InputValue"/>
+<Item current="240.0 MHz" id="pclkcdivider.InputValue"/>
 <Item current="30.0 MHz" id="pclkcdivider.OutputValue"/>
 <Item current="sckselector.radiobutton.swtpll" id="pclkcdivider.Condition"/>
-<Item current="comboBox1-4" error="false" id="pclkcdivider.comboBox"/>
+<Item current="comboBox1-8" error="false" id="pclkcdivider.comboBox"/>
 <Item current="30.0 MHz" error="false" id="pclkcdivider.PreOutput"/>
 <Item current="pclkbdivider" error="false" id="pclkcdivider.PreOutputController"/>
 <Item current="true" id="pclkddivider.isSelected"/>
-<Item current="120.0 MHz" id="pclkddivider.InputValue"/>
+<Item current="240.0 MHz" id="pclkddivider.InputValue"/>
 <Item current="30.0 MHz" id="pclkddivider.OutputValue"/>
 <Item current="sckselector.radiobutton.swtpll" id="pclkddivider.Condition"/>
-<Item current="comboBox1-4" error="false" id="pclkddivider.comboBox"/>
+<Item current="comboBox1-8" error="false" id="pclkddivider.comboBox"/>
 <Item current="30.0 MHz" error="false" id="pclkddivider.PreOutput"/>
 <Item current="pclkbdivider" error="false" id="pclkddivider.PreOutputController"/>
 <Item current="true" id="pclkbdivider.isSelected"/>
-<Item current="120.0 MHz" id="pclkbdivider.InputValue"/>
+<Item current="240.0 MHz" id="pclkbdivider.InputValue"/>
 <Item current="30.0 MHz" id="pclkbdivider.OutputValue"/>
 <Item current="sckselector.radiobutton.swtpll" id="pclkbdivider.Condition"/>
-<Item current="comboBox1-4" error="false" id="pclkbdivider.comboBox"/>
+<Item current="comboBox1-8" error="false" id="pclkbdivider.comboBox"/>
 <Item current="60.0 MHz" error="false" id="pclkbdivider.PreOutput"/>
 <Item current="pclkadivider" error="false" id="pclkbdivider.PreOutputController"/>
 <Item current="true" id="pclkadivider.isSelected"/>
-<Item current="120.0 MHz" id="pclkadivider.InputValue"/>
+<Item current="240.0 MHz" id="pclkadivider.InputValue"/>
 <Item current="60.0 MHz" id="pclkadivider.OutputValue"/>
 <Item current="sckselector.radiobutton.swtpll" id="pclkadivider.Condition"/>
-<Item current="comboBox1-2" error="false" id="pclkadivider.comboBox"/>
+<Item current="comboBox1-4" error="false" id="pclkadivider.comboBox"/>
 <Item current="false" id="uckdivider.selectBox"/>
-<Item current="120.0 MHz" id="uckdivider.InputValue"/>
+<Item current="240.0 MHz" id="uckdivider.InputValue"/>
 <Item current="" id="uckdivider.OutputValue"/>
 <Item current="sckselector.radiobutton.swtpll" id="uckdivider.Condition"/>
 <Item current="comboBox1-5" error="false" id="uckdivider.comboBox"/>
 <Item current="true" id="iclkdivider.isSelected"/>
-<Item current="120.0 MHz" id="iclkdivider.InputValue"/>
+<Item current="240.0 MHz" id="iclkdivider.InputValue"/>
 <Item current="120.0 MHz" id="iclkdivider.OutputValue"/>
 <Item current="sckselector.radiobutton.swtpll" id="iclkdivider.Condition"/>
-<Item current="comboBox1-1" error="false" id="iclkdivider.comboBox"/>
+<Item current="comboBox1-2" error="false" id="iclkdivider.comboBox"/>
 <Item current="true" id="fclk.isSelected"/>
 <Item current="30.0 MHz" id="fclk.InputValue"/>
 <Item current="30.0 MHz" id="fclk.OutputValue"/>

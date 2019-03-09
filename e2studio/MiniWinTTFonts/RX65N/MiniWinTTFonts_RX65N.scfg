@@ -51,13 +51,13 @@
 <Item current="true" id="pllSourceSelect.buttonDisable.1"/>
 <Item current="true" id="pll.isSelected"/>
 <Item current="12 MHz" id="pll.InputValue"/>
-<Item current="120.0 MHz" id="pll.OutputValue"/>
-<Item current="mul10-1" error="false" id="pll.multiplyBox"/>
+<Item current="240.0 MHz" id="pll.OutputValue"/>
+<Item current="mul20-1" error="false" id="pll.multiplyBox"/>
 <Item current="div1-1" error="false" id="pll.dividerBox"/>
 <Item current="12.0 MHz" error="false" id="pll.MiddleValue"/>
 <Item current="true" id="sckselector.isSelected"/>
-<Item current="120.0 MHz" id="sckselector.InputValue"/>
-<Item current="120.0 MHz" id="sckselector.OutputValue"/>
+<Item current="240.0 MHz" id="sckselector.InputValue"/>
+<Item current="240.0 MHz" id="sckselector.OutputValue"/>
 <Item current="swtpll" id="sckselector.radiobutton"/>
 <Item current="0" id="sckselector.CurrentValue"/>
 <Item current="false" id="sckselector.buttonDisable.0"/>
@@ -66,55 +66,55 @@
 <Item current="true" id="sckselector.buttonDisable.3"/>
 <Item current="true" id="sckselector.buttonDisable.4"/>
 <Item current="true" id="bckdivider.isSelected"/>
-<Item current="120.0 MHz" id="bckdivider.InputValue"/>
+<Item current="240.0 MHz" id="bckdivider.InputValue"/>
 <Item current="60.0 MHz" id="bckdivider.OutputValue"/>
 <Item current="sckselector.radiobutton.swtpll" id="bckdivider.Condition"/>
-<Item current="comboBox1-2" error="false" id="bckdivider.comboBox"/>
-<Item current="60.0 MHz" error="false" id="bckdivider.PreOutput"/>
+<Item current="comboBox1-4" error="false" id="bckdivider.comboBox"/>
+<Item current="120.0 MHz" error="false" id="bckdivider.PreOutput"/>
 <Item current="iclkdivider" error="false" id="bckdivider.PreOutputController"/>
 <Item current="false" id="bckselector.selectBox"/>
 <Item current="60.0 MHz" id="bckselector.InputValue"/>
 <Item current="" id="bckselector.OutputValue"/>
 <Item current="comboBox1-2" error="false" id="bckselector.comboBox"/>
 <Item current="true" id="fclkdivider.isSelected"/>
-<Item current="120.0 MHz" id="fclkdivider.InputValue"/>
+<Item current="240.0 MHz" id="fclkdivider.InputValue"/>
 <Item current="30.0 MHz" id="fclkdivider.OutputValue"/>
 <Item current="sckselector.radiobutton.swtpll" id="fclkdivider.Condition"/>
-<Item current="comboBox1-4" error="false" id="fclkdivider.comboBox"/>
+<Item current="comboBox1-8" error="false" id="fclkdivider.comboBox"/>
 <Item current="true" id="pclkcdivider.isSelected"/>
-<Item current="120.0 MHz" id="pclkcdivider.InputValue"/>
+<Item current="240.0 MHz" id="pclkcdivider.InputValue"/>
 <Item current="30.0 MHz" id="pclkcdivider.OutputValue"/>
 <Item current="sckselector.radiobutton.swtpll" id="pclkcdivider.Condition"/>
-<Item current="comboBox1-4" error="false" id="pclkcdivider.comboBox"/>
+<Item current="comboBox1-8" error="false" id="pclkcdivider.comboBox"/>
 <Item current="30.0 MHz" error="false" id="pclkcdivider.PreOutput"/>
 <Item current="pclkbdivider" error="false" id="pclkcdivider.PreOutputController"/>
 <Item current="true" id="pclkddivider.isSelected"/>
-<Item current="120.0 MHz" id="pclkddivider.InputValue"/>
+<Item current="240.0 MHz" id="pclkddivider.InputValue"/>
 <Item current="30.0 MHz" id="pclkddivider.OutputValue"/>
 <Item current="sckselector.radiobutton.swtpll" id="pclkddivider.Condition"/>
-<Item current="comboBox1-4" error="false" id="pclkddivider.comboBox"/>
+<Item current="comboBox1-8" error="false" id="pclkddivider.comboBox"/>
 <Item current="30.0 MHz" error="false" id="pclkddivider.PreOutput"/>
 <Item current="pclkbdivider" error="false" id="pclkddivider.PreOutputController"/>
 <Item current="true" id="pclkbdivider.isSelected"/>
-<Item current="120.0 MHz" id="pclkbdivider.InputValue"/>
+<Item current="240.0 MHz" id="pclkbdivider.InputValue"/>
 <Item current="30.0 MHz" id="pclkbdivider.OutputValue"/>
 <Item current="sckselector.radiobutton.swtpll" id="pclkbdivider.Condition"/>
-<Item current="comboBox1-4" error="false" id="pclkbdivider.comboBox"/>
+<Item current="comboBox1-8" error="false" id="pclkbdivider.comboBox"/>
 <Item current="60.0 MHz" error="false" id="pclkbdivider.PreOutput"/>
 <Item current="pclkadivider" error="false" id="pclkbdivider.PreOutputController"/>
 <Item current="true" id="pclkadivider.isSelected"/>
-<Item current="120.0 MHz" id="pclkadivider.InputValue"/>
+<Item current="240.0 MHz" id="pclkadivider.InputValue"/>
 <Item current="60.0 MHz" id="pclkadivider.OutputValue"/>
 <Item current="sckselector.radiobutton.swtpll" id="pclkadivider.Condition"/>
-<Item current="comboBox1-2" error="false" id="pclkadivider.comboBox"/>
+<Item current="comboBox1-4" error="false" id="pclkadivider.comboBox"/>
 <Item current="false" id="uckdivider.selectBox"/>
-<Item current="120.0 MHz" id="uckdivider.InputValue"/>
+<Item current="240.0 MHz" id="uckdivider.InputValue"/>
 <Item current="" id="uckdivider.OutputValue"/>
 <Item current="sckselector.radiobutton.swtpll" id="uckdivider.Condition"/>
 <Item current="comboBox1-5" error="false" id="uckdivider.comboBox"/>
 <Item current="true" id="iclkdivider.isSelected"/>
-<Item current="120.0 MHz" id="iclkdivider.InputValue"/>
-<Item current="60.0 MHz" id="iclkdivider.OutputValue"/>
+<Item current="240.0 MHz" id="iclkdivider.InputValue"/>
+<Item current="120.0 MHz" id="iclkdivider.OutputValue"/>
 <Item current="sckselector.radiobutton.swtpll" id="iclkdivider.Condition"/>
 <Item current="comboBox1-2" error="false" id="iclkdivider.comboBox"/>
 <Item current="true" id="fclk.isSelected"/>
@@ -125,11 +125,11 @@
 <Item current="30.0" id="fclk.CurrentValue"/>
 <Item current="false" id="fclk.Disabled"/>
 <Item current="true" id="iclk.isSelected"/>
-<Item current="60.0 MHz" id="iclk.InputValue"/>
-<Item current="60.0 MHz" id="iclk.OutputValue"/>
-<Item current="60.0" id="iclk.frequencyTxt"/>
+<Item current="120.0 MHz" id="iclk.InputValue"/>
+<Item current="120.0 MHz" id="iclk.OutputValue"/>
+<Item current="120.0" id="iclk.frequencyTxt"/>
 <Item current="MHz" id="iclk.unitTxt"/>
-<Item current="60.0" id="iclk.CurrentValue"/>
+<Item current="120.0" id="iclk.CurrentValue"/>
 <Item current="false" id="iclk.Disabled"/>
 <Item current="true" id="pclka.isSelected"/>
 <Item current="60.0 MHz" id="pclka.InputValue"/>
@@ -224,242 +224,6 @@
 <Item current="-" id="cacilsclk.frequencyTxt"/>
 <Item current="MHz" id="cacilsclk.unitTxt"/>
 <Item current="true" id="cacilsclk.Disabled"/>
-</tool>
-<tool id="SWComponent" version="1.0.0.0">
-<configuration inuse="true" name="r_bsp">
-<component description="Dependencies : None&#10;The r_bsp package provides a foundation for code to be built on top of. It provides startup code, iodefines, and MCU information for different boards. There are 2 folders that make up the r_bsp package. The 'mcu' folder contains files that are common to a MCU group. These files provide functionality such as easy register access, CPU functions, and a file named 'mcu_info.h' for each MCU group. The 'mcu_info.h' file has information about the MCU on the board and is configured based on the information given in r_bsp_config.h. The information in 'mcu_info.h' is used to help configure Renesas middleware that uses the r_bsp package. The 'board' folder has a folder with startup code for each supported board.  Which MCU and board is chosen is decided by the settings in 'platform.h'. The user can choose which board they are using by uncommenting the include path that applies to their board. For example, if you are using the RSK+RX62N then you would uncomment the #include &quot;./board/rskrx62n/r_bsp.h&quot; include path. Users are encouraged to add their own boards to the 'board' directory. BSPs are configured by using the r_bsp_config.h file. Each board will have a reference configuration file named r_bsp_config_reference.h. The user should copy this file to their project, rename it to r_bsp_config.h, and use the options inside the file to configure the BSP for their project." detailDescription="Board Support Packages." display="r_bsp" id="r_bsp3.91" version="3.91">
-<gridItem id="BSP_CFG_STARTUP_DISABLE" selectedIndex="0"/>
-<gridItem id="BSP_CFG_USER_STACK_ENABLE" selectedIndex="1"/>
-<gridItem id="#pragma stacksize su" selectedIndex="0x1000"/>
-<gridItem id="#pragma stacksize si" selectedIndex="0x400"/>
-<gridItem id="BSP_CFG_HEAP_BYTES" selectedIndex="0x400"/>
-<gridItem id="BSP_CFG_IO_LIB_ENABLE" selectedIndex="1"/>
-<gridItem id="BSP_CFG_USER_CHARGET_ENABLED" selectedIndex="0"/>
-<gridItem id="BSP_CFG_USER_CHARGET_FUNCTION" selectedIndex="my_sw_charget_function"/>
-<gridItem id="BSP_CFG_USER_CHARPUT_ENABLED" selectedIndex="0"/>
-<gridItem id="BSP_CFG_USER_CHARPUT_FUNCTION" selectedIndex="my_sw_charput_function"/>
-<gridItem id="BSP_CFG_RUN_IN_USER_MODE" selectedIndex="0"/>
-<gridItem id="BSP_CFG_ID_CODE_LONG_1" selectedIndex="0xFFFFFFFF"/>
-<gridItem id="BSP_CFG_ID_CODE_LONG_2" selectedIndex="0xFFFFFFFF"/>
-<gridItem id="BSP_CFG_ID_CODE_LONG_3" selectedIndex="0xFFFFFFFF"/>
-<gridItem id="BSP_CFG_ID_CODE_LONG_4" selectedIndex="0xFFFFFFFF"/>
-<gridItem id="BSP_CFG_ROM_CACHE_ENABLE" selectedIndex="0"/>
-<gridItem id="BSP_CFG_TRUSTED_MODE_FUNCTION" selectedIndex="0xFFFFFFFF"/>
-<gridItem id="BSP_CFG_FAW_REG_VALUE" selectedIndex="0xFFFFFFFF"/>
-<gridItem id="BSP_CFG_ROMCODE_REG_VALUE" selectedIndex="0xFFFFFFFF"/>
-<gridItem id="BSP_CFG_CODE_FLASH_BANK_MODE" selectedIndex="1"/>
-<gridItem id="BSP_CFG_CODE_FLASH_START_BANK" selectedIndex="0"/>
-<gridItem id="BSP_CFG_USER_LOCKING_ENABLED" selectedIndex="0"/>
-<gridItem id="BSP_CFG_USER_LOCKING_TYPE" selectedIndex="bsp_lock_t"/>
-<gridItem id="BSP_CFG_USER_LOCKING_HW_LOCK_FUNCTION" selectedIndex="my_hw_locking_function"/>
-<gridItem id="BSP_CFG_USER_LOCKING_HW_UNLOCK_FUNCTION" selectedIndex="my_hw_unlocking_function"/>
-<gridItem id="BSP_CFG_USER_LOCKING_SW_LOCK_FUNCTION" selectedIndex="my_sw_locking_function"/>
-<gridItem id="BSP_CFG_USER_LOCKING_SW_UNLOCK_FUNCTION" selectedIndex="my_sw_unlocking_function"/>
-<gridItem id="BSP_CFG_USER_WARM_START_CALLBACK_PRE_INITC_ENABLED" selectedIndex="0"/>
-<gridItem id="BSP_CFG_USER_WARM_START_PRE_C_FUNCTION" selectedIndex="my_sw_warmstart_prec_function"/>
-<gridItem id="BSP_CFG_USER_WARM_START_CALLBACK_POST_INITC_ENABLED" selectedIndex="0"/>
-<gridItem id="BSP_CFG_USER_WARM_START_POST_C_FUNCTION" selectedIndex="my_sw_warmstart_postc_function"/>
-<gridItem id="BSP_CFG_PARAM_CHECKING_ENABLE" selectedIndex="1"/>
-<gridItem id="BSP_CFG_EBMAPCR_1ST_PRIORITY" selectedIndex="0"/>
-<gridItem id="BSP_CFG_EBMAPCR_2ND_PRIORITY" selectedIndex="3"/>
-<gridItem id="BSP_CFG_EBMAPCR_3RD_PRIORITY" selectedIndex="1"/>
-<gridItem id="BSP_CFG_EBMAPCR_4TH_PRIORITY" selectedIndex="2"/>
-<gridItem id="BSP_CFG_EBMAPCR_5TH_PRIORITY" selectedIndex="4"/>
-<gridItem id="BSP_CFG_FIT_IPL_MAX" selectedIndex="15"/>
-</component>
-<source description="Components supporting Firmware Integration Technology" display="Firmware Integration Technology" id="com.renesas.smc.tools.swcomponent.fit.source"/>
-<source description="Components supporting Firmware Integration Technology" display="Firmware Integration Technology" id="com.renesas.smc.tools.swcomponent.fit.source"/>
-</configuration>
-<configuration inuse="true" name="r_flash_rx">
-<component description="Dependency : r_bsp version(s) 3.91&#10;This module allows the user to program, erase, write and blankcheck the Code and/or Data flash." detailDescription="Flash API for RX100, RX200, RX600. and RX700." display="r_flash_rx" id="r_flash_rx3.41" version="3.41">
-<gridItem id="FLASH_CFG_USE_FIT_BSP" selectedIndex="1"/>
-<gridItem id="FLASH_CFG_PARAM_CHECKING_ENABLE" selectedIndex="0"/>
-<gridItem id="FLASH_CFG_CODE_FLASH_ENABLE" selectedIndex="0"/>
-<gridItem id="FLASH_CFG_DATA_FLASH_BGO" selectedIndex="0"/>
-<gridItem id="FLASH_CFG_CODE_FLASH_BGO" selectedIndex="0"/>
-<gridItem id="FLASH_CFG_CODE_FLASH_RUN_FROM_ROM" selectedIndex="0"/>
-<gridItem id="FLASH_CFG_FLASH_READY_IPL" selectedIndex="4"/>
-<gridItem id="FLASH_CFG_IGNORE_LOCK_BITS" selectedIndex="0"/>
-</component>
-<source description="Components supporting Firmware Integration Technology" display="Firmware Integration Technology" id="com.renesas.smc.tools.swcomponent.fit.source"/>
-<source description="Components supporting Firmware Integration Technology" display="Firmware Integration Technology" id="com.renesas.smc.tools.swcomponent.fit.source"/>
-</configuration>
-<configuration inuse="true" name="r_cmt_rx">
-<component description="Dependency : r_bsp version(s) 2.90, 3.00, 3.01, 3.10, 3.20, 3.30, 3.40, 3.50, 3.60, 3.91&#10;This module creates a timer tick using a CMT channel based on a frequency input by the user." detailDescription="Simple CMT driver for creating timer tick." display="r_cmt_rx" id="r_cmt_rx3.31" version="3.31">
-<gridItem id="CMT_RX_CFG_IPR" selectedIndex="5"/>
-</component>
-<source description="Components supporting Firmware Integration Technology" display="Firmware Integration Technology" id="com.renesas.smc.tools.swcomponent.fit.source"/>
-<source description="Components supporting Firmware Integration Technology" display="Firmware Integration Technology" id="com.renesas.smc.tools.swcomponent.fit.source"/>
-</configuration>
-<configuration inuse="true" name="r_glcdc_rx">
-<component description="Dependency : r_bsp version(s) 3.60&#10;The GLCDC FIT module provides a method to output graphics data to LCD panel in graphics format which supports the graphics data read from the memory." detailDescription="Graphics LCD Controller Module." display="r_glcdc_rx" id="r_glcdc_rx1.00" version="1.00">
-<gridItem id="LCD_CLK" selectedIndex="1"/>
-<gridItem id="LCD_TCON0" selectedIndex="1"/>
-<gridItem id="LCD_TCON1" selectedIndex="0"/>
-<gridItem id="LCD_TCON2" selectedIndex="1"/>
-<gridItem id="LCD_TCON3" selectedIndex="1"/>
-<gridItem id="LCD_DATA0" selectedIndex="1"/>
-<gridItem id="LCD_DATA1" selectedIndex="1"/>
-<gridItem id="LCD_DATA2" selectedIndex="1"/>
-<gridItem id="LCD_DATA3" selectedIndex="1"/>
-<gridItem id="LCD_DATA4" selectedIndex="1"/>
-<gridItem id="LCD_DATA5" selectedIndex="1"/>
-<gridItem id="LCD_DATA6" selectedIndex="1"/>
-<gridItem id="LCD_DATA7" selectedIndex="1"/>
-<gridItem id="LCD_DATA8" selectedIndex="1"/>
-<gridItem id="LCD_DATA9" selectedIndex="1"/>
-<gridItem id="LCD_DATA10" selectedIndex="1"/>
-<gridItem id="LCD_DATA11" selectedIndex="1"/>
-<gridItem id="LCD_DATA12" selectedIndex="1"/>
-<gridItem id="LCD_DATA13" selectedIndex="1"/>
-<gridItem id="LCD_DATA14" selectedIndex="1"/>
-<gridItem id="LCD_DATA15" selectedIndex="1"/>
-<gridItem id="LCD_DATA16" selectedIndex="0"/>
-<gridItem id="LCD_DATA17" selectedIndex="0"/>
-<gridItem id="LCD_DATA18" selectedIndex="0"/>
-<gridItem id="LCD_DATA19" selectedIndex="0"/>
-<gridItem id="LCD_DATA20" selectedIndex="0"/>
-<gridItem id="LCD_DATA21" selectedIndex="0"/>
-<gridItem id="LCD_DATA22" selectedIndex="0"/>
-<gridItem id="LCD_DATA23" selectedIndex="0"/>
-<gridItem id="LCD_EXTCLK" selectedIndex="0"/>
-</component>
-<source description="Components supporting Firmware Integration Technology" display="Firmware Integration Technology" id="com.renesas.smc.tools.swcomponent.fit.source"/>
-<source description="Components supporting Firmware Integration Technology" display="Firmware Integration Technology" id="com.renesas.smc.tools.swcomponent.fit.source"/>
-</configuration>
-<configuration inuse="true" name="r_gpio_rx">
-<component description="Dependency : r_bsp version(s) 2.90, 3.00, 3.01, 3.10, 3.20, 3.30, 3.40, 3.50, 3.60, 3.91&#10;This code implements a General Purpose Input/Output driver. Common features such as reading, writing, and setting the direction of ports and pins is supported. Enabling features such as open-drain outputs and internal pull-ups are also supported." detailDescription="General Purpose Input/Output Driver" display="r_gpio_rx" id="r_gpio_rx2.41" version="2.41">
-<gridItem id="GPIO_CFG_PARAM_CHECKING_ENABLE" selectedIndex="1"/>
-</component>
-<source description="Components supporting Firmware Integration Technology" display="Firmware Integration Technology" id="com.renesas.smc.tools.swcomponent.fit.source"/>
-<source description="Components supporting Firmware Integration Technology" display="Firmware Integration Technology" id="com.renesas.smc.tools.swcomponent.fit.source"/>
-</configuration>
-<configuration inuse="true" name="r_sci_iic_rx">
-<component description="Dependency : r_bsp version(s) 2.30, 2.50, 2.60, 2.70, 2.80, 2.90, 3.00, 3.01, 3.10, 3.20, 3.30, 3.40, 3.50, 3.60, 3.91&#10; The SCI simple I2C mode fit module provides a method to transmit and receive data between the master and slave devices using the serial communications interface (SCI). The SCI simple I2C mode is in compliance with single master mode of the NXP I2C-bus (Inter-IC-Bus) interface.  " detailDescription="Simple IIC Driver." display="r_sci_iic_rx" id="r_sci_iic_rx2.31" version="2.31">
-<gridItem id="SSCL0" selectedIndex="0"/>
-<gridItem id="SSDA0" selectedIndex="0"/>
-<gridItem id="SCI0" selectedIndex="0"/>
-<gridItem id="SSCL1" selectedIndex="0"/>
-<gridItem id="SSDA1" selectedIndex="0"/>
-<gridItem id="SCI1" selectedIndex="0"/>
-<gridItem id="SSCL2" selectedIndex="0"/>
-<gridItem id="SSDA2" selectedIndex="0"/>
-<gridItem id="SCI2" selectedIndex="0"/>
-<gridItem id="SSCL3" selectedIndex="0"/>
-<gridItem id="SSDA3" selectedIndex="0"/>
-<gridItem id="SCI3" selectedIndex="0"/>
-<gridItem id="SSCL4" selectedIndex="0"/>
-<gridItem id="SSDA4" selectedIndex="0"/>
-<gridItem id="SCI4" selectedIndex="0"/>
-<gridItem id="SSCL5" selectedIndex="0"/>
-<gridItem id="SSDA5" selectedIndex="0"/>
-<gridItem id="SCI5" selectedIndex="0"/>
-<gridItem id="SSCL6" selectedIndex="1"/>
-<gridItem id="SSDA6" selectedIndex="1"/>
-<gridItem id="SCI6" selectedIndex="1"/>
-<gridItem id="SSCL7" selectedIndex="0"/>
-<gridItem id="SSDA7" selectedIndex="0"/>
-<gridItem id="SCI7" selectedIndex="0"/>
-<gridItem id="SSCL8" selectedIndex="0"/>
-<gridItem id="SSDA8" selectedIndex="0"/>
-<gridItem id="SCI8" selectedIndex="0"/>
-<gridItem id="SSCL9" selectedIndex="0"/>
-<gridItem id="SSDA9" selectedIndex="0"/>
-<gridItem id="SCI9" selectedIndex="0"/>
-<gridItem id="SSCL10" selectedIndex="0"/>
-<gridItem id="SSDA10" selectedIndex="0"/>
-<gridItem id="SCI10" selectedIndex="0"/>
-<gridItem id="SSCL11" selectedIndex="0"/>
-<gridItem id="SSDA11" selectedIndex="0"/>
-<gridItem id="SCI11" selectedIndex="0"/>
-<gridItem id="SSCL12" selectedIndex="0"/>
-<gridItem id="SSDA12" selectedIndex="0"/>
-<gridItem id="SCI12" selectedIndex="0"/>
-<gridItem id="SCI_IIC_CFG_PARAM_CHECKING_ENABLE" selectedIndex="2"/>
-<gridItem id="SCI_IIC_CFG_CH0_INCLUDED" selectedIndex="0"/>
-<gridItem id="SCI_IIC_CFG_CH1_INCLUDED" selectedIndex="0"/>
-<gridItem id="SCI_IIC_CFG_CH2_INCLUDED" selectedIndex="0"/>
-<gridItem id="SCI_IIC_CFG_CH3_INCLUDED" selectedIndex="0"/>
-<gridItem id="SCI_IIC_CFG_CH4_INCLUDED" selectedIndex="0"/>
-<gridItem id="SCI_IIC_CFG_CH5_INCLUDED" selectedIndex="0"/>
-<gridItem id="SCI_IIC_CFG_CH6_INCLUDED" selectedIndex="1"/>
-<gridItem id="SCI_IIC_CFG_CH7_INCLUDED" selectedIndex="0"/>
-<gridItem id="SCI_IIC_CFG_CH8_INCLUDED" selectedIndex="0"/>
-<gridItem id="SCI_IIC_CFG_CH9_INCLUDED" selectedIndex="0"/>
-<gridItem id="SCI_IIC_CFG_CH10_INCLUDED" selectedIndex="0"/>
-<gridItem id="SCI_IIC_CFG_CH11_INCLUDED" selectedIndex="0"/>
-<gridItem id="SCI_IIC_CFG_CH12_INCLUDED" selectedIndex="0"/>
-<gridItem id="SCI_IIC_CFG_CH0_BITRATE_BPS" selectedIndex="384000"/>
-<gridItem id="SCI_IIC_CFG_CH1_BITRATE_BPS" selectedIndex="384000"/>
-<gridItem id="SCI_IIC_CFG_CH2_BITRATE_BPS" selectedIndex="384000"/>
-<gridItem id="SCI_IIC_CFG_CH3_BITRATE_BPS" selectedIndex="384000"/>
-<gridItem id="SCI_IIC_CFG_CH4_BITRATE_BPS" selectedIndex="384000"/>
-<gridItem id="SCI_IIC_CFG_CH5_BITRATE_BPS" selectedIndex="384000"/>
-<gridItem id="SCI_IIC_CFG_CH6_BITRATE_BPS" selectedIndex="384000"/>
-<gridItem id="SCI_IIC_CFG_CH7_BITRATE_BPS" selectedIndex="384000"/>
-<gridItem id="SCI_IIC_CFG_CH8_BITRATE_BPS" selectedIndex="384000"/>
-<gridItem id="SCI_IIC_CFG_CH9_BITRATE_BPS" selectedIndex="384000"/>
-<gridItem id="SCI_IIC_CFG_CH10_BITRATE_BPS" selectedIndex="384000"/>
-<gridItem id="SCI_IIC_CFG_CH11_BITRATE_BPS" selectedIndex="384000"/>
-<gridItem id="SCI_IIC_CFG_CH12_BITRATE_BPS" selectedIndex="384000"/>
-<gridItem id="SCI_IIC_CFG_CH0_INT_PRIORITY" selectedIndex="1"/>
-<gridItem id="SCI_IIC_CFG_CH1_INT_PRIORITY" selectedIndex="1"/>
-<gridItem id="SCI_IIC_CFG_CH2_INT_PRIORITY" selectedIndex="1"/>
-<gridItem id="SCI_IIC_CFG_CH3_INT_PRIORITY" selectedIndex="1"/>
-<gridItem id="SCI_IIC_CFG_CH4_INT_PRIORITY" selectedIndex="1"/>
-<gridItem id="SCI_IIC_CFG_CH5_INT_PRIORITY" selectedIndex="1"/>
-<gridItem id="SCI_IIC_CFG_CH6_INT_PRIORITY" selectedIndex="1"/>
-<gridItem id="SCI_IIC_CFG_CH7_INT_PRIORITY" selectedIndex="1"/>
-<gridItem id="SCI_IIC_CFG_CH8_INT_PRIORITY" selectedIndex="1"/>
-<gridItem id="SCI_IIC_CFG_CH9_INT_PRIORITY" selectedIndex="1"/>
-<gridItem id="SCI_IIC_CFG_CH10_INT_PRIORITY" selectedIndex="1"/>
-<gridItem id="SCI_IIC_CFG_CH11_INT_PRIORITY" selectedIndex="1"/>
-<gridItem id="SCI_IIC_CFG_CH12_INT_PRIORITY" selectedIndex="1"/>
-<gridItem id="SCI_IIC_CFG_CH0_DIGITAL_FILTER" selectedIndex="1"/>
-<gridItem id="SCI_IIC_CFG_CH1_DIGITAL_FILTER" selectedIndex="1"/>
-<gridItem id="SCI_IIC_CFG_CH2_DIGITAL_FILTER" selectedIndex="1"/>
-<gridItem id="SCI_IIC_CFG_CH3_DIGITAL_FILTER" selectedIndex="1"/>
-<gridItem id="SCI_IIC_CFG_CH4_DIGITAL_FILTER" selectedIndex="1"/>
-<gridItem id="SCI_IIC_CFG_CH5_DIGITAL_FILTER" selectedIndex="1"/>
-<gridItem id="SCI_IIC_CFG_CH6_DIGITAL_FILTER" selectedIndex="1"/>
-<gridItem id="SCI_IIC_CFG_CH7_DIGITAL_FILTER" selectedIndex="1"/>
-<gridItem id="SCI_IIC_CFG_CH8_DIGITAL_FILTER" selectedIndex="1"/>
-<gridItem id="SCI_IIC_CFG_CH9_DIGITAL_FILTER" selectedIndex="1"/>
-<gridItem id="SCI_IIC_CFG_CH10_DIGITAL_FILTER" selectedIndex="1"/>
-<gridItem id="SCI_IIC_CFG_CH11_DIGITAL_FILTER" selectedIndex="1"/>
-<gridItem id="SCI_IIC_CFG_CH12_DIGITAL_FILTER" selectedIndex="1"/>
-<gridItem id="SCI_IIC_CFG_CH0_FILTER_CLOCK" selectedIndex="0"/>
-<gridItem id="SCI_IIC_CFG_CH1_FILTER_CLOCK" selectedIndex="0"/>
-<gridItem id="SCI_IIC_CFG_CH2_FILTER_CLOCK" selectedIndex="0"/>
-<gridItem id="SCI_IIC_CFG_CH3_FILTER_CLOCK" selectedIndex="0"/>
-<gridItem id="SCI_IIC_CFG_CH4_FILTER_CLOCK" selectedIndex="0"/>
-<gridItem id="SCI_IIC_CFG_CH5_FILTER_CLOCK" selectedIndex="0"/>
-<gridItem id="SCI_IIC_CFG_CH6_FILTER_CLOCK" selectedIndex="0"/>
-<gridItem id="SCI_IIC_CFG_CH7_FILTER_CLOCK" selectedIndex="0"/>
-<gridItem id="SCI_IIC_CFG_CH8_FILTER_CLOCK" selectedIndex="0"/>
-<gridItem id="SCI_IIC_CFG_CH9_FILTER_CLOCK" selectedIndex="0"/>
-<gridItem id="SCI_IIC_CFG_CH10_FILTER_CLOCK" selectedIndex="0"/>
-<gridItem id="SCI_IIC_CFG_CH11_FILTER_CLOCK" selectedIndex="0"/>
-<gridItem id="SCI_IIC_CFG_CH12_FILTER_CLOCK" selectedIndex="0"/>
-<gridItem id="SCI_IIC_CFG_CH0_SSDA_DELAY_SELECT" selectedIndex="18"/>
-<gridItem id="SCI_IIC_CFG_CH1_SSDA_DELAY_SELECT" selectedIndex="18"/>
-<gridItem id="SCI_IIC_CFG_CH2_SSDA_DELAY_SELECT" selectedIndex="18"/>
-<gridItem id="SCI_IIC_CFG_CH3_SSDA_DELAY_SELECT" selectedIndex="18"/>
-<gridItem id="SCI_IIC_CFG_CH4_SSDA_DELAY_SELECT" selectedIndex="18"/>
-<gridItem id="SCI_IIC_CFG_CH5_SSDA_DELAY_SELECT" selectedIndex="18"/>
-<gridItem id="SCI_IIC_CFG_CH6_SSDA_DELAY_SELECT" selectedIndex="18"/>
-<gridItem id="SCI_IIC_CFG_CH7_SSDA_DELAY_SELECT" selectedIndex="18"/>
-<gridItem id="SCI_IIC_CFG_CH8_SSDA_DELAY_SELECT" selectedIndex="18"/>
-<gridItem id="SCI_IIC_CFG_CH9_SSDA_DELAY_SELECT" selectedIndex="18"/>
-<gridItem id="SCI_IIC_CFG_CH10_SSDA_DELAY_SELECT" selectedIndex="18"/>
-<gridItem id="SCI_IIC_CFG_CH11_SSDA_DELAY_SELECT" selectedIndex="18"/>
-<gridItem id="SCI_IIC_CFG_CH12_SSDA_DELAY_SELECT" selectedIndex="18"/>
-<gridItem id="SCI_IIC_CFG_BUS_CHECK_COUNTER" selectedIndex="1000"/>
-<gridItem id="SCI_IIC_CFG_PORT_SETTING_PROCESSING" selectedIndex="1"/>
-</component>
-<source description="Components supporting Firmware Integration Technology" display="Firmware Integration Technology" id="com.renesas.smc.tools.swcomponent.fit.source"/>
-<source description="Components supporting Firmware Integration Technology" display="Firmware Integration Technology" id="com.renesas.smc.tools.swcomponent.fit.source"/>
-</configuration>
 </tool>
 <tool id="Pins" version="1.0.1.0">
 <pinItem allocation="20" direction="None" id="XTAL" locked="false" status="0"/>
@@ -708,5 +472,241 @@
 <Item id="PERIA_INTA253" priority="15"/>
 <Item id="PERIA_INTA254" priority="15"/>
 <Item id="PERIA_INTA255" priority="15"/>
+</tool>
+<tool id="SWComponent" version="1.0.0.0">
+<configuration inuse="true" name="r_bsp">
+<component description="Dependencies : None&#10;The r_bsp package provides a foundation for code to be built on top of. It provides startup code, iodefines, and MCU information for different boards. There are 2 folders that make up the r_bsp package. The 'mcu' folder contains files that are common to a MCU group. These files provide functionality such as easy register access, CPU functions, and a file named 'mcu_info.h' for each MCU group. The 'mcu_info.h' file has information about the MCU on the board and is configured based on the information given in r_bsp_config.h. The information in 'mcu_info.h' is used to help configure Renesas middleware that uses the r_bsp package. The 'board' folder has a folder with startup code for each supported board.  Which MCU and board is chosen is decided by the settings in 'platform.h'. The user can choose which board they are using by uncommenting the include path that applies to their board. For example, if you are using the RSK+RX62N then you would uncomment the #include &quot;./board/rskrx62n/r_bsp.h&quot; include path. Users are encouraged to add their own boards to the 'board' directory. BSPs are configured by using the r_bsp_config.h file. Each board will have a reference configuration file named r_bsp_config_reference.h. The user should copy this file to their project, rename it to r_bsp_config.h, and use the options inside the file to configure the BSP for their project." detailDescription="Board Support Packages." display="r_bsp" id="r_bsp3.91" version="3.91">
+<gridItem id="BSP_CFG_STARTUP_DISABLE" selectedIndex="0"/>
+<gridItem id="BSP_CFG_USER_STACK_ENABLE" selectedIndex="1"/>
+<gridItem id="#pragma stacksize su" selectedIndex="0x1000"/>
+<gridItem id="#pragma stacksize si" selectedIndex="0x400"/>
+<gridItem id="BSP_CFG_HEAP_BYTES" selectedIndex="0x400"/>
+<gridItem id="BSP_CFG_IO_LIB_ENABLE" selectedIndex="1"/>
+<gridItem id="BSP_CFG_USER_CHARGET_ENABLED" selectedIndex="0"/>
+<gridItem id="BSP_CFG_USER_CHARGET_FUNCTION" selectedIndex="my_sw_charget_function"/>
+<gridItem id="BSP_CFG_USER_CHARPUT_ENABLED" selectedIndex="0"/>
+<gridItem id="BSP_CFG_USER_CHARPUT_FUNCTION" selectedIndex="my_sw_charput_function"/>
+<gridItem id="BSP_CFG_RUN_IN_USER_MODE" selectedIndex="0"/>
+<gridItem id="BSP_CFG_ID_CODE_LONG_1" selectedIndex="0xFFFFFFFF"/>
+<gridItem id="BSP_CFG_ID_CODE_LONG_2" selectedIndex="0xFFFFFFFF"/>
+<gridItem id="BSP_CFG_ID_CODE_LONG_3" selectedIndex="0xFFFFFFFF"/>
+<gridItem id="BSP_CFG_ID_CODE_LONG_4" selectedIndex="0xFFFFFFFF"/>
+<gridItem id="BSP_CFG_ROM_CACHE_ENABLE" selectedIndex="0"/>
+<gridItem id="BSP_CFG_TRUSTED_MODE_FUNCTION" selectedIndex="0xFFFFFFFF"/>
+<gridItem id="BSP_CFG_FAW_REG_VALUE" selectedIndex="0xFFFFFFFF"/>
+<gridItem id="BSP_CFG_ROMCODE_REG_VALUE" selectedIndex="0xFFFFFFFF"/>
+<gridItem id="BSP_CFG_CODE_FLASH_BANK_MODE" selectedIndex="1"/>
+<gridItem id="BSP_CFG_CODE_FLASH_START_BANK" selectedIndex="0"/>
+<gridItem id="BSP_CFG_USER_LOCKING_ENABLED" selectedIndex="0"/>
+<gridItem id="BSP_CFG_USER_LOCKING_TYPE" selectedIndex="bsp_lock_t"/>
+<gridItem id="BSP_CFG_USER_LOCKING_HW_LOCK_FUNCTION" selectedIndex="my_hw_locking_function"/>
+<gridItem id="BSP_CFG_USER_LOCKING_HW_UNLOCK_FUNCTION" selectedIndex="my_hw_unlocking_function"/>
+<gridItem id="BSP_CFG_USER_LOCKING_SW_LOCK_FUNCTION" selectedIndex="my_sw_locking_function"/>
+<gridItem id="BSP_CFG_USER_LOCKING_SW_UNLOCK_FUNCTION" selectedIndex="my_sw_unlocking_function"/>
+<gridItem id="BSP_CFG_USER_WARM_START_CALLBACK_PRE_INITC_ENABLED" selectedIndex="0"/>
+<gridItem id="BSP_CFG_USER_WARM_START_PRE_C_FUNCTION" selectedIndex="my_sw_warmstart_prec_function"/>
+<gridItem id="BSP_CFG_USER_WARM_START_CALLBACK_POST_INITC_ENABLED" selectedIndex="0"/>
+<gridItem id="BSP_CFG_USER_WARM_START_POST_C_FUNCTION" selectedIndex="my_sw_warmstart_postc_function"/>
+<gridItem id="BSP_CFG_PARAM_CHECKING_ENABLE" selectedIndex="1"/>
+<gridItem id="BSP_CFG_EBMAPCR_1ST_PRIORITY" selectedIndex="0"/>
+<gridItem id="BSP_CFG_EBMAPCR_2ND_PRIORITY" selectedIndex="3"/>
+<gridItem id="BSP_CFG_EBMAPCR_3RD_PRIORITY" selectedIndex="1"/>
+<gridItem id="BSP_CFG_EBMAPCR_4TH_PRIORITY" selectedIndex="2"/>
+<gridItem id="BSP_CFG_EBMAPCR_5TH_PRIORITY" selectedIndex="4"/>
+<gridItem id="BSP_CFG_FIT_IPL_MAX" selectedIndex="15"/>
+</component>
+<source description="Components supporting Firmware Integration Technology" display="Firmware Integration Technology" id="com.renesas.smc.tools.swcomponent.fit.source"/>
+<source description="Components supporting Firmware Integration Technology" display="Firmware Integration Technology" id="com.renesas.smc.tools.swcomponent.fit.source"/>
+</configuration>
+<configuration inuse="true" name="r_flash_rx">
+<component description="Dependency : r_bsp version(s) 3.91&#10;This module allows the user to program, erase, write and blankcheck the Code and/or Data flash." detailDescription="Flash API for RX100, RX200, RX600. and RX700." display="r_flash_rx" id="r_flash_rx3.41" version="3.41">
+<gridItem id="FLASH_CFG_USE_FIT_BSP" selectedIndex="1"/>
+<gridItem id="FLASH_CFG_PARAM_CHECKING_ENABLE" selectedIndex="0"/>
+<gridItem id="FLASH_CFG_CODE_FLASH_ENABLE" selectedIndex="0"/>
+<gridItem id="FLASH_CFG_DATA_FLASH_BGO" selectedIndex="0"/>
+<gridItem id="FLASH_CFG_CODE_FLASH_BGO" selectedIndex="0"/>
+<gridItem id="FLASH_CFG_CODE_FLASH_RUN_FROM_ROM" selectedIndex="0"/>
+<gridItem id="FLASH_CFG_FLASH_READY_IPL" selectedIndex="4"/>
+<gridItem id="FLASH_CFG_IGNORE_LOCK_BITS" selectedIndex="0"/>
+</component>
+<source description="Components supporting Firmware Integration Technology" display="Firmware Integration Technology" id="com.renesas.smc.tools.swcomponent.fit.source"/>
+<source description="Components supporting Firmware Integration Technology" display="Firmware Integration Technology" id="com.renesas.smc.tools.swcomponent.fit.source"/>
+</configuration>
+<configuration inuse="true" name="r_cmt_rx">
+<component description="Dependency : r_bsp version(s) 2.90, 3.00, 3.01, 3.10, 3.20, 3.30, 3.40, 3.50, 3.60, 3.91&#10;This module creates a timer tick using a CMT channel based on a frequency input by the user." detailDescription="Simple CMT driver for creating timer tick." display="r_cmt_rx" id="r_cmt_rx3.31" version="3.31">
+<gridItem id="CMT_RX_CFG_IPR" selectedIndex="5"/>
+</component>
+<source description="Components supporting Firmware Integration Technology" display="Firmware Integration Technology" id="com.renesas.smc.tools.swcomponent.fit.source"/>
+<source description="Components supporting Firmware Integration Technology" display="Firmware Integration Technology" id="com.renesas.smc.tools.swcomponent.fit.source"/>
+</configuration>
+<configuration inuse="true" name="r_glcdc_rx">
+<component description="Dependency : r_bsp version(s) 3.60&#10;The GLCDC FIT module provides a method to output graphics data to LCD panel in graphics format which supports the graphics data read from the memory." detailDescription="Graphics LCD Controller Module." display="r_glcdc_rx" id="r_glcdc_rx1.00" version="1.00">
+<gridItem id="LCD_CLK" selectedIndex="1"/>
+<gridItem id="LCD_TCON0" selectedIndex="1"/>
+<gridItem id="LCD_TCON1" selectedIndex="0"/>
+<gridItem id="LCD_TCON2" selectedIndex="1"/>
+<gridItem id="LCD_TCON3" selectedIndex="1"/>
+<gridItem id="LCD_DATA0" selectedIndex="1"/>
+<gridItem id="LCD_DATA1" selectedIndex="1"/>
+<gridItem id="LCD_DATA2" selectedIndex="1"/>
+<gridItem id="LCD_DATA3" selectedIndex="1"/>
+<gridItem id="LCD_DATA4" selectedIndex="1"/>
+<gridItem id="LCD_DATA5" selectedIndex="1"/>
+<gridItem id="LCD_DATA6" selectedIndex="1"/>
+<gridItem id="LCD_DATA7" selectedIndex="1"/>
+<gridItem id="LCD_DATA8" selectedIndex="1"/>
+<gridItem id="LCD_DATA9" selectedIndex="1"/>
+<gridItem id="LCD_DATA10" selectedIndex="1"/>
+<gridItem id="LCD_DATA11" selectedIndex="1"/>
+<gridItem id="LCD_DATA12" selectedIndex="1"/>
+<gridItem id="LCD_DATA13" selectedIndex="1"/>
+<gridItem id="LCD_DATA14" selectedIndex="1"/>
+<gridItem id="LCD_DATA15" selectedIndex="1"/>
+<gridItem id="LCD_DATA16" selectedIndex="0"/>
+<gridItem id="LCD_DATA17" selectedIndex="0"/>
+<gridItem id="LCD_DATA18" selectedIndex="0"/>
+<gridItem id="LCD_DATA19" selectedIndex="0"/>
+<gridItem id="LCD_DATA20" selectedIndex="0"/>
+<gridItem id="LCD_DATA21" selectedIndex="0"/>
+<gridItem id="LCD_DATA22" selectedIndex="0"/>
+<gridItem id="LCD_DATA23" selectedIndex="0"/>
+<gridItem id="LCD_EXTCLK" selectedIndex="0"/>
+</component>
+<source description="Components supporting Firmware Integration Technology" display="Firmware Integration Technology" id="com.renesas.smc.tools.swcomponent.fit.source"/>
+<source description="Components supporting Firmware Integration Technology" display="Firmware Integration Technology" id="com.renesas.smc.tools.swcomponent.fit.source"/>
+</configuration>
+<configuration inuse="true" name="r_gpio_rx">
+<component description="Dependency : r_bsp version(s) 2.90, 3.00, 3.01, 3.10, 3.20, 3.30, 3.40, 3.50, 3.60, 3.91&#10;This code implements a General Purpose Input/Output driver. Common features such as reading, writing, and setting the direction of ports and pins is supported. Enabling features such as open-drain outputs and internal pull-ups are also supported." detailDescription="General Purpose Input/Output Driver" display="r_gpio_rx" id="r_gpio_rx2.41" version="2.41">
+<gridItem id="GPIO_CFG_PARAM_CHECKING_ENABLE" selectedIndex="1"/>
+</component>
+<source description="Components supporting Firmware Integration Technology" display="Firmware Integration Technology" id="com.renesas.smc.tools.swcomponent.fit.source"/>
+<source description="Components supporting Firmware Integration Technology" display="Firmware Integration Technology" id="com.renesas.smc.tools.swcomponent.fit.source"/>
+</configuration>
+<configuration inuse="true" name="r_sci_iic_rx">
+<component description="Dependency : r_bsp version(s) 2.30, 2.50, 2.60, 2.70, 2.80, 2.90, 3.00, 3.01, 3.10, 3.20, 3.30, 3.40, 3.50, 3.60, 3.91&#10; The SCI simple I2C mode fit module provides a method to transmit and receive data between the master and slave devices using the serial communications interface (SCI). The SCI simple I2C mode is in compliance with single master mode of the NXP I2C-bus (Inter-IC-Bus) interface.  " detailDescription="Simple IIC Driver." display="r_sci_iic_rx" id="r_sci_iic_rx2.31" version="2.31">
+<gridItem id="SSCL0" selectedIndex="0"/>
+<gridItem id="SSDA0" selectedIndex="0"/>
+<gridItem id="SCI0" selectedIndex="0"/>
+<gridItem id="SSCL1" selectedIndex="0"/>
+<gridItem id="SSDA1" selectedIndex="0"/>
+<gridItem id="SCI1" selectedIndex="0"/>
+<gridItem id="SSCL2" selectedIndex="0"/>
+<gridItem id="SSDA2" selectedIndex="0"/>
+<gridItem id="SCI2" selectedIndex="0"/>
+<gridItem id="SSCL3" selectedIndex="0"/>
+<gridItem id="SSDA3" selectedIndex="0"/>
+<gridItem id="SCI3" selectedIndex="0"/>
+<gridItem id="SSCL4" selectedIndex="0"/>
+<gridItem id="SSDA4" selectedIndex="0"/>
+<gridItem id="SCI4" selectedIndex="0"/>
+<gridItem id="SSCL5" selectedIndex="0"/>
+<gridItem id="SSDA5" selectedIndex="0"/>
+<gridItem id="SCI5" selectedIndex="0"/>
+<gridItem id="SSCL6" selectedIndex="1"/>
+<gridItem id="SSDA6" selectedIndex="1"/>
+<gridItem id="SCI6" selectedIndex="1"/>
+<gridItem id="SSCL7" selectedIndex="0"/>
+<gridItem id="SSDA7" selectedIndex="0"/>
+<gridItem id="SCI7" selectedIndex="0"/>
+<gridItem id="SSCL8" selectedIndex="0"/>
+<gridItem id="SSDA8" selectedIndex="0"/>
+<gridItem id="SCI8" selectedIndex="0"/>
+<gridItem id="SSCL9" selectedIndex="0"/>
+<gridItem id="SSDA9" selectedIndex="0"/>
+<gridItem id="SCI9" selectedIndex="0"/>
+<gridItem id="SSCL10" selectedIndex="0"/>
+<gridItem id="SSDA10" selectedIndex="0"/>
+<gridItem id="SCI10" selectedIndex="0"/>
+<gridItem id="SSCL11" selectedIndex="0"/>
+<gridItem id="SSDA11" selectedIndex="0"/>
+<gridItem id="SCI11" selectedIndex="0"/>
+<gridItem id="SSCL12" selectedIndex="0"/>
+<gridItem id="SSDA12" selectedIndex="0"/>
+<gridItem id="SCI12" selectedIndex="0"/>
+<gridItem id="SCI_IIC_CFG_PARAM_CHECKING_ENABLE" selectedIndex="2"/>
+<gridItem id="SCI_IIC_CFG_CH0_INCLUDED" selectedIndex="0"/>
+<gridItem id="SCI_IIC_CFG_CH1_INCLUDED" selectedIndex="0"/>
+<gridItem id="SCI_IIC_CFG_CH2_INCLUDED" selectedIndex="0"/>
+<gridItem id="SCI_IIC_CFG_CH3_INCLUDED" selectedIndex="0"/>
+<gridItem id="SCI_IIC_CFG_CH4_INCLUDED" selectedIndex="0"/>
+<gridItem id="SCI_IIC_CFG_CH5_INCLUDED" selectedIndex="0"/>
+<gridItem id="SCI_IIC_CFG_CH6_INCLUDED" selectedIndex="1"/>
+<gridItem id="SCI_IIC_CFG_CH7_INCLUDED" selectedIndex="0"/>
+<gridItem id="SCI_IIC_CFG_CH8_INCLUDED" selectedIndex="0"/>
+<gridItem id="SCI_IIC_CFG_CH9_INCLUDED" selectedIndex="0"/>
+<gridItem id="SCI_IIC_CFG_CH10_INCLUDED" selectedIndex="0"/>
+<gridItem id="SCI_IIC_CFG_CH11_INCLUDED" selectedIndex="0"/>
+<gridItem id="SCI_IIC_CFG_CH12_INCLUDED" selectedIndex="0"/>
+<gridItem id="SCI_IIC_CFG_CH0_BITRATE_BPS" selectedIndex="384000"/>
+<gridItem id="SCI_IIC_CFG_CH1_BITRATE_BPS" selectedIndex="384000"/>
+<gridItem id="SCI_IIC_CFG_CH2_BITRATE_BPS" selectedIndex="384000"/>
+<gridItem id="SCI_IIC_CFG_CH3_BITRATE_BPS" selectedIndex="384000"/>
+<gridItem id="SCI_IIC_CFG_CH4_BITRATE_BPS" selectedIndex="384000"/>
+<gridItem id="SCI_IIC_CFG_CH5_BITRATE_BPS" selectedIndex="384000"/>
+<gridItem id="SCI_IIC_CFG_CH6_BITRATE_BPS" selectedIndex="384000"/>
+<gridItem id="SCI_IIC_CFG_CH7_BITRATE_BPS" selectedIndex="384000"/>
+<gridItem id="SCI_IIC_CFG_CH8_BITRATE_BPS" selectedIndex="384000"/>
+<gridItem id="SCI_IIC_CFG_CH9_BITRATE_BPS" selectedIndex="384000"/>
+<gridItem id="SCI_IIC_CFG_CH10_BITRATE_BPS" selectedIndex="384000"/>
+<gridItem id="SCI_IIC_CFG_CH11_BITRATE_BPS" selectedIndex="384000"/>
+<gridItem id="SCI_IIC_CFG_CH12_BITRATE_BPS" selectedIndex="384000"/>
+<gridItem id="SCI_IIC_CFG_CH0_INT_PRIORITY" selectedIndex="1"/>
+<gridItem id="SCI_IIC_CFG_CH1_INT_PRIORITY" selectedIndex="1"/>
+<gridItem id="SCI_IIC_CFG_CH2_INT_PRIORITY" selectedIndex="1"/>
+<gridItem id="SCI_IIC_CFG_CH3_INT_PRIORITY" selectedIndex="1"/>
+<gridItem id="SCI_IIC_CFG_CH4_INT_PRIORITY" selectedIndex="1"/>
+<gridItem id="SCI_IIC_CFG_CH5_INT_PRIORITY" selectedIndex="1"/>
+<gridItem id="SCI_IIC_CFG_CH6_INT_PRIORITY" selectedIndex="1"/>
+<gridItem id="SCI_IIC_CFG_CH7_INT_PRIORITY" selectedIndex="1"/>
+<gridItem id="SCI_IIC_CFG_CH8_INT_PRIORITY" selectedIndex="1"/>
+<gridItem id="SCI_IIC_CFG_CH9_INT_PRIORITY" selectedIndex="1"/>
+<gridItem id="SCI_IIC_CFG_CH10_INT_PRIORITY" selectedIndex="1"/>
+<gridItem id="SCI_IIC_CFG_CH11_INT_PRIORITY" selectedIndex="1"/>
+<gridItem id="SCI_IIC_CFG_CH12_INT_PRIORITY" selectedIndex="1"/>
+<gridItem id="SCI_IIC_CFG_CH0_DIGITAL_FILTER" selectedIndex="1"/>
+<gridItem id="SCI_IIC_CFG_CH1_DIGITAL_FILTER" selectedIndex="1"/>
+<gridItem id="SCI_IIC_CFG_CH2_DIGITAL_FILTER" selectedIndex="1"/>
+<gridItem id="SCI_IIC_CFG_CH3_DIGITAL_FILTER" selectedIndex="1"/>
+<gridItem id="SCI_IIC_CFG_CH4_DIGITAL_FILTER" selectedIndex="1"/>
+<gridItem id="SCI_IIC_CFG_CH5_DIGITAL_FILTER" selectedIndex="1"/>
+<gridItem id="SCI_IIC_CFG_CH6_DIGITAL_FILTER" selectedIndex="1"/>
+<gridItem id="SCI_IIC_CFG_CH7_DIGITAL_FILTER" selectedIndex="1"/>
+<gridItem id="SCI_IIC_CFG_CH8_DIGITAL_FILTER" selectedIndex="1"/>
+<gridItem id="SCI_IIC_CFG_CH9_DIGITAL_FILTER" selectedIndex="1"/>
+<gridItem id="SCI_IIC_CFG_CH10_DIGITAL_FILTER" selectedIndex="1"/>
+<gridItem id="SCI_IIC_CFG_CH11_DIGITAL_FILTER" selectedIndex="1"/>
+<gridItem id="SCI_IIC_CFG_CH12_DIGITAL_FILTER" selectedIndex="1"/>
+<gridItem id="SCI_IIC_CFG_CH0_FILTER_CLOCK" selectedIndex="0"/>
+<gridItem id="SCI_IIC_CFG_CH1_FILTER_CLOCK" selectedIndex="0"/>
+<gridItem id="SCI_IIC_CFG_CH2_FILTER_CLOCK" selectedIndex="0"/>
+<gridItem id="SCI_IIC_CFG_CH3_FILTER_CLOCK" selectedIndex="0"/>
+<gridItem id="SCI_IIC_CFG_CH4_FILTER_CLOCK" selectedIndex="0"/>
+<gridItem id="SCI_IIC_CFG_CH5_FILTER_CLOCK" selectedIndex="0"/>
+<gridItem id="SCI_IIC_CFG_CH6_FILTER_CLOCK" selectedIndex="0"/>
+<gridItem id="SCI_IIC_CFG_CH7_FILTER_CLOCK" selectedIndex="0"/>
+<gridItem id="SCI_IIC_CFG_CH8_FILTER_CLOCK" selectedIndex="0"/>
+<gridItem id="SCI_IIC_CFG_CH9_FILTER_CLOCK" selectedIndex="0"/>
+<gridItem id="SCI_IIC_CFG_CH10_FILTER_CLOCK" selectedIndex="0"/>
+<gridItem id="SCI_IIC_CFG_CH11_FILTER_CLOCK" selectedIndex="0"/>
+<gridItem id="SCI_IIC_CFG_CH12_FILTER_CLOCK" selectedIndex="0"/>
+<gridItem id="SCI_IIC_CFG_CH0_SSDA_DELAY_SELECT" selectedIndex="18"/>
+<gridItem id="SCI_IIC_CFG_CH1_SSDA_DELAY_SELECT" selectedIndex="18"/>
+<gridItem id="SCI_IIC_CFG_CH2_SSDA_DELAY_SELECT" selectedIndex="18"/>
+<gridItem id="SCI_IIC_CFG_CH3_SSDA_DELAY_SELECT" selectedIndex="18"/>
+<gridItem id="SCI_IIC_CFG_CH4_SSDA_DELAY_SELECT" selectedIndex="18"/>
+<gridItem id="SCI_IIC_CFG_CH5_SSDA_DELAY_SELECT" selectedIndex="18"/>
+<gridItem id="SCI_IIC_CFG_CH6_SSDA_DELAY_SELECT" selectedIndex="18"/>
+<gridItem id="SCI_IIC_CFG_CH7_SSDA_DELAY_SELECT" selectedIndex="18"/>
+<gridItem id="SCI_IIC_CFG_CH8_SSDA_DELAY_SELECT" selectedIndex="18"/>
+<gridItem id="SCI_IIC_CFG_CH9_SSDA_DELAY_SELECT" selectedIndex="18"/>
+<gridItem id="SCI_IIC_CFG_CH10_SSDA_DELAY_SELECT" selectedIndex="18"/>
+<gridItem id="SCI_IIC_CFG_CH11_SSDA_DELAY_SELECT" selectedIndex="18"/>
+<gridItem id="SCI_IIC_CFG_CH12_SSDA_DELAY_SELECT" selectedIndex="18"/>
+<gridItem id="SCI_IIC_CFG_BUS_CHECK_COUNTER" selectedIndex="1000"/>
+<gridItem id="SCI_IIC_CFG_PORT_SETTING_PROCESSING" selectedIndex="1"/>
+</component>
+<source description="Components supporting Firmware Integration Technology" display="Firmware Integration Technology" id="com.renesas.smc.tools.swcomponent.fit.source"/>
+<source description="Components supporting Firmware Integration Technology" display="Firmware Integration Technology" id="com.renesas.smc.tools.swcomponent.fit.source"/>
+</configuration>
 </tool>
 </smc>

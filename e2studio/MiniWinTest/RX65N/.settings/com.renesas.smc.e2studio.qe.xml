@@ -48,7 +48,7 @@
 <Setting id="PCLKC" value="30000.0"/>
 <Setting id="BusCLK" value="60000.0"/>
 <Setting id="PCLKA" value="60000.0"/>
-<Setting id="ICLK" value="60000.0"/>
+<Setting id="ICLK" value="120000.0"/>
 <Setting id="FCLK" value="30000.0"/>
 <Setting id="SysCLKSrc" value="4.0"/>
 <Setting id="ExtCLK" value="12000.0"/>
