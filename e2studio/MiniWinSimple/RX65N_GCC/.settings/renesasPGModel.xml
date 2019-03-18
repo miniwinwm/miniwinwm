@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<rxProjectGenerationModel>
+    <fEndian>LITTLE</fEndian>
+    <stackLimit>100</stackLimit>
+    <ctype>false</ctype>
+    <math>false</math>
+    <stdio>false</stdio>
+    <stdlib>false</stdlib>
+    <string>false</string>
+    <optimized>true</optimized>
+    <pbuild>true</pbuild>
+</rxProjectGenerationModel>

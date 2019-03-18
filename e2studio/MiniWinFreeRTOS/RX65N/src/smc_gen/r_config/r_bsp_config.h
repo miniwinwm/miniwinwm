@@ -302,32 +302,32 @@ Configuration Options
 /* Peripheral Module Clock A Divider (PCKA). 
    Available divisors = /1 (no division), /2, /4, /8, /16, /32, /64
 */
-#define BSP_CFG_PCKA_DIV                (4) // <-- Updated by GUI. Do not edit this value manually
+#define BSP_CFG_PCKA_DIV                (2) // <-- Updated by GUI. Do not edit this value manually
 
 /* Peripheral Module Clock B Divider (PCKB). 
    Available divisors = /1 (no division), /2, /4, /8, /16, /32, /64
 */
-#define BSP_CFG_PCKB_DIV                (8) // <-- Updated by GUI. Do not edit this value manually
+#define BSP_CFG_PCKB_DIV                (4) // <-- Updated by GUI. Do not edit this value manually
 
 /* Peripheral Module Clock C Divider (PCKC).
    Available divisors = /1 (no division), /2, /4, /8, /16, /32, /64
 */
-#define BSP_CFG_PCKC_DIV                (8) // <-- Updated by GUI. Do not edit this value manually
+#define BSP_CFG_PCKC_DIV                (4) // <-- Updated by GUI. Do not edit this value manually
 
 /* Peripheral Module Clock D Divider (PCKD).
    Available divisors = /1 (no division), /2, /4, /8, /16, /32, /64
 */
-#define BSP_CFG_PCKD_DIV                (8) // <-- Updated by GUI. Do not edit this value manually
+#define BSP_CFG_PCKD_DIV                (4) // <-- Updated by GUI. Do not edit this value manually
 
 /* External Bus Clock Divider (BCLK). 
    Available divisors = /1 (no division), /2, /4, /8, /16, /32, /64
 */
-#define BSP_CFG_BCK_DIV                 (4) // <-- Updated by GUI. Do not edit this value manually
+#define BSP_CFG_BCK_DIV                 (2) // <-- Updated by GUI. Do not edit this value manually
 
 /* Flash IF Clock Divider (FCK). 
    Available divisors = /1 (no division), /2, /4, /8, /16, /32, /64
 */
-#define BSP_CFG_FCK_DIV                 (8) // <-- Updated by GUI. Do not edit this value manually
+#define BSP_CFG_FCK_DIV                 (4) // <-- Updated by GUI. Do not edit this value manually
 
 /* USB Clock Divider Select. 
    Available divisors = /2, /3, /4, /5
