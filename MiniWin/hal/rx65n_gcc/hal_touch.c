@@ -46,18 +46,22 @@ SOFTWARE.
 *** TYPES ***
 ************/
 
-//todo dox
+/**
+ * Enumeration of I2C start and stop conditions
+ */
 typedef enum
 {
-	start_condition,
-	stop_condition
+	start_condition,		/**< Request to create I2C start condition */
+	stop_condition  		/**< Request to create I2C stop condition */
 } start_stop_condition_t;
 
-//todo dox
+/**
+ * Enumeration of I2C frame types
+ */
 typedef enum
 {
-	read_frame,
-	write_frame
+	read_frame,				/**< Frame type is a read frame */
+	write_frame				/**< Frame type is a write frame */
 } frame_type_t;
 
 /***********************
@@ -89,7 +93,14 @@ static bool read_device_data(uint8_t device_address, uint8_t *data, uint16_t len
 *** LOCAL FUNCTIONS ***
 **********************/
 
-//todo dox
+/**
+ * Read data from an I2C device where the device register to start reading from has already been set
+ *
+ * @param device_address The I2C 7 bit address of the device, in bits b0 to b6
+ * @param data Pointer to buffer big enough to hold read data
+ * @param length Number of bytes to read
+ * @return True if in ACK returned by I2C device, false if NACK returned
+ */
 static bool read_device_data(uint8_t device_address, uint8_t *data, uint16_t length)
 {
 	bool success = false;
@@ -141,8 +152,14 @@ static bool read_device_data(uint8_t device_address, uint8_t *data, uint16_t len
 	return success;
 }
 
-//todo dox
-static bool write_device_data(uint8_t device_address, uint8_t *data, uint16_t length)
+/**
+ * Write data to an I2C device
+ *
+ * @param device_address The I2C 7 bit address of the device, in bits b0 to b6
+ * @param data Pointer to buffer holding data to write
+ * @param length Number of bytes to write
+ * @return True if in ACK returned by I2C device, false if NACK returned
+ */static bool write_device_data(uint8_t device_address, uint8_t *data, uint16_t length)
 {
 	bool success = false;
 	uint16_t i;
@@ -173,7 +190,13 @@ static bool write_device_data(uint8_t device_address, uint8_t *data, uint16_t le
 	return success;
 }
 
-// todo
+/**
+ * Write an I2C device 7 bit address to the SCI6 module
+ *
+ * @param device_address 7 bit I2C address of target device in bits b0 to b6
+ * @param frame_type Read or write frame about to occue
+ * @return True if ACK received, false if NACK received
+ */
 static bool write_device_address(uint8_t device_address, frame_type_t frame_type)
 {
 	uint8_t byte_to_write;
@@ -202,7 +225,11 @@ static bool write_device_address(uint8_t device_address, frame_type_t frame_type
 	return false;
 }
 
-//todo dox
+/**
+ * Make the SCI6 hardware module generate a start or stop condition
+ *
+ * @param start_stop_condition Start or stop
+ */
 static void generate_start_stop_condition(start_stop_condition_t start_stop_condition)
 {
 	switch (start_stop_condition)
