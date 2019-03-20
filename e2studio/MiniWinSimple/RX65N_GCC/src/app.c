@@ -155,9 +155,9 @@ void app_init(void)
 	PORT0.PDR.BIT.B5 = 0U;	/* input */
 	PORT0.PCR.BIT.B5 = 0U;  /* pull-up disable */
 
-	/* set up push button gpio input */
+	/* set up led gpio output */
 	PORT7.PMR.BIT.B0 = 0U;	/* mode to gpio */
-	PORT7.ODR1.BIT.B6 = 0U;	/* cmos output type */
+	PORT7.ODR0.BIT.B0 = 0U;	/* cmos output type */
 	PORT7.PDR.BIT.B0 = 1U;	/* output */
 }
 

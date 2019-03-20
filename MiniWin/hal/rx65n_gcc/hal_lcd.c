@@ -152,9 +152,6 @@ void mw_hal_lcd_init(void)
     MPC.PE1PFS.BYTE = 0x25U;
     PORTE.PMR.BIT.B1 = 1U;
 
-    /* enable writing to PFSWE */
-    MPC.PWPR.BIT.B0WI = 0U;
-
     /* disable writing to PFS registers. */
     MPC.PWPR.BIT.PFSWE = 0U;
 
@@ -164,7 +161,7 @@ void mw_hal_lcd_init(void)
     /* set up reset line and bring display out of reset */
 	PORT6.PMR.BIT.B3 = 0U;	/* mode to gpio */
 	PORT6.PDR.BIT.B3 = 1U; 	/* port direction output */
-	PORT6.PODR.BIT.B3 = 1U;  /* bring display out of reset */
+	PORT6.PODR.BIT.B3 = 1U; /* bring display out of reset */
 
 	/* set backlight pin as gpio output and switch backlight on */
 	PORT6.PMR.BIT.B6 = 0U;	/* mode to gpio */
@@ -179,9 +176,9 @@ void mw_hal_lcd_init(void)
 	MSTP(GLCDC) = 0U;
 
 	/* disable writing to clock control bit */
-	SYSTEM.PRCR.WORD = 0xa500U;
+	SYSTEM.PRCR.WORD = 0xa500;
 
-	/* release glcd module from a software reset status. */
+	/* release glcd module from a software reset status */
 	GLCDC.BGEN.BIT.SWRST = 1U;
 
 	/* set the dot clock to pll clock */
@@ -199,7 +196,7 @@ void mw_hal_lcd_init(void)
 	/* waiting for supply of panel clock(LCD_CLK) and pixel clock(PXCLK)
 	 * the BGMON.SWRST bit is sampled with PXCLK so if the CLKEN bit is set,
 	 * the BGEN.SWRST bit is reflected on the BGMON.SWRST bit. */
-	while (0 == GLCDC.BGMON.BIT.SWRST)
+	while (0U == GLCDC.BGMON.BIT.SWRST)
 	{
 		__asm("NOP");
 	}
@@ -211,9 +208,6 @@ void mw_hal_lcd_init(void)
 
 	/* the output of LCD_TCON0 is synchronized with rising edges of LCD_CLK */
 	GLCDC.CLKPHASE.BIT.TCON0EDG = 0U;
-
-	/* the output of LCD_TCON1 is synchronized with rising edges of LCD_CLK */
-	GLCDC.CLKPHASE.BIT.TCON1EDG = 0U;
 
 	/* the output of LCD_TCON2 is synchronized with rising edges of LCD_CLK */
 	GLCDC.CLKPHASE.BIT.TCON2EDG = 0U;
@@ -242,30 +236,64 @@ void mw_hal_lcd_init(void)
 	/* STHy signal pulse width 1 pixel */
 	GLCDC.TCONSTHA1.BIT.HW = 1U;
 
-	GLCDC.TCONSTVA2.BIT.SEL = 0U; /* Vsync(STVA) -> TCON0 */
-	GLCDC.TCONSTVA2.BIT.INV = 1U; /* Vsync(STVA) -> Invert or Vsync(STVA) -> Not Invert */
-	GLCDC.TCONSTVA1.BIT.VS = 0U;      /* No delay. */
+	/* vsync to STVA */
+	GLCDC.TCONSTVA2.BIT.SEL = 0U;
+
+	/* invert vsync */
+	GLCDC.TCONSTVA2.BIT.INV = 1U;
+
+	/* no vsync delay */
+	GLCDC.TCONSTVA1.BIT.VS = 0U;
+
+	/* pulse width 1 */
 	GLCDC.TCONSTVA1.BIT.VW = 1U;
+
+	/* output signal data enable */
 	GLCDC.TCONSTHB2.BIT.SEL = 7U;
+
+	/* don't invert data enable */
 	GLCDC.TCONDE.BIT.INV = 0U;
+
+	/* hsync delay */
 	GLCDC.TCONSTHB1.BIT.HS = 0x29U;
-	GLCDC.TCONSTHB1.BIT.HW = 0x1e0U;
-	GLCDC.TCONSTHB2.BIT.HSSEL = 0U; /* Select input Hsync as reference */
+
+	/* horiz width 480 */
+	GLCDC.TCONSTHB1.BIT.HW = LCD_DISPLAY_WIDTH_PIXELS;
+
+	/* hsync is reference */
+	GLCDC.TCONSTHB2.BIT.HSSEL = 0U;
+
+	/* vsync 9 lines delay */
 	GLCDC.TCONSTVB1.BIT.VS = 9U;
-	GLCDC.TCONSTVB1.BIT.VW = 0x110U;
+
+	/* vert height 272 */
+	GLCDC.TCONSTVB1.BIT.VW = LCD_DISPLAY_HEIGHT_PIXELS;
 
 	/* configure the background screen */
 	GLCDC.BGPERI.BIT.FH = 0x20dU;
 
+	/* vsync period */
 	GLCDC.BGPERI.BIT.FV = 0x120U;
-	GLCDC.BGSYNC.BIT.HP = 3U;
-	GLCDC.BGSYNC.BIT.VP = 7U;
-	GLCDC.BGHSIZE.BIT.HP = 0x2cU;
-	GLCDC.BGVSIZE.BIT.VP = 0x10U;
-	GLCDC.BGHSIZE.BIT.HW = 0x1e0U;
-	GLCDC.BGVSIZE.BIT.VW = 0x110U;
 
-	/* clear background colour register */
+	/* hsync assert position */
+	GLCDC.BGSYNC.BIT.HP = 3U;
+
+	/* vsync assert position */
+	GLCDC.BGSYNC.BIT.VP = 7U;
+
+	/* horiz active start pixel */
+	GLCDC.BGHSIZE.BIT.HP = 0x2cU;
+
+	/* vert active start position */
+	GLCDC.BGVSIZE.BIT.VP = 0x10U;
+
+	/* horiz active pixel width */
+	GLCDC.BGHSIZE.BIT.HW = LCD_DISPLAY_WIDTH_PIXELS;
+
+	/* vert active pixel height */
+	GLCDC.BGVSIZE.BIT.VW = LCD_DISPLAY_HEIGHT_PIXELS;
+
+	/* set background colour to black */
 	GLCDC.BGCOLOR.BIT.R = 0U;
 	GLCDC.BGCOLOR.BIT.G = 0U;
 	GLCDC.BGCOLOR.BIT.B = 0U;
@@ -280,30 +308,41 @@ void mw_hal_lcd_init(void)
 	GLCDC.GR2BASE.BIT.R = 0U;
 	GLCDC.GR2BASE.BIT.G = 0U;
 	GLCDC.GR2BASE.BIT.B = 0U;
-
-
+    
+    /* set number of 64 byte transfers, gr2 */
 	GLCDC.GR2FLM5.BIT.DATANUM = 0xeU;
 
 	/* set number of lines in display */
 	GLCDC.GR2FLM5.BIT.LNNUM = 0x10fU;
 
-	GLCDC.GR2FLM3.BIT.LNOFF = 0x3c0U;
+	/* line offset bytes */
+	GLCDC.GR2FLM3.BIT.LNOFF = LCD_DISPLAY_WIDTH_PIXELS * 2U;
 
-	GLCDC.GR2AB2.BIT.GRCVW = 0x110U;
+	/* width of graphical area */
+	GLCDC.GR2AB2.BIT.GRCVW = LCD_DISPLAY_HEIGHT_PIXELS;
+
+	/* graphical area vertical start position */
 	GLCDC.GR2AB2.BIT.GRCVS = 9U;
-	GLCDC.GR2AB3.BIT.GRCHW = 0x1e0U;
+
+	/* height of graphical area */
+	GLCDC.GR2AB3.BIT.GRCHW = LCD_DISPLAY_WIDTH_PIXELS;
+
+	/* graphical area horizontal start position */
 	GLCDC.GR2AB3.BIT.GRCHS = 0x29U;
+
+	/* frame not displayed */
 	GLCDC.GR2AB1.BIT.GRCDISPON = 0U;
-	GLCDC.GR2AB1.BIT.ARCON = 0U;
+
+	/* show current graphics */
 	GLCDC.GR2AB1.BIT.DISPSEL = 2U;
 
 	/* disable chroma control */
 	GLCDC.GR2AB7.BIT.CKON = 0U;
 
-	/* Configure the output control block */
+	/* configure the output control block */
 	GLCDC.OUTSET.BIT.ENDIANON = 0U;
 
-	/* Byte order RGB */
+	/* byte order RGB */
 	GLCDC.OUTSET.BIT.SWAPON = 0U;
 
 	/* pixel format 565 */
@@ -329,7 +368,7 @@ void mw_hal_lcd_init(void)
 	/* disable gamma correction */
 	GLCDC.GAMSW.BIT.GAMON = 0U;
 
-	/* Enable the GLCD detections and interrupts */
+	/* set the GLCD detections and interrupts */
 
 	/* disable VPOS line notification */
 	GLCDC.DTCTEN.BIT.VPOSDTC = 0U;
@@ -337,21 +376,21 @@ void mw_hal_lcd_init(void)
 	/* disable gr1 underflow notification */
 	GLCDC.DTCTEN.BIT.GR1UFDTC = 0U;
 
-	/* disable gr2 underflow notofication */
+	/* disable gr2 underflow notification */
 	GLCDC.DTCTEN.BIT.GR2UFDTC = 0U;
 
 	/* disable gr1 underflow interrupt */
 	GLCDC.INTEN.BIT.GR1UFINTEN = 0U;
 	EN(GLCDC, GR1UF) = 0U;
-	while (0 != IS(GLCDC, GR1UF))
+	while (0U != IS(GLCDC, GR1UF))
 	{
 		__asm("NOP");
 	}
 
 	/* disable gr2 underflow interrupt */
 	GLCDC.INTEN.BIT.GR2UFINTEN = 0U;
-	EN(GLCDC,GR2UF) = 0U;
-	while (0U != IS(GLCDC, GR2UF))
+	EN(GLCDC, GR2UF) = 0U;
+	while (0U != IS(GLCDC,GR2UF))
 	{
 		__asm("NOP");
 	}
@@ -361,9 +400,16 @@ void mw_hal_lcd_init(void)
 
 	/* allow reading of the frame buffer */
 	GLCDC.GR2FLMRD.BIT.RENB = 1U;
-    GLCDC.BGEN.LONG = 0x00010101;
-}
 
+	/* enable background generating block */
+	GLCDC.BGEN.BIT.EN = 1U;
+
+	/* enable register reflection */
+	GLCDC.BGEN.BIT.VEN = 1U;
+
+	/* release from software reset */
+	GLCDC.BGEN.BIT.SWRST = 1U;
+}
 
 int16_t mw_hal_lcd_get_display_width(void)
 {

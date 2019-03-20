@@ -35,6 +35,7 @@ SOFTWARE.
 #include "r_smc_entry.h"
 #include "r_glcdc_rx_if.h"
 #include "r_pinset.h"
+#include "r_gpio_rx_if.h"
 
 /****************
 *** CONSTANTS ***
@@ -71,23 +72,29 @@ void mw_hal_lcd_init(void)
 {
 	glcdc_cfg_t glcdc_cfg;
 
+	/* set up LCD pins */
 	R_GLCDC_PinSet();
 
-	PORT6.PDR.BIT.B3  = 1;  // Port direction: output
-	PORT6.PODR.BIT.B3 = 1;  // DISP on
+	/* display reset line */
+	(void)R_GPIO_PinControl(GPIO_PORT_6_PIN_3, GPIO_CMD_ASSIGN_TO_GPIO);
+	R_GPIO_PinDirectionSet(GPIO_PORT_6_PIN_3, GPIO_DIRECTION_OUTPUT);
+	(void)R_GPIO_PinControl(GPIO_PORT_6_PIN_3, GPIO_CMD_OUT_CMOS);
+	R_GPIO_PinWrite(GPIO_PORT_6_PIN_3, GPIO_LEVEL_HIGH);
 
-	// Switch backlight on, no PWM
-	PORT6.PDR.BIT.B6  = 1;
-	PORT6.PODR.BIT.B6 = 1;
+	/* backlight control */
+	(void)R_GPIO_PinControl(GPIO_PORT_6_PIN_6, GPIO_CMD_ASSIGN_TO_GPIO);
+	R_GPIO_PinDirectionSet(GPIO_PORT_6_PIN_6, GPIO_DIRECTION_OUTPUT);
+	(void)R_GPIO_PinControl(GPIO_PORT_6_PIN_6, GPIO_CMD_OUT_CMOS);
+	R_GPIO_PinWrite(GPIO_PORT_6_PIN_6, GPIO_LEVEL_HIGH);
 
-	glcdc_cfg.output.htiming.back_porch = 40;
-	glcdc_cfg.output.htiming.sync_width = 1;
-	glcdc_cfg.output.vtiming.back_porch = 8;
-	glcdc_cfg.output.vtiming.sync_width = 1;
-	glcdc_cfg.output.htiming.display_cyc = 480;
-	glcdc_cfg.output.vtiming.display_cyc = 272;
-	glcdc_cfg.output.htiming.front_porch = 5;
-	glcdc_cfg.output.vtiming.front_porch = 8;
+	glcdc_cfg.output.htiming.back_porch = 40U;
+	glcdc_cfg.output.htiming.sync_width = 1U;
+	glcdc_cfg.output.vtiming.back_porch = 8U;
+	glcdc_cfg.output.vtiming.sync_width = 1U;
+	glcdc_cfg.output.htiming.display_cyc = 480U;
+	glcdc_cfg.output.vtiming.display_cyc = 272U;
+	glcdc_cfg.output.htiming.front_porch = 5U;
+	glcdc_cfg.output.vtiming.front_porch = 8U;
 	glcdc_cfg.p_callback = NULL;
 	glcdc_cfg.output.clksrc = GLCDC_CLK_SRC_INTERNAL;
 	glcdc_cfg.output.clock_div_ratio = GLCDC_PANEL_CLK_DIVISOR_24;
@@ -99,17 +106,17 @@ void mw_hal_lcd_init(void)
 	glcdc_cfg.output.vsync_polarity = GLCDC_SIGNAL_POLARITY_LOACTIVE;
 	glcdc_cfg.output.tcon_de = GLCDC_TCON_PIN_3;
 	glcdc_cfg.output.data_enable_polarity = GLCDC_SIGNAL_POLARITY_HIACTIVE;
-	glcdc_cfg.output.bg_color.byte.r = 0;
-	glcdc_cfg.output.bg_color.byte.g = 0;
-	glcdc_cfg.output.bg_color.byte.b = 0;
+	glcdc_cfg.output.bg_color.byte.r = 0U;
+	glcdc_cfg.output.bg_color.byte.g = 0U;
+	glcdc_cfg.output.bg_color.byte.b = 0U;
 	glcdc_cfg.input[GLCDC_FRAME_LAYER_2].format = GLCDC_IN_FORMAT_16BITS_RGB565;
 	glcdc_cfg.input[GLCDC_FRAME_LAYER_1].p_base = NULL;
-	glcdc_cfg.input[GLCDC_FRAME_LAYER_2].p_base = (uint32_t *)0x00800000;
-	glcdc_cfg.input[GLCDC_FRAME_LAYER_2].bg_color.byte.r = 0;
-	glcdc_cfg.input[GLCDC_FRAME_LAYER_2].bg_color.byte.g = 0;
-	glcdc_cfg.input[GLCDC_FRAME_LAYER_2].bg_color.byte.b = 0;
-	glcdc_cfg.input[GLCDC_FRAME_LAYER_2].hsize = 480;
-	glcdc_cfg.input[GLCDC_FRAME_LAYER_2].vsize = 272;
+	glcdc_cfg.input[GLCDC_FRAME_LAYER_2].p_base = (uint32_t *)0x00800000U;
+	glcdc_cfg.input[GLCDC_FRAME_LAYER_2].bg_color.byte.r = 0U;
+	glcdc_cfg.input[GLCDC_FRAME_LAYER_2].bg_color.byte.g = 0U;
+	glcdc_cfg.input[GLCDC_FRAME_LAYER_2].bg_color.byte.b = 0U;
+	glcdc_cfg.input[GLCDC_FRAME_LAYER_2].hsize = 480U;
+	glcdc_cfg.input[GLCDC_FRAME_LAYER_2].vsize = 272U;
 	glcdc_cfg.input[GLCDC_FRAME_LAYER_2].offset = 960;
 	glcdc_cfg.input[GLCDC_FRAME_LAYER_2].frame_edge = false;
 	glcdc_cfg.input[GLCDC_FRAME_LAYER_2].coordinate.x = 0;
@@ -126,13 +133,13 @@ void mw_hal_lcd_init(void)
 	glcdc_cfg.output.color_order = GLCDC_COLOR_ORDER_RGB;
 	glcdc_cfg.output.dithering.dithering_on = false;
 	glcdc_cfg.output.brightness.enable = true;
-	glcdc_cfg.output.brightness.r = 0x200;
-	glcdc_cfg.output.brightness.g = 0x200;
-	glcdc_cfg.output.brightness.b = 0x200;
+	glcdc_cfg.output.brightness.r = 0x200U;
+	glcdc_cfg.output.brightness.g = 0x200U;
+	glcdc_cfg.output.brightness.b = 0x200U;
 	glcdc_cfg.output.contrast.enable = true;
-	glcdc_cfg.output.contrast.b = 0x80;
-	glcdc_cfg.output.contrast.g = 0x80;
-	glcdc_cfg.output.contrast.r = 0x80;
+	glcdc_cfg.output.contrast.b = 0x80U;
+	glcdc_cfg.output.contrast.g = 0x80U;
+	glcdc_cfg.output.contrast.r = 0x80U;
 	glcdc_cfg.output.gamma.enable = false;
 	glcdc_cfg.clut[GLCDC_FRAME_LAYER_2].enable = false;
 	glcdc_cfg.detection.vpos_detect = false;
@@ -158,10 +165,10 @@ int16_t mw_hal_lcd_get_display_height(void)
 
 void mw_hal_lcd_pixel(int16_t x, int16_t y, mw_hal_lcd_colour_t colour)
 {
-	uint16_t* address = (uint16_t*)0x00800000;
-	uint32_t converted_colour = ((colour & 0xf80000U) >> 8U) |
-			((colour & 0xfc00U) >> 5U) |
-			((colour & 0xf8U) >> 3U);
+	uint16_t* address = (uint16_t*)0x00800000U;
+	uint32_t converted_colour = ((colour & 0xf80000U) >> 8) |
+			((colour & 0xfc00U) >> 5) |
+			((colour & 0xf8U) >> 3);
 
 #if defined(MW_DISPLAY_ROTATION_0)
 	address += x;
@@ -201,7 +208,7 @@ void mw_hal_lcd_filled_rectangle(int16_t start_x,
 	{
 		for (y = start_y; y <= end_y; y++)
 		{
-			address = (uint16_t*)0x00800000;
+			address = (uint16_t*)0x00800000U;
 #if defined(MW_DISPLAY_ROTATION_0)
 			address += x;
 			address += y * 480;

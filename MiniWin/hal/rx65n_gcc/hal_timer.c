@@ -67,40 +67,40 @@ volatile uint32_t mw_tick_counter;
 void mw_hal_timer_init(void)
 {
 	/* set the protect register to write enable and key */
-	SYSTEM.PRCR.WORD = (uint16_t)((SYSTEM.PRCR.WORD | 0xA500) | 2);
+	SYSTEM.PRCR.WORD = 0xa502U;
 
 	/* Bring module out of stop state */
-	MSTP(CMT0) = 0;
+	MSTP(CMT0) = 0U;
 
 	/* stop counter */
-	CMT.CMSTR0.BIT.STR0 = 0;
+	CMT.CMSTR0.BIT.STR0 = 0U;
 
 	/* set the match value */
-	CMT0.CMCOR = 2929;
+	CMT0.CMCOR = 2929U;
 
 	/* set the clock divider to 512 */
-	CMT0.CMCR.BIT.CKS = 3;
+	CMT0.CMCR.BIT.CKS = 3U;
 
 	/* enable interrupt on match */
-	CMT0.CMCR.BIT.CMIE = 1;
+	CMT0.CMCR.BIT.CMIE = 1U;
 
 	/* clear counter. */
-	CMT0.CMCNT = 0;
+	CMT0.CMCNT = 0U;
 
 	/* clear any previously pending interrupts */
-	IR(CMT0, CMI0) = 0;
+	IR(CMT0, CMI0) = 0U;
 
 	/* set interrupt priority */
-	IPR(CMT0, CMI0) = 5;
+	IPR(CMT0, CMI0) = 5U;
 
 	/* enable compare match interrupt */
-	IEN(CMT0, CMI0) = 1;
+	IEN(CMT0, CMI0) = 1U;
 
 	/* start counter. */
-	CMT.CMSTR0.BIT.STR0 = 1;
+	CMT.CMSTR0.BIT.STR0 = 1U;
 
 	/* set the protect register to write disable and key */
-    SYSTEM.PRCR.WORD=(uint16_t)((SYSTEM.PRCR.WORD | 0xA500) & (~2));
+    SYSTEM.PRCR.WORD = 0xa500;
 }
 
 void mw_hal_timer_fired(void)
