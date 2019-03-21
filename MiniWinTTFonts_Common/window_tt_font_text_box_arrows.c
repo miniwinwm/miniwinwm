@@ -181,7 +181,7 @@ void window_tt_font_tbox_arrows_message_function(const mw_message_t *message)
 			mw_post_message(MW_TEXT_BOX_SET_TEXT_MESSAGE,
 					message->recipient_handle,
 					text_box_arrows_handle,
-					NULL,
+					MW_UNUSED_MESSAGE_PARAMETER,
 					(void *)"Hello world!",
 					MW_CONTROL_MESSAGE);
 			mw_paint_control(text_box_arrows_handle);
