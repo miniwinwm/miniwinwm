@@ -52,12 +52,12 @@ SOFTWARE.
  */
 typedef struct
 {
-	uint8_t	tm_sec;
-	uint8_t	tm_min;
-	uint8_t	tm_hour;
-	uint8_t	tm_mday;
-	uint8_t	tm_mon;
-	uint16_t tm_year;
+	uint8_t	tm_sec;		/* seconds 0-59 */
+	uint8_t	tm_min;		/* minutes 0-59 */
+	uint8_t	tm_hour;	/* hours 0-23 */
+	uint8_t	tm_mday;	/* day of month 1-31 */
+	uint8_t	tm_mon;		/* month of year 1-12 */
+	uint16_t tm_year;	/* year 4 digit format */
 } mw_time_t;
 
 /**
