@@ -368,7 +368,7 @@ void app_set_time_date(mw_time_t new_time)
 	(void)HAL_RTC_SetTime(&rtc_handle, &hal_time_structure, FORMAT_BIN);
 }
 
-DWORD get_fattime (void)
+DWORD get_fattime(void)
 {
 	uint32_t fattime = 0U;
 	mw_time_t time_now;

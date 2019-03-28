@@ -36,6 +36,7 @@ SOFTWARE.
 ***************/
 
 #include "ui/ui_common.h"
+#include "ff.h"
 
 /****************
 *** CONSTANTS ***
@@ -165,6 +166,13 @@ mw_time_t app_get_time_date(void);
  * @param new_time The date and time, year in xxxx format, date 1-31, month 1-12
  */
 void app_set_time_date(mw_time_t new_time);
+
+/**
+ * Get current time in FAT format
+ *
+ * @return The time in FAT format
+ */
+DWORD get_fattime(void);
 
 #ifdef __cplusplus
 }

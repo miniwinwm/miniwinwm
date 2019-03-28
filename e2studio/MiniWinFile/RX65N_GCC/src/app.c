@@ -28,9 +28,12 @@ SOFTWARE.
 *** INCLUDES ***
 ***************/
 
+#include <string.h>
 #include <iodefine.h>
+#include "spi_driver.h"
 #include "hal/hal_delay.h"
 #include "miniwin.h"
+#include "ff.h"
 #include "app.h"
 
 /****************
@@ -49,14 +52,16 @@ SOFTWARE.
 *** LOCAL VARIABLES ***
 **********************/
 
-static int bcd_to_dec(uint8_t value);
-static uint8_t dec_to_bcd(uint8_t value);
+static FATFS fatfs;
+static FIL file_handle;
 
 /********************************
 *** LOCAL FUNCTION PROTOTYPES ***
 ********************************/
 
 static void system_clock_config(void);
+static int bcd_to_dec(uint8_t value);
+static uint8_t dec_to_bcd(uint8_t value);
 
 /**********************
 *** LOCAL FUNCTIONS ***
@@ -164,6 +169,12 @@ void app_init(void)
 {
 	system_clock_config();
 
+	/* initialize sci2 interface for spi */
+	sci2_spi_init();
+
+	/* mount the file system */
+	f_mount(&fatfs, "", 0U);
+
 	/* set up push button gpio input */
 	PORT0.PMR.BIT.B5 = 0U;	/* mode to gpio */
 	PORT0.PDR.BIT.B5 = 0U;	/* input */
@@ -223,56 +234,140 @@ uint8_t find_folder_entries(char *path,
 		const uint8_t *file_entry_icon,
 		const uint8_t *folder_entry_icon)
 {
-	return 0;
+    FRESULT result;
+    DIR folder;
+    FILINFO file_info;
+    UINT i = 0U;
+
+    /* strip off terminating '/' for FatFS folders */
+    path[strlen(path) - 1U] = '\0';
+
+    /* open the folder */
+    result = f_opendir(&folder, path);
+    if (result == FR_OK)
+    {
+        for (;;)
+        {
+        	/* read a folder item */
+            result = f_readdir(&folder, &file_info);
+            if (result != FR_OK || file_info.fname[0] == '\0')
+            {
+            	/* break on error or end of folder */
+            	break;
+            }
+
+        	/* ignore if it's a hidden or system entry*/
+        	if ((file_info.fattrib & (BYTE)AM_HID) == AM_HID || (file_info.fattrib & (BYTE)AM_SYS) == AM_SYS)
+        	{
+        		continue;
+        	}
+
+        	/* ignore if not a folder and we want directories only */
+        	if (folders_only && (file_info.fattrib & (BYTE)AM_DIR) == (BYTE)0)
+        	{
+        		continue;
+        	}
+
+            (void)mw_util_safe_strcpy(list_box_settings_entries[i].label, MAX_FILENAME_LENGTH + 1U, file_info.fname);
+            if ((file_info.fattrib & (BYTE)AM_DIR) == (BYTE)AM_DIR)
+            {
+            	/* it is a folder */
+            	list_box_settings_entries[i].icon = folder_entry_icon;
+            }
+            else
+            {
+            	/* it is a file. */
+                list_box_settings_entries[i].icon = file_entry_icon;
+            }
+            i++;
+            if (i == max_entries)
+            {
+            	break;
+            }
+        }
+        (void)f_closedir(&folder);
+    }
+
+    /* replace terminating '/' */
+    path[strlen(path)] = '/';
+
+    return (i);
 }
 
 char *app_get_root_folder_path(void)
 {
-	return "";
+	static char root_folder_path[] = "0:/";
+
+	return (root_folder_path);
 }
 
 bool app_file_open(char *path_and_filename)
 {
-	return false;
+	bool result = false;
+	FILINFO file_info;
+
+	if (f_open(&file_handle, path_and_filename, FA_READ) == FR_OK)
+	{
+		result = true;
+	}
+
+	return (result);
 }
 
 bool app_file_create(char *path_and_filename)
 {
-	return false;
+	bool result = false;
+
+	if (f_open(&file_handle, path_and_filename, FA_WRITE | FA_CREATE_ALWAYS) == FR_OK)
+	{
+		result = true;
+	}
+
+	return (result);
 }
 
 uint32_t app_file_size(void)
 {
-	return 0U;
+	return ((uint32_t)f_size(&file_handle));
 }
 
 uint8_t app_file_getc(void)
 {
-	return 0U;
+	uint8_t byte;
+	UINT bytes_read;
+
+	(void)f_read(&file_handle, &byte, 1, &bytes_read);
+
+	return (byte);
 }
 
 uint32_t app_file_seek(uint32_t position)
 {
-	return 0U;
+	return ((uint32_t)(f_lseek(&file_handle, position)));
 }
 
 void app_file_read(uint8_t *buffer, uint32_t count)
 {
+	UINT bytes_read;
+
+	(void)f_read(&file_handle, buffer, count, &bytes_read);
 }
 
 void app_file_write(uint8_t *buffer, uint32_t count)
 {
+	UINT bytes_written;
+
+	(void)f_write (&file_handle, buffer, count, &bytes_written);
 }
 
 void app_file_close(void)
 {
+	(void)f_close(&file_handle);
 }
 
 mw_time_t app_get_time_date(void)
 {
 	static mw_time_t current_time = {0};
-
-
 	uint16_t bcd_years;
 
 	/* disable carry interrupt in icu */
@@ -362,4 +457,21 @@ void app_set_time_date(mw_time_t new_time)
 	{
 		__asm("NOP");
 	}
+}
+
+DWORD get_fattime (void)
+{
+	uint32_t fattime = 0U;
+	mw_time_t time_now;
+
+	time_now = app_get_time_date();
+
+	fattime = (time_now.tm_year - 1980U) << 25;
+	fattime |= time_now.tm_mon << 21;
+	fattime |= time_now.tm_mday << 16;
+	fattime |= time_now.tm_hour << 11;
+	fattime |= time_now.tm_min << 5;
+	fattime |= time_now.tm_sec / 2;
+
+	return ((DWORD)fattime);
 }

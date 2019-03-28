@@ -1,4 +1,5 @@
 #include <stdint.h>
+#include <stdlib.h>
 #include <stdbool.h>
 #include <iodefine.h>
 #include "interrupt_handlers.h"
@@ -9,6 +10,12 @@ volatile bool rx_complete_interrupt_flag = false;
 volatile bool tx_complete_interrupt_flag = false;
 volatile bool start_complete_interrupt_flag = false;
 volatile uint8_t received_byte;
+
+extern volatile const uint8_t *sci2_send_buffer;
+extern volatile uint8_t *sci2_receive_buffer;
+extern volatile uint32_t sci2_buffer_size;
+extern volatile uint32_t sci2_buffer_position;
+extern volatile bool sci2_send_receive_done;
 
 // Exception(Supervisor Instruction)
 void INT_Excep_SuperVisorInst(void){/* brk(){  } */}
@@ -119,7 +126,43 @@ void INT_Excep_SCI1_RXI1(void){ }
 void INT_Excep_SCI1_TXI1(void){ }
 
 // SCI2 RXI2
-void INT_Excep_SCI2_RXI2(void){ }
+void INT_Excep_SCI2_RXI2(void)
+{
+	uint8_t received_byte;
+
+	/* retrieve received byte from read buffer */
+	received_byte = SCI2.RDR;
+
+	/* check if receiving */
+	if (sci2_receive_buffer != NULL)
+	{
+		/* receiving so save read byte */
+		sci2_receive_buffer[sci2_buffer_position] = received_byte;
+	}
+
+	sci2_buffer_position++;
+
+	/* check if any more to send/receive */
+	if (sci2_buffer_position < sci2_buffer_size)
+	{
+		/* check if sending */
+		if (sci2_send_buffer != NULL)
+		{
+			/* sending, write next byte to send */
+			SCI2.TDR = sci2_send_buffer[sci2_buffer_position];
+		}
+		else
+		{
+			/* not sending, write dummy data */
+			SCI2.TDR = 0xffU;
+		}
+	}
+	else
+	{
+		/* all data done, signal main thread */
+		sci2_send_receive_done = true;
+	}
+}
 
 // SCI2 TXI2
 void INT_Excep_SCI2_TXI2(void){ }
