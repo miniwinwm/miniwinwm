@@ -64,7 +64,7 @@ void mw_hal_delay_init(void)
 {
 }
 
-void mw_hal_delay_ms(uint16_t ms)
+void __attribute__((optimize("O3"))) mw_hal_delay_ms(uint16_t ms)
 {
 	volatile uint16_t i;
 
@@ -74,7 +74,7 @@ void mw_hal_delay_ms(uint16_t ms)
 	}
 }
 
-void mw_hal_delay_us(uint32_t us)
+void __attribute__((optimize("O3"))) mw_hal_delay_us(uint32_t us)
 {
 	uint32_t i;
 	uint32_t d = us * 60U;
