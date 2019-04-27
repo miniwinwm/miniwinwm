@@ -47,7 +47,7 @@ SOFTWARE.
  * User configurable value
  */
 #define MW_GL_MAX_POLY_CORNERS 				5U                   	/**< Maximum number of corner coordinate points to a polygon */
-#define MW_GL_SEGMENT_FILL_ANGLE_STEP_SIZE	5                   	/**< Step angle when filling a circular segment with triangles */
+#define MW_GL_SEGMENT_FILL_ANGLE_STEP_SIZE	3                   	/**< Step angle when filling a circular segment with triangles */
 #define MW_GL_MAX_X							(MW_ROOT_WIDTH - 1)     /**< Maximum x pixel coordinate */
 #define MW_GL_MAX_Y							(MW_ROOT_HEIGHT - 1)    /**< Maximum y pixel coordinate */
 
@@ -263,7 +263,8 @@ void mw_gl_set_fill(mw_gl_fill_t fill);
  */
 void mw_gl_set_bg_transparency(mw_gl_bg_transparent_t bg_transparent);
 
-/* Set the font to use by the standard text drawing routines
+/**
+ * Set the font to use by the standard text drawing routines
  *
  * @param font The font to use
  */
@@ -463,7 +464,7 @@ void mw_gl_arc(const mw_gl_draw_info_t *draw_info, int16_t centre_x, int16_t cen
 void mw_gl_rounded_rectangle(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y, int16_t width, int16_t height, int16_t corner_radius);
 
 /**
- * Draw a filled or unfilled circular segment.  Fill, border, line style and colours controlled by gc.
+ * Draw a filled or unfilled circular segment. Fill, border, line style and colours controlled by gc.
  *
  * @param draw_info Reference frame origin coordinates and clip region rect
  * @param centre_x X coordinate of the centre point of the circle describing the arc

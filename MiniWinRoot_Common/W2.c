@@ -71,7 +71,7 @@ void window_W2_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_t
 {
     MW_ASSERT(draw_info != (void*)0, "Null pointer parameter");
 
-    /* Fill window's client area with solid white */
+    /* fill window's client area with solid white */
     mw_gl_set_fill(MW_GL_FILL);
     mw_gl_set_solid_fill_colour(MW_HAL_LCD_WHITE);
     mw_gl_set_border(MW_GL_BORDER_OFF);

@@ -102,8 +102,8 @@ void mw_user_init(void)
 			NULL);
 
 	(void)mw_util_safe_strcpy(label_data.label, MW_UI_LABEL_MAX_CHARS, "Not yet set");
-	label_handle = mw_ui_label_add_new(100,
-			5,
+	label_handle = mw_ui_label_add_new(80,
+			10,
 			84,
 			window_simple_handle,
 			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,

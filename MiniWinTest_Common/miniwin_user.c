@@ -37,6 +37,7 @@ SOFTWARE.
 #include "window_test.h"
 #include "window_yield.h"
 #include "window_paint_rect.h"
+#include "window_tabs.h"
 
 /****************
 *** CONSTANTS ***
@@ -86,6 +87,9 @@ static const mw_ui_list_box_entry list_box_3_entries[] = {
 		{list_box_label_icon, NULL},
 		{list_box_label_root, NULL}};
 
+static char *tabs_labels_auto[] = {"Freddy", "Bert", "Pete"};
+static char *tabs_labels_fixed[] = {"Cat", "Dog", "Mouse"};
+
 /************
 *** TYPES ***
 ************/
@@ -101,6 +105,7 @@ mw_handle_t window_drag_handle;
 mw_handle_t window_scroll_handle;
 mw_handle_t window_yield_handle;
 mw_handle_t window_paint_rect_handle;
+mw_handle_t window_tabs_handle;
 
 /* controls */
 mw_handle_t check_box_1_handle;
@@ -125,6 +130,13 @@ mw_handle_t scroll_bar_horiz_1_large_handle;
 mw_handle_t label_1_large_handle;
 mw_handle_t list_box_3_large_handle;
 mw_handle_t scroll_bar_vert_3_handle;
+mw_handle_t tabs_auto_handle;
+mw_handle_t tabs_fixed_handle;
+mw_handle_t label_2_handle;
+mw_handle_t label_3_handle;
+mw_handle_t label_4_handle;
+mw_handle_t label_5_handle;
+mw_handle_t label_6_handle;
 
 /**********************
 *** LOCAL VARIABLES ***
@@ -153,6 +165,13 @@ static mw_ui_scroll_bar_vert_data_t scroll_bar_vert_1_large_data;
 static mw_ui_scroll_bar_vert_data_t scroll_bar_vert_2_large_data;
 static mw_ui_scroll_bar_horiz_data_t scroll_bar_horiz_1_large_data;
 static mw_ui_scroll_bar_vert_data_t scroll_bar_vert_3_data;
+static mw_ui_tabs_data_t tabs_auto_data;
+static mw_ui_tabs_data_t tabs_fixed_data;
+static mw_ui_label_data_t label_2_data;
+static mw_ui_label_data_t label_3_data;
+static mw_ui_label_data_t label_4_data;
+static mw_ui_label_data_t label_5_data;
+static mw_ui_label_data_t label_6_data;
 
 /********************************
 *** LOCAL FUNCTION PROTOTYPES ***
@@ -487,6 +506,78 @@ void mw_user_init(void)
 			window_paint_rect_handle,
 			MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_IS_VISIBLE,
 			&list_box_2_data);
+
+	mw_util_set_rect(&r, 30, 160, 180, 120);
+	window_tabs_handle = mw_add_window(&r,
+			"Tabs 7",
+			window_tabs_paint_function,
+			window_tabs_message_function,
+			NULL,
+			0U,
+			MW_WINDOW_FLAG_HAS_BORDER | MW_WINDOW_FLAG_HAS_TITLE_BAR |
+				MW_WINDOW_FLAG_CAN_BE_CLOSED | MW_WINDOW_FLAG_IS_VISIBLE,
+			NULL);
+
+	/* create an automatic tabs control */
+    tabs_auto_data.number_of_tabs = 3;
+    tabs_auto_data.tabs_labels = tabs_labels_auto;
+    tabs_auto_data.foreground_colour = MW_CONTROL_UP_COLOUR;
+    tabs_auto_data.background_colour = MW_HAL_LCD_WHITE;
+    tabs_auto_data.automatic = true;
+    tabs_auto_handle = mw_ui_tabs_add_new(0, 0, 0, window_tabs_handle,
+    		MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_LARGE_SIZE,
+    		&tabs_auto_data);
+
+    /* create a fixed tabs control */
+    tabs_fixed_data.number_of_tabs = 3;
+    tabs_fixed_data.tabs_labels = tabs_labels_fixed;
+    tabs_fixed_data.foreground_colour = MW_CONTROL_UP_COLOUR;
+    tabs_fixed_data.background_colour = MW_CONTROL_UP_COLOUR;
+    tabs_fixed_data.automatic = false;
+    tabs_fixed_handle = mw_ui_tabs_add_new(20, 30, 120, window_tabs_handle,
+    		MW_CONTROL_FLAG_IS_ENABLED,
+    		&tabs_fixed_data);
+
+	/* create a label controls and add them to the tabs test window */
+	(void)mw_util_safe_strcpy(label_2_data.label, MW_UI_LABEL_MAX_CHARS, "Cat");
+	label_2_handle = mw_ui_label_add_new(5,
+			40,
+			20,
+			window_tabs_handle,
+			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
+			&label_2_data);
+
+	(void)mw_util_safe_strcpy(label_3_data.label, MW_UI_LABEL_MAX_CHARS, "Dog");
+	label_3_handle = mw_ui_label_add_new(25,
+			50,
+			20,
+			window_tabs_handle,
+			MW_CONTROL_FLAG_IS_ENABLED,
+			&label_3_data);
+
+	(void)mw_util_safe_strcpy(label_4_data.label, MW_UI_LABEL_MAX_CHARS, "Elk");
+	label_4_handle = mw_ui_label_add_new(50,
+			50,
+			20,
+			window_tabs_handle,
+			MW_CONTROL_FLAG_IS_ENABLED,
+			&label_4_data);
+
+	(void)mw_util_safe_strcpy(label_5_data.label, MW_UI_LABEL_MAX_CHARS, "Ant");
+	label_5_handle = mw_ui_label_add_new(60,
+			60,
+			20,
+			window_tabs_handle,
+			MW_CONTROL_FLAG_IS_ENABLED,
+			&label_5_data);
+
+	(void)mw_util_safe_strcpy(label_6_data.label, MW_UI_LABEL_MAX_CHARS, "Bee");
+	label_6_handle = mw_ui_label_add_new(70,
+			70,
+			20,
+			window_tabs_handle,
+			MW_CONTROL_FLAG_IS_ENABLED,
+			&label_6_data);
 
 	mw_paint_all();
 }

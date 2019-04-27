@@ -173,7 +173,7 @@ void mw_user_init(void)
 
     (void)mw_util_safe_strcpy(button_B1_data.button_label, MW_UI_BUTTON_LABEL_MAX_CHARS, "Button1");
     button_B1_handle = mw_ui_button_add_new(10,
-        10,
+        30,
         window_W1_handle,
         0U | MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
         &button_B1_data);

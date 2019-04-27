@@ -110,7 +110,7 @@ void mw_hal_timer_init(void)
 
 void CTIMER3_IRQHandler(void)
 {
-    /* Clear any status flags that were set */
+    /* clear any status flags that were set */
 	uint32_t int_stat = CTIMER_GetStatusFlags(CTIMER3);
     CTIMER_ClearStatusFlags(CTIMER3, int_stat);
 

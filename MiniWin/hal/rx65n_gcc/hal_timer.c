@@ -69,7 +69,7 @@ void mw_hal_timer_init(void)
 	/* set the protect register to write enable and key */
 	SYSTEM.PRCR.WORD = 0xa502U;
 
-	/* Bring module out of stop state */
+	/* bring module out of stop state */
 	MSTP(CMT0) = 0U;
 
 	/* stop counter */
@@ -100,7 +100,7 @@ void mw_hal_timer_init(void)
 	CMT.CMSTR0.BIT.STR0 = 1U;
 
 	/* set the protect register to write disable and key */
-    SYSTEM.PRCR.WORD = 0xa500;
+    SYSTEM.PRCR.WORD = 0xa500U;
 }
 
 void mw_hal_timer_fired(void)

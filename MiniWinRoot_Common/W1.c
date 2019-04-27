@@ -49,6 +49,8 @@ typedef struct
 *** GLOBAL VARIABLES ***
 ***********************/
 
+extern mw_handle_t button_B1_handle;
+
 /**********************
 *** LOCAL VARIABLES ***
 **********************/
@@ -71,7 +73,7 @@ void window_W1_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_t
 {
     MW_ASSERT(draw_info != (void*)0, "Null pointer parameter");
 
-    /* Fill window's client area with solid white */
+    /* fill window's client area */
     mw_gl_set_fill(MW_GL_FILL);
     mw_gl_set_solid_fill_colour(MW_HAL_LCD_WHITE);
     mw_gl_set_border(MW_GL_BORDER_OFF);

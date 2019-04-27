@@ -89,7 +89,7 @@ void mw_hal_touch_init(void)
     /* initialize the touch controller */
     (void)FT5406_Init(&touch_handle, I2C2);
 
-    /* Give touch hardware time to settle to prevent false touch at startup */
+    /* give touch hardware time to settle to prevent false touch at startup */
     mw_hal_delay_ms(50U);
 }
 

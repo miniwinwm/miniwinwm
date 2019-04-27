@@ -271,6 +271,22 @@ typedef enum
 	MW_CONTROL_LOST_FOCUS_MESSAGE,
 
 	/**
+	 * Message to a control when it has been resized
+	 *
+	 * message_data: Upper 16 bits = control new width, lower 16 bits = control new height
+	 * message_pointer: Unused
+	 */
+	MW_CONTROL_RESIZED_MESSAGE,
+
+	/**
+	 * Message to a control when its parent window has been resized
+	 *
+	 * message_data: Upper 16 bits = parent window new width, lower 16 bits = parent window new height
+	 * message_pointer: Unused
+	 */
+	MW_CONTROL_PARENT_WINDOW_RESIZED_MESSAGE,
+
+	/**
 	 * Message sent to a window or control when it receives a touch down event
 	 *
 	 * message_data: Upper 16 bits = x coordinate, lower 16 bits = y coordinate
@@ -406,6 +422,14 @@ typedef enum
 	 * message_pointer: Unused
 	 */
 	MW_TEXT_BOX_SCROLLING_REQUIRED_MESSAGE,
+
+	/**
+	 * A tab has been selected
+	 *
+	 * message_data: The number of the tab that has been selected, 0 based, 0 at left
+	 * message_pointer: Unused
+	 */
+	MW_TAB_SELECTED_MESSAGE,
 
 	/*********************************************
 	*											 *
@@ -1166,6 +1190,17 @@ void mw_paint_control(mw_handle_t control_handle);
 void mw_paint_control_rect(mw_handle_t control_handle, const mw_util_rect_t *rect);
 
 /**
+ * Resize a control.
+ *
+ * @param window_handle Position in array of all controls of this control
+ * @param new_width The new width of the control
+ * @param new_height The new height of the control
+ * @return If the resize was successful
+ * @note It is up to the user to issue any required paint message
+ */
+bool mw_resize_control(mw_handle_t control_handle, int16_t new_width, int16_t new_height);
+
+/**
  * Remove a control.
  *
  * @param control_handle Handle of this control.
@@ -1192,7 +1227,7 @@ mw_handle_t mw_get_control_parent_window_handle(mw_handle_t control_handle);
  * Get a control's instance_data data pointer
  *
  * @param control_handle Handle of the control to get instance data for.
- * @return The returned instance_data data pointer
+ * @return The returned instance_data data pointer or NULL if handle does not refer to a used control
  */
 void *mw_get_control_instance_data(mw_handle_t control_handle);
 

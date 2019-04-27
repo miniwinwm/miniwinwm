@@ -70,12 +70,12 @@ void mw_hal_lcd_init(void)
 {
     BSP_LCD_Init();
 
-    /* Layer2 Init */
+    /* layer2 Init */
     BSP_LCD_LayerDefaultInit(1U, LCD_FRAME_BUFFER_LAYER1);
     BSP_LCD_SelectLayer(1U);
     BSP_LCD_SetLayerVisible(1U, DISABLE);
 
-    /* Layer1 Init */
+    /* layer1 Init */
     BSP_LCD_LayerDefaultInit(0U, LCD_FRAME_BUFFER_LAYER0);
     BSP_LCD_SelectLayer(0U);
     BSP_LCD_Clear(LCD_COLOR_WHITE);

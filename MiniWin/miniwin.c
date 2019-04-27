@@ -2950,7 +2950,8 @@ static uint8_t get_control_id_for_handle(mw_handle_t control_handle)
 
 	for (i = 0U; i < MW_MAX_CONTROL_COUNT; i++)
 	{
-		if (mw_all_controls[i].control_handle == control_handle)
+		if ((mw_all_controls[i].control_flags & MW_CONTROL_FLAG_IS_USED) == MW_CONTROL_FLAG_IS_USED &&
+				mw_all_controls[i].control_handle == control_handle)
 		{
 			return (i);
 		}
@@ -3258,7 +3259,7 @@ static void process_touch_message(mw_message_id_t touch_message_id, int16_t touc
 				mw_post_message(touch_message_id,
 						MW_UNUSED_MESSAGE_PARAMETER,
 						mw_all_controls[control_to_receive_message_id].control_handle,
-						(uint32_t)client_x << 16U | (uint32_t)client_y,
+						(uint32_t)client_x << 16 | (uint32_t)client_y,
 						NULL,
 						MW_CONTROL_MESSAGE);
 
@@ -3281,7 +3282,7 @@ static void process_touch_message(mw_message_id_t touch_message_id, int16_t touc
 		mw_post_message(touch_message_id,
 				MW_UNUSED_MESSAGE_PARAMETER,
 				mw_all_windows[window_to_receive_message_id].window_handle,
-				(((uint32_t)client_x) << 16U) | (uint32_t)client_y,
+				(((uint32_t)client_x) << 16) | (uint32_t)client_y,
 				NULL,
 				MW_WINDOW_MESSAGE);
 
@@ -3315,7 +3316,7 @@ static void process_touch_message(mw_message_id_t touch_message_id, int16_t touc
 			mw_post_message(touch_message_id,
 					MW_UNUSED_MESSAGE_PARAMETER,
 					touch_message_target.touch_down_recipient_handle,
-					(((uint32_t)client_x) << 16U) | (uint32_t)client_y,
+					(((uint32_t)client_x) << 16) | (uint32_t)client_y,
 					NULL,
 					MW_WINDOW_MESSAGE);
 		}
@@ -3339,7 +3340,7 @@ static void process_touch_message(mw_message_id_t touch_message_id, int16_t touc
 			mw_post_message(touch_message_id,
 					MW_UNUSED_MESSAGE_PARAMETER,
 					touch_message_target.touch_down_recipient_handle,
-					(((uint32_t)client_x) << 16U) | (uint32_t)client_y,
+					(((uint32_t)client_x) << 16) | (uint32_t)client_y,
 					NULL,
 					MW_CONTROL_MESSAGE);
 		}
@@ -3500,7 +3501,7 @@ static bool check_and_process_touch_on_root_window(uint8_t window_id, int16_t to
 			mw_post_message(touch_message,
 					MW_UNUSED_MESSAGE_PARAMETER,
 					mw_all_windows[MW_ROOT_WINDOW_ID].window_handle,
-					(((uint32_t)touch_x) << 16U) | (uint32_t)touch_y,
+					(((uint32_t)touch_x) << 16) | (uint32_t)touch_y,
 					NULL,
 					MW_WINDOW_MESSAGE);
 		}
@@ -4520,6 +4521,7 @@ bool mw_resize_window(mw_handle_t window_handle, int16_t new_width, int16_t new_
 {
 	mw_util_rect_t r;
 	uint8_t window_id;
+	uint8_t control_id;
 
 	/* get window id from window handle and check it's in range */
 	window_id = get_window_id_for_handle(window_handle);
@@ -4550,9 +4552,24 @@ bool mw_resize_window(mw_handle_t window_handle, int16_t new_width, int16_t new_
 	mw_post_message(MW_WINDOW_RESIZED_MESSAGE,
 			MW_UNUSED_MESSAGE_PARAMETER,
 			window_handle,
-			((uint32_t)new_width) << 16U | (uint32_t)new_height,
+			((uint32_t)new_width) << 16 | (uint32_t)new_height,
 			NULL,
 			MW_WINDOW_MESSAGE);
+
+	/* send a resize message to all controls in the window in case they need to do anything */
+	for (control_id = 0U; control_id < MW_MAX_CONTROL_COUNT; control_id++)
+	{
+		if ((mw_all_controls[control_id].control_flags & MW_CONTROL_FLAG_IS_USED) == MW_CONTROL_FLAG_IS_USED &&
+				mw_all_controls[control_id].parent_handle == window_handle)
+		{
+			mw_post_message(MW_CONTROL_PARENT_WINDOW_RESIZED_MESSAGE,
+					MW_UNUSED_MESSAGE_PARAMETER,
+					mw_all_controls[control_id].control_handle,
+					((uint32_t)new_width) << 16 | (uint32_t)new_height,
+					NULL,
+					MW_CONTROL_MESSAGE);
+		}
+	}
 
 	return (true);
 }
@@ -5180,6 +5197,39 @@ void mw_paint_control_rect(mw_handle_t control_handle, const mw_util_rect_t *rec
 			MW_UNUSED_MESSAGE_PARAMETER,
 			(void *)rect,
 			MW_SYSTEM_MESSAGE);
+}
+
+bool mw_resize_control(mw_handle_t control_handle, int16_t new_width, int16_t new_height)
+{
+	uint8_t control_id;
+
+	/* get control id from window handle and check it's in range */
+	control_id = get_control_id_for_handle(control_handle);
+	if (control_id >= MW_MAX_CONTROL_COUNT)
+	{
+		MW_ASSERT((bool)false, "Bad control handle");
+		return (false);
+	}
+
+	/* check the proposed new window dimensions to see if they are sensible */
+	if (new_width < 1 || new_height < 1)
+	{
+		return (false);
+	}
+
+	/* update control size details */
+	mw_all_controls[control_id].control_rect.width = new_width;
+	mw_all_controls[control_id].control_rect.height = new_height;
+
+	/* send a resize message to the control in case it needs to do anything */
+	mw_post_message(MW_CONTROL_RESIZED_MESSAGE,
+			MW_UNUSED_MESSAGE_PARAMETER,
+			control_handle,
+			((uint32_t)new_width) << 16 | (uint32_t)new_height,
+			NULL,
+			MW_CONTROL_MESSAGE);
+
+	return (true);
 }
 
 void mw_remove_control(mw_handle_t control_handle)
