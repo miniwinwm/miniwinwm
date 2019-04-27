@@ -176,6 +176,11 @@ void window_tabs_message_function(const mw_message_t *message)
 				mw_set_control_visible(label_6_handle, true);
 			}
     	}
+    	else
+    	{
+    		/* keep MISRA happy */
+    	}
+
     	mw_paint_window_client(message->recipient_handle);
     	break;
 
