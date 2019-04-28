@@ -281,7 +281,7 @@ typedef enum
 	/**
 	 * Message to a control when its parent window has been resized
 	 *
-	 * message_data: Upper 16 bits = parent window new width, lower 16 bits = parent window new height
+	 * message_data: Upper 16 bits = parent window's new width, lower 16 bits = parent window's new height
 	 * message_pointer: Unused
 	 */
 	MW_CONTROL_PARENT_WINDOW_RESIZED_MESSAGE,
@@ -638,7 +638,7 @@ typedef enum
 	/**
 	 * Colour chooser dialog has been dismissed by ok button
 	 *
-	 * message_data: Mask with 0x00ffffff for colour in 24 bit form
+	 * message_data: Chosen colour in 24 bit RGB format
 	 * message_pointer: Unused
 	 */
 	MW_DIALOG_COLOUR_CHOOSER_OK_MESSAGE,

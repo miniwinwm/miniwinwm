@@ -153,6 +153,11 @@ int main(int argc, char **argv)
 		for (auto& scrolling_text_box : window["ScrollingTextBoxes"].array_items())
 		{
 			control_count += 2;	
+		}
+        // count tabs handles
+		for (auto& tabs : window["Tabs"].array_items())
+		{
+			control_count++;
 		}															
 	}		
 	if (!json["MaxControlCount"].is_number())
@@ -464,7 +469,17 @@ int main(int argc, char **argv)
 		    	outfileUserHeader << 
 					"extern mw_handle_t scrolling_text_box_scroll_bar_vert_" + scrolling_text_box["Name"].string_value() + "_handle;\n";				
 			}
-		}	
+		}
+        
+        // create tabs extern references
+		if (window["Tabs"].array_items().size() > 0)
+		{
+    		for (auto& tabs : window["Tabs"].array_items())
+			{
+		    	outfileUserHeader << 
+					"extern mw_handle_t tabs_" + tabs["Name"].string_value() + "_handle;\n";
+			}
+		}		
         
         outfileUserHeader << "\n";					
 	}
@@ -641,7 +656,39 @@ int main(int argc, char **argv)
             }
 			outfileUserSource << "};\n";
    		}
+    }    
+         
+	// tabs arrays
+	for (auto& window : json["Windows"].array_items())
+    {
+		for (auto& tabs : window["Tabs"].array_items())
+		{
+			if (tabs["Labels"].array_items().size() == 0)
+			{
+				continue;
+			}
+
+            uint32_t i=0;
+            for (auto &label : tabs["Labels"].array_items())
+			{
+                outfileUserSource << "static char " << "tabs_" << tabs["Name"].string_value() + "_label_" << 
+                    i << "[] = \"" << label.string_value() << "\";\n";
+                i++;
+            }
+			all_identifier_names.push_back("tabs_" + tabs["Name"].string_value() + "_labels");
+			outfileUserSource << "static char *tabs_" << tabs["Name"].string_value() << "_labels[] = {";
+    	    for (i = 0; i < tabs["Labels"].array_items().size(); i++) 
+    	    {
+            	outfileUserSource << "tabs_" << tabs["Name"].string_value() + "_label_" << i;
+				if (i < tabs["Labels"].array_items().size() - 1)
+				{
+					outfileUserSource << ", ";
+				}
+    	    }
+			outfileUserSource << "};\n";
+		}
     }
+       
    	outfileUserSource << endl;	   	
     
     // truetype fonts
@@ -795,7 +842,13 @@ int main(int argc, char **argv)
 			all_identifier_names.push_back("scrolling_text_box_scroll_bar_vert_" + scrolling_text_box["Name"].string_value() + "_handle");
 			outfileUserSource << "mw_handle_t scrolling_text_box_scroll_bar_vert_" << scrolling_text_box["Name"].string_value() << "_handle;\n";			
 		}													
-	}
+		// create tabs handles
+		for (auto& tabs : window["Tabs"].array_items())
+		{
+			all_identifier_names.push_back("tabs_" + tabs["Name"].string_value() + "_handle");
+			outfileUserSource << "mw_handle_t tabs_" << tabs["Name"].string_value() << "_handle;\n";
+		}	
+    }
 	outfileUserSource << "\n";
     
     // create controls data
@@ -878,6 +931,12 @@ int main(int argc, char **argv)
 			
 			all_identifier_names.push_back("scrolling_text_box_scroll_bar_vert_" + scrolling_text_box["Name"].string_value() + "_data");
 			outfileUserSource << "static mw_ui_scroll_bar_vert_data_t scrolling_text_box_scroll_bar_vert_" << scrolling_text_box["Name"].string_value() << "_data;\n";
+		}
+		// create tabs data
+		for (auto& tabs : window["Tabs"].array_items())
+		{
+			all_identifier_names.push_back("tabs_" + tabs["Name"].string_value() + "_data");
+			outfileUserSource << "static mw_ui_tabs_data_t tabs_" << tabs["Name"].string_value() << "_data;\n";
 		}	
 	}
     
@@ -1789,6 +1848,109 @@ int main(int argc, char **argv)
 			outfileUserSource << ",\n" 
 			    "        &scrolling_text_box_scroll_bar_vert_" << scrolling_text_box["Name"].string_value() << "_data);\n\n"; 				                    
 		}	
+        
+		// create tabs
+        bool automatic = false;
+		for (auto& tabs : window["Tabs"].array_items())
+		{
+			// check presence and format of required fields
+			if (tabs["Name"].string_value() == "")
+			{
+				cout << "No or blank Name value for tabs in window " << window["Name"].string_value() << endl;
+				exit(1);			
+			}
+            
+			if (!tabs["Auto"].is_bool())            
+			{
+				cout << "No Auto value for tabs in window " << window["Name"].string_value() << endl;
+				exit(1);			
+			}
+
+            // check for a second automatic tabs in this window
+            if (automatic)
+            {
+                if (tabs["Auto"].bool_value())
+                {
+                	cout << "Second automatic tabs control in window " << window["Name"].string_value() << endl;
+				    exit(1);
+                }
+            }
+            automatic = tabs["Auto"].bool_value();
+            
+            if (!automatic)
+            {            
+    			if (!tabs["X"].is_number())
+    			{
+    				cout << "No X value for tabs " << tabs["Name"].string_value() << " in window " << window["Name"].string_value() << endl;
+    				exit(1);
+    			}
+    			if (!tabs["Y"].is_number())
+    			{
+    				cout << "No Y value for tabs " << tabs["Name"].string_value() << " in window " << window["Name"].string_value() << endl;
+    				exit(1);
+    			}	
+    			if (!tabs["Width"].is_number())
+    			{
+    				cout << "No Width value for tabs " << tabs["Name"].string_value() << " in window " << window["Name"].string_value() << endl;
+    				exit(1);
+    			}
+            }	
+			if (!tabs["Labels"].is_array())
+			{
+				cout << "No Labels values for tabs " << tabs["Name"].string_value() << " in window " << window["Name"].string_value() << endl;
+				exit(1);
+			}							
+            if (tabs["ForegroundColour"].string_value() == "")
+			{
+				cout << "No or blank ForegroundColour value for tabs in window " << window["Name"].string_value() << endl;
+				exit(1);			
+			}
+            if (tabs["BackgroundColour"].string_value() == "")
+			{
+				cout << "No or blank BackgroundColour value for tabs in window " << window["Name"].string_value() << endl;
+				exit(1);			
+			}
+            
+          	outfileUserSource << "    size_t tabs_" << tabs["Name"].string_value() << "_count = "
+                  "sizeof(tabs_" << tabs["Name"].string_value() << "_labels) / sizeof(char *);\n";
+			outfileUserSource << "    tabs_" << tabs["Name"].string_value() << "_data.number_of_tabs = (uint8_t)tabs_" << 
+                tabs["Name"].string_value() << "_count;\n";
+			outfileUserSource << "    tabs_" << tabs["Name"].string_value() << "_data.tabs_labels = tabs_" <<
+				tabs["Name"].string_value() << "_labels;\n";               
+            outfileUserSource << "    tabs_" << tabs["Name"].string_value() << "_data.automatic = ";
+            if (automatic)
+            {
+                outfileUserSource << "true;\n";
+            } 
+            else
+            {
+                outfileUserSource << "false;\n";
+            }
+
+            outfileUserSource << "    tabs_" << tabs["Name"].string_value() << "_data.foreground_colour = " <<
+				tabs["ForegroundColour"].string_value() << ";\n";
+            outfileUserSource << "    tabs_" << tabs["Name"].string_value() << "_data.background_colour = " <<
+				tabs["BackgroundColour"].string_value() << ";\n";
+			outfileUserSource << "    tabs_" << tabs["Name"].string_value() << "_handle = mw_ui_tabs_add_new(" << tabs["X"].int_value() << ",\n" 
+				"        " << tabs["Y"].int_value() << ",\n" 
+				"        " << tabs["Width"].int_value() << ",\n" 
+			    "        window_" << window["Name"].string_value() << "_handle,\n" 
+			    "        0U";
+			if (tabs["Visible"].bool_value())
+			{
+				outfileUserSource << " | MW_CONTROL_FLAG_IS_VISIBLE";
+			}	
+			if (tabs["Enabled"].bool_value())
+			{
+				outfileUserSource << " | MW_CONTROL_FLAG_IS_ENABLED";
+			}			
+			if (large_size)
+			{
+				outfileUserSource << " | MW_CONTROL_FLAG_LARGE_SIZE";
+			}	  
+			outfileUserSource << ",\n" 
+			    "        &tabs_" << tabs["Name"].string_value() << "_data);\n\n"; 	
+		}	        
     }
 
     outfileUserSource << "    mw_paint_all();\n}\n";
@@ -1836,7 +1998,7 @@ int main(int argc, char **argv)
        				"    switch (message->message_id)\n" 
 					"    {\n"
        				"    case MW_WINDOW_CREATED_MESSAGE:\n" 
-       				"        /* Add any window initiaslisation code here */\n" 
+       				"        /* Add any window initialisation code here */\n"
        				"        break;\n\n";
        				
 		if (window["MenuItems"].array_items().size() > 0)
@@ -2117,7 +2279,7 @@ int main(int argc, char **argv)
 			outfileWindowSource << "        break;\n\n";
 		}			
 
-		// create list boxes message handlers
+		// create scrolling list boxes message handlers
 		if (window["ListBoxes"].array_items().size() > 0 || window["ScrollingListBoxes"].array_items().size() > 0)
 		{
 			outfileWindowSource << 
@@ -2167,7 +2329,56 @@ int main(int argc, char **argv)
 			    outfileWindowSource << "        else\n        {\n            /* Keep MISRA happy */\n        }\n";
             }
 			outfileWindowSource << "        break;\n\n";
-		}       				
+		}
+
+
+
+
+
+
+
+		// create tabs message handlers
+		if (window["Tabs"].array_items().size() > 0)
+		{
+			outfileWindowSource <<
+						"    case MW_TAB_SELECTED_MESSAGE:\n";
+			bool first = true;
+            bool elseif = false;
+			for (auto& tabs : window["Tabs"].array_items())
+			{
+				if (first)
+				{
+					outfileWindowSource <<
+						"        if (message->sender_handle == " << "tabs_" + tabs["Name"].string_value() + "_handle" << ")\n";
+					first = false;
+				}
+				else
+				{
+					outfileWindowSource <<
+						"        else if (message->sender_handle == " << "tabs_" + tabs["Name"].string_value() + "_handle" << ")\n";
+				    elseif = true;
+                }
+				outfileWindowSource <<
+						"        {\n"
+						"            /* Add your handler code for this control here */\n"
+						"        }\n";
+			}
+            if (elseif)
+            {
+			    outfileWindowSource << "        else\n        {\n            /* Keep MISRA happy */\n        }\n";
+            }
+			outfileWindowSource << "        break;\n\n";
+		}
+
+
+
+
+
+
+
+
+
+        	
        				
        	outfileWindowSource << 
 					"    default:\n" 
