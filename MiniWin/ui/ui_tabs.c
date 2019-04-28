@@ -182,7 +182,7 @@ static void tabs_paint_function(mw_handle_t control_handle, const mw_gl_draw_inf
 		}
 
 		/* draw bottom line of each tab */
-		if (i != this_tabs->selection)
+		if (i != (int16_t)this_tabs->selection)
 		{
 			mw_gl_hline(draw_info, i * tab_width, (i + 1) * tab_width, tabs_height - 1);
 		}
@@ -223,7 +223,7 @@ static void tabs_message_function(const mw_message_t *message)
 		if (this_tabs->number_of_tabs > 0)
 		{
 			tab_width = mw_get_control_rect(message->recipient_handle).width / this_tabs->number_of_tabs;
-			this_tabs->selection = (message->message_data >> 16) / tab_width;
+			this_tabs->selection = (uint8_t)((message->message_data >> 16) / (uint32_t)tab_width);
 			mw_paint_control(message->recipient_handle);
 
 			mw_post_message(MW_TAB_SELECTED_MESSAGE,
@@ -242,7 +242,7 @@ static void tabs_message_function(const mw_message_t *message)
 	case MW_CONTROL_PARENT_WINDOW_RESIZED_MESSAGE:
 		if (this_tabs->automatic == true)
 		{
-			mw_resize_control(message->recipient_handle,
+			(void)mw_resize_control(message->recipient_handle,
 					mw_get_window_client_rect(mw_get_control_parent_window_handle(message->recipient_handle)).width,
 					mw_get_control_rect(message->recipient_handle).height);
 		}
