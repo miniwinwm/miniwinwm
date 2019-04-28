@@ -2331,12 +2331,6 @@ int main(int argc, char **argv)
 			outfileWindowSource << "        break;\n\n";
 		}
 
-
-
-
-
-
-
 		// create tabs message handlers
 		if (window["Tabs"].array_items().size() > 0)
 		{
@@ -2370,16 +2364,6 @@ int main(int argc, char **argv)
 			outfileWindowSource << "        break;\n\n";
 		}
 
-
-
-
-
-
-
-
-
-        	
-       				
        	outfileWindowSource << 
 					"    default:\n" 
 					"        /* Keep MISRA happy */\n"
