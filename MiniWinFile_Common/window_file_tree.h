@@ -24,8 +24,8 @@ SOFTWARE.
 
 */
 
-#ifndef UI_COMMON_H
-#define UI_COMMON_H
+#ifndef WINDOW_FILE_TREE_H
+#define WINDOW_FILE_TREE_H
 
 #ifdef __cplusplus
  extern "C" {
@@ -35,21 +35,7 @@ SOFTWARE.
 *** INCLUDES ***
 ***************/
 
-#include <stdint.h>
-#include "ui/ui_button.h"
-#include "ui/ui_check_box.h"
-#include "ui/ui_radio_button.h"
-#include "ui/ui_list_box.h"
-#include "ui/ui_label.h"
-#include "ui/ui_scroll_bar_vert.h"
-#include "ui/ui_scroll_bar_horiz.h"
-#include "ui/ui_progress_bar.h"
-#include "ui/ui_keyboard.h"
-#include "ui/ui_arrow.h"
-#include "ui/ui_keypad.h"
-#include "ui/ui_text_box.h"
-#include "ui/ui_tabs.h"
-#include "ui/ui_tree.h"
+#include "miniwin.h"
 
 /****************
 *** CONSTANTS ***
@@ -63,25 +49,31 @@ SOFTWARE.
 *** EXTERNAL VARIABLES ***
 *************************/
 
+extern mw_handle_t arrow_up_handle;
+extern mw_handle_t arrow_down_handle;
+extern mw_handle_t tree_handle;
+
 /***************************
 *** FUNCTIONS PROTOTYPES ***
 ***************************/
 
 /**
- * Scale a scroll bar touch point from the full width as it appears on the screen
- * to a width excluding half a scroll bar slider width at either end.
- * This means that the scroll bar position is taken as the centre of the slider as
- * it slides along the bar and not the edge of the slider. When the slider as at an
- * end of its bar a touch point between the centre of the slider and the nearest bar end
- * is adjusted to be the centre of the slider. This eases he user pushing the slider right
- * all the way to either end of the bar. The result is still given within a range of 0 to the
- * screen length of the scroll bar.
+ * Window paint routine, called by window manager.
  *
- * @param scroll_bar_length Length of the scroll bar as drawn on screen
- * @param touch_point Touch position within the scroll bar as draw on screen
- * @return The scaled scroll bar position, ranging from 0 for left end, scroll_bar_length for right end
+ * @param window_handle The window identifier in the array of windows
+ * @param draw_info Draw info structure describing offset and clip region
+ * @note Do not call this directly from user code
  */
-int16_t mw_ui_common_scale_scroll_bar_touch_point(int16_t scroll_bar_length, int16_t touch_point);
+void window_file_tree_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_t *draw_info);
+
+/**
+ * Window message handler called by the window manager.
+ *
+ * @param message The message to be processed
+ *
+ * @note Do not call this directly from user code
+ */
+void window_file_tree_message_function(const mw_message_t *message);
 
 #ifdef __cplusplus
 }

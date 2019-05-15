@@ -24,8 +24,8 @@ SOFTWARE.
 
 */
 
-#ifndef MINWIN_H
-#define MINWIN_H
+#ifndef MINIWIN_H
+#define MINIWIN_H
 
 #ifdef __cplusplus
  extern "C" {
@@ -42,6 +42,7 @@ SOFTWARE.
 #include "miniwin_settings.h"
 #include "gl/gl.h"
 #include "bitmaps/mw_bitmaps.h"
+#include "miniwin_utilities.h"
 
 /****************
 *** CONSTANTS ***
@@ -382,6 +383,15 @@ typedef enum
 	MW_LIST_BOX_SCROLLING_REQUIRED_MESSAGE,
 
 	/**
+	 * Message posted by a tree to its parent window indicating if scrolling is required,
+	 * i.e. too many visible nodes to display in the box at once
+	 *
+	 * message_data: upper 16 bits: 1 if scrolling required, 0 if scrolling not required; lower 16 bits: the maximum lines that can be scrolled
+	 * message_pointer: Unused
+	 */
+	MW_TREE_SCROLLING_REQUIRED_MESSAGE,
+
+	/**
 	 * Response message from a vertical control scroll bar that it has been scrolled
 	 *
 	 * message_data: Unused
@@ -430,6 +440,22 @@ typedef enum
 	 * message_pointer: Unused
 	 */
 	MW_TAB_SELECTED_MESSAGE,
+
+	/**
+	 * A tree node has been selected
+	 *
+	 * message_data: The handle of the selected node
+	 * message_pointer: Unused
+	 */
+	MW_TREE_NODE_SELECTED_MESSAGE,
+
+	/**
+	 * A tree node has been deselected
+	 *
+	 * message_data: The handle of the deselected node
+	 * message_pointer: Unused
+	 */
+	MW_TREE_NODE_DESELECTED_MESSAGE,
 
 	/*********************************************
 	*											 *
@@ -492,6 +518,14 @@ typedef enum
 	 * message_pointer: Pointer to array of entries
 	 */
 	MW_LIST_BOX_SET_ENTRIES_MESSAGE,
+
+	/**
+	 * Set how many lines to scroll a tree through the tree's visible nodes
+	 *
+	 * message_data: Number of lines to scroll zero based
+	 * message_pointer: Unused
+	 */
+	MW_TREE_LINES_TO_SCROLL_MESSAGE,
 
 	/**
 	 * Set a radio button's chosen button
@@ -873,6 +907,13 @@ void mw_init(void);
  * @return true when miniwin and user initializations complete else false
  */
 bool mw_is_init_complete(void);
+
+/**
+ * Get the next handle to use for a window manager resource
+ *
+ * @return The next handle
+ */
+mw_handle_t get_next_handle(void);
 
 /**
  * Memory for holding window data is allocated statically at compile time.

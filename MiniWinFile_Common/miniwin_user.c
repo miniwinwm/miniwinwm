@@ -32,7 +32,7 @@ SOFTWARE.
 #include "miniwin.h"
 #include "miniwin_user.h"
 #include "window_file.h"
-#include "window_text.h"
+#include "window_file_tree.h"
 
 /****************
 *** CONSTANTS ***
@@ -48,6 +48,7 @@ SOFTWARE.
 
 /* windows */
 mw_handle_t window_file_handle;
+mw_handle_t window_file_tree_handle;
 
 /* controls */
 mw_handle_t button_open_handle;
@@ -55,6 +56,9 @@ mw_handle_t button_set_clock_handle;
 mw_handle_t button_create_handle;
 mw_handle_t label_time_handle;
 mw_handle_t label_date_handle;
+mw_handle_t tree_handle;
+mw_handle_t arrow_up_handle;
+mw_handle_t arrow_down_handle;
 
 /**********************
 *** LOCAL VARIABLES ***
@@ -66,6 +70,9 @@ static mw_ui_button_data_t button_set_clock_data;
 static mw_ui_button_data_t button_create_data;
 static mw_ui_label_data_t label_time_data;
 static mw_ui_label_data_t label_date_data;
+static mw_ui_tree_data_t tree_data;
+static mw_ui_arrow_data_t arrow_up_data;
+static mw_ui_arrow_data_t arrow_down_data;
 
 /********************************
 *** LOCAL FUNCTION PROTOTYPES ***
@@ -107,6 +114,39 @@ void mw_user_init(void)
 			MW_WINDOW_FLAG_HAS_BORDER | MW_WINDOW_FLAG_HAS_TITLE_BAR | MW_WINDOW_FLAG_IS_VISIBLE,
 			NULL);
 
+	mw_util_set_rect(&r, 15, 15, 182, 188);
+	window_file_tree_handle = mw_add_window(&r,
+			"File Tree Demo",
+			window_file_tree_paint_function,
+			window_file_tree_message_function,
+			NULL,
+			0,
+			MW_WINDOW_FLAG_HAS_BORDER | MW_WINDOW_FLAG_HAS_TITLE_BAR | MW_WINDOW_FLAG_IS_VISIBLE,
+			NULL);
+
+	tree_data.number_of_lines = 8U;
+	tree_data.root_handle = mw_tree_container_init(&tree_data.tree_container, "0:", MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN_FLAG, 0U);
+	tree_handle = mw_ui_tree_add_new(10,
+			40,
+			120,
+			window_file_tree_handle,
+			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
+			&tree_data);
+
+	arrow_up_data.mw_ui_arrow_direction = MW_UI_ARROW_UP;
+	arrow_up_handle = mw_ui_arrow_add_new(130,
+			40,
+			window_file_tree_handle,
+			MW_CONTROL_FLAG_IS_VISIBLE,
+			&arrow_up_data);
+
+	arrow_down_data.mw_ui_arrow_direction = MW_UI_ARROW_DOWN;
+	arrow_down_handle = mw_ui_arrow_add_new(130,
+			136,
+			window_file_tree_handle,
+			MW_CONTROL_FLAG_IS_VISIBLE,
+			&arrow_down_data);
+
 	(void)mw_util_safe_strcpy(button_open_data.button_label, MW_UI_BUTTON_LABEL_MAX_CHARS, "Open");
 	button_open_handle = mw_ui_button_add_new(20,
 			75,
@@ -147,6 +187,52 @@ void mw_user_init(void)
 			window_file_handle,
 			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
 			&label_date_data);
+
+
+
+
+
+	//todo
+	mw_tree_container_add_node(&tree_data.tree_container,
+			tree_data.root_handle,
+			"file1",
+			0U);
+	mw_handle_t fold1_handle = mw_tree_container_add_node(&tree_data.tree_container,
+			tree_data.root_handle,
+			"fold1",
+			MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG | MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN_FLAG);
+	mw_tree_container_add_node(&tree_data.tree_container,
+			fold1_handle,
+			"file2",
+			0U);
+	mw_tree_container_add_node(&tree_data.tree_container,
+			fold1_handle,
+			"file3",
+			0U);
+	mw_handle_t fold2_handle = mw_tree_container_add_node(&tree_data.tree_container,
+			fold1_handle,
+			"fold2",
+			MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG | MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN_FLAG);
+	mw_handle_t fold3_handle = mw_tree_container_add_node(&tree_data.tree_container,
+			fold1_handle,
+			"fold3",
+			MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG | MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN_FLAG);
+	mw_tree_container_add_node(&tree_data.tree_container,
+			fold3_handle,
+			"file6",
+			0U);
+	mw_tree_container_add_node(&tree_data.tree_container,
+			fold3_handle,
+			"file7",
+			0U);
+	mw_tree_container_add_node(&tree_data.tree_container,
+			fold2_handle,
+			"file4",
+			0U);
+	mw_tree_container_add_node(&tree_data.tree_container,
+			fold2_handle,
+			"file5",
+			0U);
 
 	mw_paint_all();
 }

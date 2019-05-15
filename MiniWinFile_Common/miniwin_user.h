@@ -48,11 +48,15 @@ SOFTWARE.
 *************************/
 
 extern mw_handle_t window_file_handle;
+extern mw_handle_t window_file_tree_handle;
 extern mw_handle_t button_open_handle;
 extern mw_handle_t button_set_clock_handle;
 extern mw_handle_t button_create_handle;
 extern mw_handle_t label_time_handle;
 extern mw_handle_t label_date_handle;
+extern mw_handle_t tree_handle;
+extern mw_handle_t arrow_up_handle;
+extern mw_handle_t arrow_down_handle;
 
 /***************************
 *** FUNCTIONS PROTOTYPES ***

@@ -256,7 +256,6 @@ static void do_paint_control(mw_handle_t control_handle);
 static void do_paint_control2(mw_handle_t control_handle, const mw_util_rect_t *invalid_rect);
 
 /* handle functions */
-static mw_handle_t get_next_handle(void);
 static uint8_t get_timer_id_for_handle(mw_handle_t timer_handle);
 static uint8_t get_window_id_for_handle(mw_handle_t window_handle);
 static uint8_t get_control_id_for_handle(mw_handle_t control_handle);
@@ -2868,19 +2867,6 @@ static void do_paint_control2(mw_handle_t control_handle, const mw_util_rect_t *
 }
 
 /**
- * Get the next handle to use for a window manager resource
- *
- * @return The next handle
- */
-static mw_handle_t get_next_handle(void)
-{
-	static mw_handle_t next_handle = MW_ROOT_WINDOW_HANDLE;
-
-	next_handle++;
-	return (next_handle);
-}
-
-/**
  * Get a timer_id represented by a timer handle
  *
  * @param timer_handle The timer handle
@@ -4205,6 +4191,14 @@ void mw_init(void)
 bool mw_is_init_complete(void)
 {
 	return (init_complete);
+}
+
+mw_handle_t get_next_handle(void)
+{
+	static mw_handle_t next_handle = MW_ROOT_WINDOW_HANDLE;
+
+	next_handle++;
+	return (next_handle);
 }
 
 bool mw_find_if_any_window_slots_free(void)
