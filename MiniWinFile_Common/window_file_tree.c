@@ -49,8 +49,8 @@ SOFTWARE.
  */
 typedef struct
 {
-	uint16_t lines_to_scroll;				// todo
-	uint16_t max_scrollable_lines;			/**< Maximum number of pixel lines the text can be scrolled */
+	uint16_t lines_to_scroll;				/**< The number of lines to scroll */
+	uint16_t max_scrollable_lines;			/**< Maximum number of lines that can be scrolled */
 } window_file_tree_data_t;
 
 /***********************
@@ -62,6 +62,7 @@ typedef struct
 **********************/
 
 static window_file_tree_data_t window_file_tree_data;
+static char node_path[100];
 
 /********************************
 *** LOCAL FUNCTION PROTOTYPES ***
@@ -104,11 +105,27 @@ void window_file_tree_message_function(const mw_message_t *message)
 		break;
 
 	case MW_TREE_SCROLLING_REQUIRED_MESSAGE:
-		/* enable/disable the down arrow depending on if scrolling is required, i.e. text won't all fit in the control */
-		temp_uint32 = message->message_data >> 16;
-		mw_set_control_enabled(arrow_down_handle, (bool)temp_uint32);
-		temp_uint32 = message->message_data & 0xffffU;
-		window_file_tree_data.max_scrollable_lines = (uint16_t)temp_uint32;
+		/* enable/disable the down arrow depending on if scrolling is required, i.e. tree won't all fit in the control */
+		if (message->message_data >> 16 == 0U)
+		{
+			mw_set_control_enabled(arrow_down_handle, false);
+			window_file_tree_data.max_scrollable_lines = 0U;
+			window_file_tree_data.lines_to_scroll = 0U;
+		}
+		else
+		{
+			temp_uint32 = message->message_data & 0xffffU;
+			window_file_tree_data.max_scrollable_lines = (uint16_t)temp_uint32;
+			if (window_file_tree_data.lines_to_scroll >= window_file_tree_data.max_scrollable_lines)
+			{
+				window_file_tree_data.lines_to_scroll = window_file_tree_data.max_scrollable_lines;
+				mw_set_control_enabled(arrow_down_handle, false);
+			}
+			else
+			{
+				mw_set_control_enabled(arrow_down_handle, true);
+			}
+		}
 		mw_paint_control(arrow_down_handle);
 		break;
 
@@ -166,6 +183,14 @@ void window_file_tree_message_function(const mw_message_t *message)
 		else
 		{
 			/* keep MISRA happy */
+		}
+		break;
+
+	case MW_TREE_NODE_SELECTED_MESSAGE:
+		{
+			mw_ui_tree_data_t *sender_tree = (mw_ui_tree_data_t*)mw_get_control_instance_data(message->sender_handle);
+			mw_tree_container_get_node_path(&sender_tree->tree_container, message->message_data, node_path, 100);
+			//todo do something with this
 		}
 		break;
 

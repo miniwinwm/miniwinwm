@@ -50,35 +50,59 @@ SOFTWARE.
 *** LOCAL FUNCTION PROTOTYPES ***
 ********************************/
 
-static void tree_remove_all_children(mw_tree_container_t *tree, uint16_t parent_folder_id);
-static uint16_t mw_tree_get_id_from_handle(mw_tree_container_t *tree, mw_handle_t handle);
+static void remove_all_children(mw_tree_container_t *tree, uint16_t parent_folder_id);
+static uint16_t get_id_from_handle(mw_tree_container_t *tree, mw_handle_t handle);
+static uint16_t find_parent_folder(mw_tree_container_t *tree, uint16_t node_id);
 
 /**********************
 *** LOCAL FUNCTIONS ***
 **********************/
 
 /**
+ * Find the parent folder of any node
+ *
+ * @param tree Pointer to tree structure
+ * @param node_id The id of the node to get the parent of
+ * @return The id of the parent folder
+ */
+static uint16_t find_parent_folder(mw_tree_container_t *tree, uint16_t node_id)
+{
+	uint16_t level;
+
+	level = tree->nodes_array[node_id].level;
+
+	do
+	{
+		node_id--;
+		if (tree->nodes_array[node_id].level == level - 1U)
+		{
+			return node_id;
+		}
+	}
+	while (node_id > 0U);
+
+	return (0U);
+}
+
+/**
  * Get a node's id from its handle
  *
  * @param tree Pointer to tree structure
- * @return The id of the node if found else MW_UTIL_TREE_MAX_SIZE
+ * @return The id of the node if found else the size of the tree's node array
  */
-static uint16_t mw_tree_get_id_from_handle(mw_tree_container_t *tree, mw_handle_t handle)
+static uint16_t get_id_from_handle(mw_tree_container_t *tree, mw_handle_t handle)
 {
 	uint16_t i;
 	static uint16_t cached_id = 0U;
 
-	MW_ASSERT(tree != (void*)0, "Null pointer argument");
-	MW_ASSERT(handle != MW_INVALID_HANDLE, "Bad node handle");
-
-	if (tree->nodes[cached_id].handle == handle)
+	if (tree->nodes_array[cached_id].handle == handle)
 	{
 		return cached_id;
 	}
 
 	for (i = 0U; i < tree->node_count; i++)
 	{
-		if (tree->nodes[i].handle == handle)
+		if (tree->nodes_array[i].handle == handle)
 		{
 			cached_id = i;
 
@@ -86,7 +110,7 @@ static uint16_t mw_tree_get_id_from_handle(mw_tree_container_t *tree, mw_handle_
 		}
 	}
 
-	return MW_TREE_CONTAINER_MAX_SIZE;
+	return (tree->nodes_array_size);
 }
 
 /**
@@ -96,26 +120,23 @@ static uint16_t mw_tree_get_id_from_handle(mw_tree_container_t *tree, mw_handle_
  * @param parent_folder_id The id of the folder to remove contents of
  * @note This does not remove folder node indicated by parent_folder_id
  */
-static void tree_remove_all_children(mw_tree_container_t *tree, uint16_t parent_folder_id)
+static void remove_all_children(mw_tree_container_t *tree, uint16_t parent_folder_id)
 {
 	uint16_t i;
 	uint16_t parent_folder_level;
 	uint16_t remove_count;
 
-	MW_ASSERT(tree != (void*)0, "Null pointer argument");
-	MW_ASSERT(parent_folder_id < tree->node_count, "Bad folder id");
-
-	if ((tree->nodes[parent_folder_id].node_flags & MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG) == 0U)
+	if ((tree->nodes_array[parent_folder_id].node_flags & MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG) == 0U)
 	{
 		return;
 	}
 
-	parent_folder_level = tree->nodes[parent_folder_id].level;
+	parent_folder_level = tree->nodes_array[parent_folder_id].level;
 	remove_count = 0U;
 
 	for (i = parent_folder_id + 1U; ; i++)
 	{
-		if (tree->nodes[i].level <= parent_folder_level || i == tree->node_count)
+		if (tree->nodes_array[i].level <= parent_folder_level || i == tree->node_count)
 		{
 			break;
 		}
@@ -125,7 +146,7 @@ static void tree_remove_all_children(mw_tree_container_t *tree, uint16_t parent_
 
 	for (i = parent_folder_id + 1U; i + remove_count < tree->node_count; i++)
 	{
-		tree->nodes[i] = tree->nodes[i + remove_count];
+		tree->nodes_array[i] = tree->nodes_array[i + remove_count];
 	}
 
 	tree->node_count -= remove_count;
@@ -135,24 +156,26 @@ static void tree_remove_all_children(mw_tree_container_t *tree, uint16_t parent_
 *** GLOBAL FUNCTIONS ***
 ***********************/
 
-mw_handle_t mw_tree_container_init(mw_tree_container_t *tree, char *root_folder_label, uint8_t root_node_flags, uint8_t tree_flags)
+mw_handle_t mw_tree_container_init(mw_tree_container_t *tree, mw_tree_container_node_t *nodes_array, uint16_t nodes_array_size, char *root_folder_label, uint8_t root_node_flags, uint8_t tree_flags)
 {
-	if (tree == NULL || root_folder_label == NULL)
+	if (tree == NULL || root_folder_label == NULL || nodes_array == NULL || nodes_array_size == 0U)
 	{
 		MW_ASSERT((bool)false, "Null pointer");
 
 		return MW_INVALID_HANDLE;
 	}
 
+	tree->nodes_array_size = nodes_array_size;
+	tree->nodes_array = nodes_array;
 	tree->tree_flags = tree_flags;
-	tree->nodes[MW_TREE_CONTAINER_ROOT_FOLDER_ID].node_flags = MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG | root_node_flags;
-	mw_util_safe_strcpy(tree->nodes[MW_TREE_CONTAINER_ROOT_FOLDER_ID].label, (size_t)MW_TREE_CONTAINER_NODE_LABEL_MAX_SIZE, root_folder_label);
-	tree->nodes[MW_TREE_CONTAINER_ROOT_FOLDER_ID].level = 0U;
-	tree->nodes[MW_TREE_CONTAINER_ROOT_FOLDER_ID].handle = get_next_handle();
+	tree->nodes_array[MW_TREE_CONTAINER_ROOT_FOLDER_ID].node_flags = MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG | root_node_flags;
+	mw_util_safe_strcpy(tree->nodes_array[MW_TREE_CONTAINER_ROOT_FOLDER_ID].label, (size_t)MW_TREE_CONTAINER_NODE_LABEL_MAX_SIZE, root_folder_label);
+	tree->nodes_array[MW_TREE_CONTAINER_ROOT_FOLDER_ID].level = 0U;
+	tree->nodes_array[MW_TREE_CONTAINER_ROOT_FOLDER_ID].handle = get_next_handle();
 
 	mw_tree_container_empty(tree);
 
-	return tree->nodes[MW_TREE_CONTAINER_ROOT_FOLDER_ID].handle;
+	return tree->nodes_array[MW_TREE_CONTAINER_ROOT_FOLDER_ID].handle;
 }
 
 void mw_tree_container_empty(mw_tree_container_t *tree)
@@ -179,17 +202,17 @@ mw_handle_t mw_tree_container_add_node(mw_tree_container_t *tree, mw_handle_t pa
 		return MW_INVALID_HANDLE;
 	}
 
-	if (tree->node_count == MW_TREE_CONTAINER_MAX_SIZE)
+	if (tree->node_count == tree->nodes_array_size)
 	{
 		MW_ASSERT((bool)false, "No space in tree");
 
 		return MW_INVALID_HANDLE;
 	}
 
-	parent_folder_id = mw_tree_get_id_from_handle(tree, parent_folder_handle);
+	parent_folder_id = get_id_from_handle(tree, parent_folder_handle);
 
-	if (parent_folder_id == MW_TREE_CONTAINER_MAX_SIZE ||
-			(tree->nodes[parent_folder_id].node_flags & MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG) == 0U)
+	if (parent_folder_id == tree->nodes_array_size ||
+			(tree->nodes_array[parent_folder_id].node_flags & MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG) == 0U)
 	{
 		MW_ASSERT((bool)false, "Invalid parent folder");
 
@@ -198,16 +221,16 @@ mw_handle_t mw_tree_container_add_node(mw_tree_container_t *tree, mw_handle_t pa
 
 	for (i = tree->node_count - 1U; i >= parent_folder_id + 1U; i--)
 	{
-		tree->nodes[i + 1U] = tree->nodes[i];
+		tree->nodes_array[i + 1U] = tree->nodes_array[i];
 	}
 
-	mw_util_safe_strcpy(tree->nodes[parent_folder_id + 1U].label, (size_t)MW_TREE_CONTAINER_NODE_LABEL_MAX_SIZE, label);
-	tree->nodes[parent_folder_id + 1U].node_flags = node_flags;
-	tree->nodes[parent_folder_id + 1U].level = tree->nodes[parent_folder_id].level + 1U;
-	tree->nodes[parent_folder_id + 1U].handle = get_next_handle();
+	mw_util_safe_strcpy(tree->nodes_array[parent_folder_id + 1U].label, (size_t)MW_TREE_CONTAINER_NODE_LABEL_MAX_SIZE, label);
+	tree->nodes_array[parent_folder_id + 1U].node_flags = node_flags;
+	tree->nodes_array[parent_folder_id + 1U].level = tree->nodes_array[parent_folder_id].level + 1U;
+	tree->nodes_array[parent_folder_id + 1U].handle = get_next_handle();
 	tree->node_count++;
 
-	return tree->nodes[parent_folder_id + 1U].handle;
+	return tree->nodes_array[parent_folder_id + 1U].handle;
 }
 
 void mw_tree_container_get_all_children(mw_tree_container_t *tree, mw_handle_t parent_folder_handle, mw_tree_container_callback_t callback, void *callback_data)
@@ -224,139 +247,140 @@ void mw_tree_container_get_all_children(mw_tree_container_t *tree, mw_handle_t p
 		return;
 	}
 
-	parent_folder_id = mw_tree_get_id_from_handle(tree, parent_folder_handle);
-	if (parent_folder_id == MW_TREE_CONTAINER_MAX_SIZE)
+	parent_folder_id = get_id_from_handle(tree, parent_folder_handle);
+	if (parent_folder_id == tree->nodes_array_size)
 	{
 		MW_ASSERT((bool)false, "Bad node handle");
 
 		return;
 	}
 
-	if ((tree->nodes[parent_folder_id].node_flags & MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG) == 0U)
+	if ((tree->nodes_array[parent_folder_id].node_flags & MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG) == 0U)
 	{
 		MW_ASSERT((bool)false, "Parent node not a folder");
 
 		return;
 	}
 
-	if ((tree->nodes[parent_folder_id].node_flags & MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN_FLAG) == 0U)
+	if ((tree->nodes_array[parent_folder_id].node_flags & MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN_FLAG) == 0U)
 	{
 		return;
 	}
 
-	parent_folder_level = tree->nodes[parent_folder_id].level;
-	skip_level = MW_TREE_CONTAINER_MAX_SIZE;
+	parent_folder_level = tree->nodes_array[parent_folder_id].level;
+	skip_level = tree->nodes_array_size;
 
 	for (i = parent_folder_id + 1U; ; i++)
 	{
-		if (tree->nodes[i].level <= parent_folder_level || i == tree->node_count)
+		if (tree->nodes_array[i].level <= parent_folder_level || i == tree->node_count)
 		{
 			break;
 		}
 
-		if (tree->nodes[i].level >= skip_level)
+		if (tree->nodes_array[i].level >= skip_level)
 		{
 			continue;
 		}
 
-		if ((tree->nodes[i].node_flags & MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG) == MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG)
+		if ((tree->nodes_array[i].node_flags & MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG) == MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG)
 		{
-			if ((tree->nodes[i].node_flags & MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN_FLAG) == MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN_FLAG)
+			if ((tree->nodes_array[i].node_flags & MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN_FLAG) == MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN_FLAG)
 			{
-				skip_level = MW_TREE_CONTAINER_MAX_SIZE;
+				skip_level = tree->nodes_array_size;
 			}
 			else
 			{
-				skip_level = tree->nodes[i].level + 1U;
+				skip_level = tree->nodes_array[i].level + 1U;
 			}
 		}
 
 		/* ignore if folders only and don't have a folder */
 		if ((tree->tree_flags & MW_TREE_CONTAINER_SHOW_FOLDERS_ONLY) == MW_TREE_CONTAINER_SHOW_FOLDERS_ONLY &&
-				(tree->nodes[i].node_flags & MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG) == 0U)
+				(tree->nodes_array[i].node_flags & MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG) == 0U)
 		{
 			continue;
 		}
 
-		if (callback(tree, tree->nodes[i].handle, callback_data) == false)
+		if (callback(tree, tree->nodes_array[i].handle, callback_data) == false)
 		{
 			break;
 		}
 	}
 }
 
-bool mw_tree_container_get_open_children_count(mw_tree_container_t *tree, mw_handle_t parent_folder_handle, uint16_t *count)
+uint16_t mw_tree_container_get_open_children_count(mw_tree_container_t *tree, mw_handle_t parent_folder_handle)
 {
 	uint16_t i;
 	uint16_t parent_folder_id;
 	uint16_t parent_folder_level;
 	uint16_t skip_level;
+	uint16_t count;
 
 	if (tree == NULL)
 	{
 		MW_ASSERT((bool)false, "Null pointer");
 
-		return false;
+		return (0);
 	}
 
-	parent_folder_id = mw_tree_get_id_from_handle(tree, parent_folder_handle);
-	if (parent_folder_id == MW_TREE_CONTAINER_MAX_SIZE)
+	parent_folder_id = get_id_from_handle(tree, parent_folder_handle);
+	if (parent_folder_id == tree->nodes_array_size)
 	{
 		MW_ASSERT((bool)false, "Bad node handle");
 
-		return false;
+		return (0);
 	}
 
-	if ((tree->nodes[parent_folder_id].node_flags & MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG) == 0U)
+	if ((tree->nodes_array[parent_folder_id].node_flags & MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG) == 0U)
 	{
-		return false;
+		return (0);
 	}
 
-	*count = 0U;
+	count = 0U;
 
-	if ((tree->nodes[parent_folder_id].node_flags & MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN_FLAG) == 0U)
+	if ((tree->nodes_array[parent_folder_id].node_flags & MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN_FLAG) == 0U)
 	{
-		return true;
+		return (0);
 	}
 
-	parent_folder_level = tree->nodes[parent_folder_id].level;
-	skip_level = MW_TREE_CONTAINER_MAX_SIZE;
+	parent_folder_level = tree->nodes_array[parent_folder_id].level;
+	skip_level = tree->nodes_array_size;
 
 	for (i = parent_folder_id + 1U; ; i++)
 	{
-		if (tree->nodes[i].level <= parent_folder_level || i == tree->node_count)
+		if (tree->nodes_array[i].level <= parent_folder_level || i == tree->node_count)
 		{
 			break;
 		}
 
-		if (tree->nodes[i].level >= skip_level)
+		if (tree->nodes_array[i].level >= skip_level)
 		{
 			continue;
 		}
 
-		if ((tree->nodes[i].node_flags & MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG) == MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG)
+		if ((tree->nodes_array[i].node_flags & MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG) == MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG)
 		{
-			if ((tree->nodes[i].node_flags & MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN_FLAG) == MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN_FLAG)
+			if ((tree->nodes_array[i].node_flags & MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN_FLAG) == MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN_FLAG)
 			{
-				skip_level = MW_TREE_CONTAINER_MAX_SIZE;
+				skip_level = tree->nodes_array_size;
 			}
 			else
 			{
-				skip_level = tree->nodes[i].level + 1U;
+				skip_level = tree->nodes_array[i].level + 1U;
 			}
 		}
 
 		/* ignore if folders only and don't have a folder */
 		if ((tree->tree_flags & MW_TREE_CONTAINER_SHOW_FOLDERS_ONLY) == MW_TREE_CONTAINER_SHOW_FOLDERS_ONLY &&
-				(tree->nodes[i].node_flags & MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG) == 0U)
+				(tree->nodes_array[i].node_flags & MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG) == 0U)
 		{
 			continue;
 		}
 
-		(*count)++;
+		count++;
 	}
 
-	return true;
+	return (count);
 }
 
 void mw_tree_container_change_node_label(mw_tree_container_t *tree, mw_handle_t node_handle, char *label)
@@ -370,15 +394,15 @@ void mw_tree_container_change_node_label(mw_tree_container_t *tree, mw_handle_t 
 		return;
 	}
 
-	node_id = mw_tree_get_id_from_handle(tree, node_handle);
-	if (node_id == MW_TREE_CONTAINER_MAX_SIZE)
+	node_id = get_id_from_handle(tree, node_handle);
+	if (node_id == tree->nodes_array_size)
 	{
 		MW_ASSERT((bool)false, "Bad node handle");
 
 		return;
 	}
 
-	mw_util_safe_strcpy(tree->nodes[node_id].label, (size_t)MW_TREE_CONTAINER_NODE_LABEL_MAX_SIZE, label);
+	mw_util_safe_strcpy(tree->nodes_array[node_id].label, (size_t)MW_TREE_CONTAINER_NODE_LABEL_MAX_SIZE, label);
 }
 
 void mw_tree_container_change_node_selected_state(mw_tree_container_t *tree, mw_handle_t node_handle, bool is_selected)
@@ -393,8 +417,8 @@ void mw_tree_container_change_node_selected_state(mw_tree_container_t *tree, mw_
 		return;
 	}
 
-	node_id = mw_tree_get_id_from_handle(tree, node_handle);
-	if (node_id == MW_TREE_CONTAINER_MAX_SIZE)
+	node_id = get_id_from_handle(tree, node_handle);
+	if (node_id == tree->nodes_array_size)
 	{
 		MW_ASSERT((bool)false, "Bad node handle");
 
@@ -403,9 +427,9 @@ void mw_tree_container_change_node_selected_state(mw_tree_container_t *tree, mw_
 
 	/* check if selection type is allowed */
 	if (((tree->tree_flags & MW_TREE_CONTAINER_FOLDER_SELECT_ONLY) == MW_TREE_CONTAINER_FOLDER_SELECT_ONLY &&
-			(tree->nodes[node_id].node_flags & MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG) == 0U) ||
+			(tree->nodes_array[node_id].node_flags & MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG) == 0U) ||
 			((tree->tree_flags & MW_TREE_CONTAINER_FILE_SELECT_ONLY) == MW_TREE_CONTAINER_FILE_SELECT_ONLY &&
-					(tree->nodes[node_id].node_flags & MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG) == MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG))
+					(tree->nodes_array[node_id].node_flags & MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG) == MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG))
 	{
 		return;
 	}
@@ -418,15 +442,15 @@ void mw_tree_container_change_node_selected_state(mw_tree_container_t *tree, mw_
 			/* single select only so deselect everything */
 			for (i = 0U; i < tree->node_count; i++)
 			{
-				tree->nodes[i].node_flags &= ~MW_TREE_CONTAINER_NODE_IS_SELECTED_FLAG;
+				tree->nodes_array[i].node_flags &= ~MW_TREE_CONTAINER_NODE_IS_SELECTED_FLAG;
 			}
 		}
 
-		tree->nodes[node_id].node_flags |= MW_TREE_CONTAINER_NODE_IS_SELECTED_FLAG;
+		tree->nodes_array[node_id].node_flags |= MW_TREE_CONTAINER_NODE_IS_SELECTED_FLAG;
 	}
 	else
 	{
-		tree->nodes[node_id].node_flags &= ~MW_TREE_CONTAINER_NODE_IS_SELECTED_FLAG;
+		tree->nodes_array[node_id].node_flags &= ~MW_TREE_CONTAINER_NODE_IS_SELECTED_FLAG;
 	}
 }
 
@@ -443,52 +467,52 @@ void mw_tree_container_change_folder_node_open_state(mw_tree_container_t *tree, 
 		return;
 	}
 
-	folder_id = mw_tree_get_id_from_handle(tree, folder_node_handle);
-	if (folder_id == MW_TREE_CONTAINER_MAX_SIZE)
+	folder_id = get_id_from_handle(tree, folder_node_handle);
+	if (folder_id == tree->nodes_array_size)
 	{
 		MW_ASSERT((bool)false, "Bad node handle");
 
 		return;
 	}
 
-	if ((tree->nodes[folder_id].node_flags & MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG) == 0U)
+	if ((tree->nodes_array[folder_id].node_flags & MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG) == 0U)
 	{
 		MW_ASSERT((bool)false, "Not a folder");
 
 		return;
 	}
 
-	folder_level = tree->nodes[folder_id].level;
+	folder_level = tree->nodes_array[folder_id].level;
 
 	for (i = folder_id + 1U; ; i++)
 	{
-		if (tree->nodes[i].level < folder_level + 1U || i == tree->node_count)
+		if (tree->nodes_array[i].level < folder_level + 1U || i == tree->node_count)
 		{
 			break;
 		}
 
-		if ((tree->nodes[i].node_flags & MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG) == 0U)
+		if ((tree->nodes_array[i].node_flags & MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG) == 0U)
 		{
 			continue;
 		}
 
 		if (is_open)
 		{
-			tree->nodes[i].node_flags |= MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN_FLAG;
+			tree->nodes_array[i].node_flags |= MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN_FLAG;
 		}
 		else
 		{
-			tree->nodes[i].node_flags &= ~MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN_FLAG;
+			tree->nodes_array[i].node_flags &= ~MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN_FLAG;
 		}
 	}
 
 	if (is_open)
 	{
-		tree->nodes[folder_id].node_flags |= MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN_FLAG;
+		tree->nodes_array[folder_id].node_flags |= MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN_FLAG;
 	}
 	else
 	{
-		tree->nodes[folder_id].node_flags &= ~MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN_FLAG;
+		tree->nodes_array[folder_id].node_flags &= ~MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN_FLAG;
 	}
 }
 
@@ -504,22 +528,22 @@ void mw_tree_container_remove_node(mw_tree_container_t *tree, mw_handle_t node_h
 		return;
 	}
 
-	node_id = mw_tree_get_id_from_handle(tree, node_handle);
-	if (node_id == MW_TREE_CONTAINER_MAX_SIZE)
+	node_id = get_id_from_handle(tree, node_handle);
+	if (node_id == tree->nodes_array_size)
 	{
 		MW_ASSERT((bool)false, "Bad node handle");
 
 		return;
 	}
 
-	if ((tree->nodes[node_id].node_flags & MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG) == MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG)
+	if ((tree->nodes_array[node_id].node_flags & MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG) == MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG)
 	{
-		tree_remove_all_children(tree, node_id);
+		remove_all_children(tree, node_id);
 	}
 
 	for (i = node_id; i < tree->node_count - 1U; i++)
 	{
-		tree->nodes[i] = tree->nodes[i + 1U];
+		tree->nodes_array[i] = tree->nodes_array[i + 1U];
 	}
 
 	tree->node_count--;
@@ -537,62 +561,62 @@ mw_handle_t mw_tree_container_get_handle_from_visible_position(mw_tree_container
 	{
 		MW_ASSERT((bool)false, "Null pointer");
 
-		return MW_INVALID_HANDLE;
+		return (MW_INVALID_HANDLE);
 	}
 
-	parent_folder_id = mw_tree_get_id_from_handle(tree, parent_folder_handle);
-	if (parent_folder_id == MW_TREE_CONTAINER_MAX_SIZE)
+	parent_folder_id = get_id_from_handle(tree, parent_folder_handle);
+	if (parent_folder_id == tree->nodes_array_size)
 	{
 		MW_ASSERT((bool)false, "Invalid parent folder handle");
 
-		return MW_INVALID_HANDLE;
+		return (MW_INVALID_HANDLE);
 	}
 
-	if ((tree->nodes[parent_folder_id].node_flags & MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG) == 0U)
+	if ((tree->nodes_array[parent_folder_id].node_flags & MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG) == 0U)
 	{
 		MW_ASSERT((bool)false, "Parent node is not a folder");
 
-		return MW_INVALID_HANDLE;
+		return (MW_INVALID_HANDLE);
 	}
 
-	parent_folder_level = tree->nodes[parent_folder_id].level;
-	skip_level = MW_TREE_CONTAINER_MAX_SIZE;
+	parent_folder_level = tree->nodes_array[parent_folder_id].level;
+	skip_level = tree->nodes_array_size;
 
 	visible_position_count = 0U;
 	for (i = parent_folder_id; ; i++)
 	{
-		if (tree->nodes[i].level < parent_folder_level || i == tree->node_count)
+		if (tree->nodes_array[i].level < parent_folder_level || i == tree->node_count)
 		{
 			break;
 		}
 
-		if (tree->nodes[i].level >= skip_level)
+		if (tree->nodes_array[i].level >= skip_level)
 		{
 			continue;
 		}
 
-		if ((tree->nodes[i].node_flags & MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG) == MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG)
+		if ((tree->nodes_array[i].node_flags & MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG) == MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG)
 		{
-			if ((tree->nodes[i].node_flags & MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN_FLAG) == MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN_FLAG)
+			if ((tree->nodes_array[i].node_flags & MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN_FLAG) == MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN_FLAG)
 			{
-				skip_level = MW_TREE_CONTAINER_MAX_SIZE;
+				skip_level = tree->nodes_array_size;
 			}
 			else
 			{
-				skip_level = tree->nodes[i].level + 1U;
+				skip_level = tree->nodes_array[i].level + 1U;
 			}
 		}
 
 		/* ignore if folders only and don't have a folder */
 		if ((tree->tree_flags & MW_TREE_CONTAINER_SHOW_FOLDERS_ONLY) == MW_TREE_CONTAINER_SHOW_FOLDERS_ONLY &&
-				(tree->nodes[i].node_flags & MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG) == 0U)
+				(tree->nodes_array[i].node_flags & MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG) == 0U)
 		{
 			continue;
 		}
 
 		if (visible_position_count == visible_position)
 		{
-			return (tree->nodes[i].handle);
+			return (tree->nodes_array[i].handle);
 		}
 
 		visible_position_count++;
@@ -609,18 +633,18 @@ uint8_t mw_tree_container_get_node_flags(mw_tree_container_t *tree, mw_handle_t 
 	{
 		MW_ASSERT((bool)false, "Null pointer");
 
-		return false;
+		return (0U);
 	}
 
-	node_id = mw_tree_get_id_from_handle(tree, node_handle);
-	if (node_id == MW_TREE_CONTAINER_MAX_SIZE)
+	node_id = get_id_from_handle(tree, node_handle);
+	if (node_id == tree->nodes_array_size)
 	{
 		MW_ASSERT((bool)false, "Bad node handle");
 
-		return false;
+		return (0U);
 	}
 
-	return (tree->nodes[node_id].node_flags);
+	return (tree->nodes_array[node_id].node_flags);
 }
 
 uint16_t mw_tree_container_get_node_level(mw_tree_container_t *tree, mw_handle_t node_handle)
@@ -631,18 +655,18 @@ uint16_t mw_tree_container_get_node_level(mw_tree_container_t *tree, mw_handle_t
 	{
 		MW_ASSERT((bool)false, "Null pointer");
 
-		return false;
+		return (0U);
 	}
 
-	node_id = mw_tree_get_id_from_handle(tree, node_handle);
-	if (node_id == MW_TREE_CONTAINER_MAX_SIZE)
+	node_id = get_id_from_handle(tree, node_handle);
+	if (node_id == tree->nodes_array_size)
 	{
 		MW_ASSERT((bool)false, "Bad node handle");
 
-		return (false);
+		return (0U);
 	}
 
-	return (tree->nodes[node_id].level);
+	return (tree->nodes_array[node_id].level);
 }
 
 char *mw_tree_container_get_node_label(mw_tree_container_t *tree, mw_handle_t node_handle)
@@ -656,18 +680,85 @@ char *mw_tree_container_get_node_label(mw_tree_container_t *tree, mw_handle_t no
 		return ("");
 	}
 
-	node_id = mw_tree_get_id_from_handle(tree, node_handle);
-	if (node_id == MW_TREE_CONTAINER_MAX_SIZE)
+	node_id = get_id_from_handle(tree, node_handle);
+	if (node_id == tree->nodes_array_size)
 	{
 		MW_ASSERT((bool)false, "Bad node handle");
 
 		return ("");
 	}
 
-	if (tree->nodes[node_id].label == NULL)
+	if (tree->nodes_array[node_id].label == NULL)
 	{
 		return ("");
 	}
 
-	return (tree->nodes[node_id].label);
+	return (tree->nodes_array[node_id].label);
+}
+
+void mw_tree_container_get_node_path(mw_tree_container_t *tree, mw_handle_t node_handle, char *node_path, uint16_t node_path_length)
+{
+	uint16_t level;
+	uint16_t node_id;
+	uint16_t i;
+	char node_label[MW_TREE_CONTAINER_NODE_LABEL_MAX_SIZE];
+
+	/* check pointer parameters */
+	if (tree == NULL || node_path == NULL)
+	{
+		MW_ASSERT((bool)false, "Null pointer");
+
+		return;
+	}
+
+	/* check path buffer length is sensible */
+	if (node_path_length == 0U)
+	{
+		MW_ASSERT((bool)false, "Bad parameter");
+
+		return;
+	}
+
+	/* initialize node path buffer */
+	node_path[0] = '\0';
+
+	/* get node id and level of node to get path of */
+	node_id = get_id_from_handle(tree, node_handle);
+	level = tree->nodes_array[node_id].level;
+
+	/* the path is built up backwards so to start add a folder separator if node is a folder */
+	if ((tree->nodes_array[node_id].node_flags & MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG) == MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG)
+	{
+		mw_util_safe_strcat(node_path, node_path_length, MW_TREE_CONTAINER_FOLDER_SEPARATOR);
+	}
+
+	/* get the starting node's label, copy it to a local buffer, reverse it, then cat it to path */
+	mw_util_safe_strcpy(node_label, MW_TREE_CONTAINER_NODE_LABEL_MAX_SIZE, tree->nodes_array[node_id].label);
+	mw_util_safe_strcat(node_path, node_path_length, mw_util_strrev(node_label));
+
+	/* if starting node is not root folder add a folder separator */
+	if (level > 1U)
+	{
+		mw_util_safe_strcat(node_path, node_path_length, MW_TREE_CONTAINER_FOLDER_SEPARATOR);
+	}
+
+	/* now go up the levels to root folder */
+	for (i = 0U; i < level; i++)
+	{
+		/* get id of parent folder */
+		node_id = find_parent_folder(tree, node_id);
+
+		/* get the parent folder's label, copy it to a local buffer, reverse it, then cat it to path */
+		mw_util_safe_strcpy(node_label, MW_TREE_CONTAINER_NODE_LABEL_MAX_SIZE, tree->nodes_array[node_id].label);
+		mw_util_safe_strcat(node_path, node_path_length, mw_util_strrev(node_label));
+
+		/* if not last folder, which will be root, add a folder separator */
+		if (i < level - 1U)
+		{
+			mw_util_safe_strcat(node_path, node_path_length, MW_TREE_CONTAINER_FOLDER_SEPARATOR);
+		}
+	}
+
+	/* reverse everything to correct direction */
+	(void)mw_util_strrev(node_path);
 }

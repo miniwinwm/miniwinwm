@@ -44,7 +44,6 @@ SOFTWARE.
 ****************/
 
 #define MW_TREE_CONTAINER_ROOT_FOLDER_ID 			0U
-#define MW_TREE_CONTAINER_MAX_SIZE					20U
 #define MW_TREE_CONTAINER_NODE_LABEL_MAX_SIZE		16U
 #define MW_TREE_CONTAINER_NODE_IS_SELECTED_FLAG		0x01U
 #define MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG		0x02U
@@ -53,6 +52,7 @@ SOFTWARE.
 #define MW_TREE_CONTAINER_FOLDER_SELECT_ONLY		0x02U
 #define MW_TREE_CONTAINER_FILE_SELECT_ONLY			0x04U
 #define MW_TREE_CONTAINER_SHOW_FOLDERS_ONLY			0x08U
+#define MW_TREE_CONTAINER_FOLDER_SEPARATOR			"/"
 
 /************
 *** TYPES ***
@@ -74,8 +74,9 @@ typedef struct
  */
 typedef struct
 {
+	uint16_t nodes_array_size;									/**< Maximum number of nodes in nodes_array */
 	uint16_t node_count;										/**< Number of used nodes in pool, never less than 1 */
-	mw_tree_container_node_t nodes[MW_TREE_CONTAINER_MAX_SIZE];	/**< Memory pool of nodes contained in the tree */
+	mw_tree_container_node_t *nodes_array;						/**< Pointer to array of nodes */
 	uint8_t tree_flags;											/**< Flags describing this tree */
 } mw_tree_container_t;
 
@@ -101,12 +102,14 @@ typedef bool (*mw_tree_container_callback_t)(mw_tree_container_t *tree, mw_handl
  * Initialize the tree. This sets up the root folder node with node_id 0 and marks all other nodes unused
  *
  * @param tree Pointer to tree structure
+ * @param nodes_array Pointer to array to contain nodes
+ * @param nodes_array_size Size of nodes_array
  * @param root_folder_label Label to give to the root folder node
  * @param root_node_flags Flags to use for root node; can be MW_UTREE_NODE_IS_SELECTED_FLAG or MW_TREE_FOLDER_IS_OPEN_FLAG or both
  * @param tree_flags Flags that apply to the whole tree, can be MW_TREE_CONTAINER_SINGLE_SELECT_ONLY or MW_TREE_CONTAINER_SHOW_FOLDERS_ONLY or both or neither
  * @return Handle to the root node
  */
-mw_handle_t mw_tree_container_init(mw_tree_container_t *tree, char *root_folder_label, uint8_t root_node_flags, uint8_t tree_flags);
+mw_handle_t mw_tree_container_init(mw_tree_container_t *tree, mw_tree_container_node_t *nodes_array, uint16_t nodes_array_size, char *root_folder_label, uint8_t root_node_flags, uint8_t tree_flags);
 
 /**
  * Empty a tree of all nodes except the root folder node which remains untouched
@@ -181,15 +184,14 @@ void mw_tree_container_get_all_children(mw_tree_container_t *tree, mw_handle_t p
  *
  * @param tree Pointer to tree structure
  * @param parent_folder_handle Handle of the folder node to start looking in
- * @param count Pointer to int in which the result is returned
- * @return True if parameters acceptable, else false
+ * @return The number of open children
  * @note This function recursively descends the tree from the starting folder getting all children of all descendant folders if
- *       for open sub-folders. Children of closed sub-folders are ignored.
+ *       for open sub-folders. Children of closed sub-folders are ignored. The parent folder is not included in the count.
  */
-bool mw_tree_container_get_open_children_count(mw_tree_container_t *tree, mw_handle_t parent_folder_handle, uint16_t *count);
+uint16_t mw_tree_container_get_open_children_count(mw_tree_container_t *tree, mw_handle_t parent_folder_handle);
 
 /**
- * Get a node's handle from it's position after a parent folder looking at open folders only
+ * Get a node's handle from it's position after a parent folder, looking into open folders only
  *
  * @param tree Pointer to tree structure
  * @param parent_folder_handle Handle of the folder node to start looking in
@@ -225,6 +227,18 @@ uint16_t mw_tree_container_get_node_level(mw_tree_container_t *tree, mw_handle_t
  * @note Never returns a NULL pointer
  */
 char *mw_tree_container_get_node_label(mw_tree_container_t *tree, mw_handle_t node_handle);
+
+/**
+ * Get the full path and filename of a node from its handle. This includes the root path. If the node is
+ * a file this is included. The folder separator defined above is used to separate the folders. If the node
+ * is a folder then the folder separator is appended to the folder name.
+ *
+ * @param tree Pointer to tree structure
+ * @param node_handle Handle of the node to get label for
+ * @param node_path Buffer that contains the returned path
+ * @param node_path_length Size of the node path buffer
+ */
+void mw_tree_container_get_node_path(mw_tree_container_t *tree, mw_handle_t node_handle, char *node_path, uint16_t node_path_length);
 
 #ifdef __cplusplus
 }

@@ -73,6 +73,7 @@ static mw_ui_label_data_t label_date_data;
 static mw_ui_tree_data_t tree_data;
 static mw_ui_arrow_data_t arrow_up_data;
 static mw_ui_arrow_data_t arrow_down_data;
+static mw_tree_container_node_t nodes_array[20];
 
 /********************************
 *** LOCAL FUNCTION PROTOTYPES ***
@@ -125,7 +126,7 @@ void mw_user_init(void)
 			NULL);
 
 	tree_data.number_of_lines = 8U;
-	tree_data.root_handle = mw_tree_container_init(&tree_data.tree_container, "0:", MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN_FLAG, 0U);
+	tree_data.root_handle = mw_tree_container_init(&tree_data.tree_container, nodes_array, 20, "0:", MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN_FLAG, 0U);
 	tree_handle = mw_ui_tree_add_new(10,
 			40,
 			120,
@@ -233,6 +234,7 @@ void mw_user_init(void)
 			fold2_handle,
 			"file5",
 			0U);
+
 
 	mw_paint_all();
 }

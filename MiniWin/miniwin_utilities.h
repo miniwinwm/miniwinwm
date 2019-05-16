@@ -139,6 +139,14 @@ char *mw_util_safe_strcpy(char *dest, size_t size, const char *src);
 char *mw_util_safe_strcat(char *dest, size_t size, const char *src);
 
 /**
+ * Reverse a string
+ *
+ * @param str The string to reverse
+ * @return The revesed string
+ */
+char *mw_util_strrev(char *str);
+
+/**
  * Change a bit in a supplied 16 bit word and return the changed word
  *
  * @param word The word to change the bit in
