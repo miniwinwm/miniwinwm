@@ -57,13 +57,19 @@ extern mw_handle_t label_date_handle;
 extern mw_handle_t tree_handle;
 extern mw_handle_t arrow_up_handle;
 extern mw_handle_t arrow_down_handle;
+extern mw_handle_t label_path_handle;
 
 /***************************
 *** FUNCTIONS PROTOTYPES ***
 ***************************/
 
-// todo
-void add_file(mw_handle_t parent_folder, char *name);
+/**
+ * Add a file to a folder
+ *
+ * @param parent_folder The folder to add the file to
+ * @param name The file's name excluding path
+ */
+void tree_container_add_file_to_folder(mw_handle_t parent_folder, char *filename);
 
 #ifdef __cplusplus
 }

@@ -269,9 +269,12 @@ mw_handle_t mw_tree_container_add_node(mw_tree_container_t *tree, mw_handle_t pa
 		else
 		{
 			tree->no_space_callback(tree);
-			if (tree->node_count == tree->nodes_array_size)
+			if (tree->node_count >= tree->nodes_array_size)
 			{
 				MW_ASSERT((bool)false, "No space in tree");
+
+				/* handle case where array user daftness has shrunk the array instead of expanding it */
+				tree->node_count = tree->nodes_array_size;
 
 				return MW_INVALID_HANDLE;
 			}
@@ -302,7 +305,10 @@ mw_handle_t mw_tree_container_add_node(mw_tree_container_t *tree, mw_handle_t pa
 	return tree->nodes_array[parent_folder_id + 1U].handle;
 }
 
-void mw_tree_container_get_all_children(mw_tree_container_t *tree, mw_handle_t parent_folder_handle, mw_tree_container_callback_t callback, void *callback_data)
+void mw_tree_container_get_all_children(mw_tree_container_t *tree,
+		mw_handle_t parent_folder_handle,
+		mw_tree_container_next_child_callback_t *callback,
+		void *callback_data)
 {
 	uint16_t i;
 	uint16_t parent_folder_id;

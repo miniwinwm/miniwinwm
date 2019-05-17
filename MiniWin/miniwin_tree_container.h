@@ -68,14 +68,14 @@ typedef struct mw_tree_container_tag mw_tree_container_t;
  * @param callback_data Generic pointer to extra data that needs passing to callback function
  * @return Return true to continue searching or false to quit searching
  */
-//todo rename
-// todo whats going on here with declaration?
-typedef bool (*mw_tree_container_callback_t)(mw_tree_container_t *tree, mw_handle_t node_handle, void *callback_data);
+typedef bool (mw_tree_container_next_child_callback_t)(mw_tree_container_t *tree, mw_handle_t node_handle, void *callback_data);
 
 /**
- * Pointer type to callback function called from library to user code when adding a node fails because of lack of space for new nodes
+ * Function typedef of callback function called from library to user code when adding a node fails because of lack of
+ * space for new nodes
  *
  * @param tree Pointer to tree structure
+ * @note If it is not possible to allocate a larger space for the array this callback function should do nothing
  */
 typedef void (mw_tree_container_no_space_callback_t)(mw_tree_container_t *tree);
 
@@ -223,10 +223,13 @@ void mw_tree_container_remove_node(mw_tree_container_t *tree, mw_handle_t node_h
  *       for open sub-folders. Children of closed sub-folders are ignored.
  * @note This function can be instructed to terminate early at any point by the callback function returning false
  */
-void mw_tree_container_get_all_children(mw_tree_container_t *tree, mw_handle_t parent_folder_handle, mw_tree_container_callback_t callback, void *callback_data);
+void mw_tree_container_get_all_children(mw_tree_container_t *tree,
+		mw_handle_t parent_folder_handle,
+		mw_tree_container_next_child_callback_t *callback,
+		void *callback_data);
 
 /**
- * Recursively get all the count of children and sub-children of a folder node
+ * Recursively get the count of children and sub-children of a folder node
  *
  * @param tree Pointer to tree structure
  * @param parent_folder_handle Handle of the folder node to start looking in

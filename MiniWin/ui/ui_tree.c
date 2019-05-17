@@ -39,13 +39,14 @@ SOFTWARE.
 ************/
 
 /**
- * todo
+ * Extra data structure passed to found child/sub-child node callback when finding all child/sub-child
+ * nodes of a folder
  */
 typedef struct
 {
-	mw_ui_tree_data_t *this_tree;
-	int16_t next_line;
-	const mw_gl_draw_info_t *draw_info;
+	mw_ui_tree_data_t *this_tree;			/**< pointer to tree control's instance data */
+	int16_t next_line;						/**< The line in the control where to draw this node's label */
+	const mw_gl_draw_info_t *draw_info;		/**< draw_info structure used for drawing via gl */
 } tree_callback_data_t;
 
 /***********************
@@ -69,7 +70,12 @@ static bool node_callback(mw_tree_container_t *tree, mw_handle_t node_handle, vo
 **********************/
 
 /**
- * todo
+ * Pointer type to callback function called from library to user code when finding all descendants of a folder node
+ *
+ * @param tree Pointer to tree structure
+ * @param node_handle The handle of the next found node
+ * @param callback_data Generic pointer to extra data that needs passing to callback function
+ * @return Return true to continue searching or false to quit searching
  */
 static bool node_callback(mw_tree_container_t *tree, mw_handle_t node_handle, void *callback_data)
 {
@@ -80,7 +86,7 @@ static bool node_callback(mw_tree_container_t *tree, mw_handle_t node_handle, vo
 
 	if (node_handle == MW_INVALID_HANDLE)
 	{
-		return false;
+		return (false);
 	}
 
 	mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
@@ -117,7 +123,13 @@ static bool node_callback(mw_tree_container_t *tree, mw_handle_t node_handle, vo
 
 	tree_callback_data->next_line++;
 
-	return true;
+	/* check if reached bottom of control allowing search of nodes to be aborted */
+	if (tree_callback_data->next_line - tree_callback_data->this_tree->lines_to_scroll > tree_callback_data->this_tree->number_of_lines)
+	{
+		return (false);
+	}
+
+	return (true);
 }
 
 /**
@@ -303,47 +315,6 @@ static void tree_message_function(const mw_message_t *message)
 		}
 		break;
 
-#if 0
-	case MW_TREE_SET_NODES_ARRAY_MESSAGE:
-		{
-			uint32_t message_data = 0U;
-
-			if (message->message_pointer != NULL)
-			{
-				this_tree->tree_container.nodes_array_size = (uint8_t)message->message_data;
-				this_tree->tree_container.nodes_array = (mw_tree_container_node_t *)message->message_pointer;
-
-				/* get number of visible children of root folder */
-				this_tree->visible_children = mw_tree_container_get_open_children_count(&this_tree->tree_container, this_tree->root_handle);
-
-				/* add root folder to count */
-				this_tree->visible_children++;
-
-				this_tree->lines_to_scroll = 0U;
-
-				/* send message about whether scrolling is needed */
-				message_data = 0U;
-				if (this_tree->visible_children > this_tree->number_of_lines)
-				{
-					message_data = 0x010000;
-					message_data |= ((uint32_t)this_tree->visible_children - (uint32_t)this_tree->number_of_lines);
-				}
-
-				mw_post_message(MW_TREE_SCROLLING_REQUIRED_MESSAGE,
-						message->recipient_handle,
-						mw_get_control_parent_window_handle(message->recipient_handle),
-						message_data,
-						NULL,
-						MW_WINDOW_MESSAGE);
-			}
-			else
-			{
-				MW_ASSERT((bool)false, "Null pointer");
-			}
-		}
-		break;
-#endif
-
 	case MW_TOUCH_DOWN_MESSAGE:
 		{
 			int16_t touch_x;
@@ -461,7 +432,6 @@ mw_handle_t mw_ui_tree_add_new(int16_t x,
 		mw_ui_tree_data_t *tree_instance_data)
 {
 	mw_util_rect_t r;
-//	uint8_t i;
 
 	/* check for null parameters */
 	if (tree_instance_data == NULL)
@@ -469,18 +439,16 @@ mw_handle_t mw_ui_tree_add_new(int16_t x,
 		MW_ASSERT((bool)false, "Null pointer argument");
 		return (MW_INVALID_HANDLE);
 	}
-#if 0
-	//todo
-	/* check for null pointers in entry text */
-	for (i = 0U; i < tree_instance_data->number_of_items; i++)
+
+	if (tree_instance_data->tree_container.nodes_array_size < 1U ||
+			tree_instance_data->tree_container.node_count < 1U ||
+			tree_instance_data->tree_container.nodes_array[0].label == NULL ||
+			tree_instance_data->tree_container.nodes_array[0].handle == MW_INVALID_HANDLE)
 	{
-		if (tree_instance_data->tree_entries[i].label == NULL)
-		{
-			MW_ASSERT((bool)false, "Null pointer value in array");
-			return (MW_INVALID_HANDLE);
-		}
+		MW_ASSERT((bool)false, "Bad tree container");
+		return (MW_INVALID_HANDLE);
 	}
-#endif
+
 	if ((flags & MW_CONTROL_FLAG_LARGE_SIZE) == MW_CONTROL_FLAG_LARGE_SIZE)
 	{
 		/* check for a sensible width */

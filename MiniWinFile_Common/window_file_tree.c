@@ -188,20 +188,24 @@ void window_file_tree_message_function(const mw_message_t *message)
 
 	case MW_TREE_NODE_SELECTED_MESSAGE:
 		{
+			/* get full path of selected node and display it in a label */
 			mw_ui_tree_data_t *sender_tree = (mw_ui_tree_data_t*)mw_get_control_instance_data(message->sender_handle);
 			mw_tree_container_get_node_path(&sender_tree->tree_container, message->message_data, node_path, 100);
-			//todo do something with this
+			mw_post_message(MW_LABEL_SET_LABEL_TEXT_MESSAGE,
+					message->recipient_handle,
+					label_path_handle,
+					MW_UNUSED_MESSAGE_PARAMETER,
+					node_path,
+					MW_CONTROL_MESSAGE);
+			mw_paint_control(label_path_handle);
 
 			/* if a folder selected add a file to it */
 			if ((mw_tree_container_get_node_flags(&sender_tree->tree_container, message->message_data) & MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG) == MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG)
 			{
-				add_file(message->message_data, "file_add");
+				tree_container_add_file_to_folder(message->message_data, "file_add");
 				mw_ui_tree_data_changed(tree_handle);
 			}
 		}
-		break;
-
-	case MW_TOUCH_DOWN_MESSAGE:
 		break;
 
 	default:
