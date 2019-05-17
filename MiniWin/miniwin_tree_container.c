@@ -156,7 +156,13 @@ static void remove_all_children(mw_tree_container_t *tree, uint16_t parent_folde
 *** GLOBAL FUNCTIONS ***
 ***********************/
 
-mw_handle_t mw_tree_container_init(mw_tree_container_t *tree, mw_tree_container_node_t *nodes_array, uint16_t nodes_array_size, char *root_folder_label, uint8_t root_node_flags, uint8_t tree_flags)
+mw_handle_t mw_tree_container_init(mw_tree_container_t *tree,
+		mw_tree_container_node_t *nodes_array,
+		uint16_t nodes_array_size,
+		char *root_folder_label,
+		uint8_t root_node_flags,
+		uint8_t tree_flags,
+		mw_tree_container_no_space_callback_t *no_space_callback)
 {
 	if (tree == NULL || root_folder_label == NULL || nodes_array == NULL || nodes_array_size == 0U)
 	{
@@ -172,6 +178,7 @@ mw_handle_t mw_tree_container_init(mw_tree_container_t *tree, mw_tree_container_
 	mw_util_safe_strcpy(tree->nodes_array[MW_TREE_CONTAINER_ROOT_FOLDER_ID].label, (size_t)MW_TREE_CONTAINER_NODE_LABEL_MAX_SIZE, root_folder_label);
 	tree->nodes_array[MW_TREE_CONTAINER_ROOT_FOLDER_ID].level = 0U;
 	tree->nodes_array[MW_TREE_CONTAINER_ROOT_FOLDER_ID].handle = get_next_handle();
+	tree->no_space_callback = no_space_callback;
 
 	mw_tree_container_empty(tree);
 
@@ -190,6 +197,55 @@ void mw_tree_container_empty(mw_tree_container_t *tree)
 	tree->node_count = 1U;
 }
 
+uint16_t mw_tree_container_get_node_array_size(mw_tree_container_t *tree)
+{
+	if (tree == NULL)
+	{
+		MW_ASSERT((bool)false, "Null pointer");
+
+		return 0U;
+	}
+
+	return (tree->nodes_array_size);
+}
+
+mw_tree_container_node_t *mw_tree_container_get_node_array(mw_tree_container_t *tree)
+{
+	if (tree == NULL)
+	{
+		MW_ASSERT((bool)false, "Null pointer");
+
+		return 0U;
+	}
+
+	return (tree->nodes_array);
+}
+
+void mw_tree_container_set_new_node_array(mw_tree_container_t *tree, mw_tree_container_node_t *new_node_array, uint16_t new_node_array_size)
+{
+	if (tree == NULL || new_node_array == NULL)
+	{
+		MW_ASSERT((bool)false, "Null pointer");
+
+		return;
+	}
+
+	if (new_node_array_size < 1U)
+	{
+		MW_ASSERT((bool)false, "Bad parameter");
+
+		return;
+	}
+
+	tree->nodes_array = new_node_array;
+	tree->nodes_array_size = new_node_array_size;
+
+	if (tree->nodes_array_size < tree->node_count)
+	{
+		tree->node_count = tree->nodes_array_size;
+	}
+}
+
 mw_handle_t mw_tree_container_add_node(mw_tree_container_t *tree, mw_handle_t parent_folder_handle, char *label, uint8_t node_flags)
 {
 	uint16_t i;
@@ -204,9 +260,22 @@ mw_handle_t mw_tree_container_add_node(mw_tree_container_t *tree, mw_handle_t pa
 
 	if (tree->node_count == tree->nodes_array_size)
 	{
-		MW_ASSERT((bool)false, "No space in tree");
+		if (tree->no_space_callback == NULL)
+		{
+				MW_ASSERT((bool)false, "No space in tree");
 
-		return MW_INVALID_HANDLE;
+				return MW_INVALID_HANDLE;
+		}
+		else
+		{
+			tree->no_space_callback(tree);
+			if (tree->node_count == tree->nodes_array_size)
+			{
+				MW_ASSERT((bool)false, "No space in tree");
+
+				return MW_INVALID_HANDLE;
+			}
+		}
 	}
 
 	parent_folder_id = get_id_from_handle(tree, parent_folder_handle);

@@ -58,6 +58,27 @@ SOFTWARE.
 *** TYPES ***
 ************/
 
+typedef struct mw_tree_container_tag mw_tree_container_t;
+
+/**
+ * Pointer type to callback function called from library to user code when finding all descendants of a folder node
+ *
+ * @param tree Pointer to tree structure
+ * @param node_handle The handle of the next found node
+ * @param callback_data Generic pointer to extra data that needs passing to callback function
+ * @return Return true to continue searching or false to quit searching
+ */
+//todo rename
+// todo whats going on here with declaration?
+typedef bool (*mw_tree_container_callback_t)(mw_tree_container_t *tree, mw_handle_t node_handle, void *callback_data);
+
+/**
+ * Pointer type to callback function called from library to user code when adding a node fails because of lack of space for new nodes
+ *
+ * @param tree Pointer to tree structure
+ */
+typedef void (mw_tree_container_no_space_callback_t)(mw_tree_container_t *tree);
+
 /**
  * Tree node structure
  */
@@ -72,23 +93,14 @@ typedef struct
 /**
  * Tree structure
  */
-typedef struct
+typedef struct mw_tree_container_tag
 {
 	uint16_t nodes_array_size;									/**< Maximum number of nodes in nodes_array */
 	uint16_t node_count;										/**< Number of used nodes in pool, never less than 1 */
 	mw_tree_container_node_t *nodes_array;						/**< Pointer to array of nodes */
 	uint8_t tree_flags;											/**< Flags describing this tree */
+	mw_tree_container_no_space_callback_t *no_space_callback;	/**< Callback to be called when adding a node fails because of lack of space; can be NULL */
 } mw_tree_container_t;
-
-/**
- * Pointer type to callback function when finding all descendants of a folder node
- *
- * @param tree Pointer to tree structure
- * @param node_handle The handle of the next found node
- * @param callback_data Generic pointer to extra data that needs passing to callback function
- * @return Return true to continue searching or false to quit searching
- */
-typedef bool (*mw_tree_container_callback_t)(mw_tree_container_t *tree, mw_handle_t node_handle, void *callback_data);
 
 /*************************
 *** EXTERNAL VARIABLES ***
@@ -107,9 +119,16 @@ typedef bool (*mw_tree_container_callback_t)(mw_tree_container_t *tree, mw_handl
  * @param root_folder_label Label to give to the root folder node
  * @param root_node_flags Flags to use for root node; can be MW_UTREE_NODE_IS_SELECTED_FLAG or MW_TREE_FOLDER_IS_OPEN_FLAG or both
  * @param tree_flags Flags that apply to the whole tree, can be MW_TREE_CONTAINER_SINGLE_SELECT_ONLY or MW_TREE_CONTAINER_SHOW_FOLDERS_ONLY or both or neither
+ * @param no_space_callback Pointer to callback function that is called when adding a node fails because of lack of space for a new node. This can be NULL if not required.
  * @return Handle to the root node
  */
-mw_handle_t mw_tree_container_init(mw_tree_container_t *tree, mw_tree_container_node_t *nodes_array, uint16_t nodes_array_size, char *root_folder_label, uint8_t root_node_flags, uint8_t tree_flags);
+mw_handle_t mw_tree_container_init(mw_tree_container_t *tree,
+		mw_tree_container_node_t *nodes_array,
+		uint16_t nodes_array_size,
+		char *root_folder_label,
+		uint8_t root_node_flags,
+		uint8_t tree_flags,
+		mw_tree_container_no_space_callback_t *no_space_callback);
 
 /**
  * Empty a tree of all nodes except the root folder node which remains untouched
@@ -117,6 +136,33 @@ mw_handle_t mw_tree_container_init(mw_tree_container_t *tree, mw_tree_container_
  * @param tree Pointer to tree structure
  */
 void mw_tree_container_empty(mw_tree_container_t *tree);
+
+/**
+ * Get the size of the tree's node storage array
+ *
+ * @param tree Pointer to tree structure
+ * @return The node array size
+ */
+uint16_t mw_tree_container_get_node_array_size(mw_tree_container_t *tree);
+
+/**
+ * Get pointer to the tree's node storage array
+ *
+ * @param tree Pointer to tree structure
+ * @return Pointer to the tree's node storage array
+ */
+mw_tree_container_node_t *mw_tree_container_get_node_array(mw_tree_container_t *tree);
+
+/**
+ * Replace the tree's node storage array with a new one
+ *
+ * @param tree Pointer to tree structure
+ * @param new_node_array Pointer to new node array
+ * @param new_node_array_size Size of the new node array
+ * @note The node array can be expanded or shrunk
+ * @note The new node array must already be initialised with whatever contents are required in it. The root node is not created.
+ */
+void mw_tree_container_set_new_node_array(mw_tree_container_t *tree, mw_tree_container_node_t *new_node_array, uint16_t new_node_array_size);
 
 /**
  * Add a node to a tree in a specified folder

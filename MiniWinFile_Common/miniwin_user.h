@@ -62,6 +62,9 @@ extern mw_handle_t arrow_down_handle;
 *** FUNCTIONS PROTOTYPES ***
 ***************************/
 
+// todo
+void add_file(mw_handle_t parent_folder, char *name);
+
 #ifdef __cplusplus
 }
 #endif

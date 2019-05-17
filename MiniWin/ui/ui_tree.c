@@ -175,6 +175,50 @@ static void tree_paint_function(mw_handle_t control_handle, const mw_gl_draw_inf
 			(void *)&tree_callback_data);
 }
 
+void mw_ui_tree_data_changed(mw_handle_t tree_handle)
+{
+	if (tree_handle == MW_INVALID_HANDLE)
+	{
+		MW_ASSERT(false, "Invalid handle");
+
+		return;
+	}
+
+	mw_ui_tree_data_t *tree = (mw_ui_tree_data_t*)mw_get_control_instance_data(tree_handle);
+
+	if (tree == NULL)
+	{
+		MW_ASSERT(false, "Invalid handle");
+
+		return;
+	}
+
+	uint32_t message_data;
+
+	/* get number of visible children of root folder */
+	tree->visible_children = mw_tree_container_get_open_children_count(&tree->tree_container, tree->root_handle);
+
+	/* add root folder to count */
+	tree->visible_children++;
+
+	/* send message to parent window about whether scrolling is needed */
+	message_data = 0U;
+	if (tree->visible_children > tree->number_of_lines)
+	{
+		message_data = 0x010000;
+		message_data |= ((uint32_t)tree->visible_children - (uint32_t)tree->number_of_lines);
+	}
+
+	mw_paint_control(tree_handle);
+
+	mw_post_message(MW_TREE_SCROLLING_REQUIRED_MESSAGE,
+			MW_INVALID_HANDLE,
+			mw_get_control_parent_window_handle(tree_handle),
+			message_data,
+			NULL,
+			MW_WINDOW_MESSAGE);
+}
+
 /**
  * Control message handler called by the window manager.
  *

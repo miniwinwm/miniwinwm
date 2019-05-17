@@ -73,15 +73,25 @@ static mw_ui_label_data_t label_date_data;
 static mw_ui_tree_data_t tree_data;
 static mw_ui_arrow_data_t arrow_up_data;
 static mw_ui_arrow_data_t arrow_down_data;
-static mw_tree_container_node_t nodes_array[20];
+//static mw_tree_container_node_t nodes_array[20];  //todo
+mw_tree_container_node_t *nodes_array;
 
 /********************************
 *** LOCAL FUNCTION PROTOTYPES ***
 ********************************/
 
+static void expand_node_array(mw_tree_container_t *tree);
+
 /**********************
 *** LOCAL FUNCTIONS ***
 **********************/
+
+static void expand_node_array(mw_tree_container_t *tree)
+{
+	uint16_t new_node_array_size = mw_tree_container_get_node_array_size(tree) + 5U;
+	void *new_node_array = realloc(mw_tree_container_get_node_array(tree), new_node_array_size * sizeof(mw_tree_container_node_t));
+	mw_tree_container_set_new_node_array(tree, (mw_tree_container_node_t *)new_node_array, new_node_array_size);
+}
 
 /***********************
 *** GLOBAL FUNCTIONS ***
@@ -126,7 +136,16 @@ void mw_user_init(void)
 			NULL);
 
 	tree_data.number_of_lines = 8U;
-	tree_data.root_handle = mw_tree_container_init(&tree_data.tree_container, nodes_array, 20, "0:", MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN_FLAG, 0U);
+
+	nodes_array=(mw_tree_container_node_t *)malloc(sizeof(mw_tree_container_node_t) * 12);	//todo
+
+	tree_data.root_handle = mw_tree_container_init(&tree_data.tree_container,
+			nodes_array,
+			12,
+			"0:",
+			MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN_FLAG,
+			0U,
+			expand_node_array);
 	tree_handle = mw_ui_tree_add_new(10,
 			40,
 			120,
@@ -237,4 +256,12 @@ void mw_user_init(void)
 
 
 	mw_paint_all();
+}
+
+void add_file(mw_handle_t parent_folder, char *name)
+{
+	mw_tree_container_add_node(&tree_data.tree_container,
+			parent_folder,
+			name,
+			0U);
 }

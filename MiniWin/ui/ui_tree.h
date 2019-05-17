@@ -53,8 +53,6 @@ SOFTWARE.
 #define MW_UI_TREE_LARGE_MIN_WIDTH			24
 #define MW_UI_TREE_LARGE_ICON_SIZE			16U
 
-#define MW_UI_TREE_MAX_ENTRIES				16
-
 /************
 *** TYPES ***
 ************/
@@ -100,6 +98,15 @@ mw_handle_t mw_ui_tree_add_new(int16_t x,
 		mw_handle_t parent_handle,
 		uint16_t flags,
 		mw_ui_tree_data_t *tree_instance_data);
+
+/**
+ * Inform the control that the data contained in the tree container that it is displaying the contents
+ * of has changed. This updates the control and sends messages to the control's parent window as required.
+ * This function repaints the tree control.
+ *
+ * @param tree_handle The handle of the tree control
+ */
+void mw_ui_tree_data_changed(mw_handle_t tree_handle);
 
 #ifdef __cplusplus
 }
