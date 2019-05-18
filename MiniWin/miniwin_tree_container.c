@@ -812,7 +812,7 @@ void mw_tree_container_get_node_path(mw_tree_container_t *tree, mw_handle_t node
 	mw_util_safe_strcat(node_path, node_path_length, mw_util_strrev(node_label));
 
 	/* if starting node is not root folder add a folder separator */
-	if (level > 1U)
+	if (level > 0U)
 	{
 		mw_util_safe_strcat(node_path, node_path_length, MW_TREE_CONTAINER_FOLDER_SEPARATOR);
 	}

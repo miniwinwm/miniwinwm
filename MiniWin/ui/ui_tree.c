@@ -82,6 +82,7 @@ static bool node_callback(mw_tree_container_t *tree, mw_handle_t node_handle, vo
 	tree_callback_data_t *tree_callback_data = (tree_callback_data_t *)callback_data;
 	uint8_t node_flags;
 	uint16_t node_level;
+	int16_t label_icon_offset;
 
 	if (node_handle == MW_INVALID_HANDLE)
 	{
@@ -89,6 +90,7 @@ static bool node_callback(mw_tree_container_t *tree, mw_handle_t node_handle, vo
 	}
 
 	mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
+	mw_gl_set_bg_colour(MW_HAL_LCD_WHITE);
 
 	node_flags = mw_tree_container_get_node_flags(tree, node_handle);
 	node_level = mw_tree_container_get_node_level(tree, node_handle);
@@ -100,8 +102,8 @@ static bool node_callback(mw_tree_container_t *tree, mw_handle_t node_handle, vo
 			mw_gl_monochrome_bitmap(tree_callback_data->draw_info,
 					node_level * 10,
 					(tree_callback_data->next_line - tree_callback_data->this_tree->lines_to_scroll) * tree_callback_data->this_tree->row_height,
-					MW_UI_TREE_ICON_SIZE,
-					MW_UI_TREE_ICON_SIZE,
+					tree_callback_data->this_tree->icon_size,
+					tree_callback_data->this_tree->icon_size,
 					mw_bitmaps_folder_close_icon_small);
 		}
 		else
@@ -109,11 +111,41 @@ static bool node_callback(mw_tree_container_t *tree, mw_handle_t node_handle, vo
 			mw_gl_monochrome_bitmap(tree_callback_data->draw_info,
 					node_level * 10,
 					(tree_callback_data->next_line - tree_callback_data->this_tree->lines_to_scroll) * tree_callback_data->this_tree->row_height,
-					MW_UI_TREE_ICON_SIZE,
-					MW_UI_TREE_ICON_SIZE,
+					tree_callback_data->this_tree->icon_size,
+					tree_callback_data->this_tree->icon_size,
 					mw_bitmaps_folder_open_icon_small);
 		}
 	}
+
+	/* draw file/folder icons if required */
+	label_icon_offset = 0;
+	if ((node_flags & MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG) == MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG)
+	{
+		if (tree_callback_data->this_tree->folder_icon != NULL)
+		{
+			mw_gl_monochrome_bitmap(tree_callback_data->draw_info,
+					10 + node_level * 10,
+					(tree_callback_data->next_line - tree_callback_data->this_tree->lines_to_scroll) * tree_callback_data->this_tree->row_height,
+					tree_callback_data->this_tree->icon_size,
+					tree_callback_data->this_tree->icon_size,
+					tree_callback_data->this_tree->folder_icon);
+			label_icon_offset = tree_callback_data->this_tree->icon_size + 2;
+		}
+	}
+	else
+	{
+		if (tree_callback_data->this_tree->file_icon != NULL)
+		{
+			mw_gl_monochrome_bitmap(tree_callback_data->draw_info,
+					10 + node_level * 10,
+					(tree_callback_data->next_line - tree_callback_data->this_tree->lines_to_scroll) * tree_callback_data->this_tree->row_height,
+					tree_callback_data->this_tree->icon_size,
+					tree_callback_data->this_tree->icon_size,
+					tree_callback_data->this_tree->file_icon);
+			label_icon_offset = tree_callback_data->this_tree->icon_size + 2;
+		}
+	}
+
 
 	if ((node_flags & MW_TREE_CONTAINER_NODE_IS_SELECTED_FLAG) == MW_TREE_CONTAINER_NODE_IS_SELECTED_FLAG)
 	{
@@ -121,7 +153,7 @@ static bool node_callback(mw_tree_container_t *tree, mw_handle_t node_handle, vo
 	}
 
 	mw_gl_string(tree_callback_data->draw_info,
-			10 + node_level * 10,
+			label_icon_offset + 10 + node_level * 10,
 			(tree_callback_data->next_line - tree_callback_data->this_tree->lines_to_scroll) * tree_callback_data->this_tree->row_height,
 			mw_tree_container_get_node_label(tree, node_handle));
 
@@ -154,12 +186,10 @@ static void tree_paint_function(mw_handle_t control_handle, const mw_gl_draw_inf
 	if ((mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_LARGE_SIZE) == MW_CONTROL_FLAG_LARGE_SIZE)
 	{
 		mw_gl_set_font(MW_GL_TITLE_FONT);
-		tree_callback_data.this_tree->row_height = MW_UI_TREE_LARGE_ROW_HEIGHT;
 	}
 	else
 	{
 		mw_gl_set_font(MW_GL_FONT_9);
-		tree_callback_data.this_tree->row_height = MW_UI_TREE_ROW_HEIGHT;
 	}
 
     /* draw the background rectangle */
@@ -251,6 +281,17 @@ static void tree_message_function(const mw_message_t *message)
 	{
 	case MW_CONTROL_CREATED_MESSAGE:
 		{
+			if ((mw_get_control_flags(message->recipient_handle) & MW_CONTROL_FLAG_LARGE_SIZE) == MW_CONTROL_FLAG_LARGE_SIZE)
+			{
+				this_tree->icon_size = MW_UI_TREE_LARGE_ICON_SIZE;
+				this_tree->row_height = MW_UI_TREE_LARGE_ROW_HEIGHT;
+			}
+			else
+			{
+				this_tree->icon_size = MW_UI_TREE_ICON_SIZE;
+				this_tree->row_height = MW_UI_TREE_ROW_HEIGHT;
+			}
+
 			/* get number of visible children of root folder */
 			this_tree->visible_children = mw_tree_container_get_open_children_count(&this_tree->tree_container, this_tree->root_handle);
 

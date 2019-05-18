@@ -66,13 +66,14 @@ typedef struct
 	uint8_t number_of_lines;						/**< Number of lines displayed in the tree */
 	mw_tree_container_t tree_container;				/**< Tree container data structure containing the data of the tree */
 	mw_handle_t root_handle;						/**< Handle of the root folder node */
-	uint8_t *folder_icon;
-	uint8_t *file_icon;
+	const uint8_t *folder_icon;						/**< Pointer to icon to show for folder or NULL if no icon needed */
+	const uint8_t *file_icon;						/**< Pointer to icon to show for file or NULL if no icon needed */
 
 	/* Non-user modifiable fields */
 	uint8_t lines_to_scroll;						/**< The number of entries down to start showing entries */
 	uint16_t visible_children;						/**< Total number of children of all folders that are open */
 	int16_t row_height;								/**< Height in pixels of a line on the display */
+	int16_t icon_size;								/**< Width and height of all icons used in control */
 } mw_ui_tree_data_t;
 
 /*************************

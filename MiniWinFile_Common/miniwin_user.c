@@ -137,6 +137,8 @@ void mw_user_init(void)
 
 	nodes_array=(mw_tree_container_node_t *)malloc(sizeof(mw_tree_container_node_t) * 12);	//todo
 	tree_data.number_of_lines = 8U;
+	tree_data.file_icon = mw_bitmaps_file_icon_small;
+	tree_data.folder_icon = mw_bitmaps_folder_icon_small;
 	tree_data.root_handle = mw_tree_container_init(&tree_data.tree_container,
 			nodes_array,
 			12,
