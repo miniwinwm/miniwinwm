@@ -68,6 +68,8 @@ extern const uint8_t mw_bitmaps_file_icon_small[];
 extern const uint8_t mw_bitmaps_folder_icon_small[];
 extern const uint8_t mw_bitmaps_file_icon_large[];
 extern const uint8_t mw_bitmaps_folder_icon_large[];
+extern const uint8_t mw_bitmaps_folder_close_icon_small[];
+extern const uint8_t mw_bitmaps_folder_open_icon_small[];
 
 /***************************
 *** FUNCTIONS PROTOTYPES ***

@@ -98,8 +98,8 @@ typedef struct mw_tree_container_tag
 	uint16_t nodes_array_size;									/**< Maximum number of nodes in nodes_array */
 	uint16_t node_count;										/**< Number of used nodes in pool, never less than 1 */
 	mw_tree_container_node_t *nodes_array;						/**< Pointer to array of nodes */
-	uint8_t tree_flags;											/**< Flags describing this tree */
 	mw_tree_container_no_space_callback_t *no_space_callback;	/**< Callback to be called when adding a node fails because of lack of space; can be NULL */
+	uint8_t tree_flags;											/**< Flags describing this tree */
 } mw_tree_container_t;
 
 /*************************

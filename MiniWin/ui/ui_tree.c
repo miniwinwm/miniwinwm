@@ -82,7 +82,6 @@ static bool node_callback(mw_tree_container_t *tree, mw_handle_t node_handle, vo
 	tree_callback_data_t *tree_callback_data = (tree_callback_data_t *)callback_data;
 	uint8_t node_flags;
 	uint16_t node_level;
-	char c;
 
 	if (node_handle == MW_INVALID_HANDLE)
 	{
@@ -98,17 +97,22 @@ static bool node_callback(mw_tree_container_t *tree, mw_handle_t node_handle, vo
 	{
 		if ((node_flags & MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN_FLAG) == MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN_FLAG)
 		{
-			c = '-';
+			mw_gl_monochrome_bitmap(tree_callback_data->draw_info,
+					node_level * 10,
+					(tree_callback_data->next_line - tree_callback_data->this_tree->lines_to_scroll) * tree_callback_data->this_tree->row_height,
+					MW_UI_TREE_ICON_SIZE,
+					MW_UI_TREE_ICON_SIZE,
+					mw_bitmaps_folder_close_icon_small);
 		}
 		else
 		{
-			c = '+';
+			mw_gl_monochrome_bitmap(tree_callback_data->draw_info,
+					node_level * 10,
+					(tree_callback_data->next_line - tree_callback_data->this_tree->lines_to_scroll) * tree_callback_data->this_tree->row_height,
+					MW_UI_TREE_ICON_SIZE,
+					MW_UI_TREE_ICON_SIZE,
+					mw_bitmaps_folder_open_icon_small);
 		}
-
-		mw_gl_character(tree_callback_data->draw_info,
-				node_level * 10,
-				(tree_callback_data->next_line - tree_callback_data->this_tree->lines_to_scroll) * tree_callback_data->this_tree->row_height,
-				c);
 	}
 
 	if ((node_flags & MW_TREE_CONTAINER_NODE_IS_SELECTED_FLAG) == MW_TREE_CONTAINER_NODE_IS_SELECTED_FLAG)

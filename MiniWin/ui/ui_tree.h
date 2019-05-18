@@ -66,6 +66,8 @@ typedef struct
 	uint8_t number_of_lines;						/**< Number of lines displayed in the tree */
 	mw_tree_container_t tree_container;				/**< Tree container data structure containing the data of the tree */
 	mw_handle_t root_handle;						/**< Handle of the root folder node */
+	uint8_t *folder_icon;
+	uint8_t *file_icon;
 
 	/* Non-user modifiable fields */
 	uint8_t lines_to_scroll;						/**< The number of entries down to start showing entries */
