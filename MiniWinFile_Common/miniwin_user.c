@@ -81,7 +81,16 @@ static mw_ui_label_data_t label_path_data;
 /********************************
 *** LOCAL FUNCTION PROTOTYPES ***
 ********************************/
-// todo
+/**
+ * Request from tree container to expand the node storage array
+ *
+ * @param tree Pointer to tree structure
+ * @note From the tree container structure parameter get the existing size of the node array.
+ *       Calculate the new expanded size from this. Reallocate the node array storage of this
+ *       new size using the tree container structure parameter to get the pointer to the existing
+ *       node array storage. If the reallocate succeeds set the new storage and its size using the
+ *       tree container structure parameter.
+ */
 static void expand_node_array(mw_tree_container_t *tree);
 
 /**********************
@@ -137,8 +146,10 @@ void mw_user_init(void)
 
 	nodes_array=(mw_tree_container_node_t *)malloc(sizeof(mw_tree_container_node_t) * 12);	//todo
 	tree_data.number_of_lines = 8U;
-	tree_data.file_icon = mw_bitmaps_file_icon_small;
-	tree_data.folder_icon = mw_bitmaps_folder_icon_small;
+//	tree_data.file_icon = mw_bitmaps_file_icon_small;
+//	tree_data.folder_icon = mw_bitmaps_folder_icon_small;
+	tree_data.file_icon = mw_bitmaps_file_icon_large;
+	tree_data.folder_icon = mw_bitmaps_folder_icon_large;
 	tree_data.root_handle = mw_tree_container_init(&tree_data.tree_container,
 			nodes_array,
 			12,
@@ -150,7 +161,7 @@ void mw_user_init(void)
 			5,
 			125,
 			window_file_tree_handle,
-			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
+			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_LARGE_SIZE,
 			&tree_data);
 
 	arrow_up_data.mw_ui_arrow_direction = MW_UI_ARROW_UP;
@@ -239,7 +250,7 @@ void mw_user_init(void)
 			0U);
 	mw_handle_t fold1_handle = mw_tree_container_add_node(&tree_data.tree_container,
 			tree_data.root_handle,
-			"fold1",
+			"Foldy1",
 			MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG | MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN_FLAG);
 	mw_tree_container_add_node(&tree_data.tree_container,
 			fold1_handle,
