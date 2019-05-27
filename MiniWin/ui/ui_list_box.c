@@ -335,7 +335,7 @@ static void list_box_message_function(const mw_message_t *message)
 		if (this_list_box->number_of_items <= this_list_box->number_of_lines)
 		{
 			/* no, so set scroll lines to zero */
-			this_list_box->lines_to_scroll = 0U;
+			intermediate_uint32 = 0U;
 		}
 		else
 		{
@@ -343,8 +343,17 @@ static void list_box_message_function(const mw_message_t *message)
 			  intermediate_uint32 = (message->message_data *
 					((uint32_t)this_list_box->number_of_items - (uint32_t)this_list_box->number_of_lines)) /
 					(uint32_t)UINT8_MAX;
-			  this_list_box->lines_to_scroll = (uint8_t)intermediate_uint32;
+		}
 
+		if (this_list_box->lines_to_scroll != (uint8_t)intermediate_uint32)
+		{
+			this_list_box->lines_to_scroll = (uint8_t)intermediate_uint32;
+			mw_post_message(MW_SCROLLED_CONTROL_NEEDS_PAINTING_HINT_MESSAGE,
+					message->recipient_handle,
+					mw_get_control_parent_window_handle(message->recipient_handle),
+					MW_UNUSED_MESSAGE_PARAMETER,
+					NULL,
+					MW_WINDOW_MESSAGE);
 		}
 		break;
 

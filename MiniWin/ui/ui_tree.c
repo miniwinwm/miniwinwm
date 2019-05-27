@@ -44,10 +44,10 @@ SOFTWARE.
  */
 typedef struct
 {
-	mw_ui_tree_data_t *this_tree;			/**< pointer to tree control's instance data */
+	mw_ui_tree_data_t *this_tree;			/**< Pointer to tree control's instance data */
+	const mw_gl_draw_info_t *draw_info;		/**< Structure used for drawing via gl */
 	int16_t next_line;						/**< The line in the control where to draw this node's label */
-	const mw_gl_draw_info_t *draw_info;		/**< draw_info structure used for drawing via gl */
-	int16_t control_width;					/**< width of the tree control */
+	int16_t control_width;					/**< Width of the tree control */
 	bool large_size;						/**< true if the control is large size, false if standard size */
 } tree_callback_data_t;
 
@@ -65,7 +65,7 @@ typedef struct
 
 static void tree_paint_function(mw_handle_t control_handle, const mw_gl_draw_info_t *draw_info);
 static void tree_message_function(const mw_message_t *message);
-static bool node_callback(mw_tree_container_t *tree, mw_handle_t node_handle, void *callback_data);
+static bool node_callback(struct mw_tree_container_t *tree, mw_handle_t node_handle, void *callback_data);
 
 /**********************
 *** LOCAL FUNCTIONS ***
@@ -79,7 +79,7 @@ static bool node_callback(mw_tree_container_t *tree, mw_handle_t node_handle, vo
  * @param callback_data Generic pointer to extra data that needs passing to callback function
  * @return Return true to continue searching or false to quit searching
  */
-static bool node_callback(mw_tree_container_t *tree, mw_handle_t node_handle, void *callback_data)
+static bool node_callback(struct mw_tree_container_t *tree, mw_handle_t node_handle, void *callback_data)
 {
 	tree_callback_data_t *tree_callback_data = (tree_callback_data_t *)callback_data;
 	uint8_t node_flags;
@@ -100,7 +100,7 @@ static bool node_callback(mw_tree_container_t *tree, mw_handle_t node_handle, vo
 		mw_gl_set_solid_fill_colour(MW_CONTROL_DOWN_COLOUR);
 		mw_gl_rectangle(tree_callback_data->draw_info,
 				1,
-				(tree_callback_data->next_line - tree_callback_data->this_tree->lines_to_scroll) * tree_callback_data->this_tree->row_height,
+				(tree_callback_data->next_line - (int16_t)tree_callback_data->this_tree->lines_to_scroll) * tree_callback_data->this_tree->row_height,
 				tree_callback_data->control_width - 2,
 				tree_callback_data->this_tree->row_height);
 	}
@@ -115,8 +115,8 @@ static bool node_callback(mw_tree_container_t *tree, mw_handle_t node_handle, vo
 			if (tree_callback_data->large_size == true)
 			{
 				mw_gl_monochrome_bitmap(tree_callback_data->draw_info,
-						tree_callback_data->this_tree->row_left_boder = MW_UI_TREE_LEFT_BORDER + node_level * (tree_callback_data->this_tree->icon_size + 2),
-						tree_callback_data->this_tree->row_top_boder + (tree_callback_data->next_line - tree_callback_data->this_tree->lines_to_scroll) * tree_callback_data->this_tree->row_height,
+						tree_callback_data->this_tree->row_left_border + MW_UI_TREE_LEFT_BORDER + (int16_t)node_level * ((int16_t)tree_callback_data->this_tree->icon_size + 2),
+						tree_callback_data->this_tree->row_top_border + (tree_callback_data->next_line - (int16_t)tree_callback_data->this_tree->lines_to_scroll) * tree_callback_data->this_tree->row_height,
 						tree_callback_data->this_tree->icon_size,
 						tree_callback_data->this_tree->icon_size,
 						mw_bitmaps_folder_close_icon_large);
@@ -124,8 +124,8 @@ static bool node_callback(mw_tree_container_t *tree, mw_handle_t node_handle, vo
 			else
 			{
 				mw_gl_monochrome_bitmap(tree_callback_data->draw_info,
-						tree_callback_data->this_tree->row_left_boder = MW_UI_TREE_LEFT_BORDER + node_level * (tree_callback_data->this_tree->icon_size + 2),
-						tree_callback_data->this_tree->row_top_boder + (tree_callback_data->next_line - tree_callback_data->this_tree->lines_to_scroll) * tree_callback_data->this_tree->row_height,
+						tree_callback_data->this_tree->row_left_border + MW_UI_TREE_LEFT_BORDER + (int16_t)node_level * ((int16_t)tree_callback_data->this_tree->icon_size + 2),
+						tree_callback_data->this_tree->row_top_border + (tree_callback_data->next_line - (int16_t)tree_callback_data->this_tree->lines_to_scroll) * tree_callback_data->this_tree->row_height,
 						tree_callback_data->this_tree->icon_size,
 						tree_callback_data->this_tree->icon_size,
 						mw_bitmaps_folder_close_icon_small);
@@ -136,8 +136,8 @@ static bool node_callback(mw_tree_container_t *tree, mw_handle_t node_handle, vo
 			if (tree_callback_data->large_size == true)
 			{
 				mw_gl_monochrome_bitmap(tree_callback_data->draw_info,
-						tree_callback_data->this_tree->row_left_boder = MW_UI_TREE_LEFT_BORDER + node_level * (tree_callback_data->this_tree->icon_size + 2),
-						tree_callback_data->this_tree->row_top_boder + (tree_callback_data->next_line - tree_callback_data->this_tree->lines_to_scroll) * tree_callback_data->this_tree->row_height,
+						tree_callback_data->this_tree->row_left_border + MW_UI_TREE_LEFT_BORDER + (int16_t)node_level * ((int16_t)tree_callback_data->this_tree->icon_size + 2),
+						tree_callback_data->this_tree->row_top_border + (tree_callback_data->next_line - (int16_t)tree_callback_data->this_tree->lines_to_scroll) * tree_callback_data->this_tree->row_height,
 						tree_callback_data->this_tree->icon_size,
 						tree_callback_data->this_tree->icon_size,
 						mw_bitmaps_folder_open_icon_large);
@@ -145,8 +145,8 @@ static bool node_callback(mw_tree_container_t *tree, mw_handle_t node_handle, vo
 			else
 			{
 				mw_gl_monochrome_bitmap(tree_callback_data->draw_info,
-						tree_callback_data->this_tree->row_left_boder = MW_UI_TREE_LEFT_BORDER + node_level * (tree_callback_data->this_tree->icon_size + 2),
-						tree_callback_data->this_tree->row_top_boder + (tree_callback_data->next_line - tree_callback_data->this_tree->lines_to_scroll) * tree_callback_data->this_tree->row_height,
+						tree_callback_data->this_tree->row_left_border + MW_UI_TREE_LEFT_BORDER + (int16_t)node_level * ((int16_t)tree_callback_data->this_tree->icon_size + 2),
+						tree_callback_data->this_tree->row_top_border + (tree_callback_data->next_line - (int16_t)tree_callback_data->this_tree->lines_to_scroll) * tree_callback_data->this_tree->row_height,
 						tree_callback_data->this_tree->icon_size,
 						tree_callback_data->this_tree->icon_size,
 						mw_bitmaps_folder_open_icon_small);
@@ -161,12 +161,12 @@ static bool node_callback(mw_tree_container_t *tree, mw_handle_t node_handle, vo
 		if (tree_callback_data->this_tree->folder_icon != NULL)
 		{
 			mw_gl_monochrome_bitmap(tree_callback_data->draw_info,
-					tree_callback_data->this_tree->row_left_boder = MW_UI_TREE_LEFT_BORDER + (node_level + 1) * (tree_callback_data->this_tree->icon_size + 2),
-					tree_callback_data->this_tree->row_top_boder + (tree_callback_data->next_line - tree_callback_data->this_tree->lines_to_scroll) * tree_callback_data->this_tree->row_height,
+					tree_callback_data->this_tree->row_left_border + MW_UI_TREE_LEFT_BORDER + ((int16_t)node_level + 1) * ((int16_t)tree_callback_data->this_tree->icon_size + 2),
+					tree_callback_data->this_tree->row_top_border + (tree_callback_data->next_line - (int16_t)tree_callback_data->this_tree->lines_to_scroll) * tree_callback_data->this_tree->row_height,
 					tree_callback_data->this_tree->icon_size,
 					tree_callback_data->this_tree->icon_size,
 					tree_callback_data->this_tree->folder_icon);
-			label_icon_offset = tree_callback_data->this_tree->icon_size + 2;
+			label_icon_offset = (int16_t)tree_callback_data->this_tree->icon_size + 2;
 		}
 	}
 	else
@@ -174,24 +174,24 @@ static bool node_callback(mw_tree_container_t *tree, mw_handle_t node_handle, vo
 		if (tree_callback_data->this_tree->file_icon != NULL)
 		{
 			mw_gl_monochrome_bitmap(tree_callback_data->draw_info,
-					tree_callback_data->this_tree->row_left_boder = MW_UI_TREE_LEFT_BORDER + (node_level + 1) * (tree_callback_data->this_tree->icon_size + 2),
-					tree_callback_data->this_tree->row_top_boder + (tree_callback_data->next_line - tree_callback_data->this_tree->lines_to_scroll) * tree_callback_data->this_tree->row_height,
+					tree_callback_data->this_tree->row_left_border + MW_UI_TREE_LEFT_BORDER + ((int16_t)node_level + 1) * ((int16_t)tree_callback_data->this_tree->icon_size + 2),
+					tree_callback_data->this_tree->row_top_border + (tree_callback_data->next_line - (int16_t)tree_callback_data->this_tree->lines_to_scroll) * tree_callback_data->this_tree->row_height,
 					tree_callback_data->this_tree->icon_size,
 					tree_callback_data->this_tree->icon_size,
 					tree_callback_data->this_tree->file_icon);
-			label_icon_offset = tree_callback_data->this_tree->icon_size + 2;
+			label_icon_offset = (int16_t)tree_callback_data->this_tree->icon_size + 2;
 		}
 	}
 
 	mw_gl_string(tree_callback_data->draw_info,
-			tree_callback_data->this_tree->row_left_boder = MW_UI_TREE_LEFT_BORDER + label_icon_offset + (node_level + 1) * (tree_callback_data->this_tree->icon_size + 2),
-			tree_callback_data->this_tree->row_top_boder + (tree_callback_data->next_line - tree_callback_data->this_tree->lines_to_scroll) * tree_callback_data->this_tree->row_height,
+			tree_callback_data->this_tree->row_left_border + MW_UI_TREE_LEFT_BORDER + label_icon_offset + ((int16_t)node_level + 1) * ((int16_t)tree_callback_data->this_tree->icon_size + 2),
+			tree_callback_data->this_tree->row_top_border + (tree_callback_data->next_line - (int16_t)tree_callback_data->this_tree->lines_to_scroll) * tree_callback_data->this_tree->row_height,
 			mw_tree_container_get_node_label(tree, node_handle));
 
 	tree_callback_data->next_line++;
 
 	/* check if reached bottom of control allowing search of nodes to be aborted */
-	if (tree_callback_data->next_line - tree_callback_data->this_tree->lines_to_scroll > tree_callback_data->this_tree->number_of_lines)
+	if (tree_callback_data->next_line - (int16_t)tree_callback_data->this_tree->lines_to_scroll > (int16_t)tree_callback_data->this_tree->number_of_lines)
 	{
 		return (false);
 	}
@@ -235,7 +235,9 @@ static void tree_paint_function(mw_handle_t control_handle, const mw_gl_draw_inf
     /* draw the background rectangle */
 	mw_gl_set_fill(MW_GL_FILL);
 	mw_gl_set_solid_fill_colour(MW_CONTROL_UP_COLOUR);
-	mw_gl_set_border(MW_GL_BORDER_OFF);
+	mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
+	mw_gl_set_line(MW_GL_SOLID_LINE);
+	mw_gl_set_border(MW_GL_BORDER_ON);
 	mw_gl_clear_pattern();
 	mw_gl_rectangle(draw_info,
 			0,
@@ -257,32 +259,22 @@ static void tree_paint_function(mw_handle_t control_handle, const mw_gl_draw_inf
 			tree_callback_data.this_tree->root_handle,
 			node_callback,
 			(void *)&tree_callback_data);
-
-	mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
-	mw_gl_set_line(MW_GL_SOLID_LINE);
-	mw_gl_set_border(MW_GL_BORDER_OFF);
-	mw_gl_set_fill(MW_GL_NO_FILL);
-	mw_gl_rectangle(draw_info,
-			0,
-			0,
-			mw_get_control_rect(control_handle).width,
-			mw_get_control_rect(control_handle).height);
 }
 
-void mw_ui_tree_data_changed(mw_handle_t tree_handle)
+void mw_ui_tree_data_changed(mw_handle_t changed_tree_handle)
 {
-	if (tree_handle == MW_INVALID_HANDLE)
+	if (changed_tree_handle == MW_INVALID_HANDLE)
 	{
-		MW_ASSERT(false, "Invalid handle");
+		MW_ASSERT((bool)false, "Invalid handle");
 
 		return;
 	}
 
-	mw_ui_tree_data_t *tree = (mw_ui_tree_data_t*)mw_get_control_instance_data(tree_handle);
+	mw_ui_tree_data_t *tree = (mw_ui_tree_data_t*)mw_get_control_instance_data(changed_tree_handle);
 
 	if (tree == NULL)
 	{
-		MW_ASSERT(false, "Invalid handle");
+		MW_ASSERT((bool)false, "Invalid handle");
 
 		return;
 	}
@@ -303,11 +295,9 @@ void mw_ui_tree_data_changed(mw_handle_t tree_handle)
 		message_data |= ((uint32_t)tree->visible_children - (uint32_t)tree->number_of_lines);
 	}
 
-	mw_paint_control(tree_handle);
-
 	mw_post_message(MW_TREE_SCROLLING_REQUIRED_MESSAGE,
 			MW_INVALID_HANDLE,
-			mw_get_control_parent_window_handle(tree_handle),
+			mw_get_control_parent_window_handle(changed_tree_handle),
 			message_data,
 			NULL,
 			MW_WINDOW_MESSAGE);
@@ -333,15 +323,15 @@ static void tree_message_function(const mw_message_t *message)
 			{
 				this_tree->icon_size = MW_UI_TREE_LARGE_ICON_SIZE;
 				this_tree->row_height = MW_UI_TREE_LARGE_ROW_HEIGHT;
-				this_tree->row_left_boder = MW_UI_TREE_LARGE_LEFT_BORDER;
-				this_tree->row_top_boder = MW_UI_TREE_LARGE_TOP_BORDER;
+				this_tree->row_left_border = MW_UI_TREE_LARGE_LEFT_BORDER;
+				this_tree->row_top_border = MW_UI_TREE_LARGE_TOP_BORDER;
 			}
 			else
 			{
 				this_tree->icon_size = MW_UI_TREE_ICON_SIZE;
 				this_tree->row_height = MW_UI_TREE_ROW_HEIGHT;
-				this_tree->row_left_boder = MW_UI_TREE_LEFT_BORDER;
-				this_tree->row_top_boder = MW_UI_TREE_TOP_BORDER;
+				this_tree->row_left_border = MW_UI_TREE_LEFT_BORDER;
+				this_tree->row_top_border = MW_UI_TREE_TOP_BORDER;
 			}
 
 			/* initialise selected line invalid rect */
@@ -374,25 +364,36 @@ static void tree_message_function(const mw_message_t *message)
 		}
 		break;
 
-#if 0
 	case MW_TREE_SCROLL_BAR_POSITION_MESSAGE:
-		/* check if scrolling is appropriate */
-		if (this_tree->number_of_items <= this_tree->number_of_lines)
 		{
-			/* no, so set scroll lines to zero */
-			this_tree->lines_to_scroll = 0U;
-		}
-		else
-		{
-			/* yes so recalculate vertical scroll lines from last scroll bar position recorded */
-			  intermediate_uint32 = (message->message_data *
-					((uint32_t)this_tree->number_of_items - (uint32_t)this_tree->number_of_lines)) /
-					(uint32_t)UINT8_MAX;
-			  this_tree->lines_to_scroll = (uint8_t)intermediate_uint32;
+			uint32_t intermediate_uint32;
 
+			/* check if scrolling is appropriate */
+			if (this_tree->visible_children <= this_tree->number_of_lines)
+			{
+				/* no, so set scroll lines to zero */
+				intermediate_uint32 = 0U;
+			}
+			else
+			{
+				/* yes so recalculate vertical scroll lines from last scroll bar position recorded */
+				  intermediate_uint32 = (message->message_data *
+						((uint32_t)this_tree->visible_children - (uint32_t)this_tree->number_of_lines)) /
+						(uint32_t)UINT8_MAX;
+			}
+
+			if (this_tree->lines_to_scroll != (uint8_t)intermediate_uint32)
+			{
+				this_tree->lines_to_scroll = (uint8_t)intermediate_uint32;
+				mw_post_message(MW_SCROLLED_CONTROL_NEEDS_PAINTING_HINT_MESSAGE,
+						message->recipient_handle,
+						mw_get_control_parent_window_handle(message->recipient_handle),
+						MW_UNUSED_MESSAGE_PARAMETER,
+						NULL,
+						MW_WINDOW_MESSAGE);
+			}
 		}
 		break;
-#endif
 
 	case MW_TREE_LINES_TO_SCROLL_MESSAGE:
 		{
@@ -410,7 +411,7 @@ static void tree_message_function(const mw_message_t *message)
 				/* check that the new scroll position doesn't exceed maximum possible */
 				if (this_tree->lines_to_scroll > (this_tree->visible_children - this_tree->number_of_lines))
 				{
-					this_tree->lines_to_scroll = this_tree->visible_children - this_tree->number_of_lines;
+					this_tree->lines_to_scroll = this_tree->visible_children - (uint16_t)this_tree->number_of_lines;
 				}
 			}
 		}
@@ -424,11 +425,13 @@ static void tree_message_function(const mw_message_t *message)
 			uint8_t node_flags;
 			uint16_t node_level;
 			int16_t line_number;
+			uint32_t intermediate_uint32;
 
 			/* handle a touch down event within this control */
-			touch_x = (int16_t)(message->message_data >> 16);
+			intermediate_uint32 = message->message_data >> 16;
+			touch_x = (int16_t)intermediate_uint32;
 			touch_y = (int16_t)message->message_data;
-			line_number = touch_y / this_tree->row_height + this_tree->lines_to_scroll;
+			line_number = touch_y / this_tree->row_height + (int16_t)this_tree->lines_to_scroll;
 
 			/* check if the control is enabled */
 			if ((mw_get_control_flags(message->recipient_handle) & MW_CONTROL_FLAG_IS_ENABLED) == MW_CONTROL_FLAG_IS_ENABLED)
@@ -436,28 +439,43 @@ static void tree_message_function(const mw_message_t *message)
 				/* control is enabled, get selected node handle from y poisition */
 				selected_node_handle = mw_tree_container_get_handle_from_visible_position(&this_tree->tree_container,
 						this_tree->root_handle,
-						line_number);
+						(uint16_t)line_number);
 
 				/* check for valid handle, an empty line returns an invalid handle */
 				if (selected_node_handle != MW_INVALID_HANDLE)
 				{
-					/* get details opf selected node */
+					/* get details of selected node */
 					node_flags = mw_tree_container_get_node_flags(&this_tree->tree_container, selected_node_handle);
 					node_level = mw_tree_container_get_node_level(&this_tree->tree_container, selected_node_handle);
 
-					/* check for selection on a folder +/- area */
+					/* check for selection on a folder >/V area */
 					if ((node_flags & MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG) == MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG &&
-							touch_x < ((int16_t)(node_level) + 1) * (this_tree->icon_size + 2))
+							touch_x < ((int16_t)(node_level) + 1) * ((int16_t)this_tree->icon_size + 2))
 					{
-						/* selected folder +/- area */
+						/* selected folder >/V area */
 						if ((node_flags & MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN_FLAG) == MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN_FLAG)
 						{
 							mw_tree_container_change_folder_node_open_state(&this_tree->tree_container, selected_node_handle, false);
 
+							/* let parent window know that a folder has been closed */
+							mw_post_message(MW_TREE_FOLDER_CLOSED_MESSAGE,
+									message->recipient_handle,
+									mw_get_control_parent_window_handle(message->recipient_handle),
+									selected_node_handle,
+									NULL,
+									MW_WINDOW_MESSAGE);
 						}
 						else
 						{
 							mw_tree_container_change_folder_node_open_state(&this_tree->tree_container, selected_node_handle, true);
+
+							/* let parent window know that a folder has been opened */
+							mw_post_message(MW_TREE_FOLDER_OPENED_MESSAGE,
+									message->recipient_handle,
+									mw_get_control_parent_window_handle(message->recipient_handle),
+									selected_node_handle,
+									NULL,
+									MW_WINDOW_MESSAGE);
 						}
 
 						/* update number of visible children of root folder */
@@ -486,7 +504,7 @@ static void tree_message_function(const mw_message_t *message)
 					}
 					else
 					{
-						/* not selected folder +/- area */
+						/* not selected folder >/V area */
 						if ((node_flags & MW_TREE_CONTAINER_NODE_IS_SELECTED_FLAG) == MW_TREE_CONTAINER_NODE_IS_SELECTED_FLAG)
 						{
 							/* mark node chosen as selected */

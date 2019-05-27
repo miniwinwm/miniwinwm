@@ -55,9 +55,8 @@ extern mw_handle_t button_create_handle;
 extern mw_handle_t label_time_handle;
 extern mw_handle_t label_date_handle;
 extern mw_handle_t tree_handle;
-extern mw_handle_t arrow_up_handle;
-extern mw_handle_t arrow_down_handle;
 extern mw_handle_t label_path_handle;
+extern mw_handle_t scroll_bar_vert_handle;
 
 /***************************
 *** FUNCTIONS PROTOTYPES ***

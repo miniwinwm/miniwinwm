@@ -188,6 +188,11 @@ void window_drag_message_function(const mw_message_t *message)
 		mw_paint_window_client(message->recipient_handle);
 		break;
 
+	case MW_CONTROL_VERT_SCROLL_BAR_SCROLL_ENDED:
+		(void)mw_util_safe_strcpy(window_drag_data.event_text_buffer, sizeof(window_drag_data.event_text_buffer), "CVSE");
+		mw_paint_window_client(message->recipient_handle);
+		break;
+
 	case MW_TOUCH_HOLD_DOWN_MESSAGE:
 		(void)mw_util_safe_strcpy(window_drag_data.event_text_buffer, sizeof(window_drag_data.event_text_buffer), "HOLD");
 		mw_paint_window_client(message->recipient_handle);
@@ -201,6 +206,16 @@ void window_drag_message_function(const mw_message_t *message)
 	case MW_WINDOW_VERT_SCROLL_BAR_SCROLLED_MESSAGE:
 		(void)mw_util_safe_strcpy(window_drag_data.event_text_buffer, sizeof(window_drag_data.event_text_buffer), "VSCR");
 		window_drag_data.scroll_v = (uint8_t)message->message_data;
+		mw_paint_window_client(message->recipient_handle);
+		break;
+
+	case MW_WINDOW_VERT_SCROLL_BAR_SCROLL_ENDED_MESSAGE:
+		(void)mw_util_safe_strcpy(window_drag_data.event_text_buffer, sizeof(window_drag_data.event_text_buffer), "VSCE");
+		mw_paint_window_client(message->recipient_handle);
+		break;
+
+	case MW_WINDOW_HORIZ_SCROLL_BAR_SCROLL_ENDED_MESSAGE:
+		(void)mw_util_safe_strcpy(window_drag_data.event_text_buffer, sizeof(window_drag_data.event_text_buffer), "HSCE");
 		mw_paint_window_client(message->recipient_handle);
 		break;
 

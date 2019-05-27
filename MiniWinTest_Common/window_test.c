@@ -354,7 +354,6 @@ void window_test_message_function(const mw_message_t *message)
 					message->message_data,
 					NULL,
 					MW_CONTROL_MESSAGE);
-			mw_paint_control(list_box_3_handle);
 		}
 		else if (message->sender_handle == scroll_bar_vert_2_large_handle)
 		{
@@ -364,7 +363,6 @@ void window_test_message_function(const mw_message_t *message)
 					message->message_data,
 					NULL,
 					MW_CONTROL_MESSAGE);
-			mw_paint_control(list_box_3_large_handle);
 		}
 		else if (message->sender_handle == scroll_bar_vert_1_large_handle)
 		{
@@ -440,6 +438,10 @@ void window_test_message_function(const mw_message_t *message)
 					false,
 					message->recipient_handle);
 		}
+		break;
+
+	case MW_SCROLLED_CONTROL_NEEDS_PAINTING_HINT_MESSAGE:
+		mw_paint_control(message->sender_handle);
 		break;
 
 	default:

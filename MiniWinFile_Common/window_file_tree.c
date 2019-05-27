@@ -94,7 +94,8 @@ void window_file_tree_paint_function(mw_handle_t window_handle, const mw_gl_draw
 
 void window_file_tree_message_function(const mw_message_t *message)
 {
-	uint32_t temp_uint32;
+	uint32_t intermediate_uint32;
+	mw_ui_tree_data_t *sender_tree;
 
 	MW_ASSERT(message != (void*)0, "Null pointer parameter");
 
@@ -105,107 +106,57 @@ void window_file_tree_message_function(const mw_message_t *message)
 		break;
 
 	case MW_TREE_SCROLLING_REQUIRED_MESSAGE:
-		/* enable/disable the down arrow depending on if scrolling is required, i.e. tree won't all fit in the control */
 		if (message->message_data >> 16 == 0U)
 		{
-			mw_set_control_enabled(arrow_down_handle, false);
 			window_file_tree_data.max_scrollable_lines = 0U;
 			window_file_tree_data.lines_to_scroll = 0U;
 		}
 		else
 		{
-			temp_uint32 = message->message_data & 0xffffU;
-			window_file_tree_data.max_scrollable_lines = (uint16_t)temp_uint32;
+			intermediate_uint32 = message->message_data & 0xffffU;
+			window_file_tree_data.max_scrollable_lines = (uint16_t)intermediate_uint32;
 			if (window_file_tree_data.lines_to_scroll >= window_file_tree_data.max_scrollable_lines)
 			{
 				window_file_tree_data.lines_to_scroll = window_file_tree_data.max_scrollable_lines;
-				mw_set_control_enabled(arrow_down_handle, false);
-			}
-			else
-			{
-				mw_set_control_enabled(arrow_down_handle, true);
 			}
 		}
-		mw_paint_control(arrow_down_handle);
 		break;
 
-	case MW_ARROW_PRESSED_MESSAGE:
-		/* an arrow has been pressed */
-		if ((mw_ui_arrow_direction_t)message->message_data == MW_UI_ARROW_UP &&
-				window_file_tree_data.lines_to_scroll > 0U)
-		{
-			/* up arrow, scroll text up is ok to do so */
-			if (window_file_tree_data.lines_to_scroll > 0U)
-			{
-				window_file_tree_data.lines_to_scroll--;
-			}
-
-			if (window_file_tree_data.lines_to_scroll == 0U)
-			{
-				mw_set_control_enabled(arrow_up_handle, false);
-				mw_paint_control(arrow_up_handle);
-			}
-
-			mw_set_control_enabled(arrow_down_handle, true);
-			mw_paint_control(arrow_down_handle);
-
-			mw_post_message(MW_TREE_LINES_TO_SCROLL_MESSAGE,
-					MW_UNUSED_MESSAGE_PARAMETER,
-					tree_handle,
-					window_file_tree_data.lines_to_scroll,
-					NULL,
-					MW_CONTROL_MESSAGE);
-			mw_paint_control(tree_handle);
-		}
-		else if ((mw_ui_arrow_direction_t)message->message_data == MW_UI_ARROW_DOWN &&
-				window_file_tree_data.lines_to_scroll < window_file_tree_data.max_scrollable_lines)
-		{
-			/* down arrow, scroll text down as it's ok to do so */
-			window_file_tree_data.lines_to_scroll++;
-
-			if (window_file_tree_data.lines_to_scroll == window_file_tree_data.max_scrollable_lines)
-			{
-				mw_set_control_enabled(arrow_down_handle, false);
-				mw_paint_control(arrow_down_handle);
-			}
-
-			mw_set_control_enabled(arrow_up_handle, true);
-			mw_paint_control(arrow_up_handle);
-
-			mw_post_message(MW_TREE_LINES_TO_SCROLL_MESSAGE,
-					MW_UNUSED_MESSAGE_PARAMETER,
-					tree_handle,
-					window_file_tree_data.lines_to_scroll,
-					NULL,
-					MW_CONTROL_MESSAGE);
-			mw_paint_control(tree_handle);
-		}
-		else
-		{
-			/* keep MISRA happy */
-		}
+	case MW_CONTROL_VERT_SCROLL_BAR_SCROLLED_MESSAGE:
+		mw_post_message(MW_TREE_SCROLL_BAR_POSITION_MESSAGE,
+				MW_UNUSED_MESSAGE_PARAMETER,
+				tree_handle,
+				message->message_data,
+				NULL,
+				MW_CONTROL_MESSAGE);
 		break;
 
 	case MW_TREE_NODE_SELECTED_MESSAGE:
-		{
-			/* get full path of selected node and display it in a label */
-			mw_ui_tree_data_t *sender_tree = (mw_ui_tree_data_t*)mw_get_control_instance_data(message->sender_handle);
-			mw_tree_container_get_node_path(&sender_tree->tree_container, message->message_data, node_path, 100);
-			mw_post_message(MW_LABEL_SET_LABEL_TEXT_MESSAGE,
-					message->recipient_handle,
-					label_path_handle,
-					MW_UNUSED_MESSAGE_PARAMETER,
-					node_path,
-					MW_CONTROL_MESSAGE);
-			mw_paint_control(label_path_handle);
+		/* get full path of selected node and display it in a label */
+		sender_tree = (mw_ui_tree_data_t*)mw_get_control_instance_data(message->sender_handle);
+		mw_tree_container_get_node_path(&sender_tree->tree_container, message->message_data, node_path, 100);
+		mw_post_message(MW_LABEL_SET_LABEL_TEXT_MESSAGE,
+				message->recipient_handle,
+				label_path_handle,
+				MW_UNUSED_MESSAGE_PARAMETER,
+				node_path,
+				MW_CONTROL_MESSAGE);
+		mw_paint_control(label_path_handle);
+		break;
 
-			/* if a folder selected add a file to it */
-			if ((mw_tree_container_get_node_flags(&sender_tree->tree_container, message->message_data) & MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG) == MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG)
-			{
-				tree_container_add_file_to_folder(message->message_data, "file_add");
-				mw_ui_tree_data_changed(tree_handle);
-			}
-		}
+	case MW_TREE_FOLDER_OPENED_MESSAGE:
+		sender_tree = (mw_ui_tree_data_t*)mw_get_control_instance_data(message->sender_handle);
+		app_populate_tree_from_file_system(&sender_tree->tree_container, (mw_handle_t)message->message_data);
+		mw_ui_tree_data_changed(tree_handle);
+		break;
+
+	case MW_TREE_FOLDER_CLOSED_MESSAGE:
+		sender_tree = (mw_ui_tree_data_t*)mw_get_control_instance_data(message->sender_handle);
+		mw_tree_container_remove_node_children(&sender_tree->tree_container, (mw_handle_t)message->message_data);
+		break;
+
+	case MW_SCROLLED_CONTROL_NEEDS_PAINTING_HINT_MESSAGE:
+		mw_paint_control(message->sender_handle);
 		break;
 
 	default:

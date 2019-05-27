@@ -32,7 +32,6 @@ SOFTWARE.
 #include <iodefine.h>
 #include "spi_driver.h"
 #include "hal/hal_delay.h"
-#include "miniwin.h"
 #include "ff.h"
 #include "app.h"
 
@@ -292,6 +291,12 @@ uint8_t find_folder_entries(char *path,
     path[strlen(path)] = '/';
 
     return (i);
+}
+
+void app_populate_tree_from_file_system(struct mw_tree_container_t *tree,
+		mw_handle_t start_folder_handle)
+{
+	//todo implement
 }
 
 char *app_get_root_folder_path(void)

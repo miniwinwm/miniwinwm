@@ -259,6 +259,61 @@ void app_main_loop_process(void)
 	(void)USBH_Process(&hUSBHost);
 }
 
+void app_populate_tree_from_file_system(struct mw_tree_container_t *tree,
+		mw_handle_t start_folder_handle)
+{
+    FRESULT result;
+    DIR folder;
+    FILINFO file_info;
+    char path[MAX_FOLDER_AND_FILENAME_LENGTH];
+	uint8_t node_flags;
+
+    mw_tree_container_get_node_path(tree, start_folder_handle, path, MAX_FOLDER_AND_FILENAME_LENGTH);
+
+    if (strlen(path) == (size_t)0)
+    {
+    	return;
+    }
+
+    /* strip off terminating '/' for FatFS folders */
+    path[strlen(path) - 1U] = '\0';
+
+    /* open the folder */
+    result = f_opendir(&folder, path);
+    if (result == FR_OK)
+    {
+        for (;;)
+        {
+        	/* read a folder item */
+            result = f_readdir(&folder, &file_info);
+            if (result != FR_OK || file_info.fname[0] == '\0')
+            {
+            	/* break on error or end of folder */
+            	break;
+            }
+
+        	/* ignore if it's a hidden or system entry*/
+        	if ((file_info.fattrib & (BYTE)AM_HID) == AM_HID || (file_info.fattrib & (BYTE)AM_SYS) == AM_SYS)
+        	{
+        		continue;
+        	}
+
+        	node_flags = 0U;
+            if ((file_info.fattrib & (BYTE)AM_DIR) == (BYTE)AM_DIR)
+        	{
+        		node_flags = MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG;
+        	}
+
+        	(void)mw_tree_container_add_node(tree,
+        			start_folder_handle,
+					file_info.fname,
+        			node_flags);
+
+        }
+        (void)f_closedir(&folder);
+    }
+}
+
 uint8_t find_folder_entries(char *path,
 		mw_ui_list_box_entry *list_box_settings_entries,
 		bool folders_only,
@@ -270,6 +325,11 @@ uint8_t find_folder_entries(char *path,
     DIR folder;
     FILINFO file_info;
     UINT i = 0U;
+
+    if (strlen(path) == (size_t)0)
+    {
+    	return 0U;
+    }
 
     /* strip off terminating '/' for FatFS folders */
     path[strlen(path) - 1U] = '\0';

@@ -174,7 +174,7 @@ static void scroll_bar_vert_message_function(const mw_message_t *message)
 		break;
 
 	case MW_TOUCH_UP_MESSAGE:
-		mw_post_message(MW_TOUCH_UP_MESSAGE,
+		mw_post_message(MW_CONTROL_VERT_SCROLL_BAR_SCROLL_ENDED,
 				message->recipient_handle,
 				mw_get_control_parent_window_handle(message->recipient_handle),
 				MW_UNUSED_MESSAGE_PARAMETER,

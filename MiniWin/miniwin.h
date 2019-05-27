@@ -224,12 +224,28 @@ typedef enum
 	MW_WINDOW_VERT_SCROLL_BAR_SCROLLED_MESSAGE,
 
 	/**
+	 * Message to a window when a window vertical scroll bar scrolling has ended
+	 *
+	 * message_data: Unused
+	 * message_pointer: Unused
+	 */
+	MW_WINDOW_VERT_SCROLL_BAR_SCROLL_ENDED_MESSAGE,
+
+	/**
 	 * Message to a window when a window horizontal scroll bar has been scrolled
 	 *
 	 * message_data: new horizontal scroll position 0 - UINT8_MAX as a proportion of scroll bar length
 	 * message_pointer: Unused
 	 */
 	MW_WINDOW_HORIZ_SCROLL_BAR_SCROLLED_MESSAGE,
+
+	/**
+	 * Message to a window when a window horizontal scroll bar scrolling has ended
+	 *
+	 * message_data: Unused
+	 * message_pointer: Unused
+	 */
+	MW_WINDOW_HORIZ_SCROLL_BAR_SCROLL_ENDED_MESSAGE,
 
 	/**
 	 * Message send to control as soon as it is created and before it is painted
@@ -383,21 +399,20 @@ typedef enum
 	MW_LIST_BOX_SCROLLING_REQUIRED_MESSAGE,
 
 	/**
-	 * Message posted by a tree to its parent window indicating if scrolling is required,
-	 * i.e. too many visible nodes to display in the box at once
+	 * Response message from a vertical control scroll bar that it has been scrolled
 	 *
-	 * message_data: upper 16 bits: 1 if scrolling required, 0 if scrolling not required; lower 16 bits: the maximum lines that can be scrolled
+	 * message_data: new vertical scroll position from 0 - UINT8_MAX as a proportion of the scroll bar
 	 * message_pointer: Unused
 	 */
-	MW_TREE_SCROLLING_REQUIRED_MESSAGE,
+	MW_CONTROL_VERT_SCROLL_BAR_SCROLLED_MESSAGE,
 
 	/**
-	 * Response message from a vertical control scroll bar that it has been scrolled
+	 * Response message from a vertical control scroll bar when scrolling has ended
 	 *
 	 * message_data: Unused
 	 * message_pointer: Unused
 	 */
-	MW_CONTROL_VERT_SCROLL_BAR_SCROLLED_MESSAGE,
+	MW_CONTROL_VERT_SCROLL_BAR_SCROLL_ENDED,
 
 	/**
 	 * Response message from a horizontal control scroll bar that it has been scrolled
@@ -406,6 +421,14 @@ typedef enum
 	 * message_pointer: Unused
 	 */
 	MW_CONTROL_HORIZ_SCROLL_BAR_SCROLLED_MESSAGE,
+
+	/**
+	 * Response message from a horizontal control scroll bar when scrolling has ended
+	 *
+	 * message_data: Unused
+	 * message_pointer: Unused
+	 */
+	MW_CONTROL_HORIZ_SCROLL_BAR_SCROLL_ENDED,
 
 	/**
 	 * Response message from a arrow that it has been pressed
@@ -456,6 +479,39 @@ typedef enum
 	 * message_pointer: Unused
 	 */
 	MW_TREE_NODE_DESELECTED_MESSAGE,
+
+	/**
+	 * Message posted by a tree to its parent window indicating if scrolling is required,
+	 * i.e. too many visible nodes to display in the box at once
+	 *
+	 * message_data: upper 16 bits: 1 if scrolling required, 0 if scrolling not required; lower 16 bits: the maximum lines that can be scrolled
+	 * message_pointer: Unused
+	 */
+	MW_TREE_SCROLLING_REQUIRED_MESSAGE,
+
+	/**
+	 * Message posted by a tree to its parent window indicating that a tree folder node has been opened
+	 *
+	 * message_data: Handle of the folder
+	 * message_pointer: Unused
+	 */
+	MW_TREE_FOLDER_OPENED_MESSAGE,
+
+	/**
+	 * Message posted by a tree to its parent window indicating that a tree folder node has been closed
+	 *
+	 * message_data: Handle of the folder
+	 * message_pointer: Unused
+	 */
+	MW_TREE_FOLDER_CLOSED_MESSAGE,
+
+	/**
+	 * A control needs repainting by its owning window
+	 *
+	 * message_data: Unused
+	 * message_pointer: Unused
+	 */
+	MW_SCROLLED_CONTROL_NEEDS_PAINTING_HINT_MESSAGE,
 
 	/*********************************************
 	*											 *
@@ -526,6 +582,14 @@ typedef enum
 	 * message_pointer: Unused
 	 */
 	MW_TREE_LINES_TO_SCROLL_MESSAGE,
+
+	/**
+	 * Position of a scroll bar associated with a tree
+	 *
+	 * message_data: Scroll bar position, 0 - UINT8_MAX
+	 * message_pointer: Unused
+	 */
+	MW_TREE_SCROLL_BAR_POSITION_MESSAGE,
 
 	/**
 	 * Set a radio button's chosen button

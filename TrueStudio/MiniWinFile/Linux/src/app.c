@@ -36,7 +36,6 @@ SOFTWARE.
 #include <sys/ioctl.h>
 #include <linux/rtc.h>
 #include <unistd.h>
-#include "miniwin.h"
 #include "app.h"
 
 /****************
@@ -117,6 +116,12 @@ char *app_get_root_folder_path(void)
 
 void app_main_loop_process(void)
 {
+}
+
+void app_populate_tree_from_file_system(struct mw_tree_container_t *tree,
+		mw_handle_t start_folder_handle)
+{
+	//todo implement this
 }
 
 bool app_file_open(char *path_and_filename)

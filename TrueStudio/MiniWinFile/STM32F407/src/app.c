@@ -28,7 +28,6 @@ SOFTWARE.
 *** INCLUDES ***
 ***************/
 
-#include "miniwin.h"
 #include "app.h"
 #include "stm32f4_discovery.h"
 #include "ff_gen_drv.h"
@@ -273,6 +272,12 @@ char *app_get_root_folder_path(void)
 void app_main_loop_process(void)
 {
 	(void)USBH_Process(&hUSB_Host);
+}
+
+void app_populate_tree_from_file_system(struct mw_tree_container_t *tree,
+		mw_handle_t start_folder_handle)
+{
+	//todo implement this
 }
 
 uint8_t find_folder_entries(char *path,

@@ -36,6 +36,7 @@ SOFTWARE.
 ***************/
 
 #include <stdint.h>
+#include <stdbool.h>
 #include "ui/ui_button.h"
 #include "ui/ui_check_box.h"
 #include "ui/ui_radio_button.h"

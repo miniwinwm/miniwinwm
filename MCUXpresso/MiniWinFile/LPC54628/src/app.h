@@ -36,7 +36,7 @@ SOFTWARE.
 ***************/
 
 #include <time.h>
-#include "ui/ui_common.h"
+#include "miniwin.h"
 
 /****************
 *** CONSTANTS ***
@@ -85,6 +85,18 @@ uint8_t find_folder_entries(char *path,
 		uint8_t max_entries,
 		const uint8_t *file_entry_icon,
 		const uint8_t *folder_entry_icon);
+
+/**
+ * Get all the children (but not sub-children) of a folder from the file system
+ * and add them to the folder node in the tree structure
+ *
+ * @param tree Pointer to tree structure
+ * @param start_folder_handle The folder node handle in the tree structure
+ * @note The path used to interrogate the folder in the file system is the path of the
+ *       folder node in the folder structure
+ */
+void app_populate_tree_from_file_system(struct mw_tree_container_t *tree,
+		mw_handle_t start_folder_handle);
 
 /**
  * Accessor to the root folder path which comes from the FatFS module and is stored in

@@ -254,6 +254,55 @@ void app_file_close(void)
 	(void)fclose(file_handle);
 }
 
+void app_populate_tree_from_file_system(struct mw_tree_container_t *tree,
+		mw_handle_t start_folder_handle)
+{
+	TCHAR szDir[MAX_FOLDER_AND_FILENAME_LENGTH];
+	HANDLE hFind = INVALID_HANDLE_VALUE;
+	WIN32_FIND_DATA ffd;
+	uint8_t node_flags;
+
+	mw_tree_container_get_node_path(tree, start_folder_handle, szDir, MAX_FOLDER_AND_FILENAME_LENGTH);
+
+	(void)strcat(szDir, TEXT("*"));
+
+	/* Find the first file in the folder */
+	hFind = FindFirstFile(szDir, &ffd);
+	if (hFind == INVALID_HANDLE_VALUE)
+	{
+		return;
+	}
+
+	do
+	{
+    	/* Ignore if it's a hidden or system entry*/
+    	if ((ffd.dwFileAttributes & FILE_ATTRIBUTE_HIDDEN) || (ffd.dwFileAttributes & FILE_ATTRIBUTE_SYSTEM))
+    	{
+    		continue;
+    	}
+
+    	/* don't add parent or current folder link for compatibility with FatFS */
+    	if (strcmp(ffd.cFileName, "..") == 0 || strcmp(ffd.cFileName, ".") == 0)
+    	{
+    		continue;
+    	}
+
+    	node_flags = 0U;
+    	if (ffd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
+    	{
+    		node_flags = MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG;
+    	}
+
+    	(void)mw_tree_container_add_node(tree,
+    			start_folder_handle,
+				ffd.cFileName,
+    			node_flags);
+	}
+	while (FindNextFile(hFind, &ffd) != 0);
+
+	(void)FindClose(hFind);
+}
+
 uint8_t find_folder_entries(char* path,
 		mw_ui_list_box_entry *list_box_settings_entries,
 		bool folders_only,

@@ -3341,28 +3341,18 @@ static void process_touch_message(mw_message_id_t touch_message_id, int16_t touc
 				return;
 			}
 
-			/* check for touch on either window scroll bar */
-			if (touch_message_id == MW_TOUCH_DRAG_MESSAGE)
+			/* check for touch on horiz window scroll bar */
+			if (touch_message_id == MW_TOUCH_DRAG_MESSAGE || touch_message_id == MW_TOUCH_UP_MESSAGE)
 			{
 				if (check_and_process_touch_on_horiz_window_scroll_bar(window_to_receive_message_id, touch_x, touch_y, touch_message_id, false))
 				{
+					if (touch_message_id == MW_TOUCH_UP_MESSAGE)
+					{
+						touch_message_target.touch_down_recipient_handle = MW_INVALID_HANDLE;
+					}
+
 					return;
 				}
-			}
-			else if (touch_message_id == MW_TOUCH_UP_MESSAGE)
-			{
-				mw_post_message(touch_message_id,
-						MW_UNUSED_MESSAGE_PARAMETER,
-						touch_message_target.touch_down_recipient_handle,
-						touch_message_target.touch_down_recipient_handle,
-						NULL,
-						MW_WINDOW_MESSAGE);
-				touch_message_target.touch_down_recipient_handle = MW_INVALID_HANDLE;
-				return;
-			}
-			else
-			{
-				/* keep MISRA happy */
 			}
 		}
 		else if (touch_message_target.touch_down_recipient_type == TOUCH_DOWN_RECIPIENT_TYPE_VERT_WINDOW_SCROLL_BAR)
@@ -3376,28 +3366,16 @@ static void process_touch_message(mw_message_id_t touch_message_id, int16_t touc
 				return;
 			}
 
-			/* check for touch on either window scroll bar */
-			if (touch_message_id == MW_TOUCH_DRAG_MESSAGE)
+			/* check for touch on vert window scroll bar */
+			if (touch_message_id == MW_TOUCH_DRAG_MESSAGE || touch_message_id == MW_TOUCH_UP_MESSAGE)
 			{
 				if (check_and_process_touch_on_vert_window_scroll_bar(window_to_receive_message_id, touch_x, touch_y, touch_message_id, false))
 				{
-					return;
+					if (touch_message_id == MW_TOUCH_UP_MESSAGE)
+					{
+						touch_message_target.touch_down_recipient_handle = MW_INVALID_HANDLE;
+					}
 				}
-			}
-			else if (touch_message_id == MW_TOUCH_UP_MESSAGE)
-			{
-				mw_post_message(touch_message_id,
-						MW_UNUSED_MESSAGE_PARAMETER,
-						touch_message_target.touch_down_recipient_handle,
-						touch_message_target.touch_down_recipient_handle,
-						NULL,
-						MW_WINDOW_MESSAGE);
-				touch_message_target.touch_down_recipient_handle = MW_INVALID_HANDLE;
-				return;
-			}
-			else
-			{
-				/* keep MISRA happy */
 			}
 		}
 		else
@@ -3637,6 +3615,15 @@ static bool check_and_process_touch_on_vert_window_scroll_bar(uint8_t window_id,
 								MW_WINDOW_MESSAGE);
 					}
 				}
+				else if (touch_message_id == MW_TOUCH_UP_MESSAGE)
+				{
+					mw_post_message(MW_WINDOW_VERT_SCROLL_BAR_SCROLL_ENDED_MESSAGE,
+							MW_UNUSED_MESSAGE_PARAMETER,
+							mw_all_windows[window_id].window_handle,
+							MW_UNUSED_MESSAGE_PARAMETER,
+							NULL,
+							MW_WINDOW_MESSAGE);
+				}
 			}
 
 			return (true);
@@ -3700,6 +3687,15 @@ static bool check_and_process_touch_on_horiz_window_scroll_bar(uint8_t window_id
 								MW_WINDOW_MESSAGE);
 					}
 				}
+				else if (touch_message_id == MW_TOUCH_UP_MESSAGE)
+				{
+					mw_post_message(MW_WINDOW_HORIZ_SCROLL_BAR_SCROLL_ENDED_MESSAGE,
+							MW_UNUSED_MESSAGE_PARAMETER,
+							mw_all_windows[window_id].window_handle,
+							MW_UNUSED_MESSAGE_PARAMETER,
+							NULL,
+							MW_WINDOW_MESSAGE);
+				}
 			}
 			return (true);
 		}
@@ -3707,7 +3703,6 @@ static bool check_and_process_touch_on_horiz_window_scroll_bar(uint8_t window_id
 
 	return (false);
 }
-
 
 /**
  * Check if a touch occurred on a menu bar and if it did process it

@@ -29,7 +29,6 @@ SOFTWARE.
 ***************/
 
 #include <string.h>
-#include "miniwin.h"
 #include "app.h"
 #include "r_gpio_rx_if.h"
 #include "r_usb_basic_if.h"
@@ -302,6 +301,12 @@ uint8_t find_folder_entries(char *path,
     path[strlen(path)] = '/';
 
     return (i);
+}
+
+void app_populate_tree_from_file_system(struct mw_tree_container_t *tree,
+		mw_handle_t start_folder_handle)
+{
+	// todo implement
 }
 
 mw_time_t app_get_time_date(void)

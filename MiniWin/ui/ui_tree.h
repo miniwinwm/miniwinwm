@@ -43,13 +43,13 @@ SOFTWARE.
 
 #define MW_UI_TREE_ROW_HEIGHT				14
 #define MW_UI_TREE_TOP_BORDER				3
-#define MW_UI_TREE_LEFT_BORDER 				3
+#define MW_UI_TREE_LEFT_BORDER 				1
 #define MW_UI_TREE_MIN_WIDTH			    12
 #define MW_UI_TREE_ICON_SIZE				8
 
 #define MW_UI_TREE_LARGE_ROW_HEIGHT			22
 #define MW_UI_TREE_LARGE_TOP_BORDER			4
-#define MW_UI_TREE_LARGE_LEFT_BORDER 		4
+#define MW_UI_TREE_LARGE_LEFT_BORDER 		2
 #define MW_UI_TREE_LARGE_MIN_WIDTH			24
 #define MW_UI_TREE_LARGE_ICON_SIZE			16
 
@@ -63,19 +63,19 @@ SOFTWARE.
 typedef struct
 {
 	/* User modifiable fields */
-	mw_tree_container_t tree_container;				/**< Tree container data structure containing the data of the tree */
+	struct mw_tree_container_t tree_container;		/**< Tree container data structure containing the data of the tree */
 	mw_handle_t root_handle;						/**< Handle of the root folder node */
 	const uint8_t *folder_icon;						/**< Pointer to icon to show for folder or NULL if no icon needed */
 	const uint8_t *file_icon;						/**< Pointer to icon to show for file or NULL if no icon needed */
 	uint8_t number_of_lines;						/**< Number of lines displayed in the tree */
 
 	/* Non-user modifiable fields */
-	uint8_t lines_to_scroll;						/**< The number of entries down to start showing entries */
+	uint16_t lines_to_scroll;						/**< The number of entries down to start showing entries */
 	uint16_t visible_children;						/**< Total number of children of all folders that are open */
 	int16_t row_height;								/**< Height in pixels of a line on the display */
-	int16_t icon_size;								/**< Width and height of all icons used in control */
-	int16_t row_left_boder;							/**< Distance from left of row to start of contents */
-	int16_t row_top_boder;							/**< Distance from top of row to start of contents */
+	uint16_t icon_size;								/**< Width and height of all icons used in control */
+	int16_t row_left_border;						/**< Distance from left of row to start of contents */
+	int16_t row_top_border;							/**< Distance from top of row to start of contents */
 	mw_util_rect_t invalid_rect;					/**< Rect used for partial repainting of the control */
 } mw_ui_tree_data_t;
 
@@ -110,9 +110,9 @@ mw_handle_t mw_ui_tree_add_new(int16_t x,
  * of has changed. This updates the control and sends messages to the control's parent window as required.
  * This function repaints the tree control.
  *
- * @param tree_handle The handle of the tree control
+ * @param changed_tree_handle The handle of the tree control
  */
-void mw_ui_tree_data_changed(mw_handle_t tree_handle);
+void mw_ui_tree_data_changed(mw_handle_t changed_tree_handle);
 
 #ifdef __cplusplus
 }

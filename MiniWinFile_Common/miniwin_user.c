@@ -29,7 +29,7 @@ SOFTWARE.
 ***************/
 
 #include <stdlib.h>
-#include "miniwin.h"
+#include "app.h"
 #include "miniwin_user.h"
 #include "window_file.h"
 #include "window_file_tree.h"
@@ -57,9 +57,8 @@ mw_handle_t button_create_handle;
 mw_handle_t label_time_handle;
 mw_handle_t label_date_handle;
 mw_handle_t tree_handle;
-mw_handle_t arrow_up_handle;
-mw_handle_t arrow_down_handle;
 mw_handle_t label_path_handle;
+mw_handle_t scroll_bar_vert_handle;
 
 /**********************
 *** LOCAL VARIABLES ***
@@ -72,11 +71,9 @@ static mw_ui_button_data_t button_create_data;
 static mw_ui_label_data_t label_time_data;
 static mw_ui_label_data_t label_date_data;
 static mw_ui_tree_data_t tree_data;
-static mw_ui_arrow_data_t arrow_up_data;
-static mw_ui_arrow_data_t arrow_down_data;
-//static mw_tree_container_node_t nodes_array[20];  //todo
-mw_tree_container_node_t *nodes_array;
+static mw_tree_container_node_t *nodes_array;
 static mw_ui_label_data_t label_path_data;
+static mw_ui_scroll_bar_vert_data_t scroll_bar_vert_data;
 
 /********************************
 *** LOCAL FUNCTION PROTOTYPES ***
@@ -91,15 +88,15 @@ static mw_ui_label_data_t label_path_data;
  *       node array storage. If the reallocate succeeds set the new storage and its size using the
  *       tree container structure parameter.
  */
-static void expand_node_array(mw_tree_container_t *tree);
+static void expand_node_array(struct mw_tree_container_t *tree);
 
 /**********************
 *** LOCAL FUNCTIONS ***
 **********************/
 
-static void expand_node_array(mw_tree_container_t *tree)
+static void expand_node_array(struct mw_tree_container_t *tree)
 {
-	uint16_t new_node_array_size = mw_tree_container_get_node_array_size(tree) + 5U;
+	uint16_t new_node_array_size = mw_tree_container_get_size_node_array(tree) + 5U;
 	void *new_node_array = realloc(mw_tree_container_get_node_array(tree), new_node_array_size * sizeof(mw_tree_container_node_t));
 
 	if (new_node_array == NULL)
@@ -133,8 +130,9 @@ void mw_user_root_message_function(const mw_message_t *message)
 void mw_user_init(void)
 {
 	mw_util_rect_t r;
+	mw_handle_t intermediate_handle;
 
-	mw_util_set_rect(&r, 5, 5, 230, 188);
+	mw_util_set_rect(&r, 5, 5, 230, 265);
 	window_file_tree_handle = mw_add_window(&r,
 			"File Tree Demo",
 			window_file_tree_paint_function,
@@ -144,45 +142,37 @@ void mw_user_init(void)
 			MW_WINDOW_FLAG_HAS_BORDER | MW_WINDOW_FLAG_HAS_TITLE_BAR | MW_WINDOW_FLAG_IS_VISIBLE,
 			NULL);
 
-	nodes_array=(mw_tree_container_node_t *)malloc(sizeof(mw_tree_container_node_t) * 12);	//todo
-	tree_data.number_of_lines = 8U;
-//	tree_data.file_icon = mw_bitmaps_file_icon_small;
-//	tree_data.folder_icon = mw_bitmaps_folder_icon_small;
+	nodes_array = (mw_tree_container_node_t *)malloc(sizeof(mw_tree_container_node_t) * (size_t)12);
+	tree_data.number_of_lines = 10U;
 	tree_data.file_icon = mw_bitmaps_file_icon_large;
 	tree_data.folder_icon = mw_bitmaps_folder_icon_large;
-	tree_data.root_handle = mw_tree_container_init(&tree_data.tree_container,
+	intermediate_handle = mw_tree_container_init(&tree_data.tree_container,
 			nodes_array,
 			12,
-			"0:",
-			MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN_FLAG,
+			app_get_root_folder_path(),
+			0U,
 			0U,
 			expand_node_array);
+	tree_data.root_handle = intermediate_handle;
 	tree_handle = mw_ui_tree_add_new(5,
 			5,
-			125,
+			190,
 			window_file_tree_handle,
 			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_LARGE_SIZE,
 			&tree_data);
 
-	arrow_up_data.mw_ui_arrow_direction = MW_UI_ARROW_UP;
-	arrow_up_handle = mw_ui_arrow_add_new(130,
+	scroll_bar_vert_handle = mw_ui_scroll_bar_vert_add_new(200,
 			5,
+			220,
 			window_file_tree_handle,
-			MW_CONTROL_FLAG_IS_VISIBLE,
-			&arrow_up_data);
-
-	arrow_down_data.mw_ui_arrow_direction = MW_UI_ARROW_DOWN;
-	arrow_down_handle = mw_ui_arrow_add_new(130,
-			101,
-			window_file_tree_handle,
-			MW_CONTROL_FLAG_IS_VISIBLE,
-			&arrow_down_data);
+			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_LARGE_SIZE,
+			&scroll_bar_vert_data);
 
 	(void)mw_util_safe_strcpy(label_path_data.label,
 			MW_UI_LABEL_MAX_CHARS,
 			"Not set");
 	label_path_handle = mw_ui_label_add_new(5,
-			140,
+			230,
 			220,
 			window_file_tree_handle,
 			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
@@ -239,59 +229,12 @@ void mw_user_init(void)
 			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
 			&label_date_data);
 
-
-
-
-
-	//todo
-	mw_tree_container_add_node(&tree_data.tree_container,
-			tree_data.root_handle,
-			"file1",
-			0U);
-	mw_handle_t fold1_handle = mw_tree_container_add_node(&tree_data.tree_container,
-			tree_data.root_handle,
-			"Foldy1",
-			MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG | MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN_FLAG);
-	mw_tree_container_add_node(&tree_data.tree_container,
-			fold1_handle,
-			"file2",
-			0U);
-	mw_tree_container_add_node(&tree_data.tree_container,
-			fold1_handle,
-			"file3",
-			0U);
-	mw_handle_t fold2_handle = mw_tree_container_add_node(&tree_data.tree_container,
-			fold1_handle,
-			"fold2",
-			MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG | MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN_FLAG);
-	mw_handle_t fold3_handle = mw_tree_container_add_node(&tree_data.tree_container,
-			fold1_handle,
-			"fold3",
-			MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG | MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN_FLAG);
-	mw_tree_container_add_node(&tree_data.tree_container,
-			fold3_handle,
-			"file6",
-			0U);
-	mw_tree_container_add_node(&tree_data.tree_container,
-			fold3_handle,
-			"file7",
-			0U);
-	mw_tree_container_add_node(&tree_data.tree_container,
-			fold2_handle,
-			"file4",
-			0U);
-	mw_tree_container_add_node(&tree_data.tree_container,
-			fold2_handle,
-			"file5",
-			0U);
-
-
 	mw_paint_all();
 }
 
 void tree_container_add_file_to_folder(mw_handle_t parent_folder, char *filename)
 {
-	mw_tree_container_add_node(&tree_data.tree_container,
+	(void)mw_tree_container_add_node(&tree_data.tree_container,
 			parent_folder,
 			filename,
 			0U);

@@ -49,10 +49,6 @@ SOFTWARE.
 *** EXTERNAL VARIABLES ***
 *************************/
 
-extern mw_handle_t arrow_up_handle;
-extern mw_handle_t arrow_down_handle;
-extern mw_handle_t tree_handle;
-
 /***************************
 *** FUNCTIONS PROTOTYPES ***
 ***************************/

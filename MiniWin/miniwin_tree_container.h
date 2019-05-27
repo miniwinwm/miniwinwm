@@ -43,7 +43,6 @@ SOFTWARE.
 *** CONSTANTS ***
 ****************/
 
-#define MW_TREE_CONTAINER_ROOT_FOLDER_ID 			0U
 #define MW_TREE_CONTAINER_NODE_LABEL_MAX_SIZE		16U
 #define MW_TREE_CONTAINER_NODE_IS_SELECTED_FLAG		0x01U
 #define MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG		0x02U
@@ -58,7 +57,7 @@ SOFTWARE.
 *** TYPES ***
 ************/
 
-typedef struct mw_tree_container_tag mw_tree_container_t;
+struct mw_tree_container_t;
 
 /**
  * Pointer type to callback function called from library to user code when finding all descendants of a folder node
@@ -68,7 +67,7 @@ typedef struct mw_tree_container_tag mw_tree_container_t;
  * @param callback_data Generic pointer to extra data that needs passing to callback function
  * @return Return true to continue searching or false to quit searching
  */
-typedef bool (mw_tree_container_next_child_callback_t)(mw_tree_container_t *tree, mw_handle_t node_handle, void *callback_data);
+typedef bool (mw_tree_container_next_child_callback_t)(struct mw_tree_container_t *tree, mw_handle_t node_handle, void *callback_data);
 
 /**
  * Function typedef of callback function called from library to user code when adding a node fails because of lack of
@@ -77,7 +76,7 @@ typedef bool (mw_tree_container_next_child_callback_t)(mw_tree_container_t *tree
  * @param tree Pointer to tree structure
  * @note If it is not possible to allocate a larger space for the array this callback function should do nothing
  */
-typedef void (mw_tree_container_no_space_callback_t)(mw_tree_container_t *tree);
+typedef void (mw_tree_container_no_space_callback_t)(struct mw_tree_container_t *tree);
 
 /**
  * Tree node structure
@@ -93,14 +92,14 @@ typedef struct
 /**
  * Tree structure
  */
-typedef struct mw_tree_container_tag
+struct mw_tree_container_t
 {
 	uint16_t nodes_array_size;									/**< Maximum number of nodes in nodes_array */
 	uint16_t node_count;										/**< Number of used nodes in pool, never less than 1 */
 	mw_tree_container_node_t *nodes_array;						/**< Pointer to array of nodes */
 	mw_tree_container_no_space_callback_t *no_space_callback;	/**< Callback to be called when adding a node fails because of lack of space; can be NULL */
 	uint8_t tree_flags;											/**< Flags describing this tree */
-} mw_tree_container_t;
+};
 
 /*************************
 *** EXTERNAL VARIABLES ***
@@ -116,13 +115,13 @@ typedef struct mw_tree_container_tag
  * @param tree Pointer to tree structure
  * @param nodes_array Pointer to array to contain nodes
  * @param nodes_array_size Size of nodes_array
- * @param root_folder_label Label to give to the root folder node
+ * @param root_folder_label Label to give to the root folder node, must end in MW_TREE_CONTAINER_FOLDER_SEPARATOR
  * @param root_node_flags Flags to use for root node; can be MW_UTREE_NODE_IS_SELECTED_FLAG or MW_TREE_FOLDER_IS_OPEN_FLAG or both
  * @param tree_flags Flags that apply to the whole tree, can be MW_TREE_CONTAINER_SINGLE_SELECT_ONLY or MW_TREE_CONTAINER_SHOW_FOLDERS_ONLY or both or neither
  * @param no_space_callback Pointer to callback function that is called when adding a node fails because of lack of space for a new node. This can be NULL if not required.
  * @return Handle to the root node
  */
-mw_handle_t mw_tree_container_init(mw_tree_container_t *tree,
+mw_handle_t mw_tree_container_init(struct mw_tree_container_t *tree,
 		mw_tree_container_node_t *nodes_array,
 		uint16_t nodes_array_size,
 		char *root_folder_label,
@@ -135,7 +134,7 @@ mw_handle_t mw_tree_container_init(mw_tree_container_t *tree,
  *
  * @param tree Pointer to tree structure
  */
-void mw_tree_container_empty(mw_tree_container_t *tree);
+void mw_tree_container_empty(struct mw_tree_container_t *tree);
 
 /**
  * Get the size of the tree's node storage array
@@ -143,7 +142,7 @@ void mw_tree_container_empty(mw_tree_container_t *tree);
  * @param tree Pointer to tree structure
  * @return The node array size
  */
-uint16_t mw_tree_container_get_node_array_size(mw_tree_container_t *tree);
+uint16_t mw_tree_container_get_size_node_array(struct mw_tree_container_t *tree);
 
 /**
  * Get pointer to the tree's node storage array
@@ -151,7 +150,7 @@ uint16_t mw_tree_container_get_node_array_size(mw_tree_container_t *tree);
  * @param tree Pointer to tree structure
  * @return Pointer to the tree's node storage array
  */
-mw_tree_container_node_t *mw_tree_container_get_node_array(mw_tree_container_t *tree);
+mw_tree_container_node_t *mw_tree_container_get_node_array(struct mw_tree_container_t *tree);
 
 /**
  * Replace the tree's node storage array with a new one
@@ -162,7 +161,7 @@ mw_tree_container_node_t *mw_tree_container_get_node_array(mw_tree_container_t *
  * @note The node array can be expanded or shrunk
  * @note The new node array must already be initialised with whatever contents are required in it. The root node is not created.
  */
-void mw_tree_container_set_new_node_array(mw_tree_container_t *tree, mw_tree_container_node_t *new_node_array, uint16_t new_node_array_size);
+void mw_tree_container_set_new_node_array(struct mw_tree_container_t *tree, mw_tree_container_node_t *new_node_array, uint16_t new_node_array_size);
 
 /**
  * Add a node to a tree in a specified folder
@@ -174,7 +173,7 @@ void mw_tree_container_set_new_node_array(mw_tree_container_t *tree, mw_tree_con
  *              MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG, MW_TREE_FOLDER_IS_OPEN_FLAG
  * @return The new node handle if added successfully or MW_INVALID_HANDLE if a parameter was illegal or no space remaining
  */
-mw_handle_t mw_tree_container_add_node(mw_tree_container_t *tree, mw_handle_t parent_folder_handle, char *label, uint8_t node_flags);
+mw_handle_t mw_tree_container_add_node(struct mw_tree_container_t *tree, mw_handle_t parent_folder_handle, char *label, uint8_t node_flags);
 
 /**
  * Change a node's label
@@ -183,7 +182,7 @@ mw_handle_t mw_tree_container_add_node(mw_tree_container_t *tree, mw_handle_t pa
  * @param node_handle Handle of node to change label of
  * @param label Text string of new label
  */
-void mw_tree_container_change_node_label(mw_tree_container_t *tree, mw_handle_t node_handle, char *label);
+void mw_tree_container_change_node_label(struct mw_tree_container_t *tree, mw_handle_t node_handle, char *label);
 
 /**
  * Change a node's selected state
@@ -192,7 +191,7 @@ void mw_tree_container_change_node_label(mw_tree_container_t *tree, mw_handle_t 
  * @param node_handle Handle of node to change selected state of
  * @param is_selected True to assign a node selected, false unselected
  */
-void mw_tree_container_change_node_selected_state(mw_tree_container_t *tree, mw_handle_t node_handle, bool is_selected);
+void mw_tree_container_change_node_selected_state(struct mw_tree_container_t *tree, mw_handle_t node_handle, bool is_selected);
 
 /**
  * Change a folder node's open state
@@ -201,16 +200,23 @@ void mw_tree_container_change_node_selected_state(mw_tree_container_t *tree, mw_
  * @param folder_node_handle Handle of the folder node to change open state of
  * @param is_open True to assign a folder node open, false closed
  */
-void mw_tree_container_change_folder_node_open_state(mw_tree_container_t *tree, mw_handle_t folder_node_handle, bool is_open);
+void mw_tree_container_change_folder_node_open_state(struct mw_tree_container_t *tree, mw_handle_t folder_node_handle, bool is_open);
 
 /**
  * Remove a node
  *
  * @param tree Pointer to tree structure
  * @param node_handle Handle of node to remove
- * @return True if parameters acceptable, else false
  */
-void mw_tree_container_remove_node(mw_tree_container_t *tree, mw_handle_t node_handle);
+void mw_tree_container_remove_node(struct mw_tree_container_t *tree, mw_handle_t node_handle);
+
+/**
+ * Remove all children of a folder node
+ *
+ * @param tree Pointer to tree structure
+ * @param parent_folder_handle Handle of folder node to remove children of
+ */
+void mw_tree_container_remove_node_children(struct mw_tree_container_t *tree, mw_handle_t parent_folder_handle);
 
 /**
  * Recursively get all the children and sub-children of a folder node via callback function
@@ -223,7 +229,7 @@ void mw_tree_container_remove_node(mw_tree_container_t *tree, mw_handle_t node_h
  *       for open sub-folders. Children of closed sub-folders are ignored.
  * @note This function can be instructed to terminate early at any point by the callback function returning false
  */
-void mw_tree_container_get_all_children(mw_tree_container_t *tree,
+void mw_tree_container_get_all_children(struct mw_tree_container_t *tree,
 		mw_handle_t parent_folder_handle,
 		mw_tree_container_next_child_callback_t *callback,
 		void *callback_data);
@@ -237,7 +243,7 @@ void mw_tree_container_get_all_children(mw_tree_container_t *tree,
  * @note This function recursively descends the tree from the starting folder getting all children of all descendant folders if
  *       for open sub-folders. Children of closed sub-folders are ignored. The parent folder is not included in the count.
  */
-uint16_t mw_tree_container_get_open_children_count(mw_tree_container_t *tree, mw_handle_t parent_folder_handle);
+uint16_t mw_tree_container_get_open_children_count(struct mw_tree_container_t *tree, mw_handle_t parent_folder_handle);
 
 /**
  * Get a node's handle from it's position after a parent folder, looking into open folders only
@@ -247,7 +253,7 @@ uint16_t mw_tree_container_get_open_children_count(mw_tree_container_t *tree, mw
  * @param position The position after the parent folder
  * @return The handle of the node or MW_INVALID_HANDLE if no node found at the position
  */
-mw_handle_t mw_tree_container_get_handle_from_visible_position(mw_tree_container_t *tree, mw_handle_t parent_folder_handle, uint16_t visible_position);
+mw_handle_t mw_tree_container_get_handle_from_visible_position(struct mw_tree_container_t *tree, mw_handle_t parent_folder_handle, uint16_t visible_position);
 
 /**
  * Get the flags of a node
@@ -256,7 +262,7 @@ mw_handle_t mw_tree_container_get_handle_from_visible_position(mw_tree_container
  * @param node_handle Handle of the node to get flags for
  * @return The node's flags
  */
-uint8_t mw_tree_container_get_node_flags(mw_tree_container_t *tree, mw_handle_t node_handle);
+uint8_t mw_tree_container_get_node_flags(struct mw_tree_container_t *tree, mw_handle_t node_handle);
 
 /**
  * Get the flags of a node
@@ -265,7 +271,7 @@ uint8_t mw_tree_container_get_node_flags(mw_tree_container_t *tree, mw_handle_t 
  * @param node_handle Handle of the node to get level for
  * @return The level of the node
  */
-uint16_t mw_tree_container_get_node_level(mw_tree_container_t *tree, mw_handle_t node_handle);
+uint16_t mw_tree_container_get_node_level(struct mw_tree_container_t *tree, mw_handle_t node_handle);
 
 /**
  * Get the label of a node
@@ -275,7 +281,7 @@ uint16_t mw_tree_container_get_node_level(mw_tree_container_t *tree, mw_handle_t
  * @return Pointer to node's label or empty string if node cannot be found or the label is NULL
  * @note Never returns a NULL pointer
  */
-char *mw_tree_container_get_node_label(mw_tree_container_t *tree, mw_handle_t node_handle);
+char *mw_tree_container_get_node_label(struct mw_tree_container_t *tree, mw_handle_t node_handle);
 
 /**
  * Get the full path and filename of a node from its handle. This includes the root path. If the node is
@@ -287,7 +293,7 @@ char *mw_tree_container_get_node_label(mw_tree_container_t *tree, mw_handle_t no
  * @param node_path Buffer that contains the returned path
  * @param node_path_length Size of the node path buffer
  */
-void mw_tree_container_get_node_path(mw_tree_container_t *tree, mw_handle_t node_handle, char *node_path, uint16_t node_path_length);
+void mw_tree_container_get_node_path(struct mw_tree_container_t *tree, mw_handle_t node_handle, char *node_path, uint16_t node_path_length);
 
 #ifdef __cplusplus
 }

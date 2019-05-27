@@ -316,7 +316,8 @@ void window_image_message_function(const mw_message_t *message)
 		image_window_data->x_scroll_pos = (uint8_t)message->message_data;
 		break;
 
-	case MW_TOUCH_UP_MESSAGE:
+	case MW_WINDOW_HORIZ_SCROLL_BAR_SCROLL_ENDED_MESSAGE:
+	case MW_WINDOW_VERT_SCROLL_BAR_SCROLL_ENDED_MESSAGE:
 		mw_paint_window_client(message->recipient_handle);
 		break;
 

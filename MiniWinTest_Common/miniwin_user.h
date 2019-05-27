@@ -55,6 +55,8 @@ extern mw_handle_t window_drag_handle;
 extern mw_handle_t window_scroll_handle;
 extern mw_handle_t window_yield_handle;
 extern mw_handle_t window_paint_rect_handle;
+extern mw_handle_t window_tabs_handle;
+extern mw_handle_t window_tree_handle;
 extern mw_handle_t check_box_1_handle;
 extern mw_handle_t arrow_1_handle;
 extern mw_handle_t button_1_handle;
@@ -77,7 +79,18 @@ extern mw_handle_t scroll_bar_horiz_1_large_handle;
 extern mw_handle_t label_1_large_handle;
 extern mw_handle_t list_box_3_large_handle;
 extern mw_handle_t scroll_bar_vert_3_handle;
+extern mw_handle_t tabs_auto_handle;
+extern mw_handle_t tabs_fixed_handle;
+extern mw_handle_t label_2_handle;
+extern mw_handle_t label_3_handle;
+extern mw_handle_t label_4_handle;
+extern mw_handle_t label_5_handle;
+extern mw_handle_t label_6_handle;
+extern mw_handle_t tree_handle;
+extern mw_handle_t arrow_2_handle;
+extern mw_handle_t arrow_3_handle;
 extern const uint8_t kitten[];
+extern mw_handle_t label_7_handle;
 
 /***************************
 *** FUNCTIONS PROTOTYPES ***

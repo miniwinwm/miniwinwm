@@ -34,7 +34,6 @@ SOFTWARE.
 #include "fsl_iocon.h"
 #include "fsl_sd.h"
 #include "fsl_sd_disk.h"
-#include "miniwin.h"
 #include "board.h"
 #include "pin_mux.h"
 #include "app.h"
@@ -344,6 +343,13 @@ uint8_t find_folder_entries(char *path,
     path[strlen(path)] = '/';
 
     return (i);
+}
+
+void app_populate_tree_from_file_system(struct mw_tree_container_t *tree,
+		mw_handle_t start_folder_handle)
+
+{
+	//todo implement
 }
 
 mw_time_t app_get_time_date(void)

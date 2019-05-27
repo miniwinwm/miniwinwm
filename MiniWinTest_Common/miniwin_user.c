@@ -38,6 +38,7 @@ SOFTWARE.
 #include "window_yield.h"
 #include "window_paint_rect.h"
 #include "window_tabs.h"
+#include "window_tree.h"
 
 /****************
 *** CONSTANTS ***
@@ -106,6 +107,7 @@ mw_handle_t window_scroll_handle;
 mw_handle_t window_yield_handle;
 mw_handle_t window_paint_rect_handle;
 mw_handle_t window_tabs_handle;
+mw_handle_t window_tree_handle;
 
 /* controls */
 mw_handle_t check_box_1_handle;
@@ -137,6 +139,10 @@ mw_handle_t label_3_handle;
 mw_handle_t label_4_handle;
 mw_handle_t label_5_handle;
 mw_handle_t label_6_handle;
+mw_handle_t tree_handle;
+mw_handle_t arrow_2_handle;
+mw_handle_t arrow_3_handle;
+mw_handle_t label_7_handle;
 
 /**********************
 *** LOCAL VARIABLES ***
@@ -172,6 +178,11 @@ static mw_ui_label_data_t label_3_data;
 static mw_ui_label_data_t label_4_data;
 static mw_ui_label_data_t label_5_data;
 static mw_ui_label_data_t label_6_data;
+static mw_ui_tree_data_t tree_data;
+static mw_ui_arrow_data_t arrow_2_data;
+static mw_ui_arrow_data_t arrow_3_data;
+static mw_tree_container_node_t tree_nodes_array[20];
+static mw_ui_label_data_t label_7_data;
 
 /********************************
 *** LOCAL FUNCTION PROTOTYPES ***
@@ -202,6 +213,10 @@ void mw_user_root_message_function(const mw_message_t *message)
 void mw_user_init(void)
 {
 	mw_util_rect_t r;
+	mw_handle_t intermediate_handle;
+	mw_handle_t fold1_handle;
+	mw_handle_t fold2_handle;
+	mw_handle_t fold3_handle;
 
 	/* create the new graphics library test window */
 	mw_util_set_rect(&r, 15, 100, 220, 210);
@@ -578,6 +593,98 @@ void mw_user_init(void)
 			window_tabs_handle,
 			MW_CONTROL_FLAG_IS_ENABLED,
 			&label_6_data);
+
+	mw_util_set_rect(&r, 40, 170, 180, 140);
+	window_tree_handle = mw_add_window(&r,
+			"Tree 8",
+			window_tree_paint_function,
+			window_tree_message_function,
+			NULL,
+			0U,
+			MW_WINDOW_FLAG_HAS_BORDER | MW_WINDOW_FLAG_HAS_TITLE_BAR |
+				MW_WINDOW_FLAG_CAN_BE_CLOSED | MW_WINDOW_FLAG_IS_VISIBLE,
+			NULL);
+
+	arrow_2_data.mw_ui_arrow_direction = MW_UI_ARROW_UP;
+	arrow_2_handle = mw_ui_arrow_add_new(155,
+			5,
+			window_tree_handle,
+			MW_CONTROL_FLAG_IS_VISIBLE,
+			&arrow_2_data);
+
+	arrow_3_data.mw_ui_arrow_direction = MW_UI_ARROW_DOWN;
+	arrow_3_handle = mw_ui_arrow_add_new(155,
+			59,
+			window_tree_handle,
+			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
+			&arrow_3_data);
+
+	tree_data.number_of_lines = 5U;
+	tree_data.file_icon = NULL;
+	tree_data.folder_icon = NULL;
+	intermediate_handle = mw_tree_container_init(&tree_data.tree_container,
+			tree_nodes_array,
+			20,
+			"Root/",
+			0U,
+			0U,
+			NULL);
+	tree_data.root_handle = intermediate_handle;
+	tree_handle = mw_ui_tree_add_new(5,
+			5,
+			150,
+			window_tree_handle,
+			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
+			&tree_data);
+
+	(void)mw_util_safe_strcpy(label_7_data.label, MW_UI_LABEL_MAX_CHARS, "Not set");
+	label_7_handle = mw_ui_label_add_new(5,
+			100,
+			150,
+			window_tree_handle,
+			MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_IS_VISIBLE,
+			&label_7_data);
+
+	(void)mw_tree_container_add_node(&tree_data.tree_container,
+			tree_data.root_handle,
+			"file1",
+			0U);
+	fold1_handle = mw_tree_container_add_node(&tree_data.tree_container,
+			tree_data.root_handle,
+			"Foldy1",
+			MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG | MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN_FLAG);
+	(void)mw_tree_container_add_node(&tree_data.tree_container,
+			fold1_handle,
+			"file2",
+			0U);
+	(void)mw_tree_container_add_node(&tree_data.tree_container,
+			fold1_handle,
+			"file3",
+			0U);
+	fold2_handle = mw_tree_container_add_node(&tree_data.tree_container,
+			fold1_handle,
+			"fold2",
+			MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG | MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN_FLAG);
+	fold3_handle = mw_tree_container_add_node(&tree_data.tree_container,
+			fold1_handle,
+			"fold3",
+			MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG | MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN_FLAG);
+	(void)mw_tree_container_add_node(&tree_data.tree_container,
+			fold3_handle,
+			"file6",
+			0U);
+	(void)mw_tree_container_add_node(&tree_data.tree_container,
+			fold3_handle,
+			"file7",
+			0U);
+	(void)mw_tree_container_add_node(&tree_data.tree_container,
+			fold2_handle,
+			"file4",
+			0U);
+	(void)mw_tree_container_add_node(&tree_data.tree_container,
+			fold2_handle,
+			"file5",
+			0U);
 
 	mw_paint_all();
 }
