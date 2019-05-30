@@ -553,7 +553,7 @@ void mw_user_init(void)
     		MW_CONTROL_FLAG_IS_ENABLED,
     		&tabs_fixed_data);
 
-	/* create a label controls and add them to the tabs test window */
+	/* create label controls and add them to the tabs test window */
 	(void)mw_util_safe_strcpy(label_2_data.label, MW_UI_LABEL_MAX_CHARS, "Cat");
 	label_2_handle = mw_ui_label_add_new(5,
 			40,

@@ -46,6 +46,8 @@ SOFTWARE.
 *** LOCAL VARIABLES ***
 **********************/
 
+static mw_util_rect_t invalid_rect = {0, 0, 0, 1};
+
 /********************************
 *** LOCAL FUNCTION PROTOTYPES ***
 ********************************/
@@ -94,6 +96,7 @@ static void tabs_paint_function(mw_handle_t control_handle, const mw_gl_draw_inf
 	else
 	{
 		MW_ASSERT((bool)false, "Bad number of tabs");
+		return;
 	}
 
     /* fill the background rectangle which shows above tabs */
@@ -111,12 +114,11 @@ static void tabs_paint_function(mw_handle_t control_handle, const mw_gl_draw_inf
 	mw_gl_set_solid_fill_colour(this_tabs->foreground_colour);
 	mw_gl_set_text_rotation(MW_GL_TEXT_ROTATION_0);
 	mw_gl_set_bg_transparency(MW_GL_BG_TRANSPARENT);
+	mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 
 	/* draw each tab */
 	for (i = 0; i < this_tabs->number_of_tabs; i++)
 	{
-		mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
-
 		/* calculate the start x coordinate of next tab */
 		tab_start_x = tab_width * i;
 
@@ -138,7 +140,7 @@ static void tabs_paint_function(mw_handle_t control_handle, const mw_gl_draw_inf
 		mw_gl_segment(draw_info, tab_start_x + corner_radius, corner_radius + MW_UI_TABS_Y_OFFSET, corner_radius + 1, 270, 360);
 
 		/* draw left edge */
-		mw_gl_vline(draw_info, tab_start_x, corner_radius + MW_UI_TABS_Y_OFFSET, tabs_height);
+		mw_gl_vline(draw_info, tab_start_x, corner_radius + MW_UI_TABS_Y_OFFSET, tabs_height - 1);
 
 		/* draw border of left curved corner */
 		mw_gl_arc(draw_info, tab_start_x + corner_radius, corner_radius + MW_UI_TABS_Y_OFFSET, corner_radius, 270, 360);
@@ -200,7 +202,7 @@ static void tabs_paint_function(mw_handle_t control_handle, const mw_gl_draw_inf
 
 	/* draw the right hand edge of the last tab */
 	mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
-	mw_gl_vline(draw_info, mw_get_control_rect(control_handle).width - 1, corner_radius + 2, tabs_height);
+	mw_gl_vline(draw_info, mw_get_control_rect(control_handle).width - 1, corner_radius + 2, tabs_height - 1);
 }
 
 /**
@@ -215,7 +217,7 @@ static void tabs_message_function(const mw_message_t *message)
 
 	MW_ASSERT(message != (void*)0, "Null pointer argument");
 
-	this_tabs = (mw_ui_tabs_data_t*)mw_get_control_instance_data(message->recipient_handle);
+	this_tabs = (mw_ui_tabs_data_t *)mw_get_control_instance_data(message->recipient_handle);
 
 	switch (message->message_id)
 	{
@@ -224,7 +226,18 @@ static void tabs_message_function(const mw_message_t *message)
 		{
 			tab_width = mw_get_control_rect(message->recipient_handle).width / this_tabs->number_of_tabs;
 			this_tabs->selection = (uint8_t)((message->message_data >> 16) / (uint32_t)tab_width);
-			mw_paint_control(message->recipient_handle);
+
+			/* only get bottom line of tabs control repainted, rest hasn't changed */
+			if ((mw_get_control_flags(message->recipient_handle) & MW_CONTROL_FLAG_LARGE_SIZE) == MW_CONTROL_FLAG_LARGE_SIZE)
+			{
+				invalid_rect.y = MW_UI_TABS_LARGE_HEIGHT - 1;
+			}
+			else
+			{
+				invalid_rect.y = MW_UI_TABS_HEIGHT - 1;
+			}
+			invalid_rect.width = mw_get_control_rect(message->recipient_handle).width;
+			mw_paint_control_rect(message->recipient_handle, &invalid_rect);
 
 			mw_post_message(MW_TAB_SELECTED_MESSAGE,
 					message->recipient_handle,

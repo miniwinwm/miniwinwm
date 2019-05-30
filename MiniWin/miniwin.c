@@ -2625,13 +2625,13 @@ static void do_paint_control_rect(mw_handle_t control_handle, const mw_util_rect
 		return;
 	}
 
-	invalid_rect_copy.x = mw_all_controls[control_id].control_rect.x + invalid_rect->x;
+	invalid_rect_copy.x = mw_all_windows[parent_window_id].client_rect.x + invalid_rect->x;
 	if (invalid_rect_copy.x > mw_all_controls[control_id].control_rect.x + mw_all_controls[control_id].control_rect.width)
 	{
 		return;
 	}
 
-	invalid_rect_copy.y = mw_all_controls[control_id].control_rect.y + invalid_rect->y;
+	invalid_rect_copy.y = mw_all_windows[parent_window_id].client_rect.y + invalid_rect->y;
 	if (invalid_rect_copy.y > mw_all_controls[control_id].control_rect.y + mw_all_controls[control_id].control_rect.height)
 	{
 		return;
@@ -5615,7 +5615,7 @@ bool mw_process_message(void)
 				break;
 
 			case MW_WINDOW_CLIENT_PAINT_MESSAGE:
-				/* paint a window's client and contained controls */
+				/* paint a window's client */
 				do_paint_window_client(message.recipient_handle);
 
 				/* paint all the controls; these are always on top of the client area */
@@ -5623,7 +5623,7 @@ bool mw_process_message(void)
 				break;
 
 			case MW_WINDOW_CLIENT_PAINT_RECT_MESSAGE:
-				/* paint a window's client and contained controls */
+				/* paint a window's client */
 				do_paint_window_client_rect(message.recipient_handle, (mw_util_rect_t *)message.message_pointer);
 
 				/* paint all the controls; these are always on top of the client area */

@@ -129,7 +129,7 @@ void window_tree_message_function(const mw_message_t *message)
 				mw_paint_control(arrow_2_handle);
 			}
 
-			if (window_tree_data.lines_to_scroll < window_tree_data.lines_to_scroll)
+			if (window_tree_data.lines_to_scroll < window_tree_data.max_scrollable_lines)
 			{
 				mw_set_control_enabled(arrow_3_handle, true);
 				mw_paint_control(arrow_3_handle);

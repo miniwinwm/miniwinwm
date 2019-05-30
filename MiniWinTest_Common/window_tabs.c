@@ -56,6 +56,9 @@ typedef struct
 *** LOCAL VARIABLES ***
 **********************/
 
+static mw_util_rect_t auto_tab_rect = {0, MW_UI_TABS_LARGE_HEIGHT, 0, 0};
+static const mw_util_rect_t fixed_tab_rect = {20, 45, 120, 70};
+
 /********************************
 *** LOCAL FUNCTION PROTOTYPES ***
 ********************************/
@@ -154,6 +157,12 @@ void window_tabs_message_function(const mw_message_t *message)
 				mw_set_control_visible(label_6_handle, false);
 				mw_set_control_visible(tabs_fixed_handle, false);
 			}
+
+	    	//mw_paint_window_client(message->recipient_handle);
+			auto_tab_rect.width = mw_get_window_client_rect(message->recipient_handle).width;
+			auto_tab_rect.height = mw_get_window_client_rect(message->recipient_handle).height - MW_UI_TABS_LARGE_HEIGHT;
+
+			mw_paint_window_client_rect(message->recipient_handle, &auto_tab_rect);
     	}
     	else if (message->sender_handle == tabs_fixed_handle)
     	{
@@ -175,13 +184,14 @@ void window_tabs_message_function(const mw_message_t *message)
 				mw_set_control_visible(label_5_handle, false);
 				mw_set_control_visible(label_6_handle, true);
 			}
+
+			/* only repaint the fixed tab control and the box below it that it controls */
+			mw_paint_window_client_rect(message->recipient_handle, &fixed_tab_rect);
     	}
     	else
     	{
     		/* keep MISRA happy */
     	}
-
-    	mw_paint_window_client(message->recipient_handle);
     	break;
 
 	default:
