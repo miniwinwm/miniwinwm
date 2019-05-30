@@ -2563,6 +2563,7 @@ static void paint_all_controls_in_window_rect(mw_handle_t window_handle, const m
 {
 	uint8_t i;
 	uint8_t window_id;
+	mw_util_rect_t invalid_rect_copy;
 
 	/* get window id from window handle and check it's in range */
 	window_id = get_window_id_for_handle(window_handle);
@@ -2576,7 +2577,19 @@ static void paint_all_controls_in_window_rect(mw_handle_t window_handle, const m
 				(mw_all_controls[i].control_flags & MW_CONTROL_FLAG_IS_USED) == MW_CONTROL_FLAG_IS_USED &&
 				(mw_all_controls[i].control_flags & MW_CONTROL_FLAG_IS_VISIBLE) == MW_CONTROL_FLAG_IS_VISIBLE)
 		{
-			do_paint_control_rect(mw_all_controls[i].control_handle, invalid_rect);
+			/* invalid rect is relative to window, but do_paint_control_rect needs it relative to control
+			 * first make it relative to screen */
+			invalid_rect_copy.x = invalid_rect->x + mw_all_windows[window_id].client_rect.x;
+			invalid_rect_copy.y = invalid_rect->y + mw_all_windows[window_id].client_rect.y;
+
+			/* then make it relative to control */
+			invalid_rect_copy.x -= mw_all_controls[i].control_rect.x;
+			invalid_rect_copy.y -= mw_all_controls[i].control_rect.y;
+
+			invalid_rect_copy.width = invalid_rect->width;
+			invalid_rect_copy.height = invalid_rect->height;
+
+			do_paint_control_rect(mw_all_controls[i].control_handle, &invalid_rect_copy);
 		}
 	}
 }
@@ -2625,13 +2638,13 @@ static void do_paint_control_rect(mw_handle_t control_handle, const mw_util_rect
 		return;
 	}
 
-	invalid_rect_copy.x = mw_all_windows[parent_window_id].client_rect.x + invalid_rect->x;
+	invalid_rect_copy.x = mw_all_controls[control_id].control_rect.x + invalid_rect->x;
 	if (invalid_rect_copy.x > mw_all_controls[control_id].control_rect.x + mw_all_controls[control_id].control_rect.width)
 	{
 		return;
 	}
 
-	invalid_rect_copy.y = mw_all_windows[parent_window_id].client_rect.y + invalid_rect->y;
+	invalid_rect_copy.y = mw_all_controls[control_id].control_rect.y + invalid_rect->y;
 	if (invalid_rect_copy.y > mw_all_controls[control_id].control_rect.y + mw_all_controls[control_id].control_rect.height)
 	{
 		return;
