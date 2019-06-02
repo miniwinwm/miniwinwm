@@ -100,8 +100,8 @@ void window_gl_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_t
 	const int16_t shape_x_const[] = {0, -5, 0, 5};
 	const int16_t shape_y_const[] = {-10, 10, 5, 10};
 	const uint16_t pattern[16] = {0xffff, 0x83c1, 0x83c1, 0x83c1, 0x83c1, 0x83c1, 0xffff, 0xffff,
-			0xffff, 0xffff, 0x83c1, 0x83c1, 0x83c1, 0x83c1, 0x83c1, 0xffff};	int16_t shape_x[SHAPE_POINTS];
-
+			0xffff, 0xffff, 0x83c1, 0x83c1, 0x83c1, 0x83c1, 0x83c1, 0xffff};
+	int16_t shape_x[SHAPE_POINTS];
 	int16_t shape_y[SHAPE_POINTS];
 	int16_t x;
 	int16_t y;
@@ -925,6 +925,10 @@ void window_gl_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_t
 		mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 		mw_gl_set_bg_colour(MW_HAL_LCD_YELLOW);
 		mw_gl_set_bg_transparency(MW_GL_BG_NOT_TRANSPARENT);
+		(void)memcpy((shape_x), (shape_x_const), (sizeof(shape_x)));
+		(void)memcpy((shape_y), (shape_y_const), (sizeof(shape_y)));
+		mw_gl_scale_shape(SHAPE_POINTS, shape_x, shape_y, 100, 100);
+		mw_gl_rotate_shape(SHAPE_POINTS, shape_x, shape_y, 35);
 		mw_gl_poly(draw_info, SHAPE_POINTS, shape_x, shape_y, 150, 150);
 		break;
 
@@ -934,6 +938,10 @@ void window_gl_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_t
 		mw_gl_clear_pattern();
 		mw_gl_set_border(MW_GL_BORDER_OFF);
 		mw_gl_set_solid_fill_colour(MW_HAL_LCD_GREEN);
+		(void)memcpy((shape_x), (shape_x_const), (sizeof(shape_x)));
+		(void)memcpy((shape_y), (shape_y_const), (sizeof(shape_y)));
+		mw_gl_scale_shape(SHAPE_POINTS, shape_x, shape_y, 100, 100);
+		mw_gl_rotate_shape(SHAPE_POINTS, shape_x, shape_y, 35);
 		mw_gl_poly(draw_info, SHAPE_POINTS, shape_x, shape_y, 150,150);
 		break;
 
@@ -944,6 +952,10 @@ void window_gl_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_t
 		mw_gl_clear_pattern();
 		mw_gl_set_solid_fill_colour(MW_HAL_LCD_GREEN);
 		mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
+		(void)memcpy((shape_x), (shape_x_const), (sizeof(shape_x)));
+		(void)memcpy((shape_y), (shape_y_const), (sizeof(shape_y)));
+		mw_gl_scale_shape(SHAPE_POINTS, shape_x, shape_y, 100, 100);
+		mw_gl_rotate_shape(SHAPE_POINTS, shape_x, shape_y, 35);
 		mw_gl_poly(draw_info, SHAPE_POINTS, shape_x, shape_y, 150,150);
 		break;
 
@@ -954,6 +966,10 @@ void window_gl_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_t
 		mw_gl_set_fg_colour(MW_HAL_LCD_RED);
 		mw_gl_set_bg_colour(MW_HAL_LCD_YELLOW);
 		mw_gl_set_bg_transparency(MW_GL_BG_NOT_TRANSPARENT);
+		(void)memcpy((shape_x), (shape_x_const), (sizeof(shape_x)));
+		(void)memcpy((shape_y), (shape_y_const), (sizeof(shape_y)));
+		mw_gl_scale_shape(SHAPE_POINTS, shape_x, shape_y, 100, 100);
+		mw_gl_rotate_shape(SHAPE_POINTS, shape_x, shape_y, 35);
 		mw_gl_poly(draw_info, SHAPE_POINTS, shape_x, shape_y, 150,150);
 		break;
 
@@ -964,6 +980,10 @@ void window_gl_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_t
 		mw_gl_set_fg_colour(MW_HAL_LCD_RED);
 		mw_gl_set_bg_colour(MW_HAL_LCD_YELLOW);
 		mw_gl_set_bg_transparency(MW_GL_BG_NOT_TRANSPARENT);
+		(void)memcpy((shape_x), (shape_x_const), (sizeof(shape_x)));
+		(void)memcpy((shape_y), (shape_y_const), (sizeof(shape_y)));
+		mw_gl_scale_shape(SHAPE_POINTS, shape_x, shape_y, 100, 100);
+		mw_gl_rotate_shape(SHAPE_POINTS, shape_x, shape_y, 35);
 		mw_gl_poly(draw_info, SHAPE_POINTS, shape_x, shape_y, 150, 150);
 		break;
 
