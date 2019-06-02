@@ -72,7 +72,7 @@ static bool node_callback(struct mw_tree_container_t *tree, mw_handle_t node_han
 **********************/
 
 /**
- * Pointer type to callback function called from library to user code when finding all descendants of a folder node
+ * Callback function called from library to user code when finding all descendants of a folder node
  *
  * @param tree Pointer to tree structure
  * @param node_handle The handle of the next found node
@@ -85,6 +85,7 @@ static bool node_callback(struct mw_tree_container_t *tree, mw_handle_t node_han
 	uint8_t node_flags;
 	uint16_t node_level;
 	int16_t label_icon_offset;
+	bool draw_selected_background;
 
 	if (node_handle == MW_INVALID_HANDLE)
 	{
@@ -95,7 +96,24 @@ static bool node_callback(struct mw_tree_container_t *tree, mw_handle_t node_han
 	node_level = mw_tree_container_get_node_level(tree, node_handle);
 
 	/* draw background of selected node */
-	if ((node_flags & MW_TREE_CONTAINER_NODE_IS_SELECTED_FLAG) == MW_TREE_CONTAINER_NODE_IS_SELECTED_FLAG)
+	draw_selected_background = false;
+
+	if ((tree->tree_flags & MW_TREE_CONTAINER_NO_SELECT) == MW_TREE_CONTAINER_NO_SELECT)
+	{
+		if (node_handle == tree_callback_data->this_tree->node_to_animate)
+		{
+			draw_selected_background = true;
+		}
+	}
+	else
+	{
+		if ((node_flags & MW_TREE_CONTAINER_NODE_IS_SELECTED) == MW_TREE_CONTAINER_NODE_IS_SELECTED)
+		{
+			draw_selected_background = true;
+		}
+	}
+
+	if (draw_selected_background)
 	{
 		mw_gl_set_solid_fill_colour(MW_CONTROL_DOWN_COLOUR);
 		mw_gl_rectangle(tree_callback_data->draw_info,
@@ -108,9 +126,9 @@ static bool node_callback(struct mw_tree_container_t *tree, mw_handle_t node_han
 	mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 	mw_gl_set_bg_colour(MW_HAL_LCD_WHITE);
 
-	if ((node_flags & MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG) == MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG)
+	if ((node_flags & MW_TREE_CONTAINER_NODE_IS_FOLDER) == MW_TREE_CONTAINER_NODE_IS_FOLDER)
 	{
-		if ((node_flags & MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN_FLAG) == MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN_FLAG)
+		if ((node_flags & MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN) == MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN)
 		{
 			if (tree_callback_data->large_size == true)
 			{
@@ -156,7 +174,7 @@ static bool node_callback(struct mw_tree_container_t *tree, mw_handle_t node_han
 
 	/* draw file/folder icons if required */
 	label_icon_offset = 0;
-	if ((node_flags & MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG) == MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG)
+	if ((node_flags & MW_TREE_CONTAINER_NODE_IS_FOLDER) == MW_TREE_CONTAINER_NODE_IS_FOLDER)
 	{
 		if (tree_callback_data->this_tree->folder_icon != NULL)
 		{
@@ -257,6 +275,7 @@ static void tree_paint_function(mw_handle_t control_handle, const mw_gl_draw_inf
 	tree_callback_data.next_line = 1;
 	(void)mw_tree_container_get_all_children(&tree_callback_data.this_tree->tree_container,
 			tree_callback_data.this_tree->root_handle,
+			false,
 			node_callback,
 			(void *)&tree_callback_data);
 }
@@ -318,50 +337,49 @@ static void tree_message_function(const mw_message_t *message)
 	switch (message->message_id)
 	{
 	case MW_CONTROL_CREATED_MESSAGE:
+		if ((mw_get_control_flags(message->recipient_handle) & MW_CONTROL_FLAG_LARGE_SIZE) == MW_CONTROL_FLAG_LARGE_SIZE)
 		{
-			if ((mw_get_control_flags(message->recipient_handle) & MW_CONTROL_FLAG_LARGE_SIZE) == MW_CONTROL_FLAG_LARGE_SIZE)
-			{
-				this_tree->icon_size = MW_UI_TREE_LARGE_ICON_SIZE;
-				this_tree->row_height = MW_UI_TREE_LARGE_ROW_HEIGHT;
-				this_tree->row_left_border = MW_UI_TREE_LARGE_LEFT_BORDER;
-				this_tree->row_top_border = MW_UI_TREE_LARGE_TOP_BORDER;
-			}
-			else
-			{
-				this_tree->icon_size = MW_UI_TREE_ICON_SIZE;
-				this_tree->row_height = MW_UI_TREE_ROW_HEIGHT;
-				this_tree->row_left_border = MW_UI_TREE_LEFT_BORDER;
-				this_tree->row_top_border = MW_UI_TREE_TOP_BORDER;
-			}
-
-			/* initialise selected line invalid rect */
-			this_tree->invalid_rect.height = this_tree->row_height;
-			this_tree->invalid_rect.x = 1;
-
-			/* get number of visible children of root folder */
-			this_tree->visible_children = mw_tree_container_get_open_children_count(&this_tree->tree_container, this_tree->root_handle);
-
-			/* add root folder to count */
-			this_tree->visible_children++;
-
-			/* initialise the control */
-			this_tree->lines_to_scroll = 0U;
-
-			/* send message about whether scrolling is needed */
-			message_data = 0U;
-			if (this_tree->visible_children > this_tree->number_of_lines)
-			{
-				message_data = 0x010000;
-				message_data |= ((uint32_t)this_tree->visible_children - (uint32_t)this_tree->number_of_lines);
-			}
-
-			mw_post_message(MW_TREE_SCROLLING_REQUIRED_MESSAGE,
-					message->recipient_handle,
-					mw_get_control_parent_window_handle(message->recipient_handle),
-					message_data,
-					NULL,
-					MW_WINDOW_MESSAGE);
+			this_tree->icon_size = MW_UI_TREE_LARGE_ICON_SIZE;
+			this_tree->row_height = MW_UI_TREE_LARGE_ROW_HEIGHT;
+			this_tree->row_left_border = MW_UI_TREE_LARGE_LEFT_BORDER;
+			this_tree->row_top_border = MW_UI_TREE_LARGE_TOP_BORDER;
 		}
+		else
+		{
+			this_tree->icon_size = MW_UI_TREE_ICON_SIZE;
+			this_tree->row_height = MW_UI_TREE_ROW_HEIGHT;
+			this_tree->row_left_border = MW_UI_TREE_LEFT_BORDER;
+			this_tree->row_top_border = MW_UI_TREE_TOP_BORDER;
+		}
+
+		/* initialise selected line invalid rect */
+		this_tree->invalid_rect.height = this_tree->row_height;
+		this_tree->invalid_rect.x = 1;
+
+		/* get number of visible children of root folder */
+		this_tree->visible_children = mw_tree_container_get_open_children_count(&this_tree->tree_container, this_tree->root_handle);
+
+		/* add root folder to count */
+		this_tree->visible_children++;
+
+		/* initialise the control */
+		this_tree->lines_to_scroll = 0U;
+		this_tree->node_to_animate = MW_INVALID_HANDLE;
+
+		/* send message about whether scrolling is needed */
+		message_data = 0U;
+		if (this_tree->visible_children > this_tree->number_of_lines)
+		{
+			message_data = 0x010000;
+			message_data |= ((uint32_t)this_tree->visible_children - (uint32_t)this_tree->number_of_lines);
+		}
+
+		mw_post_message(MW_TREE_SCROLLING_REQUIRED_MESSAGE,
+				message->recipient_handle,
+				mw_get_control_parent_window_handle(message->recipient_handle),
+				message_data,
+				NULL,
+				MW_WINDOW_MESSAGE);
 		break;
 
 	case MW_TREE_SCROLL_BAR_POSITION_MESSAGE:
@@ -393,6 +411,11 @@ static void tree_message_function(const mw_message_t *message)
 						MW_WINDOW_MESSAGE);
 			}
 		}
+		break;
+
+	case MW_TIMER_MESSAGE:
+		this_tree->node_to_animate = MW_INVALID_HANDLE;
+		mw_paint_control_rect(message->recipient_handle, &this_tree->invalid_rect);
 		break;
 
 	case MW_TREE_LINES_TO_SCROLL_MESSAGE:
@@ -436,7 +459,7 @@ static void tree_message_function(const mw_message_t *message)
 			/* check if the control is enabled */
 			if ((mw_get_control_flags(message->recipient_handle) & MW_CONTROL_FLAG_IS_ENABLED) == MW_CONTROL_FLAG_IS_ENABLED)
 			{
-				/* control is enabled, get selected node handle from y poisition */
+				/* control is enabled, get selected node handle from y position */
 				selected_node_handle = mw_tree_container_get_handle_from_visible_position(&this_tree->tree_container,
 						this_tree->root_handle,
 						(uint16_t)line_number);
@@ -449,11 +472,11 @@ static void tree_message_function(const mw_message_t *message)
 					node_level = mw_tree_container_get_node_level(&this_tree->tree_container, selected_node_handle);
 
 					/* check for selection on a folder >/V area */
-					if ((node_flags & MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG) == MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG &&
+					if ((node_flags & MW_TREE_CONTAINER_NODE_IS_FOLDER) == MW_TREE_CONTAINER_NODE_IS_FOLDER &&
 							touch_x < ((int16_t)(node_level) + 1) * ((int16_t)this_tree->icon_size + 2))
 					{
 						/* selected folder >/V area */
-						if ((node_flags & MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN_FLAG) == MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN_FLAG)
+						if ((node_flags & MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN) == MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN)
 						{
 							mw_tree_container_change_folder_node_open_state(&this_tree->tree_container, selected_node_handle, false);
 
@@ -505,23 +528,12 @@ static void tree_message_function(const mw_message_t *message)
 					else
 					{
 						/* not selected folder >/V area */
-						if ((node_flags & MW_TREE_CONTAINER_NODE_IS_SELECTED_FLAG) == MW_TREE_CONTAINER_NODE_IS_SELECTED_FLAG)
-						{
-							/* mark node chosen as selected */
-							mw_tree_container_change_node_selected_state(&this_tree->tree_container, selected_node_handle, false);
 
-							/* post node selected message */
-							mw_post_message(MW_TREE_NODE_DESELECTED_MESSAGE,
-									message->recipient_handle,
-									mw_get_control_parent_window_handle(message->recipient_handle),
-									(uint32_t)selected_node_handle,
-									NULL,
-									MW_WINDOW_MESSAGE);
-						}
-						else
+						/* check if selection is allowed for this tree */
+						if ((this_tree->tree_container.tree_flags & MW_TREE_CONTAINER_NO_SELECT) == MW_TREE_CONTAINER_NO_SELECT)
 						{
-							/* mark node chosen as deselected */
-							mw_tree_container_change_node_selected_state(&this_tree->tree_container, selected_node_handle, true);
+							/* mark node chosen as temporarily selected */
+							this_tree->node_to_animate = selected_node_handle;
 
 							/* post node selected message */
 							mw_post_message(MW_TREE_NODE_SELECTED_MESSAGE,
@@ -530,12 +542,54 @@ static void tree_message_function(const mw_message_t *message)
 									(uint32_t)selected_node_handle,
 									NULL,
 									MW_WINDOW_MESSAGE);
+
+							(void)mw_set_timer(mw_tick_counter + MW_CONTROL_DOWN_TIME, message->recipient_handle, MW_CONTROL_MESSAGE);
+						}
+						else
+						{
+							if ((node_flags & MW_TREE_CONTAINER_NODE_IS_SELECTED) == MW_TREE_CONTAINER_NODE_IS_SELECTED)
+							{
+								/* mark node chosen as deselected */
+								if (mw_tree_container_change_node_selected_state(&this_tree->tree_container, selected_node_handle, false))
+								{
+									/* post node deselected message if the selected state change was allowed */
+									mw_post_message(MW_TREE_NODE_DESELECTED_MESSAGE,
+											message->recipient_handle,
+											mw_get_control_parent_window_handle(message->recipient_handle),
+											(uint32_t)selected_node_handle,
+											NULL,
+											MW_WINDOW_MESSAGE);
+								}
+							}
+							else
+							{
+								/* mark node chosen as selected */
+								if (mw_tree_container_change_node_selected_state(&this_tree->tree_container, selected_node_handle, true))
+								{
+									/* post node selected message if the selected state change was allowed */
+									mw_post_message(MW_TREE_NODE_SELECTED_MESSAGE,
+											message->recipient_handle,
+											mw_get_control_parent_window_handle(message->recipient_handle),
+											(uint32_t)selected_node_handle,
+											NULL,
+											MW_WINDOW_MESSAGE);
+								}
+							}
 						}
 
-						/* repaint only selected/deselected line */
-						this_tree->invalid_rect.y = (touch_y / this_tree->row_height) * this_tree->row_height;
-						this_tree->invalid_rect.width = mw_get_control_rect(message->recipient_handle).width - 2,
-						mw_paint_control_rect(message->recipient_handle, &this_tree->invalid_rect);
+						if ((this_tree->tree_container.tree_flags & MW_TREE_CONTAINER_SINGLE_SELECT_ONLY) == MW_TREE_CONTAINER_SINGLE_SELECT_ONLY)
+						{
+							/* repaint whole control */
+							mw_paint_control(message->recipient_handle);
+
+						}
+						else
+						{
+							/* repaint only selected/deselected line */
+							this_tree->invalid_rect.y = (touch_y / this_tree->row_height) * this_tree->row_height;
+							this_tree->invalid_rect.width = mw_get_control_rect(message->recipient_handle).width - 2,
+							mw_paint_control_rect(message->recipient_handle, &this_tree->invalid_rect);
+						}
 					}
 				}
 			}

@@ -43,15 +43,22 @@ SOFTWARE.
 *** CONSTANTS ***
 ****************/
 
-#define MW_TREE_CONTAINER_NODE_LABEL_MAX_SIZE		16U
-#define MW_TREE_CONTAINER_NODE_IS_SELECTED_FLAG		0x01U
-#define MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG		0x02U
-#define MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN_FLAG	0x04U
-#define MW_TREE_CONTAINER_SINGLE_SELECT_ONLY		0x01U
-#define MW_TREE_CONTAINER_FOLDER_SELECT_ONLY		0x02U
-#define MW_TREE_CONTAINER_FILE_SELECT_ONLY			0x04U
-#define MW_TREE_CONTAINER_SHOW_FOLDERS_ONLY			0x08U
-#define MW_TREE_CONTAINER_FOLDER_SEPARATOR			"/"
+/**
+ * Tree flags and constants
+ */
+#define MW_TREE_CONTAINER_NO_SELECT					0x01U	/**< No node can be selected */
+#define MW_TREE_CONTAINER_SINGLE_SELECT_ONLY		0x02U	/**< Only a single node can be selected and when it is all other nodes are deselected */
+#define MW_TREE_CONTAINER_FOLDER_SELECT_ONLY		0x04U	/**< Only folder nodes can be selected */
+#define MW_TREE_CONTAINER_FILE_SELECT_ONLY			0x08U	/**< Only file nodes can be selected */
+#define MW_TREE_CONTAINER_SHOW_FOLDERS_ONLY			0x10U	/**< Only folder nodes are returned on a search */
+#define MW_TREE_CONTAINER_NODE_LABEL_MAX_SIZE		16U		/**< Maximum size a node label can be */
+
+/**
+ * Node flags and constants
+ */
+#define MW_TREE_CONTAINER_NODE_IS_SELECTED			0x01U	/**< Flag indicating a node is selected */
+#define MW_TREE_CONTAINER_NODE_IS_FOLDER			0x02U	/**< Flag indicating a node is a folder */
+#define MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN		0x04U	/**< Flag indicating a folder node is open */
 
 /************
 *** TYPES ***
@@ -84,8 +91,8 @@ typedef void (mw_tree_container_no_space_callback_t)(struct mw_tree_container_t 
 typedef struct
 {
 	mw_handle_t handle;											/**< This node's handle */
-	char label[MW_TREE_CONTAINER_NODE_LABEL_MAX_SIZE];			/**< This node's label */
 	uint16_t level;												/**< The folder depth of this node; root folder is zero */
+	char label[MW_TREE_CONTAINER_NODE_LABEL_MAX_SIZE];			/**< This node's label */
 	uint8_t node_flags;											/**< Flags describing this node */
 } mw_tree_container_node_t;
 
@@ -99,6 +106,7 @@ struct mw_tree_container_t
 	mw_tree_container_node_t *nodes_array;						/**< Pointer to array of nodes */
 	mw_tree_container_no_space_callback_t *no_space_callback;	/**< Callback to be called when adding a node fails because of lack of space; can be NULL */
 	uint8_t tree_flags;											/**< Flags describing this tree */
+	char folder_separator[2];									/**< Separator character between folders as a string */
 };
 
 /*************************
@@ -117,9 +125,13 @@ struct mw_tree_container_t
  * @param nodes_array_size Size of nodes_array
  * @param root_folder_label Label to give to the root folder node, must end in MW_TREE_CONTAINER_FOLDER_SEPARATOR
  * @param root_node_flags Flags to use for root node; can be MW_UTREE_NODE_IS_SELECTED_FLAG or MW_TREE_FOLDER_IS_OPEN_FLAG or both
- * @param tree_flags Flags that apply to the whole tree, can be MW_TREE_CONTAINER_SINGLE_SELECT_ONLY or MW_TREE_CONTAINER_SHOW_FOLDERS_ONLY or both or neither
+ * @param tree_flags Flags that apply to the whole tree from the list above.
  * @param no_space_callback Pointer to callback function that is called when adding a node fails because of lack of space for a new node. This can be NULL if not required.
+ * @param folder_separator Separator character between foldders
  * @return Handle to the root node
+ * @note Not all combinations of tree flags are allowed: NO_SELECT && (SINGLE_SELECT_ONLY || FOLDER_SELECT_ONLY || FILE_SELECT_ONLY)
+ *                                                       FOLDER_SELECT_ONLY && FILE_SELECT_ONLY
+ *                                                       SHOW_FOLDERS_ONLY && FILE_SELECT_ONLY
  */
 mw_handle_t mw_tree_container_init(struct mw_tree_container_t *tree,
 		mw_tree_container_node_t *nodes_array,
@@ -127,7 +139,8 @@ mw_handle_t mw_tree_container_init(struct mw_tree_container_t *tree,
 		char *root_folder_label,
 		uint8_t root_node_flags,
 		uint8_t tree_flags,
-		mw_tree_container_no_space_callback_t *no_space_callback);
+		mw_tree_container_no_space_callback_t *no_space_callback,
+		char folder_separator);
 
 /**
  * Empty a tree of all nodes except the root folder node which remains untouched
@@ -190,8 +203,9 @@ void mw_tree_container_change_node_label(struct mw_tree_container_t *tree, mw_ha
  * @param tree Pointer to tree structure
  * @param node_handle Handle of node to change selected state of
  * @param is_selected True to assign a node selected, false unselected
+ * @return If the change to the node selected state was permitted
  */
-void mw_tree_container_change_node_selected_state(struct mw_tree_container_t *tree, mw_handle_t node_handle, bool is_selected);
+bool mw_tree_container_change_node_selected_state(struct mw_tree_container_t *tree, mw_handle_t node_handle, bool is_selected);
 
 /**
  * Change a folder node's open state
@@ -223,19 +237,22 @@ void mw_tree_container_remove_node_children(struct mw_tree_container_t *tree, mw
  *
  * @param tree Pointer to tree structure
  * @param parent_folder_handle Handle of the folder node to start looking in
+ * @param selected_only Only find folders and files that are selected
  * @param callback The function to be called for each child or sub-child found
  * @param callback_data Pointer to generic data to be passed from caller to callback function
  * @note This function recursively descends the tree from the starting folder getting all children of all descendant folders if
  *       for open sub-folders. Children of closed sub-folders are ignored.
  * @note This function can be instructed to terminate early at any point by the callback function returning false
+ * @note Only nodes in open folders will be returned when searching for selected files/folders
  */
 void mw_tree_container_get_all_children(struct mw_tree_container_t *tree,
 		mw_handle_t parent_folder_handle,
+		bool selected_only,
 		mw_tree_container_next_child_callback_t *callback,
 		void *callback_data);
 
 /**
- * Recursively get the count of children and sub-children of a folder node
+ * Recursively get the count of children and sub-children of a folder node ignoring closed folders
  *
  * @param tree Pointer to tree structure
  * @param parent_folder_handle Handle of the folder node to start looking in
@@ -246,7 +263,7 @@ void mw_tree_container_get_all_children(struct mw_tree_container_t *tree,
 uint16_t mw_tree_container_get_open_children_count(struct mw_tree_container_t *tree, mw_handle_t parent_folder_handle);
 
 /**
- * Get a node's handle from it's position after a parent folder, looking into open folders only
+ * Get a node's handle from its position after a parent folder, looking into open folders only
  *
  * @param tree Pointer to tree structure
  * @param parent_folder_handle Handle of the folder node to start looking in
@@ -294,6 +311,13 @@ char *mw_tree_container_get_node_label(struct mw_tree_container_t *tree, mw_hand
  * @param node_path_length Size of the node path buffer
  */
 void mw_tree_container_get_node_path(struct mw_tree_container_t *tree, mw_handle_t node_handle, char *node_path, uint16_t node_path_length);
+
+/**
+ * Deselect all nodes in a tree
+ *
+ * @param tree Pointer to tree structure
+ */
+void mw_tree_container_deselect_all_nodes(struct mw_tree_container_t *tree);
 
 #ifdef __cplusplus
 }

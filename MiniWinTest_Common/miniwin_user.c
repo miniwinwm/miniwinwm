@@ -627,8 +627,9 @@ void mw_user_init(void)
 			20,
 			"Root/",
 			0U,
-			0U,
-			NULL);
+			MW_TREE_CONTAINER_NO_SELECT,
+			NULL,
+			'/');
 	tree_data.root_handle = intermediate_handle;
 	tree_handle = mw_ui_tree_add_new(5,
 			5,
@@ -652,7 +653,7 @@ void mw_user_init(void)
 	fold1_handle = mw_tree_container_add_node(&tree_data.tree_container,
 			tree_data.root_handle,
 			"Foldy1",
-			MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG | MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN_FLAG);
+			MW_TREE_CONTAINER_NODE_IS_FOLDER | MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN);
 	(void)mw_tree_container_add_node(&tree_data.tree_container,
 			fold1_handle,
 			"file2",
@@ -664,11 +665,11 @@ void mw_user_init(void)
 	fold2_handle = mw_tree_container_add_node(&tree_data.tree_container,
 			fold1_handle,
 			"fold2",
-			MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG | MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN_FLAG);
+			MW_TREE_CONTAINER_NODE_IS_FOLDER | MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN);
 	fold3_handle = mw_tree_container_add_node(&tree_data.tree_container,
 			fold1_handle,
 			"fold3",
-			MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG | MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN_FLAG);
+			MW_TREE_CONTAINER_NODE_IS_FOLDER | MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN);
 	(void)mw_tree_container_add_node(&tree_data.tree_container,
 			fold3_handle,
 			"file6",

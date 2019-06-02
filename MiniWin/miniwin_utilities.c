@@ -49,6 +49,8 @@ SOFTWARE.
 *** LOCAL VARIABLES ***
 **********************/
 
+static char empty_string[] = "";
+
 /********************************
 *** LOCAL FUNCTION PROTOTYPES ***
 ********************************/
@@ -128,7 +130,7 @@ char *mw_util_safe_strcpy(char *dest, size_t size, const char *src)
     if (dest == (void*)0 || src == (void*)0)
     {
     	MW_ASSERT((bool)false, "Null pointer argument");
-    	return ("");
+    	return (empty_string);
     }
 
     if (size > 0U)
@@ -148,7 +150,7 @@ char *mw_util_safe_strcat(char *dest, size_t size, const char *src)
     if (dest == (void*)0 || src == (void*)0)
     {
     	MW_ASSERT((bool)false, "Null pointer argument");
-    	return ("");
+    	return (empty_string);
     }
 
 	return (strncat((dest), (src), (size - strlen(dest) - (size_t)1U)));
@@ -156,13 +158,13 @@ char *mw_util_safe_strcat(char *dest, size_t size, const char *src)
 
 char *mw_util_strrev(char *str)
 {
-	char *p1;
-	char *p2;
+	uint8_t *p1;
+	uint8_t *p2;
 
     if (str == (void*)0)
     {
     	MW_ASSERT((bool)false, "Null pointer argument");
-    	return ("");
+    	return (empty_string);
     }
 
 	if (*str == '\0')
@@ -170,11 +172,11 @@ char *mw_util_strrev(char *str)
 		return (str);
 	}
 
-	for (p1 = str, p2 = str + strlen(str) - 1; p2 > p1; ++p1, --p2)
+	for (p1 = (uint8_t *)str, p2 = (uint8_t *)(str + strlen(str) - 1); p2 > p1; ++p1, --p2)
 	{
-		*p1 ^= *p2;
-		*p2 ^= *p1;
-		*p1 ^= *p2;
+		(*p1) ^= (*p2);
+		(*p2) ^= (*p1);
+		(*p1) ^= (*p2);
 	}
 
 	return (str);

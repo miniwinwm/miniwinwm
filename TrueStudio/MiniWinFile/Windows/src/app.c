@@ -290,7 +290,7 @@ void app_populate_tree_from_file_system(struct mw_tree_container_t *tree,
     	node_flags = 0U;
     	if (ffd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
     	{
-    		node_flags = MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG;
+    		node_flags = MW_TREE_CONTAINER_NODE_IS_FOLDER;
     	}
 
     	(void)mw_tree_container_add_node(tree,

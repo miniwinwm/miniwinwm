@@ -24,8 +24,8 @@ SOFTWARE.
 
 */
 
-#ifndef MINIWIN_USER_H
-#define MINIWIN_USER_H
+#ifndef WINDOW_SELECTION_H
+#define WINDOW_SELECTION_H
 
 #ifdef __cplusplus
  extern "C" {
@@ -34,6 +34,8 @@ SOFTWARE.
 /***************
 *** INCLUDES ***
 ***************/
+
+#include "miniwin.h"
 
 /****************
 *** CONSTANTS ***
@@ -47,30 +49,27 @@ SOFTWARE.
 *** EXTERNAL VARIABLES ***
 *************************/
 
-extern mw_handle_t window_file_handle;
-extern mw_handle_t window_file_tree_handle;
-extern mw_handle_t window_selection_handle;
-extern mw_handle_t button_open_handle;
-extern mw_handle_t button_set_clock_handle;
-extern mw_handle_t button_create_handle;
-extern mw_handle_t label_time_handle;
-extern mw_handle_t label_date_handle;
-extern mw_handle_t tree_handle;
-extern mw_handle_t label_path_handle;
-extern mw_handle_t scroll_bar_vert_handle;
-extern mw_handle_t button_show_handle;
-
 /***************************
 *** FUNCTIONS PROTOTYPES ***
 ***************************/
 
 /**
- * Add a file to a folder
+ * Window paint routine, called by window manager.
  *
- * @param parent_folder The folder to add the file to
- * @param name The file's name excluding path
+ * @param window_handle The window identifier in the array of windows
+ * @param draw_info Draw info structure describing offset and clip region
+ * @note Do not call this directly from user code
  */
-void tree_container_add_file_to_folder(mw_handle_t parent_folder, char *filename);
+void window_selection_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_t *draw_info);
+
+/**
+ * Window message handler called by the window manager.
+ *
+ * @param message The message to be processed
+ *
+ * @note Do not call this directly from user code
+ */
+void window_selection_message_function(const mw_message_t *message);
 
 #ifdef __cplusplus
 }

@@ -3637,6 +3637,10 @@ static bool check_and_process_touch_on_vert_window_scroll_bar(uint8_t window_id,
 							NULL,
 							MW_WINDOW_MESSAGE);
 				}
+				else
+				{
+					/* keep MISRA happy */
+				}
 			}
 
 			return (true);
@@ -3708,6 +3712,10 @@ static bool check_and_process_touch_on_horiz_window_scroll_bar(uint8_t window_id
 							MW_UNUSED_MESSAGE_PARAMETER,
 							NULL,
 							MW_WINDOW_MESSAGE);
+				}
+				else
+				{
+					/* keep MISRA happy */
 				}
 			}
 			return (true);

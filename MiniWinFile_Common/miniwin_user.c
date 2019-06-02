@@ -33,6 +33,7 @@ SOFTWARE.
 #include "miniwin_user.h"
 #include "window_file.h"
 #include "window_file_tree.h"
+#include "window_selection.h"
 
 /****************
 *** CONSTANTS ***
@@ -49,6 +50,7 @@ SOFTWARE.
 /* windows */
 mw_handle_t window_file_handle;
 mw_handle_t window_file_tree_handle;
+mw_handle_t window_selection_handle;
 
 /* controls */
 mw_handle_t button_open_handle;
@@ -59,6 +61,7 @@ mw_handle_t label_date_handle;
 mw_handle_t tree_handle;
 mw_handle_t label_path_handle;
 mw_handle_t scroll_bar_vert_handle;
+mw_handle_t button_show_handle;
 
 /**********************
 *** LOCAL VARIABLES ***
@@ -74,6 +77,7 @@ static mw_ui_tree_data_t tree_data;
 static mw_tree_container_node_t *nodes_array;
 static mw_ui_label_data_t label_path_data;
 static mw_ui_scroll_bar_vert_data_t scroll_bar_vert_data;
+static mw_ui_button_data_t button_show_data;
 
 /********************************
 *** LOCAL FUNCTION PROTOTYPES ***
@@ -132,7 +136,7 @@ void mw_user_init(void)
 	mw_util_rect_t r;
 	mw_handle_t intermediate_handle;
 
-	mw_util_set_rect(&r, 5, 5, 230, 265);
+	mw_util_set_rect(&r, 5, 5, 230, 285);
 	window_file_tree_handle = mw_add_window(&r,
 			"File Tree Demo",
 			window_file_tree_paint_function,
@@ -152,7 +156,8 @@ void mw_user_init(void)
 			app_get_root_folder_path(),
 			0U,
 			0U,
-			expand_node_array);
+			expand_node_array,
+			'/');
 	tree_data.root_handle = intermediate_handle;
 	tree_handle = mw_ui_tree_add_new(5,
 			5,
@@ -177,6 +182,13 @@ void mw_user_init(void)
 			window_file_tree_handle,
 			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
 			&label_path_data);
+
+	(void)mw_util_safe_strcpy(button_show_data.button_label, MW_UI_BUTTON_LABEL_MAX_CHARS, "Show");
+	button_open_handle = mw_ui_button_add_new(5,
+			247,
+			window_file_tree_handle,
+			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
+			&button_show_data);
 
 	mw_util_set_rect(&r, 15, 70, 162, 128);
 	window_file_handle = mw_add_window(&r,
@@ -228,6 +240,16 @@ void mw_user_init(void)
 			window_file_handle,
 			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
 			&label_date_data);
+
+	mw_util_set_rect(&r, 50, 50, 180, 205);
+	window_selection_handle = mw_add_window(&r,
+			"File Selection",
+			window_selection_paint_function,
+			window_selection_message_function,
+			NULL,
+			0,
+			MW_WINDOW_FLAG_HAS_BORDER | MW_WINDOW_FLAG_HAS_TITLE_BAR,
+			NULL);
 
 	mw_paint_all();
 }

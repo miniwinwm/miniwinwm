@@ -132,7 +132,7 @@ static void remove_all_children(struct mw_tree_container_t *tree, uint16_t paren
 	uint16_t parent_folder_level;
 	uint16_t remove_count;
 
-	if ((tree->nodes_array[parent_folder_id].node_flags & MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG) == 0U)
+	if ((tree->nodes_array[parent_folder_id].node_flags & MW_TREE_CONTAINER_NODE_IS_FOLDER) == 0U)
 	{
 		return;
 	}
@@ -168,7 +168,8 @@ mw_handle_t mw_tree_container_init(struct mw_tree_container_t *tree,
 		char *root_folder_label,
 		uint8_t root_node_flags,
 		uint8_t tree_flags,
-		mw_tree_container_no_space_callback_t *no_space_callback)
+		mw_tree_container_no_space_callback_t *no_space_callback,
+		char folder_separator)
 {
 	/* check pointers aren't null */
 	if (tree == NULL || root_folder_label == NULL || nodes_array == NULL || nodes_array_size == 0U)
@@ -178,38 +179,48 @@ mw_handle_t mw_tree_container_init(struct mw_tree_container_t *tree,
 		return MW_INVALID_HANDLE;
 	}
 
-	/* check root folder label is at least as long as folder separator string */
-	if (strlen(MW_TREE_CONTAINER_FOLDER_SEPARATOR) > strlen(root_folder_label))
+	/* check tree flags */
+	if (((tree_flags & MW_TREE_CONTAINER_SHOW_FOLDERS_ONLY) == MW_TREE_CONTAINER_SHOW_FOLDERS_ONLY && (tree_flags & MW_TREE_CONTAINER_FILE_SELECT_ONLY) == MW_TREE_CONTAINER_FILE_SELECT_ONLY) ||
+			((tree_flags & MW_TREE_CONTAINER_FOLDER_SELECT_ONLY) == MW_TREE_CONTAINER_FOLDER_SELECT_ONLY && (tree_flags & MW_TREE_CONTAINER_FILE_SELECT_ONLY) == MW_TREE_CONTAINER_FILE_SELECT_ONLY) ||
+			((tree_flags & MW_TREE_CONTAINER_NO_SELECT) == MW_TREE_CONTAINER_NO_SELECT && ((tree_flags & MW_TREE_CONTAINER_SINGLE_SELECT_ONLY) == MW_TREE_CONTAINER_SINGLE_SELECT_ONLY || (tree_flags & MW_TREE_CONTAINER_FOLDER_SELECT_ONLY) == MW_TREE_CONTAINER_FOLDER_SELECT_ONLY || (tree_flags & MW_TREE_CONTAINER_FILE_SELECT_ONLY) == MW_TREE_CONTAINER_FILE_SELECT_ONLY)))
+	{
+		MW_ASSERT((bool)false, "Bad tree flags");
+
+		return MW_INVALID_HANDLE;
+	}
+
+	/* check root folder label is at least as long as folder separator */
+	if (strlen(root_folder_label) < (size_t)1)
 	{
 		MW_ASSERT((bool)false, "Bad format tree root folder label");
 
 		return MW_INVALID_HANDLE;
 	}
 
-	/* check that root folder label ends in folder separator string */
-	if (memcmp(MW_TREE_CONTAINER_FOLDER_SEPARATOR,
-			root_folder_label + strlen(root_folder_label) - strlen(MW_TREE_CONTAINER_FOLDER_SEPARATOR),
-			strlen(MW_TREE_CONTAINER_FOLDER_SEPARATOR)) != 0)
+	/* check that root folder label ends in folder separator character */
+	if (root_folder_label[strlen(root_folder_label) - 1] != folder_separator)
 	{
 		MW_ASSERT((bool)false, "Bad format tree root folder label");
 
 		return MW_INVALID_HANDLE;
 	}
 
+	tree->folder_separator[0] = folder_separator;
+	tree->folder_separator[1] = '\0';
 	tree->nodes_array_size = nodes_array_size;
 	tree->nodes_array = nodes_array;
 	tree->tree_flags = tree_flags;
-	tree->nodes_array[ROOT_FOLDER_ID].node_flags = MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG | root_node_flags;
-	(void)(void)mw_util_safe_strcpy(tree->nodes_array[ROOT_FOLDER_ID].label, (size_t)MW_TREE_CONTAINER_NODE_LABEL_MAX_SIZE, root_folder_label);
+	tree->nodes_array[ROOT_FOLDER_ID].node_flags = MW_TREE_CONTAINER_NODE_IS_FOLDER | root_node_flags;
+	(void)mw_util_safe_strcpy(tree->nodes_array[ROOT_FOLDER_ID].label, (size_t)MW_TREE_CONTAINER_NODE_LABEL_MAX_SIZE, root_folder_label);
 	tree->nodes_array[ROOT_FOLDER_ID].level = 0U;
 	tree->nodes_array[ROOT_FOLDER_ID].handle = get_next_handle();
 	tree->no_space_callback = no_space_callback;
 
-	/* set up root folder label copy stripped of its separator string */
+	/* set up root folder label copy stripped of its separator character */
 	(void)mw_util_safe_strcpy(root_folder_label_stripped,
 			MW_TREE_CONTAINER_NODE_LABEL_MAX_SIZE,
 			tree->nodes_array[ROOT_FOLDER_ID].label);
-	root_folder_label_stripped[strlen(root_folder_label_stripped) - strlen(MW_TREE_CONTAINER_FOLDER_SEPARATOR)] = '\0';
+	root_folder_label_stripped[strlen(root_folder_label_stripped) - 1] = '\0';
 
 	mw_tree_container_empty(tree);
 
@@ -281,7 +292,9 @@ mw_handle_t mw_tree_container_add_node(struct mw_tree_container_t *tree, mw_hand
 {
 	uint16_t i;
 	uint16_t parent_folder_id;
+	uint16_t new_node_id;
 
+	/* check pointers for non null */
 	if (tree == NULL || label == NULL)
 	{
 		MW_ASSERT((bool)false, "Null pointer");
@@ -289,22 +302,28 @@ mw_handle_t mw_tree_container_add_node(struct mw_tree_container_t *tree, mw_hand
 		return MW_INVALID_HANDLE;
 	}
 
+	/* check there is space for a new node */
 	if (tree->node_count == tree->nodes_array_size)
 	{
+		/* there's no space, check if the node array is expandable */
 		if (tree->no_space_callback == NULL)
 		{
-				MW_ASSERT((bool)false, "No space in tree");
+			/* it isn't, give up */
+			MW_ASSERT((bool)false, "No space in tree");
 
-				return MW_INVALID_HANDLE;
+			return MW_INVALID_HANDLE;
 		}
 		else
 		{
+			/* it is so call callback to get node array expanded */
 			tree->no_space_callback(tree);
+
+			/* check that it has expanded */
 			if (tree->node_count >= tree->nodes_array_size)
 			{
+				/* handle case where array user daftness has shrunk the array instead of expanding it */
 				MW_ASSERT((bool)false, "No space in tree");
 
-				/* handle case where array user daftness has shrunk the array instead of expanding it */
 				tree->node_count = tree->nodes_array_size;
 
 				return MW_INVALID_HANDLE;
@@ -312,32 +331,54 @@ mw_handle_t mw_tree_container_add_node(struct mw_tree_container_t *tree, mw_hand
 		}
 	}
 
+	/* there is space in node array for a new node by this point */
 	parent_folder_id = get_id_from_handle(tree, parent_folder_handle);
 
+	/* check that parent folder really is a folder node */
 	if (parent_folder_id == tree->nodes_array_size ||
-			(tree->nodes_array[parent_folder_id].node_flags & MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG) == 0U)
+			(tree->nodes_array[parent_folder_id].node_flags & MW_TREE_CONTAINER_NODE_IS_FOLDER) == 0U)
 	{
+		/* it isn't */
 		MW_ASSERT((bool)false, "Invalid parent folder");
 
 		return MW_INVALID_HANDLE;
 	}
 
-	for (i = tree->node_count - 1U; i >= parent_folder_id + 1U; i--)
+	/* need to find where to put the new node - start off with parent node position + 1 */
+	new_node_id = parent_folder_id + 1U;
+
+	/* need to add new node after all existing nodes after parent with level equal to parent level + 1 so keep
+	 * incrementing while the level of the next node is parent level + 1
+	 */
+	while (tree->nodes_array[new_node_id].level == tree->nodes_array[parent_folder_id].level + 1U)
+	{
+		new_node_id++;
+	}
+
+	/* now have slot for new node so move everything after it to end of current array
+	 * size down by one
+	 */
+	for (i = tree->node_count - 1U; i >= new_node_id; i--)
 	{
 		tree->nodes_array[i + 1U] = tree->nodes_array[i];
 	}
 
-	(void)mw_util_safe_strcpy(tree->nodes_array[parent_folder_id + 1U].label, (size_t)MW_TREE_CONTAINER_NODE_LABEL_MAX_SIZE, label);
-	tree->nodes_array[parent_folder_id + 1U].node_flags = node_flags;
-	tree->nodes_array[parent_folder_id + 1U].level = tree->nodes_array[parent_folder_id].level + 1U;
-	tree->nodes_array[parent_folder_id + 1U].handle = get_next_handle();
+	/* now fill in details of new node at found position */
+	(void)mw_util_safe_strcpy(tree->nodes_array[new_node_id].label, (size_t)MW_TREE_CONTAINER_NODE_LABEL_MAX_SIZE, label);
+	tree->nodes_array[new_node_id].node_flags = node_flags;
+	tree->nodes_array[new_node_id].level = tree->nodes_array[parent_folder_id].level + 1U;
+	tree->nodes_array[new_node_id].handle = get_next_handle();
+
+	/* increment current array size as have added a new node */
 	tree->node_count++;
 
-	return tree->nodes_array[parent_folder_id + 1U].handle;
+	/* return new node handle */
+	return tree->nodes_array[new_node_id].handle;
 }
 
 void mw_tree_container_get_all_children(struct mw_tree_container_t *tree,
 		mw_handle_t parent_folder_handle,
+		bool selected_only,
 		mw_tree_container_next_child_callback_t *callback,
 		void *callback_data)
 {
@@ -354,21 +395,21 @@ void mw_tree_container_get_all_children(struct mw_tree_container_t *tree,
 	}
 
 	parent_folder_id = get_id_from_handle(tree, parent_folder_handle);
-	if (parent_folder_id == tree->nodes_array_size)
+	if (parent_folder_id >= tree->nodes_array_size)
 	{
 		MW_ASSERT((bool)false, "Bad node handle");
 
 		return;
 	}
 
-	if ((tree->nodes_array[parent_folder_id].node_flags & MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG) == 0U)
+	if ((tree->nodes_array[parent_folder_id].node_flags & MW_TREE_CONTAINER_NODE_IS_FOLDER) == 0U)
 	{
 		MW_ASSERT((bool)false, "Parent node not a folder");
 
 		return;
 	}
 
-	if ((tree->nodes_array[parent_folder_id].node_flags & MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN_FLAG) == 0U)
+	if ((tree->nodes_array[parent_folder_id].node_flags & MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN) == 0U)
 	{
 		return;
 	}
@@ -388,9 +429,9 @@ void mw_tree_container_get_all_children(struct mw_tree_container_t *tree,
 			continue;
 		}
 
-		if ((tree->nodes_array[i].node_flags & MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG) == MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG)
+		if ((tree->nodes_array[i].node_flags & MW_TREE_CONTAINER_NODE_IS_FOLDER) == MW_TREE_CONTAINER_NODE_IS_FOLDER)
 		{
-			if ((tree->nodes_array[i].node_flags & MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN_FLAG) == MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN_FLAG)
+			if ((tree->nodes_array[i].node_flags & MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN) == MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN)
 			{
 				skip_level = tree->nodes_array_size;
 			}
@@ -402,7 +443,12 @@ void mw_tree_container_get_all_children(struct mw_tree_container_t *tree,
 
 		/* ignore if folders only and don't have a folder */
 		if ((tree->tree_flags & MW_TREE_CONTAINER_SHOW_FOLDERS_ONLY) == MW_TREE_CONTAINER_SHOW_FOLDERS_ONLY &&
-				(tree->nodes_array[i].node_flags & MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG) == 0U)
+				(tree->nodes_array[i].node_flags & MW_TREE_CONTAINER_NODE_IS_FOLDER) == 0U)
+		{
+			continue;
+		}
+
+		if (selected_only && (tree->nodes_array[i].node_flags & MW_TREE_CONTAINER_NODE_IS_SELECTED) == 0U)
 		{
 			continue;
 		}
@@ -437,14 +483,14 @@ uint16_t mw_tree_container_get_open_children_count(struct mw_tree_container_t *t
 		return (0);
 	}
 
-	if ((tree->nodes_array[parent_folder_id].node_flags & MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG) == 0U)
+	if ((tree->nodes_array[parent_folder_id].node_flags & MW_TREE_CONTAINER_NODE_IS_FOLDER) == 0U)
 	{
 		return (0);
 	}
 
 	count = 0U;
 
-	if ((tree->nodes_array[parent_folder_id].node_flags & MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN_FLAG) == 0U)
+	if ((tree->nodes_array[parent_folder_id].node_flags & MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN) == 0U)
 	{
 		return (0);
 	}
@@ -464,9 +510,9 @@ uint16_t mw_tree_container_get_open_children_count(struct mw_tree_container_t *t
 			continue;
 		}
 
-		if ((tree->nodes_array[i].node_flags & MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG) == MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG)
+		if ((tree->nodes_array[i].node_flags & MW_TREE_CONTAINER_NODE_IS_FOLDER) == MW_TREE_CONTAINER_NODE_IS_FOLDER)
 		{
-			if ((tree->nodes_array[i].node_flags & MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN_FLAG) == MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN_FLAG)
+			if ((tree->nodes_array[i].node_flags & MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN) == MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN)
 			{
 				skip_level = tree->nodes_array_size;
 			}
@@ -478,7 +524,7 @@ uint16_t mw_tree_container_get_open_children_count(struct mw_tree_container_t *t
 
 		/* ignore if folders only and don't have a folder */
 		if ((tree->tree_flags & MW_TREE_CONTAINER_SHOW_FOLDERS_ONLY) == MW_TREE_CONTAINER_SHOW_FOLDERS_ONLY &&
-				(tree->nodes_array[i].node_flags & MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG) == 0U)
+				(tree->nodes_array[i].node_flags & MW_TREE_CONTAINER_NODE_IS_FOLDER) == 0U)
 		{
 			continue;
 		}
@@ -518,16 +564,21 @@ void mw_tree_container_change_node_label(struct mw_tree_container_t *tree, mw_ha
 	(void)mw_util_safe_strcpy(tree->nodes_array[node_id].label, (size_t)MW_TREE_CONTAINER_NODE_LABEL_MAX_SIZE, label);
 }
 
-void mw_tree_container_change_node_selected_state(struct mw_tree_container_t *tree, mw_handle_t node_handle, bool is_selected)
+bool mw_tree_container_change_node_selected_state(struct mw_tree_container_t *tree, mw_handle_t node_handle, bool is_selected)
 {
 	uint16_t node_id;
-	uint16_t i;
 
 	if (tree == NULL)
 	{
 		MW_ASSERT((bool)false, "Null pointer");
 
-		return;
+		return (false);
+	}
+
+	/* check if selection is allowed */
+	if ((tree->tree_flags & MW_TREE_CONTAINER_NO_SELECT) == MW_TREE_CONTAINER_NO_SELECT)
+	{
+		return (false);
 	}
 
 	node_id = get_id_from_handle(tree, node_handle);
@@ -535,16 +586,16 @@ void mw_tree_container_change_node_selected_state(struct mw_tree_container_t *tr
 	{
 		MW_ASSERT((bool)false, "Bad node handle");
 
-		return;
+		return (false);
 	}
 
 	/* check if selection type is allowed */
 	if (((tree->tree_flags & MW_TREE_CONTAINER_FOLDER_SELECT_ONLY) == MW_TREE_CONTAINER_FOLDER_SELECT_ONLY &&
-			(tree->nodes_array[node_id].node_flags & MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG) == 0U) ||
+			(tree->nodes_array[node_id].node_flags & MW_TREE_CONTAINER_NODE_IS_FOLDER) == 0U) ||
 			((tree->tree_flags & MW_TREE_CONTAINER_FILE_SELECT_ONLY) == MW_TREE_CONTAINER_FILE_SELECT_ONLY &&
-					(tree->nodes_array[node_id].node_flags & MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG) == MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG))
+					(tree->nodes_array[node_id].node_flags & MW_TREE_CONTAINER_NODE_IS_FOLDER) == MW_TREE_CONTAINER_NODE_IS_FOLDER))
 	{
-		return;
+		return (false);
 	}
 
 	if (is_selected)
@@ -553,18 +604,17 @@ void mw_tree_container_change_node_selected_state(struct mw_tree_container_t *tr
 		if ((tree->tree_flags & MW_TREE_CONTAINER_SINGLE_SELECT_ONLY) == MW_TREE_CONTAINER_SINGLE_SELECT_ONLY)
 		{
 			/* single select only so deselect everything */
-			for (i = 0U; i < tree->node_count; i++)
-			{
-				tree->nodes_array[i].node_flags &= (uint8_t)(~MW_TREE_CONTAINER_NODE_IS_SELECTED_FLAG);
-			}
+			mw_tree_container_deselect_all_nodes(tree);
 		}
 
-		tree->nodes_array[node_id].node_flags |= MW_TREE_CONTAINER_NODE_IS_SELECTED_FLAG;
+		tree->nodes_array[node_id].node_flags |= MW_TREE_CONTAINER_NODE_IS_SELECTED;
 	}
 	else
 	{
-		tree->nodes_array[node_id].node_flags &= (uint8_t)(~MW_TREE_CONTAINER_NODE_IS_SELECTED_FLAG);
+		tree->nodes_array[node_id].node_flags &= (uint8_t)(~MW_TREE_CONTAINER_NODE_IS_SELECTED);
 	}
+
+	return (true);
 }
 
 void mw_tree_container_change_folder_node_open_state(struct mw_tree_container_t *tree, mw_handle_t folder_node_handle, bool is_open)
@@ -588,7 +638,7 @@ void mw_tree_container_change_folder_node_open_state(struct mw_tree_container_t 
 		return;
 	}
 
-	if ((tree->nodes_array[folder_id].node_flags & MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG) == 0U)
+	if ((tree->nodes_array[folder_id].node_flags & MW_TREE_CONTAINER_NODE_IS_FOLDER) == 0U)
 	{
 		MW_ASSERT((bool)false, "Not a folder");
 
@@ -604,28 +654,28 @@ void mw_tree_container_change_folder_node_open_state(struct mw_tree_container_t 
 			break;
 		}
 
-		if ((tree->nodes_array[i].node_flags & MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG) == 0U)
+		if ((tree->nodes_array[i].node_flags & MW_TREE_CONTAINER_NODE_IS_FOLDER) == 0U)
 		{
 			continue;
 		}
 
 		if (is_open)
 		{
-			tree->nodes_array[i].node_flags |= MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN_FLAG;
+			tree->nodes_array[i].node_flags |= MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN;
 		}
 		else
 		{
-			tree->nodes_array[i].node_flags &= (uint8_t)(~MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN_FLAG);
+			tree->nodes_array[i].node_flags &= (uint8_t)(~MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN);
 		}
 	}
 
 	if (is_open)
 	{
-		tree->nodes_array[folder_id].node_flags |= MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN_FLAG;
+		tree->nodes_array[folder_id].node_flags |= MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN;
 	}
 	else
 	{
-		tree->nodes_array[folder_id].node_flags &= (uint8_t)(~MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN_FLAG);
+		tree->nodes_array[folder_id].node_flags &= (uint8_t)(~MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN);
 	}
 }
 
@@ -649,7 +699,7 @@ void mw_tree_container_remove_node(struct mw_tree_container_t *tree, mw_handle_t
 		return;
 	}
 
-	if ((tree->nodes_array[node_id].node_flags & MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG) == MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG)
+	if ((tree->nodes_array[node_id].node_flags & MW_TREE_CONTAINER_NODE_IS_FOLDER) == MW_TREE_CONTAINER_NODE_IS_FOLDER)
 	{
 		remove_all_children(tree, node_id);
 	}
@@ -681,7 +731,7 @@ void mw_tree_container_remove_node_children(struct mw_tree_container_t *tree, mw
 		return;
 	}
 
-	if ((tree->nodes_array[folder_id].node_flags & MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG) == 0U)
+	if ((tree->nodes_array[folder_id].node_flags & MW_TREE_CONTAINER_NODE_IS_FOLDER) == 0U)
 	{
 		MW_ASSERT((bool)false, "Not a folder");
 
@@ -714,7 +764,7 @@ mw_handle_t mw_tree_container_get_handle_from_visible_position(struct mw_tree_co
 		return (MW_INVALID_HANDLE);
 	}
 
-	if ((tree->nodes_array[parent_folder_id].node_flags & MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG) == 0U)
+	if ((tree->nodes_array[parent_folder_id].node_flags & MW_TREE_CONTAINER_NODE_IS_FOLDER) == 0U)
 	{
 		MW_ASSERT((bool)false, "Parent node is not a folder");
 
@@ -737,9 +787,9 @@ mw_handle_t mw_tree_container_get_handle_from_visible_position(struct mw_tree_co
 			continue;
 		}
 
-		if ((tree->nodes_array[i].node_flags & MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG) == MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG)
+		if ((tree->nodes_array[i].node_flags & MW_TREE_CONTAINER_NODE_IS_FOLDER) == MW_TREE_CONTAINER_NODE_IS_FOLDER)
 		{
-			if ((tree->nodes_array[i].node_flags & MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN_FLAG) == MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN_FLAG)
+			if ((tree->nodes_array[i].node_flags & MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN) == MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN)
 			{
 				skip_level = tree->nodes_array_size;
 			}
@@ -751,7 +801,7 @@ mw_handle_t mw_tree_container_get_handle_from_visible_position(struct mw_tree_co
 
 		/* ignore if folders only and don't have a folder */
 		if ((tree->tree_flags & MW_TREE_CONTAINER_SHOW_FOLDERS_ONLY) == MW_TREE_CONTAINER_SHOW_FOLDERS_ONLY &&
-				(tree->nodes_array[i].node_flags & MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG) == 0U)
+				(tree->nodes_array[i].node_flags & MW_TREE_CONTAINER_NODE_IS_FOLDER) == 0U)
 		{
 			continue;
 		}
@@ -874,13 +924,13 @@ void mw_tree_container_get_node_path(struct mw_tree_container_t *tree, mw_handle
 	level = tree->nodes_array[node_id].level;
 
 	/* the path is built up backwards so to start add a folder separator if node is a folder, except root folder which already has it */
-	if ((tree->nodes_array[node_id].node_flags & MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG) == MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG)
+	if ((tree->nodes_array[node_id].node_flags & MW_TREE_CONTAINER_NODE_IS_FOLDER) == MW_TREE_CONTAINER_NODE_IS_FOLDER)
 	{
 		/* check for root folder */
 		if (level > 0U)
 		{
 			/* not root folder */
-			(void)mw_util_safe_strcat(node_path, node_path_length, MW_TREE_CONTAINER_FOLDER_SEPARATOR);
+			(void)mw_util_safe_strcat(node_path, node_path_length, tree->folder_separator);
 		}
 	}
 
@@ -891,7 +941,7 @@ void mw_tree_container_get_node_path(struct mw_tree_container_t *tree, mw_handle
 	/* if starting node is not root folder add a folder separator */
 	if (level > 1U)
 	{
-		(void)mw_util_safe_strcat(node_path, node_path_length, MW_TREE_CONTAINER_FOLDER_SEPARATOR);
+		(void)mw_util_safe_strcat(node_path, node_path_length, tree->folder_separator);
 	}
 
 	/* now go up the levels to root folder */
@@ -907,10 +957,28 @@ void mw_tree_container_get_node_path(struct mw_tree_container_t *tree, mw_handle
 		/* if not last folder, which will be root, add a folder separator */
 		if (i + 1U < level - 1U)
 		{
-			(void)mw_util_safe_strcat(node_path, node_path_length, MW_TREE_CONTAINER_FOLDER_SEPARATOR);
+			(void)mw_util_safe_strcat(node_path, node_path_length, tree->folder_separator);
 		}
 	}
 
 	/* reverse everything to correct direction */
 	(void)mw_util_strrev(node_path);
+}
+
+void mw_tree_container_deselect_all_nodes(struct mw_tree_container_t *tree)
+{
+	uint16_t i;
+
+	/* check pointer parameters */
+	if (tree == NULL)
+	{
+		MW_ASSERT((bool)false, "Null pointer");
+
+		return;
+	}
+
+	for (i = 0U; i < tree->node_count; i++)
+	{
+		tree->nodes_array[i].node_flags &= (uint8_t)(~MW_TREE_CONTAINER_NODE_IS_SELECTED);
+	}
 }

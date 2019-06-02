@@ -77,6 +77,7 @@ typedef struct
 	int16_t row_left_border;						/**< Distance from left of row to start of contents */
 	int16_t row_top_border;							/**< Distance from top of row to start of contents */
 	mw_util_rect_t invalid_rect;					/**< Rect used for partial repainting of the control */
+	mw_handle_t	node_to_animate;					/**< Node to draw down and then up when no node selection in tree is allowed */
 } mw_ui_tree_data_t;
 
 /*************************

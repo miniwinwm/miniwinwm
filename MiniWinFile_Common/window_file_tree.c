@@ -131,6 +131,15 @@ void window_file_tree_message_function(const mw_message_t *message)
 				MW_CONTROL_MESSAGE);
 		break;
 
+	case MW_BUTTON_PRESSED_MESSAGE:
+		mw_post_message(MW_USER_1_MESSAGE,
+				message->recipient_handle,
+				window_selection_handle,
+				tree_handle,
+				NULL,
+				MW_WINDOW_MESSAGE);
+		break;
+
 	case MW_TREE_NODE_SELECTED_MESSAGE:
 		/* get full path of selected node and display it in a label */
 		sender_tree = (mw_ui_tree_data_t*)mw_get_control_instance_data(message->sender_handle);
