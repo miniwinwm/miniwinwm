@@ -49,14 +49,6 @@ SOFTWARE.
 *** EXTERNAL VARIABLES ***
 *************************/
 
-extern mw_handle_t tabs_auto_handle;
-extern mw_handle_t tabs_fixed_handle;
-extern mw_handle_t label_2_handle;
-extern mw_handle_t label_3_handle;
-extern mw_handle_t label_4_handle;
-extern mw_handle_t label_5_handle;
-extern mw_handle_t label_6_handle;
-
 /***************************
 *** FUNCTIONS PROTOTYPES ***
 ***************************/

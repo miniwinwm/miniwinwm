@@ -88,8 +88,26 @@ static const mw_ui_list_box_entry list_box_3_entries[] = {
 		{list_box_label_icon, NULL},
 		{list_box_label_root, NULL}};
 
-static char *tabs_labels_auto[] = {"Freddy", "Bert", "Pete"};
-static char *tabs_labels_fixed[] = {"Cat", "Dog", "Mouse"};
+static char tabs_auto_label_1[] = {"Freddy"};
+static char tabs_auto_label_2[] = {"Bert"};
+static char tabs_auto_label_3[] = {"Pete"};
+static char tabs_fixed_label_1[] = {"Freddy"};
+static char tabs_fixed_label_2[] = {"Bert"};
+static char tabs_fixed_label_3[] = {"Pete"};
+static char *tabs_labels_auto[] = {tabs_auto_label_1, tabs_auto_label_2, tabs_auto_label_3};
+static char *tabs_labels_fixed[] = {tabs_fixed_label_1, tabs_fixed_label_2, tabs_fixed_label_3};
+
+static char tree_root_folder_label[] = {"Root/"};
+static char tree_folder1_label[] = {"Foldy1"};
+static char tree_folder2_label[] = {"fold2"};
+static char tree_folder3_label[] = {"fold3"};
+static char tree_file1_label[] = {"File1"};
+static char tree_file2_label[] = {"File2"};
+static char tree_file3_label[] = {"File3"};
+static char tree_file4_label[] = {"File4"};
+static char tree_file5_label[] = {"File5"};
+static char tree_file6_label[] = {"File6"};
+static char tree_file7_label[] = {"File7"};
 
 /************
 *** TYPES ***
@@ -625,7 +643,7 @@ void mw_user_init(void)
 	intermediate_handle = mw_tree_container_init(&tree_data.tree_container,
 			tree_nodes_array,
 			20,
-			"Root/",
+			tree_root_folder_label,
 			0U,
 			MW_TREE_CONTAINER_NO_SELECT,
 			NULL,
@@ -648,43 +666,43 @@ void mw_user_init(void)
 
 	(void)mw_tree_container_add_node(&tree_data.tree_container,
 			tree_data.root_handle,
-			"file1",
+			tree_file1_label,
 			0U);
 	fold1_handle = mw_tree_container_add_node(&tree_data.tree_container,
 			tree_data.root_handle,
-			"Foldy1",
+			tree_folder1_label,
 			MW_TREE_CONTAINER_NODE_IS_FOLDER | MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN);
 	(void)mw_tree_container_add_node(&tree_data.tree_container,
 			fold1_handle,
-			"file2",
+			tree_file2_label,
 			0U);
 	(void)mw_tree_container_add_node(&tree_data.tree_container,
 			fold1_handle,
-			"file3",
+			tree_file3_label,
 			0U);
 	fold2_handle = mw_tree_container_add_node(&tree_data.tree_container,
 			fold1_handle,
-			"fold2",
+			tree_folder2_label,
 			MW_TREE_CONTAINER_NODE_IS_FOLDER | MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN);
 	fold3_handle = mw_tree_container_add_node(&tree_data.tree_container,
 			fold1_handle,
-			"fold3",
+			tree_folder3_label,
 			MW_TREE_CONTAINER_NODE_IS_FOLDER | MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN);
 	(void)mw_tree_container_add_node(&tree_data.tree_container,
 			fold3_handle,
-			"file6",
+			tree_file6_label,
 			0U);
 	(void)mw_tree_container_add_node(&tree_data.tree_container,
 			fold3_handle,
-			"file7",
+			tree_file7_label,
 			0U);
 	(void)mw_tree_container_add_node(&tree_data.tree_container,
 			fold2_handle,
-			"file4",
+			tree_file4_label,
 			0U);
 	(void)mw_tree_container_add_node(&tree_data.tree_container,
 			fold2_handle,
-			"file5",
+			tree_file5_label,
 			0U);
 
 	mw_paint_all();

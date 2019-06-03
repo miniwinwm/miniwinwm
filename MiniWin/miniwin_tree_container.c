@@ -198,7 +198,7 @@ mw_handle_t mw_tree_container_init(struct mw_tree_container_t *tree,
 	}
 
 	/* check that root folder label ends in folder separator character */
-	if (root_folder_label[strlen(root_folder_label) - 1] != folder_separator)
+	if (root_folder_label[strlen(root_folder_label) - (size_t)1] != folder_separator)
 	{
 		MW_ASSERT((bool)false, "Bad format tree root folder label");
 
@@ -220,7 +220,7 @@ mw_handle_t mw_tree_container_init(struct mw_tree_container_t *tree,
 	(void)mw_util_safe_strcpy(root_folder_label_stripped,
 			MW_TREE_CONTAINER_NODE_LABEL_MAX_SIZE,
 			tree->nodes_array[ROOT_FOLDER_ID].label);
-	root_folder_label_stripped[strlen(root_folder_label_stripped) - 1] = '\0';
+	root_folder_label_stripped[strlen(root_folder_label_stripped) - (size_t)1] = '\0';
 
 	mw_tree_container_empty(tree);
 

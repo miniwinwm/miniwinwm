@@ -43,6 +43,7 @@ SOFTWARE.
 #include "gl/gl.h"
 #include "bitmaps/mw_bitmaps.h"
 #include "miniwin_utilities.h"
+#include "hal/hal_timer.h"
 
 /****************
 *** CONSTANTS ***
@@ -904,8 +905,6 @@ typedef void (*mw_message_func_p)(const mw_message_t *user_message);
 /*************************
 *** EXTERNAL VARIABLES ***
 *************************/
-
-extern volatile uint32_t mw_tick_counter;
 
 /***************************
 *** FUNCTIONS PROTOTYPES ***
