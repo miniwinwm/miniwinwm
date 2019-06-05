@@ -192,11 +192,6 @@ void window_tree_message_function(const mw_message_t *message)
 		}
 		break;
 
-	case MW_TREE_FOLDER_OPENED_MESSAGE:
-	case MW_TREE_FOLDER_CLOSED_MESSAGE:
-		mw_ui_tree_data_changed(tree_handle);
-		break;
-
 	default:
 		/* keep MISRA happy */
 		break;

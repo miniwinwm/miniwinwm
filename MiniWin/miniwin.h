@@ -577,22 +577,6 @@ typedef enum
 	MW_LIST_BOX_SET_ENTRIES_MESSAGE,
 
 	/**
-	 * Set how many lines to scroll a tree through the tree's visible nodes
-	 *
-	 * message_data: Number of lines to scroll zero based
-	 * message_pointer: Unused
-	 */
-	MW_TREE_LINES_TO_SCROLL_MESSAGE,
-
-	/**
-	 * Position of a scroll bar associated with a tree
-	 *
-	 * message_data: Scroll bar position, 0 - UINT8_MAX
-	 * message_pointer: Unused
-	 */
-	MW_TREE_SCROLL_BAR_POSITION_MESSAGE,
-
-	/**
 	 * Set a radio button's chosen button
 	 *
 	 * message_data: The button to set zero based
@@ -623,6 +607,31 @@ typedef enum
 	 * message_pointer: Unused
 	 */
 	MW_TEXT_BOX_LINES_TO_SCROLL_MESSAGE,
+
+
+	/**
+	 * Set how many lines to scroll a tree through the tree's visible nodes
+	 *
+	 * message_data: Number of lines to scroll zero based
+	 * message_pointer: Unused
+	 */
+	MW_TREE_LINES_TO_SCROLL_MESSAGE,
+
+	/**
+	 * Set position of a scroll bar associated with a tree
+	 *
+	 * message_data: Scroll bar position, 0 - UINT8_MAX
+	 * message_pointer: Unused
+	 */
+	MW_TREE_SCROLL_BAR_POSITION_MESSAGE,
+
+	/**
+	 * Inform tree control that the contents of its tree container have changed
+	 *
+	 * message_data: Unused
+	 * message_pointer: Unused
+	 */
+	MW_TREE_TREE_CONTAINER_DATA_CHANGED,
 
 	/**************************************
 	*	 								  *
@@ -853,7 +862,7 @@ typedef enum
 	 * message_data: Any user meaning
 	 * message_pointer: Any user meaning
 	 */
-	MW_USER_5_MESSAGE
+	MW_USER_5_MESSAGE,
 } mw_message_id_t;
 
 /**

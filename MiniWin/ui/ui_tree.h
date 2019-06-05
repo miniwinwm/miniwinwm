@@ -106,15 +106,6 @@ mw_handle_t mw_ui_tree_add_new(int16_t x,
 		uint16_t flags,
 		mw_ui_tree_data_t *tree_instance_data);
 
-/**
- * Inform the control that the data contained in the tree container that it is displaying the contents
- * of has changed. This updates the control and sends messages to the control's parent window as required.
- * This function repaints the tree control.
- *
- * @param changed_tree_handle The handle of the tree control
- */
-void mw_ui_tree_data_changed(mw_handle_t changed_tree_handle);
-
 #ifdef __cplusplus
 }
 #endif
