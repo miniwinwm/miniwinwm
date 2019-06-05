@@ -350,7 +350,8 @@ mw_handle_t mw_tree_container_add_node(struct mw_tree_container_t *tree, mw_hand
 	/* need to add new node after all existing nodes after parent with level equal to parent level + 1 so keep
 	 * incrementing while the level of the next node is parent level + 1
 	 */
-	while (tree->nodes_array[new_node_id].level == tree->nodes_array[parent_folder_id].level + 1U)
+	while (tree->nodes_array[new_node_id].level == tree->nodes_array[parent_folder_id].level + 1U &&
+			new_node_id < tree->node_count)
 	{
 		new_node_id++;
 	}
@@ -448,6 +449,7 @@ void mw_tree_container_get_all_children(struct mw_tree_container_t *tree,
 			continue;
 		}
 
+		/* ignore if selected_only and isn't selected */
 		if (selected_only && (tree->nodes_array[i].node_flags & MW_TREE_CONTAINER_NODE_IS_SELECTED) == 0U)
 		{
 			continue;
@@ -460,7 +462,9 @@ void mw_tree_container_get_all_children(struct mw_tree_container_t *tree,
 	}
 }
 
-uint16_t mw_tree_container_get_open_children_count(struct mw_tree_container_t *tree, mw_handle_t parent_folder_handle)
+uint16_t mw_tree_container_get_open_children_count(struct mw_tree_container_t *tree,
+		mw_handle_t parent_folder_handle,
+		bool selected_only)
 {
 	uint16_t i;
 	uint16_t parent_folder_id;
@@ -525,6 +529,12 @@ uint16_t mw_tree_container_get_open_children_count(struct mw_tree_container_t *t
 		/* ignore if folders only and don't have a folder */
 		if ((tree->tree_flags & MW_TREE_CONTAINER_SHOW_FOLDERS_ONLY) == MW_TREE_CONTAINER_SHOW_FOLDERS_ONLY &&
 				(tree->nodes_array[i].node_flags & MW_TREE_CONTAINER_NODE_IS_FOLDER) == 0U)
+		{
+			continue;
+		}
+
+		/* ignore if selected_only and isn't selected */
+		if (selected_only && (tree->nodes_array[i].node_flags & MW_TREE_CONTAINER_NODE_IS_SELECTED) == 0U)
 		{
 			continue;
 		}
@@ -619,9 +629,7 @@ bool mw_tree_container_change_node_selected_state(struct mw_tree_container_t *tr
 
 void mw_tree_container_change_folder_node_open_state(struct mw_tree_container_t *tree, mw_handle_t folder_node_handle, bool is_open)
 {
-	uint16_t i;
 	uint16_t folder_id;
-	uint16_t folder_level;
 
 	if (tree == NULL)
 	{
@@ -643,30 +651,6 @@ void mw_tree_container_change_folder_node_open_state(struct mw_tree_container_t 
 		MW_ASSERT((bool)false, "Not a folder");
 
 		return;
-	}
-
-	folder_level = tree->nodes_array[folder_id].level;
-
-	for (i = folder_id + 1U; ; i++)
-	{
-		if (tree->nodes_array[i].level < folder_level + 1U || i == tree->node_count)
-		{
-			break;
-		}
-
-		if ((tree->nodes_array[i].node_flags & MW_TREE_CONTAINER_NODE_IS_FOLDER) == 0U)
-		{
-			continue;
-		}
-
-		if (is_open)
-		{
-			tree->nodes_array[i].node_flags |= MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN;
-		}
-		else
-		{
-			tree->nodes_array[i].node_flags &= (uint8_t)(~MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN);
-		}
 	}
 
 	if (is_open)
@@ -741,13 +725,16 @@ void mw_tree_container_remove_node_children(struct mw_tree_container_t *tree, mw
 	remove_all_children(tree, folder_id);
 }
 
-mw_handle_t mw_tree_container_get_handle_from_visible_position(struct mw_tree_container_t *tree, mw_handle_t parent_folder_handle, uint16_t visible_position)
+mw_handle_t mw_tree_container_get_handle_from_position(struct mw_tree_container_t *tree,
+		mw_handle_t parent_folder_handle,
+		bool selected_only,
+		uint16_t position)
 {
 	uint16_t i;
 	uint16_t parent_folder_id;
 	uint16_t parent_folder_level;
 	uint16_t skip_level;
-	uint16_t visible_position_count;
+	uint16_t position_count;
 
 	if (tree == NULL)
 	{
@@ -774,7 +761,7 @@ mw_handle_t mw_tree_container_get_handle_from_visible_position(struct mw_tree_co
 	parent_folder_level = tree->nodes_array[parent_folder_id].level;
 	skip_level = tree->nodes_array_size;
 
-	visible_position_count = 0U;
+	position_count = 0U;
 	for (i = parent_folder_id; ; i++)
 	{
 		if (tree->nodes_array[i].level < parent_folder_level || i == tree->node_count)
@@ -806,12 +793,18 @@ mw_handle_t mw_tree_container_get_handle_from_visible_position(struct mw_tree_co
 			continue;
 		}
 
-		if (visible_position_count == visible_position)
+		/* ignore if selected_only and isn't selected */
+		if (selected_only && (tree->nodes_array[i].node_flags & MW_TREE_CONTAINER_NODE_IS_SELECTED) == 0U)
+		{
+			continue;
+		}
+
+		if (position_count == position)
 		{
 			return (tree->nodes_array[i].handle);
 		}
 
-		visible_position_count++;
+		position_count++;
 	}
 
 	return (MW_INVALID_HANDLE);

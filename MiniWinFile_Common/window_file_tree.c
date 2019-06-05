@@ -49,8 +49,9 @@ SOFTWARE.
  */
 typedef struct
 {
-	uint16_t lines_to_scroll;				/**< The number of lines to scroll */
+//	uint16_t lines_to_scroll;				/**< The number of lines to scroll */
 	uint16_t max_scrollable_lines;			/**< Maximum number of lines that can be scrolled */
+	uint8_t scroll_bar_position;			/**< The scroll bar position 0-255 */
 } window_file_tree_data_t;
 
 /***********************
@@ -95,34 +96,42 @@ void window_file_tree_paint_function(mw_handle_t window_handle, const mw_gl_draw
 void window_file_tree_message_function(const mw_message_t *message)
 {
 	uint32_t intermediate_uint32;
-	mw_ui_tree_data_t *sender_tree;
+	mw_ui_tree_data_t *sender_tree_data;
 
 	MW_ASSERT(message != (void*)0, "Null pointer parameter");
 
 	switch (message->message_id)
 	{
 	case MW_WINDOW_CREATED_MESSAGE:
-		window_file_tree_data.lines_to_scroll = 0U;
+		window_file_tree_data.scroll_bar_position = 0U;
 		break;
 
 	case MW_TREE_SCROLLING_REQUIRED_MESSAGE:
-		if (message->message_data >> 16 == 0U)
 		{
-			window_file_tree_data.max_scrollable_lines = 0U;
-			window_file_tree_data.lines_to_scroll = 0U;
-		}
-		else
-		{
-			intermediate_uint32 = message->message_data & 0xffffU;
-			window_file_tree_data.max_scrollable_lines = (uint16_t)intermediate_uint32;
-			if (window_file_tree_data.lines_to_scroll >= window_file_tree_data.max_scrollable_lines)
+			if (message->message_data >> 16 == 0U)
 			{
-				window_file_tree_data.lines_to_scroll = window_file_tree_data.max_scrollable_lines;
+				window_file_tree_data.scroll_bar_position = 0U;
+			}
+			else
+			{
+		//		uint16_t previous_scrolled_lines = window_file_tree_data.scroll_bar_position * window_file_tree_data.max_scrollable_lines;
+				intermediate_uint32 = message->message_data & 0xffffU;
+				window_file_tree_data.scroll_bar_position = (window_file_tree_data.scroll_bar_position * window_file_tree_data.max_scrollable_lines) / intermediate_uint32;
+				window_file_tree_data.max_scrollable_lines = (uint16_t)intermediate_uint32;
+
+				mw_post_message(MW_SCROLL_BAR_SET_SCROLL_MESSAGE,
+						MW_UNUSED_MESSAGE_PARAMETER,
+						scroll_bar_vert_handle,
+						(uint32_t)window_file_tree_data.scroll_bar_position,
+						NULL,
+						MW_CONTROL_MESSAGE);
+				mw_paint_control(scroll_bar_vert_handle);
 			}
 		}
 		break;
 
 	case MW_CONTROL_VERT_SCROLL_BAR_SCROLLED_MESSAGE:
+		window_file_tree_data.scroll_bar_position = (uint8_t)message->message_data;
 		mw_post_message(MW_TREE_SCROLL_BAR_POSITION_MESSAGE,
 				MW_UNUSED_MESSAGE_PARAMETER,
 				tree_handle,
@@ -142,8 +151,8 @@ void window_file_tree_message_function(const mw_message_t *message)
 
 	case MW_TREE_NODE_SELECTED_MESSAGE:
 		/* get full path of selected node and display it in a label */
-		sender_tree = (mw_ui_tree_data_t*)mw_get_control_instance_data(message->sender_handle);
-		mw_tree_container_get_node_path(&sender_tree->tree_container, message->message_data, node_path, 100);
+		sender_tree_data = (mw_ui_tree_data_t*)mw_get_control_instance_data(message->sender_handle);
+		mw_tree_container_get_node_path(&sender_tree_data->tree_container, message->message_data, node_path, 100);
 		mw_post_message(MW_LABEL_SET_LABEL_TEXT_MESSAGE,
 				message->recipient_handle,
 				label_path_handle,
@@ -154,14 +163,15 @@ void window_file_tree_message_function(const mw_message_t *message)
 		break;
 
 	case MW_TREE_FOLDER_OPENED_MESSAGE:
-		sender_tree = (mw_ui_tree_data_t*)mw_get_control_instance_data(message->sender_handle);
-		app_populate_tree_from_file_system(&sender_tree->tree_container, (mw_handle_t)message->message_data);
+		sender_tree_data = (mw_ui_tree_data_t*)mw_get_control_instance_data(message->sender_handle);
+		app_populate_tree_from_file_system(&sender_tree_data->tree_container, (mw_handle_t)message->message_data);
 		mw_ui_tree_data_changed(tree_handle);
 		break;
 
 	case MW_TREE_FOLDER_CLOSED_MESSAGE:
-		sender_tree = (mw_ui_tree_data_t*)mw_get_control_instance_data(message->sender_handle);
-		mw_tree_container_remove_node_children(&sender_tree->tree_container, (mw_handle_t)message->message_data);
+		sender_tree_data = (mw_ui_tree_data_t*)mw_get_control_instance_data(message->sender_handle);
+		mw_tree_container_remove_node_children(&sender_tree_data->tree_container, (mw_handle_t)message->message_data);
+		mw_ui_tree_data_changed(tree_handle);
 		break;
 
 	case MW_SCROLLED_CONTROL_NEEDS_PAINTING_HINT_MESSAGE:

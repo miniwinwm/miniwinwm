@@ -280,48 +280,6 @@ static void tree_paint_function(mw_handle_t control_handle, const mw_gl_draw_inf
 			(void *)&tree_callback_data);
 }
 
-void mw_ui_tree_data_changed(mw_handle_t changed_tree_handle)
-{
-	if (changed_tree_handle == MW_INVALID_HANDLE)
-	{
-		MW_ASSERT((bool)false, "Invalid handle");
-
-		return;
-	}
-
-	mw_ui_tree_data_t *tree = (mw_ui_tree_data_t*)mw_get_control_instance_data(changed_tree_handle);
-
-	if (tree == NULL)
-	{
-		MW_ASSERT((bool)false, "Invalid handle");
-
-		return;
-	}
-
-	uint32_t message_data;
-
-	/* get number of visible children of root folder */
-	tree->visible_children = mw_tree_container_get_open_children_count(&tree->tree_container, tree->root_handle);
-
-	/* add root folder to count */
-	tree->visible_children++;
-
-	/* send message to parent window about whether scrolling is needed */
-	message_data = 0U;
-	if (tree->visible_children > tree->number_of_lines)
-	{
-		message_data = 0x010000;
-		message_data |= ((uint32_t)tree->visible_children - (uint32_t)tree->number_of_lines);
-	}
-
-	mw_post_message(MW_TREE_SCROLLING_REQUIRED_MESSAGE,
-			MW_INVALID_HANDLE,
-			mw_get_control_parent_window_handle(changed_tree_handle),
-			message_data,
-			NULL,
-			MW_WINDOW_MESSAGE);
-}
-
 /**
  * Control message handler called by the window manager.
  *
@@ -357,7 +315,9 @@ static void tree_message_function(const mw_message_t *message)
 		this_tree->invalid_rect.x = 1;
 
 		/* get number of visible children of root folder */
-		this_tree->visible_children = mw_tree_container_get_open_children_count(&this_tree->tree_container, this_tree->root_handle);
+		this_tree->visible_children = mw_tree_container_get_open_children_count(&this_tree->tree_container,
+				this_tree->root_handle,
+				false);
 
 		/* add root folder to count */
 		this_tree->visible_children++;
@@ -460,8 +420,9 @@ static void tree_message_function(const mw_message_t *message)
 			if ((mw_get_control_flags(message->recipient_handle) & MW_CONTROL_FLAG_IS_ENABLED) == MW_CONTROL_FLAG_IS_ENABLED)
 			{
 				/* control is enabled, get selected node handle from y position */
-				selected_node_handle = mw_tree_container_get_handle_from_visible_position(&this_tree->tree_container,
+				selected_node_handle = mw_tree_container_get_handle_from_position(&this_tree->tree_container,
 						this_tree->root_handle,
+						false,
 						(uint16_t)line_number);
 
 				/* check for valid handle, an empty line returns an invalid handle */
@@ -500,30 +461,6 @@ static void tree_message_function(const mw_message_t *message)
 									NULL,
 									MW_WINDOW_MESSAGE);
 						}
-
-						/* update number of visible children of root folder */
-						this_tree->visible_children = mw_tree_container_get_open_children_count(&this_tree->tree_container, this_tree->root_handle);
-
-						/* add root folder to count */
-						this_tree->visible_children++;
-
-						/* send message about whether scrolling is needed */
-						message_data = 0U;
-						if (this_tree->visible_children > this_tree->number_of_lines)
-						{
-							message_data = 0x010000;
-							message_data |= ((uint32_t)this_tree->visible_children - (uint32_t)this_tree->number_of_lines);
-						}
-
-						mw_post_message(MW_TREE_SCROLLING_REQUIRED_MESSAGE,
-								message->recipient_handle,
-								mw_get_control_parent_window_handle(message->recipient_handle),
-								message_data,
-								NULL,
-								MW_WINDOW_MESSAGE);
-
-						/* repaint whole control */
-						mw_paint_control(message->recipient_handle);
 					}
 					else
 					{
@@ -666,4 +603,51 @@ mw_handle_t mw_ui_tree_add_new(int16_t x,
 			tree_message_function,
 			flags,
 			tree_instance_data));
+}
+
+void mw_ui_tree_data_changed(mw_handle_t changed_tree_handle)
+{
+	uint32_t message_data;
+	mw_ui_tree_data_t *tree;
+
+	if (changed_tree_handle == MW_INVALID_HANDLE)
+	{
+		MW_ASSERT((bool)false, "Invalid handle");
+
+		return;
+	}
+
+	tree = (mw_ui_tree_data_t*)mw_get_control_instance_data(changed_tree_handle);
+
+	if (tree == NULL)
+	{
+		MW_ASSERT((bool)false, "Invalid handle");
+
+		return;
+	}
+
+	/* get number of visible children of root folder */
+	tree->visible_children = mw_tree_container_get_open_children_count(&tree->tree_container,
+			tree->root_handle,
+			false);
+
+	/* add root folder to count */
+	tree->visible_children++;
+
+	/* send message to parent window about whether scrolling is needed */
+	message_data = 0U;
+	if (tree->visible_children > tree->number_of_lines)
+	{
+		message_data = 0x010000;
+		message_data |= ((uint32_t)tree->visible_children - (uint32_t)tree->number_of_lines);
+	}
+
+	mw_post_message(MW_TREE_SCROLLING_REQUIRED_MESSAGE,
+			MW_UNUSED_MESSAGE_PARAMETER,
+			mw_get_control_parent_window_handle(changed_tree_handle),
+			message_data,
+			NULL,
+			MW_WINDOW_MESSAGE);
+
+	mw_paint_control(changed_tree_handle);
 }

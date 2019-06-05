@@ -138,7 +138,7 @@ void mw_user_init(void)
 
 	mw_util_set_rect(&r, 5, 5, 230, 285);
 	window_file_tree_handle = mw_add_window(&r,
-			"File Tree Demo",
+			"File Tree",
 			window_file_tree_paint_function,
 			window_file_tree_message_function,
 			NULL,
@@ -243,7 +243,7 @@ void mw_user_init(void)
 
 	mw_util_set_rect(&r, 50, 50, 180, 205);
 	window_selection_handle = mw_add_window(&r,
-			"File Selection",
+			"Selection",
 			window_selection_paint_function,
 			window_selection_message_function,
 			NULL,

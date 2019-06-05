@@ -217,7 +217,7 @@ bool mw_tree_container_change_node_selected_state(struct mw_tree_container_t *tr
 void mw_tree_container_change_folder_node_open_state(struct mw_tree_container_t *tree, mw_handle_t folder_node_handle, bool is_open);
 
 /**
- * Remove a node
+ * Remove a node and all its children
  *
  * @param tree Pointer to tree structure
  * @param node_handle Handle of node to remove
@@ -256,21 +256,27 @@ void mw_tree_container_get_all_children(struct mw_tree_container_t *tree,
  *
  * @param tree Pointer to tree structure
  * @param parent_folder_handle Handle of the folder node to start looking in
+ * @param selected_only Only count folders and files that are selected
  * @return The number of open children
  * @note This function recursively descends the tree from the starting folder getting all children of all descendant folders if
  *       for open sub-folders. Children of closed sub-folders are ignored. The parent folder is not included in the count.
  */
-uint16_t mw_tree_container_get_open_children_count(struct mw_tree_container_t *tree, mw_handle_t parent_folder_handle);
-
+uint16_t mw_tree_container_get_open_children_count(struct mw_tree_container_t *tree,
+		mw_handle_t parent_folder_handle,
+		bool selected_only);
 /**
  * Get a node's handle from its position after a parent folder, looking into open folders only
  *
  * @param tree Pointer to tree structure
  * @param parent_folder_handle Handle of the folder node to start looking in
+ * @param selected_only Only find folders and files that are selected
  * @param position The position after the parent folder
  * @return The handle of the node or MW_INVALID_HANDLE if no node found at the position
  */
-mw_handle_t mw_tree_container_get_handle_from_visible_position(struct mw_tree_container_t *tree, mw_handle_t parent_folder_handle, uint16_t visible_position);
+mw_handle_t mw_tree_container_get_handle_from_position(struct mw_tree_container_t *tree,
+		mw_handle_t parent_folder_handle,
+		bool selected_only,
+		uint16_t position);
 
 /**
  * Get the flags of a node

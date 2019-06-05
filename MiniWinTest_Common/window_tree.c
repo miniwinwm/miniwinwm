@@ -135,6 +135,11 @@ void window_tree_message_function(const mw_message_t *message)
 				mw_paint_control(arrow_3_handle);
 			}
 
+			if (window_tree_data.lines_to_scroll > window_tree_data.max_scrollable_lines)
+			{
+				window_tree_data.lines_to_scroll = window_tree_data.max_scrollable_lines;
+			}
+
 			mw_post_message(MW_TREE_LINES_TO_SCROLL_MESSAGE,
 					MW_UNUSED_MESSAGE_PARAMETER,
 					tree_handle,
@@ -185,6 +190,11 @@ void window_tree_message_function(const mw_message_t *message)
 
 			mw_paint_control(label_7_handle);
 		}
+		break;
+
+	case MW_TREE_FOLDER_OPENED_MESSAGE:
+	case MW_TREE_FOLDER_CLOSED_MESSAGE:
+		mw_ui_tree_data_changed(tree_handle);
 		break;
 
 	default:
