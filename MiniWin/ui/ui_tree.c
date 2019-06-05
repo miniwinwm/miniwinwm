@@ -379,32 +379,28 @@ static void tree_message_function(const mw_message_t *message)
 		break;
 
 	case MW_TREE_LINES_TO_SCROLL_MESSAGE:
+		/* check if scrolling is appropriate */
+		if (this_tree->visible_children <= this_tree->number_of_lines)
 		{
-			/* check if scrolling is appropriate */
-			if (this_tree->visible_children <= this_tree->number_of_lines)
-			{
-				/* no, so set scroll lines to zero */
-				this_tree->lines_to_scroll = 0U;
-			}
-			else
-			{
-				/* yes so set new scroll position */
-				this_tree->lines_to_scroll = (uint8_t)message->message_data;
+			/* no, so set scroll lines to zero */
+			this_tree->lines_to_scroll = 0U;
+		}
+		else
+		{
+			/* yes so set new scroll position */
+			this_tree->lines_to_scroll = (uint8_t)message->message_data;
 
-				/* check that the new scroll position doesn't exceed maximum possible */
-				if (this_tree->lines_to_scroll > (this_tree->visible_children - this_tree->number_of_lines))
-				{
-					this_tree->lines_to_scroll = this_tree->visible_children - (uint16_t)this_tree->number_of_lines;
-				}
+			/* check that the new scroll position doesn't exceed maximum possible */
+			if (this_tree->lines_to_scroll > (this_tree->visible_children - this_tree->number_of_lines))
+			{
+				this_tree->lines_to_scroll = this_tree->visible_children - (uint16_t)this_tree->number_of_lines;
 			}
 		}
 		break;
 
 	case MW_TREE_TREE_CONTAINER_DATA_CHANGED:
 		{
-			uint32_t message_data;
 			uint16_t max_scroll_lines;
-			mw_ui_tree_data_t *this_tree = (mw_ui_tree_data_t *)mw_get_control_instance_data(message->recipient_handle);
 
 			/* get number of visible children of root folder */
 			this_tree->visible_children = mw_tree_container_get_open_children_count(&this_tree->tree_container,
@@ -431,7 +427,7 @@ static void tree_message_function(const mw_message_t *message)
 				mw_post_message(MW_SCROLL_BAR_SET_SCROLL_MESSAGE,
 						MW_UNUSED_MESSAGE_PARAMETER,
 						mw_get_control_parent_window_handle(message->recipient_handle),
-						((uint32_t)this_tree->lines_to_scroll * UINT8_MAX) / (uint32_t)max_scroll_lines,
+						((uint32_t)this_tree->lines_to_scroll * (uint32_t)UINT8_MAX) / (uint32_t)max_scroll_lines,
 						NULL,
 						MW_WINDOW_MESSAGE);
 			}
