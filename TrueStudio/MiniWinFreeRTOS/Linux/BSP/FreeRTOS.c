@@ -40,7 +40,7 @@ MessageBufferHandle_t xMessageBufferCreateStatic(size_t s, uint8_t *b, StaticMes
 	return h - 1;
 }
 
-void xMessageBufferSend(MessageBufferHandle_t mbh, void *r, size_t s, uint8_t i)
+void xMessageBufferSend(MessageBufferHandle_t mbh, const void *r, size_t s, uint8_t i)
 {
 	if (mbh == 0)
 	{

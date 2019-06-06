@@ -59,7 +59,7 @@ GC graphical_context;
 **********************/
 
 static int file_descriptor;
-static char root_folder[MAX_FOLDER_AND_FILENAME_LENGTH];
+static char root_folder[MAX_FOLDER_AND_FILENAME_LENGTH] = {"/home/"};
 
 /********************************
 *** LOCAL FUNCTION PROTOTYPES ***
@@ -121,7 +121,53 @@ void app_main_loop_process(void)
 void app_populate_tree_from_file_system(struct mw_tree_container_t *tree,
 		mw_handle_t start_folder_handle)
 {
-	//todo implement this
+	DIR *directory;
+	struct dirent *directory_entry;
+	char path[MAX_FOLDER_AND_FILENAME_LENGTH];
+	uint8_t node_flags;
+
+	mw_tree_container_get_node_path(tree, start_folder_handle, path, MAX_FOLDER_AND_FILENAME_LENGTH);
+
+	if (strlen(path) == (size_t)0)
+	{
+		return;
+	}
+
+	/* open the folder */
+	directory = opendir(path);
+	if (directory)
+	{
+		while ((directory_entry = readdir(directory)) != NULL)
+		{
+			node_flags = 0U;
+
+			if (directory_entry->d_type == DT_DIR)
+			{
+				/* it is a folder */
+				if (strcmp(directory_entry->d_name, ".") == 0)
+				{
+					continue;
+				}
+				if (strcmp(directory_entry->d_name, "..") == 0)
+				{
+					continue;
+				}
+
+				node_flags = MW_TREE_CONTAINER_NODE_IS_FOLDER;
+			}
+			else if (directory_entry->d_type != DT_REG)
+			{
+				/* it's not a file or folder */
+				continue;
+			}
+
+			(void)mw_tree_container_add_node(tree,
+					start_folder_handle,
+					directory_entry->d_name,
+					node_flags);
+		}
+		(void)closedir(directory);
+	}
 }
 
 bool app_file_open(char *path_and_filename)
