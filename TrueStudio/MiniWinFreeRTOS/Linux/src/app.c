@@ -39,8 +39,6 @@ SOFTWARE.
 *** CONSTANTS ***
 ****************/
 
-#define SCROLL_LOCK 1
-
 /************
 *** TYPES ***
 ************/
@@ -87,7 +85,7 @@ void app_init(void)
 		XRootWindow(display, 0),
 		0, 
 		0, 
-		(unsigned int)MW_ROOT_WIDTH,
+		(unsigned int)MW_ROOT_WIDTH + 20,
 		(unsigned int)MW_ROOT_HEIGHT,
 		5, 
 		depth,
@@ -98,7 +96,7 @@ void app_init(void)
 
 	XStoreName(display, frame_window, "MiniWin Sim");
 
-	XSelectInput(display, frame_window, ExposureMask | StructureNotifyMask);
+	XSelectInput(display, frame_window, ExposureMask | StructureNotifyMask | KeyPressMask | KeyReleaseMask);
 
 	graphical_context = XCreateGC(display, frame_window, 0U, NULL);
 
