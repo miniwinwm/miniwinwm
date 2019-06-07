@@ -44,8 +44,7 @@ SOFTWARE.
 typedef enum
 {
 	APPLICATION_IDLE = 0,
-	APPLICATION_START,
-	APPLICATION_RUNNING
+	APPLICATION_START
 } MSC_ApplicationTypeDef;
 
 /***********************
@@ -68,10 +67,56 @@ static RTC_HandleTypeDef rtc_handle;								/**< Driver handle for RTC */
 *** LOCAL FUNCTION PROTOTYPES ***
 ********************************/
 
+static void SystemClock_Config(void);
+static void USBH_UserProcess(USBH_HandleTypeDef *phost, uint8_t id);
+
+/**********************
+*** LOCAL FUNCTIONS ***
+**********************/
+
 /**
  * Configure the system clock
  */
-static void SystemClock_Config(void);
+static void SystemClock_Config(void)
+{
+	RCC_ClkInitTypeDef RCC_ClkInitStruct;
+	RCC_OscInitTypeDef RCC_OscInitStruct;
+
+	/* Enable Power Control clock */
+	__HAL_RCC_PWR_CLK_ENABLE();
+
+	/* The voltage scaling allows optimizing the power consumption when the device is
+	 clocked below the maximum system frequency, to update the voltage scaling value
+	 regarding system frequency refer to product datasheet.  */
+	__HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
+
+	/* Enable HSE Oscillator and activate PLL with HSE as source */
+	RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
+	RCC_OscInitStruct.HSEState = RCC_HSE_ON;
+	RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
+	RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
+	RCC_OscInitStruct.PLL.PLLM = 8U;
+	RCC_OscInitStruct.PLL.PLLN = 336U;
+	RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
+	RCC_OscInitStruct.PLL.PLLQ = 7U;
+	(void)HAL_RCC_OscConfig(&RCC_OscInitStruct);
+
+	/* Select PLL as system clock source and configure the HCLK, PCLK1 and PCLK2
+	 clocks dividers */
+	RCC_ClkInitStruct.ClockType = (RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2);
+	RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
+	RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
+	RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4;
+	RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2;
+	(void)HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_5);
+
+	/* STM32F405x/407x/415x/417x Revision Z devices: prefetch is supported  */
+	if (HAL_GetREVID() == 0x1001U)
+	{
+		/* Enable the Flash prefetch */
+		__HAL_FLASH_PREFETCH_BUFFER_ENABLE();
+	}
+}
 
 /**
  * USB Host state machine state processing routine
@@ -79,53 +124,6 @@ static void SystemClock_Config(void);
  * @param phost pointer to USB host variable
  * @param id state machine state
  */
-static void USBH_UserProcess(USBH_HandleTypeDef *phost, uint8_t id);
-
-/**********************
-*** LOCAL FUNCTIONS ***
-**********************/
-
-static void SystemClock_Config  (void)
-{
-  RCC_ClkInitTypeDef RCC_ClkInitStruct;
-  RCC_OscInitTypeDef RCC_OscInitStruct;
-
-  /* Enable Power Control clock */
-  __HAL_RCC_PWR_CLK_ENABLE();
-
-  /* The voltage scaling allows optimizing the power consumption when the device is
-     clocked below the maximum system frequency, to update the voltage scaling value
-     regarding system frequency refer to product datasheet.  */
-  __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
-
-  /* Enable HSE Oscillator and activate PLL with HSE as source */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
-  RCC_OscInitStruct.HSEState = RCC_HSE_ON;
-  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
-  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
-  RCC_OscInitStruct.PLL.PLLM = 8U;
-  RCC_OscInitStruct.PLL.PLLN = 336U;
-  RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
-  RCC_OscInitStruct.PLL.PLLQ = 7U;
-  (void)HAL_RCC_OscConfig (&RCC_OscInitStruct);
-
-  /* Select PLL as system clock source and configure the HCLK, PCLK1 and PCLK2
-     clocks dividers */
-  RCC_ClkInitStruct.ClockType = (RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2);
-  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
-  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
-  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4;
-  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2;
-  (void)HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_5);
-
-  /* STM32F405x/407x/415x/417x Revision Z devices: prefetch is supported  */
-  if (HAL_GetREVID() == 0x1001U)
-  {
-    /* Enable the Flash prefetch */
-    __HAL_FLASH_PREFETCH_BUFFER_ENABLE();
-  }
-}
-
 static void USBH_UserProcess(USBH_HandleTypeDef *phost, uint8_t id)
 {
 	switch (id)
@@ -179,9 +177,6 @@ void app_init(void)
 	hal_time_structure.StoreOperation = RTC_STOREOPERATION_RESET;
 	(void)HAL_RTC_SetTime(&rtc_handle, &hal_time_structure, FORMAT_BCD);
 
-	/* Link the USB Mass Storage disk I/O driver */
-	(void)FATFS_LinkDriver(&USBH_Driver, usb_path);
-
 	/* Init Host Library */
 	(void)USBH_Init(&hUSB_Host, USBH_UserProcess, 0U);
 
@@ -190,6 +185,9 @@ void app_init(void)
 
 	/* Start Host Process */
 	(void)USBH_Start(&hUSB_Host);
+
+	/* Link the USB Mass Storage disk I/O driver */
+	(void)FATFS_LinkDriver(&USBH_Driver, usb_path);
 
 	/* Register the file system object to the FatFs module */
 	(void)f_mount(&usb_disk_fatfs, (TCHAR const*)usb_path, 0U);
@@ -235,7 +233,7 @@ uint8_t app_file_getc(void)
 	uint8_t byte;
 	UINT bytes_read;
 
-	f_read(&file_handle, &byte, 1, &bytes_read);
+	(void)f_read(&file_handle, &byte, 1, &bytes_read);
 
 	return (byte);
 }
@@ -277,7 +275,56 @@ void app_main_loop_process(void)
 void app_populate_tree_from_file_system(struct mw_tree_container_t *tree,
 		mw_handle_t start_folder_handle)
 {
-	//todo implement this
+    FRESULT result;
+    DIR folder;
+    FILINFO file_info;
+    char path[MAX_FOLDER_AND_FILENAME_LENGTH];
+	uint8_t node_flags;
+
+    mw_tree_container_get_node_path(tree, start_folder_handle, path, MAX_FOLDER_AND_FILENAME_LENGTH);
+
+    if (strlen(path) == (size_t)0)
+    {
+    	return;
+    }
+
+    /* strip off terminating '/' for FatFS folders */
+    path[strlen(path) - 1U] = '\0';
+
+    /* open the folder */
+    result = f_opendir(&folder, path);
+    if (result == FR_OK)
+    {
+        for (;;)
+        {
+        	/* read a folder item */
+            result = f_readdir(&folder, &file_info);
+            if (result != FR_OK || file_info.fname[0] == '\0')
+            {
+            	/* break on error or end of folder */
+            	break;
+            }
+
+        	/* ignore if it's a hidden or system entry*/
+        	if ((file_info.fattrib & (BYTE)AM_HID) == AM_HID || (file_info.fattrib & (BYTE)AM_SYS) == AM_SYS)
+        	{
+        		continue;
+        	}
+
+        	node_flags = 0U;
+            if ((file_info.fattrib & (BYTE)AM_DIR) == (BYTE)AM_DIR)
+        	{
+        		node_flags = MW_TREE_CONTAINER_NODE_IS_FOLDER;
+        	}
+
+        	(void)mw_tree_container_add_node(tree,
+        			start_folder_handle,
+					file_info.fname,
+        			node_flags);
+
+        }
+        (void)f_closedir(&folder);
+    }
 }
 
 uint8_t find_folder_entries(char *path,
@@ -291,6 +338,11 @@ uint8_t find_folder_entries(char *path,
     DIR folder;
     FILINFO file_info;
     UINT i = 0U;
+
+    if (strlen(path) == (size_t)0)
+    {
+    	return 0U;
+    }
 
     /* open the folder */
     result = f_opendir(&folder, path);

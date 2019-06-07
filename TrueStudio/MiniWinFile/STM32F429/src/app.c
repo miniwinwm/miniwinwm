@@ -28,13 +28,10 @@ SOFTWARE.
 *** INCLUDES ***
 ***************/
 
-#include <time.h>
-#include "miniwin.h"
+#include "app.h"
 #include "stm32f429i_discovery.h"
 #include "ff_gen_drv.h"
 #include "usbh_diskio_dma.h"
-#include "app.h"
-#include "integer.h"
 
 /****************
 *** CONSTANTS ***
@@ -77,6 +74,9 @@ static void USBH_UserProcess(USBH_HandleTypeDef *phost, uint8_t id);
 *** LOCAL FUNCTIONS ***
 **********************/
 
+/**
+ * Configure the system clock
+ */
 static void SystemClock_Config(void)
 {
 	RCC_ClkInitTypeDef RCC_ClkInitStruct;
@@ -111,6 +111,12 @@ static void SystemClock_Config(void)
 	(void)HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_5);
 }
 
+/**
+ * USB Host state machine state processing routine
+ *
+ * @param phost pointer to USB host variable
+ * @param id state machine state
+ */
 static void USBH_UserProcess(USBH_HandleTypeDef *phost, uint8_t id)
 {
 	switch (id)
@@ -153,7 +159,7 @@ void app_init(void)
 	hal_date_structure.Year = 0x00U;
 	hal_date_structure.Month = RTC_MONTH_JANUARY;
 	hal_date_structure.Date = 0x01U;
-	hal_date_structure.WeekDay = RTC_WEEKDAY_MONDAY;		/* must be set to something even if not correct for the date */
+	hal_date_structure.WeekDay = RTC_WEEKDAY_MONDAY;	/* must be set to something even if not correct for the date */
 	(void)HAL_RTC_SetDate(&rtc_handle, &hal_date_structure, FORMAT_BCD);
 
 	hal_time_structure.Hours = 0x01U;

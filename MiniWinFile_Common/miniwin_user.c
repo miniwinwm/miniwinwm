@@ -136,7 +136,7 @@ void mw_user_init(void)
 	mw_util_rect_t r;
 	mw_handle_t intermediate_handle;
 
-	mw_util_set_rect(&r, 5, 5, 230, 285);
+	mw_util_set_rect(&r, 5, 0, 230, 263);
 	window_file_tree_handle = mw_add_window(&r,
 			"File Tree",
 			window_file_tree_paint_function,
@@ -147,7 +147,7 @@ void mw_user_init(void)
 			NULL);
 
 	nodes_array = (mw_tree_container_node_t *)malloc(sizeof(mw_tree_container_node_t) * (size_t)12);
-	tree_data.number_of_lines = 10U;
+	tree_data.number_of_lines = 9U;
 	tree_data.file_icon = mw_bitmaps_file_icon_large;
 	tree_data.folder_icon = mw_bitmaps_folder_icon_large;
 	intermediate_handle = mw_tree_container_init(&tree_data.tree_container,
@@ -168,7 +168,7 @@ void mw_user_init(void)
 
 	scroll_bar_vert_handle = mw_ui_scroll_bar_vert_add_new(200,
 			5,
-			220,
+			198,
 			window_file_tree_handle,
 			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_LARGE_SIZE,
 			&scroll_bar_vert_data);
@@ -177,7 +177,7 @@ void mw_user_init(void)
 			MW_UI_LABEL_MAX_CHARS,
 			"Not set");
 	label_path_handle = mw_ui_label_add_new(5,
-			230,
+			208,
 			220,
 			window_file_tree_handle,
 			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
@@ -185,7 +185,7 @@ void mw_user_init(void)
 
 	(void)mw_util_safe_strcpy(button_show_data.button_label, MW_UI_BUTTON_LABEL_MAX_CHARS, "Show");
 	button_open_handle = mw_ui_button_add_new(5,
-			247,
+			225,
 			window_file_tree_handle,
 			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
 			&button_show_data);
