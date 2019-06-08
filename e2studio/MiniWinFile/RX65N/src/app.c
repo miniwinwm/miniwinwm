@@ -320,7 +320,64 @@ uint8_t find_folder_entries(char *path,
 void app_populate_tree_from_file_system(struct mw_tree_container_t *tree,
 		mw_handle_t start_folder_handle)
 {
-	// todo implement
+    FRESULT result;
+    DIR folder;
+    FILINFO file_info;
+    char path[MAX_FOLDER_AND_FILENAME_LENGTH];
+	uint8_t node_flags;
+
+	/* check pointer parameter */
+	if (tree == NULL)
+	{
+		MW_ASSERT((bool)false, "Null pointer");
+
+		return;
+	}
+
+    mw_tree_container_get_node_path(tree, start_folder_handle, path, MAX_FOLDER_AND_FILENAME_LENGTH);
+
+    if (strlen(path) == (size_t)0)
+    {
+    	return;
+    }
+
+    /* strip off terminating '/' for FatFS folders */
+    path[strlen(path) - 1U] = '\0';
+
+    /* open the folder */
+    result = R_tfat_f_opendir(&folder, path);
+    if (result == TFAT_FR_OK)
+    {
+        for (;;)
+        {
+        	/* read a folder item */
+            result = R_tfat_f_readdir(&folder, &file_info);
+            if (result != TFAT_FR_OK || file_info.fname[0] == '\0')
+            {
+            	/* break on error or end of folder */
+            	break;
+            }
+
+        	/* ignore if it's a hidden or system entry*/
+        	if ((file_info.fattrib & (uint8_t)TFAT_AM_HID) == (uint8_t)TFAT_AM_HID || (file_info.fattrib & (uint8_t)TFAT_AM_SYS) == (uint8_t)TFAT_AM_SYS)
+        	{
+        		continue;
+        	}
+
+        	node_flags = 0U;
+            if ((file_info.fattrib & (uint8_t)TFAT_AM_DIR) == (uint8_t)TFAT_AM_DIR)
+        	{
+        		node_flags = MW_TREE_CONTAINER_NODE_IS_FOLDER;
+        	}
+
+        	(void)mw_tree_container_add_node(tree,
+        			start_folder_handle,
+					file_info.fname,
+        			node_flags);
+
+        }
+        //(void)f_closedir(&folder);
+    }
 }
 
 mw_time_t app_get_time_date(void)
