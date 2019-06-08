@@ -2,6 +2,10 @@ See https://miniwinwm.wixsite.com/miniwinwm
 
 MiniWin contains the MiniWin window manager source code in C99. Builds for the Windows and Linux MiniWin simulator, and embedded devices.
 
+Please note: The latest formal release contains the latest stable tested code completed for all variants with up-to-date documentation. 
+The latest commit may contain work in progress, not all features may work for all variants, and the documentation may not be updated to the code.
+For further information on current work in progress please contact me by the contact box on the MiniWin website, address above.
+
 MCUXpresso contains project files and application specific source files for the example projects running on the LPC54628 dev board.
 
 TrueStudio contains project files and application specific source files for the example projects running on the STM32F429, STM32F407 dev boards and the Windows and Linux MiniWin simulators.
