@@ -376,7 +376,7 @@ void app_populate_tree_from_file_system(struct mw_tree_container_t *tree,
         			node_flags);
 
         }
-        //(void)f_closedir(&folder);
+        //(void)f_closedir(&folder);        // todo why is this not available
     }
 }
 
