@@ -315,6 +315,20 @@ uint8_t find_folder_entries(char* path,
 	WIN32_FIND_DATA ffd;
 	uint8_t i;
 
+	/* check pointer parameter */
+	if (path == NULL)
+	{
+		MW_ASSERT((bool)false, "Null pointer");
+
+		return (0U);
+	}
+
+	/* check path string not empty */
+    if (strlen(path) == (size_t)0)
+    {
+    	return (0U);
+    }
+
 	i = 0U;
 	(void)mw_util_safe_strcpy(szDir, MAX_FOLDER_AND_FILENAME_LENGTH - 2, path);
 	(void)strcat(szDir, TEXT("\\*"));

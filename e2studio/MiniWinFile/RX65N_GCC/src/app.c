@@ -238,6 +238,20 @@ uint8_t find_folder_entries(char *path,
     FILINFO file_info;
     UINT i = 0U;
 
+	/* check pointer parameter */
+	if (path == NULL)
+	{
+		MW_ASSERT((bool)false, "Null pointer");
+
+		return (0U);
+	}
+
+	/* check path string not empty */
+    if (strlen(path) == (size_t)0)
+    {
+    	return (0U);
+    }
+
     /* strip off terminating '/' for FatFS folders */
     path[strlen(path) - 1U] = '\0';
 
@@ -301,6 +315,14 @@ void app_populate_tree_from_file_system(struct mw_tree_container_t *tree,
     FILINFO file_info;
     char path[MAX_FOLDER_AND_FILENAME_LENGTH];
 	uint8_t node_flags;
+
+	/* check pointer parameter */
+	if (tree == NULL)
+	{
+		MW_ASSERT((bool)false, "Null pointer");
+
+		return;
+	}
 
     mw_tree_container_get_node_path(tree, start_folder_handle, path, MAX_FOLDER_AND_FILENAME_LENGTH);
 

@@ -248,6 +248,20 @@ uint8_t find_folder_entries(char *path,
 		return 0U;
 	}
 
+    /* check pointer parameter */
+	if (path == NULL)
+	{
+		MW_ASSERT((bool)false, "Null pointer");
+
+		return (0U);
+	}
+
+	/* check path string not empty */
+    if (strlen(path) == (size_t)0)
+    {
+    	return (0U);
+    }
+
     /* strip off terminating '/' for FatFS folders */
     path[strlen(path) - (size_t)1] = '\0';
 

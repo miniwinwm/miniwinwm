@@ -244,6 +244,20 @@ uint8_t find_folder_entries(char* path,
 	struct dirent *directory_entry;
 	uint8_t i;
 
+    /* check pointer parameter */
+	if (path == NULL)
+	{
+		MW_ASSERT((bool)false, "Null pointer");
+
+		return (0U);
+	}
+
+	/* check path string not empty */
+    if (strlen(path) == (size_t)0)
+    {
+    	return (0U);
+    }
+
 	i = 0;
 	directory = opendir(path);
 	if (directory)
