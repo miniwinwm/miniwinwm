@@ -29,20 +29,37 @@ Updates needed for tree control
 
 fields needed in json
 number of lines     int     mand
-static allocated    bool    opt, defaults to false
+static allocated    bool    mand
 node array size     int     mand
 icons               bool    opt, defaults to true
 folder icon         string  opt, defaults to standard folder icon if not given
 file icon           string  opt, defaults to standard file icon if not given
-realloc size        int     opt, defaults to node array size of not given
 root folder path    string  opt, defaults to /
-folder separator    string  opt, single character defaults to /
-node select         string  opt from none, single, multi, defaults to multi
-node_type_select    string  opt from file_only, folder_only, all, defaults to all
+folder separator    string  mand, must be single character
+node select         string  opt from none, Single, Multi, defaults to Multi
+node_type_select    string  opt from FileOnly, FolderOnly, All, defaults to All
 folders only        bool    opt, defaults to false
 root_folder_is_open bool    opt, defaults to false
+root_folder_is_selected bool    opt, defaults to false
 
-need to check for illegal option choices
+todo
+response handlers for both tree types
+scrolling tree interaction with scroll bar
+
+new errors
+
+"No allocation type specified for tree: "
+"No node array size specified for tree: " 
+"No root folder path specified for scrolling tree:"
+"No StaticAllocated values for tree "
+"No NodeArraySize values for tree "
+"Tree field separator not length 1 for tree "
+"Tree root folder cannot be empty for tree "
+"Tree root folder must end in separator character for tree "
+"Too small Lines value for tree "
+"Too small NodeArraySize values for tree "
+"Tree root folder illegal options for tree "
+
 */
 
 #include <string>
@@ -387,7 +404,6 @@ int main(int argc, char **argv)
 			" extern \"C\" {\n"
 			"#endif\n\n";
     
-    
     for (auto &window : json["Windows"].array_items())
     {
         // create windows extern references
@@ -527,6 +543,28 @@ int main(int argc, char **argv)
 					"extern mw_handle_t tabs_" + tabs["Name"].string_value() + "_handle;\n";
 			}
 		}		
+        
+        // create trees extern references
+		if (window["Trees"].array_items().size() > 0)
+		{
+    		for (auto& tree : window["Trees"].array_items())
+			{
+		    	outfileUserHeader << 
+					"extern mw_handle_t tree_" + tree["Name"].string_value() + "_handle;\n";
+			}
+		}
+        
+    	// create scrolling trees extern references
+		if (window["ScrollingTrees"].array_items().size() > 0)
+		{
+    		for (auto& scrolling_tree : window["ScrollingTrees"].array_items())
+			{
+		    	outfileUserHeader << 
+					"extern mw_handle_t scrolling_tree_" + scrolling_tree["Name"].string_value() + "_handle;\n";
+		    	outfileUserHeader << 
+					"extern mw_handle_t scrolling_tree_scroll_bar_vert_" + scrolling_tree["Name"].string_value() + "_handle;\n";				
+			}
+		}
         
         outfileUserHeader << "\n";					
 	}
@@ -735,7 +773,83 @@ int main(int argc, char **argv)
 			outfileUserSource << "};\n";
 		}
     }
-       
+    
+    // tree node array or pointer
+	for (auto& window : json["Windows"].array_items())
+    {
+		for (auto& tree : window["Trees"].array_items())
+		{
+            if (!tree["StaticAllocated"].is_bool())
+            {
+            	cout << "No allocation type specified for tree: " << tree["Name"].string_value() << " in window: " << window["Name"].string_value() << endl;
+                exit(1);
+            }
+            
+            if (!tree["NodeArraySize"].is_number())
+            {
+        	    cout << "No node array size specified for tree: " << tree["Name"].string_value() << " in window: " << window["Name"].string_value() << endl;
+                exit(1);
+            }
+
+            if (!tree["RootFolderPath"].is_string())
+            {
+            	cout << "No root folder path specified for tree: " << tree["Name"].string_value() << " in window: " << window["Name"].string_value() << endl;
+                exit(1);
+            }
+
+            outfileUserSource << "static char tree_" << tree["Name"].string_value() << "_root_folder_label[] = {\"" <<
+                tree["RootFolderPath"].string_value() << "\"};\n";
+            
+            if (tree["StaticAllocated"].bool_value() == true)
+            {                              
+                outfileUserSource << "static mw_tree_container_node_t " << "tree_" << tree["Name"].string_value() + "_nodes_array[" << 
+                       tree["NodeArraySize"].number_value() << "];\n";
+            }
+            else
+            {
+                outfileUserSource << "static mw_tree_container_node_t *" << "tree_" << tree["Name"].string_value() + "_nodes_array;\n";
+            }
+		}
+    }
+
+    // scrolling tree node array or pointer
+	for (auto& window : json["Windows"].array_items())
+    {
+		for (auto& scrolling_tree : window["ScrollingTrees"].array_items())
+		{
+            if (!scrolling_tree["StaticAllocated"].is_bool())
+            {
+            	cout << "No allocation type specified for scrolling tree: " << scrolling_tree["Name"].string_value() << " in window: " << window["Name"].string_value() << endl;
+                exit(1);
+            }
+
+            if (!scrolling_tree["NodeArraySize"].is_number())
+            {
+        	    cout << "No node array size specified for scrolling_tree: " << scrolling_tree["Name"].string_value() << " in window: " << window["Name"].string_value() << endl;
+                exit(1);
+            }
+
+            if (!scrolling_tree["RootFolderPath"].is_string())
+            {
+            	cout << "No root folder path specified for scrolling tree: " << scrolling_tree["Name"].string_value() << " in window: " << window["Name"].string_value() << endl;
+                exit(1);
+            }
+
+            outfileUserSource << "static char scrolling_tree_" << scrolling_tree["Name"].string_value() << "_root_folder_label[] = {\"" <<
+                scrolling_tree["RootFolderPath"].string_value() << "\"};\n";
+
+            if (scrolling_tree["StaticAllocated"].bool_value() == true)
+            {
+                outfileUserSource << "static mw_tree_container_node_t " << "scrolling_tree_" << scrolling_tree["Name"].string_value() + "_nodes_array[" <<
+                       scrolling_tree["NodeArraySize"].number_value() << "];\n";
+            }
+            else
+            {
+                outfileUserSource << "static mw_tree_container_node_t *" << "scrolling_tree_" << scrolling_tree["Name"].string_value() + "_nodes_array;\n";
+            }
+		}
+    }
+
    	outfileUserSource << endl;	   	
     
     // truetype fonts
@@ -895,19 +1009,33 @@ int main(int argc, char **argv)
 			all_identifier_names.push_back("tabs_" + tabs["Name"].string_value() + "_handle");
 			outfileUserSource << "mw_handle_t tabs_" << tabs["Name"].string_value() << "_handle;\n";
 		}	
+		// create tree handles
+		for (auto& tree : window["Trees"].array_items())
+		{
+			all_identifier_names.push_back("tree_" + tree["Name"].string_value() + "_handle");
+			outfileUserSource << "mw_handle_t tree_" << tree["Name"].string_value() << "_handle;\n";
+		}
+		// create scrolling trees handles
+		for (auto& scrolling_tree : window["ScrollingTrees"].array_items())
+		{
+			all_identifier_names.push_back("scrolling_tree_" + scrolling_tree["Name"].string_value() + "_handle");
+			outfileUserSource << "mw_handle_t scrolling_tree_" << scrolling_tree["Name"].string_value() << "_handle;\n";
+			all_identifier_names.push_back("scrolling_tree_scroll_bar_vert_" + scrolling_tree["Name"].string_value() + "_handle");
+			outfileUserSource << "mw_handle_t scrolling_tree_scroll_bar_vert_" << scrolling_tree["Name"].string_value() << "_handle;\n";
+		}
     }
 	outfileUserSource << "\n";
     
     // create controls data
     for (auto &window : json["Windows"].array_items())
     {
-		// creat buttons data
+		// create buttons data
 		for (auto& button : window["Buttons"].array_items())
 		{
 			all_identifier_names.push_back("button_" + button["Name"].string_value() + "_data");
 			outfileUserSource << "static mw_ui_button_data_t button_" << button["Name"].string_value() << "_data;\n";
 		}
-		// creat labels data
+		// create labels data
 		for (auto& label : window["Labels"].array_items())
 		{
 			all_identifier_names.push_back("label_" + label["Name"].string_value() + "_data");
@@ -985,8 +1113,131 @@ int main(int argc, char **argv)
 			all_identifier_names.push_back("tabs_" + tabs["Name"].string_value() + "_data");
 			outfileUserSource << "static mw_ui_tabs_data_t tabs_" << tabs["Name"].string_value() << "_data;\n";
 		}	
+		// create trees data
+		for (auto& tree : window["Trees"].array_items())
+		{
+			all_identifier_names.push_back("tree_" + tree["Name"].string_value() + "_data");
+			outfileUserSource << "static mw_ui_tree_data_t tree_" << tree["Name"].string_value() << "_data;\n";
+		}
+		// create scrolling trees data
+		for (auto& scrolling_tree : window["ScrollingTrees"].array_items())
+		{
+			all_identifier_names.push_back("scrolling_tree_" + scrolling_tree["Name"].string_value() + "_data");
+			outfileUserSource << "static mw_ui_tree_data_t scrolling_tree_" << scrolling_tree["Name"].string_value() << "_data;\n";
+
+			all_identifier_names.push_back("scrolling_tree_scroll_bar_vert_" + scrolling_tree["Name"].string_value() + "_data");
+			outfileUserSource << "static mw_ui_scroll_bar_vert_data_t scrolling_tree_scroll_bar_vert_" << scrolling_tree["Name"].string_value() << "_data;\n";
+		}
 	}
-    
+
+    bool need_tree_realloc_header = false;
+    for (auto& window : json["Windows"].array_items())
+    {
+        for (auto& tree : window["Trees"].array_items())
+        {
+            if (tree["StaticAllocated"].bool_value() == false)
+            {
+                need_tree_realloc_header = true;
+                break;
+            }
+        }
+
+        for (auto& scrolling_tree : window["ScrollingTrees"].array_items())
+        {
+            if (scrolling_tree["StaticAllocated"].bool_value() == false)
+            {
+                need_tree_realloc_header = true;
+                break;
+            }
+        }
+
+        if (need_tree_realloc_header)
+        {
+            break;
+        }
+    }
+
+    if (need_tree_realloc_header)
+    {
+        outfileUserSource <<
+            "\n/**\n"
+            " * These functions fulfil requests from tree containers to expand their node storage array\n"
+            " *\n"
+            " * @param tree Pointer to tree structure\n"
+            " * @note From the tree container structure parameter get the existing size of the node array.\n"
+            " *       Calculate the new expanded size from this. Reallocate the node array storage of this\n"
+            " *       new size using the tree container structure parameter to get the pointer to the existing\n"
+            " *       node array storage. If the reallocate succeeds set the new storage and its size using the\n"
+            " *       tree container structure parameter.\n"
+            " */\n";
+    }
+
+    for (auto& window : json["Windows"].array_items())
+    {
+        for (auto& tree : window["Trees"].array_items())
+        {
+            if (tree["StaticAllocated"].bool_value() == true)
+            {
+                continue;
+            }
+            outfileUserSource << "static void tree_" << tree["Name"].string_value() << "_expand_node_array(struct mw_tree_container_t *tree);\n";
+        }
+        for (auto& scrolling_tree : window["ScrollingTrees"].array_items())
+        {
+            if (scrolling_tree["StaticAllocated"].bool_value() == true)
+            {
+                continue;
+            }
+            outfileUserSource << "static void scrolling_tree_" << scrolling_tree["Name"].string_value() << "_expand_node_array(struct mw_tree_container_t *tree);\n";
+        }
+    }
+
+    outfileUserSource << "\n";
+    for (auto& window : json["Windows"].array_items())
+    {
+        for (auto& tree : window["Trees"].array_items())
+        {
+            if (tree["StaticAllocated"].bool_value() == true)
+            {
+                continue;
+            }
+
+            outfileUserSource << "static void tree_" << tree["Name"].string_value() << "_expand_node_array(struct mw_tree_container_t *tree)\n"
+                "{\n"
+	            "    uint16_t new_node_array_size = mw_tree_container_get_size_node_array(tree) + " << tree["NodeArraySize"].number_value() << "U;\n"
+	            "    void *new_node_array = realloc(mw_tree_container_get_node_array(tree), new_node_array_size * sizeof(mw_tree_container_node_t));\n\n"
+	            "    if (new_node_array == NULL)\n"
+	            "    {\n"
+		        "        /* realloc failed */\n"
+		        "        return;\n"
+	            "    }\n\n"
+	            "    /* realloc success so set new array and size, contents copied automatically */\n"
+	            "    mw_tree_container_set_new_node_array(tree, (mw_tree_container_node_t *)new_node_array, new_node_array_size);\n"
+                "}\n\n";
+        }
+
+        for (auto& scrolling_tree : window["ScrollingTrees"].array_items())
+        {
+            if (scrolling_tree["StaticAllocated"].bool_value() == true)
+            {
+                continue;
+            }
+
+            outfileUserSource << "static void scrolling_tree_" << scrolling_tree["Name"].string_value() << "_expand_node_array(struct mw_tree_container_t *tree)\n"
+                "{\n"
+	            "    uint16_t new_node_array_size = mw_tree_container_get_size_node_array(tree) + " << scrolling_tree["NodeArraySize"].number_value() << "U;\n"
+	            "    void *new_node_array = realloc(mw_tree_container_get_node_array(tree), new_node_array_size * sizeof(mw_tree_container_node_t));\n\n"
+	            "    if (new_node_array == NULL)\n"
+	            "    {\n"
+		        "        /* realloc failed */\n"
+		        "        return;\n"
+	            "    }\n\n"
+	            "    /* realloc success so set new array and size, contents copied automatically */\n"
+	            "    mw_tree_container_set_new_node_array(tree, (mw_tree_container_node_t *)new_node_array, new_node_array_size);\n"
+                "}\n\n";
+        }
+    }
+
     // root functions and user_init function start
     outfileUserSource << "\nvoid mw_user_root_paint_function(const mw_gl_draw_info_t *draw_info)\n" 
 						 "{\n    mw_gl_set_solid_fill_colour(MW_HAL_LCD_PURPLE);\n" 
@@ -997,7 +1248,17 @@ int main(int argc, char **argv)
 						 "void mw_user_root_message_function(const mw_message_t *message)\n" 
 						 "{\n    (void)message;\n}\n\n" 
 						 "void mw_user_init(void)\n{\n" 
-						 "    mw_util_rect_t r;\n\n";
+						 "    mw_util_rect_t r;\n";
+
+    for (auto& window : json["Windows"].array_items())
+    {
+        if (window["Trees"].array_items().size() > 0 || window["ScrollingTrees"].array_items().size() > 0)
+        {
+            outfileUserSource << "    mw_handle_t intermediate_handle;\n";
+            break;
+        }
+    }
+    outfileUserSource << "\n";
 
 	// each window's set_rect and mw_add_window
     for (auto& window : json["Windows"].array_items())
@@ -1997,7 +2258,470 @@ int main(int argc, char **argv)
 			}	  
 			outfileUserSource << ",\n" 
 			    "        &tabs_" << tabs["Name"].string_value() << "_data);\n\n"; 	
-		}	        
+		}
+
+		// create trees
+		for (auto& tree : window["Trees"].array_items())
+		{
+			// check presence and format of required fields
+			if (tree["Name"].string_value() == "")
+			{
+				cout << "No or blank Name value for tree in window " << window["Name"].string_value() << endl;
+				exit(1);
+			}
+			if (!tree["X"].is_number())
+			{
+				cout << "No X value for tree " << tree["Name"].string_value() << " in window " << window["Name"].string_value() << endl;
+				exit(1);
+			}
+			if (!tree["Y"].is_number())
+			{
+				cout << "No Y value for tree " << tree["Name"].string_value() << " in window " << window["Name"].string_value() << endl;
+				exit(1);
+			}
+			if (!tree["Width"].is_number())
+			{
+				cout << "No Width value for tree " << tree["Name"].string_value() << " in window " << window["Name"].string_value() << endl;
+				exit(1);
+			}
+			if (!tree["Lines"].is_number())
+			{
+				cout << "No Lines value for tree " << tree["Name"].string_value() << " in window " << window["Name"].string_value() << endl;
+				exit(1);
+			}
+            if (tree["Lines"].number_value() < 1)
+			{
+				cout << "Too small Lines value for tree " << tree["Name"].string_value() << " in window " << window["Name"].string_value() << endl;
+				exit(1);
+			}
+			if (!tree["StaticAllocated"].is_bool())
+			{
+				cout << "No StaticAllocated values for tree " << tree["Name"].string_value() << " in window " << window["Name"].string_value() << endl;
+				exit(1);
+			}
+			if (!tree["NodeArraySize"].is_number())
+			{
+				cout << "No NodeArraySize values for tree " << tree["Name"].string_value() << " in window " << window["Name"].string_value() << endl;
+				exit(1);
+			}
+            if (tree["NodeArraySize"].number_value() < 1)
+			{
+				cout << "Too small NodeArraySize values for tree " << tree["Name"].string_value() << " in window " << window["Name"].string_value() << endl;
+				exit(1);
+			}
+            if (tree["FolderSeparator"].string_value().length() != 1)
+            {
+            	cout << "Tree field separator not length 1 for tree " << tree["Name"].string_value() << " in window " << window["Name"].string_value() << endl;
+				exit(1);
+            }
+            if (tree["RootFolderPath"].string_value() == "")
+            {
+            	cout << "Tree root folder cannot be empty for tree " << tree["Name"].string_value() << " in window " << window["Name"].string_value() << endl;
+				exit(1);
+            }
+            if (tree["RootFolderPath"].string_value().back() != tree["FolderSeparator"].string_value().front())
+            {
+            	cout << "Tree root folder must end in separator character for tree " << tree["Name"].string_value() << " in window " << window["Name"].string_value() << endl;
+				exit(1);
+            }
+            if (tree["NodeSelect"].string_value() == "None" && tree["NodeTypeSelect"].is_string())
+            {
+                cout << "Tree root folder illegal options for tree " << tree["Name"].string_value() << " in window " << window["Name"].string_value() << endl;
+				exit(1);
+            }
+            if (tree["FolderOnly"].bool_value() == true && tree["NodeTypeSelect"].string_value() != "FolderOnly")
+            {
+                cout << "Tree root folder illegal options for tree " << tree["Name"].string_value() << " in window " << window["Name"].string_value() << endl;
+				exit(1);
+            }
+            if (tree["RootFolderIsSelected"].is_bool() &&
+                tree["RootFolderIsSelected"].bool_value() == true &&
+                tree["NodeTypeSelect"].is_string() &&
+                tree["NodeTypeSelect"].string_value() == "FileOnly")
+            {
+                cout << "Tree root folder illegal options for tree " << tree["Name"].string_value() << " in window " << window["Name"].string_value() << endl;
+				exit(1);
+            }
+            if (tree["RootFolderIsSelected"].is_bool() &&
+                tree["RootFolderIsSelected"].bool_value() == true &&
+                tree["NodeSelect"].is_string() &&
+                tree["NodeSelect"].string_value() == "None")
+            {
+                cout << "Tree root folder illegal options for tree " << tree["Name"].string_value() << " in window " << window["Name"].string_value() << endl;
+				exit(1);
+            }
+
+            if (tree["StaticAllocated"].bool_value() == false)
+            {
+                outfileUserSource << "    tree_" << tree["Name"].string_value() <<
+                    "_nodes_array = (mw_tree_container_node_t *)malloc(sizeof(mw_tree_container_node_t) * (size_t)" <<
+                    tree["NodeArraySize"].number_value() << ");\n";
+            }
+
+			outfileUserSource << "    tree_" << tree["Name"].string_value() << "_data.number_of_lines = " <<
+                tree["Lines"].number_value() << ";\n";
+            if (tree["Icons"].is_bool() && tree["Icons"].bool_value() == true)
+            {
+                if (tree["FileIcon"].is_string())
+                {
+                    outfileUserSource << "    tree_" << tree["Name"].string_value() << "_data.file_icon = " <<
+                        tree["FileIcon"].string_value() << ";\n";
+                }
+                else
+                {
+                    if (large_size)
+                    {
+                        outfileUserSource << "    tree_" << tree["Name"].string_value() << "_data.file_icon = mw_bitmaps_file_icon_large;\n";
+                    }
+                    else
+                    {
+                        outfileUserSource << "    tree_" << tree["Name"].string_value() << "_data.file_icon = mw_bitmaps_file_icon_small;\n";
+                    }
+                }
+                if (tree["FolderIcon"].is_string())
+                {
+                    outfileUserSource << "    tree_" << tree["Name"].string_value() << "_data.folder_icon = " <<
+                        tree["FolderIcon"].string_value() << ";\n";
+                }
+                else
+                {
+                    if (large_size)
+                    {
+                        outfileUserSource << "    tree_" << tree["Name"].string_value() << "_data.folder_icon = mw_bitmaps_folder_icon_large;\n";
+                    }
+                    else
+                    {
+                        outfileUserSource << "    tree_" << tree["Name"].string_value() << "_data.folder_icon = mw_bitmaps_folder_icon_small;\n";
+                    }
+                }
+            }
+            else
+            {
+                outfileUserSource << "    tree_" << tree["Name"].string_value() << "_data.file_icon = NULL;\n";
+                outfileUserSource << "    tree_" << tree["Name"].string_value() << "_data.folder_icon = NULL;\n";
+            }
+
+            outfileUserSource << "    intermediate_handle = mw_tree_container_init(&tree_" << tree["Name"].string_value() << "_data.tree_container,\n" <<
+                "        tree_" << tree["Name"].string_value() << "_nodes_array,\n" <<
+                "        " << tree["NodeArraySize"].number_value() << ",\n" <<
+                "        tree_" << tree["Name"].string_value() << "_root_folder_label,\n" <<
+                "        0U";
+            if (tree["RootFolderIsOpen"].is_bool() && tree["RootFolderIsOpen"].bool_value() == true)
+            {
+                outfileUserSource << " | MW_TREE_CONTAINER_NODE_IS_OPEN";
+            }
+            if (tree["RootFolderIsSelected"].is_bool() && tree["RootFolderIsSelected"].bool_value() == true)
+            {
+                outfileUserSource << " | MW_TREE_CONTAINER_NODE_IS_SELECTED";
+            }
+            outfileUserSource << ",\n        0U";
+
+            if (tree["FolderOnly"].is_bool() && tree["FolderOnly"].bool_value() == true)
+            {
+                outfileUserSource << " | MW_TREE_CONTAINER_SHOW_FOLDERS_ONLY";
+            }
+            if (tree["NodeSelect"].is_string())
+            {
+                if (tree["NodeSelect"].string_value() == "None")
+                {
+                    outfileUserSource << " | MW_TREE_CONTAINER_NO_SELECT";
+                }
+                else if (tree["NodeSelect"].string_value() == "Single")
+                {
+                    outfileUserSource << " | MW_TREE_CONTAINER_SINGLE_SELECT_ONLY";
+                }
+            }
+            if (tree["NodeTypeSelect"].is_string())
+            {
+                if (tree["NodeTypeSelect"].string_value() == "FileOnly")
+                {
+                    outfileUserSource << " | MW_TREE_CONTAINER_FILE_SELECT_ONLY";
+                }
+                else if (tree["NodeTypeSelect"].string_value() == "FolderOnly")
+                {
+                    outfileUserSource << " | MW_TREE_CONTAINER_FOLDER_SELECT_ONLY";
+                }
+            }
+            outfileUserSource << ",\n";
+
+            if (tree["StaticAllocated"].bool_value() == true)
+            {
+                outfileUserSource << "        NULL,\n";
+            }
+            else
+            {
+                outfileUserSource << "        tree_" << tree["Name"].string_value() << "_expand_node_array,\n";
+            }
+            outfileUserSource << "        '" << tree["FolderSeparator"].string_value() << "');\n";
+
+            outfileUserSource << "    tree_" << tree["Name"].string_value() << "_data.root_handle = intermediate_handle;\n";
+			outfileUserSource << "    tree_" << tree["Name"].string_value() << "_handle = mw_ui_tree_add_new(" << tree["X"].int_value() << ",\n"
+				"        " << tree["Y"].int_value() << ",\n"
+				"        " << tree["Width"].int_value() << ",\n"
+			    "        window_" << window["Name"].string_value() << "_handle,\n"
+			    "        0U";
+			if (tree["Visible"].bool_value())
+			{
+				outfileUserSource << " | MW_CONTROL_FLAG_IS_VISIBLE";
+			}
+			if (tree["Enabled"].bool_value())
+			{
+				outfileUserSource << " | MW_CONTROL_FLAG_IS_ENABLED";
+			}
+			if (large_size)
+			{
+				outfileUserSource << " | MW_CONTROL_FLAG_LARGE_SIZE";
+			}
+			outfileUserSource << ",\n"
+			    "        &tree_" << tree["Name"].string_value() << "_data);\n\n";
+		}
+
+		// create scrolling trees
+		for (auto& scrolling_tree : window["ScrollingTrees"].array_items())
+		{
+			// check presence and format of required fields
+			if (scrolling_tree["Name"].string_value() == "")
+			{
+				cout << "No or blank Name value for scrolling tree in window " << window["Name"].string_value() << endl;
+				exit(1);
+			}
+			if (!scrolling_tree["X"].is_number())
+			{
+				cout << "No X value for scrolling tree " << scrolling_tree["Name"].string_value() << " in window " << window["Name"].string_value() << endl;
+				exit(1);
+			}
+			if (!scrolling_tree["Y"].is_number())
+			{
+				cout << "No Y value for scrolling tree " << scrolling_tree["Name"].string_value() << " in window " << window["Name"].string_value() << endl;
+				exit(1);
+			}
+			if (!scrolling_tree["Width"].is_number())
+			{
+				cout << "No Width value for scrolling tree " << scrolling_tree["Name"].string_value() << " in window " << window["Name"].string_value() << endl;
+				exit(1);
+			}
+			if (!scrolling_tree["Lines"].is_number())
+			{
+				cout << "No Lines value for scrolling tree " << scrolling_tree["Name"].string_value() << " in window " << window["Name"].string_value() << endl;
+				exit(1);
+			}
+            if (scrolling_tree["Lines"].number_value() < 1)
+			{
+				cout << "Too small Lines value for scrolling tree " << scrolling_tree["Name"].string_value() << " in window " << window["Name"].string_value() << endl;
+				exit(1);
+			}
+			if (!scrolling_tree["StaticAllocated"].is_bool())
+			{
+				cout << "No StaticAllocated values for scrolling tree " << scrolling_tree["Name"].string_value() << " in window " << window["Name"].string_value() << endl;
+				exit(1);
+			}
+			if (!scrolling_tree["NodeArraySize"].is_number())
+			{
+				cout << "No NodeArraySize values for scrolling tree " << scrolling_tree["Name"].string_value() << " in window " << window["Name"].string_value() << endl;
+				exit(1);
+			}
+            if (scrolling_tree["NodeArraySize"].number_value() < 1)
+			{
+				cout << "Too small NodeArraySize values for scrolling tree " << scrolling_tree["Name"].string_value() << " in window " << window["Name"].string_value() << endl;
+				exit(1);
+			}
+            if (scrolling_tree["FolderSeparator"].string_value().length() != 1)
+            {
+            	cout << "Tree field separator not length 1 for scrolling tree " << scrolling_tree["Name"].string_value() << " in window " << window["Name"].string_value() << endl;
+				exit(1);
+            }
+            if (scrolling_tree["RootFolderPath"].string_value() == "")
+            {
+            	cout << "Tree root folder cannot be empty for scrolling tree " << scrolling_tree["Name"].string_value() << " in window " << window["Name"].string_value() << endl;
+				exit(1);
+            }
+            if (scrolling_tree["RootFolderPath"].string_value().back() != scrolling_tree["FolderSeparator"].string_value().front())
+            {
+            	cout << "Tree root folder must end in separator character for scrolling tree " << scrolling_tree["Name"].string_value() << " in window " << window["Name"].string_value() << endl;
+				exit(1);
+            }
+            if (scrolling_tree["NodeSelect"].string_value() == "None" && scrolling_tree["NodeTypeSelect"].is_string())
+            {
+                cout << "Tree root folder illegal options for scrolling tree " << scrolling_tree["Name"].string_value() << " in window " << window["Name"].string_value() << endl;
+				exit(1);
+            }
+            if (scrolling_tree["FolderOnly"].bool_value() == true && scrolling_tree["NodeTypeSelect"].string_value() != "FolderOnly")
+            {
+                cout << "Tree root folder illegal options for scrolling tree " << scrolling_tree["Name"].string_value() << " in window " << window["Name"].string_value() << endl;
+				exit(1);
+            }
+            if (scrolling_tree["RootFolderIsSelected"].is_bool() &&
+                scrolling_tree["RootFolderIsSelected"].bool_value() == true &&
+                scrolling_tree["NodeTypeSelect"].is_string() &&
+                scrolling_tree["NodeTypeSelect"].string_value() == "FileOnly")
+            {
+                cout << "Tree root folder illegal options for scrolling tree " << scrolling_tree["Name"].string_value() << " in window " << window["Name"].string_value() << endl;
+				exit(1);
+            }
+            if (scrolling_tree["RootFolderIsSelected"].is_bool() &&
+                scrolling_tree["RootFolderIsSelected"].bool_value() == true &&
+                scrolling_tree["NodeSelect"].is_string() &&
+                scrolling_tree["NodeSelect"].string_value() == "None")
+            {
+                cout << "Tree root folder illegal options for scrolling tree " << scrolling_tree["Name"].string_value() << " in window " << window["Name"].string_value() << endl;
+				exit(1);
+            }
+
+            if (scrolling_tree["StaticAllocated"].bool_value() == false)
+            {
+                outfileUserSource << "    tree_" << scrolling_tree["Name"].string_value() <<
+                    "_nodes_array = (mw_tree_container_node_t *)malloc(sizeof(mw_tree_container_node_t) * (size_t)" <<
+                    scrolling_tree["NodeArraySize"].number_value() << ");\n";
+            }
+
+			outfileUserSource << "    scrolling_tree_" << scrolling_tree["Name"].string_value() << "_data.number_of_lines = " <<
+                scrolling_tree["Lines"].number_value() << ";\n";
+            if (scrolling_tree["Icons"].is_bool() && scrolling_tree["Icons"].bool_value() == true)
+            {
+                if (scrolling_tree["FileIcon"].is_string())
+                {
+                    outfileUserSource << "    scrolling_tree_" << scrolling_tree["Name"].string_value() << "_data.file_icon = " <<
+                        scrolling_tree["FileIcon"].string_value() << ";\n";
+                }
+                else
+                {
+                    if (large_size)
+                    {
+                        outfileUserSource << "    scrolling_tree_" << scrolling_tree["Name"].string_value() << "_data.file_icon = mw_bitmaps_file_icon_large;\n";
+                    }
+                    else
+                    {
+                        outfileUserSource << "    scrolling_tree_" << scrolling_tree["Name"].string_value() << "_data.file_icon = mw_bitmaps_file_icon_small;\n";
+                    }
+                }
+                if (scrolling_tree["FolderIcon"].is_string())
+                {
+                    outfileUserSource << "    scrolling_tree_" << scrolling_tree["Name"].string_value() << "_data.folder_icon = " <<
+                        scrolling_tree["FolderIcon"].string_value() << ";\n";
+                }
+                else
+                {
+                    if (large_size)
+                    {
+                        outfileUserSource << "    scrolling_tree_" << scrolling_tree["Name"].string_value() << "_data.folder_icon = mw_bitmaps_folder_icon_large;\n";
+                    }
+                    else
+                    {
+                        outfileUserSource << "    scrolling_tree_" << scrolling_tree["Name"].string_value() << "_data.folder_icon = mw_bitmaps_folder_icon_small;\n";
+                    }
+                }
+            }
+            else
+            {
+                outfileUserSource << "    scrolling_tree_" << scrolling_tree["Name"].string_value() << "_data.file_icon = NULL;\n";
+                outfileUserSource << "    scrolling_tree_" << scrolling_tree["Name"].string_value() << "_data.folder_icon = NULL;\n";
+            }
+
+            outfileUserSource << "    intermediate_handle = mw_tree_container_init(&scrolling_tree_" << scrolling_tree["Name"].string_value() << "_data.tree_container,\n" <<
+                "        scrolling_tree_" << scrolling_tree["Name"].string_value() << "_nodes_array,\n" <<
+                "        " << scrolling_tree["NodeArraySize"].number_value() << ",\n" <<
+                "        scrolling_tree_" << scrolling_tree["Name"].string_value() << "_root_folder_label,\n" <<
+                "        0U";
+            if (scrolling_tree["RootFolderIsOpen"].is_bool() && scrolling_tree["RootFolderIsOpen"].bool_value() == true)
+            {
+                outfileUserSource << " | MW_TREE_CONTAINER_NODE_IS_OPEN";
+            }
+            if (scrolling_tree["RootFolderIsSelected"].is_bool() && scrolling_tree["RootFolderIsSelected"].bool_value() == true)
+            {
+                outfileUserSource << " | MW_TREE_CONTAINER_NODE_IS_SELECTED";
+            }
+            outfileUserSource << ",\n        0U";
+
+            if (scrolling_tree["FolderOnly"].is_bool() && scrolling_tree["FolderOnly"].bool_value() == true)
+            {
+                outfileUserSource << " | MW_TREE_CONTAINER_SHOW_FOLDERS_ONLY";
+            }
+            if (scrolling_tree["NodeSelect"].is_string())
+            {
+                if (scrolling_tree["NodeSelect"].string_value() == "None")
+                {
+                    outfileUserSource << " | MW_TREE_CONTAINER_NO_SELECT";
+                }
+                else if (scrolling_tree["NodeSelect"].string_value() == "Single")
+                {
+                    outfileUserSource << " | MW_TREE_CONTAINER_SINGLE_SELECT_ONLY";
+                }
+            }
+            if (scrolling_tree["NodeTypeSelect"].is_string())
+            {
+                if (scrolling_tree["NodeTypeSelect"].string_value() == "FileOnly")
+                {
+                    outfileUserSource << " | MW_TREE_CONTAINER_FILE_SELECT_ONLY";
+                }
+                else if (scrolling_tree["NodeTypeSelect"].string_value() == "FolderOnly")
+                {
+                    outfileUserSource << " | MW_TREE_CONTAINER_FOLDER_SELECT_ONLY";
+                }
+            }
+            outfileUserSource << ",\n";
+
+            if (scrolling_tree["StaticAllocated"].bool_value() == true)
+            {
+                outfileUserSource << "        NULL,\n";
+            }
+            else
+            {
+                outfileUserSource << "        scrolling_tree_" << scrolling_tree["Name"].string_value() << "_expand_node_array,\n";
+            }
+            outfileUserSource << "        '" << scrolling_tree["FolderSeparator"].string_value() << "');\n";
+
+            outfileUserSource << "    scrolling_tree_" << scrolling_tree["Name"].string_value() << "_data.root_handle = intermediate_handle;\n";
+			outfileUserSource << "    scrolling_tree_" << scrolling_tree["Name"].string_value() << "_handle = mw_ui_tree_add_new(" << scrolling_tree["X"].int_value() << ",\n"
+				"        " << scrolling_tree["Y"].int_value() << ",\n"
+				"        " << scrolling_tree["Width"].int_value() << ",\n"
+			    "        window_" << window["Name"].string_value() << "_handle,\n"
+			    "        0U";
+			if (scrolling_tree["Visible"].bool_value())
+			{
+				outfileUserSource << " | MW_CONTROL_FLAG_IS_VISIBLE";
+			}
+			if (scrolling_tree["Enabled"].bool_value())
+			{
+				outfileUserSource << " | MW_CONTROL_FLAG_IS_ENABLED";
+			}
+			if (large_size)
+			{
+				outfileUserSource << " | MW_CONTROL_FLAG_LARGE_SIZE";
+			}
+			outfileUserSource << ",\n"
+			    "        &scrolling_tree_" << scrolling_tree["Name"].string_value() << "_data);\n\n";
+
+			if (large_size)
+			{
+				outfileUserSource << "    scrolling_tree_scroll_bar_vert_" << scrolling_tree["Name"].string_value() << "_handle = mw_ui_scroll_bar_vert_add_new(" << (scrolling_tree["X"].int_value() + scrolling_tree["Width"].int_value()) << ",\n"
+					"        " << scrolling_tree["Y"].int_value() << ",\n"
+					"        " << scrolling_tree["Lines"].int_value() << " * MW_UI_TREE_LARGE_ROW_HEIGHT,\n"
+					"        window_" << window["Name"].string_value() << "_handle,\n"
+					"        0";
+			}
+			else
+			{
+				outfileUserSource << "    scrolling_tree_scroll_bar_vert_" << scrolling_tree["Name"].string_value() << "_handle = mw_ui_scroll_bar_vert_add_new(" << (scrolling_tree["X"].int_value() + scrolling_tree["Width"].int_value()) << ",\n"
+					"        " << scrolling_tree["Y"].int_value() << ",\n"
+					"        " << scrolling_tree["Lines"].int_value() << " * MW_UI_TREE_ROW_HEIGHT,\n"
+					"        window_" << window["Name"].string_value() << "_handle,\n"
+					"        0U";
+			}
+			if (scrolling_tree["Visible"].bool_value())
+			{
+				outfileUserSource << " | MW_CONTROL_FLAG_IS_VISIBLE";
+			}
+			if (scrolling_tree["Enabled"].bool_value())
+			{
+				outfileUserSource << " | MW_CONTROL_FLAG_IS_ENABLED";
+			}
+			if (large_size)
+			{
+				outfileUserSource << " | MW_CONTROL_FLAG_LARGE_SIZE";
+			}
+			outfileUserSource << ",\n"
+			    "        &scrolling_tree_scroll_bar_vert_" << scrolling_tree["Name"].string_value() << "_data);\n\n";
+        }
     }
 
     outfileUserSource << "    mw_paint_all();\n}\n";
