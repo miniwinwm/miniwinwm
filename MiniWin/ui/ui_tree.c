@@ -425,7 +425,7 @@ static void tree_message_function(const mw_message_t *message)
 				}
 
 				mw_post_message(MW_SCROLL_BAR_SET_SCROLL_MESSAGE,
-						MW_UNUSED_MESSAGE_PARAMETER,
+						message->recipient_handle,
 						mw_get_control_parent_window_handle(message->recipient_handle),
 						((uint32_t)this_tree->lines_to_scroll * (uint32_t)UINT8_MAX) / (uint32_t)max_scroll_lines,
 						NULL,
@@ -433,17 +433,19 @@ static void tree_message_function(const mw_message_t *message)
 			}
 			else
 			{
-				/* scrolling not required so set scroll bar position back to 0 */
+				/* scrolling not required so set scroll bar position and lines to scroll back to 0 */
 				mw_post_message(MW_SCROLL_BAR_SET_SCROLL_MESSAGE,
-						MW_UNUSED_MESSAGE_PARAMETER,
+						message->recipient_handle,
 						mw_get_control_parent_window_handle(message->recipient_handle),
 						0U,
 						NULL,
 						MW_WINDOW_MESSAGE);
+
+				this_tree->lines_to_scroll = 0U;
 			}
 
 			mw_post_message(MW_TREE_SCROLLING_REQUIRED_MESSAGE,
-					MW_UNUSED_MESSAGE_PARAMETER,
+					message->recipient_handle,
 					mw_get_control_parent_window_handle(message->recipient_handle),
 					message_data,
 					NULL,

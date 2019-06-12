@@ -105,17 +105,15 @@ void window_file_tree_message_function(const mw_message_t *message)
 		break;
 
 	case MW_TREE_SCROLLING_REQUIRED_MESSAGE:
+		if (message->message_data >> 16 == 0U)
 		{
-			if (message->message_data >> 16 == 0U)
-			{
-				mw_set_control_enabled(scroll_bar_vert_handle, false);
-			}
-			else
-			{
-				mw_set_control_enabled(scroll_bar_vert_handle, true);
-			}
-			mw_paint_control(scroll_bar_vert_handle);
+			mw_set_control_enabled(scroll_bar_vert_handle, false);
 		}
+		else
+		{
+			mw_set_control_enabled(scroll_bar_vert_handle, true);
+		}
+		mw_paint_control(scroll_bar_vert_handle);
 		break;
 
 	case MW_SCROLL_BAR_SET_SCROLL_MESSAGE:

@@ -37,14 +37,10 @@ file icon           string  opt, defaults to standard file icon if not given
 root folder path    string  opt, defaults to /
 folder separator    string  mand, must be single character
 node select         string  opt from none, Single, Multi, defaults to Multi
-node_type_select    string  opt from FileOnly, FolderOnly, All, defaults to All
+node_type_select    string  opt from FileOnly, FoldersOnly, All, defaults to All
 folders only        bool    opt, defaults to false
 root_folder_is_open bool    opt, defaults to false
 root_folder_is_selected bool    opt, defaults to false
-
-todo
-response handlers for both tree types
-scrolling tree interaction with scroll bar
 
 new errors
 
@@ -797,8 +793,8 @@ int main(int argc, char **argv)
                 exit(1);
             }
 
-            outfileUserSource << "static char tree_" << tree["Name"].string_value() << "_root_folder_label[] = {\"" <<
-                tree["RootFolderPath"].string_value() << "\"};\n";
+            outfileUserSource << "static char tree_" << tree["Name"].string_value() << "_root_folder_label[] = \"" <<
+                tree["RootFolderPath"].string_value() << "\";\n";
             
             if (tree["StaticAllocated"].bool_value() == true)
             {                              
@@ -835,8 +831,8 @@ int main(int argc, char **argv)
                 exit(1);
             }
 
-            outfileUserSource << "static char scrolling_tree_" << scrolling_tree["Name"].string_value() << "_root_folder_label[] = {\"" <<
-                scrolling_tree["RootFolderPath"].string_value() << "\"};\n";
+            outfileUserSource << "static char scrolling_tree_" << scrolling_tree["Name"].string_value() << "_root_folder_label[] = \"" <<
+                scrolling_tree["RootFolderPath"].string_value() << "\";\n";
 
             if (scrolling_tree["StaticAllocated"].bool_value() == true)
             {
@@ -2329,7 +2325,7 @@ int main(int argc, char **argv)
                 cout << "Tree root folder illegal options for tree " << tree["Name"].string_value() << " in window " << window["Name"].string_value() << endl;
 				exit(1);
             }
-            if (tree["FolderOnly"].bool_value() == true && tree["NodeTypeSelect"].string_value() != "FolderOnly")
+            if (tree["FoldersOnly"].bool_value() == true && tree["NodeTypeSelect"].string_value() != "FoldersOnly")
             {
                 cout << "Tree root folder illegal options for tree " << tree["Name"].string_value() << " in window " << window["Name"].string_value() << endl;
 				exit(1);
@@ -2416,7 +2412,7 @@ int main(int argc, char **argv)
             }
             outfileUserSource << ",\n        0U";
 
-            if (tree["FolderOnly"].is_bool() && tree["FolderOnly"].bool_value() == true)
+            if (tree["FoldersOnly"].is_bool() && tree["FoldersOnly"].bool_value() == true)
             {
                 outfileUserSource << " | MW_TREE_CONTAINER_SHOW_FOLDERS_ONLY";
             }
@@ -2437,7 +2433,7 @@ int main(int argc, char **argv)
                 {
                     outfileUserSource << " | MW_TREE_CONTAINER_FILE_SELECT_ONLY";
                 }
-                else if (tree["NodeTypeSelect"].string_value() == "FolderOnly")
+                else if (tree["NodeTypeSelect"].string_value() == "FoldersOnly")
                 {
                     outfileUserSource << " | MW_TREE_CONTAINER_FOLDER_SELECT_ONLY";
                 }
@@ -2545,7 +2541,7 @@ int main(int argc, char **argv)
                 cout << "Tree root folder illegal options for scrolling tree " << scrolling_tree["Name"].string_value() << " in window " << window["Name"].string_value() << endl;
 				exit(1);
             }
-            if (scrolling_tree["FolderOnly"].bool_value() == true && scrolling_tree["NodeTypeSelect"].string_value() != "FolderOnly")
+            if (scrolling_tree["FoldersOnly"].bool_value() == true && scrolling_tree["NodeTypeSelect"].string_value() != "FoldersOnly")
             {
                 cout << "Tree root folder illegal options for scrolling tree " << scrolling_tree["Name"].string_value() << " in window " << window["Name"].string_value() << endl;
 				exit(1);
@@ -2632,7 +2628,7 @@ int main(int argc, char **argv)
             }
             outfileUserSource << ",\n        0U";
 
-            if (scrolling_tree["FolderOnly"].is_bool() && scrolling_tree["FolderOnly"].bool_value() == true)
+            if (scrolling_tree["FoldersOnly"].is_bool() && scrolling_tree["FoldersOnly"].bool_value() == true)
             {
                 outfileUserSource << " | MW_TREE_CONTAINER_SHOW_FOLDERS_ONLY";
             }
@@ -2653,7 +2649,7 @@ int main(int argc, char **argv)
                 {
                     outfileUserSource << " | MW_TREE_CONTAINER_FILE_SELECT_ONLY";
                 }
-                else if (scrolling_tree["NodeTypeSelect"].string_value() == "FolderOnly")
+                else if (scrolling_tree["NodeTypeSelect"].string_value() == "FoldersOnly")
                 {
                     outfileUserSource << " | MW_TREE_CONTAINER_FOLDER_SELECT_ONLY";
                 }
@@ -2929,7 +2925,7 @@ int main(int argc, char **argv)
 		}	
 		
 		// create vert scroll bars message handlers
-		if (window["ScrollBarsVert"].array_items().size() > 0 || window["ScrollingListBoxes"].array_items().size() > 0 || window["ScrollingTextBoxes"].array_items().size() > 0)
+		if (window["ScrollBarsVert"].array_items().size() > 0 || window["ScrollingListBoxes"].array_items().size() > 0 || window["ScrollingTextBoxes"].array_items().size() > 0 || window["ScrollingTrees"].array_items().size() > 0)
 		{
 			outfileWindowSource << 
 						"    case MW_CONTROL_VERT_SCROLL_BAR_SCROLLED_MESSAGE:\n"; 
@@ -2981,7 +2977,35 @@ int main(int argc, char **argv)
 						"            /* Paint the list box to show its new scrolled position */\n"
 						"            mw_paint_control(scrolling_list_box_" << scrolling_list_box_scroll_bar_vert["Name"].string_value() << "_handle);\n"
 						"        }\n";
-			}			
+			}
+			for (auto& scrolling_tree_scroll_bar_vert : window["ScrollingTrees"].array_items())
+			{
+				if (first)
+				{
+					outfileWindowSource <<
+						"        if (message->sender_handle == " << "scrolling_tree_scroll_bar_vert_" + scrolling_tree_scroll_bar_vert["Name"].string_value() + "_handle" << ")\n";
+					first = false;
+				}
+				else
+				{
+					outfileWindowSource <<
+						"        else if (message->sender_handle == " << "scrolling_tree_scroll_bar_vert_" + scrolling_tree_scroll_bar_vert["Name"].string_value() + "_handle" << ")\n";
+				    elseif = true;
+                }
+				outfileWindowSource <<
+						"        {\n"
+						"            /* Post message to tree from its associated scroll bar to get it to scroll */\n"
+						"            mw_post_message(MW_TREE_SCROLL_BAR_POSITION_MESSAGE,\n"
+						"                message->recipient_handle,\n"
+						"                scrolling_tree_" << scrolling_tree_scroll_bar_vert["Name"].string_value() << "_handle,\n"
+						"                message->message_data,\n"
+						"                NULL,\n"
+						"                MW_CONTROL_MESSAGE);\n"
+						"\n"
+						"            /* Paint the tree to show its new scrolled position */\n"
+						"            mw_paint_control(scrolling_tree_" << scrolling_tree_scroll_bar_vert["Name"].string_value() << "_handle);\n"
+						"        }\n";
+			}
 			for (auto& scrolling_text_box_scroll_bar_vert : window["ScrollingTextBoxes"].array_items())
 			{
 				if (first)
@@ -3016,7 +3040,84 @@ int main(int argc, char **argv)
             }
 			outfileWindowSource << "        break;\n\n";
 		}					
-		
+
+        // Create scrolling required message handler for scrolling trees
+		if (window["ScrollingTrees"].array_items().size() > 0)
+		{
+            bool first = true;
+            bool elseif = false;
+           	outfileWindowSource <<
+		        "    case MW_TREE_SCROLLING_REQUIRED_MESSAGE:\n";
+			for (auto& scrolling_tree : window["ScrollingTrees"].array_items())
+            {
+                if (first)
+                {
+    				outfileWindowSource <<
+    					"        if (message->sender_handle == " << "scrolling_tree_" + scrolling_tree["Name"].string_value() + "_handle" << ")\n";
+    				first = false;
+    			}
+    			else
+    			{
+    				outfileWindowSource <<
+    					"        else if (message->sender_handle == " << "scrolling_tree_" + scrolling_tree["Name"].string_value() + "_handle" << ")\n";
+    			    elseif = true;
+                }
+                outfileWindowSource << "        {\n"
+                    "            /* Set scroll bar associated with a tree control enabled or disabled according to message from the tree control */\n"
+                    "            if (message->message_data >> 16 == 0U)\n            {\n";
+                outfileWindowSource << "                mw_set_control_enabled(scrolling_tree_scroll_bar_vert_" << scrolling_tree["Name"].string_value() << "_handle, false);\n";
+                outfileWindowSource << "            }\n            else\n            {\n";
+                outfileWindowSource << "                mw_set_control_enabled(scrolling_tree_scroll_bar_vert_" << scrolling_tree["Name"].string_value() << "_handle, true);\n";
+                outfileWindowSource << "            }\n";
+                outfileWindowSource << "            mw_paint_control(scrolling_tree_scroll_bar_vert_" << scrolling_tree["Name"].string_value() << "_handle);\n";
+                outfileWindowSource << "        }\n";
+
+                if (elseif)
+                {
+    			    outfileWindowSource << "        else\n        {\n            /* Keep MISRA happy */\n        }\n";
+                }
+            }
+            outfileWindowSource << "        break;\n\n";
+        }
+
+        // Create set scroll bar poistion message handler for scrolling trees
+		if (window["ScrollingTrees"].array_items().size() > 0)
+		{
+            bool first = true;
+            bool elseif = false;
+           	outfileWindowSource <<
+		        "    case MW_SCROLL_BAR_SET_SCROLL_MESSAGE:\n";
+			for (auto& scrolling_tree : window["ScrollingTrees"].array_items())
+            {
+                if (first)
+                {
+    				outfileWindowSource <<
+    					"        if (message->sender_handle == " << "scrolling_tree_" + scrolling_tree["Name"].string_value() + "_handle" << ")\n";
+    				first = false;
+    			}
+    			else
+    			{
+    				outfileWindowSource <<
+    					"        else if (message->sender_handle == " << "scrolling_tree_" + scrolling_tree["Name"].string_value() + "_handle" << ")\n";
+    			    elseif = true;
+                }
+                outfileWindowSource << "        {\n"
+                    "            /* Pass set scroll bar position message on from tree control to the scroll bar associated with it */\n"
+    				"            mw_post_message(MW_SCROLL_BAR_SET_SCROLL_MESSAGE,\n"
+					"            message->recipient_handle,\n"
+                    "            scrolling_tree_scroll_bar_vert_" << scrolling_tree["Name"].string_value() << "_handle,\n"
+					"            message->message_data,\n"
+					"            NULL,\n"
+					"            MW_CONTROL_MESSAGE);\n        }\n";
+
+                if (elseif)
+                {
+    			    outfileWindowSource << "        else\n        {\n            /* Keep MISRA happy */\n        }\n";
+                }
+            }
+            outfileWindowSource << "        break;\n\n";
+        }
+
 		// create radio buttons message handlers
 		if (window["RadioButtons"].array_items().size() > 0)
 		{
@@ -3050,7 +3151,7 @@ int main(int argc, char **argv)
 			outfileWindowSource << "        break;\n\n";
 		}			
 
-		// create scrolling list boxes message handlers
+		// create list boxes and scrolling list boxes message handlers
 		if (window["ListBoxes"].array_items().size() > 0 || window["ScrollingListBoxes"].array_items().size() > 0)
 		{
 			outfileWindowSource << 
@@ -3121,6 +3222,154 @@ int main(int argc, char **argv)
 				{
 					outfileWindowSource <<
 						"        else if (message->sender_handle == " << "tabs_" + tabs["Name"].string_value() + "_handle" << ")\n";
+				    elseif = true;
+                }
+				outfileWindowSource <<
+						"        {\n"
+						"            /* Add your handler code for this control here */\n"
+						"        }\n";
+			}
+            if (elseif)
+            {
+			    outfileWindowSource << "        else\n        {\n            /* Keep MISRA happy */\n        }\n";
+            }
+			outfileWindowSource << "        break;\n\n";
+		}
+
+		// create scrolling list boxes message handlers
+		if (window["Trees"].array_items().size() > 0 || window["ScrollingTrees"].array_items().size() > 0)
+		{
+			outfileWindowSource <<
+						"    case MW_TREE_NODE_SELECTED_MESSAGE:\n";
+			bool first = true;
+            bool elseif = false;
+			for (auto& tree : window["Trees"].array_items())
+			{
+				if (first)
+				{
+					outfileWindowSource <<
+						"        if (message->sender_handle == " << "tree_" + tree["Name"].string_value() + "_handle" << ")\n";
+					first = false;
+				}
+				else
+				{
+					outfileWindowSource <<
+						"        else if (message->sender_handle == " << "tree_" + tree["Name"].string_value() + "_handle" << ")\n";
+				    elseif = true;
+                }
+				outfileWindowSource <<
+						"        {\n"
+						"            /* Add your handler code for this control here */\n"
+						"        }\n";
+			}
+			for (auto& scrolling_tree : window["ScrollingTrees"].array_items())
+			{
+				if (first)
+				{
+					outfileWindowSource <<
+						"        if (message->sender_handle == " << "scrolling_tree_" + scrolling_tree["Name"].string_value() + "_handle" << ")\n";
+					first = false;
+				}
+				else
+				{
+					outfileWindowSource <<
+						"        else if (message->sender_handle == " << "scrolling_tree_" + scrolling_tree["Name"].string_value() + "_handle" << ")\n";
+				    elseif = true;
+                }
+				outfileWindowSource <<
+						"        {\n"
+						"            /* Add your handler code for this control here */\n"
+						"        }\n";
+			}
+            if (elseif)
+            {
+			    outfileWindowSource << "        else\n        {\n            /* Keep MISRA happy */\n        }\n";
+            }
+			outfileWindowSource << "        break;\n\n";
+
+			outfileWindowSource <<
+						"    case MW_TREE_FOLDER_OPENED_MESSAGE:\n";
+			first = true;
+            elseif = false;
+			for (auto& tree : window["Trees"].array_items())
+			{
+				if (first)
+				{
+					outfileWindowSource <<
+						"        if (message->sender_handle == " << "tree_" + tree["Name"].string_value() + "_handle" << ")\n";
+					first = false;
+				}
+				else
+				{
+					outfileWindowSource <<
+						"        else if (message->sender_handle == " << "tree_" + tree["Name"].string_value() + "_handle" << ")\n";
+				    elseif = true;
+                }
+				outfileWindowSource <<
+						"        {\n"
+						"            /* Add your handler code for this control here */\n"
+						"        }\n";
+			}
+			for (auto& scrolling_tree : window["ScrollingTrees"].array_items())
+			{
+				if (first)
+				{
+					outfileWindowSource <<
+						"        if (message->sender_handle == " << "scrolling_tree_" + scrolling_tree["Name"].string_value() + "_handle" << ")\n";
+					first = false;
+				}
+				else
+				{
+					outfileWindowSource <<
+						"        else if (message->sender_handle == " << "scrolling_tree_" + scrolling_tree["Name"].string_value() + "_handle" << ")\n";
+				    elseif = true;
+                }
+				outfileWindowSource <<
+						"        {\n"
+						"            /* Add your handler code for this control here */\n"
+						"        }\n";
+			}
+            if (elseif)
+            {
+			    outfileWindowSource << "        else\n        {\n            /* Keep MISRA happy */\n        }\n";
+            }
+			outfileWindowSource << "        break;\n\n";
+
+			outfileWindowSource <<
+						"    case MW_TREE_FOLDER_CLOSED_MESSAGE:\n";
+			first = true;
+            elseif = false;
+			for (auto& tree : window["Trees"].array_items())
+			{
+				if (first)
+				{
+					outfileWindowSource <<
+						"        if (message->sender_handle == " << "tree_" + tree["Name"].string_value() + "_handle" << ")\n";
+					first = false;
+				}
+				else
+				{
+					outfileWindowSource <<
+						"        else if (message->sender_handle == " << "tree_" + tree["Name"].string_value() + "_handle" << ")\n";
+				    elseif = true;
+                }
+				outfileWindowSource <<
+						"        {\n"
+						"            /* Add your handler code for this control here */\n"
+						"        }\n";
+			}
+			for (auto& scrolling_tree : window["ScrollingTrees"].array_items())
+			{
+				if (first)
+				{
+					outfileWindowSource <<
+						"        if (message->sender_handle == " << "scrolling_tree_" + scrolling_tree["Name"].string_value() + "_handle" << ")\n";
+					first = false;
+				}
+				else
+				{
+					outfileWindowSource <<
+						"        else if (message->sender_handle == " << "scrolling_tree_" + scrolling_tree["Name"].string_value() + "_handle" << ")\n";
 				    elseif = true;
                 }
 				outfileWindowSource <<

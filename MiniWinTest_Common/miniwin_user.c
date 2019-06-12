@@ -88,26 +88,26 @@ static const mw_ui_list_box_entry list_box_3_entries[] = {
 		{list_box_label_icon, NULL},
 		{list_box_label_root, NULL}};
 
-static char tabs_auto_label_1[] = {"Freddy"};
-static char tabs_auto_label_2[] = {"Bert"};
-static char tabs_auto_label_3[] = {"Pete"};
-static char tabs_fixed_label_1[] = {"Freddy"};
-static char tabs_fixed_label_2[] = {"Bert"};
-static char tabs_fixed_label_3[] = {"Pete"};
+static char tabs_auto_label_1[] = "Freddy";
+static char tabs_auto_label_2[] = "Bert";
+static char tabs_auto_label_3[] = "Pete";
+static char tabs_fixed_label_1[] = "Freddy";
+static char tabs_fixed_label_2[] = "Bert";
+static char tabs_fixed_label_3[] = "Pete";
 static char *tabs_labels_auto[] = {tabs_auto_label_1, tabs_auto_label_2, tabs_auto_label_3};
 static char *tabs_labels_fixed[] = {tabs_fixed_label_1, tabs_fixed_label_2, tabs_fixed_label_3};
 
-static char tree_root_folder_label[] = {"Root/"};
-static char tree_folder1_label[] = {"Foldy1"};
-static char tree_folder2_label[] = {"fold2"};
-static char tree_folder3_label[] = {"fold3"};
-static char tree_file1_label[] = {"File1"};
-static char tree_file2_label[] = {"File2"};
-static char tree_file3_label[] = {"File3"};
-static char tree_file4_label[] = {"File4"};
-static char tree_file5_label[] = {"File5"};
-static char tree_file6_label[] = {"File6"};
-static char tree_file7_label[] = {"File7"};
+static char tree_root_folder_label[] = "Root/";
+static char tree_folder1_label[] = "Foldy1";
+static char tree_folder2_label[] = "fold2";
+static char tree_folder3_label[] = "fold3";
+static char tree_file1_label[] = "File1";
+static char tree_file2_label[] = "File2";
+static char tree_file3_label[] = "File3";
+static char tree_file4_label[] = "File4";
+static char tree_file5_label[] = "File5";
+static char tree_file6_label[] = "File6";
+static char tree_file7_label[] = "File7";
 
 /************
 *** TYPES ***

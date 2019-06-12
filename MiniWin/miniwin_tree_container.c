@@ -50,7 +50,6 @@ SOFTWARE.
 **********************/
 
 static char empty_string[] = "";
-static char root_folder_label_stripped[MW_TREE_CONTAINER_NODE_LABEL_MAX_SIZE];
 
 /********************************
 *** LOCAL FUNCTION PROTOTYPES ***
@@ -165,14 +164,14 @@ static void remove_all_children(struct mw_tree_container_t *tree, uint16_t paren
 mw_handle_t mw_tree_container_init(struct mw_tree_container_t *tree,
 		mw_tree_container_node_t *nodes_array,
 		uint16_t nodes_array_size,
-		char *root_folder_label,
+		char *root_folder_path,
 		uint8_t root_node_flags,
 		uint8_t tree_flags,
 		mw_tree_container_no_space_callback_t *no_space_callback,
 		char folder_separator)
 {
 	/* check pointers aren't null */
-	if (tree == NULL || root_folder_label == NULL || nodes_array == NULL || nodes_array_size == 0U)
+	if (tree == NULL || root_folder_path == NULL || nodes_array == NULL || nodes_array_size == 0U)
 	{
 		MW_ASSERT((bool)false, "Null pointer");
 
@@ -190,17 +189,17 @@ mw_handle_t mw_tree_container_init(struct mw_tree_container_t *tree,
 	}
 
 	/* check root folder label is at least as long as folder separator */
-	if (strlen(root_folder_label) < (size_t)1)
+	if (strlen(root_folder_path) < (size_t)1)
 	{
-		MW_ASSERT((bool)false, "Bad format tree root folder label");
+		MW_ASSERT((bool)false, "Bad format tree root folder path");
 
 		return MW_INVALID_HANDLE;
 	}
 
 	/* check that root folder label ends in folder separator character */
-	if (root_folder_label[strlen(root_folder_label) - (size_t)1] != folder_separator)
+	if (root_folder_path[strlen(root_folder_path) - (size_t)1] != folder_separator)
 	{
-		MW_ASSERT((bool)false, "Bad format tree root folder label");
+		MW_ASSERT((bool)false, "Bad format tree root folder path");
 
 		return MW_INVALID_HANDLE;
 	}
@@ -211,16 +210,16 @@ mw_handle_t mw_tree_container_init(struct mw_tree_container_t *tree,
 	tree->nodes_array = nodes_array;
 	tree->tree_flags = tree_flags;
 	tree->nodes_array[ROOT_FOLDER_ID].node_flags = MW_TREE_CONTAINER_NODE_IS_FOLDER | root_node_flags;
-	(void)mw_util_safe_strcpy(tree->nodes_array[ROOT_FOLDER_ID].label, (size_t)MW_TREE_CONTAINER_NODE_LABEL_MAX_SIZE, root_folder_label);
+	(void)mw_util_safe_strcpy(tree->nodes_array[ROOT_FOLDER_ID].label, (size_t)MW_TREE_CONTAINER_NODE_LABEL_MAX_SIZE, root_folder_path);
 	tree->nodes_array[ROOT_FOLDER_ID].level = 0U;
 	tree->nodes_array[ROOT_FOLDER_ID].handle = get_next_handle();
 	tree->no_space_callback = no_space_callback;
 
-	/* set up root folder label copy stripped of its separator character */
-	(void)mw_util_safe_strcpy(root_folder_label_stripped,
+	/* set up root folder label stripped of the separator character at the end of the path */
+	(void)mw_util_safe_strcpy(tree->root_folder_label,
 			MW_TREE_CONTAINER_NODE_LABEL_MAX_SIZE,
 			tree->nodes_array[ROOT_FOLDER_ID].label);
-	root_folder_label_stripped[strlen(root_folder_label_stripped) - (size_t)1] = '\0';
+	tree->root_folder_label[strlen(tree->root_folder_label) - (size_t)1] = '\0';
 
 	mw_tree_container_empty(tree);
 
@@ -566,7 +565,7 @@ void mw_tree_container_change_node_label(struct mw_tree_container_t *tree, mw_ha
 
 	if (node_id == ROOT_FOLDER_ID)
 	{
-		(void)mw_util_safe_strcpy(root_folder_label_stripped,
+		(void)mw_util_safe_strcpy(tree->root_folder_label,
 				MW_TREE_CONTAINER_NODE_LABEL_MAX_SIZE,
 				tree->nodes_array[ROOT_FOLDER_ID].label);
 	}
@@ -880,7 +879,7 @@ char *mw_tree_container_get_node_label(struct mw_tree_container_t *tree, mw_hand
 
 	if (node_id == ROOT_FOLDER_ID)
 	{
-		return root_folder_label_stripped;
+		return tree->root_folder_label;
 	}
 
 	return (tree->nodes_array[node_id].label);
