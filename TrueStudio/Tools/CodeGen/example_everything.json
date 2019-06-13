@@ -289,7 +289,7 @@
            "RootFolderPath": "Root/",
            "FolderSeparator": "/",
            "NodeSelect": "Multi",
-           "NodeTypeSelect": "All",
+           "NodeTypeSelect": "FolderOnly",
            "FoldersOnly": false,
            "RootFolderIsOpen": false,
 		   "Enabled": true,

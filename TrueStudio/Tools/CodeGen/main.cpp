@@ -24,40 +24,6 @@ SOFTWARE.
 
 */
 
-/*
-Updates needed for tree control
-
-fields needed in json
-number of lines     int     mand
-static allocated    bool    mand
-node array size     int     mand
-icons               bool    opt, defaults to true
-folder icon         string  opt, defaults to standard folder icon if not given
-file icon           string  opt, defaults to standard file icon if not given
-root folder path    string  opt, defaults to /
-folder separator    string  mand, must be single character
-node select         string  opt from none, Single, Multi, defaults to Multi
-node_type_select    string  opt from FileOnly, FoldersOnly, All, defaults to All
-folders only        bool    opt, defaults to false
-root_folder_is_open bool    opt, defaults to false
-root_folder_is_selected bool    opt, defaults to false
-
-new errors
-
-"No allocation type specified for tree: "
-"No node array size specified for tree: " 
-"No root folder path specified for scrolling tree:"
-"No StaticAllocated values for tree "
-"No NodeArraySize values for tree "
-"Tree field separator not length 1 for tree "
-"Tree root folder cannot be empty for tree "
-"Tree root folder must end in separator character for tree "
-"Too small Lines value for tree "
-"Too small NodeArraySize values for tree "
-"Tree root folder illegal options for tree "
-
-*/
-
 #include <string>
 #include <iostream>
 #include <vector>
@@ -2290,16 +2256,6 @@ int main(int argc, char **argv)
 				cout << "Too small Lines value for tree " << tree["Name"].string_value() << " in window " << window["Name"].string_value() << endl;
 				exit(1);
 			}
-			if (!tree["StaticAllocated"].is_bool())
-			{
-				cout << "No StaticAllocated values for tree " << tree["Name"].string_value() << " in window " << window["Name"].string_value() << endl;
-				exit(1);
-			}
-			if (!tree["NodeArraySize"].is_number())
-			{
-				cout << "No NodeArraySize values for tree " << tree["Name"].string_value() << " in window " << window["Name"].string_value() << endl;
-				exit(1);
-			}
             if (tree["NodeArraySize"].number_value() < 1)
 			{
 				cout << "Too small NodeArraySize values for tree " << tree["Name"].string_value() << " in window " << window["Name"].string_value() << endl;
@@ -2307,7 +2263,7 @@ int main(int argc, char **argv)
 			}
             if (tree["FolderSeparator"].string_value().length() != 1)
             {
-            	cout << "Tree field separator not length 1 for tree " << tree["Name"].string_value() << " in window " << window["Name"].string_value() << endl;
+            	cout << "Tree folder separator not length 1 for tree " << tree["Name"].string_value() << " in window " << window["Name"].string_value() << endl;
 				exit(1);
             }
             if (tree["RootFolderPath"].string_value() == "")
@@ -2322,13 +2278,21 @@ int main(int argc, char **argv)
             }
             if (tree["NodeSelect"].string_value() == "None" && tree["NodeTypeSelect"].is_string())
             {
-                cout << "Tree root folder illegal options for tree " << tree["Name"].string_value() << " in window " << window["Name"].string_value() << endl;
-				exit(1);
+                cout << "Tree illegal options for tree " << tree["Name"].string_value() << " in window " << window["Name"].string_value() << endl;
+                cout << "NodeSelect is None but NodeTypeSelect is specified\n";
+                exit(1);
             }
-            if (tree["FoldersOnly"].bool_value() == true && tree["NodeTypeSelect"].string_value() != "FoldersOnly")
+            if (tree["NodeSelect"].string_value() == "None" && tree["RootFolderIsSelected"].is_bool())
             {
-                cout << "Tree root folder illegal options for tree " << tree["Name"].string_value() << " in window " << window["Name"].string_value() << endl;
-				exit(1);
+                cout << "Tree illegal options for tree " << tree["Name"].string_value() << " in window " << window["Name"].string_value() << endl;
+                cout << "NodeSelect is None but RootFolderIsSelected is specified\n";
+                exit(1);
+            }
+            if (tree["FoldersOnly"].bool_value() == true && tree["NodeTypeSelect"].string_value() != "FoldersOnly" && tree["NodeSelect"] != "None")
+            {
+                cout << "Tree illegal options for tree " << tree["Name"].string_value() << " in window " << window["Name"].string_value() << endl;
+                cout << "FoldersOnly is true but NodeTypeSelect is not FoldersOnly\n";
+                exit(1);
             }
             if (tree["RootFolderIsSelected"].is_bool() &&
                 tree["RootFolderIsSelected"].bool_value() == true &&
@@ -2336,7 +2300,8 @@ int main(int argc, char **argv)
                 tree["NodeTypeSelect"].string_value() == "FileOnly")
             {
                 cout << "Tree root folder illegal options for tree " << tree["Name"].string_value() << " in window " << window["Name"].string_value() << endl;
-				exit(1);
+                cout << "RootFolderIsSelected is true but NodeTypeSelect is FileOnly\n";
+                exit(1);
             }
             if (tree["RootFolderIsSelected"].is_bool() &&
                 tree["RootFolderIsSelected"].bool_value() == true &&
@@ -2344,7 +2309,8 @@ int main(int argc, char **argv)
                 tree["NodeSelect"].string_value() == "None")
             {
                 cout << "Tree root folder illegal options for tree " << tree["Name"].string_value() << " in window " << window["Name"].string_value() << endl;
-				exit(1);
+                cout << "RootFolderIsSelected is true but NodeSelect is None\n";
+            	exit(1);
             }
 
             if (tree["StaticAllocated"].bool_value() == false)
@@ -2404,7 +2370,7 @@ int main(int argc, char **argv)
                 "        0U";
             if (tree["RootFolderIsOpen"].is_bool() && tree["RootFolderIsOpen"].bool_value() == true)
             {
-                outfileUserSource << " | MW_TREE_CONTAINER_NODE_IS_OPEN";
+                outfileUserSource << " | MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN";
             }
             if (tree["RootFolderIsSelected"].is_bool() && tree["RootFolderIsSelected"].bool_value() == true)
             {
@@ -2433,7 +2399,7 @@ int main(int argc, char **argv)
                 {
                     outfileUserSource << " | MW_TREE_CONTAINER_FILE_SELECT_ONLY";
                 }
-                else if (tree["NodeTypeSelect"].string_value() == "FoldersOnly")
+                else if (tree["NodeTypeSelect"].string_value() == "FolderOnly")
                 {
                     outfileUserSource << " | MW_TREE_CONTAINER_FOLDER_SELECT_ONLY";
                 }
@@ -2506,16 +2472,6 @@ int main(int argc, char **argv)
 				cout << "Too small Lines value for scrolling tree " << scrolling_tree["Name"].string_value() << " in window " << window["Name"].string_value() << endl;
 				exit(1);
 			}
-			if (!scrolling_tree["StaticAllocated"].is_bool())
-			{
-				cout << "No StaticAllocated values for scrolling tree " << scrolling_tree["Name"].string_value() << " in window " << window["Name"].string_value() << endl;
-				exit(1);
-			}
-			if (!scrolling_tree["NodeArraySize"].is_number())
-			{
-				cout << "No NodeArraySize values for scrolling tree " << scrolling_tree["Name"].string_value() << " in window " << window["Name"].string_value() << endl;
-				exit(1);
-			}
             if (scrolling_tree["NodeArraySize"].number_value() < 1)
 			{
 				cout << "Too small NodeArraySize values for scrolling tree " << scrolling_tree["Name"].string_value() << " in window " << window["Name"].string_value() << endl;
@@ -2538,13 +2494,21 @@ int main(int argc, char **argv)
             }
             if (scrolling_tree["NodeSelect"].string_value() == "None" && scrolling_tree["NodeTypeSelect"].is_string())
             {
-                cout << "Tree root folder illegal options for scrolling tree " << scrolling_tree["Name"].string_value() << " in window " << window["Name"].string_value() << endl;
-				exit(1);
+                cout << "Tree illegal options for scrolling tree " << scrolling_tree["Name"].string_value() << " in window " << window["Name"].string_value() << endl;
+                cout << "NodeSelect is None but NodeTypeSelect is specified\n";
+                exit(1);
+            }
+            if (scrolling_tree["NodeSelect"].string_value() == "None" && scrolling_tree["RootFolderIsSelected"].is_bool())
+            {
+                cout << "Tree illegal options for scrolling tree " << scrolling_tree["Name"].string_value() << " in window " << window["Name"].string_value() << endl;
+                cout << "NodeSelect is None but RootFolderIsSelected is specified\n";
+                exit(1);
             }
             if (scrolling_tree["FoldersOnly"].bool_value() == true && scrolling_tree["NodeTypeSelect"].string_value() != "FoldersOnly")
             {
-                cout << "Tree root folder illegal options for scrolling tree " << scrolling_tree["Name"].string_value() << " in window " << window["Name"].string_value() << endl;
-				exit(1);
+                cout << "Tree illegal options for scrolling tree " << scrolling_tree["Name"].string_value() << " in window " << window["Name"].string_value() << endl;
+                cout << "FoldersOnly is true but NodeTypeSelect is not FoldersOnly\n";
+            	exit(1);
             }
             if (scrolling_tree["RootFolderIsSelected"].is_bool() &&
                 scrolling_tree["RootFolderIsSelected"].bool_value() == true &&
@@ -2552,7 +2516,8 @@ int main(int argc, char **argv)
                 scrolling_tree["NodeTypeSelect"].string_value() == "FileOnly")
             {
                 cout << "Tree root folder illegal options for scrolling tree " << scrolling_tree["Name"].string_value() << " in window " << window["Name"].string_value() << endl;
-				exit(1);
+                cout << "RootFolderIsSelected is true but NodeTypeSelect is FileOnly\n";
+            	exit(1);
             }
             if (scrolling_tree["RootFolderIsSelected"].is_bool() &&
                 scrolling_tree["RootFolderIsSelected"].bool_value() == true &&
@@ -2560,6 +2525,7 @@ int main(int argc, char **argv)
                 scrolling_tree["NodeSelect"].string_value() == "None")
             {
                 cout << "Tree root folder illegal options for scrolling tree " << scrolling_tree["Name"].string_value() << " in window " << window["Name"].string_value() << endl;
+                cout << "RootFolderIsSelected is true but NodeSelect is None\n";
 				exit(1);
             }
 
@@ -2620,7 +2586,7 @@ int main(int argc, char **argv)
                 "        0U";
             if (scrolling_tree["RootFolderIsOpen"].is_bool() && scrolling_tree["RootFolderIsOpen"].bool_value() == true)
             {
-                outfileUserSource << " | MW_TREE_CONTAINER_NODE_IS_OPEN";
+                outfileUserSource << " | MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN";
             }
             if (scrolling_tree["RootFolderIsSelected"].is_bool() && scrolling_tree["RootFolderIsSelected"].bool_value() == true)
             {
@@ -2649,7 +2615,7 @@ int main(int argc, char **argv)
                 {
                     outfileUserSource << " | MW_TREE_CONTAINER_FILE_SELECT_ONLY";
                 }
-                else if (scrolling_tree["NodeTypeSelect"].string_value() == "FoldersOnly")
+                else if (scrolling_tree["NodeTypeSelect"].string_value() == "FolderOnly")
                 {
                     outfileUserSource << " | MW_TREE_CONTAINER_FOLDER_SELECT_ONLY";
                 }
