@@ -285,14 +285,9 @@
            "Lines": 5,
            "StaticAllocated": true,
            "NodeArraySize": 12,
-           "Icons": false,
            "RootFolderPath": "Root/",
            "FolderSeparator": "/",
-           "NodeSelect": "Multi",
-           "NodeTypeSelect": "FolderOnly",
-           "FoldersOnly": false,
-           "RootFolderIsOpen": false,
-		   "Enabled": true,
+           "Enabled": true,
 		   "Visible": true
 			},
             {
@@ -303,13 +298,13 @@
            "Lines": 5,
            "StaticAllocated": true,
            "NodeArraySize": 12,
-           "Icons": false,
+           "Icons": true,
            "RootFolderPath": "/",
            "FolderSeparator": "/",
-           "NodeSelect": "Multi",
+           "NodeSelect": "Single",
            "NodeTypeSelect": "All",
            "FoldersOnly": false,
-           "RootFolderIsOpen": false,
+           "RootFolderIsOpen": true,
 		   "Enabled": true,
 		   "Visible": true
 			}]

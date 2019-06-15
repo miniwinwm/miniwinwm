@@ -2297,10 +2297,10 @@ int main(int argc, char **argv)
             if (tree["RootFolderIsSelected"].is_bool() &&
                 tree["RootFolderIsSelected"].bool_value() == true &&
                 tree["NodeTypeSelect"].is_string() &&
-                tree["NodeTypeSelect"].string_value() == "FileOnly")
+                tree["NodeTypeSelect"].string_value() == "FilesOnly")
             {
                 cout << "Tree root folder illegal options for tree " << tree["Name"].string_value() << " in window " << window["Name"].string_value() << endl;
-                cout << "RootFolderIsSelected is true but NodeTypeSelect is FileOnly\n";
+                cout << "RootFolderIsSelected is true but NodeTypeSelect is FilesOnly\n";
                 exit(1);
             }
             if (tree["RootFolderIsSelected"].is_bool() &&
@@ -2395,11 +2395,11 @@ int main(int argc, char **argv)
             }
             if (tree["NodeTypeSelect"].is_string())
             {
-                if (tree["NodeTypeSelect"].string_value() == "FileOnly")
+                if (tree["NodeTypeSelect"].string_value() == "FilesOnly")
                 {
                     outfileUserSource << " | MW_TREE_CONTAINER_FILE_SELECT_ONLY";
                 }
-                else if (tree["NodeTypeSelect"].string_value() == "FolderOnly")
+                else if (tree["NodeTypeSelect"].string_value() == "FoldersOnly")
                 {
                     outfileUserSource << " | MW_TREE_CONTAINER_FOLDER_SELECT_ONLY";
                 }
@@ -2513,10 +2513,10 @@ int main(int argc, char **argv)
             if (scrolling_tree["RootFolderIsSelected"].is_bool() &&
                 scrolling_tree["RootFolderIsSelected"].bool_value() == true &&
                 scrolling_tree["NodeTypeSelect"].is_string() &&
-                scrolling_tree["NodeTypeSelect"].string_value() == "FileOnly")
+                scrolling_tree["NodeTypeSelect"].string_value() == "FilesOnly")
             {
                 cout << "Tree root folder illegal options for scrolling tree " << scrolling_tree["Name"].string_value() << " in window " << window["Name"].string_value() << endl;
-                cout << "RootFolderIsSelected is true but NodeTypeSelect is FileOnly\n";
+                cout << "RootFolderIsSelected is true but NodeTypeSelect is FilesOnly\n";
             	exit(1);
             }
             if (scrolling_tree["RootFolderIsSelected"].is_bool() &&
@@ -2611,11 +2611,11 @@ int main(int argc, char **argv)
             }
             if (scrolling_tree["NodeTypeSelect"].is_string())
             {
-                if (scrolling_tree["NodeTypeSelect"].string_value() == "FileOnly")
+                if (scrolling_tree["NodeTypeSelect"].string_value() == "FilesOnly")
                 {
                     outfileUserSource << " | MW_TREE_CONTAINER_FILE_SELECT_ONLY";
                 }
-                else if (scrolling_tree["NodeTypeSelect"].string_value() == "FolderOnly")
+                else if (scrolling_tree["NodeTypeSelect"].string_value() == "FoldersOnly")
                 {
                     outfileUserSource << " | MW_TREE_CONTAINER_FOLDER_SELECT_ONLY";
                 }

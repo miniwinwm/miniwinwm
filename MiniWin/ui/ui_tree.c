@@ -123,9 +123,6 @@ static bool node_callback(struct mw_tree_container_t *tree, mw_handle_t node_han
 				tree_callback_data->this_tree->row_height);
 	}
 
-	mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
-	mw_gl_set_bg_colour(MW_HAL_LCD_WHITE);
-
 	if ((node_flags & MW_TREE_CONTAINER_NODE_IS_FOLDER) == MW_TREE_CONTAINER_NODE_IS_FOLDER)
 	{
 		if ((node_flags & MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN) == MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN)
@@ -266,6 +263,12 @@ static void tree_paint_function(mw_handle_t control_handle, const mw_gl_draw_inf
     /* set up text */
 	mw_gl_set_bg_transparency(MW_GL_BG_TRANSPARENT);
 	mw_gl_set_text_rotation(MW_GL_TEXT_ROTATION_0);
+
+	/* set up text and bitmapos foreground colour */
+	if ((mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_IS_ENABLED) == 0U)
+	{
+		mw_gl_set_fg_colour(MW_CONTROL_DISABLED_COLOUR);
+	}
 
 	tree_callback_data.next_line = 0;
 	(void)node_callback(&tree_callback_data.this_tree->tree_container,
