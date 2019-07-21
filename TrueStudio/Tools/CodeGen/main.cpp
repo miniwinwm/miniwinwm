@@ -2784,10 +2784,12 @@ int main(int argc, char **argv)
 						"            /* Add your handler code for this control here */\n" 
 						"        }\n";
 			}
+
             if (elseif)
             {
 			    outfileWindowSource << "        else\n        {\n            /* Keep MISRA happy */\n        }\n";
             }
+
 			outfileWindowSource << "        break;\n\n";
 		}
 
@@ -2817,10 +2819,12 @@ int main(int argc, char **argv)
 						"            /* Add your handler code for this control here */\n" 
 						"        }\n";
 			}
+
             if (elseif)
             {
 			    outfileWindowSource << "        else\n        {\n            /* Keep MISRA happy */\n        }\n";
             }
+
 			outfileWindowSource << "        break;\n\n";
 		}
 		
@@ -2850,10 +2854,12 @@ int main(int argc, char **argv)
 						"            /* Add your handler code for this control here */\n" 
 						"        }\n";
 			}
+
             if (elseif)
             {
 			    outfileWindowSource << "        else\n        {\n            /* Keep MISRA happy */\n        }\n";
             }
+
 			outfileWindowSource << "        break;\n\n";
 		}		
 		
@@ -2883,10 +2889,12 @@ int main(int argc, char **argv)
 						"            /* Add your handler code for this control here */\n" 
 						"        }\n";
 			}
+
             if (elseif)
             {
 			    outfileWindowSource << "        else\n        {\n            /* Keep MISRA happy */\n        }\n";
             }
+
 			outfileWindowSource << "        break;\n\n";
 		}	
 		
@@ -2968,8 +2976,8 @@ int main(int argc, char **argv)
 						"                NULL,\n"
 						"                MW_CONTROL_MESSAGE);\n"
 						"\n"
-						"            /* Paint the tree to show its new scrolled position */\n"
-						"            mw_paint_control(scrolling_tree_" << scrolling_tree_scroll_bar_vert["Name"].string_value() << "_handle);\n"
+		                "            /* Do not repaint tree control here on every message otherwise there will be too many repaints,\n"
+		                "             * instead wait until the tree gives us a hint that a repaint is required */\n"
 						"        }\n";
 			}
 			for (auto& scrolling_text_box_scroll_bar_vert : window["ScrollingTextBoxes"].array_items())
@@ -2999,11 +3007,13 @@ int main(int argc, char **argv)
 						"            /* Paint the text box to show its new scrolled position */\n"
 						"            mw_paint_control(scrolling_text_box_" << scrolling_text_box_scroll_bar_vert["Name"].string_value() << "_handle);\n"
 						"        }\n";
-			}					
+			}
+            				
             if (elseif)
             {
 			    outfileWindowSource << "        else\n        {\n            /* Keep MISRA happy */\n        }\n";
             }
+
 			outfileWindowSource << "        break;\n\n";
 		}					
 
@@ -3037,16 +3047,17 @@ int main(int argc, char **argv)
                 outfileWindowSource << "            }\n";
                 outfileWindowSource << "            mw_paint_control(scrolling_tree_scroll_bar_vert_" << scrolling_tree["Name"].string_value() << "_handle);\n";
                 outfileWindowSource << "        }\n";
-
-                if (elseif)
-                {
-    			    outfileWindowSource << "        else\n        {\n            /* Keep MISRA happy */\n        }\n";
-                }
             }
+
+            if (elseif)
+            {
+			    outfileWindowSource << "        else\n        {\n            /* Keep MISRA happy */\n        }\n";
+            }
+
             outfileWindowSource << "        break;\n\n";
         }
 
-        // Create set scroll bar poistion message handler for scrolling trees
+        // Create set scroll bar position message handler for scrolling trees
 		if (window["ScrollingTrees"].array_items().size() > 0)
 		{
             bool first = true;
@@ -3075,12 +3086,48 @@ int main(int argc, char **argv)
 					"            message->message_data,\n"
 					"            NULL,\n"
 					"            MW_CONTROL_MESSAGE);\n        }\n";
-
-                if (elseif)
-                {
-    			    outfileWindowSource << "        else\n        {\n            /* Keep MISRA happy */\n        }\n";
-                }
             }
+
+            if (elseif)
+            {
+    		    outfileWindowSource << "        else\n        {\n            /* Keep MISRA happy */\n        }\n";
+            }
+
+            outfileWindowSource << "        break;\n\n";
+        }
+
+        // Create scrolled control needs repaint message handler for scrolling trees
+		if (window["ScrollingTrees"].array_items().size() > 0)
+		{
+            bool first = true;
+            bool elseif = false;
+           	outfileWindowSource <<
+		        "    case MW_SCROLLED_CONTROL_NEEDS_PAINTING_HINT_MESSAGE:\n";
+			for (auto& scrolling_tree : window["ScrollingTrees"].array_items())
+            {
+                if (first)
+                {
+    				outfileWindowSource <<
+    					"        if (message->sender_handle == " << "scrolling_tree_" + scrolling_tree["Name"].string_value() + "_handle" << ")\n";
+    				first = false;
+    			}
+    			else
+    			{
+    				outfileWindowSource <<
+    					"        else if (message->sender_handle == " << "scrolling_tree_" + scrolling_tree["Name"].string_value() + "_handle" << ")\n";
+    			    elseif = true;
+                }
+                outfileWindowSource << "        {\n"
+                                       "            /* Paint the tree to show its new scrolled position */\n";
+                outfileWindowSource << "            mw_paint_control(scrolling_tree_" << scrolling_tree["Name"].string_value() << "_handle);\n";
+                outfileWindowSource << "        }\n";
+            }
+
+            if (elseif)
+            {
+			    outfileWindowSource << "        else\n        {\n            /* Keep MISRA happy */\n        }\n";
+            }
+
             outfileWindowSource << "        break;\n\n";
         }
 
@@ -3110,10 +3157,12 @@ int main(int argc, char **argv)
 						"            /* Add your handler code for this control here */\n" 
 						"        }\n";
 			}
+
             if (elseif)
             {
 			    outfileWindowSource << "        else\n        {\n            /* Keep MISRA happy */\n        }\n";
             }
+
 			outfileWindowSource << "        break;\n\n";
 		}			
 
@@ -3161,11 +3210,13 @@ int main(int argc, char **argv)
 						"        {\n" 
 						"            /* Add your handler code for this control here */\n" 
 						"        }\n";
-			}			
+			}
+            	
             if (elseif)
             {
 			    outfileWindowSource << "        else\n        {\n            /* Keep MISRA happy */\n        }\n";
             }
+
 			outfileWindowSource << "        break;\n\n";
 		}
 
@@ -3195,10 +3246,12 @@ int main(int argc, char **argv)
 						"            /* Add your handler code for this control here */\n"
 						"        }\n";
 			}
+
             if (elseif)
             {
 			    outfileWindowSource << "        else\n        {\n            /* Keep MISRA happy */\n        }\n";
             }
+
 			outfileWindowSource << "        break;\n\n";
 		}
 
@@ -3247,10 +3300,12 @@ int main(int argc, char **argv)
 						"            /* Add your handler code for this control here */\n"
 						"        }\n";
 			}
+
             if (elseif)
             {
 			    outfileWindowSource << "        else\n        {\n            /* Keep MISRA happy */\n        }\n";
             }
+
 			outfileWindowSource << "        break;\n\n";
 
 			outfileWindowSource <<
@@ -3295,10 +3350,12 @@ int main(int argc, char **argv)
 						"            /* Add your handler code for this control here */\n"
 						"        }\n";
 			}
+
             if (elseif)
             {
 			    outfileWindowSource << "        else\n        {\n            /* Keep MISRA happy */\n        }\n";
             }
+
 			outfileWindowSource << "        break;\n\n";
 
 			outfileWindowSource <<
@@ -3343,10 +3400,12 @@ int main(int argc, char **argv)
 						"            /* Add your handler code for this control here */\n"
 						"        }\n";
 			}
+
             if (elseif)
             {
 			    outfileWindowSource << "        else\n        {\n            /* Keep MISRA happy */\n        }\n";
             }
+
 			outfileWindowSource << "        break;\n\n";
 		}
 
