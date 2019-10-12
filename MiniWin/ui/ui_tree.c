@@ -123,9 +123,6 @@ static bool node_callback(struct mw_tree_container_t *tree, mw_handle_t node_han
 				tree_callback_data->this_tree->row_height);
 	}
 
-	mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
-	mw_gl_set_bg_colour(MW_HAL_LCD_WHITE);
-
 	if ((node_flags & MW_TREE_CONTAINER_NODE_IS_FOLDER) == MW_TREE_CONTAINER_NODE_IS_FOLDER)
 	{
 		if ((node_flags & MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN) == MW_TREE_CONTAINER_NODE_FOLDER_IS_OPEN)
@@ -266,6 +263,12 @@ static void tree_paint_function(mw_handle_t control_handle, const mw_gl_draw_inf
     /* set up text */
 	mw_gl_set_bg_transparency(MW_GL_BG_TRANSPARENT);
 	mw_gl_set_text_rotation(MW_GL_TEXT_ROTATION_0);
+
+	/* set up text and bitmapos foreground colour */
+	if ((mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_IS_ENABLED) == 0U)
+	{
+		mw_gl_set_fg_colour(MW_CONTROL_DISABLED_COLOUR);
+	}
 
 	tree_callback_data.next_line = 0;
 	(void)node_callback(&tree_callback_data.this_tree->tree_container,
@@ -425,7 +428,7 @@ static void tree_message_function(const mw_message_t *message)
 				}
 
 				mw_post_message(MW_SCROLL_BAR_SET_SCROLL_MESSAGE,
-						MW_UNUSED_MESSAGE_PARAMETER,
+						message->recipient_handle,
 						mw_get_control_parent_window_handle(message->recipient_handle),
 						((uint32_t)this_tree->lines_to_scroll * (uint32_t)UINT8_MAX) / (uint32_t)max_scroll_lines,
 						NULL,
@@ -433,17 +436,19 @@ static void tree_message_function(const mw_message_t *message)
 			}
 			else
 			{
-				/* scrolling not required so set scroll bar position back to 0 */
+				/* scrolling not required so set scroll bar position and lines to scroll back to 0 */
 				mw_post_message(MW_SCROLL_BAR_SET_SCROLL_MESSAGE,
-						MW_UNUSED_MESSAGE_PARAMETER,
+						message->recipient_handle,
 						mw_get_control_parent_window_handle(message->recipient_handle),
 						0U,
 						NULL,
 						MW_WINDOW_MESSAGE);
+
+				this_tree->lines_to_scroll = 0U;
 			}
 
 			mw_post_message(MW_TREE_SCROLLING_REQUIRED_MESSAGE,
-					MW_UNUSED_MESSAGE_PARAMETER,
+					message->recipient_handle,
 					mw_get_control_parent_window_handle(message->recipient_handle),
 					message_data,
 					NULL,

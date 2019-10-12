@@ -361,7 +361,8 @@ void mw_gl_line(const mw_gl_draw_info_t *draw_info, int16_t p1x, int16_t p1y, in
 void mw_gl_rectangle(const mw_gl_draw_info_t *draw_info, int16_t x_start, int16_t y_start, int16_t width, int16_t height);
 
 /**
- * Draw a single fixed width character. Foreground colour, background colour, font, rotation and transparency controlled by gc.
+ * Draw a single fixed width character. Foreground colour, background colour, bitmap font, rotation and
+ * transparency controlled by gc.
  *
  * @param draw_info Reference frame origin coordinates and clip region rect
  * @param x Coordinate of the left edge of the rectangle containing the character
@@ -371,7 +372,8 @@ void mw_gl_rectangle(const mw_gl_draw_info_t *draw_info, int16_t x_start, int16_
 void mw_gl_character(const mw_gl_draw_info_t *draw_info, int16_t x, int16_t y, char c);
 
 /**
- * Draw a horizontal string of small fixed width horizontal characters. Foreground colour, background colour and transparency controlled by gc.
+ * Draw a string of fixed width characters. Foreground colour, background colour, rotation,
+ * bitmap font, and transparency controlled by gc.
  *
  * @param draw_info Reference frame origin coordinates and clip region rect
  * @param x Coordinate of the left edge of the rectangle containing the first character

@@ -561,7 +561,7 @@ typedef enum
 	MW_LIST_BOX_LINES_TO_SCROLL_MESSAGE,
 
 	/**
-	 * Position of a scroll bar associated with a list box
+	 * Send the position of a scroll bar associated with a list box to the list box
 	 *
 	 * message_data: Scroll bar position, 0 - UINT8_MAX
 	 * message_pointer: Unused
@@ -593,7 +593,7 @@ typedef enum
 	MW_TEXT_BOX_SET_TEXT_MESSAGE,
 
 	/**
-	 * Position of a scroll bar associated with a text box
+	 * Send the position of a scroll bar associated with a text box to the text box
 	 *
 	 * message_data: Scroll bar position, 0 - UINT8_MAX
 	 * message_pointer: Unused
@@ -618,7 +618,7 @@ typedef enum
 	MW_TREE_LINES_TO_SCROLL_MESSAGE,
 
 	/**
-	 * Set position of a scroll bar associated with a tree
+	 * Send the position of a scroll bar associated with a tree to the tree
 	 *
 	 * message_data: Scroll bar position, 0 - UINT8_MAX
 	 * message_pointer: Unused
@@ -704,7 +704,7 @@ typedef enum
 	MW_DIALOG_FILE_CHOOSER_FOLDER_OK_MESSAGE,
 
 	/**
-	 * File chooser dialog was cancelled with no file chosen
+	 * File chooser dialog was cancelled with no file or folder chosen
 	 *
 	 * message_data: Unused
 	 * message_pointer: Unused

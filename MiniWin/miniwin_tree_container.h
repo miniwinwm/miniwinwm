@@ -107,6 +107,7 @@ struct mw_tree_container_t
 	mw_tree_container_no_space_callback_t *no_space_callback;	/**< Callback to be called when adding a node fails because of lack of space; can be NULL */
 	uint8_t tree_flags;											/**< Flags describing this tree */
 	char folder_separator[2];									/**< Separator character between folders as a string */
+	char root_folder_label[MW_TREE_CONTAINER_NODE_LABEL_MAX_SIZE];		/**< Root folder label, i.e. no terminating / */
 };
 
 /*************************
@@ -123,7 +124,7 @@ struct mw_tree_container_t
  * @param tree Pointer to tree structure
  * @param nodes_array Pointer to array to contain nodes
  * @param nodes_array_size Size of nodes_array
- * @param root_folder_label Label to give to the root folder node, must end in MW_TREE_CONTAINER_FOLDER_SEPARATOR
+ * @param root_folder_path Path of the root folder node, must end in MW_TREE_CONTAINER_FOLDER_SEPARATOR
  * @param root_node_flags Flags to use for root node; can be MW_UTREE_NODE_IS_SELECTED_FLAG or MW_TREE_FOLDER_IS_OPEN_FLAG or both
  * @param tree_flags Flags that apply to the whole tree from the list above.
  * @param no_space_callback Pointer to callback function that is called when adding a node fails because of lack of space for a new node. This can be NULL if not required.
@@ -136,7 +137,7 @@ struct mw_tree_container_t
 mw_handle_t mw_tree_container_init(struct mw_tree_container_t *tree,
 		mw_tree_container_node_t *nodes_array,
 		uint16_t nodes_array_size,
-		char *root_folder_label,
+		char *root_folder_path,
 		uint8_t root_node_flags,
 		uint8_t tree_flags,
 		mw_tree_container_no_space_callback_t *no_space_callback,

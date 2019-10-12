@@ -361,6 +361,9 @@ uint8_t find_folder_entries(char *path,
     	return (0U);
     }
 
+    /* strip off terminating '/' for FatFS folders */
+    path[strlen(path) - 1U] = '\0';
+
     /* open the folder */
     result = f_opendir(&folder, path);
     if (result == FR_OK)
@@ -407,6 +410,9 @@ uint8_t find_folder_entries(char *path,
         (void)f_closedir(&folder);
     }
 
+    /* replace terminating '/' */
+    path[strlen(path)] = '/';
+
     return (i);
 }
 
@@ -452,7 +458,7 @@ void app_set_time_date(mw_time_t new_time)
 	(void)HAL_RTC_SetTime(&rtc_handle, &hal_time_structure, FORMAT_BIN);
 }
 
-DWORD get_fattime (void)
+DWORD get_fattime(void)
 {
 	uint32_t fattime = 0U;
 	mw_time_t time_now;
