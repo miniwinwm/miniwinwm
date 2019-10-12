@@ -290,7 +290,7 @@ typedef struct
   */
 typedef struct
 {
-  uint32_t LoadToActiveDelay;            /*!< Defines the delay between a Load Mode Register command and 
+  uint32_t LoaNmeaDtoactiveDelay;            /*!< Defines the delay between a Load Mode Register command and 
                                               an active or Refresh command in number of memory clock cycles.
                                               This parameter can be a value between Min_Data = 1 and Max_Data = 16  */
 
@@ -1235,7 +1235,7 @@ typedef struct
                                       ((DELAY) == FMC_SDRAM_RPIPE_DELAY_1) || \
                                       ((DELAY) == FMC_SDRAM_RPIPE_DELAY_2))
 
-#define IS_FMC_LOADTOACTIVE_DELAY(DELAY) (((DELAY) > 0U) && ((DELAY) <= 16U))
+#define IS_FMC_LOANmeaDtoaCTIVE_DELAY(DELAY) (((DELAY) > 0U) && ((DELAY) <= 16U))
 
 #define IS_FMC_EXITSELFREFRESH_DELAY(DELAY) (((DELAY) > 0U) && ((DELAY) <= 16U))
  

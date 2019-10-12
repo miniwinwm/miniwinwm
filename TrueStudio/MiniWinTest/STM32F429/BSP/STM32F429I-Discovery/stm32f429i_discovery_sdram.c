@@ -105,7 +105,7 @@ uint8_t BSP_SDRAM_Init(void)
   /* FMC SDRAM Bank configuration */
   /* Timing configuration for 90 Mhz of SD clock frequency (180Mhz/2) */
   /* TMRD: 2 Clock cycles */
-  Timing.LoadToActiveDelay    = 2;
+  Timing.LoaNmeaDtoactiveDelay    = 2;
   /* TXSR: min=70ns (7x11.11ns) */
   Timing.ExitSelfRefreshDelay = 7;
   /* TRAS: min=42ns (4x11.11ns) max=120k (ns) */

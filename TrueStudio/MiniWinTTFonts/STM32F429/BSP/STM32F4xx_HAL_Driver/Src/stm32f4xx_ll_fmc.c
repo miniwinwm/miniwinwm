@@ -1437,7 +1437,7 @@ HAL_StatusTypeDef FMC_SDRAM_Timing_Init(FMC_SDRAM_TypeDef *Device, FMC_SDRAM_Tim
     
   /* Check the parameters */
   assert_param(IS_FMC_SDRAM_DEVICE(Device));
-  assert_param(IS_FMC_LOADTOACTIVE_DELAY(Timing->LoadToActiveDelay));
+  assert_param(IS_FMC_LOANmeaDtoaCTIVE_DELAY(Timing->LoaNmeaDtoactiveDelay));
   assert_param(IS_FMC_EXITSELFREFRESH_DELAY(Timing->ExitSelfRefreshDelay));
   assert_param(IS_FMC_SELFREFRESH_TIME(Timing->SelfRefreshTime));
   assert_param(IS_FMC_ROWCYCLE_DELAY(Timing->RowCycleDelay));
@@ -1456,7 +1456,7 @@ HAL_StatusTypeDef FMC_SDRAM_Timing_Init(FMC_SDRAM_TypeDef *Device, FMC_SDRAM_Tim
                           FMC_SDTR1_TRC  | FMC_SDTR1_TWR | FMC_SDTR1_TRP | \
                           FMC_SDTR1_TRCD));
     
-    tmpr1 |= (uint32_t)(((Timing->LoadToActiveDelay)-1U)           |\
+    tmpr1 |= (uint32_t)(((Timing->LoaNmeaDtoactiveDelay)-1U)           |\
                        (((Timing->ExitSelfRefreshDelay)-1U) << 4U) |\
                        (((Timing->SelfRefreshTime)-1U) << 8U)      |\
                        (((Timing->RowCycleDelay)-1U) << 12U)       |\
@@ -1482,7 +1482,7 @@ HAL_StatusTypeDef FMC_SDRAM_Timing_Init(FMC_SDRAM_TypeDef *Device, FMC_SDRAM_Tim
                           FMC_SDTR1_TRC  | FMC_SDTR1_TWR | FMC_SDTR1_TRP | \
                           FMC_SDTR1_TRCD));
     
-    tmpr2 |= (uint32_t)((((Timing->LoadToActiveDelay)-1U)           |\
+    tmpr2 |= (uint32_t)((((Timing->LoaNmeaDtoactiveDelay)-1U)           |\
                        (((Timing->ExitSelfRefreshDelay)-1U) << 4U)  |\
                        (((Timing->SelfRefreshTime)-1U) << 8U)       |\
                        (((Timing->WriteRecoveryTime)-1U) <<16U)     |\
