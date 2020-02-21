@@ -30,6 +30,7 @@ SOFTWARE.
 *** INCLUDES ***
 ***************/
 
+#include <stdlib.h>
 #include <X11/Xlib.h>
 #include "hal/hal_touch.h"
 
@@ -53,6 +54,7 @@ XEvent event;
 
 extern Display *display;
 extern Window frame_window;
+extern Atom wm_delete_window_message;
 
 /**********************
 *** LOCAL VARIABLES ***
@@ -92,6 +94,16 @@ bool mw_hal_touch_get_point(uint16_t* x, uint16_t* y)
 	XLockDisplay(display);
 	(void)XCheckMaskEvent(display, KeyPressMask, &event);
     (void)XQueryPointer(display, frame_window, &child_win, &root_win, &root_x, &root_y, &win_x, &win_y, &mask);
+    
+    if (XCheckTypedWindowEvent(display, frame_window, ClientMessage, &event))
+    {
+		if (event.xclient.data.l[0] == wm_delete_window_message)
+		{
+    		XCloseDisplay(display);
+    		exit(0);
+    	}
+    }
+    
 	XUnlockDisplay(display);
 
     if (mask == 256U)

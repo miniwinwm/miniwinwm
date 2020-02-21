@@ -91,7 +91,7 @@ void mw_hal_non_vol_save(uint8_t *data, uint16_t length)
 					   CREATE_ALWAYS,
                        FILE_ATTRIBUTE_NORMAL,
                        NULL);
-    (void)WriteFile(hFile, (PCVOID)data, (DWORD)length, &dwBytesWritten, NULL);
+    (void)WriteFile(hFile, (PVOID)data, (DWORD)length, &dwBytesWritten, NULL);
     CloseHandle(hFile);
 }
 
