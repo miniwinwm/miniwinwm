@@ -1,5 +1,5 @@
 {
-"TargetType": "Windows",
+"TargetType": "Linux",
 "TargetName": "MiniWinGen",
 "LargeSize": false,	
 "Windows":

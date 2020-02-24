@@ -46,6 +46,7 @@ SOFTWARE.
 Display *display;
 Window frame_window;
 GC graphical_context;
+Atom wm_delete_window_message;
 
 /**********************
 *** LOCAL VARIABLES ***
@@ -88,6 +89,10 @@ void app_init(void)
 		visual, 
 		CWBackPixel,
 		&frame_attributes);
+
+	/* register interest in delete window message */
+	wm_delete_window_message = XInternAtom(display, "WM_DELETE_WINDOW", False);
+	XSetWMProtocols(display, frame_window, &wm_delete_window_message, 1);
 
 	XStoreName(display, frame_window, "MiniWin Sim");
 
