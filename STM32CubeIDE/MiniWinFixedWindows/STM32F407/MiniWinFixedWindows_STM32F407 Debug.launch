@@ -1,38 +1,58 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<launchConfiguration type="com.atollic.hardwaredebug.launch.launchConfigurationType">
-<intAttribute key="com.atollic.hardwaredebug.launch.formatVersion" value="2"/>
-<stringAttribute key="com.atollic.hardwaredebug.launch.hwinitCommands" value="# Initialize your hardware here&#10;"/>
-<stringAttribute key="com.atollic.hardwaredebug.launch.initCommands" value=""/>
-<stringAttribute key="com.atollic.hardwaredebug.launch.ipAddress" value="localhost"/>
-<stringAttribute key="com.atollic.hardwaredebug.launch.jtagDevice" value="ST-LINK"/>
-<intAttribute key="com.atollic.hardwaredebug.launch.portNumber" value="61234"/>
-<stringAttribute key="com.atollic.hardwaredebug.launch.remoteCommand" value="target extended-remote"/>
-<stringAttribute key="com.atollic.hardwaredebug.launch.runCommands" value="# Set flash parallelism mode to 32, 16, or 8 bit when using STM32 F2/F4 microcontrollers&#10;# 2=32 bit, 1=16 bit and 0=8 bit parallelism mode&#10;monitor flash set_parallelism_mode 2&#10;&#10;# Set character encoding&#10;set host-charset CP1252&#10;set target-charset CP1252&#10;&#10;# Load the program executable&#10;load&#9;&#9;&#10;&#10;# Reset the chip to get to a known state. Remove &quot;monitor reset&quot; command &#10;#  if the code is not located at default address and does not run by reset. &#10;monitor reset&#10;&#10;# Enable Debug connection in low power modes (DBGMCU-&gt;CR)&#10;set *0xE0042004 = (*0xE0042004) | 0x7&#10;&#10;# Set a breakpoint at main().&#10;tbreak main&#10;&#10;# Run to the breakpoint.&#10;continue"/>
-<stringAttribute key="com.atollic.hardwaredebug.launch.serverParam" value="-p 61234 -l 1 -d -s -cp &quot;C:\Program Files (x86)\Atollic\TrueSTUDIO for STM32 9.3.0\Servers\STM32CubeProgrammer\bin&quot;"/>
-<booleanAttribute key="com.atollic.hardwaredebug.launch.startServer" value="true"/>
-<booleanAttribute key="com.atollic.hardwaredebug.launch.swd_mode" value="true"/>
-<stringAttribute key="com.atollic.hardwaredebug.launch.swv_port" value="61235"/>
-<stringAttribute key="com.atollic.hardwaredebug.launch.swv_trace_div" value="168"/>
-<stringAttribute key="com.atollic.hardwaredebug.launch.swv_trace_hclk" value="168000000"/>
-<booleanAttribute key="com.atollic.hardwaredebug.launch.swv_wait_for_sync" value="true"/>
-<intAttribute key="com.atollic.hardwaredebug.launch.trace_system" value="0"/>
-<booleanAttribute key="com.atollic.hardwaredebug.launch.useRemoteTarget" value="true"/>
-<booleanAttribute key="com.atollic.hardwaredebug.launch.verify_flash_download" value="true"/>
-<booleanAttribute key="com.atollic.hardwaredebug.stlink.enable_external_loader" value="false"/>
-<booleanAttribute key="com.atollic.hardwaredebug.stlink.enable_logging" value="false"/>
-<stringAttribute key="com.atollic.hardwaredebug.stlink.external_loader" value=""/>
-<stringAttribute key="com.atollic.hardwaredebug.stlink.log_file" value="C:\Users\John\Desktop\workspace\miniwinwm\TrueStudio\MiniWinFixedWindows\STM32F407\Debug\st-link_gdbserver_log.txt"/>
-<booleanAttribute key="com.atollic.hardwaredebug.stlink.stlink_check_serial_number" value="false"/>
-<stringAttribute key="com.atollic.hardwaredebug.stlink.stlink_txt_serial_number" value=""/>
-<stringAttribute key="org.eclipse.cdt.dsf.gdb.DEBUG_NAME" value="${TOOLCHAIN_PATH}/arm-atollic-eabi-gdb"/>
+<launchConfiguration type="com.st.stm32cube.ide.mcu.debug.launch.launchConfigurationType">
+<stringAttribute key="com.st.stm32cube.ide.mcu.debug.launch.access_port_id" value="0"/>
+<booleanAttribute key="com.st.stm32cube.ide.mcu.debug.launch.enable_live_expr" value="true"/>
+<booleanAttribute key="com.st.stm32cube.ide.mcu.debug.launch.enable_swv" value="false"/>
+<intAttribute key="com.st.stm32cube.ide.mcu.debug.launch.formatVersion" value="2"/>
+<stringAttribute key="com.st.stm32cube.ide.mcu.debug.launch.ip_address_local" value="localhost"/>
+<stringAttribute key="com.st.stm32cube.ide.mcu.debug.launch.loadList" value="{&quot;fItems&quot;:[{&quot;fIsFromMainTab&quot;:true,&quot;fPath&quot;:&quot;Debug\\MiniWinFixedWindows_STM32F407.elf&quot;,&quot;fProjectName&quot;:&quot;MiniWinFixedWindows_STM32F407&quot;,&quot;fPerformBuild&quot;:true,&quot;fDownload&quot;:true,&quot;fLoadSymbols&quot;:true}]}"/>
+<stringAttribute key="com.st.stm32cube.ide.mcu.debug.launch.remoteCommand" value="target remote"/>
+<booleanAttribute key="com.st.stm32cube.ide.mcu.debug.launch.startServer" value="true"/>
+<booleanAttribute key="com.st.stm32cube.ide.mcu.debug.launch.startuptab.exception.divby0" value="true"/>
+<booleanAttribute key="com.st.stm32cube.ide.mcu.debug.launch.startuptab.exception.unaligned" value="false"/>
+<booleanAttribute key="com.st.stm32cube.ide.mcu.debug.launch.startuptab.haltonexception" value="true"/>
+<booleanAttribute key="com.st.stm32cube.ide.mcu.debug.launch.swd_mode" value="true"/>
+<stringAttribute key="com.st.stm32cube.ide.mcu.debug.launch.swv_port" value="61235"/>
+<stringAttribute key="com.st.stm32cube.ide.mcu.debug.launch.swv_trace_div" value="8"/>
+<stringAttribute key="com.st.stm32cube.ide.mcu.debug.launch.swv_trace_hclk" value="16000000"/>
+<booleanAttribute key="com.st.stm32cube.ide.mcu.debug.launch.swv_wait_for_sync" value="true"/>
+<booleanAttribute key="com.st.stm32cube.ide.mcu.debug.launch.useRemoteTarget" value="true"/>
+<booleanAttribute key="com.st.stm32cube.ide.mcu.debug.launch.verify_flash_download" value="true"/>
+<booleanAttribute key="com.st.stm32cube.ide.mcu.debug.stlink.cti_allow_halt" value="false"/>
+<booleanAttribute key="com.st.stm32cube.ide.mcu.debug.stlink.cti_signal_halt" value="false"/>
+<booleanAttribute key="com.st.stm32cube.ide.mcu.debug.stlink.enable_external_loader" value="false"/>
+<booleanAttribute key="com.st.stm32cube.ide.mcu.debug.stlink.enable_logging" value="false"/>
+<booleanAttribute key="com.st.stm32cube.ide.mcu.debug.stlink.enable_shared_stlink" value="false"/>
+<stringAttribute key="com.st.stm32cube.ide.mcu.debug.stlink.external_loader" value=""/>
+<booleanAttribute key="com.st.stm32cube.ide.mcu.debug.stlink.halt_all_on_reset" value="false"/>
+<stringAttribute key="com.st.stm32cube.ide.mcu.debug.stlink.log_file" value="C:\Users\John\Desktop\workspace\miniwinwm\STM32CubeIDE\MiniWinFixedWindows\STM32F407\Debug\st-link_gdbserver_log.txt"/>
+<stringAttribute key="com.st.stm32cube.ide.mcu.debug.stlink.reset_strategy" value="system_reset"/>
+<booleanAttribute key="com.st.stm32cube.ide.mcu.debug.stlink.stlink_check_serial_number" value="false"/>
+<stringAttribute key="com.st.stm32cube.ide.mcu.debug.stlink.stlink_txt_serial_number" value=""/>
+<booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.doHalt" value="false"/>
+<booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.doReset" value="false"/>
+<stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.initCommands" value=""/>
+<stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.ipAddress" value="localhost"/>
+<stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.jtagDevice" value="ST-LINK (ST-LINK GDB server)"/>
+<stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.pcRegister" value=""/>
+<intAttribute key="org.eclipse.cdt.debug.gdbjtag.core.portNumber" value="61234"/>
+<stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.runCommands" value=""/>
+<booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.setPcRegister" value="false"/>
+<booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.setResume" value="true"/>
+<booleanAttribute key="org.eclipse.cdt.debug.gdbjtag.core.setStopAt" value="true"/>
+<stringAttribute key="org.eclipse.cdt.debug.gdbjtag.core.stopAt" value="main"/>
+<stringAttribute key="org.eclipse.cdt.dsf.gdb.DEBUG_NAME" value="${TOOLCHAIN_PATH}/arm-none-eabi-gdb"/>
+<booleanAttribute key="org.eclipse.cdt.dsf.gdb.NON_STOP" value="true"/>
 <booleanAttribute key="org.eclipse.cdt.dsf.gdb.UPDATE_THREADLIST_ON_SUSPEND" value="false"/>
 <intAttribute key="org.eclipse.cdt.launch.ATTR_BUILD_BEFORE_LAUNCH_ATTR" value="2"/>
 <stringAttribute key="org.eclipse.cdt.launch.COREFILE_PATH" value=""/>
-<stringAttribute key="org.eclipse.cdt.launch.DEBUGGER_REGISTER_GROUPS" value=""/>
+<stringAttribute key="org.eclipse.cdt.launch.DEBUGGER_START_MODE" value="remote"/>
+<booleanAttribute key="org.eclipse.cdt.launch.DEBUGGER_STOP_AT_MAIN" value="true"/>
+<stringAttribute key="org.eclipse.cdt.launch.DEBUGGER_STOP_AT_MAIN_SYMBOL" value="main"/>
 <stringAttribute key="org.eclipse.cdt.launch.PROGRAM_NAME" value="Debug\MiniWinFixedWindows_STM32F407.elf"/>
 <stringAttribute key="org.eclipse.cdt.launch.PROJECT_ATTR" value="MiniWinFixedWindows_STM32F407"/>
 <booleanAttribute key="org.eclipse.cdt.launch.PROJECT_BUILD_CONFIG_AUTO_ATTR" value="true"/>
-<stringAttribute key="org.eclipse.cdt.launch.PROJECT_BUILD_CONFIG_ID_ATTR" value="com.atollic.truestudio.exe.debug.1490098564"/>
+<stringAttribute key="org.eclipse.cdt.launch.PROJECT_BUILD_CONFIG_ID_ATTR" value="com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.debug.1025966360"/>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
 <listEntry value="/MiniWinFixedWindows_STM32F407"/>
 </listAttribute>
