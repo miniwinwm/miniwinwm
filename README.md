@@ -8,7 +8,9 @@ For further information on current work in progress please contact me by the con
 
 MCUXpresso contains project files and application specific source files for the example projects running on the LPC54628 dev board.
 
-TrueStudio contains project files and application specific source files for the example projects running on the STM32F429, STM32F407 dev boards and the Windows and Linux MiniWin simulators.
+STM32CubeIDE contains project files and application specific source files for the example projects running on the STM32F429 and STM32F407 dev boards.
+
+Simulation contains projectfiles and application specific source files for example projects running on the Windows and Linux MiniWin simulators.
 
 e2studio contains project files and application specific source files for the example projects running on the Renesas RX65N Envision dev board.
 
@@ -26,7 +28,7 @@ MiniWinRoot_Common contains platform independant files for an example appliocati
 
 MiniWinTTFonts_Common contains platform independant files for an example appliocation. Builds for Windows and Linux simulators and embedded platforms.
 
-In addition the MiniWin tools are built using TrueStudio and are found under the TrueStudio folder. These tools are...
+Tools contains source and project files for MiniWin tool applications. These are built using GCC and for Windows require the mingw64 and MSYS2 environments. Details are in the documentaion. These tools are...
 
 BMPConv24Colour is a tool to convert a 24 bits per pixel Windows .bmp file to a C99 source code file. Builds for Windows or Linux.
 
