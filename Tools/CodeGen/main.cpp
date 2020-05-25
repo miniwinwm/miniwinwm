@@ -31,6 +31,9 @@ SOFTWARE.
 #include <fstream>
 #include <sys/stat.h>
 #include "json11.hpp"
+#ifdef _MSC_VER
+#include <windows.h>
+#endif
 
 using namespace json11;
 using namespace std;
@@ -241,22 +244,41 @@ int main(int argc, char **argv)
 	}	
 	
     // make output folders
+#ifdef _MSC_VER
+	if (CreateDirectoryA(("../../Simulation/" + json["TargetName"].string_value()).c_str(), NULL) == 0 && GetLastError() != ERROR_ALREADY_EXISTS)
+#else
 	if (mkdir(("../../Simulation/" + json["TargetName"].string_value()).c_str(), 0777) != 0 && errno != EEXIST)
+#endif
 	{
     	cout << "Could not make " + json["TargetName"].string_value() + " folder.\n";
     	exit(1);
 	}
+
+#ifdef _MSC_VER
+	if (CreateDirectoryA(("../../Simulation/" + json["TargetName"].string_value() + "/" + json["TargetType"].string_value()).c_str(), NULL) == 0 && GetLastError() != ERROR_ALREADY_EXISTS)
+#else
 	if (mkdir(("../../Simulation/" + json["TargetName"].string_value() + "/" + json["TargetType"].string_value()).c_str(), 0777) != 0 && errno != EEXIST)
+#endif
 	{
     	cout << "Could not make " + json["TargetName"].string_value() + "/" << json["TargetType"].string_value() << " folder.\n";
     	exit(1);
 	}
+
+#ifdef _MSC_VER
+	if (CreateDirectoryA(("../../Simulation/" + json["TargetName"].string_value() + "/" + json["TargetType"].string_value() + "/src").c_str(), NULL) == 0 && GetLastError() != ERROR_ALREADY_EXISTS)
+#else
 	if (mkdir(("../../Simulation/" + json["TargetName"].string_value() + "/" + json["TargetType"].string_value() + "/src").c_str(), 0777) != 0 && errno != EEXIST)
+#endif
 	{
 		cout << "Could not make " + json["TargetName"].string_value() + "/" << json["TargetType"].string_value() << "/src folder.\n";
 		exit(1);
 	}
+
+#ifdef _MSC_VER
+	if (CreateDirectoryA(("../../" + json["TargetName"].string_value() + "_Common").c_str(), NULL) == 0 && GetLastError() != ERROR_ALREADY_EXISTS)
+#else
 	if (mkdir(("../../" + json["TargetName"].string_value() + "_Common").c_str(), 0777) != 0 && errno != EEXIST)
+#endif
 	{
 		cout << "Could not make " + json["TargetName"].string_value() + "_Common folder.\n";
 		exit(1);
