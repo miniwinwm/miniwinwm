@@ -3748,21 +3748,69 @@ int main(int argc, char **argv)
 
 	outfileMake <<
 			"all: ${OBJECTS}\n" 
-			"	${CC} $(CFLAGS) ${OBJECTS} ${LIBS} -o ${BINARY}\n\n" 
-			"clean:\n";
+			"	${CC} $(CFLAGS) ${OBJECTS} ${LIBS} -o ${BINARY}\n";
 
 	if (json["TargetType"].string_value() == "Windows")
 	{
-		outfileMake <<
-				"	$(RM) $(subst /,\\,$(OBJECTS))\n" 
-				"	$(RM) ${BINARY}\n";		
+		outfileMake << "	$(RM) $(subst /,\\,$(OBJECTS))\n\n";
+	}
+	else
+	{
+		outfileMake << "	rm $(OBJECTS)\n\n";
+	}
+
+	outfileMake << "clean:\n";
+
+	if (json["TargetType"].string_value() == "Windows")
+	{
+		outfileMake << "	$(RM) ${BINARY}\n";
 	}
 	else if (json["TargetType"].string_value() == "Linux")
 	{
-		outfileMake <<
-				"	rm $(OBJECTS)\n" 
-				"	rm ${BINARY}\n";
+		outfileMake << "	rm ${BINARY}\n";
 	}			
+	outfileMake.close();
+
+	// create nmakefile for windows only
+	if (json["TargetType"].string_value() == "Windows")
+	{
+		std::ofstream outfileNmake("../../Simulation/" + json["TargetName"].string_value() + "/" + json["TargetType"].string_value() + "/nmakefile");
+		if (!outfileNmake.is_open())
+		{
+			cout << "Could not create file\n";
+			exit(1);
+		}
+		outfileNmake << "BINARY = " << json["TargetName"].string_value() << ".exe\n";
+		outfileNmake << "CFLAGS = -nologo -I../../../MiniWin -I../../../MiniWin/gl/fonts/truetype/mcufont -Isrc -I../../../MiniWinGen_Common\n";
+
+		outfileNmake <<
+				"OBJECTS = src/*.obj \\\n"
+				"	 ../../../" << json["TargetName"].string_value() << "_Common/*.obj \\\n"
+				"	 ../../../MiniWin/*.obj \\\n"
+				"	 ../../../MiniWin/bitmaps/*.obj \\\n"
+				"	 ../../../MiniWin/hal/*.obj \\\n"
+				"	 ../../../MiniWin/hal/windows/*.obj \\\n"
+				"	 ../../../MiniWin/ui/*.obj \\\n"
+				"	 ../../../MiniWin/dialogs/*.obj \\\n"
+				"	 ../../../MiniWin/gl/*.obj \\\n"
+				"	 ../../../MiniWin/gl/fonts/bitmapped/*.obj \\\n"
+				"	 ../../../MiniWin/gl/fonts/truetype/*.obj \\\n"
+				"	 ../../../MiniWin/gl/fonts/truetype/mcufont/*.obj\n\n";
+
+
+		outfileNmake <<
+				".c.obj:\n"
+				"\t$(CC) $(CFLAGS) -c $<\n\n";
+
+		outfileNmake <<
+				"$(BINARY): $(OBJECTS)\n"
+				"\tlink gdi32.lib user32.lib *.obj -out:$(BINARY)\n"
+				"\tdel *.obj\n\n";
+
+		outfileNmake << "clean:\n";
+		outfileNmake << "\tdel $(BINARY)\n";
+		outfileMake.close();
+	}
 
 	// check duplicate identifier names
 	for (uint32_t i = 0; i < all_identifier_names.size(); i++)
@@ -3781,5 +3829,4 @@ int main(int argc, char **argv)
 	}
 
 	cout << "Generation completed successfully.\n";
-	outfileMake.close();
 }
