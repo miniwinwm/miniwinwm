@@ -1,0 +1,12 @@
+BMPConvMono.exe: main.obj EasyBMP.obj
+	link main.obj EasyBMP.obj -out:BMPConvMono.exe
+
+main.obj: main.cpp
+	cl -c -EHsc -I..\EasyBMP main.cpp
+
+EasyBMP.obj: ..\EasyBMP\EasyBMP.cpp ..\EasyBMP\EasyBMP.h
+	cl -c -EHsc -I..\EasyBMP ..\EasyBMP\EasyBMP.cpp 
+
+clean: 
+	del *.obj
+	del BMPConvMono.exe
