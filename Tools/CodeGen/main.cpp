@@ -3781,7 +3781,7 @@ int main(int argc, char **argv)
 			exit(1);
 		}
 		outfileNmake << "BINARY = " << json["TargetName"].string_value() << ".exe\n";
-		outfileNmake << "CFLAGS = -nologo -I../../../MiniWin -I../../../MiniWin/gl/fonts/truetype/mcufont -Isrc -I../../../MiniWinGen_Common\n";
+		outfileNmake << "CFLAGS = -nologo -I../../../MiniWin -I../../../MiniWin/gl/fonts/truetype/mcufont -Isrc -I../../../" << json["TargetName"].string_value() << "_Common\n";
 
 		outfileNmake <<
 				"OBJECTS = src/*.obj \\\n"
