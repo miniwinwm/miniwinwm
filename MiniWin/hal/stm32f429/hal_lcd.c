@@ -141,8 +141,8 @@ void mw_hal_lcd_colour_bitmap_clip(int16_t image_start_x,
 	/* check if pixels in data buffer are all to be drawn and if so use bitmap draw routine */
 	if (image_start_x >= clip_start_x &&
 			image_start_y >= clip_start_y &&
-			image_start_x + (int16_t)image_data_width_pixels < clip_start_x + clip_width &&
-			image_start_y + (int16_t)image_data_height_pixels < clip_start_y + clip_height)
+			image_start_x + (int16_t)image_data_width_pixels <= clip_start_x + clip_width &&
+			image_start_y + (int16_t)image_data_height_pixels <= clip_start_y + clip_height)
 	{
 		BSP_LCD_DrawBitmap24((uint16_t)image_start_x,
 				(uint16_t)image_start_y,
