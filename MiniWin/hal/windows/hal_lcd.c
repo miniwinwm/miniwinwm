@@ -133,7 +133,8 @@ void mw_hal_lcd_colour_bitmap_clip(int16_t image_start_x,
 {
 	int16_t x;
 	int16_t y;
-	mw_hal_lcd_colour_t pixel_colour;
+
+	hdc = GetDC(hwnd);
 
 	for (y = 0; y < image_data_height_pixels; y++)
 	{
@@ -144,14 +145,18 @@ void mw_hal_lcd_colour_bitmap_clip(int16_t image_start_x,
 					y + image_start_y >= clip_start_y &&
 					y + image_start_y < clip_start_y + clip_height)
 			{
-				pixel_colour = *(data + (x + y * image_data_width_pixels) * 3);
-				pixel_colour |= *(1 + data + (x + y * image_data_width_pixels) * 3) << 8U;
-				pixel_colour |= *(2 + data + (x + y * image_data_width_pixels) * 3) << 16U;
-				mw_hal_lcd_pixel(x + image_start_x, y + image_start_y, pixel_colour);
+				(void)SetPixel(hdc,
+						x + image_start_x,
+						y + image_start_y,
+						RGB(*(data + (x + y * image_data_width_pixels) * 3),
+								*(1 + data + (x + y * image_data_width_pixels) * 3),
+								*(2 + data + (x + y * image_data_width_pixels) * 3)));
 			}
 		}
 
 	}
+
+	(void)ReleaseDC(hwnd, hdc);
 }
 
 void mw_hal_lcd_monochrome_bitmap_clip(int16_t image_start_x,
