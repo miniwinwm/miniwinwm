@@ -1,36 +1,75 @@
+/*
+
+MIT License
+
+Copyright (c) John Blaiklock 2020 miniwin Embedded Window Manager
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+*/
+
+/***************
+*** INCLUDES ***
+***************/
+
 #include <windows.h>
 #include <stdbool.h>
 #include "miniwin.h"
 #include "camlib.h"
 #include "gcc_camlib.h"
 
+/****************
+*** CONSTANTS ***
+****************/
+
 #define WINDOW_START_LOCATION_X		100
 #define WINDOW_START_LOCATION_Y		100
+
+/************
+*** TYPES ***
+************/
+
+/***********************
+*** GLOBAL VARIABLES ***
+***********************/
 
 HWND hwnd;
 bool mouse_down = false;
 SHORT mx;
 SHORT my;
 
+/**********************
+*** LOCAL VARIABLES ***
+**********************/
+
 static gcc_camlib_t gcc_cam_lib;
+
+/********************************
+*** LOCAL FUNCTION PROTOTYPES ***
+********************************/
 
 static VOID MouseEventProc(LPARAM lp);
 static LRESULT CALLBACK WindowProc(HWND window, UINT msg, WPARAM wp, LPARAM lp);
 
-void camlib_init(void)
-{
-	gcc_cam_lib = gcc_camlib_init();
-}
-
-uint16_t *get_frame(void)
-{
-	return gcc_camlib_get_frame(gcc_cam_lib);
-}
-
-void capture(void)
-{
-	gcc_camlib_capture(gcc_cam_lib);
-}
+/**********************
+*** LOCAL FUNCTIONS ***
+**********************/
 
 static VOID MouseEventProc(LPARAM lp)
 {
@@ -65,10 +104,6 @@ static LRESULT CALLBACK WindowProc(HWND window, UINT msg, WPARAM wp, LPARAM lp)
 {
     switch(msg)
     {
-	case WM_CREATE:
-		camlib_init();
-		break;
-
 	case WM_DESTROY:
 		gcc_camlib_destroy(gcc_cam_lib);
 		PostQuitMessage(0);
@@ -98,6 +133,25 @@ static LRESULT CALLBACK WindowProc(HWND window, UINT msg, WPARAM wp, LPARAM lp)
     return 0;
 }
 
+/***********************
+*** GLOBAL FUNCTIONS ***
+***********************/
+
+void camlib_init(void)
+{
+	gcc_cam_lib = gcc_camlib_init();
+}
+
+uint16_t *get_frame(void)
+{
+	return gcc_camlib_get_frame(gcc_cam_lib);
+}
+
+void capture(void)
+{
+	gcc_camlib_capture(gcc_cam_lib);
+}
+
 void app_init(void)
 {
     const char* const miniwin_class = "miniwin_class";
@@ -118,6 +172,8 @@ void app_init(void)
 			   r.right - r.left, r.bottom - r.top, 0, 0, GetModuleHandle(0), 0);
 
 	ShowWindow(hwnd, SW_SHOWDEFAULT);
+
+	camlib_init();
 }
 
 void app_main_loop_process(void)
