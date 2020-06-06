@@ -32,7 +32,6 @@ SOFTWARE.
 #include <stdbool.h>
 #include "miniwin.h"
 #include "camlib.h"
-#include "gcc_camlib.h"
 
 /****************
 *** CONSTANTS ***
@@ -57,8 +56,6 @@ SHORT my;
 /**********************
 *** LOCAL VARIABLES ***
 **********************/
-
-static gcc_camlib_t gcc_cam_lib;
 
 /********************************
 *** LOCAL FUNCTION PROTOTYPES ***
@@ -105,7 +102,6 @@ static LRESULT CALLBACK WindowProc(HWND window, UINT msg, WPARAM wp, LPARAM lp)
     switch(msg)
     {
 	case WM_DESTROY:
-		gcc_camlib_destroy(gcc_cam_lib);
 		PostQuitMessage(0);
 		exit(0);
 
@@ -137,21 +133,6 @@ static LRESULT CALLBACK WindowProc(HWND window, UINT msg, WPARAM wp, LPARAM lp)
 *** GLOBAL FUNCTIONS ***
 ***********************/
 
-void camlib_init(void)
-{
-	gcc_cam_lib = gcc_camlib_init();
-}
-
-uint16_t *get_frame(void)
-{
-	return gcc_camlib_get_frame(gcc_cam_lib);
-}
-
-void capture(void)
-{
-	gcc_camlib_capture(gcc_cam_lib);
-}
-
 void app_init(void)
 {
     const char* const miniwin_class = "miniwin_class";
@@ -165,7 +146,7 @@ void app_init(void)
     		WINDOW_START_LOCATION_Y,
 			WINDOW_START_LOCATION_X + MW_ROOT_WIDTH,
 			WINDOW_START_LOCATION_Y + MW_ROOT_HEIGHT};
-   AdjustWindowRectEx(&r, WS_OVERLAPPEDWINDOW, FALSE, 0);
+    AdjustWindowRectEx(&r, WS_OVERLAPPEDWINDOW, FALSE, 0);
 
 	hwnd = CreateWindow(miniwin_class, "MiniWin Sim",
 			   WS_OVERLAPPEDWINDOW | WS_CAPTION, r.left, r.top,

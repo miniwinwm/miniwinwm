@@ -20,7 +20,7 @@ OBJECTS := $(SRCS:.c=.o)
 LIBS = -L. -lopencv_core.dll -lopencv_imgproc.dll -lopencv_videoio.dll -lgdi32
 
 all: gcc_camlib.o ${OBJECTS} 
-	$(CPP) $(CFLAGS) gcc_camlib.o ${OBJECTS} ${LIBS} -o ${BINARY}
+	$(CPP) $(CFLAGS) camlib_opencv.o ${OBJECTS} ${LIBS} -o ${BINARY}
 
 clean:
 	$(RM) $(subst /,\,$(OBJECTS))

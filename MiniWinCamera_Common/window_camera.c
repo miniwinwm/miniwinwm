@@ -20,7 +20,7 @@ void window_window_camera_paint_function(mw_handle_t window_handle, const mw_gl_
 
 	MW_ASSERT(draw_info != (void*)0, "Null pointer parameter");
 
-	frame_data = get_frame();
+	frame_data = camlib_get_frame();
 	if (window_window_camera_data.captured && frame_data != NULL)
 	{
 		for (uint32_t y = 0U; y < 120U; y++)
@@ -72,7 +72,7 @@ void window_window_camera_message_function(const mw_message_t *message)
 		break;
 
     case MW_TIMER_MESSAGE:
-	    capture();
+	    camlib_capture();
 	    window_window_camera_data.captured = true;
 	    mw_paint_window_client(message->recipient_handle);
 	    mw_set_timer(mw_tick_counter + 2, message->recipient_handle, MW_WINDOW_MESSAGE);
