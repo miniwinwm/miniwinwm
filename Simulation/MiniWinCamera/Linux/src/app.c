@@ -31,7 +31,6 @@ SOFTWARE.
 #include "miniwin.h"
 #include "app.h"
 #include "camlib.h"
-#include "gcc_camlib.h"
 
 /****************
 *** CONSTANTS ***
@@ -54,8 +53,6 @@ Atom wm_delete_window_message;
 *** LOCAL VARIABLES ***
 **********************/
 
-static gcc_camlib_t gcc_cam_lib;
-
 /********************************
 *** LOCAL FUNCTION PROTOTYPES ***
 ********************************/
@@ -63,21 +60,6 @@ static gcc_camlib_t gcc_cam_lib;
 /**********************
 *** LOCAL FUNCTIONS ***
 **********************/
-
-void camlib_init(void)
-{
-	gcc_cam_lib = gcc_camlib_init();
-}
-
-uint16_t *get_frame(void)
-{
-	return gcc_camlib_get_frame(gcc_cam_lib);
-}
-
-void capture(void)
-{
-	gcc_camlib_capture(gcc_cam_lib);
-}
 
 /***********************
 *** GLOBAL FUNCTIONS ***
