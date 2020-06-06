@@ -17,10 +17,10 @@ SRCS := $(wildcard src/*.c) \
 CPP = g++
 CFLAGS = -D_WIN32 -I../../../MiniWin -I../../../MiniWin/gl/fonts/truetype/mcufont -Isrc -I../../../MiniWinCamera_Common -g -Wall
 OBJECTS := $(SRCS:.c=.o)
-LIBS = -L. -lopencv_core.dll -lopencv_imgproc.dll -lopencv_videoio.dll -lgdi32
+LIBS = -Llib -lopencv_core.dll -lopencv_imgproc.dll -lopencv_videoio.dll -lgdi32
 
-all: camlib_opencv.o ${OBJECTS} 
-	$(CPP) $(CFLAGS) camlib_opencv.o ${OBJECTS} ${LIBS} -o ${BINARY}
+all: lib/camlib_opencv.o ${OBJECTS} 
+	$(CPP) $(CFLAGS) lib/camlib_opencv.o ${OBJECTS} ${LIBS} -o ${BINARY}
 
 clean:
 	$(RM) $(subst /,\,$(OBJECTS))
