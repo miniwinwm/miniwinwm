@@ -74,6 +74,11 @@ static inline void write_data_dma(const void *data, uint16_t length);
 static inline void wait_for_dma_write_complete(void);
 static inline void write_command(uint8_t command);
 static inline void write_data(uint8_t data);
+static inline void mw_hal_lcd_filled_rectangle_rotated(int16_t start_x,
+		int16_t start_y,
+		int16_t width,
+		int16_t height,
+		mw_hal_lcd_colour_t colour);
 
 /**********************
 *** LOCAL FUNCTIONS ***
@@ -156,6 +161,58 @@ static inline void set_window(uint16_t start_x, uint16_t start_y, uint16_t end_x
 
 	write_command(0x2CU);
 	HAL_GPIO_WritePin(ILI9341_DC_PORT, ILI9341_DC_PIN, GPIO_PIN_SET);
+}
+
+/**
+ * Plot a filled rectangle using already rotated coordinates. Position and size values are not clipped to the screen.
+ *
+ * @param start_x X position of left edge of rectangle
+ * @param start_y Y position of top of rectangle
+ * @param width Width of rectangle, pixels plotted are from start_x to (start_x + width) - 1
+ * @param height Height of rectangle, pixels plotted are from start_y to (start_y + height) - 1
+ * @param colour The colour of the pixel to plot
+ */
+static inline void mw_hal_lcd_filled_rectangle_rotated(int16_t start_x,
+		int16_t start_y,
+		int16_t width,
+		int16_t height,
+		mw_hal_lcd_colour_t colour)
+{
+	uint16_t dmaBuffer[DMA_BUFFER_SIZE];
+	uint8_t i;
+	uint32_t totalBytesToWrite;
+	uint32_t bytesToWriteThisTime;
+	uint16_t rgb565_colour;
+
+	/* convert pixel colour from rgb888 to rgb565 format */
+	rgb565_colour = (uint16_t)((((uint32_t)colour & 0xf80000UL) >> 8) |
+			(((uint32_t)colour & 0x00fc00UL) >> 5) |
+			(((uint32_t)colour & 0x0000f8UL) >> 3));
+
+	/* swap endianess */
+	rgb565_colour = __builtin_bswap16(rgb565_colour);
+
+	for (i = 0U; i < DMA_BUFFER_SIZE; i++)
+	{
+		dmaBuffer[i] = rgb565_colour;
+	}
+
+	totalBytesToWrite = (uint32_t)width * (uint32_t)height * (uint32_t)sizeof(uint16_t);
+	bytesToWriteThisTime = DMA_BUFFER_SIZE * (uint16_t)sizeof(uint16_t);
+
+	set_window(start_x, start_y, start_x + width - 1U, start_y + height - 1U);
+
+	while (totalBytesToWrite > 0UL)
+	{
+		if (totalBytesToWrite < bytesToWriteThisTime)
+		{
+			bytesToWriteThisTime = totalBytesToWrite;
+		}
+		totalBytesToWrite -= bytesToWriteThisTime;
+
+		write_data_dma(&dmaBuffer, bytesToWriteThisTime);
+		wait_for_dma_write_complete();
+	}
 }
 
 /***********************
@@ -376,41 +433,15 @@ void mw_hal_lcd_filled_rectangle(int16_t start_x,
 		int16_t height,
 		mw_hal_lcd_colour_t colour)
 {
-	uint16_t dmaBuffer[DMA_BUFFER_SIZE];
-	uint8_t i;
-	uint32_t totalBytesToWrite;
-	uint32_t bytesToWriteThisTime;
-	uint16_t rgb565_colour;
-
-	/* convert pixel colour from rgb888 to rgb565 format */
-	rgb565_colour = (uint16_t)((((uint32_t)colour & 0xf80000UL) >> 8) |
-			(((uint32_t)colour & 0x00fc00UL) >> 5) |
-			(((uint32_t)colour & 0x0000f8UL) >> 3));
-
-	/* swap endianess */
-	rgb565_colour = __builtin_bswap16(rgb565_colour);
-
-	for (i = 0U; i < DMA_BUFFER_SIZE; i++)
-	{
-		dmaBuffer[i] = rgb565_colour;
-	}
-
-	totalBytesToWrite = (uint32_t)width * (uint32_t)height * (uint32_t)sizeof(uint16_t);
-	bytesToWriteThisTime = DMA_BUFFER_SIZE * (uint16_t)sizeof(uint16_t);
-
-	set_window(start_x, start_y, start_x + width - 1U, start_y + height - 1U);
-
-	while (totalBytesToWrite > 0UL)
-	{
-		if (totalBytesToWrite < bytesToWriteThisTime)
-		{
-			bytesToWriteThisTime = totalBytesToWrite;
-		}
-		totalBytesToWrite -= bytesToWriteThisTime;
-
-		write_data_dma(&dmaBuffer, bytesToWriteThisTime);
-		wait_for_dma_write_complete();
-	}
+#if defined(MW_DISPLAY_ROTATION_0)
+	mw_hal_lcd_filled_rectangle_rotated(start_x, start_y, width, height, colour);
+#elif defined(MW_DISPLAY_ROTATION_90)
+	mw_hal_lcd_filled_rectangle_rotated(start_y, LCD_DISPLAY_HEIGHT_PIXELS - start_x - width, height, width, colour);
+#elif defined (MW_DISPLAY_ROTATION_180)
+	mw_hal_lcd_filled_rectangle_rotated(LCD_DISPLAY_WIDTH_PIXELS - start_x - width, LCD_DISPLAY_HEIGHT_PIXELS - start_y - height, width, height, colour);
+#elif defined (MW_DISPLAY_ROTATION_270)
+	mw_hal_lcd_filled_rectangle_rotated(LCD_DISPLAY_WIDTH_PIXELS - start_y - height, start_x, height, width, colour);
+#endif
 }
 
 void mw_hal_lcd_colour_bitmap_clip(int16_t image_start_x,
@@ -425,64 +456,7 @@ void mw_hal_lcd_colour_bitmap_clip(int16_t image_start_x,
 {
 	int16_t x;
 	int16_t y;
-	uint16_t rgb565_colour;
-	uint32_t pixels_to_plot;
-	uint16_t dmaBuffer[DMA_BUFFER_SIZE];
-	uint16_t next_buffer_position = 0U;
-	uint16_t red_byte;
-	uint16_t blue_byte;
-	uint16_t green_byte;
-	int16_t window_start_x;
-	int16_t window_start_y;
-	int16_t window_width;
-	int16_t window_height;
-
-	if (clip_start_x > image_start_x)
-	{
-		window_start_x = clip_start_x;
-	}
-	else
-	{
-		window_start_x = image_start_x;
-	}
-
-	window_width = image_data_width_pixels;
-	if (image_start_x < clip_start_x)
-	{
-		window_width -= clip_start_x - image_start_x;
-	}
-
-	if (image_start_x + image_data_width_pixels > clip_start_x + clip_width)
-	{
-		window_width -= ((image_start_x + image_data_width_pixels) - (clip_start_x + clip_width));
-	}
-
-	if (clip_start_y > image_start_y)
-	{
-		window_start_y = clip_start_y;
-	}
-	else
-	{
-		window_start_y = image_start_y;
-	}
-
-	window_height = image_data_height_pixels;
-	if (image_start_y < clip_start_y)
-	{
-		window_height -= clip_start_y - image_start_y;
-	}
-
-	if (image_start_y + image_data_height_pixels > clip_start_y + clip_height)
-	{
-		window_height -= ((image_start_y + image_data_height_pixels) - (clip_start_y + clip_height));
-	}
-
-	set_window((uint16_t)window_start_x,
-			(uint16_t)window_start_y,
-			(uint16_t)(window_start_x + window_width - 1),
-			(uint16_t)(window_start_y + window_height - 1));
-
-	pixels_to_plot = (uint32_t)window_width * (uint32_t)window_height;
+	mw_hal_lcd_colour_t pixel_colour;
 
 	for (y = 0; y < (int16_t)image_data_height_pixels; y++)
 	{
@@ -493,34 +467,12 @@ void mw_hal_lcd_colour_bitmap_clip(int16_t image_start_x,
 					y + image_start_y >= clip_start_y &&
 					y + image_start_y < clip_start_y + clip_height)
 			{
-				/* get 3 bytes of next 24 bit rgb888 pixel */
-				red_byte = (uint16_t)*(2 + data + (x + y * (int16_t)image_data_width_pixels) * 3);
-				green_byte = (uint16_t)*(1 + data + (x + y * (int16_t)image_data_width_pixels) * 3);
-				blue_byte = (uint16_t)*(data + (x + y * (int16_t)image_data_width_pixels) * 3);
-
-				/* convert into rgb565 format and swap endianess */
-				rgb565_colour = blue_byte >> 3;
-				rgb565_colour |= (green_byte & 0x00fcU) << 3;
-				rgb565_colour |= (red_byte & 0x00f8U) << 8;
-				rgb565_colour = __builtin_bswap16(rgb565_colour);
-
-				dmaBuffer[next_buffer_position] = rgb565_colour;
-				next_buffer_position++;
-				pixels_to_plot--;
-
-				if (next_buffer_position == DMA_BUFFER_SIZE || pixels_to_plot == 0UL)
-				{
-					if (pixels_to_plot == 0UL)
-					{
-						write_data_dma(&dmaBuffer, next_buffer_position * 2U);
-						wait_for_dma_write_complete();
-						return;
-					}
-
-					write_data_dma(&dmaBuffer, DMA_BUFFER_SIZE * 2U);
-					wait_for_dma_write_complete();
-					next_buffer_position = 0U;
-				}
+				pixel_colour = *(2 + data + (x + y * (int16_t)image_data_width_pixels) * 3);
+				pixel_colour <<= 8;
+				pixel_colour += *(1 + data + (x + y * (int16_t)image_data_width_pixels) * 3);
+				pixel_colour <<= 8;
+				pixel_colour += *(data + (x + y * (int16_t)image_data_width_pixels) * 3);
+				mw_hal_lcd_pixel(x + image_start_x, y + image_start_y, pixel_colour);
 			}
 		}
 	}
@@ -544,78 +496,6 @@ void mw_hal_lcd_monochrome_bitmap_clip(int16_t image_start_x,
 	uint8_t image_byte;
 	uint8_t mask;
 	int16_t array_width_bytes;
-	uint16_t rgb565_fg_colour;
-	uint16_t rgb565_bg_colour;
-	uint32_t pixels_to_plot;
-	uint16_t dmaBuffer[DMA_BUFFER_SIZE];
-	uint16_t next_buffer_position = 0U;
-	int16_t window_start_x;
-	int16_t window_start_y;
-	int16_t window_width;
-	int16_t window_height;
-
-	if (clip_start_x > image_start_x)
-	{
-		window_start_x = clip_start_x;
-	}
-	else
-	{
-		window_start_x = image_start_x;
-	}
-
-	window_width = bitmap_width;
-	if (image_start_x < clip_start_x)
-	{
-		window_width -= clip_start_x - image_start_x;
-	}
-
-	if (image_start_x + bitmap_width > clip_start_x + clip_width)
-	{
-		window_width -= ((image_start_x + bitmap_width) - (clip_start_x + clip_width));
-	}
-
-	if (clip_start_y > image_start_y)
-	{
-		window_start_y = clip_start_y;
-	}
-	else
-	{
-		window_start_y = image_start_y;
-	}
-
-	window_height = bitmap_height;
-	if (image_start_y < clip_start_y)
-	{
-		window_height -= clip_start_y - image_start_y;
-	}
-
-	if (image_start_y + bitmap_height > clip_start_y + clip_height)
-	{
-		window_height -= ((image_start_y + bitmap_height) - (clip_start_y + clip_height));
-	}
-
-	set_window((uint16_t)window_start_x,
-			(uint16_t)window_start_y,
-			(uint16_t)(window_start_x + window_width - 1),
-			(uint16_t)(window_start_y + window_height - 1));
-
-	pixels_to_plot = (uint32_t)window_width * (uint32_t)window_height;
-
-	/* convert fg pixel colour from rgb888 to rgb565 format */
-	rgb565_fg_colour = (uint16_t)((((uint32_t)fg_colour & 0xf80000UL) >> 8) |
-			(((uint32_t)fg_colour & 0x00fc00UL) >> 5) |
-			(((uint32_t)fg_colour & 0x0000f8UL) >> 3));
-
-	/* swap endianess */
-	rgb565_fg_colour = __builtin_bswap16(rgb565_fg_colour);
-
-	/* convert bg pixel colour from rgb888 to rgb565 format */
-	rgb565_bg_colour = (uint16_t)((((uint32_t)bg_colour & 0xf80000U) >> 8) |
-			(((uint32_t)bg_colour & 0x00fc00U) >> 5) |
-			(((uint32_t)bg_colour & 0x0000f8U) >> 3));
-
-	/* swap endianess */
-	rgb565_bg_colour = __builtin_bswap16(rgb565_bg_colour);
 
 	array_width_bytes = (int16_t)bitmap_width / 8;
 	if (bitmap_width % 8U > 0U)
@@ -642,27 +522,11 @@ void mw_hal_lcd_monochrome_bitmap_clip(int16_t image_start_x,
 				{
 					if ((image_byte & mask) == 0U)
 					{
-						dmaBuffer[next_buffer_position] = rgb565_fg_colour;
+						mw_hal_lcd_pixel((a * 8) + x + image_start_x, y + image_start_y, fg_colour);
 					}
 					else
 					{
-						dmaBuffer[next_buffer_position] = rgb565_bg_colour;
-					}
-					next_buffer_position++;
-					pixels_to_plot--;
-
-					if (next_buffer_position == DMA_BUFFER_SIZE || pixels_to_plot == 0UL)
-					{
-						if (pixels_to_plot == 0UL)
-						{
-							write_data_dma(&dmaBuffer, next_buffer_position * 2U);
-							wait_for_dma_write_complete();
-							return;
-						}
-
-						write_data_dma(&dmaBuffer, DMA_BUFFER_SIZE * 2U);
-						wait_for_dma_write_complete();
-						next_buffer_position = 0U;
+						mw_hal_lcd_pixel((a * 8) + x + image_start_x, y + image_start_y, bg_colour);
 					}
 				}
 				mask >>= 1;

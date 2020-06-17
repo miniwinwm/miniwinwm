@@ -202,7 +202,7 @@ void mw_hal_lcd_monochrome_bitmap_clip(int16_t image_start_x,
 		for (a = 0; a < array_width_bytes; a++)
 		{
 			image_byte = image_data[y * array_width_bytes + a];
-			mask = 0x80;
+			mask = 0x80U;
 			for (x = 0; x < 8; x++)
 			{
 				if ((a * 8) + x == (int16_t)bitmap_width)
