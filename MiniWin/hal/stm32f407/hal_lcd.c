@@ -32,7 +32,6 @@ SOFTWARE.
 
 #include <stdbool.h>
 #include "hal/hal_lcd.h"
-#include "hal/hal_delay.h"
 #include "miniwin_config.h"
 #include "stm32f4xx_hal.h"
 
@@ -42,6 +41,13 @@ SOFTWARE.
 
 #define LCD_DISPLAY_WIDTH_PIXELS	240							/**< This is the width of the display in pixels irrespective of user specified display rotation */
 #define LCD_DISPLAY_HEIGHT_PIXELS	320							/**< This is the height of the display in pixels irrespective of user specified display rotation */
+#define DMA_BUFFER_SIZE 			64U							/**< Number of bytes written to LCD in one go by DMA */
+#define ILI9341_RST_PORT           	GPIOD						/**< Port of ILI9341 RESET# line */
+#define ILI9341_RST_PIN             GPIO_PIN_6					/**< Pin of ILI9341 RESET# line */
+#define ILI9341_DC_PORT             GPIOD						/**< Port of ILI9341 DC line */
+#define ILI9341_DC_PIN              GPIO_PIN_7					/**< Pin of ILI9341 DC line */
+#define ILI9341_CS_PORT             GPIOD						/**< Port of ILI9341 CS# line */
+#define ILI9341_CS_PIN              GPIO_PIN_8					/**< Pin of ILI9341 CS# line */
 
 /************
 *** TYPES ***
@@ -55,144 +61,278 @@ SOFTWARE.
 *** LOCAL VARIABLES ***
 **********************/
 
+static volatile bool dma_transmit_complete;
+static SPI_HandleTypeDef hspi2;
+static DMA_HandleTypeDef hdma_spi2_tx;
+
 /********************************
 *** LOCAL FUNCTION PROTOTYPES ***
 ********************************/
 
-static void write_command(uint8_t register_address, uint16_t data);
-static void set_register_address(uint8_t data);
-static void write_data(uint16_t data);
+static inline void set_window(uint16_t start_x, uint16_t start_y, uint16_t end_x, uint16_t end_y);
+static inline void write_data_dma(const void *data, uint16_t length);
+static inline void wait_for_dma_write_complete(void);
+static inline void write_command(uint8_t command);
+static inline void write_data(uint8_t data);
 
 /**********************
 *** LOCAL FUNCTIONS ***
 **********************/
 
 /**
- * Write a command into a register
- *
- * @param address The lcd controller register address
- * @param data The value of the command to put into the register
+ * Wait for the SPI TX transfer to complete and return when it's done after receiving the DMA TX interrupt
  */
-static void write_command(uint8_t register_address, uint16_t data)
+static inline void wait_for_dma_write_complete(void)
 {
-	set_register_address(register_address);
-	write_data(data);
+	while (dma_transmit_complete == false)
+	{
+	}
 }
 
 /**
- * Write an address onto the data bus to the lcd, this has RS line low
+ * Send a known length of data to SPI via DMA
  *
- * @data The 16 bit data value to write
+ * @param data The data to send
+ * @param length The number of bytes in data
  */
-static void set_register_address(uint8_t data)
+static inline void write_data_dma(const void *data, uint16_t length)
 {
-	/* RS = 0 */
-    HAL_GPIO_WritePin(GPIOD, GPIO_PIN_11, GPIO_PIN_RESET );
-
-    /* write data */
-    GPIOE->ODR = (uint32_t)data;
-
-	/* WR = 0 */
-    HAL_GPIO_WritePin(GPIOD, GPIO_PIN_5, GPIO_PIN_RESET );
-	/* WR = 1 */
-    HAL_GPIO_WritePin(GPIOD, GPIO_PIN_5, GPIO_PIN_SET );
+	dma_transmit_complete = false;
+	HAL_SPI_Transmit_DMA(&hspi2, (uint8_t *)data, length);
 }
 
 /**
- * Write data onto the data bus to the lcd, this has RS line high
+ * Send a command to the ILI9341 panel by switching the DC line to C first
  *
- * @data The 16 bit data value to write
+ * @param command The command byte
  */
-static void write_data(uint16_t data)
+static inline void write_command(uint8_t command)
 {
-    /* RS = 1 */
-    HAL_GPIO_WritePin(GPIOD, GPIO_PIN_11, GPIO_PIN_SET );
+	HAL_GPIO_WritePin(ILI9341_DC_PORT, ILI9341_DC_PIN, GPIO_PIN_RESET);
+	HAL_SPI_Transmit(&hspi2, &command, 1U, 100U);
+}
 
-    /* write data */
-    GPIOE->ODR = (uint32_t)data;
+/**
+ * Send a data byte to the ILI9341 panel by switching the DC line to D first
+ *
+ * @param data The data byte
+ */
+static inline void write_data(uint8_t data)
+{
+	HAL_GPIO_WritePin(ILI9341_DC_PORT, ILI9341_DC_PIN, GPIO_PIN_SET);
+	HAL_SPI_Transmit(&hspi2, &data, 1U, 100U);
+}
 
-	/* WR = 0 */
-	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_5, GPIO_PIN_RESET );
-	/* WR = 1 */
-	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_5, GPIO_PIN_SET );
+/**
+ * Send the set window command to the ILI9341 panel
+ *
+ * @param start_x Left edge of window
+ * @param start_y Top edge of window
+ * @param end_x Right edge of window
+ * @param end_y Bottom edge of window
+
+ */
+static inline void set_window(uint16_t start_x, uint16_t start_y, uint16_t end_x, uint16_t end_y)
+{
+	uint8_t data[4];
+
+	write_command(0x2AU);
+	data[0] = start_x >> 8;
+	data[1] = start_x;
+	data[2] = end_x >> 8;
+	data[3] = end_x;
+	HAL_GPIO_WritePin(ILI9341_DC_PORT, ILI9341_DC_PIN, GPIO_PIN_SET);
+	write_data_dma(data, (uint16_t)sizeof(data));
+	wait_for_dma_write_complete();
+
+	write_command(0x2BU);
+	data[0] = start_y >> 8;
+	data[1] = start_y;
+	data[2] = end_y >> 8;
+	data[3] = end_y;
+	HAL_GPIO_WritePin(ILI9341_DC_PORT, ILI9341_DC_PIN, GPIO_PIN_SET);
+	write_data_dma(data, (uint16_t)sizeof(data));
+	wait_for_dma_write_complete();
+
+	write_command(0x2CU);
+	HAL_GPIO_WritePin(ILI9341_DC_PORT, ILI9341_DC_PIN, GPIO_PIN_SET);
 }
 
 /***********************
 *** GLOBAL FUNCTIONS ***
 ***********************/
 
+/**
+ * Called by the HAL framework when SPI DMA TX interrupt fires
+ */
+void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi)
+{
+	dma_transmit_complete = true;
+}
+
 void mw_hal_lcd_init(void)
 {
-	GPIO_InitTypeDef GPIO_InitStruct;
+	GPIO_InitTypeDef GPIO_InitStruct = { 0 };
+
+    __HAL_RCC_SPI2_CLK_ENABLE();
+	__HAL_RCC_GPIOB_CLK_ENABLE();
+    __HAL_RCC_GPIOC_CLK_ENABLE();
 	__HAL_RCC_GPIOD_CLK_ENABLE();
-	__HAL_RCC_GPIOE_CLK_ENABLE();
+	__HAL_RCC_DMA1_CLK_ENABLE();
 
-	GPIO_InitStruct.Pin = GPIO_PIN_All;
+	/* configure GPIO pins used SPI2 MISO / MOSI / CLK pins */
+    GPIO_InitStruct.Pin = GPIO_PIN_2;
+    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+    GPIO_InitStruct.Alternate = GPIO_AF5_SPI2;
+    HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+    GPIO_InitStruct.Pin = GPIO_PIN_13 | GPIO_PIN_15;
+    HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+	/* configure GPIO pins used for RESET#, CS# and DC PD6, PD7, PD8 */
+	GPIO_InitStruct.Pin = GPIO_PIN_6 | GPIO_PIN_7 | GPIO_PIN_8;
 	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-	GPIO_InitStruct.Speed = GPIO_SPEED_HIGH;
-	GPIO_InitStruct.Pull = GPIO_NOPULL;
-	HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
-
-	GPIO_InitStruct.Pin = GPIO_PIN_1  | GPIO_PIN_4  | GPIO_PIN_5  | GPIO_PIN_7 | GPIO_PIN_11;
 	HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 
-    /* reset the display */
-	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_1, GPIO_PIN_SET);
-    mw_hal_delay_ms(5U);
-    HAL_GPIO_WritePin(GPIOD, GPIO_PIN_1, GPIO_PIN_RESET);
-    mw_hal_delay_ms(30U);
-    HAL_GPIO_WritePin(GPIOD, GPIO_PIN_1, GPIO_PIN_SET);
-    mw_hal_delay_ms(20U);
+	/* configure SPI2 */
+	hspi2.Instance = SPI2;
+	hspi2.Init.Mode = SPI_MODE_MASTER;
+	hspi2.Init.Direction = SPI_DIRECTION_2LINES;
+	hspi2.Init.DataSize = SPI_DATASIZE_8BIT;
+	hspi2.Init.CLKPolarity = SPI_POLARITY_LOW;
+	hspi2.Init.CLKPhase = SPI_PHASE_1EDGE;
+	hspi2.Init.NSS = SPI_NSS_SOFT;
+	hspi2.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_2;
+	hspi2.Init.FirstBit = SPI_FIRSTBIT_MSB;
+	hspi2.Init.TIMode = SPI_TIMODE_DISABLE;
+	hspi2.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
+	hspi2.Init.CRCPolynomial = 10;
+	HAL_SPI_Init(&hspi2);
 
-	/* RD = 1 */
-    HAL_GPIO_WritePin(GPIOD, GPIO_PIN_4, GPIO_PIN_SET);
+    /* configure SPI2 Tx DMA */
+    hdma_spi2_tx.Instance = DMA1_Stream4;
+    hdma_spi2_tx.Init.Channel = DMA_CHANNEL_0;
+    hdma_spi2_tx.Init.Direction = DMA_MEMORY_TO_PERIPH;
+    hdma_spi2_tx.Init.PeriphInc = DMA_PINC_DISABLE;
+    hdma_spi2_tx.Init.MemInc = DMA_MINC_ENABLE;
+    hdma_spi2_tx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
+    hdma_spi2_tx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
+    hdma_spi2_tx.Init.Mode = DMA_NORMAL;
+    hdma_spi2_tx.Init.Priority = DMA_PRIORITY_VERY_HIGH;
+    hdma_spi2_tx.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
+    HAL_DMA_Init(&hdma_spi2_tx);
+    __HAL_LINKDMA(&hspi2, hdmatx,hdma_spi2_tx);
 
-	/* WR = 1 */
-    HAL_GPIO_WritePin(GPIOD, GPIO_PIN_5, GPIO_PIN_SET);
+	/* configure DMA1_Stream4_IRQn interrupt configuration */
+	HAL_NVIC_SetPriority(DMA1_Stream4_IRQn, 0UL, 0UL);
+	HAL_NVIC_EnableIRQ(DMA1_Stream4_IRQn);
 
-	/* CS = 1 */
-    HAL_GPIO_WritePin(GPIOD, GPIO_PIN_7, GPIO_PIN_RESET);
+	/* select the device permanently */
+	HAL_GPIO_WritePin(ILI9341_CS_PORT, ILI9341_CS_PIN, GPIO_PIN_RESET);
 
-    write_command(0x00U, 0x0001U);		/* oscillator on/off */
-    write_command(0x03U, 0xA8A4U);		/* power control 1 */
-    write_command(0x0CU, 0x0000U);		/* power control 2 */
-    write_command(0x0DU, 0x080CU);		/* power control 3 */
-    write_command(0x0EU, 0x2B00U);		/* power control 4 */
-    write_command(0x1EU, 0x00B0U);		/* power control 5 */
-    write_command(0x01U, 0x2B3FU);		/* driver output control */
-    write_command(0x02U, 0x0600U);		/* LCD drive AC control */
-    write_command(0x10U, 0x0000U);		/* sleep mode */
-    write_command(0x11U, 0x6070U);		/* entry mode */
-    write_command(0x05U, 0x0000U);		/* compare register 1 */
-    write_command(0x06U, 0x0000U);		/* compare register 2 */
-    write_command(0x16U, 0xEF1CU);		/* horizontal porch */
-    write_command(0x17U, 0x0003U);		/* vertical porch */
-    write_command(0x07U, 0x0233U);		/* display control */
-    write_command(0x0BU, 0x0000U);		/* frame cycle control */
-    write_command(0x0FU, 0x0000U);		/* gate scan start pos */
-    write_command(0x41U, 0x0000U);		/* vertical scroll control 1 */
-    write_command(0x42U, 0x0000U);		/* vertical scroll control 2 */
-    write_command(0x48U, 0x0000U);		/* first window start */
-    write_command(0x49U, 0x013FU);		/* first window end */
-    write_command(0x4AU, 0x0000U);		/* second window start */
-    write_command(0x4BU, 0x0000U);		/* second window end */
-    write_command(0x44U, 0xEF00U);		/* horizontal ram address pos */
-    write_command(0x45U, 0x0000U);		/* vertical ram address start pos */
-    write_command(0x46U, 0x013FU);		/* vertical ram address end pos */
-    write_command(0x30U, 0x0707U);		/* gamma control */
-    write_command(0x31U, 0x0204U);
-    write_command(0x32U, 0x0204U);
-    write_command(0x33U, 0x0502U);
-    write_command(0x34U, 0x0507U);
-    write_command(0x35U, 0x0204U);
-    write_command(0x36U, 0x0204U);
-    write_command(0x37U, 0x0502U);
-    write_command(0x3AU, 0x0302U);
-    write_command(0x3BU, 0x0302U);
-    write_command(0x23U, 0x0000U);		/* ram write data mask 1 */
-    write_command(0x24U, 0x0000U);		/* ram write data mask 2 */
-    write_command(0x4fU, 0x0000U);		/* ram x address counter */
-    write_command(0x4eU, 0x0000U);		/* ram y address counter */
+	/* reset the device */
+	HAL_GPIO_WritePin(ILI9341_RST_PORT, ILI9341_RST_PIN, GPIO_PIN_RESET);
+	HAL_Delay(200UL);
+	HAL_GPIO_WritePin(ILI9341_RST_PORT, ILI9341_RST_PIN, GPIO_PIN_SET);
+	HAL_Delay(200UL);
+
+	write_command(0x01U);
+	HAL_Delay(10UL);
+	write_command(0xcbU);
+	write_data(0x39U);
+	write_data(0x2cU);
+	write_data(0x00U);
+	write_data(0x34U);
+	write_data(0x02U);
+	write_command(0xcfU);
+	write_data(0x00U);
+	write_data(0xc1U);
+	write_data(0x30U);
+	write_command(0xe8U);
+	write_data(0x85U);
+	write_data(0x00U);
+	write_data(0x78U);
+	write_command(0xeaU);
+	write_data(0x00U);
+	write_data(0x00U);
+	write_command(0xedU);
+	write_data(0x64U);
+	write_data(0x03U);
+	write_data(0x12U);
+	write_data(0x81U);
+	write_command(0xf7U);
+	write_data(0x20U);
+	write_command(0xc0U);
+	write_data(0x23U);
+	write_command(0xc1U);
+	write_data(0x10U);
+	write_command(0xc5U);
+	write_data(0x3eU);
+	write_data(0x28U);
+	write_command(0xc7U);
+	write_data(0x86U);
+	write_command(0x36U);
+	write_data(0x48U);
+	write_command(0x3aU);
+	write_data(0x55U);
+	write_command(0xb1U);
+	write_data(0x00U);
+	write_data(0x18U);
+	write_command(0xb6U);
+	write_data(0x08U);
+	write_data(0x82U);
+	write_data(0x27U);
+	write_command(0xf2U);
+	write_data(0x00U);
+	write_command(0x26U);
+	write_data(0x01U);
+	write_command(0xe0U);
+	write_data(0x0fU);
+	write_data(0x31U);
+	write_data(0x2bU);
+	write_data(0x0cU);
+	write_data(0x0eU);
+	write_data(0x08U);
+	write_data(0x4eU);
+	write_data(0xf1U);
+	write_data(0x37U);
+	write_data(0x07U);
+	write_data(0x10U);
+	write_data(0x03U);
+	write_data(0x0eU);
+	write_data(0x09U);
+	write_data(0x00U);
+	write_command(0xe1U);
+	write_data(0x00U);
+	write_data(0x0eU);
+	write_data(0x14U);
+	write_data(0x03U);
+	write_data(0x11U);
+	write_data(0x07U);
+	write_data(0x31U);
+	write_data(0xc1U);
+	write_data(0x48U);
+	write_data(0x08U);
+	write_data(0x0fU);
+	write_data(0x0cU);
+	write_data(0x31U);
+	write_data(0x36U);
+	write_data(0x0fU);
+	write_command(0x11U);
+	HAL_Delay(120UL);
+	write_command(0x29U);
+	write_command(0x36U);
+	write_data(0x48U);
+}
+
+/**
+ * The ISR for the SPI TX DMA transfer complete
+ */
+void DMA1_Stream4_IRQHandler(void)
+{
+	HAL_DMA_IRQHandler(&hdma_spi2_tx);
 }
 
 int16_t mw_hal_lcd_get_display_width(void)
@@ -207,26 +347,27 @@ int16_t mw_hal_lcd_get_display_height(void)
 
 void mw_hal_lcd_pixel(int16_t x, int16_t y, mw_hal_lcd_colour_t colour)
 {
-	uint32_t temp_uint32;
+	uint16_t rgb565_colour;
+
+	/* convert pixel colour from rgb888 to rgb565 format */
+	rgb565_colour = (uint16_t)((((uint32_t)colour & 0xf80000U) >> 8) |
+			(((uint32_t)colour & 0xfc00U) >> 5) |
+			(((uint32_t)colour & 0xf8U) >> 3));
+
+	/* swap endianess */
+	rgb565_colour = __builtin_bswap16(rgb565_colour);
 
 #if defined(MW_DISPLAY_ROTATION_0)
-	write_command(0x4eU, (uint16_t)x);
-	write_command(0x4fU, (uint16_t)y);
+	set_window((uint16_t)x, (uint16_t)y, (uint16_t)x, (uint16_t)y);
 #elif defined(MW_DISPLAY_ROTATION_90)
-	write_command(0x4eU, (uint16_t)y);
-	write_command(0x4fU, (uint16_t)LCD_DISPLAY_HEIGHT_PIXELS - 1U - (uint16_t)x);
+	set_window(y, (uint16_t)LCD_DISPLAY_HEIGHT_PIXELS - 1U - (uint16_t)x, y, (uint16_t)LCD_DISPLAY_HEIGHT_PIXELS - 1U - (uint16_t)x);
 #elif defined (MW_DISPLAY_ROTATION_180)
-	write_command(0x4eU, (uint16_t)LCD_DISPLAY_WIDTH_PIXELS - (uint16_t)x - 1U);
-	write_command(0x4fU, (uint16_t)LCD_DISPLAY_HEIGHT_PIXELS - 1U - (uint16_t)y);
+	set_window((uint16_t)LCD_DISPLAY_WIDTH_PIXELS - (uint16_t)x - 1U, (uint16_t)LCD_DISPLAY_HEIGHT_PIXELS - 1U - (uint16_t)y, (uint16_t)LCD_DISPLAY_WIDTH_PIXELS - (uint16_t)x - 1U, (uint16_t)LCD_DISPLAY_HEIGHT_PIXELS - 1U - (uint16_t)y);
 #elif defined (MW_DISPLAY_ROTATION_270)
-	write_command(0x4eU, (uint16_t)LCD_DISPLAY_WIDTH_PIXELS - 1U - (uint16_t)y);
-	write_command(0x4fU, (uint16_t)x);
+	set_window((uint16_t)LCD_DISPLAY_WIDTH_PIXELS - 1U - (uint16_t)y, (uint16_t)x, (uint16_t)LCD_DISPLAY_WIDTH_PIXELS - 1U - (uint16_t)y, (uint16_t)x);
 #endif
 
-	temp_uint32 = (((uint32_t)colour & 0xf80000U) >> 8) |
-			(((uint32_t)colour & 0xfc00U) >> 5) |
-			(((uint32_t)colour & 0xf8U) >> 3);
-	write_command(0x22U, (uint16_t)temp_uint32);
+	HAL_SPI_Transmit(&hspi2, (uint8_t *)&rgb565_colour, sizeof(uint16_t), 100UL);
 }
 
 void mw_hal_lcd_filled_rectangle(int16_t start_x,
@@ -235,20 +376,40 @@ void mw_hal_lcd_filled_rectangle(int16_t start_x,
 		int16_t height,
 		mw_hal_lcd_colour_t colour)
 {
-	int16_t end_x;
-	int16_t end_y;
-	int16_t x;
-	int16_t y;
+	uint16_t dmaBuffer[DMA_BUFFER_SIZE];
+	uint8_t i;
+	uint32_t totalBytesToWrite;
+	uint32_t bytesToWriteThisTime;
+	uint16_t rgb565_colour;
 
-	end_x = start_x + width - 1;
-	end_y = start_y + height - 1;
+	/* convert pixel colour from rgb888 to rgb565 format */
+	rgb565_colour = (uint16_t)((((uint32_t)colour & 0xf80000UL) >> 8) |
+			(((uint32_t)colour & 0x00fc00UL) >> 5) |
+			(((uint32_t)colour & 0x0000f8UL) >> 3));
 
-	for (x = start_x; x <= end_x; x++)
+	/* swap endianess */
+	rgb565_colour = __builtin_bswap16(rgb565_colour);
+
+	for (i = 0U; i < DMA_BUFFER_SIZE; i++)
 	{
-		for (y = start_y; y <= end_y; y++)
+		dmaBuffer[i] = rgb565_colour;
+	}
+
+	totalBytesToWrite = (uint32_t)width * (uint32_t)height * (uint32_t)sizeof(uint16_t);
+	bytesToWriteThisTime = DMA_BUFFER_SIZE * (uint16_t)sizeof(uint16_t);
+
+	set_window(start_x, start_y, start_x + width - 1U, start_y + height - 1U);
+
+	while (totalBytesToWrite > 0UL)
+	{
+		if (totalBytesToWrite < bytesToWriteThisTime)
 		{
-			mw_hal_lcd_pixel(x, y, colour);
+			bytesToWriteThisTime = totalBytesToWrite;
 		}
+		totalBytesToWrite -= bytesToWriteThisTime;
+
+		write_data_dma(&dmaBuffer, bytesToWriteThisTime);
+		wait_for_dma_write_complete();
 	}
 }
 
@@ -264,7 +425,64 @@ void mw_hal_lcd_colour_bitmap_clip(int16_t image_start_x,
 {
 	int16_t x;
 	int16_t y;
-	mw_hal_lcd_colour_t pixel_colour;
+	uint16_t rgb565_colour;
+	uint32_t pixels_to_plot;
+	uint16_t dmaBuffer[DMA_BUFFER_SIZE];
+	uint16_t next_buffer_position = 0U;
+	uint16_t red_byte;
+	uint16_t blue_byte;
+	uint16_t green_byte;
+	int16_t window_start_x;
+	int16_t window_start_y;
+	int16_t window_width;
+	int16_t window_height;
+
+	if (clip_start_x > image_start_x)
+	{
+		window_start_x = clip_start_x;
+	}
+	else
+	{
+		window_start_x = image_start_x;
+	}
+
+	window_width = image_data_width_pixels;
+	if (image_start_x < clip_start_x)
+	{
+		window_width -= clip_start_x - image_start_x;
+	}
+
+	if (image_start_x + image_data_width_pixels > clip_start_x + clip_width)
+	{
+		window_width -= ((image_start_x + image_data_width_pixels) - (clip_start_x + clip_width));
+	}
+
+	if (clip_start_y > image_start_y)
+	{
+		window_start_y = clip_start_y;
+	}
+	else
+	{
+		window_start_y = image_start_y;
+	}
+
+	window_height = image_data_height_pixels;
+	if (image_start_y < clip_start_y)
+	{
+		window_height -= clip_start_y - image_start_y;
+	}
+
+	if (image_start_y + image_data_height_pixels > clip_start_y + clip_height)
+	{
+		window_height -= ((image_start_y + image_data_height_pixels) - (clip_start_y + clip_height));
+	}
+
+	set_window((uint16_t)window_start_x,
+			(uint16_t)window_start_y,
+			(uint16_t)(window_start_x + window_width - 1),
+			(uint16_t)(window_start_y + window_height - 1));
+
+	pixels_to_plot = (uint32_t)window_width * (uint32_t)window_height;
 
 	for (y = 0; y < (int16_t)image_data_height_pixels; y++)
 	{
@@ -275,12 +493,34 @@ void mw_hal_lcd_colour_bitmap_clip(int16_t image_start_x,
 					y + image_start_y >= clip_start_y &&
 					y + image_start_y < clip_start_y + clip_height)
 			{
-				pixel_colour = *(2 + data + (x + y * (int16_t)image_data_width_pixels) * 3);
-				pixel_colour <<= 8;
-				pixel_colour += *(1 + data + (x + y * (int16_t)image_data_width_pixels) * 3);
-				pixel_colour <<= 8;
-				pixel_colour += *(data + (x + y * (int16_t)image_data_width_pixels) * 3);
-				mw_hal_lcd_pixel(x + image_start_x, y + image_start_y, pixel_colour);
+				/* get 3 bytes of next 24 bit rgb888 pixel */
+				red_byte = (uint16_t)*(2 + data + (x + y * (int16_t)image_data_width_pixels) * 3);
+				green_byte = (uint16_t)*(1 + data + (x + y * (int16_t)image_data_width_pixels) * 3);
+				blue_byte = (uint16_t)*(data + (x + y * (int16_t)image_data_width_pixels) * 3);
+
+				/* convert into rgb565 format and swap endianess */
+				rgb565_colour = blue_byte >> 3;
+				rgb565_colour |= (green_byte & 0x00fcU) << 3;
+				rgb565_colour |= (red_byte & 0x00f8U) << 8;
+				rgb565_colour = __builtin_bswap16(rgb565_colour);
+
+				dmaBuffer[next_buffer_position] = rgb565_colour;
+				next_buffer_position++;
+				pixels_to_plot--;
+
+				if (next_buffer_position == DMA_BUFFER_SIZE || pixels_to_plot == 0UL)
+				{
+					if (pixels_to_plot == 0UL)
+					{
+						write_data_dma(&dmaBuffer, next_buffer_position * 2U);
+						wait_for_dma_write_complete();
+						return;
+					}
+
+					write_data_dma(&dmaBuffer, DMA_BUFFER_SIZE * 2U);
+					wait_for_dma_write_complete();
+					next_buffer_position = 0U;
+				}
 			}
 		}
 	}
@@ -304,6 +544,78 @@ void mw_hal_lcd_monochrome_bitmap_clip(int16_t image_start_x,
 	uint8_t image_byte;
 	uint8_t mask;
 	int16_t array_width_bytes;
+	uint16_t rgb565_fg_colour;
+	uint16_t rgb565_bg_colour;
+	uint32_t pixels_to_plot;
+	uint16_t dmaBuffer[DMA_BUFFER_SIZE];
+	uint16_t next_buffer_position = 0U;
+	int16_t window_start_x;
+	int16_t window_start_y;
+	int16_t window_width;
+	int16_t window_height;
+
+	if (clip_start_x > image_start_x)
+	{
+		window_start_x = clip_start_x;
+	}
+	else
+	{
+		window_start_x = image_start_x;
+	}
+
+	window_width = bitmap_width;
+	if (image_start_x < clip_start_x)
+	{
+		window_width -= clip_start_x - image_start_x;
+	}
+
+	if (image_start_x + bitmap_width > clip_start_x + clip_width)
+	{
+		window_width -= ((image_start_x + bitmap_width) - (clip_start_x + clip_width));
+	}
+
+	if (clip_start_y > image_start_y)
+	{
+		window_start_y = clip_start_y;
+	}
+	else
+	{
+		window_start_y = image_start_y;
+	}
+
+	window_height = bitmap_height;
+	if (image_start_y < clip_start_y)
+	{
+		window_height -= clip_start_y - image_start_y;
+	}
+
+	if (image_start_y + bitmap_height > clip_start_y + clip_height)
+	{
+		window_height -= ((image_start_y + bitmap_height) - (clip_start_y + clip_height));
+	}
+
+	set_window((uint16_t)window_start_x,
+			(uint16_t)window_start_y,
+			(uint16_t)(window_start_x + window_width - 1),
+			(uint16_t)(window_start_y + window_height - 1));
+
+	pixels_to_plot = (uint32_t)window_width * (uint32_t)window_height;
+
+	/* convert fg pixel colour from rgb888 to rgb565 format */
+	rgb565_fg_colour = (uint16_t)((((uint32_t)fg_colour & 0xf80000UL) >> 8) |
+			(((uint32_t)fg_colour & 0x00fc00UL) >> 5) |
+			(((uint32_t)fg_colour & 0x0000f8UL) >> 3));
+
+	/* swap endianess */
+	rgb565_fg_colour = __builtin_bswap16(rgb565_fg_colour);
+
+	/* convert bg pixel colour from rgb888 to rgb565 format */
+	rgb565_bg_colour = (uint16_t)((((uint32_t)bg_colour & 0xf80000U) >> 8) |
+			(((uint32_t)bg_colour & 0x00fc00U) >> 5) |
+			(((uint32_t)bg_colour & 0x0000f8U) >> 3));
+
+	/* swap endianess */
+	rgb565_bg_colour = __builtin_bswap16(rgb565_bg_colour);
 
 	array_width_bytes = (int16_t)bitmap_width / 8;
 	if (bitmap_width % 8U > 0U)
@@ -316,7 +628,7 @@ void mw_hal_lcd_monochrome_bitmap_clip(int16_t image_start_x,
 		for (a = 0; a < array_width_bytes; a++)
 		{
 			image_byte = image_data[y * array_width_bytes + a];
-			mask = 0x80;
+			mask = 0x80U;
 			for (x = 0; x < 8; x++)
 			{
 				if ((a * 8) + x == (int16_t)bitmap_width)
@@ -330,11 +642,27 @@ void mw_hal_lcd_monochrome_bitmap_clip(int16_t image_start_x,
 				{
 					if ((image_byte & mask) == 0U)
 					{
-						mw_hal_lcd_pixel((a * 8) + x + image_start_x, y + image_start_y, fg_colour);
+						dmaBuffer[next_buffer_position] = rgb565_fg_colour;
 					}
 					else
 					{
-						mw_hal_lcd_pixel((a * 8) + x + image_start_x, y + image_start_y, bg_colour);
+						dmaBuffer[next_buffer_position] = rgb565_bg_colour;
+					}
+					next_buffer_position++;
+					pixels_to_plot--;
+
+					if (next_buffer_position == DMA_BUFFER_SIZE || pixels_to_plot == 0UL)
+					{
+						if (pixels_to_plot == 0UL)
+						{
+							write_data_dma(&dmaBuffer, next_buffer_position * 2U);
+							wait_for_dma_write_complete();
+							return;
+						}
+
+						write_data_dma(&dmaBuffer, DMA_BUFFER_SIZE * 2U);
+						wait_for_dma_write_complete();
+						next_buffer_position = 0U;
 					}
 				}
 				mask >>= 1;

@@ -31,7 +31,6 @@ SOFTWARE.
 ***************/
 
 #include "hal/hal_touch.h"
-#include "hal/hal_delay.h"
 #include "stm32f4xx_hal.h"
 #include "stm32f4_discovery.h"
 
@@ -39,9 +38,15 @@ SOFTWARE.
 *** CONSTANTS ***
 ****************/
 
-#define CS_ON								(HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, GPIO_PIN_RESET))  /**< Touch screen digitizer chip select off */
-#define CS_OFF 								(HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, GPIO_PIN_SET)) 	/**< Touch screen digitizer chip select on */
-#define MW_HAL_TOUCH_READ_POINTS_COUNT		10U														/**< Number of samples to take to reduce noise */
+#define TOUCH_IRQ_PORT						GPIOD					/**< Port of incoming screen touched line */
+#define TOUCH_IRQ_PIN						GPIO_PIN_9				/**< Pin of incoming screen touched line */
+#define TOUCH_CHIP_SELECT_PORT				GPIOD					/**< Port of chip select line */
+#define TOUCH_CHIP_SELECT_PIN				GPIO_PIN_10				/**< Pin of chip select line */
+#define CHIP_SELECT_ON						(HAL_GPIO_WritePin(TOUCH_CHIP_SELECT_PORT, TOUCH_CHIP_SELECT_PIN, GPIO_PIN_RESET))  	/**< Touch screen digitizer chip select off */
+#define CHIP_SELECT_OFF 					(HAL_GPIO_WritePin(TOUCH_CHIP_SELECT_PORT, TOUCH_CHIP_SELECT_PIN, GPIO_PIN_SET)) 		/**< Touch screen digitizer chip select on */
+#define MW_HAL_TOUCH_READ_POINTS_COUNT		10U						/**< Number of samples to take to reduce noise */
+#define COMMAND_READ_X             			0xd0U					/**< Command to read X position from touch screen */
+#define COMMAND_READ_Y             			0x90U					/**< Command to read Y position from touch screen */
 
 /************
 *** TYPES ***
@@ -55,7 +60,7 @@ SOFTWARE.
 *** LOCAL VARIABLES ***
 **********************/
 
-static SPI_HandleTypeDef SpiHandle;
+static SPI_HandleTypeDef hspi3;
 
 /********************************
 *** LOCAL FUNCTION PROTOTYPES ***
@@ -77,7 +82,7 @@ static uint8_t spi_transfer(uint8_t byte)
 {
 	uint8_t result;
 
-	(void)HAL_SPI_TransmitReceive(&SpiHandle, &byte, &result, 1U, 1000U);
+	(void)HAL_SPI_TransmitReceive(&hspi3, &byte, &result, 1U, 1000U);
 
 	return (result);
 }
@@ -90,47 +95,47 @@ void mw_hal_touch_init(void)
 {
 	GPIO_InitTypeDef GPIO_InitStructure;
 
-	/* enable SPI1, AF, GPIOA and GPIOB clocks */
-	__HAL_RCC_GPIOA_CLK_ENABLE();
-	__HAL_RCC_GPIOB_CLK_ENABLE();
-	__HAL_RCC_SPI2_CLK_ENABLE();
+	/* enable SPI3, AF, GPIOC and GPIOD clocks */
+	__HAL_RCC_GPIOC_CLK_ENABLE();
+	__HAL_RCC_GPIOD_CLK_ENABLE();
+	__HAL_RCC_SPI3_CLK_ENABLE();
 	__HAL_RCC_SYSCFG_CLK_ENABLE();
 
-	/* configure SPI1 pins SCK, MISO and MOSI */
+	/* configure SPI3 pins SCK, MISO and MOSI */
 	GPIO_InitStructure.Mode = GPIO_MODE_AF_PP;
 	GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_HIGH;
 	GPIO_InitStructure.Pull = GPIO_PULLDOWN;
-	GPIO_InitStructure.Pin = GPIO_PIN_13 | GPIO_PIN_14 |GPIO_PIN_15;
-	GPIO_InitStructure.Alternate = GPIO_AF5_SPI1;
-	HAL_GPIO_Init(GPIOB, &GPIO_InitStructure);
+	GPIO_InitStructure.Pin = GPIO_PIN_10 | GPIO_PIN_11 |GPIO_PIN_12;
+	GPIO_InitStructure.Alternate = GPIO_AF6_SPI3;
+	HAL_GPIO_Init(GPIOC, &GPIO_InitStructure);
 
-	/* configure b6 as touch up/down state line */
-	GPIO_InitStructure.Pin = GPIO_PIN_6;
+	/* configure D9 as touch up/down state line */
+	GPIO_InitStructure.Pin = TOUCH_IRQ_PIN;
 	GPIO_InitStructure.Mode = GPIO_MODE_INPUT;
 	GPIO_InitStructure.Pull = GPIO_PULLUP;
-	HAL_GPIO_Init(GPIOB, &GPIO_InitStructure);
+	HAL_GPIO_Init(TOUCH_IRQ_PORT, &GPIO_InitStructure);
 
-	/* configure b7 as output push-pull, used as touch chip select */
-	GPIO_InitStructure.Pin = GPIO_PIN_7;
+	/* configure D10 as output push-pull, used as touch chip select */
+	GPIO_InitStructure.Pin = TOUCH_CHIP_SELECT_PIN;
 	GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
-	HAL_GPIO_Init(GPIOB, &GPIO_InitStructure);
+	HAL_GPIO_Init(TOUCH_CHIP_SELECT_PORT, &GPIO_InitStructure);
 
 	/* deselect touch - chip select high */
-	CS_OFF;
+	CHIP_SELECT_OFF;
 
-	/* SPI1 configuration */
-	SpiHandle.Instance = SPI2;
-	(void)HAL_SPI_DeInit(&SpiHandle);
-	SpiHandle.Init.Direction = SPI_DIRECTION_2LINES;
-	SpiHandle.Init.Mode = SPI_MODE_MASTER;
-	SpiHandle.Init.DataSize = SPI_DATASIZE_8BIT;
-	SpiHandle.Init.CLKPolarity = SPI_POLARITY_HIGH;
-	SpiHandle.Init.CLKPhase = SPI_PHASE_2EDGE;
-	SpiHandle.Init.NSS = SPI_NSS_SOFT;
-	SpiHandle.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_16;
-	SpiHandle.Init.FirstBit = SPI_FIRSTBIT_MSB;
-	SpiHandle.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
-	(void)HAL_SPI_Init(&SpiHandle);
+	/* SPI3 configuration */
+	hspi3.Instance = SPI3;
+	(void)HAL_SPI_DeInit(&hspi3);
+	hspi3.Init.Direction = SPI_DIRECTION_2LINES;
+	hspi3.Init.Mode = SPI_MODE_MASTER;
+	hspi3.Init.DataSize = SPI_DATASIZE_8BIT;
+	hspi3.Init.CLKPolarity = SPI_POLARITY_HIGH;
+	hspi3.Init.CLKPhase = SPI_PHASE_2EDGE;
+	hspi3.Init.NSS = SPI_NSS_SOFT;
+	hspi3.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_16;
+	hspi3.Init.FirstBit = SPI_FIRSTBIT_MSB;
+	hspi3.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
+	(void)HAL_SPI_Init(&hspi3);
 
 	BSP_PB_Init(BUTTON_KEY, BUTTON_MODE_GPIO);
 }
@@ -142,7 +147,7 @@ bool mw_hal_touch_is_recalibration_required(void)
 
 mw_hal_touch_state_t mw_hal_touch_get_state()
 {
-	if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_6) == GPIO_PIN_RESET)
+	if (HAL_GPIO_ReadPin(TOUCH_IRQ_PORT, TOUCH_IRQ_PIN) == GPIO_PIN_RESET)
 	{
 		return (MW_HAL_TOUCH_STATE_DOWN);
 	}
@@ -159,18 +164,17 @@ bool mw_hal_touch_get_point(uint16_t* x, uint16_t* y)
 	uint16_t databuffer[2][MW_HAL_TOUCH_READ_POINTS_COUNT];
 	uint8_t touch_count;
 
-	CS_ON;
+	CHIP_SELECT_ON;
+
 	touch_count = 0U;
 	do
 	{
-		spi_transfer(0xd0U);
-		mw_hal_delay_us(1U);
+		spi_transfer(COMMAND_READ_X);
 		x_raw = (uint16_t)spi_transfer(0U) << 8;
 		x_raw |= (uint16_t)spi_transfer(0U);
 		x_raw >>= 3;
 
-		spi_transfer(0x90U);
-		mw_hal_delay_us(1U);
+		spi_transfer(COMMAND_READ_Y);
 		y_raw = (uint16_t)spi_transfer(0U) << 8;
 		y_raw |= (uint16_t)spi_transfer(0U);
 		y_raw >>= 3;
@@ -181,7 +185,7 @@ bool mw_hal_touch_get_point(uint16_t* x, uint16_t* y)
 	}
 	while (mw_hal_touch_get_state() == MW_HAL_TOUCH_STATE_DOWN && touch_count < MW_HAL_TOUCH_READ_POINTS_COUNT);
 
-	CS_OFF;
+	CHIP_SELECT_OFF;
 
 	if (touch_count != MW_HAL_TOUCH_READ_POINTS_COUNT)
 	{

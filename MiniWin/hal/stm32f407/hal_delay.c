@@ -30,14 +30,11 @@ SOFTWARE.
 *** INCLUDES ***
 ***************/
 
-#include "stm32f4xx.h"
-#include "hal/hal_delay.h"
+#include <stdint.h>
 
 /****************
 *** CONSTANTS ***
 ****************/
-
-#define TIMERCLOCK_SPEED_MHZ		84U
 
 /************
 *** TYPES ***
@@ -65,33 +62,14 @@ SOFTWARE.
 
 void mw_hal_delay_init(void)
 {
-	TIM_HandleTypeDef Tim2Handle;
-
-	__HAL_RCC_TIM2_CLK_ENABLE();
-
-	Tim2Handle.Instance = TIM2;
-	Tim2Handle.Init.Period = UINT16_MAX;
-	Tim2Handle.Init.Prescaler = TIMERCLOCK_SPEED_MHZ - 1U;
-	Tim2Handle.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-	Tim2Handle.Init.CounterMode = TIM_COUNTERMODE_UP;
-	(void)HAL_TIM_Base_Init(&Tim2Handle);
-	(void)HAL_TIM_Base_Start(&Tim2Handle);
 }
 
 void mw_hal_delay_ms(uint16_t ms)
 {
-	uint16_t i;
-
-	for(i = 0; i < 1000U; i++)
-	{
-		mw_hal_delay_us(ms);
-	}
 }
 
 void mw_hal_delay_us(uint32_t us)
 {
-	TIM2->CNT = 0U;
-	while(TIM2->CNT <= us);
 }
 
 #endif
