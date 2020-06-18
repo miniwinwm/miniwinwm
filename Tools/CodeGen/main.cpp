@@ -3747,8 +3747,8 @@ int main(int argc, char **argv)
 	}
 
 	outfileMake <<
-			"all: ${OBJECTS}\n" 
-			"	${CC} $(CFLAGS) ${OBJECTS} ${LIBS} -o ${BINARY}\n";
+			"all: $(OBJECTS)\n"
+			"	$(CC) $(CFLAGS) $(OBJECTS) $(LIBS) -o $(BINARY)\n";
 
 	if (json["TargetType"].string_value() == "Windows")
 	{
@@ -3763,11 +3763,11 @@ int main(int argc, char **argv)
 
 	if (json["TargetType"].string_value() == "Windows")
 	{
-		outfileMake << "	$(RM) ${BINARY}\n";
+		outfileMake << "	$(RM) $(BINARY)\n";
 	}
 	else if (json["TargetType"].string_value() == "Linux")
 	{
-		outfileMake << "	rm ${BINARY}\n";
+		outfileMake << "	rm $(BINARY)\n";
 	}			
 	outfileMake.close();
 
