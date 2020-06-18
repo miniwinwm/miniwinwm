@@ -148,9 +148,9 @@ void mw_hal_lcd_colour_bitmap_clip(int16_t image_start_x,
 				(void)SetPixel(hdc,
 						x + image_start_x,
 						y + image_start_y,
-						RGB(*(image_data + (x + y * bitmap_width) * 3),
+						RGB(*(2 + image_data + (x + y * bitmap_width) * 3),
 								*(1 + image_data + (x + y * bitmap_width) * 3),
-								*(2 + image_data + (x + y * bitmap_width) * 3)));
+								*(image_data + (x + y * bitmap_width) * 3)));
 			}
 		}
 
