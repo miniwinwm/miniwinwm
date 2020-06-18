@@ -18,10 +18,10 @@ CFLAGS = -I../../../MiniWin -I../../../MiniWin/gl/fonts/truetype/mcufont -Isrc -
 OBJECTS := $(SRCS:.c=.o)
 LIBS = -Llibs -lX11 -lm -lpthread -lopencv_core -lopencv_videoio -lopencv_imgproc
 
-all: lib/camlib_opencv.o ${OBJECTS}
-	${CPP} $(CFLAGS) lib/camlib_opencv.o ${OBJECTS} ${LIBS} -o ${BINARY}
+all: lib/camlib_opencv.o $(OBJECTS)
+	$(CPP) $(CFLAGS) lib/camlib_opencv.o $(OBJECTS) $(LIBS) -o $(BINARY)
 	
 clean:
 	rm $(OBJECTS)
-	rm ${BINARY} 
+	rm $(BINARY)
 

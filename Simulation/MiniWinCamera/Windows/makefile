@@ -19,9 +19,9 @@ CFLAGS = -D_WIN32 -I../../../MiniWin -I../../../MiniWin/gl/fonts/truetype/mcufon
 OBJECTS := $(SRCS:.c=.o)
 LIBS = -Llib -lopencv_core.dll -lopencv_imgproc.dll -lopencv_videoio.dll -lgdi32
 
-all: lib/camlib_opencv.o ${OBJECTS} 
-	$(CPP) $(CFLAGS) lib/camlib_opencv.o ${OBJECTS} ${LIBS} -o ${BINARY}
+all: lib/camlib_opencv.o $(OBJECTS) 
+	$(CPP) $(CFLAGS) lib/camlib_opencv.o $(OBJECTS) $(LIBS) -o $(BINARY)
 
 clean:
 	$(RM) $(subst /,\,$(OBJECTS))
-	$(RM) ${BINARY}
+	$(RM) $(BINARY)

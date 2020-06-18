@@ -20,9 +20,9 @@ CFLAGS = -D_WIN32 -I../../../MiniWin -I../../../MiniWin/gl/fonts/truetype/mcufon
 OBJECTS := $(SRCS:.c=.o)
 LIBS = -lgdi32 -lwinmm
 
-all: ${OBJECTS}
-	${CC} $(CFLAGS) ${OBJECTS} ${LIBS} -o ${BINARY}
+all: $(OBJECTS)
+	$(CC) $(CFLAGS) $(OBJECTS) $(LIBS) -o $(BINARY)
 
 clean:
 	$(RM) $(subst /,\,$(OBJECTS))
-	$(RM) ${BINARY}
+	$(RM) $(BINARY)
