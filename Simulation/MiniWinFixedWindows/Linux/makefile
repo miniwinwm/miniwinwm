@@ -18,10 +18,10 @@ CFLAGS = -I../../../MiniWin -I../../../MiniWin/gl/fonts/truetype/mcufont -Isrc -
 OBJECTS := $(SRCS:.c=.o)
 LIBS = -lX11 -lm -lpthread
 
-all: ${OBJECTS}
-	${CC} $(CFLAGS) ${OBJECTS} ${LIBS} -o ${BINARY}
+all: $(OBJECTS)
+	$(CC) $(CFLAGS) $(OBJECTS) $(LIBS) -o $(BINARY)
 	
 clean:
 	rm $(OBJECTS)
-	rm ${BINARY} 
+	rm $(BINARY)
 
