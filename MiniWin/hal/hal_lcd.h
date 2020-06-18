@@ -137,8 +137,8 @@ void mw_hal_lcd_filled_rectangle(int16_t start_x,
  * 
  * @param image_start_x The coordinate of the left edge of position to plot image
  * @param image_start_y The coordinate of the top edge of position to plot image
- * @param bitmap_width The width of the image in the bitmap data
- * @param bitmap_height The height of the image in the bitmap data
+ * @param bitmap_width The width of the image in the bitmap data in pixels
+ * @param bitmap_height The height of the image in the bitmap data in pixels
  * @param clip_start_x The coordinate of the left edge of the clip rect
  * @param clip_start_y The coordinate of the top edge of the clip rect
  * @param clip_width The width of the clip rect
@@ -167,24 +167,24 @@ void mw_hal_lcd_monochrome_bitmap_clip(int16_t image_start_x,
  *
  * @param image_start_x The coordinate of the left edge of position to plot image
  * @param image_start_y The coordinate of the top edge of position to plot image
- * @param image_data_width_pixels The width of the image in the bitmap data
- * @param image_data_height_pixels The height of the image in the bitmap data
+ * @param bitmap_width The width of the image in the bitmap data in pixels
+ * @param bitmap_height The height of the image in the bitmap data in pixels
  * @param clip_start_x The left edge of the clip rect
  * @param clip_start_y The top edge of the clip rect
  * @param clip_width The width of the clip rect
  * @param clip_height The height of the clip rect
- * @param data The image data
+ * @param image_data The image data
  * @note The image is not clipped to the screen, only to the clip rect; the clip rect must already provide screen clipping.
  */
 void mw_hal_lcd_colour_bitmap_clip(int16_t image_start_x,
 		int16_t image_start_y,
-		uint16_t image_data_width_pixels,
-		uint16_t image_data_height_pixels,
+		uint16_t bitmap_width,
+		uint16_t bitmap_height,
 		int16_t clip_start_x,
 		int16_t clip_start_y,
 		int16_t clip_width,
 		int16_t clip_height,
-		const uint8_t *data);
+		const uint8_t *image_data);
 
 #ifdef __cplusplus
 }

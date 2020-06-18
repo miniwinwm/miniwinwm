@@ -123,22 +123,22 @@ void mw_hal_lcd_filled_rectangle(int16_t start_x,
 
 void mw_hal_lcd_colour_bitmap_clip(int16_t image_start_x,
 		int16_t image_start_y,
-		uint16_t image_data_width_pixels,
-		uint16_t image_data_height_pixels,
+		uint16_t bitmap_width,
+		uint16_t bitmap_height,
 		int16_t clip_start_x,
 		int16_t clip_start_y,
 		int16_t clip_width,
 		int16_t clip_height,
-		const uint8_t *data)
+		const uint8_t *image_data)
 {
 	int16_t x;
 	int16_t y;
 
 	hdc = GetDC(hwnd);
 
-	for (y = 0; y < image_data_height_pixels; y++)
+	for (y = 0; y < bitmap_height; y++)
 	{
-		for (x = 0; x < image_data_width_pixels; x++)
+		for (x = 0; x < bitmap_width; x++)
 		{
 			if (x + image_start_x >= clip_start_x &&
 					x + image_start_x < clip_start_x + clip_width &&
@@ -148,9 +148,9 @@ void mw_hal_lcd_colour_bitmap_clip(int16_t image_start_x,
 				(void)SetPixel(hdc,
 						x + image_start_x,
 						y + image_start_y,
-						RGB(*(data + (x + y * image_data_width_pixels) * 3),
-								*(1 + data + (x + y * image_data_width_pixels) * 3),
-								*(2 + data + (x + y * image_data_width_pixels) * 3)));
+						RGB(*(image_data + (x + y * bitmap_width) * 3),
+								*(1 + image_data + (x + y * bitmap_width) * 3),
+								*(2 + image_data + (x + y * bitmap_width) * 3)));
 			}
 		}
 
