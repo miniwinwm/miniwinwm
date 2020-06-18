@@ -138,6 +138,7 @@ void mw_hal_lcd_colour_bitmap_clip(int16_t image_start_x,
 	int16_t y;
 	mw_hal_lcd_colour_t pixel_colour;
 
+#if defined(MW_DISPLAY_ROTATION_0)
 	/* check if pixels in data buffer are all to be drawn and if so use bitmap draw routine */
 	if (image_start_x >= clip_start_x &&
 			image_start_y >= clip_start_y &&
@@ -151,6 +152,7 @@ void mw_hal_lcd_colour_bitmap_clip(int16_t image_start_x,
 				data);
 		return;
 	}
+#endif
 
 	for (y = 0; y < (int16_t)image_data_height_pixels; y++)
 	{
