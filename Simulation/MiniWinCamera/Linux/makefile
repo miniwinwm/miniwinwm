@@ -1,10 +1,3 @@
-
-
-
-
-
-
-
 PROJECT = MiniWinCamera
 
 BINARY = $(PROJECT)
@@ -30,7 +23,7 @@ LIBS = -Llibs -lX11 -lm -lpthread lib/camlib_opencv.o -lopencv_core -lopencv_vid
 all: $(BINARY)
 
 $(BINARY) : $(OBJS)
-	$(CPP) $^ $(LIBS) -o $(BINARY)
+	$(CPP) $^ $(LIBS) -o $@
 	
 -include $(DEPS)
 

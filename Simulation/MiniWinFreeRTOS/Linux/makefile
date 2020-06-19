@@ -23,7 +23,7 @@ LIBS = -lX11 -lm -lpthread
 all: $(BINARY)
 
 $(BINARY) : $(OBJS)
-	$(CC) $^ $(LIBS) -o $(BINARY)
+	$(CC) $^ $(LIBS) -o $@
 	
 -include $(DEPS)
 
