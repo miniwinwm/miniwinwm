@@ -1,7 +1,15 @@
-BINARY = MiniWinCamera
 
+
+
+
+
+
+
+PROJECT = MiniWinCamera
+
+BINARY = $(PROJECT)
 SRCS := $(wildcard src/*.c) \
-	$(wildcard ../../../MiniWinCamera_Common/*.c) \
+	$(wildcard ../../../$(PROJECT)_Common/*.c) \
 	$(wildcard ../../../MiniWin/*.c) \
 	$(wildcard ../../../MiniWin/bitmaps/*.c) \
 	$(wildcard ../../../MiniWin/hal/*.c) \
@@ -11,17 +19,25 @@ SRCS := $(wildcard src/*.c) \
 	$(wildcard ../../../MiniWin/gl/*.c) \
 	$(wildcard ../../../MiniWin/gl/fonts/bitmapped/*.c) \
 	$(wildcard ../../../MiniWin/gl/fonts/truetype/*.c) \
-	$(wildcard ../../../MiniWin/gl/fonts/truetype/mcufont/*.c) 
-
+	$(wildcard ../../../MiniWin/gl/fonts/truetype/mcufont/*.c)
+CC = gcc
 CPP = g++
-CFLAGS = -I../../../MiniWin -I../../../MiniWin/gl/fonts/truetype/mcufont -Isrc -I../../../MiniWinCamera_Common -g -Wall
-OBJECTS := $(SRCS:.c=.o)
-LIBS = -Llibs -lX11 -lm -lpthread -lopencv_core -lopencv_videoio -lopencv_imgproc
+CFLAGS = -I../../../MiniWin -I../../../MiniWin/gl/fonts/truetype/mcufont -Isrc -I../../../$(PROJECT)_Common -g -Wall
+OBJS := $(SRCS:.c=.o)
+DEPS := $(OBJS:.o=.d)
+LIBS = -Llibs -lX11 -lm -lpthread lib/camlib_opencv.o -lopencv_core -lopencv_videoio -lopencv_imgproc 
 
-all: lib/camlib_opencv.o $(OBJECTS)
-	$(CPP) $(CFLAGS) lib/camlib_opencv.o $(OBJECTS) $(LIBS) -o $(BINARY)
+all: $(BINARY)
+
+$(BINARY) : $(OBJS)
+	$(CPP) $^ $(LIBS) -o $(BINARY)
 	
-clean:
-	rm $(OBJECTS)
-	rm $(BINARY)
+-include $(DEPS)
 
+%.o : %.c
+	$(CC) $(CFLAGS) -MMD -c $< -o $@
+
+clean:
+	rm $(OBJS)
+	rm $(DEPS)
+	rm $(BINARY)

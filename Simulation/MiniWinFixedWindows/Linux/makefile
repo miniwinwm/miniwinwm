@@ -1,7 +1,8 @@
-BINARY = MiniWinFixedWindows
+PROJECT = MiniWinFixedWindows
 
+BINARY = $(PROJECT)
 SRCS := $(wildcard src/*.c) \
-	$(wildcard ../../../MiniWinFixedWindows_Common/*.c) \
+	$(wildcard ../../../$(PROJECT)_Common/*.c) \
 	$(wildcard ../../../MiniWin/*.c) \
 	$(wildcard ../../../MiniWin/bitmaps/*.c) \
 	$(wildcard ../../../MiniWin/hal/*.c) \
@@ -11,17 +12,24 @@ SRCS := $(wildcard src/*.c) \
 	$(wildcard ../../../MiniWin/gl/*.c) \
 	$(wildcard ../../../MiniWin/gl/fonts/bitmapped/*.c) \
 	$(wildcard ../../../MiniWin/gl/fonts/truetype/*.c) \
-	$(wildcard ../../../MiniWin/gl/fonts/truetype/mcufont/*.c) 
-
+	$(wildcard ../../../MiniWin/gl/fonts/truetype/mcufont/*.c)
 CC = gcc
-CFLAGS = -I../../../MiniWin -I../../../MiniWin/gl/fonts/truetype/mcufont -Isrc -I../../../MiniWinFixedWindows_Common -g -Wall
-OBJECTS := $(SRCS:.c=.o)
+CFLAGS = -I../../../MiniWin -I../../../MiniWin/gl/fonts/truetype/mcufont -Isrc -I../../../$(PROJECT)_Common -g -Wall
+OBJS := $(SRCS:.c=.o)
+DEPS := $(OBJS:.o=.d)
 LIBS = -lX11 -lm -lpthread
 
-all: $(OBJECTS)
-	$(CC) $(CFLAGS) $(OBJECTS) $(LIBS) -o $(BINARY)
-	
-clean:
-	rm $(OBJECTS)
-	rm $(BINARY)
+all: $(BINARY)
 
+$(BINARY) : $(OBJS)
+	$(CC) $^ $(LIBS) -o $(BINARY)
+	
+-include $(DEPS)
+
+%.o : %.c
+	$(CC) $(CFLAGS) -MMD -c $< -o $@
+
+clean:
+	rm $(OBJS)
+	rm $(DEPS)
+	rm $(BINARY)
