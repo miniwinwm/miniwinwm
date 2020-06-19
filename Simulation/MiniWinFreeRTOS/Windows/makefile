@@ -1,8 +1,9 @@
-BINARY = MiniWinFreeRTOS.exe
-RM=cmd \/C del
+PROJECT = MiniWinFreeRTOS
 
+BINARY = $(PROJECT).exe
+RM = cmd \/C del
 SRCS := $(wildcard src/*.c) \
-	$(wildcard ../../../MiniWinFreeRTOS_Common/*.c) \
+	$(wildcard ../../../$(PROJECT)_Common/*.c) \
 	$(wildcard ../../../MiniWin/*.c) \
 	$(wildcard ../../../MiniWin/bitmaps/*.c) \
 	$(wildcard ../../../MiniWin/hal/*.c) \
@@ -14,15 +15,22 @@ SRCS := $(wildcard src/*.c) \
 	$(wildcard ../../../MiniWin/gl/fonts/truetype/*.c) \
 	$(wildcard ../../../MiniWin/gl/fonts/truetype/mcufont/*.c) \
 	$(wildcard BSP/*.c)
-
 CC = gcc
-CFLAGS = -D_WIN32 -I../../../MiniWin -I../../../MiniWin/gl/fonts/truetype/mcufont -Isrc -IBSP -I../../../MiniWinFreeRTOS_Common -g -Wall
-OBJECTS := $(SRCS:.c=.o)
-LIBS = -lgdi32 -lwinmm
+CFLAGS = -D_WIN32 -I../../../MiniWin -I../../../MiniWin/gl/fonts/truetype/mcufont -Isrc -IBSP -I../../../$(PROJECT)_Common -g -Wall
+OBJS := $(SRCS:.c=.o)
+DEPS := $(OBJS:.o=.d)
+LIBS = -lgdi32
 
-all: $(OBJECTS)
-	$(CC) $(CFLAGS) $(OBJECTS) $(LIBS) -o $(BINARY)
+$(BINARY) : $(OBJS)
+	$(CC) $^ $(LIBS) -o $@
+	
+-include $(DEPS)
+
+%.o : %.c
+	$(CC) $(CFLAGS) -MMD -c $< -o $@
 
 clean:
-	$(RM) $(subst /,\,$(OBJECTS))
+	$(RM) $(subst /,\,$(OBJS))
+	$(RM) $(subst /,\,$(DEPS))
 	$(RM) $(BINARY)
+	

@@ -1,8 +1,9 @@
-BINARY = MiniWinCamera.exe
-RM=cmd \/C del
+PROJECT = MiniWinCamera
 
+BINARY = $(PROJECT).exe
+RM = cmd \/C del
 SRCS := $(wildcard src/*.c) \
-	$(wildcard ../../../MiniWinCamera_Common/*.c) \
+	$(wildcard ../../../$(PROJECT)_Common/*.c) \
 	$(wildcard ../../../MiniWin/*.c) \
 	$(wildcard ../../../MiniWin/bitmaps/*.c) \
 	$(wildcard ../../../MiniWin/hal/*.c) \
@@ -13,15 +14,23 @@ SRCS := $(wildcard src/*.c) \
 	$(wildcard ../../../MiniWin/gl/fonts/bitmapped/*.c) \
 	$(wildcard ../../../MiniWin/gl/fonts/truetype/*.c) \
 	$(wildcard ../../../MiniWin/gl/fonts/truetype/mcufont/*.c)
-
+CC = gcc
 CPP = g++
-CFLAGS = -D_WIN32 -I../../../MiniWin -I../../../MiniWin/gl/fonts/truetype/mcufont -Isrc -I../../../MiniWinCamera_Common -g -Wall
-OBJECTS := $(SRCS:.c=.o)
-LIBS = -Llib -lopencv_core.dll -lopencv_imgproc.dll -lopencv_videoio.dll -lgdi32
+CFLAGS = -D_WIN32 -I../../../MiniWin -I../../../MiniWin/gl/fonts/truetype/mcufont -Isrc -I../../../$(PROJECT)_Common -g -Wall
+OBJS := $(SRCS:.c=.o)
+DEPS := $(OBJS:.o=.d)
+LIBS = -Llib lib/camlib_opencv.o -lopencv_core.dll -lopencv_imgproc.dll -lopencv_videoio.dll -lgdi32  
 
-all: lib/camlib_opencv.o $(OBJECTS) 
-	$(CPP) $(CFLAGS) lib/camlib_opencv.o $(OBJECTS) $(LIBS) -o $(BINARY)
+$(BINARY) : $(OBJS)
+	$(CPP) $^ $(LIBS) -o $@
+	
+-include $(DEPS)
+
+%.o : %.c
+	$(CC) $(CFLAGS) -MMD -c $< -o $@
 
 clean:
-	$(RM) $(subst /,\,$(OBJECTS))
+	$(RM) $(subst /,\,$(OBJS))
+	$(RM) $(subst /,\,$(DEPS))
 	$(RM) $(BINARY)
+	
