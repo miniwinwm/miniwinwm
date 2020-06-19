@@ -21,6 +21,8 @@ OBJS := $(SRCS:.c=.o)
 DEPS := $(OBJS:.o=.d)
 LIBS = -lgdi32
 
+all : $(BINARY)
+
 $(BINARY) : $(OBJS)
 	$(CC) $^ $(LIBS) -o $@
 	

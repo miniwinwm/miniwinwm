@@ -21,6 +21,8 @@ OBJS := $(SRCS:.c=.o)
 DEPS := $(OBJS:.o=.d)
 LIBS = -Llib lib/camlib_opencv.o -lopencv_core.dll -lopencv_imgproc.dll -lopencv_videoio.dll -lgdi32  
 
+all : $(BINARY)
+
 $(BINARY) : $(OBJS)
 	$(CPP) $^ $(LIBS) -o $@
 	
