@@ -3687,21 +3687,23 @@ int main(int argc, char **argv)
 		cout << "Could not create file\n";
 		exit(1);
 	}
-	outfileMake << "BINARY = " << json["TargetName"].string_value();
-
+	
+	outfileMake << "PROJECT = " << json["TargetName"].string_value() << "\n\n";
+	
+	outfileMake << "BINARY = $(PROJECT)";
 	if (json["TargetType"].string_value() == "Windows")
 	{
 		outfileMake << ".exe\n";
-        outfileMake << "RM=cmd \\/C del\n\n";
+        outfileMake << "RM = cmd \\/C del\n";
 	}
 	else if (json["TargetType"].string_value() == "Linux")
 	{
-		outfileMake << "\n\n";
+		outfileMake << "\n";
 	}
 
 	outfileMake <<
 			"SRCS := $(wildcard src/*.c) \\\n" 
-			"	$(wildcard ../../../" << json["TargetName"].string_value() << "_Common/*.c) \\\n"
+			"	$(wildcard ../../../$(PROJECT)_Common/*.c) \\\n"
 			"	$(wildcard ../../../MiniWin/*.c) \\\n"
 			"	$(wildcard ../../../MiniWin/bitmaps/*.c) \\\n"
 			"	$(wildcard ../../../MiniWin/hal/*.c) \\\n";
@@ -3720,7 +3722,7 @@ int main(int argc, char **argv)
 			"	$(wildcard ../../../MiniWin/gl/*.c) \\\n"
 			"	$(wildcard ../../../MiniWin/gl/fonts/bitmapped/*.c) \\\n"
 			"	$(wildcard ../../../MiniWin/gl/fonts/truetype/*.c) \\\n"
-			"	$(wildcard ../../../MiniWin/gl/fonts/truetype/mcufont/*.c)\n\n"
+			"	$(wildcard ../../../MiniWin/gl/fonts/truetype/mcufont/*.c)\n"
 			"CC = gcc\n";
 
 	if (json["TargetType"].string_value() == "Windows")
@@ -3729,14 +3731,15 @@ int main(int argc, char **argv)
     }
 	else if (json["TargetType"].string_value() == "Linux")
 	{
-   	    outfileMake << "CFLAGS = -D__linux ";
+   	    outfileMake << "CFLAGS = ";
     }
 
 	outfileMake <<
             "-I../../../MiniWin -I../../../MiniWin/gl/fonts/truetype/mcufont "
-            "-Isrc -I../../../" << json["TargetName"].string_value() << "_Common -g -Wall\n"
-			"OBJECTS := $(SRCS:.c=.o)\n";
-
+            "-Isrc -I../../../$(PROJECT)_Common -g -Wall\n"
+			"OBJS := $(SRCS:.c=.o)\n"
+			"DEPS := $(OBJS:.o=.d)\n";
+	
 	if (json["TargetType"].string_value() == "Windows")
 	{
 		outfileMake << "LIBS = -lgdi32\n\n";
@@ -3745,29 +3748,33 @@ int main(int argc, char **argv)
 	{
 		outfileMake << "LIBS = -lX11 -lm -lpthread\n\n";
 	}
+	
+	outfileMake << 
+			"all : $(BINARY)\n\n";
 
 	outfileMake <<
-			"all: $(OBJECTS)\n"
-			"	$(CC) $(CFLAGS) $(OBJECTS) $(LIBS) -o $(BINARY)\n";
-
-	if (json["TargetType"].string_value() == "Windows")
-	{
-		outfileMake << "	$(RM) $(subst /,\\,$(OBJECTS))\n\n";
-	}
-	else
-	{
-		outfileMake << "	rm $(OBJECTS)\n\n";
-	}
+			"$(BINARY) : $(OBJS)\n"
+			"	$(CC) $^ $(LIBS) -o $@\n\n";
+	
+	outfileMake << "-include $(DEPS)\n\n"	;
+			
+	outfileMake << 
+			"%.o : %.c\n"
+			"	$(CC) $(CFLAGS) -MMD -c $< -o $@\n\n";
 
 	outfileMake << "clean:\n";
 
 	if (json["TargetType"].string_value() == "Windows")
 	{
+		outfileMake << "	$(RM) $(subst /,\\,$(OBJS))\n";
+		outfileMake << "	$(RM) $(subst /,\\,$(DEPS))\n";		
 		outfileMake << "	$(RM) $(BINARY)\n";
 	}
 	else if (json["TargetType"].string_value() == "Linux")
 	{
-		outfileMake << "	rm $(BINARY)\n";
+		outfileMake << "	rm $(OBJS)\n";
+		outfileMake << "	rm $(DEPS)\n";	
+		outfileMake << "	rm $(BINARY)\n";		
 	}			
 	outfileMake.close();
 
