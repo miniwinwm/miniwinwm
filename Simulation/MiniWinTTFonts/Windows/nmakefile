@@ -1,0 +1,24 @@
+BINARY = MiniWinTTFonts.exe
+CFLAGS = -nologo -I../../../MiniWin -I../../../MiniWin/gl/fonts/truetype/mcufont -Isrc -I../../../MiniWinTTFonts_Common
+OBJECTS = src/*.obj \
+	 ../../../MiniWinTTFonts_Common/*.obj \
+	 ../../../MiniWin/*.obj \
+	 ../../../MiniWin/bitmaps/*.obj \
+	 ../../../MiniWin/hal/*.obj \
+	 ../../../MiniWin/hal/windows/*.obj \
+	 ../../../MiniWin/ui/*.obj \
+	 ../../../MiniWin/dialogs/*.obj \
+	 ../../../MiniWin/gl/*.obj \
+	 ../../../MiniWin/gl/fonts/bitmapped/*.obj \
+	 ../../../MiniWin/gl/fonts/truetype/*.obj \
+	 ../../../MiniWin/gl/fonts/truetype/mcufont/*.obj
+	 
+.c.obj:
+	$(CC) $(CFLAGS) -c $<
+
+$(BINARY): $(OBJECTS)
+	link gdi32.lib user32.lib *.obj -out:$(BINARY)
+
+clean:
+	del $(BINARY)
+	del *.obj
