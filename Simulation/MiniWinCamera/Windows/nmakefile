@@ -1,23 +1,27 @@
-BINARY = MiniWinCamera.exe
-CFLAGS = -nologo -I../../../MiniWin -I../../../MiniWin/gl/fonts/truetype/mcufont -Isrc -I../../../MiniWinCamera_Common
-OBJECTS = src/*.obj \
-	 ../../../MiniWinCamera_Common/*.obj \
-	 ../../../MiniWin/*.obj \
-	 ../../../MiniWin/bitmaps/*.obj \
-	 ../../../MiniWin/hal/*.obj \
-	 ../../../MiniWin/hal/windows/*.obj \
-	 ../../../MiniWin/ui/*.obj \
-	 ../../../MiniWin/dialogs/*.obj \
-	 ../../../MiniWin/gl/*.obj \
-	 ../../../MiniWin/gl/fonts/bitmapped/*.obj \
-	 ../../../MiniWin/gl/fonts/truetype/*.obj \
-	 ../../../MiniWin/gl/fonts/truetype/mcufont/*.obj
-.c.obj:
-	$(CC) $(CFLAGS) -c $<
+PROJECT = MiniWinCamera
 
-$(BINARY): $(OBJECTS)
-	link gdi32.lib user32.lib *.obj lib\camlib_opencv.obj lib\opencv_world430.lib -out:$(BINARY)
+BINARY = $(PROJECT).exe
+OBJS = src\*.obj \
+	 ..\..\..\$(PROJECT)_Common\*.obj \
+	 ..\..\..\MiniWin\*.obj \
+	 ..\..\..\MiniWin\bitmaps\*.obj \
+	 ..\..\..\MiniWin\hal\*.obj \
+	 ..\..\..\MiniWin\hal\windows\*.obj \
+	 ..\..\..\MiniWin\ui\*.obj \
+	 ..\..\..\MiniWin\dialogs\*.obj \
+	 ..\..\..\MiniWin\gl\*.obj \
+	 ..\..\..\MiniWin\gl\fonts\bitmapped\*.obj \
+	 ..\..\..\MiniWin\gl\fonts\truetype\*.obj \
+	 ..\..\..\MiniWin\gl\fonts\truetype\mcufont\*.obj
+ 	 
+CFLAGS = -nologo -I..\..\..\MiniWin -I..\..\..\MiniWin\gl\fonts\truetype\mcufont -Isrc -I..\..\..\$(PROJECT)_Common
+
+.c.obj:
+	cl $(CFLAGS) -c $< -Fo$(@D)\ 
+	
+$(BINARY): $(OBJS)
+	link gdi32.lib user32.lib $(OBJS) lib\camlib_opencv.obj lib\opencv_world430.lib -out:$@
 
 clean:
 	del $(BINARY)
-	del *.obj
+	del $(OBJS)
