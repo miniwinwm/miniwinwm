@@ -407,6 +407,16 @@ static void arc_bres(const mw_gl_draw_info_t *draw_info, int16_t centre_x, int16
 
 	MW_ASSERT(draw_info, "Null pointer argument");
 
+	if (start_angle < 0)
+	{
+		start_angle += 360;
+	}
+
+	if (end_angle < 0)
+	{
+		end_angle += 360;
+	}
+
 	/* plot top, bottom, left and right */
 	arc_point(draw_info, centre_x, centre_y, centre_x, centre_y + radius, start_angle, end_angle);
 	arc_point(draw_info, centre_x, centre_y, centre_x, centre_y - radius, start_angle, end_angle);
@@ -469,9 +479,19 @@ static void arc_point(const mw_gl_draw_info_t *draw_info, int16_t centre_x, int1
 		angle += 360;
 	}
 
-	if (angle >= start_angle && angle < end_angle)
+	if (end_angle > start_angle)
 	{
-		mw_gl_fg_pixel(draw_info, x, y);
+		if (angle >= start_angle && angle < end_angle)
+		{
+			mw_gl_fg_pixel(draw_info, x, y);
+		}
+	}
+	else
+	{
+		if (!(angle >= end_angle && angle < start_angle))
+		{
+			mw_gl_fg_pixel(draw_info, x, y);
+		}
 	}
 }
 

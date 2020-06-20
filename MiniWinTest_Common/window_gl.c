@@ -648,9 +648,9 @@ void window_gl_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_t
 
 	case 30:
 		/* check plain arc */
-		mw_gl_set_line(MW_GL_SOLID_LINE);
+		mw_gl_set_line(MW_GL_LARGE_DASH_LINE);
 		mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
-		mw_gl_arc(draw_info, 100, 100, 50, 10, 350);
+		mw_gl_arc(draw_info, 100, 100, 50, -45, 45);
 		mw_gl_hline(draw_info, 0, mw_get_window_client_rect(window_handle).width, 50);
 		mw_gl_hline(draw_info, 0, mw_get_window_client_rect(window_handle).width, 150);
 		mw_gl_vline(draw_info, 50, 0, mw_get_window_client_rect(window_handle).height);
