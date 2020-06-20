@@ -46,7 +46,7 @@ SOFTWARE.
 static const sdmmchost_detect_card_t s_sdCardDetect =
 {
     .cdType = BOARD_SD_DETECT_TYPE,
-    .cdTimeOut_ms = ~0U
+    .cdTimeOut_ms = 2000U
 };
 
 /************
