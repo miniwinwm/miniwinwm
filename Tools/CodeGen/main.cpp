@@ -1293,6 +1293,10 @@ int main(int argc, char **argv)
 		{
 			outfileUserSource << " | MW_WINDOW_FLAG_CAN_BE_CLOSED";
 		}		
+		if (window["FixedSize"].bool_value())
+		{
+			outfileUserSource << " | MW_WINDOW_FLAG_FIXED_SIZE";
+		}
 		if (window["VerticalScrollBarEnabled"].bool_value())
 		{
 			outfileUserSource << " | MW_WINDOW_FLAG_VERT_SCROLL_BAR_ENABLED";

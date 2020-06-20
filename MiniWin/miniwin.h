@@ -106,6 +106,7 @@ SOFTWARE.
 #define MW_WINDOW_FLAG_HORIZ_SCROLL_BAR_ENABLED		0x00002000U	/**< Indicates that a horizontal scroll bar, if existing, is enabled */
 #define MW_WINDOW_FLAG_TOUCH_FOCUS_AND_EVENT		0x00004000U	/**< Indicates that a touch in a non-focused window gives it focus and generates a touch down event */
 #define MW_WINDOW_FLAG_LARGE_SIZE					0x00008000U	/**< Indicates that a window's menu bar and scroll bars are to be drawn large sized */
+#define MW_WINDOW_FLAG_FIXED_SIZE					0x00010000U	/**< Indicates that a window cannot be resized or maximised */
 
 /**
  * Control option and state flags

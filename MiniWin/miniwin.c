@@ -1533,7 +1533,7 @@ static void draw_title_bar(mw_handle_t window_handle, const mw_gl_draw_info_t *d
 				close_icon_bitmap);
 
 		/* resize icon */
-		mw_gl_set_fg_colour(MW_HAL_LCD_WHITE);
+		mw_gl_set_fg_colour((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_FIXED_SIZE) == MW_WINDOW_FLAG_FIXED_SIZE ? (mw_hal_lcd_colour_t)MW_HAL_LCD_GREY5 : (mw_hal_lcd_colour_t)MW_HAL_LCD_WHITE);
 		mw_gl_set_bg_transparency(MW_GL_BG_TRANSPARENT);
 		mw_gl_monochrome_bitmap(draw_info,
 				2,
@@ -1545,7 +1545,7 @@ static void draw_title_bar(mw_handle_t window_handle, const mw_gl_draw_info_t *d
 		/* maximise icon */
 		mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
 		mw_gl_set_bg_transparency(MW_GL_BG_NOT_TRANSPARENT);
-		mw_gl_set_bg_colour(MW_HAL_LCD_WHITE);
+		mw_gl_set_bg_colour((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_FIXED_SIZE) == MW_WINDOW_FLAG_FIXED_SIZE ? (mw_hal_lcd_colour_t)MW_HAL_LCD_GREY5 : (mw_hal_lcd_colour_t)MW_HAL_LCD_WHITE);
 		mw_gl_monochrome_bitmap(draw_info,
 				mw_all_windows[window_id].window_rect.width - (icon_offset * 2),
 				2,
@@ -3853,11 +3853,14 @@ static bool check_and_process_touch_on_title_bar(uint8_t window_id, int16_t touc
 					/* touch event was on maximise icon; ignore if window is modal */
 					if (touch_message_id == MW_TOUCH_DOWN_MESSAGE)
 					{
-						/* it was touch down and window isn't modal so maximise window */
-						(void)mw_resize_window(mw_all_windows[window_id].window_handle,
-								MW_ROOT_WIDTH, MW_ROOT_HEIGHT);
-						mw_reposition_window(mw_all_windows[window_id].window_handle, 0, 0);
-						mw_paint_all();
+						/* it was touch down and window isn't modal so maximise window if it's allowed*/
+						if ((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_FIXED_SIZE) == 0UL)
+						{
+							(void)mw_resize_window(mw_all_windows[window_id].window_handle,
+									MW_ROOT_WIDTH, MW_ROOT_HEIGHT);
+							mw_reposition_window(mw_all_windows[window_id].window_handle, 0, 0);
+							mw_paint_all();
+						}
 					}
 				}
 				/* check if touch occurred on minimise icon */
@@ -3890,10 +3893,14 @@ static bool check_and_process_touch_on_title_bar(uint8_t window_id, int16_t touc
 					/* touch event was on resize icon; ignore if window is modal */
 					if (touch_message_id == MW_TOUCH_DOWN_MESSAGE)
 					{
-						/* window isn't modal so start resize process */
-						window_redimensioning_state = WINDOW_BEING_RESIZED;
-						window_being_redimensioned_id = get_window_id_for_handle(mw_all_windows[window_id].window_handle);
-						MW_ASSERT(window_being_redimensioned_id < MW_MAX_WINDOW_COUNT, "Bad window handle");
+						/* check if resize is allowed */
+						if ((mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_FIXED_SIZE) == 0UL)
+						{
+							/* resize is allowed so start resize process */
+							window_redimensioning_state = WINDOW_BEING_RESIZED;
+							window_being_redimensioned_id = get_window_id_for_handle(mw_all_windows[window_id].window_handle);
+							MW_ASSERT(window_being_redimensioned_id < MW_MAX_WINDOW_COUNT, "Bad window handle");
+						}
 					}
 				}
 				else
