@@ -3787,35 +3787,37 @@ int main(int argc, char **argv)
 			cout << "Could not create file\n";
 			exit(1);
 		}
-		outfileNmake << "BINARY = " << json["TargetName"].string_value() << ".exe\n";
-		outfileNmake << "CFLAGS = -nologo -I../../../MiniWin -I../../../MiniWin/gl/fonts/truetype/mcufont -Isrc -I../../../" << json["TargetName"].string_value() << "_Common\n";
+		outfileNmake << "PROJECT = " << json["TargetName"].string_value() << "\n\n";
+		
+		outfileNmake << "BINARY = $(PROJECT).exe\n";
 
 		outfileNmake <<
-				"OBJECTS = src/*.obj \\\n"
-				"	 ../../../" << json["TargetName"].string_value() << "_Common/*.obj \\\n"
-				"	 ../../../MiniWin/*.obj \\\n"
-				"	 ../../../MiniWin/bitmaps/*.obj \\\n"
-				"	 ../../../MiniWin/hal/*.obj \\\n"
-				"	 ../../../MiniWin/hal/windows/*.obj \\\n"
-				"	 ../../../MiniWin/ui/*.obj \\\n"
-				"	 ../../../MiniWin/dialogs/*.obj \\\n"
-				"	 ../../../MiniWin/gl/*.obj \\\n"
-				"	 ../../../MiniWin/gl/fonts/bitmapped/*.obj \\\n"
-				"	 ../../../MiniWin/gl/fonts/truetype/*.obj \\\n"
-				"	 ../../../MiniWin/gl/fonts/truetype/mcufont/*.obj\n\n";
+				"OBJS = src\\*.obj \\\n"
+				"	 ..\\..\\..\\$(PROJECT)_Common\\*.obj \\\n"
+				"	 ..\\..\\..\\MiniWin\\*.obj \\\n"
+				"	 ..\\..\\..\\MiniWin\\bitmaps\\*.obj \\\n"
+				"	 ..\\..\\..\\MiniWin\\hal\\*.obj \\\n"
+				"	 ..\\..\\..\\MiniWin\\hal\\windows\\*.obj \\\n"
+				"	 ..\\..\\..\\MiniWin\\ui\\*.obj \\\n"
+				"	 ..\\..\\..\\MiniWin\\dialogs\\*.obj \\\n"
+				"	 ..\\..\\..\\MiniWin\\gl\\*.obj \\\n"
+				"	 ..\\..\\..\\MiniWin\\gl\\fonts\\bitmapped\\*.obj \\\n"
+				"	 ..\\..\\..\\MiniWin\\gl\\fonts\\truetype\\*.obj \\\n"
+				"	 ..\\..\\..\\MiniWin\\gl\\fonts\\truetype\\mcufont\\*.obj\n\n";
 
-
+		outfileNmake << "CFLAGS = -nologo -I..\\..\\../MiniWin -I..\\..\\..\\MiniWin\\gl\\fonts\\truetype\\mcufont -Isrc -I..\\..\\..\\$(PROJECT)_Common\n\n";
+		
 		outfileNmake <<
 				".c.obj:\n"
-				"\t$(CC) $(CFLAGS) -c $<\n\n";
+				"\tcl $(CFLAGS) -c $< -Fo$(@D)\\ \n\n";
 
 		outfileNmake <<
-				"$(BINARY): $(OBJECTS)\n"
-				"\tlink gdi32.lib user32.lib *.obj -out:$(BINARY)\n"
-				"\tdel *.obj\n\n";
+				"$(BINARY): $(OBJS)\n"
+				"\tlink gdi32.lib user32.lib $(OBJS) -out:$@\n\n";
 
 		outfileNmake << "clean:\n";
 		outfileNmake << "\tdel $(BINARY)\n";
+		outfileNmake << "\tdel $(OBJS)\n";
 		outfileMake.close();
 	}
 
