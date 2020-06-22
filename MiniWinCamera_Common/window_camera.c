@@ -69,6 +69,7 @@ static window_window_camera_data_t window_window_camera_data;
 void window_window_camera_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_t *draw_info)
 {
 	uint16_t *frame_data;
+	uint16_t pixel;
 
 	MW_ASSERT(draw_info != (void*)0, "Null pointer parameter");
 
@@ -80,13 +81,18 @@ void window_window_camera_paint_function(mw_handle_t window_handle, const mw_gl_
 			uint32_t i = 0UL;
 			for (uint32_t x = 0U; x < 160U; x++)
 			{
-				uint16_t pixel = (frame_data[(y * 320U + x) * 2U]);
+				pixel = frame_data[(y * 160U + x)];
 
-				window_window_camera_data.line_buffer[i] = (pixel >> 11) << 3;
+				/* blue */
+				window_window_camera_data.line_buffer[i] = (uint8_t)(pixel << 3);
 				i++;
-				window_window_camera_data.line_buffer[i] = (pixel << 5) >> 8;
+
+				/* green */
+				window_window_camera_data.line_buffer[i] = (uint8_t)((pixel & 0x7e0U) >> 3);
 				i++;
-				window_window_camera_data.line_buffer[i] = pixel << 3;
+
+				/* red */
+				window_window_camera_data.line_buffer[i] = (uint8_t)((pixel >> 11) << 3);
 				i++;
 			}
 
