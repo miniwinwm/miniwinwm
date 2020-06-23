@@ -22,31 +22,33 @@ OV7670		STM32F429I-DISC1
 
 3.3V		3V
 DGND		GND
-SCL		PB6
-SDA		PB7
-VS		PC11
-HS		PA5
-PLK		PB4
-XLK		PF6
-D7		PG9
-D6		PE6
-D5		PE5
-D4		PE4
-D3		PE3
-D2		PE2
-D1		PG3
-D0		PG2
-RET		NC	
+SCL			PB6
+SDA			PB7
+VS			PC11
+HS			PA5
+PLK			PB4
+XLK			PF6
+D7			PG9
+D6			PE6
+D5			PE5
+D4			PE4
+D3			PE3
+D2			PE2
+D1			PG3
+D0			PG2
+RET			NC	
 PWDN		NC
 
 The camlib library uses the following resources:
 
-GPIO pins on port G:	PG2, PG3, PG9
+GPIO pins on port A:	PA5
+GPIO pins on port C:	PC11
 GPIO pins on port E:	PE2, PE3, PE4, PE5, PE6
+GPIO pins on port G:	PG2, PG3, PG9
 
-320 * 240 * 2 bytes of RAM
+160 * 120 * 2 bytes of RAM
 
-TIM1 and TIM1OC channel 1 on PF6
+TIM10 and TIM1OC channel 1 on PF6
 
 I2C1 on PB6 and PB7 during call of library function camlib_init().
 

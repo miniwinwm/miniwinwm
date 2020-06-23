@@ -98,7 +98,7 @@ typedef struct
     mw_message_func_p message_func;    			 	/**< Pointer to window message handler function */
     uint32_t window_flags;							/**< All the flags defining a window's description and state */
 	void *instance_data;							/**< Optional void pointer to window specific data structure containing window instance specific data */
-	mw_handle_t window_handle;						/**< handle used to refer to this window */
+	mw_handle_t window_handle;						/**< Handle used to refer to this window */
 	mw_util_rect_t window_rect;         			/**< Rect containing coordinates of window including title bar and border if present */
 	mw_util_rect_t client_rect;         			/**< Rect containing coordinates of window's client area */
 	uint16_t menu_bar_item_enables;					/**< Bitfield of individual enable flags for menu bar items */
@@ -121,7 +121,7 @@ typedef struct
 	void *instance_data;							/**< Void pointer to control specific data structure containing control specific configuration data per instance */
 	mw_util_rect_t control_rect;        			/**< Rect containing coordinates of control's area */
 	mw_handle_t parent_handle;          			/**< This control's parent window handle */
-	mw_handle_t control_handle;						/**< handle used to refer to this control */
+	mw_handle_t control_handle;						/**< Handle used to refer to this control */
 	uint16_t control_flags;							/**< All the flags defining a control's description and state */
 } control_t;
 
@@ -1424,7 +1424,7 @@ static bool find_if_window_is_overlapped(mw_handle_t window_handle)
 }
 
 /**
- * FInd if a specified rect is completely on the screen
+ * Find if a specified rect is completely on the screen
  *
  * @param rect The rect to check
  * @return If completely on screen true else false
