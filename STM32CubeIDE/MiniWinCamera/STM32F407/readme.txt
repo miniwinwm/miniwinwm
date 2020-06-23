@@ -17,7 +17,7 @@ inaccurate.
 
 These are the connections required between the OV7670 camera and the board:
 
-OV7670		STM32F429I-DISC1
+OV7670		STM32F4DISCOVERY
 
 3.3V		3V
 DGND		GND
