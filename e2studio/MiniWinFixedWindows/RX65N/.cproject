@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?fileVersion 4.0.0?><cproject storage_type_id="org.eclipse.cdt.core.XmlProjectDescriptionStorage">
 	<storageModule moduleId="org.eclipse.cdt.core.settings">
-		<cconfiguration id="com.renesas.cdt.managedbuild.renesas.ccrx.hardwaredebug.configuration.1901532711">
-			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="com.renesas.cdt.managedbuild.renesas.ccrx.hardwaredebug.configuration.1901532711" moduleId="org.eclipse.cdt.core.settings" name="HardwareDebug">
+		<cconfiguration id="com.renesas.cdt.managedbuild.renesas.ccrx.hardwaredebug.configuration.1282829680">
+			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="com.renesas.cdt.managedbuild.renesas.ccrx.hardwaredebug.configuration.1282829680" moduleId="org.eclipse.cdt.core.settings" name="HardwareDebug">
 				<externalSettings/>
 				<extensions>
 					<extension id="org.eclipse.cdt.core.PE" point="org.eclipse.cdt.core.BinaryParser"/>
@@ -14,337 +14,167 @@
 			</storageModule>
 			<storageModule moduleId="com.renesas.cdt.managedbuild.core.toolchainInfo">
 				<option id="toolchain.id" value="Renesas_RXC"/>
-				<option id="toolchain.version" value="v3.01.00"/>
+				<option id="toolchain.version" value="v2.08.00"/>
 			</storageModule>
 			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
-				<configuration artifactExtension="abs" artifactName="${ProjName}" buildArtefactType="org.eclipse.cdt.build.core.buildArtefactType.exe" buildProperties="org.eclipse.cdt.build.core.buildArtefactType=org.eclipse.cdt.build.core.buildArtefactType.exe,org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.debug" description="Debug on hardware" id="com.renesas.cdt.managedbuild.renesas.ccrx.hardwaredebug.configuration.1901532711" name="HardwareDebug" parent="com.renesas.cdt.managedbuild.renesas.ccrx.hardwaredebug.configuration">
-					<folderInfo id="com.renesas.cdt.managedbuild.renesas.ccrx.hardwaredebug.configuration.1901532711." name="/" resourcePath="">
-						<toolChain id="com.renesas.cdt.managedbuild.renesas.ccrx.hardwaredebug.toolChain.1114623030" name="Renesas CCRX Toolchain" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.hardwaredebug.toolChain">
-							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF;org.eclipse.cdt.core.PE" id="com.renesas.cdt.managedbuild.renesas.ccrx.base.targetPlatform.1946649466" osList="win32" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.base.targetPlatform"/>
-							<builder buildPath="${workspace_loc:/MiniWinFixedWindows_RX65N}/HardwareDebug" id="com.renesas.cdt.managedbuild.renesas.ccrx.base.builder.2062143811" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="CCRX Builder" parallelBuildOn="true" parallelizationNumber="optimal" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.base.builder"/>
-							<tool id="com.renesas.cdt.managedbuild.renesas.ccrx.base.dsp.505153365" name="DSP Assembler" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.base.dsp">
-								<option id="com.renesas.cdt.managedbuild.renesas.ccrx.dsp.option.noDebugInfo.1770342998" name="Output debug information" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.dsp.option.noDebugInfo" useByScannerDiscovery="false" value="true" valueType="boolean"/>
-								<option id="com.renesas.cdt.managedbuild.renesas.ccrx.dsp.option.endian.2132414675" name="Endian of output data value" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.dsp.option.endian" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.dsp.option.endian.big" valueType="enumerated"/>
+				<configuration artifactExtension="abs" artifactName="${ProjName}" buildArtefactType="org.eclipse.cdt.build.core.buildArtefactType.exe" buildProperties="org.eclipse.cdt.build.core.buildArtefactType=org.eclipse.cdt.build.core.buildArtefactType.exe,org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.debug" description="Debug on hardware" id="com.renesas.cdt.managedbuild.renesas.ccrx.hardwaredebug.configuration.1282829680" name="HardwareDebug" parent="com.renesas.cdt.managedbuild.renesas.ccrx.hardwaredebug.configuration">
+					<folderInfo id="com.renesas.cdt.managedbuild.renesas.ccrx.hardwaredebug.configuration.1282829680." name="/" resourcePath="">
+						<toolChain id="com.renesas.cdt.managedbuild.renesas.ccrx.hardwaredebug.toolChain.1597545440" name="Renesas CCRX Toolchain" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.hardwaredebug.toolChain">
+							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF;org.eclipse.cdt.core.PE" id="com.renesas.cdt.managedbuild.renesas.ccrx.base.targetPlatform.199021152" osList="win32" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.base.targetPlatform"/>
+							<builder buildPath="${workspace_loc:/MiniWinFixedWindows_RX65N}/HardwareDebug" id="com.renesas.cdt.managedbuild.renesas.ccrx.base.builder.543155241" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="CCRX Builder" parallelBuildOn="true" parallelizationNumber="optimal" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.base.builder"/>
+							<tool id="com.renesas.cdt.managedbuild.renesas.ccrx.base.dsp.540999712" name="DSP Assembler" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.base.dsp">
+								<option id="com.renesas.cdt.managedbuild.renesas.ccrx.dsp.option.noDebugInfo.64566694" name="Output debug information" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.dsp.option.noDebugInfo" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="com.renesas.cdt.managedbuild.renesas.ccrx.dsp.option.endian.1606584416" name="Endian of output data value" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.dsp.option.endian" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.dsp.option.endian.big" valueType="enumerated"/>
 							</tool>
-							<tool id="com.renesas.cdt.managedbuild.renesas.ccrx.base.common.1019613766" name="Common" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.base.common">
-								<option id="com.renesas.cdt.managedbuild.renesas.ccrx.common.option.isa.318347664" name="Instruction set architecture" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.common.option.isa" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.common.option.isa.rxv2" valueType="enumerated"/>
-								<option id="com.renesas.cdt.managedbuild.renesas.ccrx.common.option.rxArchitecture.7297190" name="RX Architecture" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.common.option.rxArchitecture" useByScannerDiscovery="false" value="rxv2" valueType="string"/>
-								<option id="com.renesas.cdt.managedbuild.renesas.ccrx.common.option.floatIns.1930339456" name="Use floating point arithmetic instructions" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.common.option.floatIns" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.common.option.floatIns.yes" valueType="enumerated"/>
-								<option id="com.renesas.cdt.managedbuild.renesas.ccrx.common.option.hasFpu.1828257173" name="Has FPU" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.common.option.hasFpu" useByScannerDiscovery="false" value="TRUE" valueType="string"/>
-								<option id="com.renesas.cdt.managedbuild.renesas.ccrx.common.option.deviceName.780268494" name="Device Name" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.common.option.deviceName" useByScannerDiscovery="false" value="R5F565NEDxFB_DUAL" valueType="string"/>
-								<option id="com.renesas.cdt.managedbuild.renesas.ccrx.common.option.deviceHistory.694893677" name="Device history" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.common.option.deviceHistory" useByScannerDiscovery="false" value="non_init;R5F565NEDxFB_DUAL" valueType="string"/>
-								<option id="com.renesas.cdt.managedbuild.renesas.ccrx.common.option.isaHistory.1316554531" name="ISA history" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.common.option.isaHistory" useByScannerDiscovery="false" value="non_init;com.renesas.cdt.managedbuild.renesas.ccrx.common.option.isa.rxv2" valueType="string"/>
-								<option id="com.renesas.cdt.managedbuild.renesas.ccrx.common.option.deviceCommand.73141984" name="Device Command" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.common.option.deviceCommand" useByScannerDiscovery="false" value="R5F565NE_DUAL" valueType="string"/>
-								<option id="com.renesas.cdt.managedbuild.renesas.ccrx.common.option.checkRtos.1777047735" name="Check RTOS" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.common.option.checkRtos" useByScannerDiscovery="false" value="unusedRtos" valueType="string"/>
-								<option id="com.renesas.cdt.managedbuild.renesas.ccrx.common.option.hasDsp.96036485" name="Has DSP" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.common.option.hasDsp" useByScannerDiscovery="false" value="false" valueType="string"/>
-								<option id="com.renesas.cdt.managedbuild.renesas.ccrx.common.option.deviceFamily.966284366" name="Device Family" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.common.option.deviceFamily" useByScannerDiscovery="false" value="RX65N" valueType="string"/>
+							<tool id="com.renesas.cdt.managedbuild.renesas.ccrx.base.common.1689615443" name="Common" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.base.common">
+								<option id="com.renesas.cdt.managedbuild.renesas.ccrx.common.option.isa.1669978153" name="Instruction set architecture" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.common.option.isa" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.common.option.isa.rxv2" valueType="enumerated"/>
+								<option id="com.renesas.cdt.managedbuild.renesas.ccrx.common.option.rxArchitecture.90927829" name="RX Architecture" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.common.option.rxArchitecture" useByScannerDiscovery="false" value="rxv2" valueType="string"/>
+								<option id="com.renesas.cdt.managedbuild.renesas.ccrx.common.option.floatIns.194442141" name="Use floating point arithmetic instructions" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.common.option.floatIns" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.common.option.floatIns.yes" valueType="enumerated"/>
+								<option id="com.renesas.cdt.managedbuild.renesas.ccrx.common.option.hasFpu.1234648642" name="Has FPU" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.common.option.hasFpu" useByScannerDiscovery="false" value="TRUE" valueType="string"/>
+								<option id="com.renesas.cdt.managedbuild.renesas.ccrx.common.option.deviceName.578210979" name="Device Name" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.common.option.deviceName" useByScannerDiscovery="false" value="R5F565NEDxFB_DUAL" valueType="string"/>
+								<option id="com.renesas.cdt.managedbuild.renesas.ccrx.common.option.deviceHistory.469983496" name="Device history" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.common.option.deviceHistory" useByScannerDiscovery="false" value="non_init;R5F565NEDxFB_DUAL" valueType="string"/>
+								<option id="com.renesas.cdt.managedbuild.renesas.ccrx.common.option.isaHistory.1879174554" name="ISA history" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.common.option.isaHistory" useByScannerDiscovery="false" value="non_init;com.renesas.cdt.managedbuild.renesas.ccrx.common.option.isa.rxv2" valueType="string"/>
+								<option id="com.renesas.cdt.managedbuild.renesas.ccrx.common.option.deviceCommand.130529139" name="Device Command" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.common.option.deviceCommand" useByScannerDiscovery="false" value="R5F565NE_DUAL" valueType="string"/>
+								<option id="com.renesas.cdt.managedbuild.renesas.ccrx.common.option.checkRtos.193440983" name="Check RTOS" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.common.option.checkRtos" useByScannerDiscovery="false" value="unusedRtos" valueType="string"/>
+								<option id="com.renesas.cdt.managedbuild.renesas.ccrx.common.option.hasDsp.203533837" name="Has DSP" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.common.option.hasDsp" useByScannerDiscovery="false" value="false" valueType="string"/>
+								<option id="com.renesas.cdt.managedbuild.renesas.ccrx.common.option.deviceFamily.820803245" name="Device Family" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.common.option.deviceFamily" useByScannerDiscovery="false" value="RX65N" valueType="string"/>
 							</tool>
-							<tool id="com.renesas.cdt.managedbuild.renesas.ccrx.base.compiler.593573888" name="Compiler" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.base.compiler">
-								<option id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.fpu.687695773" name="Use floating point arithmetic instructions" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.fpu" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.fpu.yes" valueType="enumerated"/>
-								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.include.2068908030" name="Include file directories" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.include" valueType="includePath">
+							<tool id="com.renesas.cdt.managedbuild.renesas.ccrx.base.compiler.1964313801" name="Compiler" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.base.compiler">
+								<option id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.fpu.2010161421" name="Use floating point arithmetic instructions" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.fpu" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.fpu.yes" valueType="enumerated"/>
+								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.include.1142853677" name="Include file directories" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.include" useByScannerDiscovery="false" valueType="includePath">
 									<listOptionValue builtIn="false" value="${TCINSTALL}/include"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MiniWinFixedWindows_RX65N/MiniWin}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MiniWinFixedWindows_RX65N/MiniWin/gl/fonts/truetype/mcufont}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MiniWinFixedWindows_RX65N/MiniWinFixedWindows_Common}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MiniWinFixedWindows_RX65N/src}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/smc_gen/r_bsp}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/smc_gen/r_config}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/smc_gen/r_gpio_rx}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/smc_gen/r_gpio_rx/src}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/smc_gen/r_cmt_rx}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/smc_gen/r_cmt_rx/src}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/smc_gen/r_flash_rx}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/smc_gen/r_flash_rx/src}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/smc_gen/r_flash_rx/src/flash_type_1}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/smc_gen/r_flash_rx/src/flash_type_2}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/smc_gen/r_flash_rx/src/flash_type_3}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/smc_gen/r_flash_rx/src/flash_type_4}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/smc_gen/r_flash_rx/src/targets}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/smc_gen/r_sci_iic_rx}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/smc_gen/r_sci_iic_rx/src}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/smc_gen/r_glcdc_rx}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/smc_gen/general}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/smc_gen/r_pincfg}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MiniWinFixedWindows_RX65N/src/smc_gen/general}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MiniWinFixedWindows_RX65N/src/smc_gen/r_bsp}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MiniWinFixedWindows_RX65N/src/smc_gen/r_cmt_rx}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MiniWinFixedWindows_RX65N/src/smc_gen/r_config}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MiniWinFixedWindows_RX65N/src/smc_gen/r_flash_rx}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MiniWinFixedWindows_RX65N/src/smc_gen/r_flash_rx/src}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MiniWinFixedWindows_RX65N/src/smc_gen/r_flash_rx/src/flash_type_4}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MiniWinFixedWindows_RX65N/src/smc_gen/r_glcdc_rx}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MiniWinFixedWindows_RX65N/src/smc_gen/r_gpio_rx}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MiniWinFixedWindows_RX65N/src/smc_gen/r_pincfg}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MiniWinFixedWindows_RX65N/src/smc_gen/r_sci_iic_rx}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/MiniWinFixedWindows_RX65N/src/smc_gen/r_sci_iic_rx/src}&quot;"/>
 								</option>
-								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.userBefore.1624834150" name="User-defined options (added before all specified options)" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.userBefore" useByScannerDiscovery="false" valueType="stringList">
+								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.userBefore.673720643" name="User-defined options (added before all specified options)" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.userBefore" useByScannerDiscovery="false" valueType="stringList">
 									<listOptionValue builtIn="false" value=""/>
 								</option>
-								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.userAfter.1729666281" name="User-defined options (added after all specified options)" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.userAfter" useByScannerDiscovery="false" valueType="stringList">
+								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.userAfter.1821856856" name="User-defined options (added after all specified options)" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.userAfter" useByScannerDiscovery="false" valueType="stringList">
 									<listOptionValue builtIn="false" value=""/>
 								</option>
-								<option id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.langFileC.764682054" name="C source file" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.langFileC" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.langFileC.c99" valueType="enumerated"/>
-								<option id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.inputCharCode.1998344533" name="Character code of an input program" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.inputCharCode" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.inputCharCode.utf8" valueType="enumerated"/>
-								<option id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.outcode.1108246164" name="Output character code" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.outcode" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.outcode.utf8" valueType="enumerated"/>
-								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.define.773036076" name="Macro definition" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.define" valueType="definedSymbols">
+								<option id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.inputCharCode.402899078" name="Character code of an input program" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.inputCharCode" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.inputCharCode.utf8" valueType="enumerated"/>
+								<option id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.outcode.2013185279" name="Output character code" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.outcode" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.outcode.utf8" valueType="enumerated"/>
+								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.define.1170394796" name="Macro definition" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.define" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="RX65N"/>
 								</option>
-								<inputType id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gcc.inputType.1813337212" name="Compiler Input C" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gcc.inputType"/>
-								<inputType id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gpp.inputType.1577627972" name="Compiler Input CPP" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gpp.inputType"/>
+								<option id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.langFileC.189215225" name="C source file" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.langFileC" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.langFileC.c99" valueType="enumerated"/>
+								<inputType id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gcc.inputType.1750348589" name="Compiler Input C" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gcc.inputType"/>
+								<inputType id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gpp.inputType.373463170" name="Compiler Input CPP" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gpp.inputType"/>
 							</tool>
-							<tool id="com.renesas.cdt.managedbuild.renesas.ccrx.base.assembler.1264873332" name="Assembler" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.base.assembler">
-								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.renesas.cdt.managedbuild.renesas.ccrx.assembler.option.userBefore.1877865278" name="User-defined options (added before all specified options)" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.assembler.option.userBefore" useByScannerDiscovery="false" valueType="stringList">
+							<tool id="com.renesas.cdt.managedbuild.renesas.ccrx.base.assembler.900191046" name="Assembler" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.base.assembler">
+								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.renesas.cdt.managedbuild.renesas.ccrx.assembler.option.userBefore.1414205858" name="User-defined options (added before all specified options)" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.assembler.option.userBefore" useByScannerDiscovery="false" valueType="stringList">
 									<listOptionValue builtIn="false" value=""/>
 								</option>
-								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.renesas.cdt.managedbuild.renesas.ccrx.assembler.option.userAfter.1693869403" name="User-defined options (added after all specified options)" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.assembler.option.userAfter" useByScannerDiscovery="false" valueType="stringList">
+								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.renesas.cdt.managedbuild.renesas.ccrx.assembler.option.userAfter.1780329388" name="User-defined options (added after all specified options)" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.assembler.option.userAfter" useByScannerDiscovery="false" valueType="stringList">
 									<listOptionValue builtIn="false" value=""/>
 								</option>
-								<option id="com.renesas.cdt.managedbuild.renesas.ccrx.assembler.option.characterCode.769666288" name="Character code of an input program" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.assembler.option.characterCode" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.assembler.option.characterCode.utf8" valueType="enumerated"/>
-								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.renesas.cdt.managedbuild.renesas.ccrx.assembler.option.include.1580782392" name="Include file directories" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.assembler.option.include" valueType="includePath">
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/smc_gen/general}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/smc_gen/r_pincfg}&quot;"/>
-								</option>
-								<inputType id="com.renesas.cdt.managedbuild.renesas.ccrx.assembler.inputType.573620415" name="Assembler InputType" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.assembler.inputType"/>
+								<option id="com.renesas.cdt.managedbuild.renesas.ccrx.assembler.option.characterCode.1278356334" name="Character code of an input program" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.assembler.option.characterCode" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.assembler.option.characterCode.utf8" valueType="enumerated"/>
+								<inputType id="com.renesas.cdt.managedbuild.renesas.ccrx.assembler.inputType.1982337710" name="Assembler InputType" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.assembler.inputType"/>
 							</tool>
-							<tool id="com.renesas.cdt.managedbuild.renesas.ccrx.base.linker.1478330069" name="Linker" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.base.linker">
-								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.renesas.cdt.managedbuild.renesas.ccrx.linker.option.rom.1657992346" name="ROM to RAM mapped section" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.linker.option.rom" useByScannerDiscovery="false" valueType="stringList">
+							<tool id="com.renesas.cdt.managedbuild.renesas.ccrx.base.linker.1497703373" name="Linker" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.base.linker">
+								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.renesas.cdt.managedbuild.renesas.ccrx.linker.option.rom.1761091375" name="ROM to RAM mapped section" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.linker.option.rom" useByScannerDiscovery="false" valueType="stringList">
 									<listOptionValue builtIn="false" value="D=R"/>
 									<listOptionValue builtIn="false" value="D_1=R_1"/>
 									<listOptionValue builtIn="false" value="D_2=R_2"/>
 								</option>
-								<option id="com.renesas.cdt.managedbuild.renesas.ccrx.linker.option.linkerSection.1214675439" name="Sections" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.linker.option.linkerSection" useByScannerDiscovery="false" value="SU,SI,B_1,R_1,B_2,R_2,B,R/04,C_1,C_2,C,C$*,D*,W*,L,P*/0FFF00000,EXCEPTVECT/0FFFFFF80,RESETVECT/0FFFFFFFC" valueType="string"/>
-								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.renesas.cdt.managedbuild.renesas.ccrx.linker.option.userBefore.544370589" name="User-defined options (added before all specified options)" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.linker.option.userBefore" useByScannerDiscovery="false" valueType="stringList">
+								<option id="com.renesas.cdt.managedbuild.renesas.ccrx.linker.option.linkerSection.1194871631" name="Sections" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.linker.option.linkerSection" useByScannerDiscovery="false" value="SU,SI,B_1,R_1,B_2,R_2,B,R/04,C_1,C_2,C,C$*,D*,W*,L,P/0FFF00000,EXCEPTVECT/0FFFFFF80,RESETVECT/0FFFFFFFC" valueType="string"/>
+								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.renesas.cdt.managedbuild.renesas.ccrx.linker.option.userBefore.1028307429" name="User-defined options (added before all specified options)" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.linker.option.userBefore" useByScannerDiscovery="false" valueType="stringList">
 									<listOptionValue builtIn="false" value=""/>
 								</option>
-								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.renesas.cdt.managedbuild.renesas.ccrx.linker.option.userAfter.2082908586" name="User-defined options (added after all specified options)" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.linker.option.userAfter" useByScannerDiscovery="false" valueType="stringList">
+								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.renesas.cdt.managedbuild.renesas.ccrx.linker.option.userAfter.1239282828" name="User-defined options (added after all specified options)" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.linker.option.userAfter" useByScannerDiscovery="false" valueType="stringList">
 									<listOptionValue builtIn="false" value=""/>
 								</option>
-								<option id="com.renesas.cdt.managedbuild.renesas.ccrx.linker.option.vect.294177925" name="Address setting for unused vector area" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.linker.option.vect" useByScannerDiscovery="false" value="_undefined_interrupt_source_isr" valueType="string"/>
-								<option id="com.renesas.cdt.managedbuild.renesas.ccrx.linker.option.checkSection.203030168" name="Checks the section larger than the specified range of addresses" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.linker.option.checkSection" useByScannerDiscovery="false" value="true" valueType="boolean"/>
-								<option id="com.renesas.cdt.managedbuild.renesas.ccrx.linker.option.memoryType.264106438" name="Memory address type assignment method" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.linker.option.memoryType" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.linker.option.memoryType.autoSpecify" valueType="enumerated"/>
-								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.renesas.cdt.managedbuild.renesas.ccrx.linker.option.noneLinkageOrderList.691543439" name="(Linkage order list)" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.linker.option.noneLinkageOrderList" valueType="stringList">
+								<option id="com.renesas.cdt.managedbuild.renesas.ccrx.linker.option.checkSection.11252807" name="Checks the section larger than the specified range of addresses" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.linker.option.checkSection" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="com.renesas.cdt.managedbuild.renesas.ccrx.linker.option.memoryType.1914009477" name="Memory address type assignment method" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.linker.option.memoryType" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.linker.option.memoryType.autoSpecify" valueType="enumerated"/>
+								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.renesas.cdt.managedbuild.renesas.ccrx.linker.option.noneLinkageOrderList.1654992765" name="(Linkage order list)" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.linker.option.noneLinkageOrderList" valueType="stringList">
+									<listOptionValue builtIn="false" value="&quot;.\generate\dbsct.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\generate\hwsetup.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\generate\intprg.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\generate\resetprg.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\generate\sbrk.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\generate\vecttbl.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\MiniWinFixedWindows_RX65N.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\app.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src/smc_gen/general\r_cg_hardware_setup.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src/smc_gen/general\r_smc_cgc.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src/smc_gen/general\r_smc_cgc_user.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src/smc_gen/general\r_smc_interrupt.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src/smc_gen/r_bsp/board/generic_rx65n\dbsct.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src/smc_gen/r_bsp/board/generic_rx65n\hwsetup.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src/smc_gen/r_bsp/board/generic_rx65n\lowlvl.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src/smc_gen/r_bsp/board/generic_rx65n\lowsrc.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src/smc_gen/r_bsp/board/generic_rx65n\resetprg.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src/smc_gen/r_bsp/board/generic_rx65n\sbrk.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src/smc_gen/r_bsp/board/generic_rx65n\vecttbl.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src/smc_gen/r_bsp/mcu/all\r_bsp_common.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src/smc_gen/r_bsp/mcu/rx65n\cpu.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src/smc_gen/r_bsp/mcu/rx65n\locking.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src/smc_gen/r_bsp/mcu/rx65n\mcu_clocks.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src/smc_gen/r_bsp/mcu/rx65n\mcu_init.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src/smc_gen/r_bsp/mcu/rx65n\mcu_interrupts.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src/smc_gen/r_bsp/mcu/rx65n\mcu_locks.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src/smc_gen/r_bsp/mcu/rx65n\mcu_mapped_interrupts.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src/smc_gen/r_bsp/mcu/rx65n\mcu_startup.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src/smc_gen/r_cmt_rx/src\r_cmt_rx.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src/smc_gen/r_flash_rx/src/flash_type_1\r_codeflash.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src/smc_gen/r_flash_rx/src/flash_type_1\r_codeflash_extra.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src/smc_gen/r_flash_rx/src/flash_type_1\r_dataflash.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src/smc_gen/r_flash_rx/src/flash_type_1\r_flash_type1.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src/smc_gen/r_flash_rx/src/flash_type_1\r_flash_utils.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src/smc_gen/r_flash_rx/src/flash_type_2\r_flash_type2.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src/smc_gen/r_flash_rx/src/flash_type_3\r_flash_type3.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src/smc_gen/r_flash_rx/src/flash_type_4\r_flash_type4.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src/smc_gen/r_flash_rx/src\r_flash_fcu.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src/smc_gen/r_flash_rx/src\r_flash_group.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src/smc_gen/r_flash_rx/src\r_flash_rx.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src/smc_gen/r_glcdc_rx/src\r_glcdc_private.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src/smc_gen/r_glcdc_rx/src\r_glcdc_rx.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src/smc_gen/r_glcdc_rx/src/targets/rx65n\r_glcdc_rx65n.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src/smc_gen/r_gpio_rx/src\r_gpio_rx.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src/smc_gen/r_gpio_rx/src/targets/rx65n\r_gpio_rx65n.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src/smc_gen/r_pincfg\Pin.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src/smc_gen/r_pincfg\r_glcdc_rx_pinset.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src/smc_gen/r_sci_iic_rx/src\r_sci_iic_rx.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src/smc_gen/r_sci_iic_rx/src/targets/rx65n\r_sci_iic_rx65n.obj&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;.\MiniWinFixedWindows_RX65N.lib&quot;"/>
 								</option>
 							</tool>
-							<tool id="com.renesas.cdt.managedbuild.renesas.ccrx.base.librarian.990240689" name="Library Generator" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.base.librarian">
-								<option id="com.renesas.cdt.managedbuild.renesas.ccrx.librarian.option.fpu.1204672421" name="Use floating point arithmetic instructions" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.librarian.option.fpu" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.librarian.option.fpu.yes" valueType="enumerated"/>
-								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.renesas.cdt.managedbuild.renesas.ccrx.librarian.option.userBefore.1138052803" name="User-defined options (added before all specified options)" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.librarian.option.userBefore" useByScannerDiscovery="false" valueType="stringList">
+							<tool id="com.renesas.cdt.managedbuild.renesas.ccrx.base.librarian.738179663" name="Library Generator" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.base.librarian">
+								<option id="com.renesas.cdt.managedbuild.renesas.ccrx.librarian.option.fpu.616593634" name="Use floating point arithmetic instructions" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.librarian.option.fpu" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.librarian.option.fpu.yes" valueType="enumerated"/>
+								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.renesas.cdt.managedbuild.renesas.ccrx.librarian.option.userBefore.717703214" name="User-defined options (added before all specified options)" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.librarian.option.userBefore" useByScannerDiscovery="false" valueType="stringList">
 									<listOptionValue builtIn="false" value=""/>
 								</option>
-								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.renesas.cdt.managedbuild.renesas.ccrx.librarian.option.userAfter.1764588693" name="User-defined options (added after all specified options)" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.librarian.option.userAfter" useByScannerDiscovery="false" valueType="stringList">
+								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.renesas.cdt.managedbuild.renesas.ccrx.librarian.option.userAfter.193297243" name="User-defined options (added after all specified options)" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.librarian.option.userAfter" useByScannerDiscovery="false" valueType="stringList">
 									<listOptionValue builtIn="false" value=""/>
 								</option>
-								<option id="com.renesas.cdt.managedbuild.renesas.ccrx.librarian.option.lang.877572480" name="Library configuration" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.librarian.option.lang" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.librarian.option.lang.c99" valueType="enumerated"/>
-								<option id="com.renesas.cdt.managedbuild.renesas.ccrx.librarian.option.headNew.1533896297" name="new (EC++): Memory allocation and deallocation routines" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.librarian.option.headNew" useByScannerDiscovery="false" value="false" valueType="boolean"/>
-								<option id="com.renesas.cdt.managedbuild.renesas.ccrx.librarian.option.headMathf.1722933374" name="mathf.h (C89/C99): Numerical calculation library (float type function)" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.librarian.option.headMathf" useByScannerDiscovery="false" value="true" valueType="boolean"/>
+								<option id="com.renesas.cdt.managedbuild.renesas.ccrx.librarian.option.lang.144165811" name="Library configuration" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.librarian.option.lang" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.librarian.option.lang.c99" valueType="enumerated"/>
+								<option id="com.renesas.cdt.managedbuild.renesas.ccrx.librarian.option.headMathf.1702537809" name="mathf.h (C89/C99): Numerical calculation library (float type function)" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.librarian.option.headMathf" useByScannerDiscovery="false" value="true" valueType="boolean"/>
 							</tool>
-							<tool id="com.renesas.cdt.managedbuild.renesas.ccrx.base.converter.906773684" name="Converter" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.base.converter">
-								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.renesas.cdt.managedbuild.renesas.ccrx.converter.option.userBefore.516340734" name="User-defined options (added before all specified options)" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.converter.option.userBefore" useByScannerDiscovery="false" valueType="stringList">
+							<tool id="com.renesas.cdt.managedbuild.renesas.ccrx.base.converter.97853361" name="Converter" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.base.converter">
+								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.renesas.cdt.managedbuild.renesas.ccrx.converter.option.userBefore.1641135441" name="User-defined options (added before all specified options)" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.converter.option.userBefore" useByScannerDiscovery="false" valueType="stringList">
 									<listOptionValue builtIn="false" value=""/>
 								</option>
-								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.renesas.cdt.managedbuild.renesas.ccrx.converter.option.userAfter.1420408477" name="User-defined options (added after all specified options)" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.converter.option.userAfter" useByScannerDiscovery="false" valueType="stringList">
+								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.renesas.cdt.managedbuild.renesas.ccrx.converter.option.userAfter.2145860986" name="User-defined options (added after all specified options)" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.converter.option.userAfter" useByScannerDiscovery="false" valueType="stringList">
 									<listOptionValue builtIn="false" value=""/>
 								</option>
 							</tool>
-							<tool id="com.renesas.cdt.managedbuild.renesas.ccrx.base.rtosConfig.268430133" name="RTOS Configurator" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.base.rtosConfig"/>
+							<tool id="com.renesas.cdt.managedbuild.renesas.ccrx.base.rtosConfig.524948881" name="RTOS Configurator" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.base.rtosConfig"/>
 						</toolChain>
 					</folderInfo>
-					<fileInfo id="com.renesas.cdt.managedbuild.renesas.ccrx.hardwaredebug.configuration.1901532711.2112451357" name="settings_bitmap.c" rcbsApplicability="disable" resourcePath="MiniWinFixedWindows_Common/settings_bitmap.c" toolsToInvoke="com.renesas.cdt.managedbuild.renesas.ccrx.base.compiler.593573888.1205821136">
-						<tool id="com.renesas.cdt.managedbuild.renesas.ccrx.base.compiler.593573888.1205821136" name="Compiler" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.base.compiler.593573888">
-							<option id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.checkSourceByMisraC.378669830" name="Check the source code by MISRA-C" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.checkSourceByMisraC" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.checkSourceByMisraC.misra2012" valueType="enumerated"/>
-							<option id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misraDisplayRule.505362052" name="Apply rule" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misraDisplayRule" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misraDisplayRule.applyAllRequired" valueType="enumerated"/>
-							<option id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misra2012Rule.1126125061" name="Apply rule_2012:" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misra2012Rule" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misra2012Rule.applyAllRequired" valueType="enumerated"/>
-							<inputType id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gcc.inputType.9052683" name="Compiler Input C" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gcc.inputType"/>
-							<inputType id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gpp.inputType.1311123033" name="Compiler Input CPP" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gpp.inputType"/>
-						</tool>
-					</fileInfo>
-					<fileInfo id="com.renesas.cdt.managedbuild.renesas.ccrx.hardwaredebug.configuration.1901532711.471153197" name="main.c" rcbsApplicability="disable" resourcePath="MiniWinFixedWindows_Common/main.c" toolsToInvoke="com.renesas.cdt.managedbuild.renesas.ccrx.base.compiler.593573888.1688285631">
-						<tool id="com.renesas.cdt.managedbuild.renesas.ccrx.base.compiler.593573888.1688285631" name="Compiler" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.base.compiler.593573888">
-							<option id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.checkSourceByMisraC.487281274" name="Check the source code by MISRA-C" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.checkSourceByMisraC" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.checkSourceByMisraC.misra2012" valueType="enumerated"/>
-							<option id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misraDisplayRule.1624267146" name="Apply rule" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misraDisplayRule" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misraDisplayRule.applyAllRequired" valueType="enumerated"/>
-							<option id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misra2012Rule.582167852" name="Apply rule_2012:" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misra2012Rule" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misra2012Rule.applyAllRequired" valueType="enumerated"/>
-							<inputType id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gcc.inputType.50739027" name="Compiler Input C" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gcc.inputType"/>
-							<inputType id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gpp.inputType.1358926469" name="Compiler Input CPP" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gpp.inputType"/>
-						</tool>
-					</fileInfo>
-					<fileInfo id="com.renesas.cdt.managedbuild.renesas.ccrx.hardwaredebug.configuration.1901532711.554231961" name="minwin_user.c" rcbsApplicability="disable" resourcePath="MiniWinFixedWindows_Common/minwin_user.c" toolsToInvoke="com.renesas.cdt.managedbuild.renesas.ccrx.base.compiler.593573888.839138244">
-						<tool id="com.renesas.cdt.managedbuild.renesas.ccrx.base.compiler.593573888.839138244" name="Compiler" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.base.compiler.593573888">
-							<option id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.checkSourceByMisraC.842840657" name="Check the source code by MISRA-C" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.checkSourceByMisraC" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.checkSourceByMisraC.misra2012" valueType="enumerated"/>
-							<option id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misraDisplayRule.1660324509" name="Apply rule" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misraDisplayRule" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misraDisplayRule.applyAllRequired" valueType="enumerated"/>
-							<option id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misra2012Rule.409082169" name="Apply rule_2012:" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misra2012Rule" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misra2012Rule.applyAllRequired" valueType="enumerated"/>
-							<inputType id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gcc.inputType.1197514565" name="Compiler Input C" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gcc.inputType"/>
-							<inputType id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gpp.inputType.1938671771" name="Compiler Input CPP" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gpp.inputType"/>
-						</tool>
-					</fileInfo>
-					<fileInfo id="com.renesas.cdt.managedbuild.renesas.ccrx.hardwaredebug.configuration.1901532711.1911320067" name="window_temp_icon.c" rcbsApplicability="disable" resourcePath="MiniWinFixedWindows_Common/window_temp_icon.c" toolsToInvoke="com.renesas.cdt.managedbuild.renesas.ccrx.base.compiler.593573888.1427310776">
-						<tool id="com.renesas.cdt.managedbuild.renesas.ccrx.base.compiler.593573888.1427310776" name="Compiler" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.base.compiler.593573888">
-							<option id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.checkSourceByMisraC.1253673471" name="Check the source code by MISRA-C" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.checkSourceByMisraC" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.checkSourceByMisraC.misra2012" valueType="enumerated"/>
-							<option id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misraDisplayRule.1610760791" name="Apply rule" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misraDisplayRule" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misraDisplayRule.applyAllRequired" valueType="enumerated"/>
-							<option id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misra2012Rule.532994998" name="Apply rule_2012:" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misra2012Rule" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misra2012Rule.applyAllRequired" valueType="enumerated"/>
-							<inputType id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gcc.inputType.1561107444" name="Compiler Input C" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gcc.inputType"/>
-							<inputType id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gpp.inputType.859673315" name="Compiler Input CPP" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gpp.inputType"/>
-						</tool>
-					</fileInfo>
-					<fileInfo id="com.renesas.cdt.managedbuild.renesas.ccrx.hardwaredebug.configuration.1901532711.1569436256" name="date_bitmap.c" rcbsApplicability="disable" resourcePath="MiniWinFixedWindows_Common/date_bitmap.c" toolsToInvoke="com.renesas.cdt.managedbuild.renesas.ccrx.base.compiler.593573888.901980842">
-						<tool id="com.renesas.cdt.managedbuild.renesas.ccrx.base.compiler.593573888.901980842" name="Compiler" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.base.compiler.593573888">
-							<option id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.checkSourceByMisraC.303938448" name="Check the source code by MISRA-C" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.checkSourceByMisraC" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.checkSourceByMisraC.misra2012" valueType="enumerated"/>
-							<option id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misraDisplayRule.1344906462" name="Apply rule" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misraDisplayRule" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misraDisplayRule.applyAllRequired" valueType="enumerated"/>
-							<option id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misra2012Rule.738118493" name="Apply rule_2012:" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misra2012Rule" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misra2012Rule.applyAllRequired" valueType="enumerated"/>
-							<inputType id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gcc.inputType.684646586" name="Compiler Input C" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gcc.inputType"/>
-							<inputType id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gpp.inputType.496892498" name="Compiler Input CPP" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gpp.inputType"/>
-						</tool>
-					</fileInfo>
-					<fileInfo id="com.renesas.cdt.managedbuild.renesas.ccrx.hardwaredebug.configuration.1901532711.1024706713" name="file_bitmap.c" rcbsApplicability="disable" resourcePath="MiniWinFixedWindows_Common/file_bitmap.c" toolsToInvoke="com.renesas.cdt.managedbuild.renesas.ccrx.base.compiler.593573888.429598772">
-						<tool id="com.renesas.cdt.managedbuild.renesas.ccrx.base.compiler.593573888.429598772" name="Compiler" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.base.compiler.593573888">
-							<option id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.checkSourceByMisraC.1633616615" name="Check the source code by MISRA-C" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.checkSourceByMisraC" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.checkSourceByMisraC.misra2012" valueType="enumerated"/>
-							<option id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misraDisplayRule.1909325072" name="Apply rule" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misraDisplayRule" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misraDisplayRule.applyAllRequired" valueType="enumerated"/>
-							<option id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misra2012Rule.486095646" name="Apply rule_2012:" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misra2012Rule" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misra2012Rule.applyAllRequired" valueType="enumerated"/>
-							<inputType id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gcc.inputType.1093757067" name="Compiler Input C" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gcc.inputType"/>
-							<inputType id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gpp.inputType.101984053" name="Compiler Input CPP" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gpp.inputType"/>
-						</tool>
-					</fileInfo>
-					<fileInfo id="com.renesas.cdt.managedbuild.renesas.ccrx.hardwaredebug.configuration.1901532711.169351706" name="time_bitmap.c" rcbsApplicability="disable" resourcePath="MiniWinFixedWindows_Common/time_bitmap.c" toolsToInvoke="com.renesas.cdt.managedbuild.renesas.ccrx.base.compiler.593573888.1014519860">
-						<tool id="com.renesas.cdt.managedbuild.renesas.ccrx.base.compiler.593573888.1014519860" name="Compiler" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.base.compiler.593573888">
-							<option id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.checkSourceByMisraC.1074620613" name="Check the source code by MISRA-C" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.checkSourceByMisraC" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.checkSourceByMisraC.misra2012" valueType="enumerated"/>
-							<option id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misraDisplayRule.1309544398" name="Apply rule" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misraDisplayRule" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misraDisplayRule.applyAllRequired" valueType="enumerated"/>
-							<option id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misra2012Rule.841571671" name="Apply rule_2012:" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misra2012Rule" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misra2012Rule.applyAllRequired" valueType="enumerated"/>
-							<inputType id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gcc.inputType.1570627974" name="Compiler Input C" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gcc.inputType"/>
-							<inputType id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gpp.inputType.996029410" name="Compiler Input CPP" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gpp.inputType"/>
-						</tool>
-					</fileInfo>
-					<fileInfo id="com.renesas.cdt.managedbuild.renesas.ccrx.hardwaredebug.configuration.1901532711.240814399" name="window_file.c" rcbsApplicability="disable" resourcePath="MiniWinFixedWindows_Common/window_file.c" toolsToInvoke="com.renesas.cdt.managedbuild.renesas.ccrx.base.compiler.593573888.1548748705">
-						<tool id="com.renesas.cdt.managedbuild.renesas.ccrx.base.compiler.593573888.1548748705" name="Compiler" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.base.compiler.593573888">
-							<option id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.checkSourceByMisraC.1049942967" name="Check the source code by MISRA-C" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.checkSourceByMisraC" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.checkSourceByMisraC.misra2012" valueType="enumerated"/>
-							<option id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misraDisplayRule.772471952" name="Apply rule" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misraDisplayRule" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misraDisplayRule.applyAllRequired" valueType="enumerated"/>
-							<option id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misra2012Rule.1670511254" name="Apply rule_2012:" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misra2012Rule" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misra2012Rule.applyAllRequired" valueType="enumerated"/>
-							<inputType id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gcc.inputType.209141114" name="Compiler Input C" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gcc.inputType"/>
-							<inputType id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gpp.inputType.537017894" name="Compiler Input CPP" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gpp.inputType"/>
-						</tool>
-					</fileInfo>
-					<fileInfo id="com.renesas.cdt.managedbuild.renesas.ccrx.hardwaredebug.configuration.1901532711.1511439049" name="window_settings_icon.c" rcbsApplicability="disable" resourcePath="MiniWinFixedWindows_Common/window_settings_icon.c" toolsToInvoke="com.renesas.cdt.managedbuild.renesas.ccrx.base.compiler.593573888.848271786">
-						<tool id="com.renesas.cdt.managedbuild.renesas.ccrx.base.compiler.593573888.848271786" name="Compiler" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.base.compiler.593573888">
-							<option id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.checkSourceByMisraC.365184902" name="Check the source code by MISRA-C" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.checkSourceByMisraC" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.checkSourceByMisraC.misra2012" valueType="enumerated"/>
-							<option id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misraDisplayRule.182485732" name="Apply rule" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misraDisplayRule" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misraDisplayRule.applyAllRequired" valueType="enumerated"/>
-							<option id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misra2012Rule.1029338051" name="Apply rule_2012:" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misra2012Rule" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misra2012Rule.applyAllRequired" valueType="enumerated"/>
-							<inputType id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gcc.inputType.517046896" name="Compiler Input C" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gcc.inputType"/>
-							<inputType id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gpp.inputType.1971458793" name="Compiler Input CPP" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gpp.inputType"/>
-						</tool>
-					</fileInfo>
-					<fileInfo id="com.renesas.cdt.managedbuild.renesas.ccrx.hardwaredebug.configuration.1901532711.1108948183" name="window_time_icon.c" rcbsApplicability="disable" resourcePath="MiniWinFixedWindows_Common/window_time_icon.c" toolsToInvoke="com.renesas.cdt.managedbuild.renesas.ccrx.base.compiler.593573888.1466458252">
-						<tool id="com.renesas.cdt.managedbuild.renesas.ccrx.base.compiler.593573888.1466458252" name="Compiler" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.base.compiler.593573888">
-							<option id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.checkSourceByMisraC.501646717" name="Check the source code by MISRA-C" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.checkSourceByMisraC" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.checkSourceByMisraC.misra2012" valueType="enumerated"/>
-							<option id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misraDisplayRule.1831199113" name="Apply rule" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misraDisplayRule" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misraDisplayRule.applyAllRequired" valueType="enumerated"/>
-							<option id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misra2012Rule.310757734" name="Apply rule_2012:" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misra2012Rule" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misra2012Rule.applyAllRequired" valueType="enumerated"/>
-							<inputType id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gcc.inputType.68750521" name="Compiler Input C" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gcc.inputType"/>
-							<inputType id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gpp.inputType.1828793174" name="Compiler Input CPP" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gpp.inputType"/>
-						</tool>
-					</fileInfo>
-					<fileInfo id="com.renesas.cdt.managedbuild.renesas.ccrx.hardwaredebug.configuration.1901532711.747867338" name="window_temp.c" rcbsApplicability="disable" resourcePath="MiniWinFixedWindows_Common/window_temp.c" toolsToInvoke="com.renesas.cdt.managedbuild.renesas.ccrx.base.compiler.593573888.703950352">
-						<tool id="com.renesas.cdt.managedbuild.renesas.ccrx.base.compiler.593573888.703950352" name="Compiler" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.base.compiler.593573888">
-							<option id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.checkSourceByMisraC.1305534147" name="Check the source code by MISRA-C" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.checkSourceByMisraC" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.checkSourceByMisraC.misra2012" valueType="enumerated"/>
-							<option id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misraDisplayRule.1661325824" name="Apply rule" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misraDisplayRule" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misraDisplayRule.applyAllRequired" valueType="enumerated"/>
-							<option id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misra2012Rule.202685566" name="Apply rule_2012:" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misra2012Rule" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misra2012Rule.applyAllRequired" valueType="enumerated"/>
-							<inputType id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gcc.inputType.306788874" name="Compiler Input C" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gcc.inputType"/>
-							<inputType id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gpp.inputType.945795461" name="Compiler Input CPP" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gpp.inputType"/>
-						</tool>
-					</fileInfo>
-					<fileInfo id="com.renesas.cdt.managedbuild.renesas.ccrx.hardwaredebug.configuration.1901532711.1682563671" name="file_down_bitmap.c" rcbsApplicability="disable" resourcePath="MiniWinFixedWindows_Common/file_down_bitmap.c" toolsToInvoke="com.renesas.cdt.managedbuild.renesas.ccrx.base.compiler.593573888.1924863048">
-						<tool id="com.renesas.cdt.managedbuild.renesas.ccrx.base.compiler.593573888.1924863048" name="Compiler" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.base.compiler.593573888">
-							<option id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.checkSourceByMisraC.894707892" name="Check the source code by MISRA-C" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.checkSourceByMisraC" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.checkSourceByMisraC.misra2012" valueType="enumerated"/>
-							<option id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misraDisplayRule.1964267608" name="Apply rule" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misraDisplayRule" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misraDisplayRule.applyAllRequired" valueType="enumerated"/>
-							<option id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misra2012Rule.1872788711" name="Apply rule_2012:" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misra2012Rule" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misra2012Rule.applyAllRequired" valueType="enumerated"/>
-							<inputType id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gcc.inputType.1834986310" name="Compiler Input C" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gcc.inputType"/>
-							<inputType id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gpp.inputType.2106254006" name="Compiler Input CPP" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gpp.inputType"/>
-						</tool>
-					</fileInfo>
-					<fileInfo id="com.renesas.cdt.managedbuild.renesas.ccrx.hardwaredebug.configuration.1901532711.543891592" name="temp_bitmap.c" rcbsApplicability="disable" resourcePath="MiniWinFixedWindows_Common/temp_bitmap.c" toolsToInvoke="com.renesas.cdt.managedbuild.renesas.ccrx.base.compiler.593573888.1073395847">
-						<tool id="com.renesas.cdt.managedbuild.renesas.ccrx.base.compiler.593573888.1073395847" name="Compiler" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.base.compiler.593573888">
-							<option id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.checkSourceByMisraC.2025297628" name="Check the source code by MISRA-C" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.checkSourceByMisraC" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.checkSourceByMisraC.misra2012" valueType="enumerated"/>
-							<option id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misraDisplayRule.290906613" name="Apply rule" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misraDisplayRule" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misraDisplayRule.applyAllRequired" valueType="enumerated"/>
-							<option id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misra2012Rule.1785289136" name="Apply rule_2012:" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misra2012Rule" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misra2012Rule.applyAllRequired" valueType="enumerated"/>
-							<inputType id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gcc.inputType.1315809247" name="Compiler Input C" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gcc.inputType"/>
-							<inputType id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gpp.inputType.2006218501" name="Compiler Input CPP" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gpp.inputType"/>
-						</tool>
-					</fileInfo>
-					<fileInfo id="com.renesas.cdt.managedbuild.renesas.ccrx.hardwaredebug.configuration.1901532711.1047639385" name="help_down_bitmap.c" rcbsApplicability="disable" resourcePath="MiniWinFixedWindows_Common/help_down_bitmap.c" toolsToInvoke="com.renesas.cdt.managedbuild.renesas.ccrx.base.compiler.593573888.1134880166">
-						<tool id="com.renesas.cdt.managedbuild.renesas.ccrx.base.compiler.593573888.1134880166" name="Compiler" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.base.compiler.593573888">
-							<option id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.checkSourceByMisraC.405032146" name="Check the source code by MISRA-C" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.checkSourceByMisraC" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.checkSourceByMisraC.misra2012" valueType="enumerated"/>
-							<option id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misraDisplayRule.1613871885" name="Apply rule" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misraDisplayRule" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misraDisplayRule.applyAllRequired" valueType="enumerated"/>
-							<option id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misra2012Rule.705273161" name="Apply rule_2012:" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misra2012Rule" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misra2012Rule.applyAllRequired" valueType="enumerated"/>
-							<inputType id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gcc.inputType.1650596618" name="Compiler Input C" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gcc.inputType"/>
-							<inputType id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gpp.inputType.1896898795" name="Compiler Input CPP" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gpp.inputType"/>
-						</tool>
-					</fileInfo>
-					<fileInfo id="com.renesas.cdt.managedbuild.renesas.ccrx.hardwaredebug.configuration.1901532711.609627034" name="window_date_icon.c" rcbsApplicability="disable" resourcePath="MiniWinFixedWindows_Common/window_date_icon.c" toolsToInvoke="com.renesas.cdt.managedbuild.renesas.ccrx.base.compiler.593573888.1859655074">
-						<tool id="com.renesas.cdt.managedbuild.renesas.ccrx.base.compiler.593573888.1859655074" name="Compiler" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.base.compiler.593573888">
-							<option id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.checkSourceByMisraC.1450074830" name="Check the source code by MISRA-C" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.checkSourceByMisraC" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.checkSourceByMisraC.misra2012" valueType="enumerated"/>
-							<option id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misraDisplayRule.1458210596" name="Apply rule" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misraDisplayRule" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misraDisplayRule.applyAllRequired" valueType="enumerated"/>
-							<option id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misra2012Rule.1832996540" name="Apply rule_2012:" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misra2012Rule" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misra2012Rule.applyAllRequired" valueType="enumerated"/>
-							<inputType id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gcc.inputType.567850791" name="Compiler Input C" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gcc.inputType"/>
-							<inputType id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gpp.inputType.1858175150" name="Compiler Input CPP" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gpp.inputType"/>
-						</tool>
-					</fileInfo>
-					<fileInfo id="com.renesas.cdt.managedbuild.renesas.ccrx.hardwaredebug.configuration.1901532711.464983296" name="settings_down_bitmap.c" rcbsApplicability="disable" resourcePath="MiniWinFixedWindows_Common/settings_down_bitmap.c" toolsToInvoke="com.renesas.cdt.managedbuild.renesas.ccrx.base.compiler.593573888.1055086096">
-						<tool id="com.renesas.cdt.managedbuild.renesas.ccrx.base.compiler.593573888.1055086096" name="Compiler" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.base.compiler.593573888">
-							<option id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.checkSourceByMisraC.1468215433" name="Check the source code by MISRA-C" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.checkSourceByMisraC" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.checkSourceByMisraC.misra2012" valueType="enumerated"/>
-							<option id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misraDisplayRule.931978684" name="Apply rule" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misraDisplayRule" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misraDisplayRule.applyAllRequired" valueType="enumerated"/>
-							<option id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misra2012Rule.278940252" name="Apply rule_2012:" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misra2012Rule" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misra2012Rule.applyAllRequired" valueType="enumerated"/>
-							<inputType id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gcc.inputType.157662114" name="Compiler Input C" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gcc.inputType"/>
-							<inputType id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gpp.inputType.639349203" name="Compiler Input CPP" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gpp.inputType"/>
-						</tool>
-					</fileInfo>
-					<fileInfo id="com.renesas.cdt.managedbuild.renesas.ccrx.hardwaredebug.configuration.1901532711.100682652" name="time_down_bitmap.c" rcbsApplicability="disable" resourcePath="MiniWinFixedWindows_Common/time_down_bitmap.c" toolsToInvoke="com.renesas.cdt.managedbuild.renesas.ccrx.base.compiler.593573888.550585964">
-						<tool id="com.renesas.cdt.managedbuild.renesas.ccrx.base.compiler.593573888.550585964" name="Compiler" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.base.compiler.593573888">
-							<option id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.checkSourceByMisraC.1588744228" name="Check the source code by MISRA-C" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.checkSourceByMisraC" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.checkSourceByMisraC.misra2012" valueType="enumerated"/>
-							<option id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misraDisplayRule.619997261" name="Apply rule" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misraDisplayRule" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misraDisplayRule.applyAllRequired" valueType="enumerated"/>
-							<option id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misra2012Rule.1508060211" name="Apply rule_2012:" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misra2012Rule" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misra2012Rule.applyAllRequired" valueType="enumerated"/>
-							<inputType id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gcc.inputType.279690860" name="Compiler Input C" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gcc.inputType"/>
-							<inputType id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gpp.inputType.420174931" name="Compiler Input CPP" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gpp.inputType"/>
-						</tool>
-					</fileInfo>
-					<fileInfo id="com.renesas.cdt.managedbuild.renesas.ccrx.hardwaredebug.configuration.1901532711.2124473793" name="help_bitmap.c" rcbsApplicability="disable" resourcePath="MiniWinFixedWindows_Common/help_bitmap.c" toolsToInvoke="com.renesas.cdt.managedbuild.renesas.ccrx.base.compiler.593573888.1283428701">
-						<tool id="com.renesas.cdt.managedbuild.renesas.ccrx.base.compiler.593573888.1283428701" name="Compiler" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.base.compiler.593573888">
-							<option id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.checkSourceByMisraC.145494538" name="Check the source code by MISRA-C" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.checkSourceByMisraC" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.checkSourceByMisraC.misra2012" valueType="enumerated"/>
-							<option id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misraDisplayRule.71672722" name="Apply rule" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misraDisplayRule" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misraDisplayRule.applyAllRequired" valueType="enumerated"/>
-							<option id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misra2012Rule.157963574" name="Apply rule_2012:" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misra2012Rule" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misra2012Rule.applyAllRequired" valueType="enumerated"/>
-							<inputType id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gcc.inputType.1113041971" name="Compiler Input C" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gcc.inputType"/>
-							<inputType id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gpp.inputType.89495508" name="Compiler Input CPP" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gpp.inputType"/>
-						</tool>
-					</fileInfo>
-					<fileInfo id="com.renesas.cdt.managedbuild.renesas.ccrx.hardwaredebug.configuration.1901532711.1299934340" name="temp_down_bitmap.c" rcbsApplicability="disable" resourcePath="MiniWinFixedWindows_Common/temp_down_bitmap.c" toolsToInvoke="com.renesas.cdt.managedbuild.renesas.ccrx.base.compiler.593573888.2026018344">
-						<tool id="com.renesas.cdt.managedbuild.renesas.ccrx.base.compiler.593573888.2026018344" name="Compiler" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.base.compiler.593573888">
-							<option id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.checkSourceByMisraC.810220356" name="Check the source code by MISRA-C" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.checkSourceByMisraC" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.checkSourceByMisraC.misra2012" valueType="enumerated"/>
-							<option id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misraDisplayRule.1190197961" name="Apply rule" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misraDisplayRule" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misraDisplayRule.applyAllRequired" valueType="enumerated"/>
-							<option id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misra2012Rule.419203513" name="Apply rule_2012:" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misra2012Rule" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misra2012Rule.applyAllRequired" valueType="enumerated"/>
-							<inputType id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gcc.inputType.968001096" name="Compiler Input C" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gcc.inputType"/>
-							<inputType id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gpp.inputType.278031368" name="Compiler Input CPP" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gpp.inputType"/>
-						</tool>
-					</fileInfo>
-					<fileInfo id="com.renesas.cdt.managedbuild.renesas.ccrx.hardwaredebug.configuration.1901532711.403337558" name="window_file_icon.c" rcbsApplicability="disable" resourcePath="MiniWinFixedWindows_Common/window_file_icon.c" toolsToInvoke="com.renesas.cdt.managedbuild.renesas.ccrx.base.compiler.593573888.895633589">
-						<tool id="com.renesas.cdt.managedbuild.renesas.ccrx.base.compiler.593573888.895633589" name="Compiler" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.base.compiler.593573888">
-							<option id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.checkSourceByMisraC.1025263996" name="Check the source code by MISRA-C" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.checkSourceByMisraC" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.checkSourceByMisraC.misra2012" valueType="enumerated"/>
-							<option id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misraDisplayRule.229172587" name="Apply rule" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misraDisplayRule" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misraDisplayRule.applyAllRequired" valueType="enumerated"/>
-							<option id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misra2012Rule.144509641" name="Apply rule_2012:" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misra2012Rule" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misra2012Rule.applyAllRequired" valueType="enumerated"/>
-							<inputType id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gcc.inputType.1106633151" name="Compiler Input C" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gcc.inputType"/>
-							<inputType id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gpp.inputType.950479894" name="Compiler Input CPP" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gpp.inputType"/>
-						</tool>
-					</fileInfo>
-					<fileInfo id="com.renesas.cdt.managedbuild.renesas.ccrx.hardwaredebug.configuration.1901532711.1046857986" name="date_down_bitmap.c" rcbsApplicability="disable" resourcePath="MiniWinFixedWindows_Common/date_down_bitmap.c" toolsToInvoke="com.renesas.cdt.managedbuild.renesas.ccrx.base.compiler.593573888.1224107300">
-						<tool id="com.renesas.cdt.managedbuild.renesas.ccrx.base.compiler.593573888.1224107300" name="Compiler" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.base.compiler.593573888">
-							<option id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.checkSourceByMisraC.1744214391" name="Check the source code by MISRA-C" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.checkSourceByMisraC" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.checkSourceByMisraC.misra2012" valueType="enumerated"/>
-							<option id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misraDisplayRule.1992532606" name="Apply rule" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misraDisplayRule" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misraDisplayRule.applyAllRequired" valueType="enumerated"/>
-							<option id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misra2012Rule.1037529841" name="Apply rule_2012:" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misra2012Rule" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misra2012Rule.applyAllRequired" valueType="enumerated"/>
-							<inputType id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gcc.inputType.477902593" name="Compiler Input C" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gcc.inputType"/>
-							<inputType id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gpp.inputType.1731618718" name="Compiler Input CPP" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gpp.inputType"/>
-						</tool>
-					</fileInfo>
-					<fileInfo id="com.renesas.cdt.managedbuild.renesas.ccrx.hardwaredebug.configuration.1901532711.1865565579" name="window_help_icon.c" rcbsApplicability="disable" resourcePath="MiniWinFixedWindows_Common/window_help_icon.c" toolsToInvoke="com.renesas.cdt.managedbuild.renesas.ccrx.base.compiler.593573888.1427827575">
-						<tool id="com.renesas.cdt.managedbuild.renesas.ccrx.base.compiler.593573888.1427827575" name="Compiler" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.base.compiler.593573888">
-							<option id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.checkSourceByMisraC.261234806" name="Check the source code by MISRA-C" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.checkSourceByMisraC" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.checkSourceByMisraC.misra2012" valueType="enumerated"/>
-							<option id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misraDisplayRule.255575628" name="Apply rule" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misraDisplayRule" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misraDisplayRule.applyAllRequired" valueType="enumerated"/>
-							<option id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misra2012Rule.297602391" name="Apply rule_2012:" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misra2012Rule" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misra2012Rule.applyAllRequired" valueType="enumerated"/>
-							<inputType id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gcc.inputType.435040353" name="Compiler Input C" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gcc.inputType"/>
-							<inputType id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gpp.inputType.1929142828" name="Compiler Input CPP" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gpp.inputType"/>
-						</tool>
-					</fileInfo>
-					<fileInfo id="com.renesas.cdt.managedbuild.renesas.ccrx.hardwaredebug.configuration.1901532711.1969776661" name="window_settings.c" rcbsApplicability="disable" resourcePath="MiniWinFixedWindows_Common/window_settings.c" toolsToInvoke="com.renesas.cdt.managedbuild.renesas.ccrx.base.compiler.593573888.850996021">
-						<tool id="com.renesas.cdt.managedbuild.renesas.ccrx.base.compiler.593573888.850996021" name="Compiler" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.base.compiler.593573888">
-							<option id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.checkSourceByMisraC.1798047899" name="Check the source code by MISRA-C" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.checkSourceByMisraC" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.checkSourceByMisraC.misra2012" valueType="enumerated"/>
-							<option id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misraDisplayRule.1348679493" name="Apply rule" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misraDisplayRule" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misraDisplayRule.applyAllRequired" valueType="enumerated"/>
-							<option id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misra2012Rule.897337258" name="Apply rule_2012:" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misra2012Rule" useByScannerDiscovery="false" value="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.option.misra2012Rule.applyAllRequired" valueType="enumerated"/>
-							<inputType id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gcc.inputType.85731397" name="Compiler Input C" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gcc.inputType"/>
-							<inputType id="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gpp.inputType.1514933875" name="Compiler Input CPP" superClass="com.renesas.cdt.managedbuild.renesas.ccrx.compiler.gpp.inputType"/>
-						</tool>
-					</fileInfo>
 					<sourceEntries>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="MiniWin"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="MiniWinFixedWindows_Common"/>
@@ -356,7 +186,7 @@
 		</cconfiguration>
 	</storageModule>
 	<storageModule moduleId="cdtBuildSystem" version="4.0.0">
-		<project id="MiniWinFixedWindows_RX65N.com.renesas.cdt.managedbuild.renesas.ccrx.projectType.544141110" name="Executable" projectType="com.renesas.cdt.managedbuild.renesas.ccrx.projectType"/>
+		<project id="MiniWinFixedWindows_RX65N.com.renesas.cdt.managedbuild.renesas.ccrx.projectType.1365138110" name="Executable" projectType="com.renesas.cdt.managedbuild.renesas.ccrx.projectType"/>
 	</storageModule>
 	<storageModule moduleId="scannerConfiguration">
 		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>

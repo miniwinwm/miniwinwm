@@ -30,14 +30,14 @@
 	</natures>
 	<linkedResources>
 		<link>
+			<name>MiniWin</name>
+			<type>2</type>
+			<locationURI>$%7BPARENT-3-PROJECT_LOC%7D/MiniWin</locationURI>
+		</link>
+		<link>
 			<name>MiniWinTest_Common</name>
 			<type>2</type>
 			<locationURI>$%7BPARENT-3-PROJECT_LOC%7D/MiniWinTest_Common</locationURI>
-		</link>
-		<link>
-			<name>Miniwin</name>
-			<type>2</type>
-			<locationURI>$%7BPARENT-3-PROJECT_LOC%7D/Miniwin</locationURI>
 		</link>
 	</linkedResources>
 </projectDescription>
