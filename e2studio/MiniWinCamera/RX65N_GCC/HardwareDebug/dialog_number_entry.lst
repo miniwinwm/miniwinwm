@@ -1,0 +1,1824 @@
+   1                             		.file	"dialog_number_entry.c"
+   2                             		.section P,"ax"
+   3                             	.Ltext0:
+   4                             		.section	.rodata.number_display_rect,"a"
+   5                             		.balign 2
+   8                             	_number_display_rect:
+   9 0000 18 00                   		.short	24
+  10 0002 05 00                   		.short	5
+  11 0004 41 00                   		.short	0x41
+  12 0006 0E 00                   		.short	14
+  13                             		.section	.rodata.number_display_rect_large,"a"
+  14                             		.balign 2
+  17                             	_number_display_rect_large:
+  18 0000 30 00                   		.short	48
+  19 0002 03 00                   		.short	3
+  20 0004 82 00                   		.short	0x82
+  21 0006 13 00                   		.short	19
+  22                             		.section	.bss.mw_dialog_number_entry_data,"aw",@nobits
+  23                             		.balign 4
+  26                             	_mw_dialog_number_entry_data:
+  27 0000 00 00 00 00 00 00 00 00 		.zero	104
+  27      00 00 00 00 00 00 00 00 
+  27      00 00 00 00 00 00 00 00 
+  27      00 00 00 00 00 00 00 00 
+  27      00 00 00 00 00 00 00 00 
+  28                             		.section C,"a",@progbits
+  29                             		.p2align 2
+  30                             	.LC0:
+  31 0000 2D 00                   		.string	"-"
+  32                             		.section	.text.get_cursor_x_coordinate,"ax",@progbits
+  34                             	_get_cursor_x_coordinate:
+  35                             	.LFB0:
+  36                             		.file 1 "C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs/dialog_number_entry.c"
+   1:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** /*
+   2:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 
+   3:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** MIT License
+   4:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 
+   5:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** Copyright (c) John Blaiklock 2019 miniwin Embedded Window Manager
+   6:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 
+   7:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** Permission is hereby granted, free of charge, to any person obtaining a copy
+   8:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** of this software and associated documentation files (the "Software"), to deal
+   9:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** in the Software without restriction, including without limitation the rights
+  10:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  11:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** copies of the Software, and to permit persons to whom the Software is
+  12:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** furnished to do so, subject to the following conditions:
+  13:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 
+  14:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** The above copyright notice and this permission notice shall be included in all
+  15:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** copies or substantial portions of the Software.
+  16:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 
+  17:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  18:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  19:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  20:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  21:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  22:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  23:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** SOFTWARE.
+  24:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 
+  25:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** */
+  26:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 
+  27:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** /***************
+  28:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** *** INCLUDES ***
+  29:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** ***************/
+  30:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 
+  31:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** #include <ctype.h>
+  32:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** #include <string.h>
+  33:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** #include "miniwin.h"
+  34:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 
+  35:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** /****************
+  36:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** *** CONSTANTS ***
+  37:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** ****************/
+  38:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 
+  39:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** static const mw_util_rect_t number_display_rect = {24, 5, 65, 14};
+  40:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** static const mw_util_rect_t number_display_rect_large = {48, 3, 130, 19};
+  41:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 
+  42:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** /************
+  43:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** *** TYPES ***
+  44:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** ************/
+  45:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 
+  46:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** /**
+  47:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c ****  * Window data structure
+  48:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c ****  */
+  49:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** typedef struct
+  50:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** {
+  51:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	mw_handle_t keypad_handle;						/**< Keypad control handle */
+  52:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	mw_handle_t button_ok_handle;					/**< Control handle of ok button */
+  53:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	mw_handle_t button_cancel_handle;				/**< Control handle of cancel button */
+  54:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	mw_handle_t owner_window_handle;				/**< Window handle to send response message to */
+  55:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	mw_handle_t number_entry_dialog_window_handle;	/**< Handle of number entry dialog window */
+  56:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	mw_util_rect_t cursor_rect;						/**< Rect of cursor in window coordinates */
+  57:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	mw_util_rect_t number_rect;						/**< Rect of number entry box */
+  58:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	mw_ui_keypad_data_t mw_ui_keypad_data;			/**< Keypad control instance data */
+  59:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	mw_ui_button_data_t button_ok_data;				/**< Instance data of ok button */
+  60:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	mw_ui_button_data_t button_cancel_data;			/**< Instance data of cancel button */
+  61:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	char number_buffer[MW_DIALOG_MAX_NUMBER_LENGTH + 2];	/**< MW_DIALOG_MAX_NUMBER_LENGTH digits, - si
+  62:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	bool is_negative;								/**< If the number is negative */
+  63:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	bool large_size;								/**< True for large size false for standard size */
+  64:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	bool draw_cursor;								/**< if to draw cursor this timer tick or not */
+  65:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** } mw_dialog_number_entry_data_t;
+  66:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 
+  67:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** /***********************
+  68:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** *** GLOBAL VARIABLES ***
+  69:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** ***********************/
+  70:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 
+  71:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** /**********************
+  72:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** *** LOCAL VARIABLES ***
+  73:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** **********************/
+  74:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 
+  75:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** static mw_dialog_number_entry_data_t mw_dialog_number_entry_data;
+  76:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 
+  77:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** /********************************
+  78:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** *** LOCAL FUNCTION PROTOTYPES ***
+  79:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** ********************************/
+  80:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 
+  81:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** static int16_t get_cursor_x_coordinate(void);
+  82:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** static void mw_dialog_number_entry_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_
+  83:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** static void mw_dialog_number_entry_message_function(const mw_message_t *message);
+  84:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 
+  85:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** /**********************
+  86:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** *** LOCAL FUNCTIONS ***
+  87:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** **********************/
+  88:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 
+  89:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** /**
+  90:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c ****  * Gets the cursor x coordinate from its position
+  91:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c ****  *
+  92:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c ****  * @return The x coordinate
+  93:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c ****  */
+  94:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** static int16_t get_cursor_x_coordinate(void)
+  95:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** {
+  37                             		.loc 1 95 1
+  38 0000 7E AA                   		push.l	r10
+  39                             	.LCFI0:
+  40 0002 71 0A FC                		add	#-4, r0, r10
+  41                             	.LCFI1:
+  42 0005 EF A0                   		mov.L	r10, r0
+  96:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	int16_t pixel_length;
+  97:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 
+  98:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	if (mw_dialog_number_entry_data.large_size)
+  43                             		.loc 1 98 33
+  44 0007 FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+  45 000d CD 55 64                		mov.B	100[r5], r5
+  46                             		.loc 1 98 5
+  47 0010 5B 55                   		movu.B	r5, r5
+  48 0012 61 05                   		cmp	#0, r5
+  49 0014 10                      		beq	.L2
+  99:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	{
+ 100:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		mw_gl_set_font(MW_GL_TITLE_FONT);
+  50                             		.loc 1 100 3
+  51 0015 66 51                   		mov.L	#5, r1
+  52 0017 05 00 00 00             		bsr	_mw_gl_set_font
+  53 001b 0F                      		bra	.L3
+  54                             	.L2:
+ 101:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	}
+ 102:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	else
+ 103:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	{
+ 104:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		mw_gl_set_font(MW_GL_FONT_9);
+  55                             		.loc 1 104 3
+  56 001c 66 01                   		mov.L	#0, r1
+  57 001e 05 00 00 00             		bsr	_mw_gl_set_font
+  58                             	.L3:
+ 105:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	}
+ 106:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 
+ 107:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	pixel_length = (int16_t)mw_gl_get_string_width_pixels(mw_dialog_number_entry_data.number_buffer);
+  59                             		.loc 1 107 26
+  60 0022 FB 12 58 00 00 00       		mov.L	#_mw_dialog_number_entry_data+88, r1
+  61 0028 05 00 00 00             		bsr	_mw_gl_get_string_width_pixels
+  62 002c EF 15                   		mov.L	r1, r5
+  63 002e D3 A5                   		mov.W	r5, [r10]
+ 108:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	if (mw_dialog_number_entry_data.is_negative)
+  64                             		.loc 1 108 33
+  65 0030 FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+  66 0036 CD 55 63                		mov.B	99[r5], r5
+  67                             		.loc 1 108 5
+  68 0039 5B 55                   		movu.B	r5, r5
+  69 003b 61 05                   		cmp	#0, r5
+  70 003d 20 16                   		beq	.L4
+ 109:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	{
+ 110:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		pixel_length += (int16_t)mw_gl_get_string_width_pixels("-");
+  71                             		.loc 1 110 28
+  72 003f FB 12 00 00 00 00       		mov.L	#.LC0, r1
+  73 0045 05 00 00 00             		bsr	_mw_gl_get_string_width_pixels
+  74 0049 EF 15                   		mov.L	r1, r5
+  75                             		.loc 1 110 19
+  76 004b DF 54                   		mov.W	r5, r4
+  77                             		.loc 1 110 16
+  78 004d DC A5                   		mov.W	[r10], r5
+  79 004f 4B 45                   		add	r4, r5
+  80 0051 D3 A5                   		mov.W	r5, [r10]
+  81                             	.L4:
+ 111:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	}
+ 112:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 
+ 113:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	return (pixel_length + mw_dialog_number_entry_data.number_rect.x + 3);
+  82                             		.loc 1 113 64
+  83 0053 FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+  84 0059 9B D5                   		mov.W	28[r5], r5
+  85 005b DF 54                   		mov.W	r5, r4
+  86                             		.loc 1 113 23
+  87 005d DC A5                   		mov.W	[r10], r5
+  88 005f 4B 45                   		add	r4, r5
+  89                             		.loc 1 113 67
+  90 0061 62 35                   		add	#3, r5
+  91 0063 DF 55                   		mov.W	r5, r5
+ 114:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** }
+  92                             		.loc 1 114 1
+  93 0065 EF 51                   		mov.L	r5, r1
+  94 0067 3F AA 02                		rtsd	#8, r10-r10
+  95                             	.LFE0:
+  97                             		.section C,"a",@progbits
+  98 0002 00 00                   		.p2align 2
+  99                             	.LC1:
+ 100 0004 4E 75 6C 6C 20 70 6F 69 		.string	"Null pointer argument"
+ 100      6E 74 65 72 20 61 72 67 
+ 100      75 6D 65 6E 74 00 
+ 101                             	.LC2:
+ 102 001a 30 00                   		.string	"0"
+ 103                             		.section	.text.mw_dialog_number_entry_paint_function,"ax",@progbits
+ 105                             	_mw_dialog_number_entry_paint_function:
+ 106                             	.LFB1:
+ 115:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 
+ 116:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** /**
+ 117:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c ****  * Window paint routine, called by window manager.
+ 118:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c ****  *
+ 119:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c ****  * @param window_handle The window identifier in the array of windows
+ 120:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c ****  * @param draw_info Draw info structure describing offset and clip region
+ 121:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c ****  * @note Do not call this directly from user code
+ 122:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c ****  */
+ 123:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** static void mw_dialog_number_entry_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_
+ 124:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** {
+ 107                             		.loc 1 124 1
+ 108 0000 6E 6B                   		pushm	r6-r11
+ 109                             	.LCFI2:
+ 110 0002 71 0A F8                		add	#-8, r0, r10
+ 111                             	.LCFI3:
+ 112 0005 71 A0 FC                		add	#-4, r10, r0
+ 113                             	.LCFI4:
+ 114 0008 E3 A1                   		mov.L	r1, [r10]
+ 115 000a E7 A2 01                		mov.L	r2, 4[r10]
+ 125:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	MW_ASSERT(draw_info != (void*)0, "Null pointer argument");
+ 116                             		.loc 1 125 2
+ 117 000d ED A5 01                		mov.L	4[r10], r5
+ 118 0010 61 05                   		cmp	#0, r5
+ 119 0012 FC DB 51                		scne.L	r5
+ 120 0015 FB 42 04 00 00 00       		mov.L	#.LC1, r4
+ 121 001b 75 43 7D                		mov.L	#0x7d, r3
+ 122 001e FB 22 00 00 00 00       		mov.L	#___func__.3013, r2
+ 123 0024 CF 51                   		mov.B	r5, r1
+ 124 0026 05 00 00 00             		bsr	_mw_debug_print_assert
+ 126:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 
+ 127:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	mw_gl_set_fill(MW_GL_FILL);
+ 125                             		.loc 1 127 2
+ 126 002a 66 11                   		mov.L	#1, r1
+ 127 002c 05 00 00 00             		bsr	_mw_gl_set_fill
+ 128:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	mw_gl_set_solid_fill_colour(MW_HAL_LCD_WHITE);
+ 128                             		.loc 1 128 2
+ 129 0030 FB 12 FF FF FF 00       		mov.L	#0xffffff, r1
+ 130 0036 05 00 00 00             		bsr	_mw_gl_set_solid_fill_colour
+ 129:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	mw_gl_set_border(MW_GL_BORDER_OFF);
+ 131                             		.loc 1 129 2
+ 132 003a 66 01                   		mov.L	#0, r1
+ 133 003c 05 00 00 00             		bsr	_mw_gl_set_border
+ 130:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	mw_gl_clear_pattern();
+ 134                             		.loc 1 130 2
+ 135 0040 05 00 00 00             		bsr	_mw_gl_clear_pattern
+ 131:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	mw_gl_rectangle(draw_info,
+ 132:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 			0,
+ 133:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 			0,
+ 134:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 			mw_get_window_client_rect(window_handle).width,
+ 136                             		.loc 1 134 4
+ 137 0044 EC A1                   		mov.L	[r10], r1
+ 138 0046 05 00 00 00             		bsr	_mw_get_window_client_rect
+ 139 004a EF 15                   		mov.L	r1, r5
+ 140 004c EF 26                   		mov.L	r2, r6
+ 131:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	mw_gl_rectangle(draw_info,
+ 141                             		.loc 1 131 2
+ 142 004e DF 6B                   		mov.W	r6, r11
+ 135:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 			mw_get_window_client_rect(window_handle).height);
+ 143                             		.loc 1 135 4
+ 144 0050 EC A1                   		mov.L	[r10], r1
+ 145 0052 05 00 00 00             		bsr	_mw_get_window_client_rect
+ 146 0056 EF 15                   		mov.L	r1, r5
+ 147 0058 EF 26                   		mov.L	r2, r6
+ 131:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	mw_gl_rectangle(draw_info,
+ 148                             		.loc 1 131 2
+ 149 005a EF 65                   		mov.L	r6, r5
+ 150 005c 6B 05                   		shar	#16, r5
+ 151 005e D3 05                   		mov.W	r5, [r0]
+ 152 0060 DF B4                   		mov.W	r11, r4
+ 153 0062 66 03                   		mov	#0, r3
+ 154 0064 66 02                   		mov	#0, r2
+ 155 0066 ED A1 01                		mov.L	4[r10], r1
+ 156 0069 05 00 00 00             		bsr	_mw_gl_rectangle
+ 136:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 
+ 137:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	mw_gl_set_border(MW_GL_BORDER_ON);
+ 157                             		.loc 1 137 2
+ 158 006d 66 11                   		mov.L	#1, r1
+ 159 006f 05 00 00 00             		bsr	_mw_gl_set_border
+ 138:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	mw_gl_set_line(MW_GL_SOLID_LINE);
+ 160                             		.loc 1 138 2
+ 161 0073 FB 1E FF FF 00          		mov.L	#0xffff, r1
+ 162 0078 05 00 00 00             		bsr	_mw_gl_set_line
+ 139:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
+ 163                             		.loc 1 139 2
+ 164 007c 66 01                   		mov.L	#0, r1
+ 165 007e 05 00 00 00             		bsr	_mw_gl_set_fg_colour
+ 140:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	mw_gl_set_solid_fill_colour(MW_CONTROL_UP_COLOUR);
+ 166                             		.loc 1 140 2
+ 167 0082 FB 12 E6 E6 E6 00       		mov.L	#0xe6e6e6, r1
+ 168 0088 05 00 00 00             		bsr	_mw_gl_set_solid_fill_colour
+ 141:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	mw_gl_set_bg_transparency(MW_GL_BG_TRANSPARENT);
+ 169                             		.loc 1 141 2
+ 170 008c 66 01                   		mov.L	#0, r1
+ 171 008e 05 00 00 00             		bsr	_mw_gl_set_bg_transparency
+ 142:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	mw_gl_set_text_rotation(MW_GL_TEXT_ROTATION_0);
+ 172                             		.loc 1 142 2
+ 173 0092 66 01                   		mov.L	#0, r1
+ 174 0094 05 00 00 00             		bsr	_mw_gl_set_text_rotation
+ 143:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 
+ 144:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	/* draw the box the number is displayed in */
+ 145:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	mw_gl_rectangle(draw_info, mw_dialog_number_entry_data.number_rect.x,
+ 175                             		.loc 1 145 2
+ 176 0098 FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+ 177 009e 9B D2                   		mov.W	28[r5], r2
+ 178 00a0 FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+ 179 00a6 9B DB                   		mov.W	30[r5], r3
+ 180 00a8 FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+ 181 00ae 9C 54                   		mov.W	32[r5], r4
+ 182 00b0 FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+ 183 00b6 9C 5D                   		mov.W	34[r5], r5
+ 184 00b8 D3 05                   		mov.W	r5, [r0]
+ 185 00ba ED A1 01                		mov.L	4[r10], r1
+ 186 00bd 05 00 00 00             		bsr	_mw_gl_rectangle
+ 146:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 			mw_dialog_number_entry_data.number_rect.y,
+ 147:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 			mw_dialog_number_entry_data.number_rect.width,
+ 148:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 			mw_dialog_number_entry_data.number_rect.height);
+ 149:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 
+ 150:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	/* draw 3d effect */
+ 151:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	mw_gl_set_fg_colour(MW_HAL_LCD_WHITE);
+ 187                             		.loc 1 151 2
+ 188 00c1 FB 12 FF FF FF 00       		mov.L	#0xffffff, r1
+ 189 00c7 05 00 00 00             		bsr	_mw_gl_set_fg_colour
+ 152:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	mw_gl_vline(draw_info,
+ 153:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 			mw_dialog_number_entry_data.number_rect.x + 1,
+ 190                             		.loc 1 153 43
+ 191 00cb FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+ 192 00d1 9B D5                   		mov.W	28[r5], r5
+ 193                             		.loc 1 153 46
+ 194 00d3 62 15                   		add	#1, r5
+ 152:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	mw_gl_vline(draw_info,
+ 195                             		.loc 1 152 2
+ 196 00d5 DF 52                   		mov.W	r5, r2
+ 154:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 			mw_dialog_number_entry_data.number_rect.y + 1,
+ 197                             		.loc 1 154 43
+ 198 00d7 FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+ 199 00dd 9B DD                   		mov.W	30[r5], r5
+ 200                             		.loc 1 154 46
+ 201 00df 62 15                   		add	#1, r5
+ 152:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	mw_gl_vline(draw_info,
+ 202                             		.loc 1 152 2
+ 203 00e1 DF 53                   		mov.W	r5, r3
+ 155:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 			mw_dialog_number_entry_data.number_rect.y + mw_dialog_number_entry_data.number_rect.height - 2);
+ 204                             		.loc 1 155 43
+ 205 00e3 FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+ 206 00e9 9B DD                   		mov.W	30[r5], r5
+ 207 00eb DF 54                   		mov.W	r5, r4
+ 208                             		.loc 1 155 87
+ 209 00ed FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+ 210 00f3 9C 5D                   		mov.W	34[r5], r5
+ 211                             		.loc 1 155 46
+ 212 00f5 4B 45                   		add	r4, r5
+ 213                             		.loc 1 155 95
+ 214 00f7 60 25                   		sub	#2, r5
+ 152:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	mw_gl_vline(draw_info,
+ 215                             		.loc 1 152 2
+ 216 00f9 DF 54                   		mov.W	r5, r4
+ 217 00fb ED A1 01                		mov.L	4[r10], r1
+ 218 00fe 05 00 00 00             		bsr	_mw_gl_vline
+ 156:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	mw_gl_hline(draw_info,
+ 157:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 			mw_dialog_number_entry_data.number_rect.x + 1,
+ 219                             		.loc 1 157 43
+ 220 0102 FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+ 221 0108 9B D5                   		mov.W	28[r5], r5
+ 222                             		.loc 1 157 46
+ 223 010a 62 15                   		add	#1, r5
+ 156:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	mw_gl_hline(draw_info,
+ 224                             		.loc 1 156 2
+ 225 010c DF 52                   		mov.W	r5, r2
+ 158:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 			mw_dialog_number_entry_data.number_rect.x + mw_dialog_number_entry_data.number_rect.width - 2,
+ 226                             		.loc 1 158 43
+ 227 010e FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+ 228 0114 9B D5                   		mov.W	28[r5], r5
+ 229 0116 DF 54                   		mov.W	r5, r4
+ 230                             		.loc 1 158 87
+ 231 0118 FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+ 232 011e 9C 55                   		mov.W	32[r5], r5
+ 233                             		.loc 1 158 46
+ 234 0120 4B 45                   		add	r4, r5
+ 235                             		.loc 1 158 94
+ 236 0122 60 25                   		sub	#2, r5
+ 156:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	mw_gl_hline(draw_info,
+ 237                             		.loc 1 156 2
+ 238 0124 DF 53                   		mov.W	r5, r3
+ 159:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 			mw_dialog_number_entry_data.number_rect.y - 1);
+ 239                             		.loc 1 159 43
+ 240 0126 FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+ 241 012c 9B DD                   		mov.W	30[r5], r5
+ 242                             		.loc 1 159 46
+ 243 012e 60 15                   		sub	#1, r5
+ 156:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	mw_gl_hline(draw_info,
+ 244                             		.loc 1 156 2
+ 245 0130 DF 54                   		mov.W	r5, r4
+ 246 0132 ED A1 01                		mov.L	4[r10], r1
+ 247 0135 05 00 00 00             		bsr	_mw_gl_hline
+ 160:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	mw_gl_set_fg_colour(MW_HAL_LCD_GREY7);
+ 248                             		.loc 1 160 2
+ 249 0139 FB 12 A6 A6 A6 00       		mov.L	#0xa6a6a6, r1
+ 250 013f 05 00 00 00             		bsr	_mw_gl_set_fg_colour
+ 161:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	mw_gl_vline(draw_info,
+ 162:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 			mw_dialog_number_entry_data.number_rect.x + mw_dialog_number_entry_data.number_rect.width - 2,
+ 251                             		.loc 1 162 43
+ 252 0143 FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+ 253 0149 9B D5                   		mov.W	28[r5], r5
+ 254 014b DF 54                   		mov.W	r5, r4
+ 255                             		.loc 1 162 87
+ 256 014d FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+ 257 0153 9C 55                   		mov.W	32[r5], r5
+ 258                             		.loc 1 162 46
+ 259 0155 4B 45                   		add	r4, r5
+ 260                             		.loc 1 162 94
+ 261 0157 60 25                   		sub	#2, r5
+ 161:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	mw_gl_vline(draw_info,
+ 262                             		.loc 1 161 2
+ 263 0159 DF 52                   		mov.W	r5, r2
+ 163:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 			mw_dialog_number_entry_data.number_rect.y + 1,
+ 264                             		.loc 1 163 43
+ 265 015b FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+ 266 0161 9B DD                   		mov.W	30[r5], r5
+ 267                             		.loc 1 163 46
+ 268 0163 62 15                   		add	#1, r5
+ 161:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	mw_gl_vline(draw_info,
+ 269                             		.loc 1 161 2
+ 270 0165 DF 53                   		mov.W	r5, r3
+ 164:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 			mw_dialog_number_entry_data.number_rect.y + mw_dialog_number_entry_data.number_rect.height - 2);
+ 271                             		.loc 1 164 43
+ 272 0167 FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+ 273 016d 9B DD                   		mov.W	30[r5], r5
+ 274 016f DF 54                   		mov.W	r5, r4
+ 275                             		.loc 1 164 87
+ 276 0171 FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+ 277 0177 9C 5D                   		mov.W	34[r5], r5
+ 278                             		.loc 1 164 46
+ 279 0179 4B 45                   		add	r4, r5
+ 280                             		.loc 1 164 95
+ 281 017b 60 25                   		sub	#2, r5
+ 161:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	mw_gl_vline(draw_info,
+ 282                             		.loc 1 161 2
+ 283 017d DF 54                   		mov.W	r5, r4
+ 284 017f ED A1 01                		mov.L	4[r10], r1
+ 285 0182 05 00 00 00             		bsr	_mw_gl_vline
+ 165:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	mw_gl_hline(draw_info,
+ 166:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 			mw_dialog_number_entry_data.number_rect.x + 1,
+ 286                             		.loc 1 166 43
+ 287 0186 FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+ 288 018c 9B D5                   		mov.W	28[r5], r5
+ 289                             		.loc 1 166 46
+ 290 018e 62 15                   		add	#1, r5
+ 165:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	mw_gl_hline(draw_info,
+ 291                             		.loc 1 165 2
+ 292 0190 DF 52                   		mov.W	r5, r2
+ 167:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 			mw_dialog_number_entry_data.number_rect.x + mw_dialog_number_entry_data.number_rect.width - 2,
+ 293                             		.loc 1 167 43
+ 294 0192 FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+ 295 0198 9B D5                   		mov.W	28[r5], r5
+ 296 019a DF 54                   		mov.W	r5, r4
+ 297                             		.loc 1 167 87
+ 298 019c FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+ 299 01a2 9C 55                   		mov.W	32[r5], r5
+ 300                             		.loc 1 167 46
+ 301 01a4 4B 45                   		add	r4, r5
+ 302                             		.loc 1 167 94
+ 303 01a6 60 25                   		sub	#2, r5
+ 165:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	mw_gl_hline(draw_info,
+ 304                             		.loc 1 165 2
+ 305 01a8 DF 53                   		mov.W	r5, r3
+ 168:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 			mw_dialog_number_entry_data.number_rect.y + mw_dialog_number_entry_data.number_rect.height - 2);
+ 306                             		.loc 1 168 43
+ 307 01aa FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+ 308 01b0 9B DD                   		mov.W	30[r5], r5
+ 309 01b2 DF 54                   		mov.W	r5, r4
+ 310                             		.loc 1 168 87
+ 311 01b4 FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+ 312 01ba 9C 5D                   		mov.W	34[r5], r5
+ 313                             		.loc 1 168 46
+ 314 01bc 4B 45                   		add	r4, r5
+ 315                             		.loc 1 168 95
+ 316 01be 60 25                   		sub	#2, r5
+ 165:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	mw_gl_hline(draw_info,
+ 317                             		.loc 1 165 2
+ 318 01c0 DF 54                   		mov.W	r5, r4
+ 319 01c2 ED A1 01                		mov.L	4[r10], r1
+ 320 01c5 05 00 00 00             		bsr	_mw_gl_hline
+ 169:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 
+ 170:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	/* draw the number */
+ 171:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
+ 321                             		.loc 1 171 2
+ 322 01c9 66 01                   		mov.L	#0, r1
+ 323 01cb 05 00 00 00             		bsr	_mw_gl_set_fg_colour
+ 172:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 
+ 173:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	if (mw_dialog_number_entry_data.large_size)
+ 324                             		.loc 1 173 33
+ 325 01cf FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+ 326 01d5 CD 55 64                		mov.B	100[r5], r5
+ 327                             		.loc 1 173 5
+ 328 01d8 5B 55                   		movu.B	r5, r5
+ 329 01da 61 05                   		cmp	#0, r5
+ 330 01dc 10                      		beq	.L7
+ 174:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	{
+ 175:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		mw_gl_set_font(MW_GL_TITLE_FONT);
+ 331                             		.loc 1 175 3
+ 332 01dd 66 51                   		mov.L	#5, r1
+ 333 01df 05 00 00 00             		bsr	_mw_gl_set_font
+ 334 01e3 0F                      		bra	.L8
+ 335                             	.L7:
+ 176:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	}
+ 177:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	else
+ 178:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	{
+ 179:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		mw_gl_set_font(MW_GL_FONT_9);
+ 336                             		.loc 1 179 3
+ 337 01e4 66 01                   		mov.L	#0, r1
+ 338 01e6 05 00 00 00             		bsr	_mw_gl_set_font
+ 339                             	.L8:
+ 180:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	}
+ 181:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 
+ 182:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	if (strcmp((mw_dialog_number_entry_data.number_buffer), ("0")) != 0 && mw_dialog_number_entry_data
+ 340                             		.loc 1 182 6
+ 341 01ea FB 22 1A 00 00 00       		mov.L	#.LC2, r2
+ 342 01f0 FB 12 58 00 00 00       		mov.L	#_mw_dialog_number_entry_data+88, r1
+ 343 01f6 05 00 00 00             		bsr	_strcmp
+ 344 01fa EF 15                   		mov.L	r1, r5
+ 345                             		.loc 1 182 5
+ 346 01fc 61 05                   		cmp	#0, r5
+ 347 01fe 20 6A                   		beq	.L9
+ 348                             		.loc 1 182 100 discriminator 1
+ 349 0200 FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+ 350 0206 CD 55 63                		mov.B	99[r5], r5
+ 351                             		.loc 1 182 70 discriminator 1
+ 352 0209 5B 55                   		movu.B	r5, r5
+ 353 020b 61 05                   		cmp	#0, r5
+ 354 020d 20 5B                   		beq	.L9
+ 183:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	{
+ 184:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		/* draw negative sign and number */
+ 185:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		mw_gl_character(draw_info,
+ 186:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 				mw_dialog_number_entry_data.number_rect.x + 3,
+ 355                             		.loc 1 186 44
+ 356 020f FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+ 357 0215 9B D5                   		mov.W	28[r5], r5
+ 358                             		.loc 1 186 47
+ 359 0217 62 35                   		add	#3, r5
+ 185:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 				mw_dialog_number_entry_data.number_rect.x + 3,
+ 360                             		.loc 1 185 3
+ 361 0219 DF 52                   		mov.W	r5, r2
+ 187:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 				mw_dialog_number_entry_data.number_rect.y + 3,
+ 362                             		.loc 1 187 44
+ 363 021b FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+ 364 0221 9B DD                   		mov.W	30[r5], r5
+ 365                             		.loc 1 187 47
+ 366 0223 62 35                   		add	#3, r5
+ 185:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 				mw_dialog_number_entry_data.number_rect.x + 3,
+ 367                             		.loc 1 185 3
+ 368 0225 75 44 2D                		mov	#45, r4
+ 369 0228 DF 53                   		mov.W	r5, r3
+ 370 022a ED A1 01                		mov.L	4[r10], r1
+ 371 022d 05 00 00 00             		bsr	_mw_gl_character
+ 188:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 				'-');
+ 189:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		mw_gl_string(draw_info,
+ 190:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 				mw_dialog_number_entry_data.number_rect.x + 3 + (int16_t)mw_gl_get_string_width_pixels("-"),
+ 372                             		.loc 1 190 44
+ 373 0231 FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+ 374 0237 9B D5                   		mov.W	28[r5], r5
+ 375 0239 DF 56                   		mov.W	r5, r6
+ 376                             		.loc 1 190 62
+ 377 023b FB 12 00 00 00 00       		mov.L	#.LC0, r1
+ 378 0241 05 00 00 00             		bsr	_mw_gl_get_string_width_pixels
+ 379 0245 EF 15                   		mov.L	r1, r5
+ 380                             		.loc 1 190 51
+ 381 0247 4B 65                   		add	r6, r5
+ 382 0249 62 35                   		add	#3, r5
+ 189:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 				mw_dialog_number_entry_data.number_rect.x + 3 + (int16_t)mw_gl_get_string_width_pixels("-"),
+ 383                             		.loc 1 189 3
+ 384 024b DF 52                   		mov.W	r5, r2
+ 191:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 				mw_dialog_number_entry_data.number_rect.y + 3, mw_dialog_number_entry_data.number_buffer);
+ 385                             		.loc 1 191 44
+ 386 024d FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+ 387 0253 9B DD                   		mov.W	30[r5], r5
+ 388                             		.loc 1 191 47
+ 389 0255 62 35                   		add	#3, r5
+ 189:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 				mw_dialog_number_entry_data.number_rect.x + 3 + (int16_t)mw_gl_get_string_width_pixels("-"),
+ 390                             		.loc 1 189 3
+ 391 0257 FB 42 58 00 00 00       		mov.L	#_mw_dialog_number_entry_data+88, r4
+ 392 025d DF 53                   		mov.W	r5, r3
+ 393 025f ED A1 01                		mov.L	4[r10], r1
+ 394 0262 05 00 00 00             		bsr	_mw_gl_string
+ 395 0266 2E 27                   		bra	.L10
+ 396                             	.L9:
+ 192:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	}
+ 193:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	else
+ 194:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	{
+ 195:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		/* draw number only */
+ 196:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		mw_gl_string(draw_info,
+ 197:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 				mw_dialog_number_entry_data.number_rect.x + 3,
+ 397                             		.loc 1 197 44
+ 398 0268 FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+ 399 026e 9B D5                   		mov.W	28[r5], r5
+ 400                             		.loc 1 197 47
+ 401 0270 62 35                   		add	#3, r5
+ 196:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 				mw_dialog_number_entry_data.number_rect.x + 3,
+ 402                             		.loc 1 196 3
+ 403 0272 DF 52                   		mov.W	r5, r2
+ 198:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 				mw_dialog_number_entry_data.number_rect.y + 3,
+ 404                             		.loc 1 198 44
+ 405 0274 FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+ 406 027a 9B DD                   		mov.W	30[r5], r5
+ 407                             		.loc 1 198 47
+ 408 027c 62 35                   		add	#3, r5
+ 196:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 				mw_dialog_number_entry_data.number_rect.x + 3,
+ 409                             		.loc 1 196 3
+ 410 027e FB 42 58 00 00 00       		mov.L	#_mw_dialog_number_entry_data+88, r4
+ 411 0284 DF 53                   		mov.W	r5, r3
+ 412 0286 ED A1 01                		mov.L	4[r10], r1
+ 413 0289 05 00 00 00             		bsr	_mw_gl_string
+ 414                             	.L10:
+ 199:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 				mw_dialog_number_entry_data.number_buffer);
+ 200:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	}
+ 201:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 
+ 202:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	/* draw cursor, already adjusted for standard/large size */
+ 203:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	if (mw_dialog_number_entry_data.draw_cursor)
+ 415                             		.loc 1 203 33
+ 416 028d FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+ 417 0293 CD 55 65                		mov.B	101[r5], r5
+ 418                             		.loc 1 203 5
+ 419 0296 5B 55                   		movu.B	r5, r5
+ 420 0298 61 05                   		cmp	#0, r5
+ 421 029a 20 35                   		beq	.L12
+ 204:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	{
+ 205:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
+ 422                             		.loc 1 205 3
+ 423 029c 66 01                   		mov.L	#0, r1
+ 424 029e 05 00 00 00             		bsr	_mw_gl_set_fg_colour
+ 206:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		mw_gl_vline(draw_info,
+ 425                             		.loc 1 206 3
+ 426 02a2 FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+ 427 02a8 9A D2                   		mov.W	20[r5], r2
+ 428 02aa FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+ 429 02b0 9A DB                   		mov.W	22[r5], r3
+ 207:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 				mw_dialog_number_entry_data.cursor_rect.x,
+ 208:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 				mw_dialog_number_entry_data.cursor_rect.y,
+ 209:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 				mw_dialog_number_entry_data.cursor_rect.y + mw_dialog_number_entry_data.cursor_rect.height);
+ 430                             		.loc 1 209 44
+ 431 02b2 FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+ 432 02b8 9A DD                   		mov.W	22[r5], r5
+ 433 02ba DF 54                   		mov.W	r5, r4
+ 434                             		.loc 1 209 88
+ 435 02bc FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+ 436 02c2 9B 5D                   		mov.W	26[r5], r5
+ 437                             		.loc 1 209 47
+ 438 02c4 4B 45                   		add	r4, r5
+ 206:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		mw_gl_vline(draw_info,
+ 439                             		.loc 1 206 3
+ 440 02c6 DF 54                   		mov.W	r5, r4
+ 441 02c8 ED A1 01                		mov.L	4[r10], r1
+ 442 02cb 05 00 00 00             		bsr	_mw_gl_vline
+ 443                             	.L12:
+ 210:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	}
+ 211:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** }
+ 444                             		.loc 1 211 1
+ 445 02cf 03                      		nop
+ 446 02d0 3F 6B 09                		rtsd	#36, r6-r11
+ 447                             	.LFE1:
+ 449                             		.section	.text.mw_dialog_number_entry_message_function,"ax",@progbits
+ 451                             	_mw_dialog_number_entry_message_function:
+ 452                             	.LFB2:
+ 212:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 
+ 213:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** /**
+ 214:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c ****  * Window message handler called by the window manager.
+ 215:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c ****  *
+ 216:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c ****  * @param message The message to be processed
+ 217:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c ****  * @note Do not call this directly from user code
+ 218:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c ****  */
+ 219:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** static void mw_dialog_number_entry_message_function(const mw_message_t *message)
+ 220:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** {
+ 453                             		.loc 1 220 1
+ 454 0000 7E AA                   		push.l	r10
+ 455                             	.LCFI5:
+ 456 0002 71 0A F0                		add	#-16, r0, r10
+ 457                             	.LCFI6:
+ 458 0005 71 A0 F8                		add	#-8, r10, r0
+ 459                             	.LCFI7:
+ 460 0008 E7 A1 03                		mov.L	r1, 12[r10]
+ 221:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	MW_ASSERT(message != (void*)0, "Null pointer argument");
+ 461                             		.loc 1 221 2
+ 462 000b ED A5 03                		mov.L	12[r10], r5
+ 463 000e 61 05                   		cmp	#0, r5
+ 464 0010 FC DB 51                		scne.L	r5
+ 465 0013 FB 42 04 00 00 00       		mov.L	#.LC1, r4
+ 466 0019 75 43 DD                		mov.L	#0xdd, r3
+ 467 001c FB 22 00 00 00 00       		mov.L	#___func__.3017, r2
+ 468 0022 CF 51                   		mov.B	r5, r1
+ 469 0024 05 00 00 00             		bsr	_mw_debug_print_assert
+ 222:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 
+ 223:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	switch (message->message_id)
+ 470                             		.loc 1 223 17
+ 471 0028 ED A5 03                		mov.L	12[r10], r5
+ 472 002b A8 D5                   		mov.L	8[r5], r5
+ 473                             		.loc 1 223 2
+ 474 002d 75 55 19                		cmp	#25, r5
+ 475 0030 3A B1 00                		beq	.L14
+ 476 0033 75 55 19                		cmp	#25, r5
+ 477 0036 24 09                   		bgtu	.L15
+ 478 0038 61 05                   		cmp	#0, r5
+ 479 003a 20 14                   		beq	.L16
+ 224:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	{
+ 225:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	case MW_WINDOW_CREATED_MESSAGE:
+ 226:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		(void)mw_set_timer(mw_tick_counter + MW_CURSOR_PERIOD_TICKS, message->recipient_handle, MW_WINDOW
+ 227:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 
+ 228:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		/* set size specific values */
+ 229:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		if (mw_dialog_number_entry_data.large_size)
+ 230:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		{
+ 231:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 			mw_dialog_number_entry_data.cursor_rect.y = 4;
+ 232:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 			mw_dialog_number_entry_data.cursor_rect.height = 17;
+ 233:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 			(void)memcpy((&mw_dialog_number_entry_data.number_rect), (&number_display_rect_large), (sizeof(n
+ 234:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		}
+ 235:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		else
+ 236:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		{
+ 237:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 			mw_dialog_number_entry_data.cursor_rect.y = 6;
+ 238:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 			mw_dialog_number_entry_data.cursor_rect.height = 11;
+ 239:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 			(void)memcpy((&mw_dialog_number_entry_data.number_rect), (&number_display_rect), (sizeof(number_
+ 240:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		}
+ 241:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 
+ 242:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		/* set cursor rect values */
+ 243:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		mw_dialog_number_entry_data.cursor_rect.x = get_cursor_x_coordinate();
+ 244:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		mw_dialog_number_entry_data.cursor_rect.width = 1;
+ 245:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		break;
+ 246:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 
+ 247:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	case MW_TIMER_MESSAGE:
+ 248:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		mw_dialog_number_entry_data.draw_cursor = !mw_dialog_number_entry_data.draw_cursor;
+ 249:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		mw_paint_window_client_rect(message->recipient_handle, &mw_dialog_number_entry_data.cursor_rect);
+ 250:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		(void)mw_set_timer(mw_tick_counter + MW_CURSOR_PERIOD_TICKS, message->recipient_handle, MW_WINDOW
+ 251:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		break;
+ 252:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 
+ 253:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	case MW_KEY_PRESSED_MESSAGE:
+ 254:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		{
+ 255:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 			int16_t current_length;
+ 256:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 
+ 257:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 			if ((message->message_data >= (uint32_t)'0' && message->message_data <= (uint32_t)'9') || messag
+ 258:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 			{
+ 259:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 				current_length = (int16_t)strlen(mw_dialog_number_entry_data.number_buffer);
+ 260:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 
+ 261:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 				if (message->message_data == (uint32_t)'-')
+ 262:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 				{
+ 263:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 					mw_dialog_number_entry_data.is_negative = !mw_dialog_number_entry_data.is_negative;
+ 264:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 				}
+ 265:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 				else if (message->message_data == (uint32_t)'\b')
+ 266:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 				{
+ 267:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 					if (current_length == 1)
+ 268:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 					{
+ 269:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 						mw_dialog_number_entry_data.is_negative = false;
+ 270:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 						(void)strcpy((mw_dialog_number_entry_data.number_buffer), ("0"));
+ 271:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 					}
+ 272:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 					else
+ 273:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 					{
+ 274:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 						mw_dialog_number_entry_data.number_buffer[current_length - 1] = '\0';
+ 275:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 					}
+ 276:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 				}
+ 277:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 				else
+ 278:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 				{
+ 279:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 					if (current_length < MW_DIALOG_MAX_NUMBER_LENGTH)
+ 280:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 					{
+ 281:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 						if (mw_dialog_number_entry_data.number_buffer[0] == '0')
+ 282:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 						{
+ 283:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 							/* replace 0 with entered digit */
+ 284:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 							mw_dialog_number_entry_data.number_buffer[0] = (char)message->message_data;
+ 285:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 							mw_dialog_number_entry_data.number_buffer[1] = '\0';
+ 286:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 						}
+ 287:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 						else
+ 288:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 						{
+ 289:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 							/* append entered digit to existing digits */
+ 290:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 							mw_dialog_number_entry_data.number_buffer[current_length] = (char)message->message_data;
+ 291:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 							mw_dialog_number_entry_data.number_buffer[current_length + 1] = '\0';
+ 292:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 						}
+ 293:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 					}
+ 294:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 				}
+ 295:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 
+ 296:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 				mw_dialog_number_entry_data.cursor_rect.x = get_cursor_x_coordinate();
+ 297:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 				mw_paint_window_client_rect(message->recipient_handle, &mw_dialog_number_entry_data.number_rect
+ 298:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 			}
+ 299:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		}
+ 300:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		break;
+ 301:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 
+ 302:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	case MW_BUTTON_PRESSED_MESSAGE:
+ 303:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		{
+ 304:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 			char *destination;
+ 305:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 			const char *source;
+ 306:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 
+ 307:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 			/* remove all controls and window */
+ 308:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 			mw_remove_window(mw_dialog_number_entry_data.number_entry_dialog_window_handle);
+ 309:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 
+ 310:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 			/* a window has changed visibility so repaint all */
+ 311:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 			mw_paint_all();
+ 312:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 
+ 313:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 			if (message->sender_handle == mw_dialog_number_entry_data.button_cancel_handle)
+ 314:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 			{
+ 315:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 				/* post cancel response to receiving window */
+ 316:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 				mw_post_message(MW_DIALOG_NUMBER_ENTRY_CANCEL_MESSAGE,
+ 317:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 						MW_UNUSED_MESSAGE_PARAMETER,
+ 318:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 						mw_dialog_number_entry_data.owner_window_handle,
+ 319:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 						MW_UNUSED_MESSAGE_PARAMETER,
+ 320:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 						NULL,
+ 321:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 						MW_WINDOW_MESSAGE);
+ 322:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 			}
+ 323:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 			else
+ 324:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 			{
+ 325:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 				/* post ok response to receiving window */
+ 326:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 				/* insert - sign if required */
+ 327:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 				if (mw_dialog_number_entry_data.is_negative)
+ 328:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 				{
+ 329:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 					destination = mw_dialog_number_entry_data.number_buffer;
+ 330:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 					source = mw_dialog_number_entry_data.number_buffer + 1U;
+ 331:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 					(void)memmove((destination),
+ 332:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 							(source),
+ 333:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 							((size_t)1 + strlen(mw_dialog_number_entry_data.number_buffer)));
+ 334:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 					mw_dialog_number_entry_data.number_buffer[0] = '-';
+ 335:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 				}
+ 336:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 				mw_post_message(MW_DIALOG_NUMBER_ENTRY_OK_MESSAGE,
+ 337:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 						MW_UNUSED_MESSAGE_PARAMETER,
+ 338:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 						mw_dialog_number_entry_data.owner_window_handle,
+ 339:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 						MW_UNUSED_MESSAGE_PARAMETER,
+ 340:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 						(void *)mw_dialog_number_entry_data.number_buffer,
+ 341:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 						MW_WINDOW_MESSAGE);
+ 342:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 			}
+ 343:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		}
+ 344:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		break;
+ 345:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 
+ 346:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	default:
+ 347:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		/* keep MISRA happy */
+ 348:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		break;
+ 480                             		.loc 1 348 3
+ 481 003c 38 AA 02                		bra	.L22
+ 482                             	.L15:
+ 223:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	{
+ 483                             		.loc 1 223 2
+ 484 003f 75 55 1A                		cmp	#26, r5
+ 485 0042 3A 02 02                		beq	.L18
+ 486 0045 75 55 24                		cmp	#36, r5
+ 487 0048 3A E8 00                		beq	.L19
+ 488                             		.loc 1 348 3
+ 489 004b 38 9B 02                		bra	.L22
+ 490                             	.L16:
+ 226:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 
+ 491                             		.loc 1 226 9
+ 492 004e FB 52 00 00 00 00       		mov.L	#_mw_tick_counter, r5
+ 493 0054 EC 55                   		mov.L	[r5], r5
+ 494 0056 71 54 0A                		add	#10, r5, r4
+ 495 0059 ED A5 03                		mov.L	12[r10], r5
+ 496 005c A8 5D                   		mov.L	4[r5], r5
+ 497 005e 66 03                   		mov.L	#0, r3
+ 498 0060 EF 52                   		mov.L	r5, r2
+ 499 0062 EF 41                   		mov.L	r4, r1
+ 500 0064 05 00 00 00             		bsr	_mw_set_timer
+ 229:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		{
+ 501                             		.loc 1 229 34
+ 502 0068 FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+ 503 006e CD 55 64                		mov.B	100[r5], r5
+ 229:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		{
+ 504                             		.loc 1 229 6
+ 505 0071 5B 55                   		movu.B	r5, r5
+ 506 0073 61 05                   		cmp	#0, r5
+ 507 0075 20 2A                   		beq	.L20
+ 231:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 			mw_dialog_number_entry_data.cursor_rect.height = 17;
+ 508                             		.loc 1 231 46
+ 509 0077 FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+ 510 007d 3D 5B 04                		mov.W	#4, 22[r5]
+ 232:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 			(void)memcpy((&mw_dialog_number_entry_data.number_rect), (&number_display_rect_large), (sizeof(n
+ 511                             		.loc 1 232 51
+ 512 0080 FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+ 513 0086 3D 5D 11                		mov.W	#17, 26[r5]
+ 233:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		}
+ 514                             		.loc 1 233 10
+ 515 0089 FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+ 516 008f FB 42 00 00 00 00       		mov.L	#_number_display_rect_large, r4
+ 517 0095 EC 43                   		mov.L	[r4], r3
+ 518 0097 A1 DB                   		mov.L	r3, 28[r5]
+ 519 0099 A8 4C                   		mov.L	4[r4], r4
+ 520 009b A2 54                   		mov.L	r4, 32[r5]
+ 521 009d 2E 28                   		bra	.L21
+ 522                             	.L20:
+ 237:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 			mw_dialog_number_entry_data.cursor_rect.height = 11;
+ 523                             		.loc 1 237 46
+ 524 009f FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+ 525 00a5 3D 5B 06                		mov.W	#6, 22[r5]
+ 238:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 			(void)memcpy((&mw_dialog_number_entry_data.number_rect), (&number_display_rect), (sizeof(number_
+ 526                             		.loc 1 238 51
+ 527 00a8 FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+ 528 00ae 3D 5D 0B                		mov.W	#11, 26[r5]
+ 239:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		}
+ 529                             		.loc 1 239 10
+ 530 00b1 FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+ 531 00b7 FB 42 00 00 00 00       		mov.L	#_number_display_rect, r4
+ 532 00bd EC 43                   		mov.L	[r4], r3
+ 533 00bf A1 DB                   		mov.L	r3, 28[r5]
+ 534 00c1 A8 4C                   		mov.L	4[r4], r4
+ 535 00c3 A2 54                   		mov.L	r4, 32[r5]
+ 536                             	.L21:
+ 243:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		mw_dialog_number_entry_data.cursor_rect.width = 1;
+ 537                             		.loc 1 243 47
+ 538 00c5 05 00 00 00             		bsr	_get_cursor_x_coordinate
+ 539 00c9 EF 15                   		mov.L	r1, r5
+ 540 00cb DF 54                   		mov.W	r5, r4
+ 243:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		mw_dialog_number_entry_data.cursor_rect.width = 1;
+ 541                             		.loc 1 243 45
+ 542 00cd FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+ 543 00d3 92 D4                   		mov.W	r4, 20[r5]
+ 244:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		break;
+ 544                             		.loc 1 244 49
+ 545 00d5 FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+ 546 00db 3D 5C 01                		mov.W	#1, 24[r5]
+ 245:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 
+ 547                             		.loc 1 245 3
+ 548 00de 38 08 02                		bra	.L22
+ 549                             	.L14:
+ 248:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		mw_paint_window_client_rect(message->recipient_handle, &mw_dialog_number_entry_data.cursor_rect);
+ 550                             		.loc 1 248 73
+ 551 00e1 FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+ 552 00e7 CD 55 65                		mov.B	101[r5], r5
+ 553 00ea 5B 55                   		movu.B	r5, r5
+ 248:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		mw_paint_window_client_rect(message->recipient_handle, &mw_dialog_number_entry_data.cursor_rect);
+ 554                             		.loc 1 248 3
+ 555 00ec 61 05                   		cmp	#0, r5
+ 556 00ee FC DB 51                		scne.L	r5
+ 557 00f1 FD 74 D5 01             		xor	#1, r5
+ 558 00f5 5B 55                   		movu.B	r5, r5
+ 248:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		mw_paint_window_client_rect(message->recipient_handle, &mw_dialog_number_entry_data.cursor_rect);
+ 559                             		.loc 1 248 45
+ 560 00f7 64 15                   		and	#1, r5
+ 248:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		mw_paint_window_client_rect(message->recipient_handle, &mw_dialog_number_entry_data.cursor_rect);
+ 561                             		.loc 1 248 43
+ 562 00f9 FB 42 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r4
+ 563 00ff C7 45 65                		mov.B	r5, 101[r4]
+ 249:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		(void)mw_set_timer(mw_tick_counter + MW_CURSOR_PERIOD_TICKS, message->recipient_handle, MW_WINDOW
+ 564                             		.loc 1 249 3
+ 565 0102 ED A5 03                		mov.L	12[r10], r5
+ 566 0105 A8 5D                   		mov.L	4[r5], r5
+ 567 0107 FB 22 14 00 00 00       		mov.L	#_mw_dialog_number_entry_data+20, r2
+ 568 010d EF 51                   		mov.L	r5, r1
+ 569 010f 05 00 00 00             		bsr	_mw_paint_window_client_rect
+ 250:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		break;
+ 570                             		.loc 1 250 9
+ 571 0113 FB 52 00 00 00 00       		mov.L	#_mw_tick_counter, r5
+ 572 0119 EC 55                   		mov.L	[r5], r5
+ 573 011b 71 54 0A                		add	#10, r5, r4
+ 574 011e ED A5 03                		mov.L	12[r10], r5
+ 575 0121 A8 5D                   		mov.L	4[r5], r5
+ 576 0123 66 03                   		mov.L	#0, r3
+ 577 0125 EF 52                   		mov.L	r5, r2
+ 578 0127 EF 41                   		mov.L	r4, r1
+ 579 0129 05 00 00 00             		bsr	_mw_set_timer
+ 251:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 
+ 580                             		.loc 1 251 3
+ 581 012d 38 B9 01                		bra	.L22
+ 582                             	.L19:
+ 583                             	.LBB2:
+ 257:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 			{
+ 584                             		.loc 1 257 16
+ 585 0130 ED A5 03                		mov.L	12[r10], r5
+ 586 0133 A9 55                   		mov.L	16[r5], r5
+ 257:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 			{
+ 587                             		.loc 1 257 7
+ 588 0135 75 55 2F                		cmp	#47, r5
+ 589 0138 25 0C                   		bleu	.L23
+ 257:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 			{
+ 590                             		.loc 1 257 58 discriminator 1
+ 591 013a ED A5 03                		mov.L	12[r10], r5
+ 592 013d A9 55                   		mov.L	16[r5], r5
+ 257:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 			{
+ 593                             		.loc 1 257 48 discriminator 1
+ 594 013f 75 55 39                		cmp	#57, r5
+ 595 0142 25 16                   		bleu	.L24
+ 596                             	.L23:
+ 257:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 			{
+ 597                             		.loc 1 257 101 discriminator 3
+ 598 0144 ED A5 03                		mov.L	12[r10], r5
+ 599 0147 A9 55                   		mov.L	16[r5], r5
+ 257:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 			{
+ 600                             		.loc 1 257 91 discriminator 3
+ 601 0149 75 55 2D                		cmp	#45, r5
+ 602 014c 20 0C                   		beq	.L24
+ 257:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 			{
+ 603                             		.loc 1 257 143 discriminator 4
+ 604 014e ED A5 03                		mov.L	12[r10], r5
+ 605 0151 A9 55                   		mov.L	16[r5], r5
+ 257:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 			{
+ 606                             		.loc 1 257 133 discriminator 4
+ 607 0153 61 85                   		cmp	#8, r5
+ 608 0155 3B 90 01                		bne	.L35
+ 609                             	.L24:
+ 259:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 
+ 610                             		.loc 1 259 31
+ 611 0158 FB 12 58 00 00 00       		mov.L	#_mw_dialog_number_entry_data+88, r1
+ 612 015e 05 00 00 00             		bsr	_strlen
+ 613 0162 EF 15                   		mov.L	r1, r5
+ 259:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 
+ 614                             		.loc 1 259 20
+ 615 0164 D3 A5                   		mov.W	r5, [r10]
+ 261:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 				{
+ 616                             		.loc 1 261 16
+ 617 0166 ED A5 03                		mov.L	12[r10], r5
+ 618 0169 A9 55                   		mov.L	16[r5], r5
+ 261:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 				{
+ 619                             		.loc 1 261 8
+ 620 016b 75 55 2D                		cmp	#45, r5
+ 621 016e 21 26                   		bne	.L26
+ 263:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 				}
+ 622                             		.loc 1 263 76
+ 623 0170 FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+ 624 0176 CD 55 63                		mov.B	99[r5], r5
+ 625 0179 5B 55                   		movu.B	r5, r5
+ 263:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 				}
+ 626                             		.loc 1 263 6
+ 627 017b 61 05                   		cmp	#0, r5
+ 628 017d FC DB 51                		scne.L	r5
+ 629 0180 FD 74 D5 01             		xor	#1, r5
+ 630 0184 5B 55                   		movu.B	r5, r5
+ 263:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 				}
+ 631                             		.loc 1 263 48
+ 632 0186 64 15                   		and	#1, r5
+ 263:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 				}
+ 633                             		.loc 1 263 46
+ 634 0188 FB 42 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r4
+ 635 018e C7 45 63                		mov.B	r5, 99[r4]
+ 636 0191 38 8F 00                		bra	.L27
+ 637                             	.L26:
+ 265:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 				{
+ 638                             		.loc 1 265 21
+ 639 0194 ED A5 03                		mov.L	12[r10], r5
+ 640 0197 A9 55                   		mov.L	16[r5], r5
+ 265:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 				{
+ 641                             		.loc 1 265 13
+ 642 0199 61 85                   		cmp	#8, r5
+ 643 019b 21 2F                   		bne	.L28
+ 267:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 					{
+ 644                             		.loc 1 267 9
+ 645 019d DC A5                   		mov.W	[r10], r5
+ 646 019f 61 15                   		cmp	#1, r5
+ 647 01a1 21 17                   		bne	.L29
+ 269:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 						(void)strcpy((mw_dialog_number_entry_data.number_buffer), ("0"));
+ 648                             		.loc 1 269 47
+ 649 01a3 FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+ 650 01a9 F9 54 63 00             		mov.B	#0, 99[r5]
+ 270:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 					}
+ 651                             		.loc 1 270 13
+ 652 01ad FB 52 58 00 00 00       		mov.L	#_mw_dialog_number_entry_data+88, r5
+ 653 01b3 F8 55 30                		mov.W	#48, [r5]
+ 654 01b6 2E 6A                   		bra	.L27
+ 655                             	.L29:
+ 274:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 					}
+ 656                             		.loc 1 274 64
+ 657 01b8 DC A5                   		mov.W	[r10], r5
+ 658 01ba 60 15                   		sub	#1, r5
+ 274:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 					}
+ 659                             		.loc 1 274 69
+ 660 01bc FB 42 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r4
+ 661 01c2 4B 45                   		add	r4, r5
+ 662 01c4 F9 54 58 00             		mov.B	#0, 88[r5]
+ 663 01c8 2E 58                   		bra	.L27
+ 664                             	.L28:
+ 279:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 					{
+ 665                             		.loc 1 279 9
+ 666 01ca DC A5                   		mov.W	[r10], r5
+ 667 01cc 61 85                   		cmp	#8, r5
+ 668 01ce 2A 52                   		bgt	.L27
+ 281:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 						{
+ 669                             		.loc 1 281 52
+ 670 01d0 FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+ 671 01d6 CD 55 58                		mov.B	88[r5], r5
+ 281:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 						{
+ 672                             		.loc 1 281 10
+ 673 01d9 5B 55                   		movu.B	r5, r5
+ 674 01db 75 55 30                		cmp	#48, r5
+ 675 01de 21 1E                   		bne	.L31
+ 284:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 							mw_dialog_number_entry_data.number_buffer[1] = '\0';
+ 676                             		.loc 1 284 68
+ 677 01e0 ED A5 03                		mov.L	12[r10], r5
+ 678 01e3 A9 55                   		mov.L	16[r5], r5
+ 284:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 							mw_dialog_number_entry_data.number_buffer[1] = '\0';
+ 679                             		.loc 1 284 55
+ 680 01e5 CF 54                   		mov.B	r5, r4
+ 284:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 							mw_dialog_number_entry_data.number_buffer[1] = '\0';
+ 681                             		.loc 1 284 53
+ 682 01e7 FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+ 683 01ed C7 54 58                		mov.B	r4, 88[r5]
+ 285:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 						}
+ 684                             		.loc 1 285 53
+ 685 01f0 FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+ 686 01f6 F9 54 59 00             		mov.B	#0, 89[r5]
+ 687 01fa 2E 26                   		bra	.L27
+ 688                             	.L31:
+ 290:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 							mw_dialog_number_entry_data.number_buffer[current_length + 1] = '\0';
+ 689                             		.loc 1 290 81
+ 690 01fc ED A5 03                		mov.L	12[r10], r5
+ 691 01ff A9 54                   		mov.L	16[r5], r4
+ 290:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 							mw_dialog_number_entry_data.number_buffer[current_length + 1] = '\0';
+ 692                             		.loc 1 290 49
+ 693 0201 DC A5                   		mov.W	[r10], r5
+ 290:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 							mw_dialog_number_entry_data.number_buffer[current_length + 1] = '\0';
+ 694                             		.loc 1 290 68
+ 695 0203 CF 43                   		mov.B	r4, r3
+ 290:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 							mw_dialog_number_entry_data.number_buffer[current_length + 1] = '\0';
+ 696                             		.loc 1 290 66
+ 697 0205 FB 42 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r4
+ 698 020b 4B 45                   		add	r4, r5
+ 699 020d C7 53 58                		mov.B	r3, 88[r5]
+ 291:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 						}
+ 700                             		.loc 1 291 65
+ 701 0210 DC A5                   		mov.W	[r10], r5
+ 702 0212 62 15                   		add	#1, r5
+ 291:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 						}
+ 703                             		.loc 1 291 70
+ 704 0214 FB 42 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r4
+ 705 021a 4B 45                   		add	r4, r5
+ 706 021c F9 54 58 00             		mov.B	#0, 88[r5]
+ 707                             		.balign 8,3,3
+ 708                             	.L27:
+ 296:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 				mw_paint_window_client_rect(message->recipient_handle, &mw_dialog_number_entry_data.number_rect
+ 709                             		.loc 1 296 49
+ 710 0220 05 00 00 00             		bsr	_get_cursor_x_coordinate
+ 711 0224 EF 15                   		mov.L	r1, r5
+ 712 0226 DF 54                   		mov.W	r5, r4
+ 296:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 				mw_paint_window_client_rect(message->recipient_handle, &mw_dialog_number_entry_data.number_rect
+ 713                             		.loc 1 296 47
+ 714 0228 FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+ 715 022e 92 D4                   		mov.W	r4, 20[r5]
+ 297:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 			}
+ 716                             		.loc 1 297 5
+ 717 0230 ED A5 03                		mov.L	12[r10], r5
+ 718 0233 A8 5D                   		mov.L	4[r5], r5
+ 719 0235 FB 22 1C 00 00 00       		mov.L	#_mw_dialog_number_entry_data+28, r2
+ 720 023b EF 51                   		mov.L	r5, r1
+ 721 023d 05 00 00 00             		bsr	_mw_paint_window_client_rect
+ 722                             	.LBE2:
+ 300:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 
+ 723                             		.loc 1 300 3
+ 724 0241 38 A4 00                		bra	.L35
+ 725                             	.L18:
+ 726                             	.LBB3:
+ 308:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 
+ 727                             		.loc 1 308 4
+ 728 0244 FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+ 729 024a A9 55                   		mov.L	16[r5], r5
+ 730 024c EF 51                   		mov.L	r5, r1
+ 731 024e 05 00 00 00             		bsr	_mw_remove_window
+ 311:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 
+ 732                             		.loc 1 311 4
+ 733 0252 05 00 00 00             		bsr	_mw_paint_all
+ 313:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 			{
+ 734                             		.loc 1 313 15
+ 735 0256 ED A5 03                		mov.L	12[r10], r5
+ 736 0259 EC 54                   		mov.L	[r5], r4
+ 313:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 			{
+ 737                             		.loc 1 313 61
+ 738 025b FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+ 739 0261 A8 D5                   		mov.L	8[r5], r5
+ 313:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 			{
+ 740                             		.loc 1 313 7
+ 741 0263 47 54                   		cmp	r5, r4
+ 742 0265 21 1F                   		bne	.L32
+ 316:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 						MW_UNUSED_MESSAGE_PARAMETER,
+ 743                             		.loc 1 316 5
+ 744 0267 FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+ 745 026d A8 DD                   		mov.L	12[r5], r5
+ 746 026f 3E 01 00                		mov.L	#0, 4[r0]
+ 747 0272 F8 06 00                		mov.L	#0, [r0]
+ 748 0275 66 04                   		mov.L	#0, r4
+ 749 0277 EF 53                   		mov.L	r5, r3
+ 750 0279 66 02                   		mov.L	#0, r2
+ 751 027b 75 41 47                		mov.L	#0x47, r1
+ 752 027e 05 00 00 00             		bsr	_mw_post_message
+ 753                             	.LBE3:
+ 344:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 
+ 754                             		.loc 1 344 3
+ 755 0282 2E 64                   		bra	.L22
+ 756                             	.L32:
+ 757                             	.LBB4:
+ 327:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 				{
+ 758                             		.loc 1 327 36
+ 759 0284 FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+ 760 028a CD 55 63                		mov.B	99[r5], r5
+ 327:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 				{
+ 761                             		.loc 1 327 8
+ 762 028d 5B 55                   		movu.B	r5, r5
+ 763 028f 61 05                   		cmp	#0, r5
+ 764 0291 20 34                   		beq	.L34
+ 329:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 					source = mw_dialog_number_entry_data.number_buffer + 1U;
+ 765                             		.loc 1 329 18
+ 766 0293 F9 A2 01 58 00 00 00    		mov.L	#_mw_dialog_number_entry_data+88, 4[r10]
+ 330:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 					(void)memmove((destination),
+ 767                             		.loc 1 330 13
+ 768 029a F9 A2 02 59 00 00 00    		mov.L	#_mw_dialog_number_entry_data+89, 8[r10]
+ 333:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 					mw_dialog_number_entry_data.number_buffer[0] = '-';
+ 769                             		.loc 1 333 21
+ 770 02a1 FB 12 58 00 00 00       		mov.L	#_mw_dialog_number_entry_data+88, r1
+ 771 02a7 05 00 00 00             		bsr	_strlen
+ 772 02ab EF 15                   		mov.L	r1, r5
+ 331:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 							(source),
+ 773                             		.loc 1 331 12
+ 774 02ad 62 15                   		add	#1, r5
+ 775 02af EF 53                   		mov.L	r5, r3
+ 776 02b1 ED A2 02                		mov.L	8[r10], r2
+ 777 02b4 ED A1 01                		mov.L	4[r10], r1
+ 778 02b7 05 00 00 00             		bsr	_memmove
+ 334:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 				}
+ 779                             		.loc 1 334 51
+ 780 02bb FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+ 781 02c1 F9 54 58 2D             		mov.B	#45, 88[r5]
+ 782                             	.L34:
+ 336:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 						MW_UNUSED_MESSAGE_PARAMETER,
+ 783                             		.loc 1 336 5
+ 784 02c5 FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+ 785 02cb A8 DD                   		mov.L	12[r5], r5
+ 786 02cd 3E 01 00                		mov.L	#0, 4[r0]
+ 787 02d0 F8 02 58 00 00 00       		mov.L	#_mw_dialog_number_entry_data+88, [r0]
+ 788 02d6 66 04                   		mov.L	#0, r4
+ 789 02d8 EF 53                   		mov.L	r5, r3
+ 790 02da 66 02                   		mov.L	#0, r2
+ 791 02dc 75 41 46                		mov.L	#0x46, r1
+ 792 02df 05 00 00 00             		bsr	_mw_post_message
+ 793                             	.LBE4:
+ 344:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 
+ 794                             		.loc 1 344 3
+ 795 02e3 2E 03                   		bra	.L22
+ 796                             	.L35:
+ 300:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 
+ 797                             		.loc 1 300 3
+ 798 02e5 03                      		nop
+ 799                             	.L22:
+ 349:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	}
+ 350:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** }
+ 800                             		.loc 1 350 1
+ 801 02e6 03                      		nop
+ 802 02e7 3F AA 07                		rtsd	#28, r10-r10
+ 803                             	.LFE2:
+ 805 02ea 74 10 01 00 00 00       		.section C,"a",@progbits
+ 806                             		.p2align 2
+ 807                             	.LC3:
+ 808 001c 4E 6F 6E 73 65 6E 73 65 		.string	"Nonsense arguments"
+ 808      20 61 72 67 75 6D 65 6E 
+ 808      74 73 00 
+ 809                             	.LC4:
+ 810 002f 4F 4B 00                		.string	"OK"
+ 811                             	.LC5:
+ 812 0032 43 61 6E 63 65 6C 00    		.string	"Cancel"
+ 813 0039 00 00 00                		.section	.text.mw_create_window_dialog_number_entry,"ax",@progbits
+ 814                             		.global	_mw_create_window_dialog_number_entry
+ 816                             	_mw_create_window_dialog_number_entry:
+ 817                             	.LFB3:
+ 351:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 
+ 352:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** /***********************
+ 353:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** *** GLOBAL FUNCTIONS ***
+ 354:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** ***********************/
+ 355:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 
+ 356:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** mw_handle_t mw_create_window_dialog_number_entry(int16_t x,
+ 357:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		int16_t y,
+ 358:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		char *title,
+ 359:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		bool enable_negative,
+ 360:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		int32_t initial_number,
+ 361:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		bool large_size,
+ 362:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		mw_handle_t owner_window_handle)
+ 363:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** {
+ 818                             		.loc 1 363 1
+ 819 0000 6E 6B                   		pushm	r6-r11
+ 820                             	.LCFI8:
+ 821 0002 71 0A DC                		add	#-36, r0, r10
+ 822                             	.LCFI9:
+ 823 0005 71 A0 F0                		add	#-16, r10, r0
+ 824                             	.LCFI10:
+ 825 0008 75 46 40                		mov.L	#0x40, r6
+ 826 000b 4B A6                   		add	r10, r6
+ 827 000d D7 A1 06                		mov.W	r1, 12[r10]
+ 828 0010 D7 A2 07                		mov.W	r2, 14[r10]
+ 829 0013 E7 A3 04                		mov.L	r3, 16[r10]
+ 830 0016 C7 A4 14                		mov.B	r4, 20[r10]
+ 364:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	mw_util_rect_t rect;
+ 365:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	mw_handle_t temp_handle;
+ 366:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 
+ 367:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	/* check pointer parameters */
+ 368:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	if (title == NULL)
+ 831                             		.loc 1 368 5
+ 832 0019 ED A5 04                		mov.L	16[r10], r5
+ 833 001c 61 05                   		cmp	#0, r5
+ 834 001e 21 1D                   		bne	.L37
+ 369:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	{
+ 370:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		MW_ASSERT((bool)false, "Null pointer argument");
+ 835                             		.loc 1 370 3
+ 836 0020 FB 42 04 00 00 00       		mov.L	#.LC1, r4
+ 837 0026 FB 3A 72 01             		mov.L	#0x172, r3
+ 838 002a FB 22 00 00 00 00       		mov.L	#___func__.3038, r2
+ 839 0030 66 01                   		mov	#0, r1
+ 840 0032 05 00 00 00             		bsr	_mw_debug_print_assert
+ 371:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		return (MW_INVALID_HANDLE);
+ 841                             		.loc 1 371 10
+ 842 0036 66 05                   		mov.L	#0, r5
+ 843 0038 38 D4 02                		bra	.L54
+ 844                             	.L37:
+ 372:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	}
+ 373:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 
+ 374:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	/* check negative/initial number sanity */
+ 375:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	if (!enable_negative && initial_number < 0)
+ 845                             		.loc 1 375 6
+ 846 003b CD A5 14                		mov.B	20[r10], r5
+ 847 003e FD 74 D5 01             		xor	#1, r5
+ 848                             		.loc 1 375 5
+ 849 0042 5B 55                   		movu.B	r5, r5
+ 850 0044 61 05                   		cmp	#0, r5
+ 851 0046 20 23                   		beq	.L39
+ 852                             		.loc 1 375 23 discriminator 1
+ 853 0048 EC 65                   		mov.L	[r6], r5
+ 854 004a 61 05                   		cmp	#0, r5
+ 855 004c 28 1D                   		bge	.L39
+ 376:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	{
+ 377:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		MW_ASSERT((bool)false, "Nonsense arguments");
+ 856                             		.loc 1 377 3
+ 857 004e FB 42 1C 00 00 00       		mov.L	#.LC3, r4
+ 858 0054 FB 3A 79 01             		mov.L	#0x179, r3
+ 859 0058 FB 22 00 00 00 00       		mov.L	#___func__.3038, r2
+ 860 005e 66 01                   		mov	#0, r1
+ 861 0060 05 00 00 00             		bsr	_mw_debug_print_assert
+ 378:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		return (MW_INVALID_HANDLE);
+ 862                             		.loc 1 378 10
+ 863 0064 66 05                   		mov.L	#0, r5
+ 864 0066 38 A6 02                		bra	.L54
+ 865                             	.L39:
+ 379:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	}
+ 380:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 
+ 381:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	if (large_size)
+ 866                             		.loc 1 381 5
+ 867 0069 B1 65                   		movu.B	4[r6], r5
+ 868 006b 61 05                   		cmp	#0, r5
+ 869 006d 20 0D                   		beq	.L40
+ 382:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	{
+ 383:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		rect.width = 220;
+ 870                             		.loc 1 383 14
+ 871 006f F9 A9 04 DC 00          		mov.W	#0xdc, 8[r10]
+ 384:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		rect.height = 252;
+ 872                             		.loc 1 384 15
+ 873 0074 F9 A9 05 FC 00          		mov.W	#0xfc, 10[r10]
+ 874 0079 0A                      		bra	.L41
+ 875                             	.L40:
+ 385:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	}
+ 386:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	else
+ 387:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	{
+ 388:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		rect.width = 115;
+ 876                             		.loc 1 388 14
+ 877 007a F9 A5 04 73             		mov.W	#0x73, 8[r10]
+ 389:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		rect.height = 149;
+ 878                             		.loc 1 389 15
+ 879 007e F9 A9 05 95 00          		mov.W	#0x95, 10[r10]
+ 880                             	.L41:
+ 390:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	}
+ 391:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	rect.x = x;
+ 881                             		.loc 1 391 9
+ 882 0083 DD A5 06                		mov.W	12[r10], r5
+ 883 0086 D7 A5 02                		mov.W	r5, 4[r10]
+ 392:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	rect.y = y;
+ 884                             		.loc 1 392 9
+ 885 0089 DD A5 07                		mov.W	14[r10], r5
+ 886 008c D7 A5 03                		mov.W	r5, 6[r10]
+ 393:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 
+ 394:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	/* check start position */
+ 395:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	if (x + rect.width > MW_ROOT_WIDTH)
+ 887                             		.loc 1 395 8
+ 888 008f DD A4 06                		mov.W	12[r10], r4
+ 889                             		.loc 1 395 14
+ 890 0092 DD A5 04                		mov.W	8[r10], r5
+ 891 0095 DF 55                   		mov.W	r5, r5
+ 892                             		.loc 1 395 8
+ 893 0097 FF 2B 54                		add	r5, r4, r11
+ 894                             		.loc 1 395 23
+ 895 009a 05 00 00 00             		bsr	_mw_hal_lcd_get_display_width
+ 896 009e EF 15                   		mov.L	r1, r5
+ 897 00a0 DF 55                   		mov.W	r5, r5
+ 898                             		.loc 1 395 5
+ 899 00a2 47 5B                   		cmp	r5, r11
+ 900 00a4 2B 07                   		ble	.L42
+ 396:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	{
+ 397:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		return (MW_INVALID_HANDLE);
+ 901                             		.loc 1 397 10
+ 902 00a6 66 05                   		mov.L	#0, r5
+ 903 00a8 38 64 02                		bra	.L54
+ 904                             	.L42:
+ 398:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	}
+ 399:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	if (y + rect.height > MW_ROOT_HEIGHT)
+ 905                             		.loc 1 399 8
+ 906 00ab DD A4 07                		mov.W	14[r10], r4
+ 907                             		.loc 1 399 14
+ 908 00ae DD A5 05                		mov.W	10[r10], r5
+ 909 00b1 DF 55                   		mov.W	r5, r5
+ 910                             		.loc 1 399 8
+ 911 00b3 FF 2B 54                		add	r5, r4, r11
+ 912                             		.loc 1 399 24
+ 913 00b6 05 00 00 00             		bsr	_mw_hal_lcd_get_display_height
+ 914 00ba EF 15                   		mov.L	r1, r5
+ 915 00bc DF 55                   		mov.W	r5, r5
+ 916                             		.loc 1 399 5
+ 917 00be 47 5B                   		cmp	r5, r11
+ 918 00c0 2B 07                   		ble	.L43
+ 400:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	{
+ 401:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		return (MW_INVALID_HANDLE);
+ 919                             		.loc 1 401 10
+ 920 00c2 66 05                   		mov.L	#0, r5
+ 921 00c4 38 48 02                		bra	.L54
+ 922                             	.L43:
+ 402:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	}
+ 403:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 
+ 404:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	/* check no modal windows already showing */
+ 405:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	if (mw_is_any_window_modal())
+ 923                             		.loc 1 405 6
+ 924 00c7 05 00 00 00             		bsr	_mw_is_any_window_modal
+ 925 00cb EF 15                   		mov.L	r1, r5
+ 926                             		.loc 1 405 5
+ 927 00cd 5B 55                   		movu.B	r5, r5
+ 928 00cf 61 05                   		cmp	#0, r5
+ 929 00d1 16                      		beq	.L44
+ 406:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	{
+ 407:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		return (MW_INVALID_HANDLE);
+ 930                             		.loc 1 407 10
+ 931 00d2 66 05                   		mov.L	#0, r5
+ 932 00d4 38 38 02                		bra	.L54
+ 933                             	.L44:
+ 408:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	}
+ 409:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 
+ 410:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	/* check response window handle */
+ 411:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	if (!mw_is_window_handle_valid(owner_window_handle))
+ 934                             		.loc 1 411 7
+ 935 00d7 A8 E1                   		mov.L	8[r6], r1
+ 936 00d9 05 00 00 00             		bsr	_mw_is_window_handle_valid
+ 937 00dd EF 15                   		mov.L	r1, r5
+ 938                             		.loc 1 411 6
+ 939 00df FD 74 D5 01             		xor	#1, r5
+ 940                             		.loc 1 411 5
+ 941 00e3 5B 55                   		movu.B	r5, r5
+ 942 00e5 61 05                   		cmp	#0, r5
+ 943 00e7 16                      		beq	.L45
+ 412:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	{
+ 413:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		return (MW_INVALID_HANDLE);
+ 944                             		.loc 1 413 10
+ 945 00e8 66 05                   		mov.L	#0, r5
+ 946 00ea 38 22 02                		bra	.L54
+ 947                             	.L45:
+ 414:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	}
+ 415:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 
+ 416:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	mw_dialog_number_entry_data.owner_window_handle = owner_window_handle;
+ 948                             		.loc 1 416 50
+ 949 00ed FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+ 950 00f3 A8 E4                   		mov.L	8[r6], r4
+ 951 00f5 A0 DC                   		mov.L	r4, 12[r5]
+ 417:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 
+ 418:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	mw_dialog_number_entry_data.number_entry_dialog_window_handle = mw_add_window(&rect,
+ 952                             		.loc 1 418 66
+ 953 00f7 B1 65                   		movu.B	4[r6], r5
+ 954 00f9 61 05                   		cmp	#0, r5
+ 955 00fb 17                      		beq	.L46
+ 956                             		.loc 1 418 66 is_stmt 0 discriminator 1
+ 957 00fc FB 4E 4B 80 00          		mov.L	#0x804b, r4
+ 958 0101 0C                      		bra	.L47
+ 959                             	.L46:
+ 960                             		.loc 1 418 66 discriminator 2
+ 961 0102 75 44 4B                		mov.L	#0x4b, r4
+ 962                             	.L47:
+ 963                             		.loc 1 418 66 discriminator 4
+ 964 0105 71 A5 04                		add	#4, r10, r5
+ 965 0108 3E 03 00                		mov.L	#0, 12[r0]
+ 966 010b A0 84                   		mov.L	r4, 8[r0]
+ 967 010d 3C 04 00                		mov.B	#0, 4[r0]
+ 968 0110 F8 06 00                		mov.L	#0, [r0]
+ 969 0113 FB 42 00 00 00 00       		mov.L	#_mw_dialog_number_entry_message_function, r4
+ 970 0119 FB 32 00 00 00 00       		mov.L	#_mw_dialog_number_entry_paint_function, r3
+ 971 011f ED A2 04                		mov.L	16[r10], r2
+ 972 0122 EF 51                   		mov.L	r5, r1
+ 973 0124 05 00 00 00             		bsr	_mw_add_window
+ 974 0128 EF 14                   		mov.L	r1, r4
+ 975                             		.loc 1 418 64 is_stmt 1 discriminator 4
+ 976 012a FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+ 977 0130 A1 54                   		mov.L	r4, 16[r5]
+ 419:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 			title,
+ 420:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 			mw_dialog_number_entry_paint_function,
+ 421:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 			mw_dialog_number_entry_message_function,
+ 422:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 			NULL,
+ 423:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 			0,
+ 424:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 			MW_WINDOW_FLAG_HAS_BORDER | MW_WINDOW_FLAG_HAS_TITLE_BAR |
+ 425:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 					MW_WINDOW_FLAG_IS_VISIBLE | MW_WINDOW_FLAG_IS_MODAL | (uint32_t)(large_size ? MW_WINDOW_FLAG_L
+ 426:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 			NULL);
+ 427:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 
+ 428:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	/* check if window could be created */
+ 429:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	if (mw_dialog_number_entry_data.number_entry_dialog_window_handle == MW_INVALID_HANDLE)
+ 978                             		.loc 1 429 33 discriminator 4
+ 979 0132 FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+ 980 0138 A9 55                   		mov.L	16[r5], r5
+ 981                             		.loc 1 429 5 discriminator 4
+ 982 013a 61 05                   		cmp	#0, r5
+ 983 013c 1E                      		bne	.L48
+ 430:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	{
+ 431:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		/* it couldn't so exit */
+ 432:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		return (MW_INVALID_HANDLE);
+ 984                             		.loc 1 432 10
+ 985 013d 66 05                   		mov.L	#0, r5
+ 986 013f 38 CD 01                		bra	.L54
+ 987                             	.L48:
+ 433:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	}
+ 434:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 
+ 435:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	/* set controls instance data */
+ 436:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	mw_dialog_number_entry_data.mw_ui_keypad_data.enable_negative = enable_negative;
+ 988                             		.loc 1 436 64
+ 989 0142 FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+ 990 0148 CD A4 14                		mov.B	20[r10], r4
+ 991 014b C7 54 24                		mov.B	r4, 36[r5]
+ 437:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	(void)mw_util_safe_strcpy(mw_dialog_number_entry_data.button_ok_data.button_label,
+ 992                             		.loc 1 437 8
+ 993 014e FB 32 2F 00 00 00       		mov.L	#.LC4, r3
+ 994 0154 66 A2                   		mov.L	#10, r2
+ 995 0156 FB 12 40 00 00 00       		mov.L	#_mw_dialog_number_entry_data+64, r1
+ 996 015c 05 00 00 00             		bsr	_mw_util_safe_strcpy
+ 438:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 			MW_UI_BUTTON_LABEL_MAX_CHARS, "OK");
+ 439:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	(void)mw_util_safe_strcpy(mw_dialog_number_entry_data.button_cancel_data.button_label,
+ 997                             		.loc 1 439 8
+ 998 0160 FB 32 32 00 00 00       		mov.L	#.LC5, r3
+ 999 0166 66 A2                   		mov.L	#10, r2
+ 1000 0168 FB 12 4C 00 00 00       		mov.L	#_mw_dialog_number_entry_data+76, r1
+ 1001 016e 05 00 00 00             		bsr	_mw_util_safe_strcpy
+ 440:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 			MW_UI_BUTTON_LABEL_MAX_CHARS, "Cancel");
+ 441:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 
+ 442:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	/* create controls */
+ 443:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	if (large_size)
+ 1002                             		.loc 1 443 5
+ 1003 0172 B1 65                   		movu.B	4[r6], r5
+ 1004 0174 61 05                   		cmp	#0, r5
+ 1005 0176 20 7B                   		beq	.L49
+ 444:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	{
+ 445:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		temp_handle = mw_ui_keypad_add_new(49,
+ 1006                             		.loc 1 445 17
+ 1007 0178 FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+ 1008 017e A9 55                   		mov.L	16[r5], r5
+ 1009 0180 F8 02 24 00 00 00       		mov.L	#_mw_dialog_number_entry_data+36, [r0]
+ 1010 0186 66 B4                   		mov	#11, r4
+ 1011 0188 EF 53                   		mov.L	r5, r3
+ 1012 018a 75 42 1A                		mov	#26, r2
+ 1013 018d 75 41 31                		mov	#49, r1
+ 1014 0190 05 00 00 00             		bsr	_mw_ui_keypad_add_new
+ 1015 0194 E3 A1                   		mov.L	r1, [r10]
+ 446:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 				26,
+ 447:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 				mw_dialog_number_entry_data.number_entry_dialog_window_handle,
+ 448:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_LARGE_SIZE,
+ 449:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 				&mw_dialog_number_entry_data.mw_ui_keypad_data);
+ 450:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		mw_dialog_number_entry_data.keypad_handle = temp_handle;
+ 1016                             		.loc 1 450 45
+ 1017 0196 FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+ 1018 019c EC A4                   		mov.L	[r10], r4
+ 1019 019e E3 54                   		mov.L	r4, [r5]
+ 451:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 
+ 452:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		temp_handle = mw_ui_button_add_new(5,
+ 1020                             		.loc 1 452 17
+ 1021 01a0 FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+ 1022 01a6 A9 55                   		mov.L	16[r5], r5
+ 1023 01a8 F8 02 40 00 00 00       		mov.L	#_mw_dialog_number_entry_data+64, [r0]
+ 1024 01ae 66 B4                   		mov	#11, r4
+ 1025 01b0 EF 53                   		mov.L	r5, r3
+ 1026 01b2 75 42 C0                		mov	#0xc0, r2
+ 1027 01b5 66 51                   		mov	#5, r1
+ 1028 01b7 05 00 00 00             		bsr	_mw_ui_button_add_new
+ 1029 01bb E3 A1                   		mov.L	r1, [r10]
+ 453:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 				192,
+ 454:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 				mw_dialog_number_entry_data.number_entry_dialog_window_handle,
+ 455:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_LARGE_SIZE,
+ 456:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 				&mw_dialog_number_entry_data.button_ok_data);
+ 457:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		mw_dialog_number_entry_data.button_ok_handle = temp_handle;
+ 1030                             		.loc 1 457 48
+ 1031 01bd FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+ 1032 01c3 EC A4                   		mov.L	[r10], r4
+ 1033 01c5 A0 5C                   		mov.L	r4, 4[r5]
+ 458:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 
+ 459:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		temp_handle = mw_ui_button_add_new(113,
+ 1034                             		.loc 1 459 17
+ 1035 01c7 FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+ 1036 01cd A9 55                   		mov.L	16[r5], r5
+ 1037 01cf F8 02 4C 00 00 00       		mov.L	#_mw_dialog_number_entry_data+76, [r0]
+ 1038 01d5 66 B4                   		mov	#11, r4
+ 1039 01d7 EF 53                   		mov.L	r5, r3
+ 1040 01d9 75 42 C0                		mov	#0xc0, r2
+ 1041 01dc 75 41 71                		mov	#0x71, r1
+ 1042 01df 05 00 00 00             		bsr	_mw_ui_button_add_new
+ 1043 01e3 E3 A1                   		mov.L	r1, [r10]
+ 460:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 				192,
+ 461:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 				mw_dialog_number_entry_data.number_entry_dialog_window_handle,
+ 462:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_LARGE_SIZE,
+ 463:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 				&mw_dialog_number_entry_data.button_cancel_data);
+ 464:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		mw_dialog_number_entry_data.button_cancel_handle = temp_handle;
+ 1044                             		.loc 1 464 52
+ 1045 01e5 FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+ 1046 01eb EC A4                   		mov.L	[r10], r4
+ 1047 01ed A0 D4                   		mov.L	r4, 8[r5]
+ 1048 01ef 2E 79                   		bra	.L50
+ 1049                             	.L49:
+ 465:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	}
+ 466:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	else
+ 467:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	{
+ 468:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		temp_handle = mw_ui_keypad_add_new(27,
+ 1050                             		.loc 1 468 17
+ 1051 01f1 FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+ 1052 01f7 A9 55                   		mov.L	16[r5], r5
+ 1053 01f9 F8 02 24 00 00 00       		mov.L	#_mw_dialog_number_entry_data+36, [r0]
+ 1054 01ff 66 34                   		mov	#3, r4
+ 1055 0201 EF 53                   		mov.L	r5, r3
+ 1056 0203 75 42 19                		mov	#25, r2
+ 1057 0206 75 41 1B                		mov	#27, r1
+ 1058 0209 05 00 00 00             		bsr	_mw_ui_keypad_add_new
+ 1059 020d E3 A1                   		mov.L	r1, [r10]
+ 469:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 				25,
+ 470:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 				mw_dialog_number_entry_data.number_entry_dialog_window_handle,
+ 471:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
+ 472:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 				&mw_dialog_number_entry_data.mw_ui_keypad_data);
+ 473:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		mw_dialog_number_entry_data.keypad_handle = temp_handle;
+ 1060                             		.loc 1 473 45
+ 1061 020f FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+ 1062 0215 EC A4                   		mov.L	[r10], r4
+ 1063 0217 E3 54                   		mov.L	r4, [r5]
+ 474:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 
+ 475:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		temp_handle = mw_ui_button_add_new(5,
+ 1064                             		.loc 1 475 17
+ 1065 0219 FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+ 1066 021f A9 55                   		mov.L	16[r5], r5
+ 1067 0221 F8 02 40 00 00 00       		mov.L	#_mw_dialog_number_entry_data+64, [r0]
+ 1068 0227 66 34                   		mov	#3, r4
+ 1069 0229 EF 53                   		mov.L	r5, r3
+ 1070 022b 75 42 6E                		mov	#0x6e, r2
+ 1071 022e 66 51                   		mov	#5, r1
+ 1072 0230 05 00 00 00             		bsr	_mw_ui_button_add_new
+ 1073 0234 E3 A1                   		mov.L	r1, [r10]
+ 476:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 				110,
+ 477:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 				mw_dialog_number_entry_data.number_entry_dialog_window_handle,
+ 478:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
+ 479:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 				&mw_dialog_number_entry_data.button_ok_data);
+ 480:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		mw_dialog_number_entry_data.button_ok_handle = temp_handle;
+ 1074                             		.loc 1 480 48
+ 1075 0236 FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+ 1076 023c EC A4                   		mov.L	[r10], r4
+ 1077 023e A0 5C                   		mov.L	r4, 4[r5]
+ 481:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 
+ 482:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		temp_handle = mw_ui_button_add_new(58,
+ 1078                             		.loc 1 482 17
+ 1079 0240 FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+ 1080 0246 A9 55                   		mov.L	16[r5], r5
+ 1081 0248 F8 02 4C 00 00 00       		mov.L	#_mw_dialog_number_entry_data+76, [r0]
+ 1082 024e 66 34                   		mov	#3, r4
+ 1083 0250 EF 53                   		mov.L	r5, r3
+ 1084 0252 75 42 6E                		mov	#0x6e, r2
+ 1085 0255 75 41 3A                		mov	#58, r1
+ 1086 0258 05 00 00 00             		bsr	_mw_ui_button_add_new
+ 1087 025c E3 A1                   		mov.L	r1, [r10]
+ 483:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 				110,
+ 484:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 				mw_dialog_number_entry_data.number_entry_dialog_window_handle,
+ 485:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
+ 486:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 				&mw_dialog_number_entry_data.button_cancel_data);
+ 487:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		mw_dialog_number_entry_data.button_cancel_handle = temp_handle;
+ 1088                             		.loc 1 487 52
+ 1089 025e FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+ 1090 0264 EC A4                   		mov.L	[r10], r4
+ 1091 0266 A0 D4                   		mov.L	r4, 8[r5]
+ 1092                             	.L50:
+ 488:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	}
+ 489:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 
+ 490:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	/* check if controls could be created */
+ 491:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	if (mw_dialog_number_entry_data.keypad_handle == MW_INVALID_HANDLE ||
+ 1093                             		.loc 1 491 33
+ 1094 0268 FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+ 1095 026e EC 55                   		mov.L	[r5], r5
+ 1096                             		.loc 1 491 5
+ 1097 0270 61 05                   		cmp	#0, r5
+ 1098 0272 20 1A                   		beq	.L51
+ 492:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		mw_dialog_number_entry_data.button_ok_handle == MW_INVALID_HANDLE ||
+ 1099                             		.loc 1 492 30 discriminator 1
+ 1100 0274 FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+ 1101 027a A8 5D                   		mov.L	4[r5], r5
+ 491:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		mw_dialog_number_entry_data.button_ok_handle == MW_INVALID_HANDLE ||
+ 1102                             		.loc 1 491 69 discriminator 1
+ 1103 027c 61 05                   		cmp	#0, r5
+ 1104 027e 20 0E                   		beq	.L51
+ 493:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		mw_dialog_number_entry_data.button_cancel_handle == MW_INVALID_HANDLE)
+ 1105                             		.loc 1 493 30
+ 1106 0280 FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+ 1107 0286 A8 D5                   		mov.L	8[r5], r5
+ 492:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		mw_dialog_number_entry_data.button_ok_handle == MW_INVALID_HANDLE ||
+ 1108                             		.loc 1 492 69
+ 1109 0288 61 05                   		cmp	#0, r5
+ 1110 028a 21 14                   		bne	.L52
+ 1111                             	.L51:
+ 494:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	{
+ 495:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		/* remove all controls and window */
+ 496:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		mw_remove_window(mw_dialog_number_entry_data.number_entry_dialog_window_handle);
+ 1112                             		.loc 1 496 3
+ 1113 028c FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+ 1114 0292 A9 55                   		mov.L	16[r5], r5
+ 1115 0294 EF 51                   		mov.L	r5, r1
+ 1116 0296 05 00 00 00             		bsr	_mw_remove_window
+ 497:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 
+ 498:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		return (MW_INVALID_HANDLE);
+ 1117                             		.loc 1 498 10
+ 1118 029a 66 05                   		mov.L	#0, r5
+ 1119 029c 2E 70                   		bra	.L54
+ 1120                             	.L52:
+ 499:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	}
+ 500:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 
+ 501:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	/* set initial value which comes as number but is converted to string, minus sign (if minus) store
+ 502:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	mw_dialog_number_entry_data.is_negative = (initial_number < 0);
+ 1121                             		.loc 1 502 60
+ 1122 029e EC 65                   		mov.L	[r6], r5
+ 1123 02a0 69 F5                   		shlr	#31, r5
+ 1124 02a2 CF 54                   		mov.B	r5, r4
+ 1125                             		.loc 1 502 42
+ 1126 02a4 FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+ 1127 02aa C7 54 63                		mov.B	r4, 99[r5]
+ 503:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	if (initial_number < 0)
+ 1128                             		.loc 1 503 5
+ 1129 02ad EC 65                   		mov.L	[r6], r5
+ 1130 02af 61 05                   		cmp	#0, r5
+ 1131 02b1 28 08                   		bge	.L53
+ 504:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	{
+ 505:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 		initial_number =-initial_number;
+ 1132                             		.loc 1 505 18
+ 1133 02b3 EC 65                   		mov.L	[r6], r5
+ 1134 02b5 7E 15                   		neg	r5
+ 1135 02b7 E3 65                   		mov.L	r5, [r6]
+ 1136                             	.L53:
+ 506:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	}
+ 507:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	(void)mw_util_safe_itoa(initial_number, mw_dialog_number_entry_data.number_buffer, MW_DIALOG_MAX_N
+ 1137                             		.loc 1 507 8
+ 1138 02b9 3C 02 30                		mov.B	#48, 2[r0]
+ 1139 02bc 3C 01 00                		mov.B	#0, 1[r0]
+ 1140 02bf F8 04 00                		mov.B	#0, [r0]
+ 1141 02c2 66 A4                   		mov.L	#10, r4
+ 1142 02c4 66 A3                   		mov.L	#10, r3
+ 1143 02c6 FB 22 58 00 00 00       		mov.L	#_mw_dialog_number_entry_data+88, r2
+ 1144 02cc EC 61                   		mov.L	[r6], r1
+ 1145 02ce 05 00 00 00             		bsr	_mw_util_safe_itoa
+ 508:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 
+ 509:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	mw_dialog_number_entry_data.large_size = large_size;
+ 1146                             		.loc 1 509 41
+ 1147 02d2 FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+ 1148 02d8 89 64                   		mov.B	4[r6], r4
+ 1149 02da C7 54 64                		mov.B	r4, 100[r5]
+ 510:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 
+ 511:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	/* owner window needs its title bar redrawing */
+ 512:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	mw_paint_window_frame(owner_window_handle, MW_WINDOW_FRAME_COMPONENT_TITLE_BAR);
+ 1150                             		.loc 1 512 2
+ 1151 02dd 66 12                   		mov	#1, r2
+ 1152 02df A8 E1                   		mov.L	8[r6], r1
+ 1153 02e1 05 00 00 00             		bsr	_mw_paint_window_frame
+ 513:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 
+ 514:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	/* this window needs painting; it is coming up at the front so paint only this one */
+ 515:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	mw_paint_window_frame(mw_dialog_number_entry_data.number_entry_dialog_window_handle, MW_WINDOW_FRA
+ 1154                             		.loc 1 515 2
+ 1155 02e5 FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+ 1156 02eb A9 55                   		mov.L	16[r5], r5
+ 1157 02ed 75 42 1F                		mov	#31, r2
+ 1158 02f0 EF 51                   		mov.L	r5, r1
+ 1159 02f2 05 00 00 00             		bsr	_mw_paint_window_frame
+ 516:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	mw_paint_window_client(mw_dialog_number_entry_data.number_entry_dialog_window_handle);
+ 1160                             		.loc 1 516 2
+ 1161 02f6 FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+ 1162 02fc A9 55                   		mov.L	16[r5], r5
+ 1163 02fe EF 51                   		mov.L	r5, r1
+ 1164 0300 05 00 00 00             		bsr	_mw_paint_window_client
+ 517:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 
+ 518:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** 	return (mw_dialog_number_entry_data.number_entry_dialog_window_handle);
+ 1165                             		.loc 1 518 37
+ 1166 0304 FB 52 00 00 00 00       		mov.L	#_mw_dialog_number_entry_data, r5
+ 1167 030a A9 55                   		mov.L	16[r5], r5
+ 1168                             		.balign 8,3,1
+ 1169                             	.L54:
+ 519:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_number_entry.c **** }
+ 1170                             		.loc 1 519 1 discriminator 1
+ 1171 030c EF 51                   		mov.L	r5, r1
+ 1172 030e 3F 6B 13                		rtsd	#76, r6-r11
+ 1173                             	.LFE3:
+ 1175 0311 FD 70 40 00 00 00 80    		.section	.rodata.__func__.3013,"a"
+ 1178                             	___func__.3013:
+ 1179 0000 6D 77 5F 64 69 61 6C 6F 		.string	"mw_dialog_number_entry_paint_function"
+ 1179      67 5F 6E 75 6D 62 65 72 
+ 1179      5F 65 6E 74 72 79 5F 70 
+ 1179      61 69 6E 74 5F 66 75 6E 
+ 1179      63 74 69 6F 6E 00 
+ 1180                             		.section	.rodata.__func__.3017,"a"
+ 1183                             	___func__.3017:
+ 1184 0000 6D 77 5F 64 69 61 6C 6F 		.string	"mw_dialog_number_entry_message_function"
+ 1184      67 5F 6E 75 6D 62 65 72 
+ 1184      5F 65 6E 74 72 79 5F 6D 
+ 1184      65 73 73 61 67 65 5F 66 
+ 1184      75 6E 63 74 69 6F 6E 00 
+ 1185                             		.section	.rodata.__func__.3038,"a"
+ 1188                             	___func__.3038:
+ 1189 0000 6D 77 5F 63 72 65 61 74 		.string	"mw_create_window_dialog_number_entry"
+ 1189      65 5F 77 69 6E 64 6F 77 
+ 1189      5F 64 69 61 6C 6F 67 5F 
+ 1189      6E 75 6D 62 65 72 5F 65 
+ 1189      6E 74 72 79 00 
+ 1319                             	.Letext0:
+ 1320                             		.file 2 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\rx-el
+ 1321                             		.file 3 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\lib\\
+ 1322                             		.file 4 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\rx-el
+ 1323                             		.file 5 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\rx-el
+ 1324                             		.file 6 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\rx-el
+ 1325                             		.file 7 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\rx-el
+ 1326                             		.file 8 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\rx-el
+ 1327                             		.file 9 "C:\\Users\\John\\Desktop\\workspace\\miniwinwm\\MiniWin/miniwin_utilities.h"
+ 1328                             		.file 10 "C:\\Users\\John\\Desktop\\workspace\\miniwinwm\\MiniWin/gl/gl.h"
+ 1329                             		.file 11 "C:\\Users\\John\\Desktop\\workspace\\miniwinwm\\MiniWin/bitmaps/mw_bitmaps.h"
+ 1330                             		.file 12 "C:\\Users\\John\\Desktop\\workspace\\miniwinwm\\MiniWin/hal/hal_timer.h"
+ 1331                             		.file 13 "C:\\Users\\John\\Desktop\\workspace\\miniwinwm\\MiniWin/miniwin.h"
+ 1332                             		.file 14 "C:\\Users\\John\\Desktop\\workspace\\miniwinwm\\MiniWin/ui/ui_button.h"
+ 1333                             		.file 15 "C:\\Users\\John\\Desktop\\workspace\\miniwinwm\\MiniWin/ui/ui_keypad.h"

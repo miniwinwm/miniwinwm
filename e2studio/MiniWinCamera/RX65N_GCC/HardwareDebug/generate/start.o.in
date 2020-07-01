@@ -1,0 +1,1 @@
+-O0 -ffunction-sections -fdata-sections -g2 -Wstack-usage=1000 -m64bit-doubles -mcpu=rx64m -misa=v2 -mlittle-endian-data -x assembler-with-cpp -Wa,--gdwarf2 -I"C:/Users/John/Desktop/workspace/miniwinwm/e2studio/MiniWinCamera/RX65N_GCC/src" -Wa,-adlhn="start.lst" -MMD -MP -MF"generate/start.d" -MT"generate/start.o" -c "../generate/start.S" -o "generate/start.o"

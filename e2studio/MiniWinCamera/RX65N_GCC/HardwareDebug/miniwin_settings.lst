@@ -1,0 +1,308 @@
+   1                             		.file	"miniwin_settings.c"
+   2                             		.section P,"ax"
+   3                             	.Ltext0:
+   4                             		.section	.bss.settings,"aw",@nobits
+   5                             		.balign 4
+   8                             	_settings:
+   9 0000 00 00 00 00 00 00 00 00 		.zero	36
+   9      00 00 00 00 00 00 00 00 
+   9      00 00 00 00 00 00 00 00 
+   9      00 00 00 00 00 00 00 00 
+   9      00 00 00 00 
+  10                             		.section	.text.mw_settings_load,"ax",@progbits
+  11                             		.global	_mw_settings_load
+  13                             	_mw_settings_load:
+  14                             	.LFB0:
+  15                             		.file 1 "C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/miniwin_settings.c"
+   1:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** /*
+   2:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** 
+   3:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** MIT License
+   4:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** 
+   5:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** Copyright (c) John Blaiklock 2019 miniwin Embedded Window Manager
+   6:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** 
+   7:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** Permission is hereby granted, free of charge, to any person obtaining a copy
+   8:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** of this software and associated documentation files (the "Software"), to deal
+   9:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** in the Software without restriction, including without limitation the rights
+  10:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  11:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** copies of the Software, and to permit persons to whom the Software is
+  12:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** furnished to do so, subject to the following conditions:
+  13:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** 
+  14:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** The above copyright notice and this permission notice shall be included in all
+  15:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** copies or substantial portions of the Software.
+  16:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** 
+  17:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  18:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  19:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  20:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  21:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  22:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  23:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** SOFTWARE.
+  24:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** 
+  25:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** */
+  26:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** 
+  27:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** /***************
+  28:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** *** INCLUDES ***
+  29:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** ***************/
+  30:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** 
+  31:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** #include <string.h>
+  32:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** #include "miniwin.h"
+  33:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** #include "miniwin_debug.h"
+  34:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** #include "miniwin_settings.h"
+  35:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** #include "hal/hal_non_vol.h"
+  36:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** 
+  37:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** /****************
+  38:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** *** CONSTANTS ***
+  39:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** ****************/
+  40:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** 
+  41:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** #define SETTINGS_INIT_FLAG	0xBADD10DEU      /**< Signature of the initialisation flag */
+  42:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** 
+  43:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** /************
+  44:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** *** TYPES ***
+  45:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** ************/
+  46:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** 
+  47:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** /**
+  48:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c ****  * Structure defining the layout of settings held in non-vol storage
+  49:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c ****  */
+  50:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** typedef struct
+  51:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** {
+  52:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** 	uint32_t		init_flag;              /**< flag to indicate that the settings in non-vol storage have 
+  53:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** 	bool			is_calibrated;          /**< flag to indicate that the touch screen has been calibrated and
+  54:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** 	MATRIX			calibration_matrix;     /**< the touch screen calibration matrix */
+  55:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** } settings_t;
+  56:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** 
+  57:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** /***********************
+  58:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** *** GLOBAL VARIABLES ***
+  59:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** ***********************/
+  60:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** 
+  61:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** /**********************
+  62:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** *** LOCAL VARIABLES ***
+  63:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** **********************/
+  64:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** 
+  65:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** static settings_t settings;                  /**< Structure containing the settings in memory */
+  66:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** 
+  67:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** /********************************
+  68:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** *** LOCAL FUNCTION PROTOTYPES ***
+  69:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** ********************************/
+  70:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** 
+  71:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** /**********************
+  72:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** *** LOCAL FUNCTIONS ***
+  73:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** **********************/
+  74:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** 
+  75:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** /***********************
+  76:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** *** GLOBAL FUNCTIONS ***
+  77:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** ***********************/
+  78:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** 
+  79:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** void mw_settings_load(void)
+  80:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** {
+  16                             		.loc 1 80 1
+  17 0000 7E AA                   		push.l	r10
+  18                             	.LCFI0:
+  19 0002 EF 0A                   		mov.L	r0, r10
+  20                             	.LCFI1:
+  81:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** 	mw_hal_non_vol_load((uint8_t *)&settings, (uint16_t)sizeof(settings));
+  21                             		.loc 1 81 2
+  22 0004 75 42 24                		mov	#36, r2
+  23 0007 FB 12 00 00 00 00       		mov.L	#_settings, r1
+  24 000d 05 00 00 00             		bsr	_mw_hal_non_vol_load
+  82:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** }
+  25                             		.loc 1 82 1
+  26 0011 03                      		nop
+  27 0012 3F AA 01                		rtsd	#4, r10-r10
+  28                             	.LFE0:
+  30                             		.section	.text.mw_settings_save,"ax",@progbits
+  31                             		.global	_mw_settings_save
+  33                             	_mw_settings_save:
+  34                             	.LFB1:
+  83:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** 
+  84:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** void mw_settings_save(void)
+  85:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** {
+  35                             		.loc 1 85 1
+  36 0000 7E AA                   		push.l	r10
+  37                             	.LCFI2:
+  38 0002 EF 0A                   		mov.L	r0, r10
+  39                             	.LCFI3:
+  86:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** 	mw_hal_non_vol_save((uint8_t *)&settings, (uint16_t)sizeof(settings));
+  40                             		.loc 1 86 2
+  41 0004 75 42 24                		mov	#36, r2
+  42 0007 FB 12 00 00 00 00       		mov.L	#_settings, r1
+  43 000d 05 00 00 00             		bsr	_mw_hal_non_vol_save
+  87:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** }
+  44                             		.loc 1 87 1
+  45 0011 03                      		nop
+  46 0012 3F AA 01                		rtsd	#4, r10-r10
+  47                             	.LFE1:
+  49                             		.section	.text.mw_settings_is_initialised,"ax",@progbits
+  50                             		.global	_mw_settings_is_initialised
+  52                             	_mw_settings_is_initialised:
+  53                             	.LFB2:
+  88:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** 
+  89:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** bool mw_settings_is_initialised(void)
+  90:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** {
+  54                             		.loc 1 90 1
+  55 0000 7E AA                   		push.l	r10
+  56                             	.LCFI4:
+  57 0002 EF 0A                   		mov.L	r0, r10
+  58                             	.LCFI5:
+  91:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** 	return (settings.init_flag == SETTINGS_INIT_FLAG);
+  59                             		.loc 1 91 18
+  60 0004 FB 52 00 00 00 00       		mov.L	#_settings, r5
+  61 000a EC 55                   		mov.L	[r5], r5
+  62                             		.loc 1 91 29
+  63 000c 74 05 DE 10 DD BA       		cmp	#-1159917346, r5
+  64 0012 FC DB 50                		sceq.L	r5
+  65 0015 5B 55                   		movu.B	r5, r5
+  92:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** }
+  66                             		.loc 1 92 1
+  67 0017 EF 51                   		mov.L	r5, r1
+  68 0019 3F AA 01                		rtsd	#4, r10-r10
+  69                             	.LFE2:
+  71                             		.section	.text.mw_settings_set_to_defaults,"ax",@progbits
+  72                             		.global	_mw_settings_set_to_defaults
+  74                             	_mw_settings_set_to_defaults:
+  75                             	.LFB3:
+  93:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** 
+  94:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** void mw_settings_set_to_defaults(void)
+  95:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** {
+  76                             		.loc 1 95 1
+  77 0000 7E AA                   		push.l	r10
+  78                             	.LCFI6:
+  79 0002 EF 0A                   		mov.L	r0, r10
+  80                             	.LCFI7:
+  96:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** 	settings.init_flag = SETTINGS_INIT_FLAG;
+  81                             		.loc 1 96 21
+  82 0004 FB 52 00 00 00 00       		mov.L	#_settings, r5
+  83 000a F8 52 DE 10 DD BA       		mov.L	#-1159917346, [r5]
+  97:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** 	settings.is_calibrated = false;
+  84                             		.loc 1 97 25
+  85 0010 FB 52 00 00 00 00       		mov.L	#_settings, r5
+  86 0016 3C 54 00                		mov.B	#0, 4[r5]
+  98:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** }
+  87                             		.loc 1 98 1
+  88 0019 03                      		nop
+  89 001a 3F AA 01                		rtsd	#4, r10-r10
+  90                             	.LFE3:
+  92                             		.section	.text.mw_settings_is_calibrated,"ax",@progbits
+  93                             		.global	_mw_settings_is_calibrated
+  95                             	_mw_settings_is_calibrated:
+  96                             	.LFB4:
+  99:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** 
+ 100:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** bool mw_settings_is_calibrated(void)
+ 101:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** {
+  97                             		.loc 1 101 1
+  98 0000 7E AA                   		push.l	r10
+  99                             	.LCFI8:
+ 100 0002 EF 0A                   		mov.L	r0, r10
+ 101                             	.LCFI9:
+ 102:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** 	return (settings.is_calibrated);
+ 102                             		.loc 1 102 18
+ 103 0004 FB 52 00 00 00 00       		mov.L	#_settings, r5
+ 104 000a 89 55                   		mov.B	4[r5], r5
+ 105 000c 5B 55                   		movu.B	r5, r5
+ 103:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** }
+ 106                             		.loc 1 103 1
+ 107 000e EF 51                   		mov.L	r5, r1
+ 108 0010 3F AA 01                		rtsd	#4, r10-r10
+ 109                             	.LFE4:
+ 111                             		.section	.text.mw_settings_set_calibrated,"ax",@progbits
+ 112                             		.global	_mw_settings_set_calibrated
+ 114                             	_mw_settings_set_calibrated:
+ 115                             	.LFB5:
+ 104:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** 
+ 105:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** void mw_settings_set_calibrated(bool calibrated)
+ 106:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** {
+ 116                             		.loc 1 106 1
+ 117 0000 7E AA                   		push.l	r10
+ 118                             	.LCFI10:
+ 119 0002 71 0A FC                		add	#-4, r0, r10
+ 120                             	.LCFI11:
+ 121 0005 EF A0                   		mov.L	r10, r0
+ 122 0007 C3 A1                   		mov.B	r1, [r10]
+ 107:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** 	settings.is_calibrated = calibrated;
+ 123                             		.loc 1 107 25
+ 124 0009 FB 52 00 00 00 00       		mov.L	#_settings, r5
+ 125 000f CC A4                   		mov.B	[r10], r4
+ 126 0011 81 54                   		mov.B	r4, 4[r5]
+ 108:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** }
+ 127                             		.loc 1 108 1
+ 128 0013 03                      		nop
+ 129 0014 3F AA 02                		rtsd	#8, r10-r10
+ 130                             	.LFE5:
+ 132                             		.section	.text.mw_settings_get_calibration_matrix,"ax",@progbits
+ 133                             		.global	_mw_settings_get_calibration_matrix
+ 135                             	_mw_settings_get_calibration_matrix:
+ 136                             	.LFB6:
+ 109:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** 
+ 110:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** MATRIX *mw_settings_get_calibration_matrix(void)
+ 111:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** {
+ 137                             		.loc 1 111 1
+ 138 0000 7E AA                   		push.l	r10
+ 139                             	.LCFI12:
+ 140 0002 EF 0A                   		mov.L	r0, r10
+ 141                             	.LCFI13:
+ 112:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** 	return (&settings.calibration_matrix);
+ 142                             		.loc 1 112 10
+ 143 0004 FB 52 08 00 00 00       		mov.L	#_settings+8, r5
+ 113:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** }
+ 144                             		.loc 1 113 1
+ 145 000a EF 51                   		mov.L	r5, r1
+ 146 000c 3F AA 01                		rtsd	#4, r10-r10
+ 147                             	.LFE6:
+ 149                             		.section C,"a",@progbits
+ 150                             		.p2align 2
+ 151                             	.LC0:
+ 152 0000 4E 75 6C 6C 20 70 6F 69 		.string	"Null pointer argument"
+ 152      6E 74 65 72 20 61 72 67 
+ 152      75 6D 65 6E 74 00 
+ 153 0016 00 00                   		.section	.text.mw_settings_set_calibration_matrix,"ax",@progbits
+ 154                             		.global	_mw_settings_set_calibration_matrix
+ 156                             	_mw_settings_set_calibration_matrix:
+ 157                             	.LFB7:
+ 114:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** 
+ 115:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** void mw_settings_set_calibration_matrix(const MATRIX *new_calibration_matrix)
+ 116:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** {
+ 158                             		.loc 1 116 1
+ 159 0000 7E AA                   		push.l	r10
+ 160                             	.LCFI14:
+ 161 0002 71 0A FC                		add	#-4, r0, r10
+ 162                             	.LCFI15:
+ 163 0005 EF A0                   		mov.L	r10, r0
+ 164 0007 E3 A1                   		mov.L	r1, [r10]
+ 117:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** 	MW_ASSERT(new_calibration_matrix != (void*)0, "Null pointer argument");
+ 165                             		.loc 1 117 2
+ 166 0009 EC A5                   		mov.L	[r10], r5
+ 167 000b 61 05                   		cmp	#0, r5
+ 168 000d FC DB 51                		scne.L	r5
+ 169 0010 FB 42 00 00 00 00       		mov.L	#.LC0, r4
+ 170 0016 75 43 75                		mov.L	#0x75, r3
+ 171 0019 FB 22 00 00 00 00       		mov.L	#___func__.2988, r2
+ 172 001f CF 51                   		mov.B	r5, r1
+ 173 0021 05 00 00 00             		bsr	_mw_debug_print_assert
+ 118:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** 
+ 119:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** 	(void)memcpy((&settings.calibration_matrix), (new_calibration_matrix), (sizeof(MATRIX)));
+ 174                             		.loc 1 119 8
+ 175 0025 75 43 1C                		mov.L	#28, r3
+ 176 0028 EC A2                   		mov.L	[r10], r2
+ 177 002a FB 12 08 00 00 00       		mov.L	#_settings+8, r1
+ 178 0030 05 00 00 00             		bsr	_memcpy
+ 120:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_settings.c **** }
+ 179                             		.loc 1 120 1
+ 180 0034 03                      		nop
+ 181 0035 3F AA 02                		rtsd	#8, r10-r10
+ 182                             	.LFE7:
+ 184                             		.section	.rodata.__func__.2988,"a"
+ 187                             	___func__.2988:
+ 188 0000 6D 77 5F 73 65 74 74 69 		.string	"mw_settings_set_calibration_matrix"
+ 188      6E 67 73 5F 73 65 74 5F 
+ 188      63 61 6C 69 62 72 61 74 
+ 188      69 6F 6E 5F 6D 61 74 72 
+ 188      69 78 00 
+ 353                             	.Letext0:
+ 354                             		.file 2 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\rx-el
+ 355                             		.file 3 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\rx-el
+ 356                             		.file 4 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\rx-el
+ 357                             		.file 5 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\lib\\
+ 358                             		.file 6 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\rx-el
+ 359                             		.file 7 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\rx-el
+ 360                             		.file 8 "C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/calibrate.h"
+ 361                             		.file 9 "C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/bitmaps/mw_bitmaps.h"
+ 362                             		.file 10 "C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/hal/hal_timer.h"

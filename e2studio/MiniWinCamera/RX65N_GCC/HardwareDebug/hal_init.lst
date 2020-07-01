@@ -1,0 +1,104 @@
+   1                             		.file	"hal_init.c"
+   2                             		.section P,"ax"
+   3                             	.Ltext0:
+   4                             		.section	.text.mw_hal_init,"ax",@progbits
+   5                             		.global	_mw_hal_init
+   7                             	_mw_hal_init:
+   8                             	.LFB0:
+   9                             		.file 1 "C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/hal/hal_init.c"
+   1:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/hal\hal_init.c **** /*
+   2:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/hal\hal_init.c **** 
+   3:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/hal\hal_init.c **** MIT License
+   4:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/hal\hal_init.c **** 
+   5:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/hal\hal_init.c **** Copyright (c) John Blaiklock 2019 miniwin Embedded Window Manager
+   6:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/hal\hal_init.c **** 
+   7:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/hal\hal_init.c **** Permission is hereby granted, free of charge, to any person obtaining a copy
+   8:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/hal\hal_init.c **** of this software and associated documentation files (the "Software"), to deal
+   9:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/hal\hal_init.c **** in the Software without restriction, including without limitation the rights
+  10:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/hal\hal_init.c **** to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  11:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/hal\hal_init.c **** copies of the Software, and to permit persons to whom the Software is
+  12:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/hal\hal_init.c **** furnished to do so, subject to the following conditions:
+  13:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/hal\hal_init.c **** 
+  14:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/hal\hal_init.c **** The above copyright notice and this permission notice shall be included in all
+  15:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/hal\hal_init.c **** copies or substantial portions of the Software.
+  16:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/hal\hal_init.c **** 
+  17:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/hal\hal_init.c **** THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  18:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/hal\hal_init.c **** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  19:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/hal\hal_init.c **** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  20:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/hal\hal_init.c **** AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  21:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/hal\hal_init.c **** LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  22:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/hal\hal_init.c **** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  23:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/hal\hal_init.c **** SOFTWARE.
+  24:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/hal\hal_init.c **** 
+  25:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/hal\hal_init.c **** */
+  26:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/hal\hal_init.c **** 
+  27:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/hal\hal_init.c **** /***************
+  28:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/hal\hal_init.c **** *** INCLUDES ***
+  29:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/hal\hal_init.c **** ***************/
+  30:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/hal\hal_init.c **** 
+  31:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/hal\hal_init.c **** #include "hal/hal_delay.h"
+  32:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/hal\hal_init.c **** #include "hal/hal_lcd.h"
+  33:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/hal\hal_init.c **** #include "hal/hal_touch.h"
+  34:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/hal\hal_init.c **** #include "hal/hal_timer.h"
+  35:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/hal\hal_init.c **** #include "hal/hal_non_vol.h"
+  36:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/hal\hal_init.c **** 
+  37:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/hal\hal_init.c **** /****************
+  38:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/hal\hal_init.c **** *** CONSTANTS ***
+  39:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/hal\hal_init.c **** ****************/
+  40:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/hal\hal_init.c **** 
+  41:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/hal\hal_init.c **** /************
+  42:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/hal\hal_init.c **** *** TYPES ***
+  43:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/hal\hal_init.c **** ************/
+  44:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/hal\hal_init.c **** 
+  45:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/hal\hal_init.c **** /***********************
+  46:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/hal\hal_init.c **** *** GLOBAL VARIABLES ***
+  47:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/hal\hal_init.c **** ***********************/
+  48:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/hal\hal_init.c **** 
+  49:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/hal\hal_init.c **** /**********************
+  50:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/hal\hal_init.c **** *** LOCAL VARIABLES ***
+  51:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/hal\hal_init.c **** **********************/
+  52:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/hal\hal_init.c **** 
+  53:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/hal\hal_init.c **** /********************************
+  54:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/hal\hal_init.c **** *** LOCAL FUNCTION PROTOTYPES ***
+  55:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/hal\hal_init.c **** ********************************/
+  56:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/hal\hal_init.c **** 
+  57:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/hal\hal_init.c **** /**********************
+  58:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/hal\hal_init.c **** *** LOCAL FUNCTIONS ***
+  59:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/hal\hal_init.c **** **********************/
+  60:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/hal\hal_init.c **** 
+  61:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/hal\hal_init.c **** /***********************
+  62:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/hal\hal_init.c **** *** GLOBAL FUNCTIONS ***
+  63:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/hal\hal_init.c **** ***********************/
+  64:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/hal\hal_init.c **** 
+  65:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/hal\hal_init.c **** void mw_hal_init(void)
+  66:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/hal\hal_init.c **** {
+  10                             		.loc 1 66 1
+  11 0000 7E AA                   		push.l	r10
+  12                             	.LCFI0:
+  13 0002 EF 0A                   		mov.L	r0, r10
+  14                             	.LCFI1:
+  67:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/hal\hal_init.c **** 	/* initialise all the hal sub-systems */
+  68:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/hal\hal_init.c **** 	mw_hal_delay_init();
+  15                             		.loc 1 68 2
+  16 0004 05 00 00 00             		bsr	_mw_hal_delay_init
+  69:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/hal\hal_init.c **** 	mw_hal_lcd_init();
+  17                             		.loc 1 69 2
+  18 0008 05 00 00 00             		bsr	_mw_hal_lcd_init
+  70:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/hal\hal_init.c **** 	mw_hal_touch_init();
+  19                             		.loc 1 70 2
+  20 000c 05 00 00 00             		bsr	_mw_hal_touch_init
+  71:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/hal\hal_init.c **** 	mw_hal_timer_init();
+  21                             		.loc 1 71 2
+  22 0010 05 00 00 00             		bsr	_mw_hal_timer_init
+  72:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/hal\hal_init.c **** 	mw_hal_non_vol_init();
+  23                             		.loc 1 72 2
+  24 0014 05 00 00 00             		bsr	_mw_hal_non_vol_init
+  73:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/hal\hal_init.c **** }
+  25                             		.loc 1 73 1
+  26 0018 03                      		nop
+  27 0019 3F AA 01                		rtsd	#4, r10-r10
+  28                             	.LFE0:
+  66                             	.Letext0:
+  67                             		.file 2 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\rx-el
+  68                             		.file 3 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\rx-el
+  69                             		.file 4 "C:\\Users\\John\\Desktop\\workspace\\miniwinwm\\MiniWin/hal/hal_timer.h"

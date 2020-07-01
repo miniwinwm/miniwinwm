@@ -1,0 +1,779 @@
+   1                             		.file	"calibrate.c"
+   2                             		.section P,"ax"
+   3                             	.Ltext0:
+   4                             		.section	.text.setCalibrationMatrix,"ax",@progbits
+   5                             		.global	_setCalibrationMatrix
+   7                             	_setCalibrationMatrix:
+   8                             	.LFB0:
+   9                             		.file 1 "C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/calibrate.c"
+   1:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c **** /*
+   2:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****  *
+   3:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****  *   Copyright (c) 2001, Carlos E. Vidales. All rights reserved.
+   4:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****  *
+   5:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****  *   This sample program was written and put in the public domain
+   6:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****  *    by Carlos E. Vidales.  The program is provided "as is"
+   7:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****  *    without warranty of any kind, either expressed or implied.
+   8:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****  *   If you choose to use the program within your own products
+   9:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****  *    you do so at your own risk, and assume the responsibility
+  10:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****  *    for servicing, repairing or correcting the program should
+  11:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****  *    it prove defective in any manner.
+  12:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****  *   You may copy and distribute the program's source code in any
+  13:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****  *    medium, provided that you also include in each copy an
+  14:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****  *    appropriate copyright notice and disclaimer of warranty.
+  15:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****  *   You may also modify this program and distribute copies of
+  16:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****  *    it provided that you include prominent notices stating
+  17:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****  *    that you changed the file(s) and the date of any change,
+  18:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****  *    and that you do not charge any royalties or licenses for
+  19:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****  *    its use.
+  20:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****  *
+  21:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****  *
+  22:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****  *   File Name:  calibrate.c
+  23:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****  *
+  24:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****  */
+  25:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c **** 
+  26:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c **** #include "calibrate.h"
+  27:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c **** 
+  28:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c **** int setCalibrationMatrix( POINT_T * displayPtr,
+  29:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c **** 						  POINT_T * screenPtr,
+  30:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****                           MATRIX * matrixPtr)
+  31:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c **** {
+  10                             		.loc 1 31 1
+  11 0000 7E AA                   		push.l	r10
+  12                             	.LCFI0:
+  13 0002 71 0A F0                		add	#-16, r0, r10
+  14                             	.LCFI1:
+  15 0005 EF A0                   		mov.L	r10, r0
+  16 0007 E7 A1 01                		mov.L	r1, 4[r10]
+  17 000a E7 A2 02                		mov.L	r2, 8[r10]
+  18 000d E7 A3 03                		mov.L	r3, 12[r10]
+  32:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c **** 
+  33:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****     int  retValue = OK ;
+  19                             		.loc 1 33 10
+  20 0010 F8 A6 00                		mov.L	#0, [r10]
+  34:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c **** 
+  35:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c **** 
+  36:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c **** 
+  37:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****     matrixPtr->Divider = ((screenPtr[0].x - screenPtr[2].x) * (screenPtr[1].y - screenPtr[2].y)) -
+  21                             		.loc 1 37 40
+  22 0013 ED A5 02                		mov.L	8[r10], r5
+  23 0016 EC 54                   		mov.L	[r5], r4
+  24                             		.loc 1 37 54
+  25 0018 ED A5 02                		mov.L	8[r10], r5
+  26 001b 71 55 10                		add	#16, r5
+  27                             		.loc 1 37 57
+  28 001e EC 55                   		mov.L	[r5], r5
+  29                             		.loc 1 37 43
+  30 0020 43 54                   		sub	r5, r4
+  31                             		.loc 1 37 73
+  32 0022 ED A5 02                		mov.L	8[r10], r5
+  33 0025 62 85                   		add	#8, r5
+  34                             		.loc 1 37 76
+  35 0027 A8 5B                   		mov.L	4[r5], r3
+  36                             		.loc 1 37 90
+  37 0029 ED A5 02                		mov.L	8[r10], r5
+  38 002c 71 55 10                		add	#16, r5
+  39                             		.loc 1 37 93
+  40 002f A8 5D                   		mov.L	4[r5], r5
+  41                             		.loc 1 37 79
+  42 0031 FF 05 53                		sub	r5, r3, r5
+  43                             		.loc 1 37 61
+  44 0034 4F 54                   		mul	r5, r4
+  38:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****                          ((screenPtr[1].x - screenPtr[2].x) * (screenPtr[0].y - screenPtr[2].y)) ;
+  45                             		.loc 1 38 37
+  46 0036 ED A5 02                		mov.L	8[r10], r5
+  47 0039 62 85                   		add	#8, r5
+  48                             		.loc 1 38 40
+  49 003b EC 53                   		mov.L	[r5], r3
+  50                             		.loc 1 38 54
+  51 003d ED A5 02                		mov.L	8[r10], r5
+  52 0040 71 55 10                		add	#16, r5
+  53                             		.loc 1 38 57
+  54 0043 EC 55                   		mov.L	[r5], r5
+  55                             		.loc 1 38 43
+  56 0045 43 53                   		sub	r5, r3
+  57                             		.loc 1 38 76
+  58 0047 ED A5 02                		mov.L	8[r10], r5
+  59 004a A8 5A                   		mov.L	4[r5], r2
+  60                             		.loc 1 38 90
+  61 004c ED A5 02                		mov.L	8[r10], r5
+  62 004f 71 55 10                		add	#16, r5
+  63                             		.loc 1 38 93
+  64 0052 A8 5D                   		mov.L	4[r5], r5
+  65                             		.loc 1 38 79
+  66 0054 FF 05 52                		sub	r5, r2, r5
+  67                             		.loc 1 38 61
+  68 0057 4F 35                   		mul	r3, r5
+  37:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****                          ((screenPtr[1].x - screenPtr[2].x) * (screenPtr[0].y - screenPtr[2].y)) ;
+  69                             		.loc 1 37 98
+  70 0059 43 54                   		sub	r5, r4
+  37:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****                          ((screenPtr[1].x - screenPtr[2].x) * (screenPtr[0].y - screenPtr[2].y)) ;
+  71                             		.loc 1 37 24
+  72 005b ED A5 03                		mov.L	12[r10], r5
+  73 005e A1 D4                   		mov.L	r4, 24[r5]
+  39:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c **** 
+  40:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****     if( matrixPtr->Divider == 0 )
+  74                             		.loc 1 40 18
+  75 0060 ED A5 03                		mov.L	12[r10], r5
+  76 0063 A9 D5                   		mov.L	24[r5], r5
+  77                             		.loc 1 40 7
+  78 0065 61 05                   		cmp	#0, r5
+  79 0067 1F                      		bne	.L2
+  41:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****     {
+  42:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****         retValue = NOT_OK ;
+  80                             		.loc 1 42 18
+  81 0068 F8 A6 FF                		mov.L	#-1, [r10]
+  82 006b 38 4B 02                		bra	.L3
+  83                             	.L2:
+  43:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****     }
+  44:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****     else
+  45:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****     {
+  46:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****         matrixPtr->An = ((displayPtr[0].x - displayPtr[2].x) * (screenPtr[1].y - screenPtr[2].y)) -
+  84                             		.loc 1 46 40
+  85 006e ED A5 01                		mov.L	4[r10], r5
+  86 0071 EC 54                   		mov.L	[r5], r4
+  87                             		.loc 1 46 55
+  88 0073 ED A5 01                		mov.L	4[r10], r5
+  89 0076 71 55 10                		add	#16, r5
+  90                             		.loc 1 46 58
+  91 0079 EC 55                   		mov.L	[r5], r5
+  92                             		.loc 1 46 43
+  93 007b 43 54                   		sub	r5, r4
+  94                             		.loc 1 46 74
+  95 007d ED A5 02                		mov.L	8[r10], r5
+  96 0080 62 85                   		add	#8, r5
+  97                             		.loc 1 46 77
+  98 0082 A8 5B                   		mov.L	4[r5], r3
+  99                             		.loc 1 46 91
+ 100 0084 ED A5 02                		mov.L	8[r10], r5
+ 101 0087 71 55 10                		add	#16, r5
+ 102                             		.loc 1 46 94
+ 103 008a A8 5D                   		mov.L	4[r5], r5
+ 104                             		.loc 1 46 80
+ 105 008c FF 05 53                		sub	r5, r3, r5
+ 106                             		.loc 1 46 62
+ 107 008f 4F 54                   		mul	r5, r4
+  47:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****                         ((displayPtr[1].x - displayPtr[2].x) * (screenPtr[0].y - screenPtr[2].y)) ;
+ 108                             		.loc 1 47 37
+ 109 0091 ED A5 01                		mov.L	4[r10], r5
+ 110 0094 62 85                   		add	#8, r5
+ 111                             		.loc 1 47 40
+ 112 0096 EC 53                   		mov.L	[r5], r3
+ 113                             		.loc 1 47 55
+ 114 0098 ED A5 01                		mov.L	4[r10], r5
+ 115 009b 71 55 10                		add	#16, r5
+ 116                             		.loc 1 47 58
+ 117 009e EC 55                   		mov.L	[r5], r5
+ 118                             		.loc 1 47 43
+ 119 00a0 43 53                   		sub	r5, r3
+ 120                             		.loc 1 47 77
+ 121 00a2 ED A5 02                		mov.L	8[r10], r5
+ 122 00a5 A8 5A                   		mov.L	4[r5], r2
+ 123                             		.loc 1 47 91
+ 124 00a7 ED A5 02                		mov.L	8[r10], r5
+ 125 00aa 71 55 10                		add	#16, r5
+ 126                             		.loc 1 47 94
+ 127 00ad A8 5D                   		mov.L	4[r5], r5
+ 128                             		.loc 1 47 80
+ 129 00af FF 05 52                		sub	r5, r2, r5
+ 130                             		.loc 1 47 62
+ 131 00b2 4F 35                   		mul	r3, r5
+  46:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****                         ((displayPtr[1].x - displayPtr[2].x) * (screenPtr[0].y - screenPtr[2].y)) ;
+ 132                             		.loc 1 46 99
+ 133 00b4 43 54                   		sub	r5, r4
+  46:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****                         ((displayPtr[1].x - displayPtr[2].x) * (screenPtr[0].y - screenPtr[2].y)) ;
+ 134                             		.loc 1 46 23
+ 135 00b6 ED A5 03                		mov.L	12[r10], r5
+ 136 00b9 E3 54                   		mov.L	r4, [r5]
+  48:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c **** 
+  49:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****         matrixPtr->Bn = ((screenPtr[0].x - screenPtr[2].x) * (displayPtr[1].x - displayPtr[2].x)) -
+ 137                             		.loc 1 49 39
+ 138 00bb ED A5 02                		mov.L	8[r10], r5
+ 139 00be EC 54                   		mov.L	[r5], r4
+ 140                             		.loc 1 49 53
+ 141 00c0 ED A5 02                		mov.L	8[r10], r5
+ 142 00c3 71 55 10                		add	#16, r5
+ 143                             		.loc 1 49 56
+ 144 00c6 EC 55                   		mov.L	[r5], r5
+ 145                             		.loc 1 49 42
+ 146 00c8 43 54                   		sub	r5, r4
+ 147                             		.loc 1 49 73
+ 148 00ca ED A5 01                		mov.L	4[r10], r5
+ 149 00cd 62 85                   		add	#8, r5
+ 150                             		.loc 1 49 76
+ 151 00cf EC 53                   		mov.L	[r5], r3
+ 152                             		.loc 1 49 91
+ 153 00d1 ED A5 01                		mov.L	4[r10], r5
+ 154 00d4 71 55 10                		add	#16, r5
+ 155                             		.loc 1 49 94
+ 156 00d7 EC 55                   		mov.L	[r5], r5
+ 157                             		.loc 1 49 79
+ 158 00d9 FF 05 53                		sub	r5, r3, r5
+ 159                             		.loc 1 49 60
+ 160 00dc 4F 54                   		mul	r5, r4
+  50:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****                         ((displayPtr[0].x - displayPtr[2].x) * (screenPtr[1].x - screenPtr[2].x)) ;
+ 161                             		.loc 1 50 40
+ 162 00de ED A5 01                		mov.L	4[r10], r5
+ 163 00e1 EC 53                   		mov.L	[r5], r3
+ 164                             		.loc 1 50 55
+ 165 00e3 ED A5 01                		mov.L	4[r10], r5
+ 166 00e6 71 55 10                		add	#16, r5
+ 167                             		.loc 1 50 58
+ 168 00e9 EC 55                   		mov.L	[r5], r5
+ 169                             		.loc 1 50 43
+ 170 00eb 43 53                   		sub	r5, r3
+ 171                             		.loc 1 50 74
+ 172 00ed ED A5 02                		mov.L	8[r10], r5
+ 173 00f0 62 85                   		add	#8, r5
+ 174                             		.loc 1 50 77
+ 175 00f2 EC 52                   		mov.L	[r5], r2
+ 176                             		.loc 1 50 91
+ 177 00f4 ED A5 02                		mov.L	8[r10], r5
+ 178 00f7 71 55 10                		add	#16, r5
+ 179                             		.loc 1 50 94
+ 180 00fa EC 55                   		mov.L	[r5], r5
+ 181                             		.loc 1 50 80
+ 182 00fc FF 05 52                		sub	r5, r2, r5
+ 183                             		.loc 1 50 62
+ 184 00ff 4F 35                   		mul	r3, r5
+  49:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****                         ((displayPtr[0].x - displayPtr[2].x) * (screenPtr[1].x - screenPtr[2].x)) ;
+ 185                             		.loc 1 49 99
+ 186 0101 43 54                   		sub	r5, r4
+  49:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****                         ((displayPtr[0].x - displayPtr[2].x) * (screenPtr[1].x - screenPtr[2].x)) ;
+ 187                             		.loc 1 49 23
+ 188 0103 ED A5 03                		mov.L	12[r10], r5
+ 189 0106 A0 5C                   		mov.L	r4, 4[r5]
+  51:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c **** 
+  52:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****         matrixPtr->Cn = (screenPtr[2].x * displayPtr[1].x - screenPtr[1].x * displayPtr[2].x) * scr
+ 190                             		.loc 1 52 35
+ 191 0108 ED A5 02                		mov.L	8[r10], r5
+ 192 010b 71 55 10                		add	#16, r5
+ 193                             		.loc 1 52 38
+ 194 010e EC 54                   		mov.L	[r5], r4
+ 195                             		.loc 1 52 53
+ 196 0110 ED A5 01                		mov.L	4[r10], r5
+ 197 0113 62 85                   		add	#8, r5
+ 198                             		.loc 1 52 56
+ 199 0115 EC 55                   		mov.L	[r5], r5
+ 200                             		.loc 1 52 41
+ 201 0117 4F 54                   		mul	r5, r4
+ 202                             		.loc 1 52 70
+ 203 0119 ED A5 02                		mov.L	8[r10], r5
+ 204 011c 62 85                   		add	#8, r5
+ 205                             		.loc 1 52 73
+ 206 011e EC 53                   		mov.L	[r5], r3
+ 207                             		.loc 1 52 88
+ 208 0120 ED A5 01                		mov.L	4[r10], r5
+ 209 0123 71 55 10                		add	#16, r5
+ 210                             		.loc 1 52 91
+ 211 0126 EC 55                   		mov.L	[r5], r5
+ 212                             		.loc 1 52 76
+ 213 0128 4F 35                   		mul	r3, r5
+ 214                             		.loc 1 52 59
+ 215 012a FF 05 54                		sub	r5, r4, r5
+ 216                             		.loc 1 52 109
+ 217 012d ED A4 02                		mov.L	8[r10], r4
+ 218 0130 A8 4C                   		mov.L	4[r4], r4
+ 219                             		.loc 1 52 95
+ 220 0132 FF 33 45                		mul	r4, r5, r3
+  53:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****                         (screenPtr[0].x * displayPtr[2].x - screenPtr[2].x * displayPtr[0].x) * scr
+ 221                             		.loc 1 53 38
+ 222 0135 ED A5 02                		mov.L	8[r10], r5
+ 223 0138 EC 54                   		mov.L	[r5], r4
+ 224                             		.loc 1 53 53
+ 225 013a ED A5 01                		mov.L	4[r10], r5
+ 226 013d 71 55 10                		add	#16, r5
+ 227                             		.loc 1 53 56
+ 228 0140 EC 55                   		mov.L	[r5], r5
+ 229                             		.loc 1 53 41
+ 230 0142 4F 54                   		mul	r5, r4
+ 231                             		.loc 1 53 70
+ 232 0144 ED A5 02                		mov.L	8[r10], r5
+ 233 0147 71 55 10                		add	#16, r5
+ 234                             		.loc 1 53 73
+ 235 014a EC 52                   		mov.L	[r5], r2
+ 236                             		.loc 1 53 91
+ 237 014c ED A5 01                		mov.L	4[r10], r5
+ 238 014f EC 55                   		mov.L	[r5], r5
+ 239                             		.loc 1 53 76
+ 240 0151 4F 25                   		mul	r2, r5
+ 241                             		.loc 1 53 59
+ 242 0153 FF 05 54                		sub	r5, r4, r5
+ 243                             		.loc 1 53 106
+ 244 0156 ED A4 02                		mov.L	8[r10], r4
+ 245 0159 62 84                   		add	#8, r4
+ 246                             		.loc 1 53 109
+ 247 015b A8 4C                   		mov.L	4[r4], r4
+ 248                             		.loc 1 53 95
+ 249 015d 4F 45                   		mul	r4, r5
+  52:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****                         (screenPtr[0].x * displayPtr[2].x - screenPtr[2].x * displayPtr[0].x) * scr
+ 250                             		.loc 1 52 112
+ 251 015f 4B 53                   		add	r5, r3
+  54:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****                         (screenPtr[1].x * displayPtr[0].x - screenPtr[0].x * displayPtr[1].x) * scr
+ 252                             		.loc 1 54 35
+ 253 0161 ED A5 02                		mov.L	8[r10], r5
+ 254 0164 62 85                   		add	#8, r5
+ 255                             		.loc 1 54 38
+ 256 0166 EC 54                   		mov.L	[r5], r4
+ 257                             		.loc 1 54 56
+ 258 0168 ED A5 01                		mov.L	4[r10], r5
+ 259 016b EC 55                   		mov.L	[r5], r5
+ 260                             		.loc 1 54 41
+ 261 016d 4F 54                   		mul	r5, r4
+ 262                             		.loc 1 54 73
+ 263 016f ED A5 02                		mov.L	8[r10], r5
+ 264 0172 EC 52                   		mov.L	[r5], r2
+ 265                             		.loc 1 54 88
+ 266 0174 ED A5 01                		mov.L	4[r10], r5
+ 267 0177 62 85                   		add	#8, r5
+ 268                             		.loc 1 54 91
+ 269 0179 EC 55                   		mov.L	[r5], r5
+ 270                             		.loc 1 54 76
+ 271 017b 4F 25                   		mul	r2, r5
+ 272                             		.loc 1 54 59
+ 273 017d FF 05 54                		sub	r5, r4, r5
+ 274                             		.loc 1 54 106
+ 275 0180 ED A4 02                		mov.L	8[r10], r4
+ 276 0183 71 44 10                		add	#16, r4
+ 277                             		.loc 1 54 109
+ 278 0186 A8 4C                   		mov.L	4[r4], r4
+ 279                             		.loc 1 54 95
+ 280 0188 4F 45                   		mul	r4, r5
+  53:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****                         (screenPtr[0].x * displayPtr[2].x - screenPtr[2].x * displayPtr[0].x) * scr
+ 281                             		.loc 1 53 112
+ 282 018a FF 24 53                		add	r5, r3, r4
+  52:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****                         (screenPtr[0].x * displayPtr[2].x - screenPtr[2].x * displayPtr[0].x) * scr
+ 283                             		.loc 1 52 23
+ 284 018d ED A5 03                		mov.L	12[r10], r5
+ 285 0190 A0 D4                   		mov.L	r4, 8[r5]
+  55:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c **** 
+  56:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****         matrixPtr->Dn = ((displayPtr[0].y - displayPtr[2].y) * (screenPtr[1].y - screenPtr[2].y)) -
+ 286                             		.loc 1 56 40
+ 287 0192 ED A5 01                		mov.L	4[r10], r5
+ 288 0195 A8 5C                   		mov.L	4[r5], r4
+ 289                             		.loc 1 56 55
+ 290 0197 ED A5 01                		mov.L	4[r10], r5
+ 291 019a 71 55 10                		add	#16, r5
+ 292                             		.loc 1 56 58
+ 293 019d A8 5D                   		mov.L	4[r5], r5
+ 294                             		.loc 1 56 43
+ 295 019f 43 54                   		sub	r5, r4
+ 296                             		.loc 1 56 74
+ 297 01a1 ED A5 02                		mov.L	8[r10], r5
+ 298 01a4 62 85                   		add	#8, r5
+ 299                             		.loc 1 56 77
+ 300 01a6 A8 5B                   		mov.L	4[r5], r3
+ 301                             		.loc 1 56 91
+ 302 01a8 ED A5 02                		mov.L	8[r10], r5
+ 303 01ab 71 55 10                		add	#16, r5
+ 304                             		.loc 1 56 94
+ 305 01ae A8 5D                   		mov.L	4[r5], r5
+ 306                             		.loc 1 56 80
+ 307 01b0 FF 05 53                		sub	r5, r3, r5
+ 308                             		.loc 1 56 62
+ 309 01b3 4F 54                   		mul	r5, r4
+  57:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****                         ((displayPtr[1].y - displayPtr[2].y) * (screenPtr[0].y - screenPtr[2].y)) ;
+ 310                             		.loc 1 57 37
+ 311 01b5 ED A5 01                		mov.L	4[r10], r5
+ 312 01b8 62 85                   		add	#8, r5
+ 313                             		.loc 1 57 40
+ 314 01ba A8 5B                   		mov.L	4[r5], r3
+ 315                             		.loc 1 57 55
+ 316 01bc ED A5 01                		mov.L	4[r10], r5
+ 317 01bf 71 55 10                		add	#16, r5
+ 318                             		.loc 1 57 58
+ 319 01c2 A8 5D                   		mov.L	4[r5], r5
+ 320                             		.loc 1 57 43
+ 321 01c4 43 53                   		sub	r5, r3
+ 322                             		.loc 1 57 77
+ 323 01c6 ED A5 02                		mov.L	8[r10], r5
+ 324 01c9 A8 5A                   		mov.L	4[r5], r2
+ 325                             		.loc 1 57 91
+ 326 01cb ED A5 02                		mov.L	8[r10], r5
+ 327 01ce 71 55 10                		add	#16, r5
+ 328                             		.loc 1 57 94
+ 329 01d1 A8 5D                   		mov.L	4[r5], r5
+ 330                             		.loc 1 57 80
+ 331 01d3 FF 05 52                		sub	r5, r2, r5
+ 332                             		.loc 1 57 62
+ 333 01d6 4F 35                   		mul	r3, r5
+  56:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****                         ((displayPtr[1].y - displayPtr[2].y) * (screenPtr[0].y - screenPtr[2].y)) ;
+ 334                             		.loc 1 56 99
+ 335 01d8 43 54                   		sub	r5, r4
+  56:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****                         ((displayPtr[1].y - displayPtr[2].y) * (screenPtr[0].y - screenPtr[2].y)) ;
+ 336                             		.loc 1 56 23
+ 337 01da ED A5 03                		mov.L	12[r10], r5
+ 338 01dd A0 DC                   		mov.L	r4, 12[r5]
+  58:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c **** 
+  59:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****         matrixPtr->En = ((screenPtr[0].x - screenPtr[2].x) * (displayPtr[1].y - displayPtr[2].y)) -
+ 339                             		.loc 1 59 39
+ 340 01df ED A5 02                		mov.L	8[r10], r5
+ 341 01e2 EC 54                   		mov.L	[r5], r4
+ 342                             		.loc 1 59 53
+ 343 01e4 ED A5 02                		mov.L	8[r10], r5
+ 344 01e7 71 55 10                		add	#16, r5
+ 345                             		.loc 1 59 56
+ 346 01ea EC 55                   		mov.L	[r5], r5
+ 347                             		.loc 1 59 42
+ 348 01ec 43 54                   		sub	r5, r4
+ 349                             		.loc 1 59 73
+ 350 01ee ED A5 01                		mov.L	4[r10], r5
+ 351 01f1 62 85                   		add	#8, r5
+ 352                             		.loc 1 59 76
+ 353 01f3 A8 5B                   		mov.L	4[r5], r3
+ 354                             		.loc 1 59 91
+ 355 01f5 ED A5 01                		mov.L	4[r10], r5
+ 356 01f8 71 55 10                		add	#16, r5
+ 357                             		.loc 1 59 94
+ 358 01fb A8 5D                   		mov.L	4[r5], r5
+ 359                             		.loc 1 59 79
+ 360 01fd FF 05 53                		sub	r5, r3, r5
+ 361                             		.loc 1 59 60
+ 362 0200 4F 54                   		mul	r5, r4
+  60:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****                         ((displayPtr[0].y - displayPtr[2].y) * (screenPtr[1].x - screenPtr[2].x)) ;
+ 363                             		.loc 1 60 40
+ 364 0202 ED A5 01                		mov.L	4[r10], r5
+ 365 0205 A8 5B                   		mov.L	4[r5], r3
+ 366                             		.loc 1 60 55
+ 367 0207 ED A5 01                		mov.L	4[r10], r5
+ 368 020a 71 55 10                		add	#16, r5
+ 369                             		.loc 1 60 58
+ 370 020d A8 5D                   		mov.L	4[r5], r5
+ 371                             		.loc 1 60 43
+ 372 020f 43 53                   		sub	r5, r3
+ 373                             		.loc 1 60 74
+ 374 0211 ED A5 02                		mov.L	8[r10], r5
+ 375 0214 62 85                   		add	#8, r5
+ 376                             		.loc 1 60 77
+ 377 0216 EC 52                   		mov.L	[r5], r2
+ 378                             		.loc 1 60 91
+ 379 0218 ED A5 02                		mov.L	8[r10], r5
+ 380 021b 71 55 10                		add	#16, r5
+ 381                             		.loc 1 60 94
+ 382 021e EC 55                   		mov.L	[r5], r5
+ 383                             		.loc 1 60 80
+ 384 0220 FF 05 52                		sub	r5, r2, r5
+ 385                             		.loc 1 60 62
+ 386 0223 4F 35                   		mul	r3, r5
+  59:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****                         ((displayPtr[0].y - displayPtr[2].y) * (screenPtr[1].x - screenPtr[2].x)) ;
+ 387                             		.loc 1 59 99
+ 388 0225 43 54                   		sub	r5, r4
+  59:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****                         ((displayPtr[0].y - displayPtr[2].y) * (screenPtr[1].x - screenPtr[2].x)) ;
+ 389                             		.loc 1 59 23
+ 390 0227 ED A5 03                		mov.L	12[r10], r5
+ 391 022a A1 54                   		mov.L	r4, 16[r5]
+  61:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c **** 
+  62:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****         matrixPtr->Fn = (screenPtr[2].x * displayPtr[1].y - screenPtr[1].x * displayPtr[2].y) * scr
+ 392                             		.loc 1 62 35
+ 393 022c ED A5 02                		mov.L	8[r10], r5
+ 394 022f 71 55 10                		add	#16, r5
+ 395                             		.loc 1 62 38
+ 396 0232 EC 54                   		mov.L	[r5], r4
+ 397                             		.loc 1 62 53
+ 398 0234 ED A5 01                		mov.L	4[r10], r5
+ 399 0237 62 85                   		add	#8, r5
+ 400                             		.loc 1 62 56
+ 401 0239 A8 5D                   		mov.L	4[r5], r5
+ 402                             		.loc 1 62 41
+ 403 023b 4F 54                   		mul	r5, r4
+ 404                             		.loc 1 62 70
+ 405 023d ED A5 02                		mov.L	8[r10], r5
+ 406 0240 62 85                   		add	#8, r5
+ 407                             		.loc 1 62 73
+ 408 0242 EC 53                   		mov.L	[r5], r3
+ 409                             		.loc 1 62 88
+ 410 0244 ED A5 01                		mov.L	4[r10], r5
+ 411 0247 71 55 10                		add	#16, r5
+ 412                             		.loc 1 62 91
+ 413 024a A8 5D                   		mov.L	4[r5], r5
+ 414                             		.loc 1 62 76
+ 415 024c 4F 35                   		mul	r3, r5
+ 416                             		.loc 1 62 59
+ 417 024e FF 05 54                		sub	r5, r4, r5
+ 418                             		.loc 1 62 109
+ 419 0251 ED A4 02                		mov.L	8[r10], r4
+ 420 0254 A8 4C                   		mov.L	4[r4], r4
+ 421                             		.loc 1 62 95
+ 422 0256 FF 33 45                		mul	r4, r5, r3
+  63:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****                         (screenPtr[0].x * displayPtr[2].y - screenPtr[2].x * displayPtr[0].y) * scr
+ 423                             		.loc 1 63 38
+ 424 0259 ED A5 02                		mov.L	8[r10], r5
+ 425 025c EC 54                   		mov.L	[r5], r4
+ 426                             		.loc 1 63 53
+ 427 025e ED A5 01                		mov.L	4[r10], r5
+ 428 0261 71 55 10                		add	#16, r5
+ 429                             		.loc 1 63 56
+ 430 0264 A8 5D                   		mov.L	4[r5], r5
+ 431                             		.loc 1 63 41
+ 432 0266 4F 54                   		mul	r5, r4
+ 433                             		.loc 1 63 70
+ 434 0268 ED A5 02                		mov.L	8[r10], r5
+ 435 026b 71 55 10                		add	#16, r5
+ 436                             		.loc 1 63 73
+ 437 026e EC 52                   		mov.L	[r5], r2
+ 438                             		.loc 1 63 91
+ 439 0270 ED A5 01                		mov.L	4[r10], r5
+ 440 0273 A8 5D                   		mov.L	4[r5], r5
+ 441                             		.loc 1 63 76
+ 442 0275 4F 25                   		mul	r2, r5
+ 443                             		.loc 1 63 59
+ 444 0277 FF 05 54                		sub	r5, r4, r5
+ 445                             		.loc 1 63 106
+ 446 027a ED A4 02                		mov.L	8[r10], r4
+ 447 027d 62 84                   		add	#8, r4
+ 448                             		.loc 1 63 109
+ 449 027f A8 4C                   		mov.L	4[r4], r4
+ 450                             		.loc 1 63 95
+ 451 0281 4F 45                   		mul	r4, r5
+  62:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****                         (screenPtr[0].x * displayPtr[2].y - screenPtr[2].x * displayPtr[0].y) * scr
+ 452                             		.loc 1 62 112
+ 453 0283 4B 53                   		add	r5, r3
+  64:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****                         (screenPtr[1].x * displayPtr[0].y - screenPtr[0].x * displayPtr[1].y) * scr
+ 454                             		.loc 1 64 35
+ 455 0285 ED A5 02                		mov.L	8[r10], r5
+ 456 0288 62 85                   		add	#8, r5
+ 457                             		.loc 1 64 38
+ 458 028a EC 54                   		mov.L	[r5], r4
+ 459                             		.loc 1 64 56
+ 460 028c ED A5 01                		mov.L	4[r10], r5
+ 461 028f A8 5D                   		mov.L	4[r5], r5
+ 462                             		.loc 1 64 41
+ 463 0291 4F 54                   		mul	r5, r4
+ 464                             		.loc 1 64 73
+ 465 0293 ED A5 02                		mov.L	8[r10], r5
+ 466 0296 EC 52                   		mov.L	[r5], r2
+ 467                             		.loc 1 64 88
+ 468 0298 ED A5 01                		mov.L	4[r10], r5
+ 469 029b 62 85                   		add	#8, r5
+ 470                             		.loc 1 64 91
+ 471 029d A8 5D                   		mov.L	4[r5], r5
+ 472                             		.loc 1 64 76
+ 473 029f 4F 25                   		mul	r2, r5
+ 474                             		.loc 1 64 59
+ 475 02a1 FF 05 54                		sub	r5, r4, r5
+ 476                             		.loc 1 64 106
+ 477 02a4 ED A4 02                		mov.L	8[r10], r4
+ 478 02a7 71 44 10                		add	#16, r4
+ 479                             		.loc 1 64 109
+ 480 02aa A8 4C                   		mov.L	4[r4], r4
+ 481                             		.loc 1 64 95
+ 482 02ac 4F 45                   		mul	r4, r5
+  63:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****                         (screenPtr[0].x * displayPtr[2].y - screenPtr[2].x * displayPtr[0].y) * scr
+ 483                             		.loc 1 63 112
+ 484 02ae FF 24 53                		add	r5, r3, r4
+  62:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****                         (screenPtr[0].x * displayPtr[2].y - screenPtr[2].x * displayPtr[0].y) * scr
+ 485                             		.loc 1 62 23
+ 486 02b1 ED A5 03                		mov.L	12[r10], r5
+ 487 02b4 A1 5C                   		mov.L	r4, 20[r5]
+ 488                             	.L3:
+  65:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****     }
+  66:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c **** 
+  67:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****     return( retValue ) ;
+ 489                             		.loc 1 67 11
+ 490 02b6 EC A5                   		mov.L	[r10], r5
+  68:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c **** 
+  69:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c **** } /* end of setCalibrationMatrix() */
+ 491                             		.loc 1 69 1
+ 492 02b8 EF 51                   		mov.L	r5, r1
+ 493 02ba 3F AA 05                		rtsd	#20, r10-r10
+ 494                             	.LFE0:
+ 496                             		.section	.text.getDisplayPoint,"ax",@progbits
+ 497                             		.global	_getDisplayPoint
+ 499                             	_getDisplayPoint:
+ 500                             	.LFB1:
+  70:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c **** 
+  71:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c **** 
+  72:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c **** 
+  73:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c **** /**********************************************************************
+  74:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****  *
+  75:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****  *     Function: getDisplayPoint()
+  76:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****  *
+  77:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****  *  Description: Given a valid set of calibration factors and a point
+  78:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****  *                value reported by the touch screen, this function
+  79:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****  *                calculates and returns the true (or closest to true)
+  80:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****  *                display point below the spot where the touch screen
+  81:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****  *                was touched.
+  82:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****  *
+  83:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****  *
+  84:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****  *
+  85:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****  *  Argument(s): displayPtr (output) - Pointer to the calculated
+  86:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****  *                                      (true) display point.
+  87:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****  *               screenPtr (input) - Pointer to the reported touch
+  88:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****  *                                    screen point.
+  89:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****  *               matrixPtr (input) - Pointer to calibration factors
+  90:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****  *                                    matrix previously calculated
+  91:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****  *                                    from a call to
+  92:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****  *                                    setCalibrationMatrix()
+  93:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****  *
+  94:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****  *
+  95:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****  *  The function simply solves for Xd and Yd by implementing the
+  96:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****  *   computations required by the translation matrix.
+  97:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****  *
+  98:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****  *                                              /-     -\
+  99:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****  *              /-    -\     /-            -\   |       |
+ 100:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****  *              |      |     |              |   |   Xs  |
+ 101:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****  *              |  Xd  |     | A    B    C  |   |       |
+ 102:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****  *              |      |  =  |              | * |   Ys  |
+ 103:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****  *              |  Yd  |     | D    E    F  |   |       |
+ 104:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****  *              |      |     |              |   |   1   |
+ 105:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****  *              \-    -/     \-            -/   |       |
+ 106:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****  *                                              \-     -/
+ 107:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****  *
+ 108:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****  *  It must be kept brief to avoid consuming CPU cycles.
+ 109:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****  *
+ 110:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****  *
+ 111:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****  *       Return: OK - the display point was correctly calculated
+ 112:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****  *                     and its value is in the output argument.
+ 113:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****  *               NOT_OK - an error was detected and the function
+ 114:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****  *                         failed to return a valid point.
+ 115:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****  *
+ 116:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****  *
+ 117:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****  *
+ 118:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****  *                 NOTE!    NOTE!    NOTE!
+ 119:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****  *
+ 120:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****  *  setCalibrationMatrix() and getDisplayPoint() will do fine
+ 121:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****  *  for you as they are, provided that your digitizer
+ 122:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****  *  resolution does not exceed 10 bits (1024 values).  Higher
+ 123:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****  *  resolutions may cause the integer operations to overflow
+ 124:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****  *  and return incorrect values.  If you wish to use these
+ 125:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****  *  functions with digitizer resolutions of 12 bits (4096
+ 126:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****  *  values) you will either have to a) use 64-bit signed
+ 127:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****  *  integer variables and math, or b) judiciously modify the
+ 128:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****  *  operations to scale results by a factor of 2 or even 4.
+ 129:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****  *
+ 130:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****  *
+ 131:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****  */
+ 132:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c **** int getDisplayPoint( POINT_T * displayPtr,
+ 133:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c **** 					 POINT_T * screenPtr,
+ 134:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****                      MATRIX * matrixPtr )
+ 135:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c **** {
+ 501                             		.loc 1 135 1
+ 502 0000 6E 7A                   		pushm	r7-r10
+ 503                             	.LCFI2:
+ 504 0002 71 0A F0                		add	#-16, r0, r10
+ 505                             	.LCFI3:
+ 506 0005 EF A0                   		mov.L	r10, r0
+ 507 0007 E7 A1 01                		mov.L	r1, 4[r10]
+ 508 000a E7 A2 02                		mov.L	r2, 8[r10]
+ 509 000d E7 A3 03                		mov.L	r3, 12[r10]
+ 136:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****     int retValue = OK ;
+ 510                             		.loc 1 136 9
+ 511 0010 F8 A6 00                		mov.L	#0, [r10]
+ 137:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c **** 
+ 138:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c **** 
+ 139:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****     if( matrixPtr->Divider != 0 )
+ 512                             		.loc 1 139 18
+ 513 0013 ED A5 03                		mov.L	12[r10], r5
+ 514 0016 A9 D5                   		mov.L	24[r5], r5
+ 515                             		.loc 1 139 7
+ 516 0018 61 05                   		cmp	#0, r5
+ 517 001a 20 67                   		beq	.L6
+ 140:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****     {
+ 141:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c **** 
+ 142:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****         /* Operation order is important since we are doing integer */
+ 143:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****         /*  math. Make sure you add all terms together before      */
+ 144:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****         /*  dividing, so that the remainder is not rounded off     */
+ 145:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****         /*  prematurely.                                           */
+ 146:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c **** 
+ 147:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****         displayPtr->x = ( (matrixPtr->An * screenPtr->x) +
+ 518                             		.loc 1 147 37
+ 519 001c ED A5 03                		mov.L	12[r10], r5
+ 520 001f EC 54                   		mov.L	[r5], r4
+ 521                             		.loc 1 147 53
+ 522 0021 ED A5 02                		mov.L	8[r10], r5
+ 523 0024 EC 55                   		mov.L	[r5], r5
+ 524                             		.loc 1 147 42
+ 525 0026 4F 54                   		mul	r5, r4
+ 148:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****                           (matrixPtr->Bn * screenPtr->y) +
+ 526                             		.loc 1 148 37
+ 527 0028 ED A5 03                		mov.L	12[r10], r5
+ 528 002b A8 5B                   		mov.L	4[r5], r3
+ 529                             		.loc 1 148 53
+ 530 002d ED A5 02                		mov.L	8[r10], r5
+ 531 0030 A8 5D                   		mov.L	4[r5], r5
+ 532                             		.loc 1 148 42
+ 533 0032 4F 35                   		mul	r3, r5
+ 147:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****                           (matrixPtr->Bn * screenPtr->y) +
+ 534                             		.loc 1 147 58
+ 535 0034 4B 45                   		add	r4, r5
+ 149:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****                            matrixPtr->Cn
+ 536                             		.loc 1 149 37
+ 537 0036 ED A4 03                		mov.L	12[r10], r4
+ 538 0039 A8 C4                   		mov.L	8[r4], r4
+ 148:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****                           (matrixPtr->Bn * screenPtr->y) +
+ 539                             		.loc 1 148 58
+ 540 003b 4B 45                   		add	r4, r5
+ 150:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****                         ) / matrixPtr->Divider ;
+ 541                             		.loc 1 150 38
+ 542 003d ED A4 03                		mov.L	12[r10], r4
+ 543 0040 A9 C4                   		mov.L	24[r4], r4
+ 544                             		.loc 1 150 27
+ 545 0042 EF 57                   		mov.L	r5, r7
+ 546 0044 FC 23 47                		div	r4, r7
+ 547 0047 EF 74                   		mov.L	r7, r4
+ 147:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****                           (matrixPtr->Bn * screenPtr->y) +
+ 548                             		.loc 1 147 23
+ 549 0049 ED A5 01                		mov.L	4[r10], r5
+ 550 004c E3 54                   		mov.L	r4, [r5]
+ 151:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c **** 
+ 152:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****         displayPtr->y = ( (matrixPtr->Dn * screenPtr->x) +
+ 551                             		.loc 1 152 37
+ 552 004e ED A5 03                		mov.L	12[r10], r5
+ 553 0051 A8 DC                   		mov.L	12[r5], r4
+ 554                             		.loc 1 152 53
+ 555 0053 ED A5 02                		mov.L	8[r10], r5
+ 556 0056 EC 55                   		mov.L	[r5], r5
+ 557                             		.loc 1 152 42
+ 558 0058 4F 54                   		mul	r5, r4
+ 153:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****                           (matrixPtr->En * screenPtr->y) +
+ 559                             		.loc 1 153 37
+ 560 005a ED A5 03                		mov.L	12[r10], r5
+ 561 005d A9 53                   		mov.L	16[r5], r3
+ 562                             		.loc 1 153 53
+ 563 005f ED A5 02                		mov.L	8[r10], r5
+ 564 0062 A8 5D                   		mov.L	4[r5], r5
+ 565                             		.loc 1 153 42
+ 566 0064 4F 35                   		mul	r3, r5
+ 152:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****                           (matrixPtr->En * screenPtr->y) +
+ 567                             		.loc 1 152 58
+ 568 0066 4B 45                   		add	r4, r5
+ 154:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****                            matrixPtr->Fn
+ 569                             		.loc 1 154 37
+ 570 0068 ED A4 03                		mov.L	12[r10], r4
+ 571 006b A9 4C                   		mov.L	20[r4], r4
+ 153:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****                           (matrixPtr->En * screenPtr->y) +
+ 572                             		.loc 1 153 58
+ 573 006d 4B 45                   		add	r4, r5
+ 155:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****                         ) / matrixPtr->Divider ;
+ 574                             		.loc 1 155 38
+ 575 006f ED A4 03                		mov.L	12[r10], r4
+ 576 0072 A9 C4                   		mov.L	24[r4], r4
+ 577                             		.loc 1 155 27
+ 578 0074 EF 57                   		mov.L	r5, r7
+ 579 0076 FC 23 47                		div	r4, r7
+ 580 0079 EF 74                   		mov.L	r7, r4
+ 152:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****                           (matrixPtr->En * screenPtr->y) +
+ 581                             		.loc 1 152 23
+ 582 007b ED A5 01                		mov.L	4[r10], r5
+ 583 007e A0 5C                   		mov.L	r4, 4[r5]
+ 584 0080 0C                      		bra	.L7
+ 585                             	.L6:
+ 156:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****     }
+ 157:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****     else
+ 158:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****     {
+ 159:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****         retValue = NOT_OK;
+ 586                             		.loc 1 159 18
+ 587 0081 F8 A6 FF                		mov.L	#-1, [r10]
+ 588                             	.L7:
+ 160:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****     }
+ 161:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c **** 
+ 162:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c ****     return (retValue);
+ 589                             		.loc 1 162 12
+ 590 0084 EC A5                   		mov.L	[r10], r5
+ 163:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c **** 
+ 164:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\calibrate.c **** } /* end of getDisplayPoint() */
+ 591                             		.loc 1 164 1
+ 592 0086 EF 51                   		mov.L	r5, r1
+ 593 0088 3F 7A 08                		rtsd	#32, r7-r10
+ 594                             	.LFE1:
+ 658                             	.Letext0:
+ 659                             		.file 2 "C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/calibrate.h"

@@ -2301,7 +2301,7 @@ void mw_gl_scale_shape(uint8_t poly_corners, int16_t *poly_x, int16_t *poly_y, i
 	for (i = 0U; i < poly_corners; i++)
 	{
 		poly_x[i] = poly_x[i] * scale_x / 10;
-		poly_y[i] = poly_y[i] * scale_y / 10;;
+		poly_y[i] = poly_y[i] * scale_y / 10;
 	}
 }
 
@@ -2586,7 +2586,7 @@ void mw_gl_tt_render_text(const mw_gl_draw_info_t *draw_info,
 		int16_t vert_scroll_pixels)
 {
 	tt_font_state_t tt_font_state;
-	mw_hal_lcd_colour_t temp_lcd_colour;;
+	mw_hal_lcd_colour_t temp_lcd_colour;
 
 	/* check parameters */
 	if (draw_info == NULL || rle_font == NULL || tt_text == NULL || text_rect == NULL)

@@ -1,0 +1,76 @@
+   1                             		.file	"hwinit.c"
+   2                             		.section P,"ax"
+   3                             	.Ltext0:
+   4                             		.section	.text.HardwareSetup,"ax",@progbits
+   5                             		.global	_HardwareSetup
+   7                             	_HardwareSetup:
+   8                             	.LFB0:
+   9                             		.file 1 "../generate/hwinit.c"
+   1:../generate/hwinit.c ****                                                                           
+   2:../generate/hwinit.c ****                                                                            
+   3:../generate/hwinit.c ****                                                                            
+   4:../generate/hwinit.c ****                                                                            
+   5:../generate/hwinit.c ****                                                                            
+   6:../generate/hwinit.c ****                                                                            
+   7:../generate/hwinit.c ****                                                                            
+   8:../generate/hwinit.c ****                                                                            
+   9:../generate/hwinit.c ****                                                                            
+  10:../generate/hwinit.c ****                                                                            
+  11:../generate/hwinit.c ****                                                                            
+  12:../generate/hwinit.c ****                                                                            
+  13:../generate/hwinit.c ****                                                                            
+  14:../generate/hwinit.c ****                                                                           
+  15:../generate/hwinit.c **** /************************************************************************
+  16:../generate/hwinit.c **** *
+  17:../generate/hwinit.c **** * Device     : RX/RX600/RX65N
+  18:../generate/hwinit.c **** *
+  19:../generate/hwinit.c **** * File Name  : hwsetup.c
+  20:../generate/hwinit.c **** *
+  21:../generate/hwinit.c **** * Abstract   : Hardware Setup file.
+  22:../generate/hwinit.c **** *
+  23:../generate/hwinit.c **** * History    : 0.5A  (2015-11-20)  [Hardware Manual Revision : 0.50]
+  24:../generate/hwinit.c **** *
+  25:../generate/hwinit.c **** * NOTE       : THIS IS A TYPICAL EXAMPLE.
+  26:../generate/hwinit.c **** *
+  27:../generate/hwinit.c **** * Copyright (C) 2015 Renesas Electronics Corporation.
+  28:../generate/hwinit.c **** *
+  29:../generate/hwinit.c **** ************************************************************************/
+  30:../generate/hwinit.c **** 
+  31:../generate/hwinit.c **** #include "iodefine.h"
+  32:../generate/hwinit.c **** #ifdef __cplusplus
+  33:../generate/hwinit.c **** extern "C" {
+  34:../generate/hwinit.c **** #endif
+  35:../generate/hwinit.c **** extern void HardwareSetup(void);
+  36:../generate/hwinit.c **** #ifdef __cplusplus
+  37:../generate/hwinit.c **** }
+  38:../generate/hwinit.c **** #endif
+  39:../generate/hwinit.c **** 
+  40:../generate/hwinit.c **** void HardwareSetup(void)
+  41:../generate/hwinit.c **** {
+  10                             		.loc 1 41 1
+  11 0000 7E AA                   		push.l	r10
+  12                             	.LCFI0:
+  13 0002 EF 0A                   		mov.L	r0, r10
+  14                             	.LCFI1:
+  42:../generate/hwinit.c **** /*
+  43:../generate/hwinit.c ****  BSC.CS0MOD.WORD = 0x1234;
+  44:../generate/hwinit.c ****  BSC.CS7CNT.WORD = 0x5678;
+  45:../generate/hwinit.c ****   
+  46:../generate/hwinit.c ****  SCI0.SCR.BIT.TE  = 0;
+  47:../generate/hwinit.c ****  SCI0.SCR.BIT.RE  = 0;
+  48:../generate/hwinit.c ****  SCI0.SCR.BIT.TE  = 1;
+  49:../generate/hwinit.c ****  SCI2.SSR.BIT.PER = 0;
+  50:../generate/hwinit.c **** 
+  51:../generate/hwinit.c ****  TMR0.TCR.BYTE = 0x12;
+  52:../generate/hwinit.c ****  TMR1.TCR.BYTE = 0x12;
+  53:../generate/hwinit.c ****  TMR2.TCR.BYTE = 0x12;
+  54:../generate/hwinit.c ****  
+  55:../generate/hwinit.c ****  P0.DDR.BYTE = 0x12;
+  56:../generate/hwinit.c ****  P1.DDR.BYTE = 0x12;
+  57:../generate/hwinit.c **** */
+  58:../generate/hwinit.c **** }
+  15                             		.loc 1 58 1
+  16 0004 03                      		nop
+  17 0005 3F AA 01                		rtsd	#4, r10-r10
+  18                             	.LFE0:
+  56                             	.Letext0:

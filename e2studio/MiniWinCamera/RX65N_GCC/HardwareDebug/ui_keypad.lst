@@ -1,0 +1,1548 @@
+   1                             		.file	"ui_keypad.c"
+   2                             		.section P,"ax"
+   3                             	.Ltext0:
+   4                             		.section	.rodata.key_codes,"a"
+   7                             	_key_codes:
+   8 0000 37 38 39 34 35 36 31 32 		.string	"789456123-0\b"
+   8      33 2D 30 08 00 
+   9                             		.section C,"a",@progbits
+  10                             		.p2align 2
+  11                             	.LC0:
+  12 0000 4E 75 6C 6C 20 70 6F 69 		.string	"Null pointer argument"
+  12      6E 74 65 72 20 61 72 67 
+  12      75 6D 65 6E 74 00 
+  13 0016 00 00                   		.section	.text.keypad_paint_function,"ax",@progbits
+  15                             	_keypad_paint_function:
+  16                             	.LFB0:
+  17                             		.file 1 "C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui/ui_keypad.c"
+   1:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** /*
+   2:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 
+   3:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** MIT License
+   4:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 
+   5:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** Copyright (c) John Blaiklock 2019 miniwin Embedded Window Manager
+   6:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 
+   7:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** Permission is hereby granted, free of charge, to any person obtaining a copy
+   8:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** of this software and associated documentation files (the "Software"), to deal
+   9:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** in the Software without restriction, including without limitation the rights
+  10:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  11:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** copies of the Software, and to permit persons to whom the Software is
+  12:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** furnished to do so, subject to the following conditions:
+  13:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 
+  14:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** The above copyright notice and this permission notice shall be included in all
+  15:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** copies or substantial portions of the Software.
+  16:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 
+  17:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  18:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  19:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  20:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  21:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  22:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  23:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** SOFTWARE.
+  24:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 
+  25:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** */
+  26:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 
+  27:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** /***************
+  28:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** *** INCLUDES ***
+  29:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** ***************/
+  30:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 
+  31:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** #include <stdlib.h>
+  32:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** #include "miniwin.h"
+  33:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 
+  34:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** /****************
+  35:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** *** CONSTANTS ***
+  36:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** ****************/
+  37:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 
+  38:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** static const char key_codes[] = 				"789456123-0\b";	/**< The actual characters represented by each
+  39:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** #define MW_UI_KEYPAD_KEY_TEXT_OFFSET 			7					/**< Start position relative to square for character 
+  40:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** #define MW_UI_KEYPAD_KEY_TEXT_LARGE_OFFSET 		14					/**< Start position relative to large square fo
+  41:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** #define MW_UI_KEYPAD_KEY_BITMAP_SIZE			16U					/**< Backspace symbol bitmap size */
+  42:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** #define MW_UI_KEYPAD_KEY_BITMAP_OFFSET 			2					/**< Start position relative to square for bitmap *
+  43:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** #define MW_UI_KEYPAD_KEY_BITMAP_LARGE_OFFSET	12					/**< Start position relative to large square fo
+  44:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 
+  45:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** /************
+  46:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** *** TYPES ***
+  47:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** ************/
+  48:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 
+  49:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** /***********************
+  50:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** *** GLOBAL VARIABLES ***
+  51:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** ***********************/
+  52:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 
+  53:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** /**********************
+  54:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** *** LOCAL VARIABLES ***
+  55:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** **********************/
+  56:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 
+  57:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** /********************************
+  58:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** *** LOCAL FUNCTION PROTOTYPES ***
+  59:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** ********************************/
+  60:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 
+  61:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** static void keypad_paint_function(mw_handle_t control_handle, const mw_gl_draw_info_t *draw_info);
+  62:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** static void keypad_message_function(const mw_message_t *message);
+  63:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** static void process_keypress(const mw_message_t *message);
+  64:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 
+  65:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** /**********************
+  66:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** *** LOCAL FUNCTIONS ***
+  67:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** **********************/
+  68:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 
+  69:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** /**
+  70:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c ****  * Control paint routine, called by window manager.
+  71:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c ****  *
+  72:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c ****  * @param control_handle The control identifier in the array of controls
+  73:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c ****  * @param draw_info Draw info structure describing offset and clip region
+  74:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c ****  */
+  75:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** static void keypad_paint_function(mw_handle_t control_handle, const mw_gl_draw_info_t *draw_info)
+  76:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** {
+  18                             		.loc 1 76 1
+  19 0000 7E AA                   		push.l	r10
+  20                             	.LCFI0:
+  21 0002 71 0A E0                		add	#-32, r0, r10
+  22                             	.LCFI1:
+  23 0005 71 A0 F8                		add	#-8, r10, r0
+  24                             	.LCFI2:
+  25 0008 E7 A1 06                		mov.L	r1, 24[r10]
+  26 000b E7 A2 07                		mov.L	r2, 28[r10]
+  77:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 	mw_ui_keypad_data_t *this_keypad = (mw_ui_keypad_data_t*)mw_get_control_instance_data(control_hand
+  27                             		.loc 1 77 59
+  28 000e ED A1 06                		mov.L	24[r10], r1
+  29 0011 05 00 00 00             		bsr	_mw_get_control_instance_data
+  30 0015 E7 A1 04                		mov.L	r1, 16[r10]
+  78:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 	mw_hal_lcd_colour_t highlighted_colour;
+  79:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 	mw_hal_lcd_colour_t lowlighted_colour;
+  80:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 	int16_t row;
+  81:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 	int16_t column;
+  82:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 	int16_t text_offset;
+  83:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 	int16_t bitmap_offset;
+  84:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 	char c;
+  85:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 
+  86:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 	MW_ASSERT(draw_info != (void*)0, "Null pointer argument");
+  31                             		.loc 1 86 2
+  32 0018 ED A5 07                		mov.L	28[r10], r5
+  33 001b 61 05                   		cmp	#0, r5
+  34 001d FC DB 51                		scne.L	r5
+  35 0020 FB 42 00 00 00 00       		mov.L	#.LC0, r4
+  36 0026 75 43 56                		mov.L	#0x56, r3
+  37 0029 FB 22 00 00 00 00       		mov.L	#___func__.2883, r2
+  38 002f CF 51                   		mov.B	r5, r1
+  39 0031 05 00 00 00             		bsr	_mw_debug_print_assert
+  87:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 
+  88:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 	if ((mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_LARGE_SIZE) == MW_CONTROL_FLAG_LARGE_S
+  40                             		.loc 1 88 7
+  41 0035 ED A1 06                		mov.L	24[r10], r1
+  42 0038 05 00 00 00             		bsr	_mw_get_control_flags
+  43 003c EF 15                   		mov.L	r1, r5
+  44                             		.loc 1 88 44
+  45 003e 5F 55                   		movu.W	r5, r5
+  46 0040 64 85                   		and	#8, r5
+  47                             		.loc 1 88 5
+  48 0042 61 85                   		cmp	#8, r5
+  49 0044 21 12                   		bne	.L2
+  89:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 	{
+  90:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		mw_gl_set_font(MW_GL_TITLE_FONT);
+  50                             		.loc 1 90 3
+  51 0046 66 51                   		mov.L	#5, r1
+  52 0048 05 00 00 00             		bsr	_mw_gl_set_font
+  91:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		text_offset = MW_UI_KEYPAD_KEY_TEXT_LARGE_OFFSET;
+  53                             		.loc 1 91 15
+  54 004c F9 A5 06 0E             		mov.W	#14, 12[r10]
+  92:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		bitmap_offset = MW_UI_KEYPAD_KEY_BITMAP_LARGE_OFFSET;
+  55                             		.loc 1 92 17
+  56 0050 F9 A5 07 0C             		mov.W	#12, 14[r10]
+  57 0054 2E 10                   		bra	.L3
+  58                             	.L2:
+  93:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 	}
+  94:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 	else
+  95:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 	{
+  96:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		mw_gl_set_font(MW_GL_FONT_9);
+  59                             		.loc 1 96 3
+  60 0056 66 01                   		mov.L	#0, r1
+  61 0058 05 00 00 00             		bsr	_mw_gl_set_font
+  97:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		text_offset = MW_UI_KEYPAD_KEY_TEXT_OFFSET;
+  62                             		.loc 1 97 15
+  63 005c F9 A5 06 07             		mov.W	#7, 12[r10]
+  98:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		bitmap_offset = MW_UI_KEYPAD_KEY_BITMAP_OFFSET;
+  64                             		.loc 1 98 17
+  65 0060 F9 A5 07 02             		mov.W	#2, 14[r10]
+  66                             	.L3:
+  99:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 	}
+ 100:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 
+ 101:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 	/* draw the keys */
+ 102:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 	mw_gl_set_fill(MW_GL_FILL);
+  67                             		.loc 1 102 2
+  68 0064 66 11                   		mov.L	#1, r1
+  69 0066 05 00 00 00             		bsr	_mw_gl_set_fill
+ 103:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 	mw_gl_clear_pattern();
+  70                             		.loc 1 103 2
+  71 006a 05 00 00 00             		bsr	_mw_gl_clear_pattern
+ 104:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 	mw_gl_set_line(MW_GL_SOLID_LINE);
+  72                             		.loc 1 104 2
+  73 006e FB 1E FF FF 00          		mov.L	#0xffff, r1
+  74 0073 05 00 00 00             		bsr	_mw_gl_set_line
+ 105:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 	mw_gl_set_border(MW_GL_BORDER_ON);
+  75                             		.loc 1 105 2
+  76 0077 66 11                   		mov.L	#1, r1
+  77 0079 05 00 00 00             		bsr	_mw_gl_set_border
+ 106:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 	mw_gl_set_bg_transparency(MW_GL_BG_TRANSPARENT);
+  78                             		.loc 1 106 2
+  79 007d 66 01                   		mov.L	#0, r1
+  80 007f 05 00 00 00             		bsr	_mw_gl_set_bg_transparency
+ 107:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 	mw_gl_set_text_rotation(MW_GL_TEXT_ROTATION_0);
+  81                             		.loc 1 107 2
+  82 0083 66 01                   		mov.L	#0, r1
+  83 0085 05 00 00 00             		bsr	_mw_gl_set_text_rotation
+ 108:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 
+ 109:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 	for (row = 0; row < 4; row++)
+  84                             		.loc 1 109 11
+  85 0089 F9 A5 04 00             		mov.W	#0, 8[r10]
+  86                             		.loc 1 109 2
+  87 008d 38 2A 03                		bra	.L4
+  88                             	.L18:
+ 110:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 	{
+ 111:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		for (column = 0; column < 3; column++)
+  89                             		.loc 1 111 15
+  90 0090 F9 A5 05 00             		mov.W	#0, 10[r10]
+  91                             		.loc 1 111 3
+  92 0094 38 11 03                		bra	.L5
+  93                             	.L17:
+ 112:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		{
+ 113:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 			/* set colour of key box fill according to pressed state */
+ 114:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 			if (this_keypad->is_key_pressed && row == this_keypad->key_pressed_row && column == this_keypad-
+  94                             		.loc 1 114 19
+  95 0097 ED A5 04                		mov.L	16[r10], r5
+  96 009a 88 5D                   		mov.B	1[r5], r5
+  97                             		.loc 1 114 7
+  98 009c 5B 55                   		movu.B	r5, r5
+  99 009e 61 05                   		cmp	#0, r5
+ 100 00a0 20 2A                   		beq	.L6
+ 101                             		.loc 1 114 57 discriminator 1
+ 102 00a2 ED A5 04                		mov.L	16[r10], r5
+ 103 00a5 98 5D                   		mov.W	2[r5], r5
+ 104                             		.loc 1 114 36 discriminator 1
+ 105 00a7 DD A4 04                		mov.W	8[r10], r4
+ 106 00aa DF 55                   		mov.W	r5, r5
+ 107 00ac 47 54                   		cmp	r5, r4
+ 108 00ae 21 1C                   		bne	.L6
+ 109                             		.loc 1 114 99 discriminator 2
+ 110 00b0 ED A5 04                		mov.L	16[r10], r5
+ 111 00b3 98 D5                   		mov.W	4[r5], r5
+ 112                             		.loc 1 114 75 discriminator 2
+ 113 00b5 DD A4 05                		mov.W	10[r10], r4
+ 114 00b8 DF 55                   		mov.W	r5, r5
+ 115 00ba 47 54                   		cmp	r5, r4
+ 116 00bc 21 0E                   		bne	.L6
+ 115:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 			{
+ 116:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 				mw_gl_set_solid_fill_colour(MW_CONTROL_DOWN_COLOUR);
+ 117                             		.loc 1 116 5
+ 118 00be FB 12 CC CC CC 00       		mov.L	#0xcccccc, r1
+ 119 00c4 05 00 00 00             		bsr	_mw_gl_set_solid_fill_colour
+ 120 00c8 2E 0C                   		bra	.L7
+ 121                             	.L6:
+ 117:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 			}
+ 118:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 			else
+ 119:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 			{
+ 120:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 				mw_gl_set_solid_fill_colour(MW_CONTROL_UP_COLOUR);
+ 122                             		.loc 1 120 5
+ 123 00ca FB 12 E6 E6 E6 00       		mov.L	#0xe6e6e6, r1
+ 124 00d0 05 00 00 00             		bsr	_mw_gl_set_solid_fill_colour
+ 125                             	.L7:
+ 121:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 			}
+ 122:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 
+ 123:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 			/* set fg colour according to control enabled state */
+ 124:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 			if ((mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_IS_ENABLED) == MW_CONTROL_FLAG_IS_EN
+ 126                             		.loc 1 124 9
+ 127 00d4 ED A1 06                		mov.L	24[r10], r1
+ 128 00d7 05 00 00 00             		bsr	_mw_get_control_flags
+ 129 00db EF 15                   		mov.L	r1, r5
+ 130                             		.loc 1 124 46
+ 131 00dd 5F 55                   		movu.W	r5, r5
+ 132 00df 64 25                   		and	#2, r5
+ 133                             		.loc 1 124 7
+ 134 00e1 61 25                   		cmp	#2, r5
+ 135 00e3 19                      		bne	.L8
+ 125:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 			{
+ 126:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 				mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
+ 136                             		.loc 1 126 5
+ 137 00e4 66 01                   		mov.L	#0, r1
+ 138 00e6 05 00 00 00             		bsr	_mw_gl_set_fg_colour
+ 139 00ea 2E 0C                   		bra	.L9
+ 140                             	.L8:
+ 127:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 			}
+ 128:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 			else
+ 129:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 			{
+ 130:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 				mw_gl_set_fg_colour(MW_CONTROL_DISABLED_COLOUR);
+ 141                             		.loc 1 130 5
+ 142 00ec FB 12 BF BF BF 00       		mov.L	#0xbfbfbf, r1
+ 143 00f2 05 00 00 00             		bsr	_mw_gl_set_fg_colour
+ 144                             	.L9:
+ 131:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 			}
+ 132:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 
+ 133:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 			/* draw key rectangle */
+ 134:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 			mw_gl_rectangle(draw_info,
+ 135:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 					column * this_keypad->key_size,
+ 145                             		.loc 1 135 26
+ 146 00f6 ED A5 04                		mov.L	16[r10], r5
+ 147 00f9 9B 5D                   		mov.W	26[r5], r5
+ 148 00fb DF 54                   		mov.W	r5, r4
+ 149                             		.loc 1 135 13
+ 150 00fd DD A5 05                		mov.W	10[r10], r5
+ 151 0100 4F 45                   		mul	r4, r5
+ 134:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 					column * this_keypad->key_size,
+ 152                             		.loc 1 134 4
+ 153 0102 DF 52                   		mov.W	r5, r2
+ 136:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 					row * this_keypad->key_size,
+ 154                             		.loc 1 136 23
+ 155 0104 ED A5 04                		mov.L	16[r10], r5
+ 156 0107 9B 5D                   		mov.W	26[r5], r5
+ 157 0109 DF 54                   		mov.W	r5, r4
+ 158                             		.loc 1 136 10
+ 159 010b DD A5 04                		mov.W	8[r10], r5
+ 160 010e 4F 45                   		mul	r4, r5
+ 134:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 					column * this_keypad->key_size,
+ 161                             		.loc 1 134 4
+ 162 0110 DF 53                   		mov.W	r5, r3
+ 163 0112 ED A5 04                		mov.L	16[r10], r5
+ 164 0115 9B 5C                   		mov.W	26[r5], r4
+ 165 0117 ED A5 04                		mov.L	16[r10], r5
+ 166 011a 9B 5D                   		mov.W	26[r5], r5
+ 167 011c D3 05                   		mov.W	r5, [r0]
+ 168 011e ED A1 07                		mov.L	28[r10], r1
+ 169 0121 05 00 00 00             		bsr	_mw_gl_rectangle
+ 137:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 					this_keypad->key_size,
+ 138:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 					this_keypad->key_size);
+ 139:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 
+ 140:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 			/* draw key text character */
+ 141:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 			c = key_codes[(row * 3) + column];
+ 170                             		.loc 1 141 23
+ 171 0125 DD A5 04                		mov.W	8[r10], r5
+ 172 0128 66 34                   		mov.L	#3, r4
+ 173 012a 4F 54                   		mul	r5, r4
+ 174                             		.loc 1 141 28
+ 175 012c DD A5 05                		mov.W	10[r10], r5
+ 176 012f 4B 45                   		add	r4, r5
+ 177                             		.loc 1 141 6
+ 178 0131 FB 42 00 00 00 00       		mov.L	#_key_codes, r4
+ 179 0137 FE 45 45                		mov.B	[r5,r4], r5
+ 180 013a C7 A5 14                		mov.B	r5, 20[r10]
+ 142:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 			if (this_keypad->is_key_pressed && row == this_keypad->key_pressed_row && column == this_keypad-
+ 181                             		.loc 1 142 19
+ 182 013d ED A5 04                		mov.L	16[r10], r5
+ 183 0140 88 5D                   		mov.B	1[r5], r5
+ 184                             		.loc 1 142 7
+ 185 0142 5B 55                   		movu.B	r5, r5
+ 186 0144 61 05                   		cmp	#0, r5
+ 187 0146 3A A7 00                		beq	.L10
+ 188                             		.loc 1 142 57 discriminator 1
+ 189 0149 ED A5 04                		mov.L	16[r10], r5
+ 190 014c 98 5D                   		mov.W	2[r5], r5
+ 191                             		.loc 1 142 36 discriminator 1
+ 192 014e DD A4 04                		mov.W	8[r10], r4
+ 193 0151 DF 55                   		mov.W	r5, r5
+ 194 0153 47 54                   		cmp	r5, r4
+ 195 0155 3B 98 00                		bne	.L10
+ 196                             		.loc 1 142 99 discriminator 2
+ 197 0158 ED A5 04                		mov.L	16[r10], r5
+ 198 015b 98 D5                   		mov.W	4[r5], r5
+ 199                             		.loc 1 142 75 discriminator 2
+ 200 015d DD A4 05                		mov.W	10[r10], r4
+ 201 0160 DF 55                   		mov.W	r5, r5
+ 202 0162 47 54                   		cmp	r5, r4
+ 203 0164 3B 89 00                		bne	.L10
+ 143:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 			{
+ 144:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 				if (c == '\b')
+ 204                             		.loc 1 144 8
+ 205 0167 59 A5 14                		movu.B	20[r10], r5
+ 206 016a 61 85                   		cmp	#8, r5
+ 207 016c 21 47                   		bne	.L11
+ 145:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 				{
+ 146:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 					mw_gl_monochrome_bitmap(draw_info,
+ 147:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 							(column * this_keypad->key_size) + bitmap_offset + 1,
+ 208                             		.loc 1 147 29
+ 209 016e ED A5 04                		mov.L	16[r10], r5
+ 210 0171 9B 5D                   		mov.W	26[r5], r5
+ 211 0173 DF 54                   		mov.W	r5, r4
+ 212                             		.loc 1 147 16
+ 213 0175 DD A5 05                		mov.W	10[r10], r5
+ 214 0178 4F 45                   		mul	r4, r5
+ 215 017a DF 54                   		mov.W	r5, r4
+ 216                             		.loc 1 147 41
+ 217 017c DD A5 07                		mov.W	14[r10], r5
+ 218 017f 4B 45                   		add	r4, r5
+ 219                             		.loc 1 147 57
+ 220 0181 62 15                   		add	#1, r5
+ 146:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 							(column * this_keypad->key_size) + bitmap_offset + 1,
+ 221                             		.loc 1 146 6
+ 222 0183 DF 52                   		mov.W	r5, r2
+ 148:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 							(row * this_keypad->key_size) + bitmap_offset + 1,
+ 223                             		.loc 1 148 26
+ 224 0185 ED A5 04                		mov.L	16[r10], r5
+ 225 0188 9B 5D                   		mov.W	26[r5], r5
+ 226 018a DF 54                   		mov.W	r5, r4
+ 227                             		.loc 1 148 13
+ 228 018c DD A5 04                		mov.W	8[r10], r5
+ 229 018f 4F 45                   		mul	r4, r5
+ 230 0191 DF 54                   		mov.W	r5, r4
+ 231                             		.loc 1 148 38
+ 232 0193 DD A5 07                		mov.W	14[r10], r5
+ 233 0196 4B 45                   		add	r4, r5
+ 234                             		.loc 1 148 54
+ 235 0198 62 15                   		add	#1, r5
+ 146:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 							(column * this_keypad->key_size) + bitmap_offset + 1,
+ 236                             		.loc 1 146 6
+ 237 019a F9 02 01 00 00 00 00    		mov.L	#_mw_bitmaps_backspace_key, 4[r0]
+ 238 01a1 F8 05 10                		mov.W	#16, [r0]
+ 239 01a4 75 44 10                		mov	#16, r4
+ 240 01a7 DF 53                   		mov.W	r5, r3
+ 241 01a9 ED A1 07                		mov.L	28[r10], r1
+ 242 01ac 05 00 00 00             		bsr	_mw_gl_monochrome_bitmap
+ 144:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 				{
+ 243                             		.loc 1 144 8
+ 244 01b0 38 B8 00                		bra	.L13
+ 245                             	.L11:
+ 149:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 							MW_UI_KEYPAD_KEY_BITMAP_SIZE,
+ 150:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 							MW_UI_KEYPAD_KEY_BITMAP_SIZE,
+ 151:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 							mw_bitmaps_backspace_key);
+ 152:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 				}
+ 153:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 				else
+ 154:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 				{
+ 155:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 					mw_gl_character(draw_info,
+ 156:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 							(column * this_keypad->key_size) + text_offset + 1,
+ 246                             		.loc 1 156 29
+ 247 01b3 ED A5 04                		mov.L	16[r10], r5
+ 248 01b6 9B 5D                   		mov.W	26[r5], r5
+ 249 01b8 DF 54                   		mov.W	r5, r4
+ 250                             		.loc 1 156 16
+ 251 01ba DD A5 05                		mov.W	10[r10], r5
+ 252 01bd 4F 45                   		mul	r4, r5
+ 253 01bf DF 54                   		mov.W	r5, r4
+ 254                             		.loc 1 156 41
+ 255 01c1 DD A5 06                		mov.W	12[r10], r5
+ 256 01c4 4B 45                   		add	r4, r5
+ 257                             		.loc 1 156 55
+ 258 01c6 62 15                   		add	#1, r5
+ 155:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 							(column * this_keypad->key_size) + text_offset + 1,
+ 259                             		.loc 1 155 6
+ 260 01c8 DF 52                   		mov.W	r5, r2
+ 157:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 							(row * this_keypad->key_size) + text_offset + 1,
+ 261                             		.loc 1 157 26
+ 262 01ca ED A5 04                		mov.L	16[r10], r5
+ 263 01cd 9B 5D                   		mov.W	26[r5], r5
+ 264 01cf DF 54                   		mov.W	r5, r4
+ 265                             		.loc 1 157 13
+ 266 01d1 DD A5 04                		mov.W	8[r10], r5
+ 267 01d4 4F 45                   		mul	r4, r5
+ 268 01d6 DF 54                   		mov.W	r5, r4
+ 269                             		.loc 1 157 38
+ 270 01d8 DD A5 06                		mov.W	12[r10], r5
+ 271 01db 4B 45                   		add	r4, r5
+ 272                             		.loc 1 157 52
+ 273 01dd 62 15                   		add	#1, r5
+ 155:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 							(column * this_keypad->key_size) + text_offset + 1,
+ 274                             		.loc 1 155 6
+ 275 01df CD A4 14                		mov.B	20[r10], r4
+ 276 01e2 DF 53                   		mov.W	r5, r3
+ 277 01e4 ED A1 07                		mov.L	28[r10], r1
+ 278 01e7 05 00 00 00             		bsr	_mw_gl_character
+ 144:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 				{
+ 279                             		.loc 1 144 8
+ 280 01eb 2E 7D                   		bra	.L13
+ 281                             	.L10:
+ 158:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 							c);
+ 159:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 				}
+ 160:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 			}
+ 161:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 			else
+ 162:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 			{
+ 163:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 				if (c == '\b')
+ 282                             		.loc 1 163 8
+ 283 01ed 59 A5 14                		movu.B	20[r10], r5
+ 284 01f0 61 85                   		cmp	#8, r5
+ 285 01f2 21 42                   		bne	.L14
+ 164:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 				{
+ 165:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 					mw_gl_monochrome_bitmap(draw_info,
+ 166:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 							(column * this_keypad->key_size) + bitmap_offset,
+ 286                             		.loc 1 166 29
+ 287 01f4 ED A5 04                		mov.L	16[r10], r5
+ 288 01f7 9B 5D                   		mov.W	26[r5], r5
+ 289 01f9 DF 54                   		mov.W	r5, r4
+ 290                             		.loc 1 166 16
+ 291 01fb DD A5 05                		mov.W	10[r10], r5
+ 292 01fe 4F 45                   		mul	r4, r5
+ 293 0200 DF 54                   		mov.W	r5, r4
+ 294                             		.loc 1 166 41
+ 295 0202 DD A5 07                		mov.W	14[r10], r5
+ 296 0205 4B 45                   		add	r4, r5
+ 165:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 							(column * this_keypad->key_size) + bitmap_offset,
+ 297                             		.loc 1 165 6
+ 298 0207 DF 52                   		mov.W	r5, r2
+ 167:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 							(row * this_keypad->key_size) + bitmap_offset,
+ 299                             		.loc 1 167 26
+ 300 0209 ED A5 04                		mov.L	16[r10], r5
+ 301 020c 9B 5D                   		mov.W	26[r5], r5
+ 302 020e DF 54                   		mov.W	r5, r4
+ 303                             		.loc 1 167 13
+ 304 0210 DD A5 04                		mov.W	8[r10], r5
+ 305 0213 4F 45                   		mul	r4, r5
+ 306 0215 DF 54                   		mov.W	r5, r4
+ 307                             		.loc 1 167 38
+ 308 0217 DD A5 07                		mov.W	14[r10], r5
+ 309 021a 4B 45                   		add	r4, r5
+ 165:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 							(column * this_keypad->key_size) + bitmap_offset,
+ 310                             		.loc 1 165 6
+ 311 021c F9 02 01 00 00 00 00    		mov.L	#_mw_bitmaps_backspace_key, 4[r0]
+ 312 0223 F8 05 10                		mov.W	#16, [r0]
+ 313 0226 75 44 10                		mov	#16, r4
+ 314 0229 DF 53                   		mov.W	r5, r3
+ 315 022b ED A1 07                		mov.L	28[r10], r1
+ 316 022e 05 00 00 00             		bsr	_mw_gl_monochrome_bitmap
+ 317 0232 2E 36                   		bra	.L13
+ 318                             	.L14:
+ 168:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 							MW_UI_KEYPAD_KEY_BITMAP_SIZE,
+ 169:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 							MW_UI_KEYPAD_KEY_BITMAP_SIZE,
+ 170:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 							mw_bitmaps_backspace_key);
+ 171:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 				}
+ 172:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 				else
+ 173:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 				{
+ 174:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 					mw_gl_character(draw_info,
+ 175:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 							(column * this_keypad->key_size) + text_offset,
+ 319                             		.loc 1 175 29
+ 320 0234 ED A5 04                		mov.L	16[r10], r5
+ 321 0237 9B 5D                   		mov.W	26[r5], r5
+ 322 0239 DF 54                   		mov.W	r5, r4
+ 323                             		.loc 1 175 16
+ 324 023b DD A5 05                		mov.W	10[r10], r5
+ 325 023e 4F 45                   		mul	r4, r5
+ 326 0240 DF 54                   		mov.W	r5, r4
+ 327                             		.loc 1 175 41
+ 328 0242 DD A5 06                		mov.W	12[r10], r5
+ 329 0245 4B 45                   		add	r4, r5
+ 174:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 							(column * this_keypad->key_size) + text_offset,
+ 330                             		.loc 1 174 6
+ 331 0247 DF 52                   		mov.W	r5, r2
+ 176:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 							(row * this_keypad->key_size) + text_offset,
+ 332                             		.loc 1 176 26
+ 333 0249 ED A5 04                		mov.L	16[r10], r5
+ 334 024c 9B 5D                   		mov.W	26[r5], r5
+ 335 024e DF 54                   		mov.W	r5, r4
+ 336                             		.loc 1 176 13
+ 337 0250 DD A5 04                		mov.W	8[r10], r5
+ 338 0253 4F 45                   		mul	r4, r5
+ 339 0255 DF 54                   		mov.W	r5, r4
+ 340                             		.loc 1 176 38
+ 341 0257 DD A5 06                		mov.W	12[r10], r5
+ 342 025a 4B 45                   		add	r4, r5
+ 174:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 							(column * this_keypad->key_size) + text_offset,
+ 343                             		.loc 1 174 6
+ 344 025c CD A4 14                		mov.B	20[r10], r4
+ 345 025f DF 53                   		mov.W	r5, r3
+ 346 0261 ED A1 07                		mov.L	28[r10], r1
+ 347 0264 05 00 00 00             		bsr	_mw_gl_character
+ 348                             		.balign 8,3,1
+ 349                             	.L13:
+ 177:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 							c);
+ 178:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 				}
+ 179:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 			}
+ 180:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 
+ 181:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 			/* draw 3d effect */
+ 182:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 			if (this_keypad->is_key_pressed && row == this_keypad->key_pressed_row && column == this_keypad-
+ 350                             		.loc 1 182 19
+ 351 0268 ED A5 04                		mov.L	16[r10], r5
+ 352 026b 88 5D                   		mov.B	1[r5], r5
+ 353                             		.loc 1 182 7
+ 354 026d 5B 55                   		movu.B	r5, r5
+ 355 026f 61 05                   		cmp	#0, r5
+ 356 0271 20 2A                   		beq	.L15
+ 357                             		.loc 1 182 57 discriminator 1
+ 358 0273 ED A5 04                		mov.L	16[r10], r5
+ 359 0276 98 5D                   		mov.W	2[r5], r5
+ 360                             		.loc 1 182 36 discriminator 1
+ 361 0278 DD A4 04                		mov.W	8[r10], r4
+ 362 027b DF 55                   		mov.W	r5, r5
+ 363 027d 47 54                   		cmp	r5, r4
+ 364 027f 21 1C                   		bne	.L15
+ 365                             		.loc 1 182 99 discriminator 2
+ 366 0281 ED A5 04                		mov.L	16[r10], r5
+ 367 0284 98 D5                   		mov.W	4[r5], r5
+ 368                             		.loc 1 182 75 discriminator 2
+ 369 0286 DD A4 05                		mov.W	10[r10], r4
+ 370 0289 DF 55                   		mov.W	r5, r5
+ 371 028b 47 54                   		cmp	r5, r4
+ 372 028d 21 0E                   		bne	.L15
+ 183:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 			{
+ 184:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 				highlighted_colour = MW_HAL_LCD_BLACK;
+ 373                             		.loc 1 184 24
+ 374 028f F8 A6 00                		mov.L	#0, [r10]
+ 185:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 				lowlighted_colour = MW_HAL_LCD_GREY2;
+ 375                             		.loc 1 185 23
+ 376 0292 F9 A2 01 E6 E6 E6 00    		mov.L	#0xe6e6e6, 4[r10]
+ 377 0299 2E 0F                   		bra	.L16
+ 378                             	.L15:
+ 186:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 			}
+ 187:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 			else
+ 188:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 			{
+ 189:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 				highlighted_colour = MW_HAL_LCD_WHITE;
+ 379                             		.loc 1 189 24
+ 380 029b F8 A2 FF FF FF 00       		mov.L	#0xffffff, [r10]
+ 190:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 				lowlighted_colour = MW_HAL_LCD_GREY7;
+ 381                             		.loc 1 190 23
+ 382 02a1 F9 A2 01 A6 A6 A6 00    		mov.L	#0xa6a6a6, 4[r10]
+ 383                             	.L16:
+ 191:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 			}
+ 192:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 
+ 193:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 			mw_gl_set_fg_colour(highlighted_colour);
+ 384                             		.loc 1 193 4 discriminator 2
+ 385 02a8 EC A1                   		mov.L	[r10], r1
+ 386 02aa 05 00 00 00             		bsr	_mw_gl_set_fg_colour
+ 194:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 			mw_gl_vline(draw_info,
+ 195:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 					(column * this_keypad->key_size) + 1,
+ 387                             		.loc 1 195 27 discriminator 2
+ 388 02ae ED A5 04                		mov.L	16[r10], r5
+ 389 02b1 9B 5D                   		mov.W	26[r5], r5
+ 390 02b3 DF 54                   		mov.W	r5, r4
+ 391                             		.loc 1 195 14 discriminator 2
+ 392 02b5 DD A5 05                		mov.W	10[r10], r5
+ 393 02b8 4F 45                   		mul	r4, r5
+ 394                             		.loc 1 195 39 discriminator 2
+ 395 02ba 62 15                   		add	#1, r5
+ 194:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 			mw_gl_vline(draw_info,
+ 396                             		.loc 1 194 4 discriminator 2
+ 397 02bc DF 52                   		mov.W	r5, r2
+ 196:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 					(row * this_keypad->key_size) + 1,
+ 398                             		.loc 1 196 24 discriminator 2
+ 399 02be ED A5 04                		mov.L	16[r10], r5
+ 400 02c1 9B 5D                   		mov.W	26[r5], r5
+ 401 02c3 DF 54                   		mov.W	r5, r4
+ 402                             		.loc 1 196 11 discriminator 2
+ 403 02c5 DD A5 04                		mov.W	8[r10], r5
+ 404 02c8 4F 45                   		mul	r4, r5
+ 405                             		.loc 1 196 36 discriminator 2
+ 406 02ca 62 15                   		add	#1, r5
+ 194:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 			mw_gl_vline(draw_info,
+ 407                             		.loc 1 194 4 discriminator 2
+ 408 02cc DF 53                   		mov.W	r5, r3
+ 197:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 					((row + 1) * this_keypad->key_size) - 2);
+ 409                             		.loc 1 197 12 discriminator 2
+ 410 02ce DD A5 04                		mov.W	8[r10], r5
+ 411 02d1 62 15                   		add	#1, r5
+ 412                             		.loc 1 197 42 discriminator 2
+ 413 02d3 DF 54                   		mov.W	r5, r4
+ 414                             		.loc 1 197 30 discriminator 2
+ 415 02d5 ED A5 04                		mov.L	16[r10], r5
+ 416 02d8 9B 5D                   		mov.W	26[r5], r5
+ 417                             		.loc 1 197 42 discriminator 2
+ 418 02da 4F 45                   		mul	r4, r5
+ 419 02dc 60 25                   		sub	#2, r5
+ 194:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 			mw_gl_vline(draw_info,
+ 420                             		.loc 1 194 4 discriminator 2
+ 421 02de DF 54                   		mov.W	r5, r4
+ 422 02e0 ED A1 07                		mov.L	28[r10], r1
+ 423 02e3 05 00 00 00             		bsr	_mw_gl_vline
+ 198:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 			mw_gl_hline(draw_info,
+ 199:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 					(column * this_keypad->key_size) + 1,
+ 424                             		.loc 1 199 27 discriminator 2
+ 425 02e7 ED A5 04                		mov.L	16[r10], r5
+ 426 02ea 9B 5D                   		mov.W	26[r5], r5
+ 427 02ec DF 54                   		mov.W	r5, r4
+ 428                             		.loc 1 199 14 discriminator 2
+ 429 02ee DD A5 05                		mov.W	10[r10], r5
+ 430 02f1 4F 45                   		mul	r4, r5
+ 431                             		.loc 1 199 39 discriminator 2
+ 432 02f3 62 15                   		add	#1, r5
+ 198:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 			mw_gl_hline(draw_info,
+ 433                             		.loc 1 198 4 discriminator 2
+ 434 02f5 DF 52                   		mov.W	r5, r2
+ 200:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 					((column + 1) * this_keypad->key_size) - 2,
+ 435                             		.loc 1 200 15 discriminator 2
+ 436 02f7 DD A5 05                		mov.W	10[r10], r5
+ 437 02fa 62 15                   		add	#1, r5
+ 438                             		.loc 1 200 45 discriminator 2
+ 439 02fc DF 54                   		mov.W	r5, r4
+ 440                             		.loc 1 200 33 discriminator 2
+ 441 02fe ED A5 04                		mov.L	16[r10], r5
+ 442 0301 9B 5D                   		mov.W	26[r5], r5
+ 443                             		.loc 1 200 45 discriminator 2
+ 444 0303 4F 45                   		mul	r4, r5
+ 445 0305 60 25                   		sub	#2, r5
+ 198:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 			mw_gl_hline(draw_info,
+ 446                             		.loc 1 198 4 discriminator 2
+ 447 0307 DF 53                   		mov.W	r5, r3
+ 201:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 					(row * this_keypad->key_size) + 1);
+ 448                             		.loc 1 201 24 discriminator 2
+ 449 0309 ED A5 04                		mov.L	16[r10], r5
+ 450 030c 9B 5D                   		mov.W	26[r5], r5
+ 451 030e DF 54                   		mov.W	r5, r4
+ 452                             		.loc 1 201 11 discriminator 2
+ 453 0310 DD A5 04                		mov.W	8[r10], r5
+ 454 0313 4F 45                   		mul	r4, r5
+ 455                             		.loc 1 201 36 discriminator 2
+ 456 0315 62 15                   		add	#1, r5
+ 198:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 			mw_gl_hline(draw_info,
+ 457                             		.loc 1 198 4 discriminator 2
+ 458 0317 DF 54                   		mov.W	r5, r4
+ 459 0319 ED A1 07                		mov.L	28[r10], r1
+ 460 031c 05 00 00 00             		bsr	_mw_gl_hline
+ 202:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 
+ 203:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 			mw_gl_set_fg_colour(lowlighted_colour);
+ 461                             		.loc 1 203 4 discriminator 2
+ 462 0320 ED A1 01                		mov.L	4[r10], r1
+ 463 0323 05 00 00 00             		bsr	_mw_gl_set_fg_colour
+ 204:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 			mw_gl_vline(draw_info,
+ 205:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 					((column + 1) * this_keypad->key_size) - 2,
+ 464                             		.loc 1 205 15 discriminator 2
+ 465 0327 DD A5 05                		mov.W	10[r10], r5
+ 466 032a 62 15                   		add	#1, r5
+ 467                             		.loc 1 205 45 discriminator 2
+ 468 032c DF 54                   		mov.W	r5, r4
+ 469                             		.loc 1 205 33 discriminator 2
+ 470 032e ED A5 04                		mov.L	16[r10], r5
+ 471 0331 9B 5D                   		mov.W	26[r5], r5
+ 472                             		.loc 1 205 45 discriminator 2
+ 473 0333 4F 45                   		mul	r4, r5
+ 474 0335 60 25                   		sub	#2, r5
+ 204:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 			mw_gl_vline(draw_info,
+ 475                             		.loc 1 204 4 discriminator 2
+ 476 0337 DF 52                   		mov.W	r5, r2
+ 206:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 					(row * this_keypad->key_size) + 1,
+ 477                             		.loc 1 206 24 discriminator 2
+ 478 0339 ED A5 04                		mov.L	16[r10], r5
+ 479 033c 9B 5D                   		mov.W	26[r5], r5
+ 480 033e DF 54                   		mov.W	r5, r4
+ 481                             		.loc 1 206 11 discriminator 2
+ 482 0340 DD A5 04                		mov.W	8[r10], r5
+ 483 0343 4F 45                   		mul	r4, r5
+ 484                             		.loc 1 206 36 discriminator 2
+ 485 0345 62 15                   		add	#1, r5
+ 204:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 			mw_gl_vline(draw_info,
+ 486                             		.loc 1 204 4 discriminator 2
+ 487 0347 DF 53                   		mov.W	r5, r3
+ 207:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 					((row + 1) * this_keypad->key_size) - 2);
+ 488                             		.loc 1 207 12 discriminator 2
+ 489 0349 DD A5 04                		mov.W	8[r10], r5
+ 490 034c 62 15                   		add	#1, r5
+ 491                             		.loc 1 207 42 discriminator 2
+ 492 034e DF 54                   		mov.W	r5, r4
+ 493                             		.loc 1 207 30 discriminator 2
+ 494 0350 ED A5 04                		mov.L	16[r10], r5
+ 495 0353 9B 5D                   		mov.W	26[r5], r5
+ 496                             		.loc 1 207 42 discriminator 2
+ 497 0355 4F 45                   		mul	r4, r5
+ 498 0357 60 25                   		sub	#2, r5
+ 204:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 			mw_gl_vline(draw_info,
+ 499                             		.loc 1 204 4 discriminator 2
+ 500 0359 DF 54                   		mov.W	r5, r4
+ 501 035b ED A1 07                		mov.L	28[r10], r1
+ 502 035e 05 00 00 00             		bsr	_mw_gl_vline
+ 208:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 			mw_gl_hline(draw_info,
+ 209:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 					(column * this_keypad->key_size) + 1,
+ 503                             		.loc 1 209 27 discriminator 2
+ 504 0362 ED A5 04                		mov.L	16[r10], r5
+ 505 0365 9B 5D                   		mov.W	26[r5], r5
+ 506 0367 DF 54                   		mov.W	r5, r4
+ 507                             		.loc 1 209 14 discriminator 2
+ 508 0369 DD A5 05                		mov.W	10[r10], r5
+ 509 036c 4F 45                   		mul	r4, r5
+ 510                             		.loc 1 209 39 discriminator 2
+ 511 036e 62 15                   		add	#1, r5
+ 208:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 			mw_gl_hline(draw_info,
+ 512                             		.loc 1 208 4 discriminator 2
+ 513 0370 DF 52                   		mov.W	r5, r2
+ 210:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 					((column + 1) * this_keypad->key_size) - 2,
+ 514                             		.loc 1 210 15 discriminator 2
+ 515 0372 DD A5 05                		mov.W	10[r10], r5
+ 516 0375 62 15                   		add	#1, r5
+ 517                             		.loc 1 210 45 discriminator 2
+ 518 0377 DF 54                   		mov.W	r5, r4
+ 519                             		.loc 1 210 33 discriminator 2
+ 520 0379 ED A5 04                		mov.L	16[r10], r5
+ 521 037c 9B 5D                   		mov.W	26[r5], r5
+ 522                             		.loc 1 210 45 discriminator 2
+ 523 037e 4F 45                   		mul	r4, r5
+ 524 0380 60 25                   		sub	#2, r5
+ 208:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 			mw_gl_hline(draw_info,
+ 525                             		.loc 1 208 4 discriminator 2
+ 526 0382 DF 53                   		mov.W	r5, r3
+ 211:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 					((row + 1) * this_keypad->key_size) - 2);
+ 527                             		.loc 1 211 12 discriminator 2
+ 528 0384 DD A5 04                		mov.W	8[r10], r5
+ 529 0387 62 15                   		add	#1, r5
+ 530                             		.loc 1 211 42 discriminator 2
+ 531 0389 DF 54                   		mov.W	r5, r4
+ 532                             		.loc 1 211 30 discriminator 2
+ 533 038b ED A5 04                		mov.L	16[r10], r5
+ 534 038e 9B 5D                   		mov.W	26[r5], r5
+ 535                             		.loc 1 211 42 discriminator 2
+ 536 0390 4F 45                   		mul	r4, r5
+ 537 0392 60 25                   		sub	#2, r5
+ 208:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 			mw_gl_hline(draw_info,
+ 538                             		.loc 1 208 4 discriminator 2
+ 539 0394 DF 54                   		mov.W	r5, r4
+ 540 0396 ED A1 07                		mov.L	28[r10], r1
+ 541 0399 05 00 00 00             		bsr	_mw_gl_hline
+ 111:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		{
+ 542                             		.loc 1 111 38 discriminator 2
+ 543 039d DD A5 05                		mov.W	10[r10], r5
+ 544 03a0 62 15                   		add	#1, r5
+ 545 03a2 D7 A5 05                		mov.W	r5, 10[r10]
+ 546                             	.L5:
+ 111:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		{
+ 547                             		.loc 1 111 3 discriminator 1
+ 548 03a5 DD A5 05                		mov.W	10[r10], r5
+ 549 03a8 61 25                   		cmp	#2, r5
+ 550 03aa 2A 05 38 EB FC          		ble	.L17
+ 109:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 	{
+ 551                             		.loc 1 109 28 discriminator 2
+ 552 03af DD A5 04                		mov.W	8[r10], r5
+ 553 03b2 62 15                   		add	#1, r5
+ 554 03b4 D7 A5 04                		mov.W	r5, 8[r10]
+ 555                             	.L4:
+ 109:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 	{
+ 556                             		.loc 1 109 2 discriminator 1
+ 557 03b7 DD A5 04                		mov.W	8[r10], r5
+ 558 03ba 61 35                   		cmp	#3, r5
+ 559 03bc 2A 05 38 D2 FC          		ble	.L18
+ 212:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		}
+ 213:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 	}
+ 214:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 
+ 215:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 	/* special handling for negative sign which can be disabled */
+ 216:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 	if (!this_keypad->enable_negative)
+ 560                             		.loc 1 216 18
+ 561 03c1 ED A5 04                		mov.L	16[r10], r5
+ 562 03c4 CC 55                   		mov.B	[r5], r5
+ 563                             		.loc 1 216 6
+ 564 03c6 FD 74 D5 01             		xor	#1, r5
+ 565                             		.loc 1 216 5
+ 566 03ca 5B 55                   		movu.B	r5, r5
+ 567 03cc 61 05                   		cmp	#0, r5
+ 568 03ce 20 29                   		beq	.L20
+ 217:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 	{
+ 218:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		mw_gl_set_fg_colour(MW_CONTROL_DISABLED_COLOUR);
+ 569                             		.loc 1 218 3
+ 570 03d0 FB 12 BF BF BF 00       		mov.L	#0xbfbfbf, r1
+ 571 03d6 05 00 00 00             		bsr	_mw_gl_set_fg_colour
+ 219:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		mw_gl_character(draw_info,
+ 220:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 				(0 * this_keypad->key_size) + text_offset,
+ 221:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 				(3 * this_keypad->key_size) + text_offset,
+ 572                             		.loc 1 221 21
+ 573 03da ED A5 04                		mov.L	16[r10], r5
+ 574 03dd 9B 5D                   		mov.W	26[r5], r5
+ 575                             		.loc 1 221 8
+ 576 03df 63 35                   		mul	#3, r5
+ 577 03e1 DF 54                   		mov.W	r5, r4
+ 578                             		.loc 1 221 33
+ 579 03e3 DD A5 06                		mov.W	12[r10], r5
+ 580 03e6 4B 45                   		add	r4, r5
+ 219:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		mw_gl_character(draw_info,
+ 581                             		.loc 1 219 3
+ 582 03e8 75 44 2D                		mov	#45, r4
+ 583 03eb DF 53                   		mov.W	r5, r3
+ 584 03ed DD A2 06                		mov.W	12[r10], r2
+ 585 03f0 ED A1 07                		mov.L	28[r10], r1
+ 586 03f3 05 00 00 00             		bsr	_mw_gl_character
+ 587                             	.L20:
+ 222:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 				'-');
+ 223:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 	}
+ 224:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** }
+ 588                             		.loc 1 224 1
+ 589 03f7 03                      		nop
+ 590 03f8 3F AA 0B                		rtsd	#44, r10-r10
+ 591                             	.LFE0:
+ 593 03fb 77 10 01 00 00          		.section	.text.process_keypress,"ax",@progbits
+ 595                             	_process_keypress:
+ 596                             	.LFB1:
+ 225:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 
+ 226:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** /**
+ 227:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c ****  * Process a keypress, either as a new touch down or a hold down from a previous touch down
+ 228:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c ****  *
+ 229:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c ****  * @param message Message passed in from message handler that calls this function
+ 230:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c ****  */
+ 231:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** static void process_keypress(const mw_message_t *message)
+ 232:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** {
+ 597                             		.loc 1 232 1
+ 598 0000 7E AA                   		push.l	r10
+ 599                             	.LCFI3:
+ 600 0002 7E A6                   		push.l	r6
+ 601                             	.LCFI4:
+ 602 0004 71 0A F8                		add	#-8, r0, r10
+ 603                             	.LCFI5:
+ 604 0007 71 A0 F8                		add	#-8, r10, r0
+ 605                             	.LCFI6:
+ 606 000a E7 A1 01                		mov.L	r1, 4[r10]
+ 233:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 	mw_ui_keypad_data_t *this_keypad = (mw_ui_keypad_data_t*)mw_get_control_instance_data(message->rec
+ 607                             		.loc 1 233 59
+ 608 000d ED A5 01                		mov.L	4[r10], r5
+ 609 0010 A8 5D                   		mov.L	4[r5], r5
+ 610 0012 EF 51                   		mov.L	r5, r1
+ 611 0014 05 00 00 00             		bsr	_mw_get_control_instance_data
+ 612 0018 E3 A1                   		mov.L	r1, [r10]
+ 234:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 
+ 235:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 	/* special handling for negative key which can be disabled */
+ 236:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 	if (!(this_keypad->key_pressed_row == 3 && this_keypad->key_pressed_column == 0 && !this_keypad->e
+ 613                             		.loc 1 236 19
+ 614 001a EC A5                   		mov.L	[r10], r5
+ 615 001c 98 5D                   		mov.W	2[r5], r5
+ 616                             		.loc 1 236 5
+ 617 001e DF 55                   		mov.W	r5, r5
+ 618 0020 61 35                   		cmp	#3, r5
+ 619 0022 21 16                   		bne	.L22
+ 620                             		.loc 1 236 56 discriminator 1
+ 621 0024 EC A5                   		mov.L	[r10], r5
+ 622 0026 98 D5                   		mov.W	4[r5], r5
+ 623                             		.loc 1 236 42 discriminator 1
+ 624 0028 DF 55                   		mov.W	r5, r5
+ 625 002a 61 05                   		cmp	#0, r5
+ 626 002c 21 0C                   		bne	.L22
+ 627                             		.loc 1 236 97 discriminator 2
+ 628 002e EC A5                   		mov.L	[r10], r5
+ 629 0030 CC 55                   		mov.B	[r5], r5
+ 630                             		.loc 1 236 6 discriminator 2
+ 631 0032 5B 55                   		movu.B	r5, r5
+ 632 0034 61 05                   		cmp	#0, r5
+ 633 0036 20 77                   		beq	.L24
+ 634                             	.L22:
+ 237:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 	{
+ 238:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		/* post message for keypress */
+ 239:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		mw_post_message(MW_KEY_PRESSED_MESSAGE,
+ 635                             		.loc 1 239 3
+ 636 0038 ED A5 01                		mov.L	4[r10], r5
+ 637 003b A8 5E                   		mov.L	4[r5], r6
+ 638 003d ED A5 01                		mov.L	4[r10], r5
+ 639 0040 A8 5D                   		mov.L	4[r5], r5
+ 640 0042 EF 51                   		mov.L	r5, r1
+ 641 0044 05 00 00 00             		bsr	_mw_get_control_parent_window_handle
+ 642 0048 EF 13                   		mov.L	r1, r3
+ 240:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 				message->recipient_handle,
+ 241:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 				mw_get_control_parent_window_handle(message->recipient_handle),
+ 242:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 				(uint32_t)key_codes[(this_keypad->key_pressed_row * 3) + this_keypad->key_pressed_column],
+ 643                             		.loc 1 242 37
+ 644 004a EC A5                   		mov.L	[r10], r5
+ 645 004c 98 5D                   		mov.W	2[r5], r5
+ 646 004e DF 55                   		mov.W	r5, r5
+ 647                             		.loc 1 242 55
+ 648 0050 66 34                   		mov.L	#3, r4
+ 649 0052 4F 54                   		mul	r5, r4
+ 650                             		.loc 1 242 73
+ 651 0054 EC A5                   		mov.L	[r10], r5
+ 652 0056 98 D5                   		mov.W	4[r5], r5
+ 653 0058 DF 55                   		mov.W	r5, r5
+ 654                             		.loc 1 242 60
+ 655 005a 4B 45                   		add	r4, r5
+ 656                             		.loc 1 242 24
+ 657 005c FB 42 00 00 00 00       		mov.L	#_key_codes, r4
+ 658 0062 FE 45 45                		mov.B	[r5,r4], r5
+ 239:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 				message->recipient_handle,
+ 659                             		.loc 1 239 3
+ 660 0065 5B 55                   		movu.B	r5, r5
+ 661 0067 3E 01 00                		mov.L	#0, 4[r0]
+ 662 006a F8 06 00                		mov.L	#0, [r0]
+ 663 006d EF 54                   		mov.L	r5, r4
+ 664 006f EF 62                   		mov.L	r6, r2
+ 665 0071 75 41 24                		mov.L	#36, r1
+ 666 0074 05 00 00 00             		bsr	_mw_post_message
+ 243:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 				NULL,
+ 244:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 				MW_WINDOW_MESSAGE);
+ 245:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 
+ 246:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		/* repaint pressed key area only */
+ 247:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		this_keypad->invalid_rect.x = this_keypad->key_pressed_column * this_keypad->key_size;
+ 667                             		.loc 1 247 44
+ 668 0078 EC A5                   		mov.L	[r10], r5
+ 669 007a 98 D5                   		mov.W	4[r5], r5
+ 670 007c DF 54                   		mov.W	r5, r4
+ 671                             		.loc 1 247 78
+ 672 007e EC A5                   		mov.L	[r10], r5
+ 673 0080 9B 5D                   		mov.W	26[r5], r5
+ 674                             		.loc 1 247 65
+ 675 0082 4F 45                   		mul	r4, r5
+ 676 0084 DF 54                   		mov.W	r5, r4
+ 677                             		.loc 1 247 31
+ 678 0086 EC A5                   		mov.L	[r10], r5
+ 679 0088 90 DC                   		mov.W	r4, 6[r5]
+ 248:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		this_keypad->invalid_rect.y = this_keypad->key_pressed_row * this_keypad->key_size;
+ 680                             		.loc 1 248 44
+ 681 008a EC A5                   		mov.L	[r10], r5
+ 682 008c 98 5D                   		mov.W	2[r5], r5
+ 683 008e DF 54                   		mov.W	r5, r4
+ 684                             		.loc 1 248 75
+ 685 0090 EC A5                   		mov.L	[r10], r5
+ 686 0092 9B 5D                   		mov.W	26[r5], r5
+ 687                             		.loc 1 248 62
+ 688 0094 4F 45                   		mul	r4, r5
+ 689 0096 DF 54                   		mov.W	r5, r4
+ 690                             		.loc 1 248 31
+ 691 0098 EC A5                   		mov.L	[r10], r5
+ 692 009a 91 54                   		mov.W	r4, 8[r5]
+ 249:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		mw_paint_control_rect(message->recipient_handle, &this_keypad->invalid_rect);
+ 693                             		.loc 1 249 3
+ 694 009c ED A5 01                		mov.L	4[r10], r5
+ 695 009f A8 5C                   		mov.L	4[r5], r4
+ 696                             		.loc 1 249 52
+ 697 00a1 EC A5                   		mov.L	[r10], r5
+ 698 00a3 62 65                   		add	#6, r5
+ 699                             		.loc 1 249 3
+ 700 00a5 EF 52                   		mov.L	r5, r2
+ 701 00a7 EF 41                   		mov.L	r4, r1
+ 702 00a9 05 00 00 00             		bsr	_mw_paint_control_rect
+ 703                             	.L24:
+ 250:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 	}
+ 251:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** }
+ 704                             		.loc 1 251 1
+ 705 00ad 03                      		nop
+ 706 00ae 71 00 10                		add	#16, r0
+ 707 00b1 7E B6                   		pop	r6
+ 708 00b3 7E BA                   		pop	r10
+ 709 00b5 02                      		rts
+ 710                             	.LFE1:
+ 712                             		.section	.text.keypad_message_function,"ax",@progbits
+ 714                             	_keypad_message_function:
+ 715                             	.LFB2:
+ 252:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 
+ 253:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** /**
+ 254:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c ****  * Control message handler called by the window manager.
+ 255:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c ****  *
+ 256:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c ****  * @param message The message to be processed
+ 257:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c ****  */
+ 258:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** static void keypad_message_function(const mw_message_t *message)
+ 259:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** {
+ 716                             		.loc 1 259 1
+ 717 0000 6E 7A                   		pushm	r7-r10
+ 718                             	.LCFI7:
+ 719 0002 71 0A F4                		add	#-12, r0, r10
+ 720                             	.LCFI8:
+ 721 0005 EF A0                   		mov.L	r10, r0
+ 722 0007 E7 A1 02                		mov.L	r1, 8[r10]
+ 260:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 	mw_ui_keypad_data_t *this_keypad = (mw_ui_keypad_data_t*)mw_get_control_instance_data(message->rec
+ 723                             		.loc 1 260 59
+ 724 000a ED A5 02                		mov.L	8[r10], r5
+ 725 000d A8 5D                   		mov.L	4[r5], r5
+ 726 000f EF 51                   		mov.L	r5, r1
+ 727 0011 05 00 00 00             		bsr	_mw_get_control_instance_data
+ 728 0015 E3 A1                   		mov.L	r1, [r10]
+ 261:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 	uint32_t intermediate_uint32;
+ 262:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 
+ 263:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 	MW_ASSERT(message != (void*)0, "Null pointer argument");
+ 729                             		.loc 1 263 2
+ 730 0017 ED A5 02                		mov.L	8[r10], r5
+ 731 001a 61 05                   		cmp	#0, r5
+ 732 001c FC DB 51                		scne.L	r5
+ 733 001f FB 42 00 00 00 00       		mov.L	#.LC0, r4
+ 734 0025 FB 3A 07 01             		mov.L	#0x107, r3
+ 735 0029 FB 22 00 00 00 00       		mov.L	#___func__.2899, r2
+ 736 002f CF 51                   		mov.B	r5, r1
+ 737 0031 05 00 00 00             		bsr	_mw_debug_print_assert
+ 264:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 
+ 265:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 	switch (message->message_id)
+ 738                             		.loc 1 265 17
+ 739 0035 ED A5 02                		mov.L	8[r10], r5
+ 740 0038 A8 D5                   		mov.L	8[r5], r5
+ 741                             		.loc 1 265 2
+ 742 003a 75 55 15                		cmp	#21, r5
+ 743 003d 20 6B                   		beq	.L26
+ 744 003f 75 55 15                		cmp	#21, r5
+ 745 0042 24 0F                   		bgtu	.L27
+ 746 0044 61 D5                   		cmp	#13, r5
+ 747 0046 20 21                   		beq	.L28
+ 748 0048 75 55 14                		cmp	#20, r5
+ 749 004b 3A CA 00                		beq	.L29
+ 266:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 	{
+ 267:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 	case MW_CONTROL_CREATED_MESSAGE:
+ 268:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		/* initialise the control */		
+ 269:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		this_keypad->is_key_pressed = false;
+ 270:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		this_keypad->holding_down = false;
+ 271:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		this_keypad->timer_handle = MW_INVALID_HANDLE;
+ 272:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		if ((mw_get_control_flags(message->recipient_handle) & MW_CONTROL_FLAG_LARGE_SIZE) == MW_CONTROL_
+ 273:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		{
+ 274:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 			this_keypad->key_size = MW_UI_KEYPAD_KEY_LARGE_SIZE;
+ 275:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		}
+ 276:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		else
+ 277:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		{
+ 278:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 			this_keypad->key_size = MW_UI_KEYPAD_KEY_SIZE;
+ 279:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		}
+ 280:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		this_keypad->invalid_rect.width = this_keypad->key_size;
+ 281:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		this_keypad->invalid_rect.height = this_keypad->key_size;
+ 282:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		break;
+ 283:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 
+ 284:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 	case MW_TOUCH_DRAG_MESSAGE:
+ 285:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 	case MW_TOUCH_HOLD_DOWN_MESSAGE:
+ 286:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		if ((mw_get_control_flags(message->recipient_handle) & MW_CONTROL_FLAG_IS_ENABLED) == 0U)
+ 287:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		{
+ 288:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 			break;
+ 289:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		}
+ 290:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 
+ 291:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		if (!this_keypad->is_key_pressed)
+ 292:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		{
+ 293:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 			break;
+ 294:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		}
+ 295:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 
+ 296:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		mw_cancel_timer(this_keypad->timer_handle);
+ 297:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		this_keypad->holding_down = true;
+ 298:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		if (mw_tick_counter - this_keypad->touch_down_time > MW_HOLD_DOWN_DELAY_TICKS)
+ 299:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		{
+ 300:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 			process_keypress(message);
+ 301:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		}
+ 302:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		break;
+ 303:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 
+ 304:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 	case MW_TIMER_MESSAGE:
+ 305:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		/* set key pressed to false */
+ 306:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		this_keypad->is_key_pressed = false;
+ 307:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 
+ 308:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		/* repaint pressed key area only */
+ 309:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		mw_paint_control_rect(message->recipient_handle, &this_keypad->invalid_rect);
+ 310:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		break;
+ 311:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 
+ 312:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 	case MW_TOUCH_DOWN_MESSAGE:
+ 313:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		/* handle a touch down event within this control */
+ 314:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		if ((mw_get_control_flags(message->recipient_handle) & MW_CONTROL_FLAG_IS_ENABLED) == 0U)
+ 315:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		{
+ 316:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 			break;
+ 317:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		}
+ 318:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 
+ 319:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		/* get key pressed number */
+ 320:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		intermediate_uint32 = message->message_data & 0xffffU;
+ 321:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		this_keypad->key_pressed_row = ((int16_t)intermediate_uint32 / this_keypad->key_size);
+ 322:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		intermediate_uint32 = message->message_data >> 16U;
+ 323:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		this_keypad->key_pressed_column = (int16_t)intermediate_uint32 / this_keypad->key_size;
+ 324:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 
+ 325:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		this_keypad->touch_down_time = mw_tick_counter;
+ 326:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		this_keypad->timer_handle = mw_set_timer(mw_tick_counter + MW_KEY_DOWN_TIME, message->recipient_h
+ 327:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		this_keypad->is_key_pressed = true;
+ 328:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		process_keypress(message);
+ 329:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		break;
+ 330:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 
+ 331:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 	case MW_TOUCH_UP_MESSAGE:
+ 332:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		if (this_keypad->holding_down)
+ 333:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		{
+ 334:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 			this_keypad->holding_down = false;
+ 335:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 			this_keypad->timer_handle = mw_set_timer(mw_tick_counter + MW_KEY_DOWN_TIME, message->recipient_
+ 336:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		}
+ 337:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		break;
+ 338:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 
+ 339:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 	default:
+ 340:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		/* keep MISRA happy */
+ 341:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		break;
+ 750                             		.loc 1 341 3
+ 751 004e 38 98 01                		bra	.L35
+ 752                             	.L27:
+ 265:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 	{
+ 753                             		.loc 1 265 2
+ 754 0051 75 55 17                		cmp	#23, r5
+ 755 0054 20 54                   		beq	.L26
+ 756 0056 75 55 17                		cmp	#23, r5
+ 757 0059 22 05 38 51 01          		bltu	.L31
+ 758 005e 75 55 19                		cmp	#25, r5
+ 759 0061 3A 9B 00                		beq	.L32
+ 760                             		.loc 1 341 3
+ 761 0064 38 82 01                		bra	.L35
+ 762                             	.L28:
+ 269:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		this_keypad->holding_down = false;
+ 763                             		.loc 1 269 31
+ 764 0067 EC A5                   		mov.L	[r10], r5
+ 765 0069 3C 51 00                		mov.B	#0, 1[r5]
+ 270:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		this_keypad->timer_handle = MW_INVALID_HANDLE;
+ 766                             		.loc 1 270 29
+ 767 006c EC A5                   		mov.L	[r10], r5
+ 768 006e 3C D8 00                		mov.B	#0, 24[r5]
+ 271:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		if ((mw_get_control_flags(message->recipient_handle) & MW_CONTROL_FLAG_LARGE_SIZE) == MW_CONTROL_
+ 769                             		.loc 1 271 29
+ 770 0071 EC A5                   		mov.L	[r10], r5
+ 771 0073 3E 54 00                		mov.L	#0, 16[r5]
+ 272:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		{
+ 772                             		.loc 1 272 8
+ 773 0076 ED A5 02                		mov.L	8[r10], r5
+ 774 0079 A8 5D                   		mov.L	4[r5], r5
+ 775 007b EF 51                   		mov.L	r5, r1
+ 776 007d 05 00 00 00             		bsr	_mw_get_control_flags
+ 777 0081 EF 15                   		mov.L	r1, r5
+ 272:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		{
+ 778                             		.loc 1 272 56
+ 779 0083 5F 55                   		movu.W	r5, r5
+ 780 0085 64 85                   		and	#8, r5
+ 272:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		{
+ 781                             		.loc 1 272 6
+ 782 0087 61 85                   		cmp	#8, r5
+ 783 0089 1F                      		bne	.L33
+ 274:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		}
+ 784                             		.loc 1 274 26
+ 785 008a EC A5                   		mov.L	[r10], r5
+ 786 008c 3D 5D 28                		mov.W	#40, 26[r5]
+ 787 008f 0E                      		bra	.L34
+ 788                             	.L33:
+ 278:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		}
+ 789                             		.loc 1 278 26
+ 790 0090 EC A5                   		mov.L	[r10], r5
+ 791 0092 3D 5D 14                		mov.W	#20, 26[r5]
+ 792                             	.L34:
+ 280:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		this_keypad->invalid_rect.height = this_keypad->key_size;
+ 793                             		.loc 1 280 48
+ 794 0095 EC A5                   		mov.L	[r10], r5
+ 795 0097 9B 5C                   		mov.W	26[r5], r4
+ 280:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		this_keypad->invalid_rect.height = this_keypad->key_size;
+ 796                             		.loc 1 280 35
+ 797 0099 EC A5                   		mov.L	[r10], r5
+ 798 009b 91 5C                   		mov.W	r4, 10[r5]
+ 281:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		break;
+ 799                             		.loc 1 281 49
+ 800 009d EC A5                   		mov.L	[r10], r5
+ 801 009f 9B 5C                   		mov.W	26[r5], r4
+ 281:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		break;
+ 802                             		.loc 1 281 36
+ 803 00a1 EC A5                   		mov.L	[r10], r5
+ 804 00a3 91 D4                   		mov.W	r4, 12[r5]
+ 282:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 
+ 805                             		.loc 1 282 3
+ 806 00a5 38 41 01                		bra	.L35
+ 807                             	.L26:
+ 286:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		{
+ 808                             		.loc 1 286 8
+ 809 00a8 ED A5 02                		mov.L	8[r10], r5
+ 810 00ab A8 5D                   		mov.L	4[r5], r5
+ 811 00ad EF 51                   		mov.L	r5, r1
+ 812 00af 05 00 00 00             		bsr	_mw_get_control_flags
+ 813 00b3 EF 15                   		mov.L	r1, r5
+ 286:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		{
+ 814                             		.loc 1 286 56
+ 815 00b5 5F 55                   		movu.W	r5, r5
+ 816 00b7 64 25                   		and	#2, r5
+ 286:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		{
+ 817                             		.loc 1 286 6
+ 818 00b9 61 05                   		cmp	#0, r5
+ 819 00bb 3A 21 01                		beq	.L41
+ 291:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		{
+ 820                             		.loc 1 291 19
+ 821 00be EC A5                   		mov.L	[r10], r5
+ 822 00c0 88 5D                   		mov.B	1[r5], r5
+ 291:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		{
+ 823                             		.loc 1 291 7
+ 824 00c2 FD 74 D5 01             		xor	#1, r5
+ 291:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		{
+ 825                             		.loc 1 291 6
+ 826 00c6 5B 55                   		movu.B	r5, r5
+ 827 00c8 61 05                   		cmp	#0, r5
+ 828 00ca 3B 14 01                		bne	.L42
+ 296:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		this_keypad->holding_down = true;
+ 829                             		.loc 1 296 3
+ 830 00cd EC A5                   		mov.L	[r10], r5
+ 831 00cf A9 55                   		mov.L	16[r5], r5
+ 832 00d1 EF 51                   		mov.L	r5, r1
+ 833 00d3 05 00 00 00             		bsr	_mw_cancel_timer
+ 297:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		if (mw_tick_counter - this_keypad->touch_down_time > MW_HOLD_DOWN_DELAY_TICKS)
+ 834                             		.loc 1 297 29
+ 835 00d7 EC A5                   		mov.L	[r10], r5
+ 836 00d9 3C D8 01                		mov.B	#1, 24[r5]
+ 298:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		{
+ 837                             		.loc 1 298 23
+ 838 00dc FB 52 00 00 00 00       		mov.L	#_mw_tick_counter, r5
+ 839 00e2 EC 54                   		mov.L	[r5], r4
+ 298:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		{
+ 840                             		.loc 1 298 36
+ 841 00e4 EC A5                   		mov.L	[r10], r5
+ 842 00e6 A9 5D                   		mov.L	20[r5], r5
+ 298:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		{
+ 843                             		.loc 1 298 23
+ 844 00e8 FF 05 54                		sub	r5, r4, r5
+ 298:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		{
+ 845                             		.loc 1 298 6
+ 846 00eb 61 A5                   		cmp	#10, r5
+ 847 00ed 24 05 38 F1 00          		bleu	.L43
+ 300:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		}
+ 848                             		.loc 1 300 4
+ 849 00f2 ED A1 02                		mov.L	8[r10], r1
+ 850 00f5 05 00 00 00             		bsr	_process_keypress
+ 302:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 
+ 851                             		.loc 1 302 3
+ 852 00f9 38 E7 00                		bra	.L43
+ 853                             	.L32:
+ 306:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 
+ 854                             		.loc 1 306 31
+ 855 00fc EC A5                   		mov.L	[r10], r5
+ 856 00fe 3C 51 00                		mov.B	#0, 1[r5]
+ 309:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		break;
+ 857                             		.loc 1 309 3
+ 858 0101 ED A5 02                		mov.L	8[r10], r5
+ 859 0104 A8 5C                   		mov.L	4[r5], r4
+ 309:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		break;
+ 860                             		.loc 1 309 52
+ 861 0106 EC A5                   		mov.L	[r10], r5
+ 862 0108 62 65                   		add	#6, r5
+ 309:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		break;
+ 863                             		.loc 1 309 3
+ 864 010a EF 52                   		mov.L	r5, r2
+ 865 010c EF 41                   		mov.L	r4, r1
+ 866 010e 05 00 00 00             		bsr	_mw_paint_control_rect
+ 310:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 
+ 867                             		.loc 1 310 3
+ 868 0112 38 D4 00                		bra	.L35
+ 869                             	.L29:
+ 314:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		{
+ 870                             		.loc 1 314 8
+ 871 0115 ED A5 02                		mov.L	8[r10], r5
+ 872 0118 A8 5D                   		mov.L	4[r5], r5
+ 873 011a EF 51                   		mov.L	r5, r1
+ 874 011c 05 00 00 00             		bsr	_mw_get_control_flags
+ 875 0120 EF 15                   		mov.L	r1, r5
+ 314:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		{
+ 876                             		.loc 1 314 56
+ 877 0122 5F 55                   		movu.W	r5, r5
+ 878 0124 64 25                   		and	#2, r5
+ 314:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		{
+ 879                             		.loc 1 314 6
+ 880 0126 61 05                   		cmp	#0, r5
+ 881 0128 3A BA 00                		beq	.L44
+ 320:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		this_keypad->key_pressed_row = ((int16_t)intermediate_uint32 / this_keypad->key_size);
+ 882                             		.loc 1 320 32
+ 883 012b ED A5 02                		mov.L	8[r10], r5
+ 884 012e A9 55                   		mov.L	16[r5], r5
+ 320:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		this_keypad->key_pressed_row = ((int16_t)intermediate_uint32 / this_keypad->key_size);
+ 885                             		.loc 1 320 23
+ 886 0130 77 25 FF FF 00          		and	#0xffff, r5
+ 887 0135 E7 A5 01                		mov.L	r5, 4[r10]
+ 321:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		intermediate_uint32 = message->message_data >> 16U;
+ 888                             		.loc 1 321 35
+ 889 0138 ED A5 01                		mov.L	4[r10], r5
+ 890 013b DF 54                   		mov.W	r5, r4
+ 321:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		intermediate_uint32 = message->message_data >> 16U;
+ 891                             		.loc 1 321 77
+ 892 013d EC A5                   		mov.L	[r10], r5
+ 893 013f 9B 5D                   		mov.W	26[r5], r5
+ 894 0141 DF 55                   		mov.W	r5, r5
+ 321:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		intermediate_uint32 = message->message_data >> 16U;
+ 895                             		.loc 1 321 64
+ 896 0143 EF 47                   		mov.L	r4, r7
+ 897 0145 FC 23 57                		div	r5, r7
+ 898 0148 EF 75                   		mov.L	r7, r5
+ 321:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		intermediate_uint32 = message->message_data >> 16U;
+ 899                             		.loc 1 321 32
+ 900 014a DF 54                   		mov.W	r5, r4
+ 901 014c EC A5                   		mov.L	[r10], r5
+ 902 014e 90 5C                   		mov.W	r4, 2[r5]
+ 322:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		this_keypad->key_pressed_column = (int16_t)intermediate_uint32 / this_keypad->key_size;
+ 903                             		.loc 1 322 32
+ 904 0150 ED A5 02                		mov.L	8[r10], r5
+ 905 0153 A9 55                   		mov.L	16[r5], r5
+ 322:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		this_keypad->key_pressed_column = (int16_t)intermediate_uint32 / this_keypad->key_size;
+ 906                             		.loc 1 322 23
+ 907 0155 69 05                   		shlr	#16, r5
+ 908 0157 E7 A5 01                		mov.L	r5, 4[r10]
+ 323:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 
+ 909                             		.loc 1 323 37
+ 910 015a ED A5 01                		mov.L	4[r10], r5
+ 911 015d DF 54                   		mov.W	r5, r4
+ 323:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 
+ 912                             		.loc 1 323 79
+ 913 015f EC A5                   		mov.L	[r10], r5
+ 914 0161 9B 5D                   		mov.W	26[r5], r5
+ 915 0163 DF 55                   		mov.W	r5, r5
+ 323:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 
+ 916                             		.loc 1 323 66
+ 917 0165 EF 47                   		mov.L	r4, r7
+ 918 0167 FC 23 57                		div	r5, r7
+ 919 016a EF 75                   		mov.L	r7, r5
+ 323:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 
+ 920                             		.loc 1 323 35
+ 921 016c DF 54                   		mov.W	r5, r4
+ 922 016e EC A5                   		mov.L	[r10], r5
+ 923 0170 90 D4                   		mov.W	r4, 4[r5]
+ 325:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		this_keypad->timer_handle = mw_set_timer(mw_tick_counter + MW_KEY_DOWN_TIME, message->recipient_h
+ 924                             		.loc 1 325 32
+ 925 0172 FB 52 00 00 00 00       		mov.L	#_mw_tick_counter, r5
+ 926 0178 EC 54                   		mov.L	[r5], r4
+ 927 017a EC A5                   		mov.L	[r10], r5
+ 928 017c A1 5C                   		mov.L	r4, 20[r5]
+ 326:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		this_keypad->is_key_pressed = true;
+ 929                             		.loc 1 326 31
+ 930 017e FB 52 00 00 00 00       		mov.L	#_mw_tick_counter, r5
+ 931 0184 EC 55                   		mov.L	[r5], r5
+ 932 0186 71 54 03                		add	#3, r5, r4
+ 933 0189 ED A5 02                		mov.L	8[r10], r5
+ 934 018c A8 5D                   		mov.L	4[r5], r5
+ 935 018e 66 13                   		mov.L	#1, r3
+ 936 0190 EF 52                   		mov.L	r5, r2
+ 937 0192 EF 41                   		mov.L	r4, r1
+ 938 0194 05 00 00 00             		bsr	_mw_set_timer
+ 939 0198 EF 14                   		mov.L	r1, r4
+ 326:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		this_keypad->is_key_pressed = true;
+ 940                             		.loc 1 326 29
+ 941 019a EC A5                   		mov.L	[r10], r5
+ 942 019c A1 54                   		mov.L	r4, 16[r5]
+ 327:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		process_keypress(message);
+ 943                             		.loc 1 327 31
+ 944 019e EC A5                   		mov.L	[r10], r5
+ 945 01a0 3C 51 01                		mov.B	#1, 1[r5]
+ 328:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		break;
+ 946                             		.loc 1 328 3
+ 947 01a3 ED A1 02                		mov.L	8[r10], r1
+ 948 01a6 05 00 00 00             		bsr	_process_keypress
+ 329:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 
+ 949                             		.loc 1 329 3
+ 950 01aa 2E 3C                   		bra	.L35
+ 951                             	.L31:
+ 332:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		{
+ 952                             		.loc 1 332 18
+ 953 01ac EC A5                   		mov.L	[r10], r5
+ 954 01ae 8E 55                   		mov.B	24[r5], r5
+ 332:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		{
+ 955                             		.loc 1 332 6
+ 956 01b0 5B 55                   		movu.B	r5, r5
+ 957 01b2 61 05                   		cmp	#0, r5
+ 958 01b4 20 31                   		beq	.L45
+ 334:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 			this_keypad->timer_handle = mw_set_timer(mw_tick_counter + MW_KEY_DOWN_TIME, message->recipient_
+ 959                             		.loc 1 334 30
+ 960 01b6 EC A5                   		mov.L	[r10], r5
+ 961 01b8 3C D8 00                		mov.B	#0, 24[r5]
+ 335:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		}
+ 962                             		.loc 1 335 32
+ 963 01bb FB 52 00 00 00 00       		mov.L	#_mw_tick_counter, r5
+ 964 01c1 EC 55                   		mov.L	[r5], r5
+ 965 01c3 71 54 03                		add	#3, r5, r4
+ 966 01c6 ED A5 02                		mov.L	8[r10], r5
+ 967 01c9 A8 5D                   		mov.L	4[r5], r5
+ 968 01cb 66 13                   		mov.L	#1, r3
+ 969 01cd EF 52                   		mov.L	r5, r2
+ 970 01cf EF 41                   		mov.L	r4, r1
+ 971 01d1 05 00 00 00             		bsr	_mw_set_timer
+ 972 01d5 EF 14                   		mov.L	r1, r4
+ 335:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		}
+ 973                             		.loc 1 335 30
+ 974 01d7 EC A5                   		mov.L	[r10], r5
+ 975 01d9 A1 54                   		mov.L	r4, 16[r5]
+ 337:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 
+ 976                             		.loc 1 337 3
+ 977 01db 0A                      		bra	.L45
+ 978                             	.L41:
+ 288:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		}
+ 979                             		.loc 1 288 4
+ 980 01dc 03                      		nop
+ 981 01dd 09                      		bra	.L35
+ 982                             	.L42:
+ 293:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		}
+ 983                             		.loc 1 293 4
+ 984 01de 03                      		nop
+ 985 01df 0F                      		bra	.L35
+ 986                             	.L43:
+ 302:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 
+ 987                             		.loc 1 302 3
+ 988 01e0 03                      		nop
+ 989 01e1 0D                      		bra	.L35
+ 990                             	.L44:
+ 316:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		}
+ 991                             		.loc 1 316 4
+ 992 01e2 03                      		nop
+ 993 01e3 2E 03                   		bra	.L35
+ 994                             	.L45:
+ 337:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 
+ 995                             		.loc 1 337 3
+ 996 01e5 03                      		nop
+ 997                             	.L35:
+ 342:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 	}
+ 343:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** }
+ 998                             		.loc 1 343 1
+ 999 01e6 03                      		nop
+ 1000 01e7 3F 7A 07                		rtsd	#28, r7-r10
+ 1001                             	.LFE2:
+ 1003                             		.section	.text.mw_ui_keypad_add_new,"ax",@progbits
+ 1004                             		.global	_mw_ui_keypad_add_new
+ 1006                             	_mw_ui_keypad_add_new:
+ 1007                             	.LFB3:
+ 344:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 
+ 345:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** /***********************
+ 346:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** *** GLOBAL FUNCTIONS ***
+ 347:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** ***********************/
+ 348:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 
+ 349:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** mw_handle_t mw_ui_keypad_add_new(int16_t x,
+ 350:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		int16_t y,
+ 351:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		mw_handle_t parent_handle,
+ 352:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		uint16_t flags,
+ 353:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		mw_ui_keypad_data_t *keypad_instance_data)
+ 354:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** {
+ 1008                             		.loc 1 354 1
+ 1009 0000 7E AA                   		push.l	r10
+ 1010                             	.LCFI9:
+ 1011 0002 7E A6                   		push.l	r6
+ 1012                             	.LCFI10:
+ 1013 0004 71 0A E8                		add	#-24, r0, r10
+ 1014                             	.LCFI11:
+ 1015 0007 71 A0 F8                		add	#-8, r10, r0
+ 1016                             	.LCFI12:
+ 1017 000a 75 46 24                		mov.L	#36, r6
+ 1018 000d 4B A6                   		add	r10, r6
+ 1019 000f D7 A1 04                		mov.W	r1, 8[r10]
+ 1020 0012 D7 A2 05                		mov.W	r2, 10[r10]
+ 1021 0015 E7 A3 03                		mov.L	r3, 12[r10]
+ 1022 0018 D7 A4 08                		mov.W	r4, 16[r10]
+ 355:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 	mw_util_rect_t r;
+ 356:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 
+ 357:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 	if ((flags & MW_CONTROL_FLAG_LARGE_SIZE) == MW_CONTROL_FLAG_LARGE_SIZE)
+ 1023                             		.loc 1 357 13
+ 1024 001b 5D A5 08                		movu.W	16[r10], r5
+ 1025 001e 64 85                   		and	#8, r5
+ 1026                             		.loc 1 357 5
+ 1027 0020 61 05                   		cmp	#0, r5
+ 1028 0022 20 17                   		beq	.L47
+ 358:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 	{
+ 359:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		mw_util_set_rect(&r, x, y, MW_UI_KEYPAD_KEY_LARGE_SIZE * 3, MW_UI_KEYPAD_KEY_LARGE_SIZE * 4);
+ 1029                             		.loc 1 359 3
+ 1030 0024 F8 09 A0 00             		mov.W	#0xa0, [r0]
+ 1031 0028 75 44 78                		mov	#0x78, r4
+ 1032 002b DD A3 05                		mov.W	10[r10], r3
+ 1033 002e DD A2 04                		mov.W	8[r10], r2
+ 1034 0031 EF A1                   		mov.L	r10, r1
+ 1035 0033 05 00 00 00             		bsr	_mw_util_set_rect
+ 1036 0037 2E 14                   		bra	.L48
+ 1037                             	.L47:
+ 360:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 	}
+ 361:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 	else
+ 362:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 	{
+ 363:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 		mw_util_set_rect(&r, x, y, MW_UI_KEYPAD_KEY_SIZE * 3, MW_UI_KEYPAD_KEY_SIZE * 4);
+ 1038                             		.loc 1 363 3
+ 1039 0039 F8 05 50                		mov.W	#0x50, [r0]
+ 1040 003c 75 44 3C                		mov	#60, r4
+ 1041 003f DD A3 05                		mov.W	10[r10], r3
+ 1042 0042 DD A2 04                		mov.W	8[r10], r2
+ 1043 0045 EF A1                   		mov.L	r10, r1
+ 1044 0047 05 00 00 00             		bsr	_mw_util_set_rect
+ 1045                             	.L48:
+ 364:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 	}
+ 365:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 
+ 366:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 	return (mw_add_control(&r,
+ 1046                             		.loc 1 366 10
+ 1047 004b EC 65                   		mov.L	[r6], r5
+ 1048 004d A0 0D                   		mov.L	r5, 4[r0]
+ 1049 004f DD A5 08                		mov.W	16[r10], r5
+ 1050 0052 D3 05                   		mov.W	r5, [r0]
+ 1051 0054 FB 42 00 00 00 00       		mov.L	#_keypad_message_function, r4
+ 1052 005a FB 32 00 00 00 00       		mov.L	#_keypad_paint_function, r3
+ 1053 0060 ED A2 03                		mov.L	12[r10], r2
+ 1054 0063 EF A1                   		mov.L	r10, r1
+ 1055 0065 05 00 00 00             		bsr	_mw_add_control
+ 1056 0069 EF 15                   		mov.L	r1, r5
+ 367:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 			parent_handle,
+ 368:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 			keypad_paint_function,
+ 369:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 			keypad_message_function,
+ 370:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 			flags,
+ 371:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** 			keypad_instance_data));
+ 372:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_keypad.c **** }
+ 1057                             		.loc 1 372 1
+ 1058 006b EF 51                   		mov.L	r5, r1
+ 1059 006d 71 00 20                		add	#32, r0
+ 1060 0070 7E B6                   		pop	r6
+ 1061 0072 7E BA                   		pop	r10
+ 1062 0074 02                      		rts
+ 1063                             	.LFE3:
+ 1065                             		.section	.rodata.__func__.2883,"a"
+ 1068                             	___func__.2883:
+ 1069 0000 6B 65 79 70 61 64 5F 70 		.string	"keypad_paint_function"
+ 1069      61 69 6E 74 5F 66 75 6E 
+ 1069      63 74 69 6F 6E 00 
+ 1070                             		.section	.rodata.__func__.2899,"a"
+ 1073                             	___func__.2899:
+ 1074 0000 6B 65 79 70 61 64 5F 6D 		.string	"keypad_message_function"
+ 1074      65 73 73 61 67 65 5F 66 
+ 1074      75 6E 63 74 69 6F 6E 00 
+ 1202                             	.Letext0:
+ 1203                             		.file 2 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\rx-el
+ 1204                             		.file 3 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\rx-el
+ 1205                             		.file 4 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\rx-el
+ 1206                             		.file 5 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\lib\\
+ 1207                             		.file 6 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\rx-el
+ 1208                             		.file 7 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\rx-el
+ 1209                             		.file 8 "C:\\Users\\John\\Desktop\\workspace\\miniwinwm\\MiniWin/miniwin_utilities.h"
+ 1210                             		.file 9 "C:\\Users\\John\\Desktop\\workspace\\miniwinwm\\MiniWin/hal/hal_lcd.h"
+ 1211                             		.file 10 "C:\\Users\\John\\Desktop\\workspace\\miniwinwm\\MiniWin/gl/gl.h"
+ 1212                             		.file 11 "C:\\Users\\John\\Desktop\\workspace\\miniwinwm\\MiniWin/bitmaps/mw_bitmaps.h"
+ 1213                             		.file 12 "C:\\Users\\John\\Desktop\\workspace\\miniwinwm\\MiniWin/hal/hal_timer.h"
+ 1214                             		.file 13 "C:\\Users\\John\\Desktop\\workspace\\miniwinwm\\MiniWin/miniwin.h"
+ 1215                             		.file 14 "C:\\Users\\John\\Desktop\\workspace\\miniwinwm\\MiniWin/ui/ui_keypad.h"

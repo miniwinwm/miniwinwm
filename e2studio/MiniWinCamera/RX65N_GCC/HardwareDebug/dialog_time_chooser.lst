@@ -1,0 +1,1547 @@
+   1                             		.file	"dialog_time_chooser.c"
+   2                             		.section P,"ax"
+   3                             	.Ltext0:
+   4                             		.section	.rodata.text_rect_standard,"a"
+   5                             		.balign 2
+   8                             	_text_rect_standard:
+   9 0000 42 00                   		.short	0x42
+  10 0002 14 00                   		.short	20
+  11 0004 0C 00                   		.short	12
+  12 0006 32 00                   		.short	50
+  13                             		.section	.rodata.text_rect_large,"a"
+  14                             		.balign 2
+  17                             	_text_rect_large:
+  18 0000 8C 00                   		.short	0x8c
+  19 0002 28 00                   		.short	40
+  20 0004 14 00                   		.short	20
+  21 0006 5F 00                   		.short	0x5f
+  22                             		.section	.bss.mw_dialog_time_chooser_data,"aw",@nobits
+  23                             		.balign 4
+  26                             	_mw_dialog_time_chooser_data:
+  27 0000 00 00 00 00 00 00 00 00 		.zero	124
+  27      00 00 00 00 00 00 00 00 
+  27      00 00 00 00 00 00 00 00 
+  27      00 00 00 00 00 00 00 00 
+  27      00 00 00 00 00 00 00 00 
+  28                             		.section	.text.update_arrow_enable_states,"ax",@progbits
+  30                             	_update_arrow_enable_states:
+  31                             	.LFB0:
+  32                             		.file 1 "C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs/dialog_time_chooser.c"
+   1:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** /*
+   2:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 
+   3:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** MIT License
+   4:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 
+   5:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** Copyright (c) John Blaiklock 2019 miniwin Embedded Window Manager
+   6:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 
+   7:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** Permission is hereby granted, free of charge, to any person obtaining a copy
+   8:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** of this software and associated documentation files (the "Software"), to deal
+   9:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** in the Software without restriction, including without limitation the rights
+  10:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  11:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** copies of the Software, and to permit persons to whom the Software is
+  12:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** furnished to do so, subject to the following conditions:
+  13:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 
+  14:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** The above copyright notice and this permission notice shall be included in all
+  15:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** copies or substantial portions of the Software.
+  16:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 
+  17:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  18:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  19:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  20:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  21:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  22:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  23:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** SOFTWARE.
+  24:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 
+  25:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** */
+  26:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 
+  27:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** /***************
+  28:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** *** INCLUDES ***
+  29:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** ***************/
+  30:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 
+  31:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** #include <string.h>
+  32:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** #include "miniwin.h"
+  33:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** #include "dialogs/dialog_common.h"
+  34:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** #include "ui/ui_common.h"
+  35:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 
+  36:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** /****************
+  37:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** *** CONSTANTS ***
+  38:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** ****************/
+  39:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 
+  40:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** static const mw_util_rect_t text_rect_standard = {66, 20, 12, 50};
+  41:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** static const mw_util_rect_t text_rect_large = {140, 40, 20, 95};
+  42:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 
+  43:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** /************
+  44:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** *** TYPES ***
+  45:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** ************/
+  46:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 
+  47:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** /**
+  48:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c ****  * Window data structure
+  49:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c ****  */
+  50:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** typedef struct
+  51:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** {
+  52:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	mw_handle_t button_ok_handle;					/**< Control handle of ok button */
+  53:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	mw_handle_t button_cancel_handle;				/**< Control handle of cancel button */
+  54:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	mw_handle_t arrow_hour_up_handle;				/**< Control handle of hour up button */
+  55:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	mw_handle_t arrow_hour_down_handle;				/**< Control handle of hour down button */
+  56:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	mw_handle_t arrow_minute_down_handle;			/**< Control handle of minute down button */
+  57:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	mw_handle_t owner_window_handle;				/**< Window handle to send response message to */
+  58:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	mw_handle_t time_chooser_dialog_window_handle;	/**< Window handle to time chooser dialog */
+  59:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	mw_handle_t arrow_minute_up_handle;				/**< Control handle of minute up button */
+  60:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	mw_ui_button_data_t button_ok_data;				/**< Instance data of ok button */
+  61:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	mw_ui_button_data_t button_cancel_data;			/**< Instance data of cancel button */
+  62:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	mw_ui_arrow_data_t arrow_hour_up_data;			/**< Instance data of hour up button */
+  63:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	mw_ui_arrow_data_t arrow_hour_down_data;		/**< Instance data of hour down button */
+  64:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	mw_ui_arrow_data_t arrow_minute_up_data;		/**< Instance data of minute up button */
+  65:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	mw_ui_arrow_data_t arrow_minute_down_data;		/**< Instance data of minute down button */
+  66:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	uint8_t current_time_hours;						/**< Current time in dialog hours */
+  67:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	uint8_t current_time_mins;						/**< Current time in dialog minutes */
+  68:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	bool large_size;								/**< True for large size false for standard size */
+  69:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** } mw_dialog_time_chooser_data_t;
+  70:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 
+  71:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** /***********************
+  72:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** *** GLOBAL VARIABLES ***
+  73:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** ***********************/
+  74:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 
+  75:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** /**********************
+  76:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** *** LOCAL VARIABLES ***
+  77:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** **********************/
+  78:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 
+  79:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** static mw_dialog_time_chooser_data_t mw_dialog_time_chooser_data;
+  80:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 
+  81:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** /********************************
+  82:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** *** LOCAL FUNCTION PROTOTYPES ***
+  83:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** ********************************/
+  84:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 
+  85:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** static void update_arrow_enable_states(void);
+  86:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** static void mw_dialog_time_chooser_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_
+  87:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** static void mw_dialog_time_chooser_message_function(const mw_message_t *message);
+  88:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 
+  89:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** /**********************
+  90:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** *** LOCAL FUNCTIONS ***
+  91:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** **********************/
+  92:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 
+  93:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** /**
+  94:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c ****  * Set all the arrow enable states according to value of current time
+  95:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c ****  */
+  96:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** static void update_arrow_enable_states(void)
+  97:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** {
+  33                             		.loc 1 97 1
+  34 0000 7E AA                   		push.l	r10
+  35                             	.LCFI0:
+  36 0002 EF 0A                   		mov.L	r0, r10
+  37                             	.LCFI1:
+  98:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	mw_set_control_enabled(mw_dialog_time_chooser_data.arrow_minute_up_handle, true);
+  38                             		.loc 1 98 2
+  39 0004 FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+  40 000a A9 DD                   		mov.L	28[r5], r5
+  41 000c 66 12                   		mov	#1, r2
+  42 000e EF 51                   		mov.L	r5, r1
+  43 0010 05 00 00 00             		bsr	_mw_set_control_enabled
+  99:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	mw_set_control_enabled(mw_dialog_time_chooser_data.arrow_minute_down_handle, true);
+  44                             		.loc 1 99 2
+  45 0014 FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+  46 001a A9 55                   		mov.L	16[r5], r5
+  47 001c 66 12                   		mov	#1, r2
+  48 001e EF 51                   		mov.L	r5, r1
+  49 0020 05 00 00 00             		bsr	_mw_set_control_enabled
+ 100:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 
+ 101:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	if (mw_dialog_time_chooser_data.current_time_mins == 0U)
+  50                             		.loc 1 101 33
+  51 0024 FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+  52 002a CD 55 79                		mov.B	121[r5], r5
+  53                             		.loc 1 101 5
+  54 002d 5B 55                   		movu.B	r5, r5
+  55 002f 61 05                   		cmp	#0, r5
+  56 0031 21 14                   		bne	.L2
+ 102:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	{
+ 103:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		mw_set_control_enabled(mw_dialog_time_chooser_data.arrow_minute_down_handle, false);
+  57                             		.loc 1 103 3
+  58 0033 FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+  59 0039 A9 55                   		mov.L	16[r5], r5
+  60 003b 66 02                   		mov	#0, r2
+  61 003d EF 51                   		mov.L	r5, r1
+  62 003f 05 00 00 00             		bsr	_mw_set_control_enabled
+  63 0043 2E 22                   		bra	.L3
+  64                             	.L2:
+ 104:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	}
+ 105:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	else if (mw_dialog_time_chooser_data.current_time_mins == 59U)
+  65                             		.loc 1 105 38
+  66 0045 FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+  67 004b CD 55 79                		mov.B	121[r5], r5
+  68                             		.loc 1 105 10
+  69 004e 5B 55                   		movu.B	r5, r5
+  70 0050 75 55 3B                		cmp	#59, r5
+  71 0053 21 12                   		bne	.L3
+ 106:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	{
+ 107:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		mw_set_control_enabled(mw_dialog_time_chooser_data.arrow_minute_up_handle, false);
+  72                             		.loc 1 107 3
+  73 0055 FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+  74 005b A9 DD                   		mov.L	28[r5], r5
+  75 005d 66 02                   		mov	#0, r2
+  76 005f EF 51                   		mov.L	r5, r1
+  77 0061 05 00 00 00             		bsr	_mw_set_control_enabled
+  78                             	.L3:
+ 108:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	}
+ 109:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	else
+ 110:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	{
+ 111:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		/* keep MISRA happy */
+ 112:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	}
+ 113:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 
+ 114:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	mw_set_control_enabled(mw_dialog_time_chooser_data.arrow_hour_up_handle, true);
+  79                             		.loc 1 114 2
+  80 0065 FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+  81 006b A8 D5                   		mov.L	8[r5], r5
+  82 006d 66 12                   		mov	#1, r2
+  83 006f EF 51                   		mov.L	r5, r1
+  84 0071 05 00 00 00             		bsr	_mw_set_control_enabled
+ 115:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	mw_set_control_enabled(mw_dialog_time_chooser_data.arrow_hour_down_handle, true);
+  85                             		.loc 1 115 2
+  86 0075 FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+  87 007b A8 DD                   		mov.L	12[r5], r5
+  88 007d 66 12                   		mov	#1, r2
+  89 007f EF 51                   		mov.L	r5, r1
+  90 0081 05 00 00 00             		bsr	_mw_set_control_enabled
+ 116:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 
+ 117:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	if (mw_dialog_time_chooser_data.current_time_hours == 0U)
+  91                             		.loc 1 117 33
+  92 0085 FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+  93 008b CD 55 78                		mov.B	120[r5], r5
+  94                             		.loc 1 117 5
+  95 008e 5B 55                   		movu.B	r5, r5
+  96 0090 61 05                   		cmp	#0, r5
+  97 0092 21 14                   		bne	.L4
+ 118:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	{
+ 119:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		mw_set_control_enabled(mw_dialog_time_chooser_data.arrow_hour_down_handle, false);
+  98                             		.loc 1 119 3
+  99 0094 FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+ 100 009a A8 DD                   		mov.L	12[r5], r5
+ 101 009c 66 02                   		mov	#0, r2
+ 102 009e EF 51                   		mov.L	r5, r1
+ 103 00a0 05 00 00 00             		bsr	_mw_set_control_enabled
+ 104 00a4 2E 22                   		bra	.L5
+ 105                             	.L4:
+ 120:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	}
+ 121:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	else if (mw_dialog_time_chooser_data.current_time_hours == 23U)
+ 106                             		.loc 1 121 38
+ 107 00a6 FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+ 108 00ac CD 55 78                		mov.B	120[r5], r5
+ 109                             		.loc 1 121 10
+ 110 00af 5B 55                   		movu.B	r5, r5
+ 111 00b1 75 55 17                		cmp	#23, r5
+ 112 00b4 21 12                   		bne	.L5
+ 122:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	{
+ 123:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		mw_set_control_enabled(mw_dialog_time_chooser_data.arrow_hour_up_handle, false);
+ 113                             		.loc 1 123 3
+ 114 00b6 FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+ 115 00bc A8 D5                   		mov.L	8[r5], r5
+ 116 00be 66 02                   		mov	#0, r2
+ 117 00c0 EF 51                   		mov.L	r5, r1
+ 118 00c2 05 00 00 00             		bsr	_mw_set_control_enabled
+ 119                             	.L5:
+ 124:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	}
+ 125:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	else
+ 126:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	{
+ 127:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		/* keep MISRA happy */
+ 128:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	}
+ 129:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 
+ 130:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	mw_paint_control(mw_dialog_time_chooser_data.arrow_minute_up_handle);
+ 120                             		.loc 1 130 2
+ 121 00c6 FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+ 122 00cc A9 DD                   		mov.L	28[r5], r5
+ 123 00ce EF 51                   		mov.L	r5, r1
+ 124 00d0 05 00 00 00             		bsr	_mw_paint_control
+ 131:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	mw_paint_control(mw_dialog_time_chooser_data.arrow_minute_down_handle);
+ 125                             		.loc 1 131 2
+ 126 00d4 FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+ 127 00da A9 55                   		mov.L	16[r5], r5
+ 128 00dc EF 51                   		mov.L	r5, r1
+ 129 00de 05 00 00 00             		bsr	_mw_paint_control
+ 132:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	mw_paint_control(mw_dialog_time_chooser_data.arrow_hour_up_handle);
+ 130                             		.loc 1 132 2
+ 131 00e2 FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+ 132 00e8 A8 D5                   		mov.L	8[r5], r5
+ 133 00ea EF 51                   		mov.L	r5, r1
+ 134 00ec 05 00 00 00             		bsr	_mw_paint_control
+ 133:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	mw_paint_control(mw_dialog_time_chooser_data.arrow_hour_down_handle);
+ 135                             		.loc 1 133 2
+ 136 00f0 FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+ 137 00f6 A8 DD                   		mov.L	12[r5], r5
+ 138 00f8 EF 51                   		mov.L	r5, r1
+ 139 00fa 05 00 00 00             		bsr	_mw_paint_control
+ 134:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** }
+ 140                             		.loc 1 134 1
+ 141 00fe 03                      		nop
+ 142 00ff 3F AA 01                		rtsd	#4, r10-r10
+ 143                             	.LFE0:
+ 145                             		.section C,"a",@progbits
+ 146                             		.p2align 2
+ 147                             	.LC0:
+ 148 0000 4E 75 6C 6C 20 70 6F 69 		.string	"Null pointer argument"
+ 148      6E 74 65 72 20 61 72 67 
+ 148      75 6D 65 6E 74 00 
+ 149                             	.LC1:
+ 150 0016 48 6F 75 72 3A 20 00    		.string	"Hour: "
+ 151                             	.LC2:
+ 152 001d 4D 69 6E 75 74 65 3A 20 		.string	"Minute: "
+ 152      00 
+ 153                             		.section	.text.mw_dialog_time_chooser_paint_function,"ax",@progbits
+ 155                             	_mw_dialog_time_chooser_paint_function:
+ 156                             	.LFB1:
+ 135:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 
+ 136:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** /**
+ 137:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c ****  * Window paint routine, called by window manager.
+ 138:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c ****  *
+ 139:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c ****  * @param window_handle The window identifier in the array of windows
+ 140:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c ****  * @param draw_info Draw info structure describing offset and clip region
+ 141:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c ****  * @note Do not call this directly from user code
+ 142:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c ****  */
+ 143:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** static void mw_dialog_time_chooser_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_
+ 144:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** {
+ 157                             		.loc 1 144 1
+ 158 0000 6E 6B                   		pushm	r6-r11
+ 159                             	.LCFI2:
+ 160 0002 71 0A D4                		add	#-44, r0, r10
+ 161                             	.LCFI3:
+ 162 0005 71 A0 FC                		add	#-4, r10, r0
+ 163                             	.LCFI4:
+ 164 0008 E7 A1 09                		mov.L	r1, 36[r10]
+ 165 000b E7 A2 0A                		mov.L	r2, 40[r10]
+ 145:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	char text_hour[16];
+ 146:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	char text_min[16];
+ 147:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	char temp_buffer[3];
+ 148:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 
+ 149:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	MW_ASSERT(draw_info != (void*)0, "Null pointer argument");
+ 166                             		.loc 1 149 2
+ 167 000e ED A5 0A                		mov.L	40[r10], r5
+ 168 0011 61 05                   		cmp	#0, r5
+ 169 0013 FC DB 51                		scne.L	r5
+ 170 0016 FB 42 00 00 00 00       		mov.L	#.LC0, r4
+ 171 001c 75 43 95                		mov.L	#0x95, r3
+ 172 001f FB 22 00 00 00 00       		mov.L	#___func__.2989, r2
+ 173 0025 CF 51                   		mov.B	r5, r1
+ 174 0027 05 00 00 00             		bsr	_mw_debug_print_assert
+ 150:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 
+ 151:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	mw_gl_set_fill(MW_GL_FILL);
+ 175                             		.loc 1 151 2
+ 176 002b 66 11                   		mov.L	#1, r1
+ 177 002d 05 00 00 00             		bsr	_mw_gl_set_fill
+ 152:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	mw_gl_set_solid_fill_colour(MW_HAL_LCD_WHITE);
+ 178                             		.loc 1 152 2
+ 179 0031 FB 12 FF FF FF 00       		mov.L	#0xffffff, r1
+ 180 0037 05 00 00 00             		bsr	_mw_gl_set_solid_fill_colour
+ 153:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	mw_gl_set_border(MW_GL_BORDER_OFF);
+ 181                             		.loc 1 153 2
+ 182 003b 66 01                   		mov.L	#0, r1
+ 183 003d 05 00 00 00             		bsr	_mw_gl_set_border
+ 154:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	mw_gl_clear_pattern();
+ 184                             		.loc 1 154 2
+ 185 0041 05 00 00 00             		bsr	_mw_gl_clear_pattern
+ 155:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	mw_gl_rectangle(draw_info,
+ 156:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 			0,
+ 157:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 			0,
+ 158:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 			mw_get_window_client_rect(window_handle).width,
+ 186                             		.loc 1 158 4
+ 187 0045 ED A1 09                		mov.L	36[r10], r1
+ 188 0048 05 00 00 00             		bsr	_mw_get_window_client_rect
+ 189 004c EF 15                   		mov.L	r1, r5
+ 190 004e EF 26                   		mov.L	r2, r6
+ 155:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	mw_gl_rectangle(draw_info,
+ 191                             		.loc 1 155 2
+ 192 0050 DF 6B                   		mov.W	r6, r11
+ 159:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 			mw_get_window_client_rect(window_handle).height);
+ 193                             		.loc 1 159 4
+ 194 0052 ED A1 09                		mov.L	36[r10], r1
+ 195 0055 05 00 00 00             		bsr	_mw_get_window_client_rect
+ 196 0059 EF 15                   		mov.L	r1, r5
+ 197 005b EF 26                   		mov.L	r2, r6
+ 155:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	mw_gl_rectangle(draw_info,
+ 198                             		.loc 1 155 2
+ 199 005d EF 65                   		mov.L	r6, r5
+ 200 005f 6B 05                   		shar	#16, r5
+ 201 0061 D3 05                   		mov.W	r5, [r0]
+ 202 0063 DF B4                   		mov.W	r11, r4
+ 203 0065 66 03                   		mov	#0, r3
+ 204 0067 66 02                   		mov	#0, r2
+ 205 0069 ED A1 0A                		mov.L	40[r10], r1
+ 206 006c 05 00 00 00             		bsr	_mw_gl_rectangle
+ 160:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 
+ 161:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
+ 207                             		.loc 1 161 2
+ 208 0070 66 01                   		mov.L	#0, r1
+ 209 0072 05 00 00 00             		bsr	_mw_gl_set_fg_colour
+ 162:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	mw_gl_set_bg_transparency(MW_GL_BG_TRANSPARENT);
+ 210                             		.loc 1 162 2
+ 211 0076 66 01                   		mov.L	#0, r1
+ 212 0078 05 00 00 00             		bsr	_mw_gl_set_bg_transparency
+ 163:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	mw_gl_set_text_rotation(MW_GL_TEXT_ROTATION_0);
+ 213                             		.loc 1 163 2
+ 214 007c 66 01                   		mov.L	#0, r1
+ 215 007e 05 00 00 00             		bsr	_mw_gl_set_text_rotation
+ 164:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 
+ 165:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	(void)mw_util_safe_itoa((int32_t)mw_dialog_time_chooser_data.current_time_hours, temp_buffer, (siz
+ 216                             		.loc 1 165 62
+ 217 0082 FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+ 218 0088 CD 55 78                		mov.B	120[r5], r5
+ 219                             		.loc 1 165 8
+ 220 008b 5B 55                   		movu.B	r5, r5
+ 221 008d 71 A2 20                		add	#32, r10, r2
+ 222 0090 3C 02 30                		mov.B	#48, 2[r0]
+ 223 0093 3C 01 00                		mov.B	#0, 1[r0]
+ 224 0096 F8 04 00                		mov.B	#0, [r0]
+ 225 0099 66 A4                   		mov.L	#10, r4
+ 226 009b 66 33                   		mov.L	#3, r3
+ 227 009d EF 51                   		mov.L	r5, r1
+ 228 009f 05 00 00 00             		bsr	_mw_util_safe_itoa
+ 166:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	(void)mw_util_safe_strcpy(text_hour, 16, "Hour: ");
+ 229                             		.loc 1 166 8
+ 230 00a3 FB 32 16 00 00 00       		mov.L	#.LC1, r3
+ 231 00a9 75 42 10                		mov.L	#16, r2
+ 232 00ac EF A1                   		mov.L	r10, r1
+ 233 00ae 05 00 00 00             		bsr	_mw_util_safe_strcpy
+ 167:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	(void)mw_util_safe_strcat(text_hour, 16, temp_buffer);
+ 234                             		.loc 1 167 8
+ 235 00b2 71 A5 20                		add	#32, r10, r5
+ 236 00b5 EF 53                   		mov.L	r5, r3
+ 237 00b7 75 42 10                		mov.L	#16, r2
+ 238 00ba EF A1                   		mov.L	r10, r1
+ 239 00bc 05 00 00 00             		bsr	_mw_util_safe_strcat
+ 168:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	(void)mw_util_safe_itoa((int32_t)mw_dialog_time_chooser_data.current_time_mins, temp_buffer, (size
+ 240                             		.loc 1 168 62
+ 241 00c0 FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+ 242 00c6 CD 55 79                		mov.B	121[r5], r5
+ 243                             		.loc 1 168 8
+ 244 00c9 5B 55                   		movu.B	r5, r5
+ 245 00cb 71 A2 20                		add	#32, r10, r2
+ 246 00ce 3C 02 30                		mov.B	#48, 2[r0]
+ 247 00d1 3C 01 00                		mov.B	#0, 1[r0]
+ 248 00d4 F8 04 00                		mov.B	#0, [r0]
+ 249 00d7 66 A4                   		mov.L	#10, r4
+ 250 00d9 66 33                   		mov.L	#3, r3
+ 251 00db EF 51                   		mov.L	r5, r1
+ 252 00dd 05 00 00 00             		bsr	_mw_util_safe_itoa
+ 169:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	(void)mw_util_safe_strcpy(text_min, 16, "Minute: ");
+ 253                             		.loc 1 169 8
+ 254 00e1 71 A5 10                		add	#16, r10, r5
+ 255 00e4 FB 32 1D 00 00 00       		mov.L	#.LC2, r3
+ 256 00ea 75 42 10                		mov.L	#16, r2
+ 257 00ed EF 51                   		mov.L	r5, r1
+ 258 00ef 05 00 00 00             		bsr	_mw_util_safe_strcpy
+ 170:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	(void)mw_util_safe_strcat(text_min, 16, temp_buffer);
+ 259                             		.loc 1 170 8
+ 260 00f3 71 A4 20                		add	#32, r10, r4
+ 261 00f6 71 A5 10                		add	#16, r10, r5
+ 262 00f9 EF 43                   		mov.L	r4, r3
+ 263 00fb 75 42 10                		mov.L	#16, r2
+ 264 00fe EF 51                   		mov.L	r5, r1
+ 265 0100 05 00 00 00             		bsr	_mw_util_safe_strcat
+ 171:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 
+ 172:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	if (mw_dialog_time_chooser_data.large_size)
+ 266                             		.loc 1 172 33
+ 267 0104 FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+ 268 010a CD 55 7A                		mov.B	122[r5], r5
+ 269                             		.loc 1 172 5
+ 270 010d 5B 55                   		movu.B	r5, r5
+ 271 010f 61 05                   		cmp	#0, r5
+ 272 0111 20 2B                   		beq	.L7
+ 173:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	{
+ 174:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		mw_gl_set_font(MW_GL_TITLE_FONT);
+ 273                             		.loc 1 174 3
+ 274 0113 66 51                   		mov.L	#5, r1
+ 275 0115 05 00 00 00             		bsr	_mw_gl_set_font
+ 175:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		mw_gl_string(draw_info, 101, 40, text_hour);
+ 276                             		.loc 1 175 3
+ 277 0119 EF A4                   		mov.L	r10, r4
+ 278 011b 75 43 28                		mov	#40, r3
+ 279 011e 75 42 65                		mov	#0x65, r2
+ 280 0121 ED A1 0A                		mov.L	40[r10], r1
+ 281 0124 05 00 00 00             		bsr	_mw_gl_string
+ 176:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		mw_gl_string(draw_info, 89, 120, text_min);
+ 282                             		.loc 1 176 3
+ 283 0128 71 A5 10                		add	#16, r10, r5
+ 284 012b EF 54                   		mov.L	r5, r4
+ 285 012d 75 43 78                		mov	#0x78, r3
+ 286 0130 75 42 59                		mov	#0x59, r2
+ 287 0133 ED A1 0A                		mov.L	40[r10], r1
+ 288 0136 05 00 00 00             		bsr	_mw_gl_string
+ 177:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	}
+ 178:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	else
+ 179:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	{
+ 180:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		mw_gl_set_font(MW_GL_FONT_9);
+ 181:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		mw_gl_string(draw_info, 30, 20, text_hour);
+ 182:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		mw_gl_string(draw_info, 18, 60, text_min);
+ 183:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	}
+ 184:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** }
+ 289                             		.loc 1 184 1
+ 290 013a 2E 29                   		bra	.L9
+ 291                             	.L7:
+ 180:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		mw_gl_string(draw_info, 30, 20, text_hour);
+ 292                             		.loc 1 180 3
+ 293 013c 66 01                   		mov.L	#0, r1
+ 294 013e 05 00 00 00             		bsr	_mw_gl_set_font
+ 181:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		mw_gl_string(draw_info, 18, 60, text_min);
+ 295                             		.loc 1 181 3
+ 296 0142 EF A4                   		mov.L	r10, r4
+ 297 0144 75 43 14                		mov	#20, r3
+ 298 0147 75 42 1E                		mov	#30, r2
+ 299 014a ED A1 0A                		mov.L	40[r10], r1
+ 300 014d 05 00 00 00             		bsr	_mw_gl_string
+ 182:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	}
+ 301                             		.loc 1 182 3
+ 302 0151 71 A5 10                		add	#16, r10, r5
+ 303 0154 EF 54                   		mov.L	r5, r4
+ 304 0156 75 43 3C                		mov	#60, r3
+ 305 0159 75 42 12                		mov	#18, r2
+ 306 015c ED A1 0A                		mov.L	40[r10], r1
+ 307 015f 05 00 00 00             		bsr	_mw_gl_string
+ 308                             	.L9:
+ 309                             		.loc 1 184 1
+ 310 0163 03                      		nop
+ 311 0164 3F 6B 12                		rtsd	#72, r6-r11
+ 312                             	.LFE1:
+ 314                             		.section C,"a",@progbits
+ 315 0026 00 00                   		.p2align 2
+ 316                             	.LC3:
+ 317 0028 55 6E 6B 6E 6F 77 6E 20 		.string	"Unknown control id"
+ 317      63 6F 6E 74 72 6F 6C 20 
+ 317      69 64 00 
+ 318                             		.section	.text.mw_dialog_time_chooser_message_function,"ax",@progbits
+ 320                             	_mw_dialog_time_chooser_message_function:
+ 321                             	.LFB2:
+ 185:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 
+ 186:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** /**
+ 187:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c ****  * Window message handler called by the window manager.
+ 188:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c ****  *
+ 189:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c ****  * @param message The message to be processed
+ 190:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c ****  * @note Do not call this directly from user code
+ 191:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c ****  */
+ 192:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** static void mw_dialog_time_chooser_message_function(const mw_message_t *message)
+ 193:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** {
+ 322                             		.loc 1 193 1
+ 323 0000 7E AA                   		push.l	r10
+ 324                             	.LCFI5:
+ 325 0002 71 0A FC                		add	#-4, r0, r10
+ 326                             	.LCFI6:
+ 327 0005 71 A0 F8                		add	#-8, r10, r0
+ 328                             	.LCFI7:
+ 329 0008 E3 A1                   		mov.L	r1, [r10]
+ 194:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	MW_ASSERT(message != (void*)0, "Null pointer argument");
+ 330                             		.loc 1 194 2
+ 331 000a EC A5                   		mov.L	[r10], r5
+ 332 000c 61 05                   		cmp	#0, r5
+ 333 000e FC DB 51                		scne.L	r5
+ 334 0011 FB 42 00 00 00 00       		mov.L	#.LC0, r4
+ 335 0017 75 43 C2                		mov.L	#0xc2, r3
+ 336 001a FB 22 00 00 00 00       		mov.L	#___func__.2993, r2
+ 337 0020 CF 51                   		mov.B	r5, r1
+ 338 0022 05 00 00 00             		bsr	_mw_debug_print_assert
+ 195:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 
+ 196:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	switch (message->message_id)
+ 339                             		.loc 1 196 17
+ 340 0026 EC A5                   		mov.L	[r10], r5
+ 341 0028 A8 D5                   		mov.L	8[r5], r5
+ 342                             		.loc 1 196 2
+ 343 002a 75 55 1A                		cmp	#26, r5
+ 344 002d 3A 44 01                		beq	.L11
+ 345 0030 75 55 23                		cmp	#35, r5
+ 346 0033 3B DB 01                		bne	.L28
+ 197:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	{
+ 198:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	case MW_ARROW_PRESSED_MESSAGE:
+ 199:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		if (message->sender_handle == mw_dialog_time_chooser_data.arrow_hour_up_handle)
+ 347                             		.loc 1 199 14
+ 348 0036 EC A5                   		mov.L	[r10], r5
+ 349 0038 EC 54                   		mov.L	[r5], r4
+ 350                             		.loc 1 199 60
+ 351 003a FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+ 352 0040 A8 D5                   		mov.L	8[r5], r5
+ 353                             		.loc 1 199 6
+ 354 0042 47 54                   		cmp	r5, r4
+ 355 0044 21 2E                   		bne	.L13
+ 200:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		{
+ 201:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 			if (mw_dialog_time_chooser_data.current_time_hours < 23U)
+ 356                             		.loc 1 201 35
+ 357 0046 FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+ 358 004c CD 55 78                		mov.B	120[r5], r5
+ 359                             		.loc 1 201 7
+ 360 004f 5B 55                   		movu.B	r5, r5
+ 361 0051 75 55 16                		cmp	#22, r5
+ 362 0054 25 05 38 DA 00          		bgtu	.L15
+ 202:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 			{
+ 203:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 				mw_dialog_time_chooser_data.current_time_hours++;
+ 363                             		.loc 1 203 32
+ 364 0059 FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+ 365 005f CD 55 78                		mov.B	120[r5], r5
+ 366                             		.loc 1 203 51
+ 367 0062 62 15                   		add	#1, r5
+ 368 0064 CF 54                   		mov.B	r5, r4
+ 369 0066 FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+ 370 006c C7 54 78                		mov.B	r4, 120[r5]
+ 371 006f 38 C1 00                		bra	.L15
+ 372                             	.L13:
+ 204:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 			}
+ 205:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		}
+ 206:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		else if (message->sender_handle == mw_dialog_time_chooser_data.arrow_hour_down_handle)
+ 373                             		.loc 1 206 19
+ 374 0072 EC A5                   		mov.L	[r10], r5
+ 375 0074 EC 54                   		mov.L	[r5], r4
+ 376                             		.loc 1 206 65
+ 377 0076 FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+ 378 007c A8 DD                   		mov.L	12[r5], r5
+ 379                             		.loc 1 206 11
+ 380 007e 47 54                   		cmp	r5, r4
+ 381 0080 21 2B                   		bne	.L16
+ 207:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		{
+ 208:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 			if (mw_dialog_time_chooser_data.current_time_hours > 0U)
+ 382                             		.loc 1 208 35
+ 383 0082 FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+ 384 0088 CD 55 78                		mov.B	120[r5], r5
+ 385                             		.loc 1 208 7
+ 386 008b 5B 55                   		movu.B	r5, r5
+ 387 008d 61 05                   		cmp	#0, r5
+ 388 008f 3A A1 00                		beq	.L15
+ 209:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 			{
+ 210:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 				mw_dialog_time_chooser_data.current_time_hours--;
+ 389                             		.loc 1 210 32
+ 390 0092 FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+ 391 0098 CD 55 78                		mov.B	120[r5], r5
+ 392                             		.loc 1 210 51
+ 393 009b 60 15                   		sub	#1, r5
+ 394 009d CF 54                   		mov.B	r5, r4
+ 395 009f FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+ 396 00a5 C7 54 78                		mov.B	r4, 120[r5]
+ 397 00a8 38 88 00                		bra	.L15
+ 398                             	.L16:
+ 211:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 			}
+ 212:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		}
+ 213:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		else if (message->sender_handle == mw_dialog_time_chooser_data.arrow_minute_up_handle)
+ 399                             		.loc 1 213 19
+ 400 00ab EC A5                   		mov.L	[r10], r5
+ 401 00ad EC 54                   		mov.L	[r5], r4
+ 402                             		.loc 1 213 65
+ 403 00af FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+ 404 00b5 A9 DD                   		mov.L	28[r5], r5
+ 405                             		.loc 1 213 11
+ 406 00b7 47 54                   		cmp	r5, r4
+ 407 00b9 21 2A                   		bne	.L18
+ 214:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		{
+ 215:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 			if (mw_dialog_time_chooser_data.current_time_mins < 59U)
+ 408                             		.loc 1 215 35
+ 409 00bb FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+ 410 00c1 CD 55 79                		mov.B	121[r5], r5
+ 411                             		.loc 1 215 7
+ 412 00c4 5B 55                   		movu.B	r5, r5
+ 413 00c6 75 55 3A                		cmp	#58, r5
+ 414 00c9 24 67                   		bgtu	.L15
+ 216:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 			{
+ 217:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 				mw_dialog_time_chooser_data.current_time_mins++;
+ 415                             		.loc 1 217 32
+ 416 00cb FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+ 417 00d1 CD 55 79                		mov.B	121[r5], r5
+ 418                             		.loc 1 217 50
+ 419 00d4 62 15                   		add	#1, r5
+ 420 00d6 CF 54                   		mov.B	r5, r4
+ 421 00d8 FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+ 422 00de C7 54 79                		mov.B	r4, 121[r5]
+ 423 00e1 2E 4F                   		bra	.L15
+ 424                             	.L18:
+ 218:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 			}
+ 219:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		}
+ 220:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		else if (message->sender_handle == mw_dialog_time_chooser_data.arrow_minute_down_handle)
+ 425                             		.loc 1 220 19
+ 426 00e3 EC A5                   		mov.L	[r10], r5
+ 427 00e5 EC 54                   		mov.L	[r5], r4
+ 428                             		.loc 1 220 65
+ 429 00e7 FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+ 430 00ed A9 55                   		mov.L	16[r5], r5
+ 431                             		.loc 1 220 11
+ 432 00ef 47 54                   		cmp	r5, r4
+ 433 00f1 21 29                   		bne	.L20
+ 221:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		{
+ 222:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 			if (mw_dialog_time_chooser_data.current_time_mins > 0U)
+ 434                             		.loc 1 222 35
+ 435 00f3 FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+ 436 00f9 CD 55 79                		mov.B	121[r5], r5
+ 437                             		.loc 1 222 7
+ 438 00fc 5B 55                   		movu.B	r5, r5
+ 439 00fe 61 05                   		cmp	#0, r5
+ 440 0100 20 30                   		beq	.L15
+ 223:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 			{
+ 224:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 				mw_dialog_time_chooser_data.current_time_mins--;
+ 441                             		.loc 1 224 32
+ 442 0102 FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+ 443 0108 CD 55 79                		mov.B	121[r5], r5
+ 444                             		.loc 1 224 50
+ 445 010b 60 15                   		sub	#1, r5
+ 446 010d CF 54                   		mov.B	r5, r4
+ 447 010f FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+ 448 0115 C7 54 79                		mov.B	r4, 121[r5]
+ 449 0118 2E 18                   		bra	.L15
+ 450                             	.L20:
+ 225:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 			}
+ 226:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		}
+ 227:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		else
+ 228:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		{
+ 229:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 			MW_ASSERT((bool)false, "Unknown control id");
+ 451                             		.loc 1 229 4
+ 452 011a FB 42 28 00 00 00       		mov.L	#.LC3, r4
+ 453 0120 75 43 E5                		mov.L	#0xe5, r3
+ 454 0123 FB 22 00 00 00 00       		mov.L	#___func__.2993, r2
+ 455 0129 66 01                   		mov	#0, r1
+ 456 012b 05 00 00 00             		bsr	_mw_debug_print_assert
+ 457 012f 03                      		.balign 8,3,3
+ 458                             	.L15:
+ 230:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		}
+ 231:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 
+ 232:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		/* enable or disable arrow controls as required */
+ 233:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		update_arrow_enable_states();
+ 459                             		.loc 1 233 3
+ 460 0130 05 00 00 00             		bsr	_update_arrow_enable_states
+ 234:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 
+ 235:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		/* just paint the changed text */
+ 236:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		if (mw_dialog_time_chooser_data.large_size)
+ 461                             		.loc 1 236 34
+ 462 0134 FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+ 463 013a CD 55 7A                		mov.B	122[r5], r5
+ 464                             		.loc 1 236 6
+ 465 013d 5B 55                   		movu.B	r5, r5
+ 466 013f 61 05                   		cmp	#0, r5
+ 467 0141 20 19                   		beq	.L22
+ 237:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		{
+ 238:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 			mw_paint_window_client_rect(mw_dialog_time_chooser_data.time_chooser_dialog_window_handle, &text
+ 468                             		.loc 1 238 4
+ 469 0143 FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+ 470 0149 A9 D5                   		mov.L	24[r5], r5
+ 471 014b FB 22 00 00 00 00       		mov.L	#_text_rect_large, r2
+ 472 0151 EF 51                   		mov.L	r5, r1
+ 473 0153 05 00 00 00             		bsr	_mw_paint_window_client_rect
+ 239:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		}
+ 240:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		else
+ 241:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		{
+ 242:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 			mw_paint_window_client_rect(mw_dialog_time_chooser_data.time_chooser_dialog_window_handle, &text
+ 243:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		}
+ 244:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		break;
+ 474                             		.loc 1 244 3
+ 475 0157 38 B8 00                		bra	.L24
+ 476                             	.L22:
+ 242:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		}
+ 477                             		.loc 1 242 4
+ 478 015a FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+ 479 0160 A9 D5                   		mov.L	24[r5], r5
+ 480 0162 FB 22 00 00 00 00       		mov.L	#_text_rect_standard, r2
+ 481 0168 EF 51                   		mov.L	r5, r1
+ 482 016a 05 00 00 00             		bsr	_mw_paint_window_client_rect
+ 483                             		.loc 1 244 3
+ 484 016e 38 A1 00                		bra	.L24
+ 485                             	.L11:
+ 245:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 
+ 246:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	case MW_BUTTON_PRESSED_MESSAGE:
+ 247:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		/* remove all controls and window */
+ 248:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		mw_remove_window(mw_dialog_time_chooser_data.time_chooser_dialog_window_handle);
+ 486                             		.loc 1 248 3
+ 487 0171 FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+ 488 0177 A9 D5                   		mov.L	24[r5], r5
+ 489 0179 EF 51                   		mov.L	r5, r1
+ 490 017b 05 00 00 00             		bsr	_mw_remove_window
+ 249:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 
+ 250:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		/* a window has changed visibility so repaint all */
+ 251:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		mw_paint_all();
+ 491                             		.loc 1 251 3
+ 492 017f 05 00 00 00             		bsr	_mw_paint_all
+ 252:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 
+ 253:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		if (message->sender_handle == mw_dialog_time_chooser_data.button_ok_handle)
+ 493                             		.loc 1 253 14
+ 494 0183 EC A5                   		mov.L	[r10], r5
+ 495 0185 EC 54                   		mov.L	[r5], r4
+ 496                             		.loc 1 253 60
+ 497 0187 FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+ 498 018d EC 55                   		mov.L	[r5], r5
+ 499                             		.loc 1 253 6
+ 500 018f 47 54                   		cmp	r5, r4
+ 501 0191 21 38                   		bne	.L25
+ 254:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		{
+ 255:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 			/* post ok response to receiving window */
+ 256:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 			mw_post_message(MW_DIALOG_TIME_CHOOSER_OK_MESSAGE,
+ 502                             		.loc 1 256 4
+ 503 0193 FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+ 504 0199 A9 5B                   		mov.L	20[r5], r3
+ 257:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 					MW_UNUSED_MESSAGE_PARAMETER,
+ 258:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 					mw_dialog_time_chooser_data.owner_window_handle,
+ 259:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 					(uint32_t)mw_dialog_time_chooser_data.current_time_hours << 8U |
+ 505                             		.loc 1 259 43
+ 506 019b FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+ 507 01a1 CD 55 78                		mov.B	120[r5], r5
+ 508                             		.loc 1 259 6
+ 509 01a4 5B 55                   		movu.B	r5, r5
+ 510                             		.loc 1 259 63
+ 511 01a6 FD C8 54                		shll	#8, r5, r4
+ 260:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 						mw_dialog_time_chooser_data.current_time_mins,
+ 512                             		.loc 1 260 34
+ 513 01a9 FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+ 514 01af CD 55 79                		mov.B	121[r5], r5
+ 515 01b2 5B 55                   		movu.B	r5, r5
+ 256:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 					MW_UNUSED_MESSAGE_PARAMETER,
+ 516                             		.loc 1 256 4
+ 517 01b4 57 45                   		or	r4, r5
+ 518 01b6 3E 01 00                		mov.L	#0, 4[r0]
+ 519 01b9 F8 06 00                		mov.L	#0, [r0]
+ 520 01bc EF 54                   		mov.L	r5, r4
+ 521 01be 66 02                   		mov.L	#0, r2
+ 522 01c0 75 41 3D                		mov.L	#61, r1
+ 523 01c3 05 00 00 00             		bsr	_mw_post_message
+ 261:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 					NULL,
+ 262:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 					MW_WINDOW_MESSAGE);
+ 263:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		}
+ 264:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		else if (message->sender_handle == mw_dialog_time_chooser_data.button_cancel_handle)
+ 265:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		{
+ 266:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 			/* post cancel response to receiving window */
+ 267:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 			mw_post_message(MW_DIALOG_TIME_CHOOSER_CANCEL_MESSAGE,
+ 268:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 					MW_UNUSED_MESSAGE_PARAMETER,
+ 269:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 					mw_dialog_time_chooser_data.owner_window_handle,
+ 270:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 					MW_UNUSED_MESSAGE_PARAMETER,
+ 271:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 					NULL,
+ 272:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 					MW_WINDOW_MESSAGE);
+ 273:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		}
+ 274:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		else
+ 275:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		{
+ 276:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 			MW_ASSERT((bool)false, "Unknown control id");
+ 277:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		}
+ 278:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		break;
+ 524                             		.loc 1 278 3
+ 525 01c7 2E 48                   		bra	.L24
+ 526                             	.L25:
+ 264:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		{
+ 527                             		.loc 1 264 19
+ 528 01c9 EC A5                   		mov.L	[r10], r5
+ 529 01cb EC 54                   		mov.L	[r5], r4
+ 264:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		{
+ 530                             		.loc 1 264 65
+ 531 01cd FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+ 532 01d3 A8 5D                   		mov.L	4[r5], r5
+ 264:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		{
+ 533                             		.loc 1 264 11
+ 534 01d5 47 54                   		cmp	r5, r4
+ 535 01d7 21 1F                   		bne	.L27
+ 267:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 					MW_UNUSED_MESSAGE_PARAMETER,
+ 536                             		.loc 1 267 4
+ 537 01d9 FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+ 538 01df A9 5D                   		mov.L	20[r5], r5
+ 539 01e1 3E 01 00                		mov.L	#0, 4[r0]
+ 540 01e4 F8 06 00                		mov.L	#0, [r0]
+ 541 01e7 66 04                   		mov.L	#0, r4
+ 542 01e9 EF 53                   		mov.L	r5, r3
+ 543 01eb 66 02                   		mov.L	#0, r2
+ 544 01ed 75 41 3E                		mov.L	#62, r1
+ 545 01f0 05 00 00 00             		bsr	_mw_post_message
+ 546                             		.loc 1 278 3
+ 547 01f4 2E 1B                   		bra	.L24
+ 548                             	.L27:
+ 276:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		}
+ 549                             		.loc 1 276 4
+ 550 01f6 FB 42 28 00 00 00       		mov.L	#.LC3, r4
+ 551 01fc FB 3A 14 01             		mov.L	#0x114, r3
+ 552 0200 FB 22 00 00 00 00       		mov.L	#___func__.2993, r2
+ 553 0206 66 01                   		mov	#0, r1
+ 554 0208 05 00 00 00             		bsr	_mw_debug_print_assert
+ 555                             		.loc 1 278 3
+ 556 020c 2E 03                   		bra	.L24
+ 557                             	.L28:
+ 279:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 
+ 280:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	default:
+ 281:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		/* keep MISRA happy */
+ 282:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		break;
+ 558                             		.loc 1 282 3
+ 559 020e 03                      		nop
+ 560                             	.L24:
+ 283:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	}
+ 284:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** }
+ 561                             		.loc 1 284 1
+ 562 020f 03                      		nop
+ 563 0210 3F AA 04                		rtsd	#16, r10-r10
+ 564                             	.LFE2:
+ 566 0213 77 10 01 00 00          		.section C,"a",@progbits
+ 567 003b 00                      		.p2align 2
+ 568                             	.LC4:
+ 569 003c 53 65 74 20 74 69 6D 65 		.string	"Set time"
+ 569      00 
+ 570                             	.LC5:
+ 571 0045 4F 4B 00                		.string	"OK"
+ 572                             	.LC6:
+ 573 0048 43 61 6E 63 65 6C 00    		.string	"Cancel"
+ 574 004f 00                      		.section	.text.mw_create_window_dialog_time_chooser,"ax",@progbits
+ 575                             		.global	_mw_create_window_dialog_time_chooser
+ 577                             	_mw_create_window_dialog_time_chooser:
+ 578                             	.LFB3:
+ 285:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 
+ 286:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** /***********************
+ 287:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** *** GLOBAL FUNCTIONS ***
+ 288:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** ***********************/
+ 289:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 
+ 290:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** mw_handle_t mw_create_window_dialog_time_chooser(int16_t x,
+ 291:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		int16_t y,
+ 292:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		uint8_t start_time_hour,
+ 293:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		uint8_t start_time_minute,
+ 294:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		bool large_size,
+ 295:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		mw_handle_t owner_window_handle)
+ 296:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** {
+ 579                             		.loc 1 296 1
+ 580 0000 6E 6B                   		pushm	r6-r11
+ 581                             	.LCFI8:
+ 582 0002 71 0A E4                		add	#-28, r0, r10
+ 583                             	.LCFI9:
+ 584 0005 71 A0 F0                		add	#-16, r10, r0
+ 585                             	.LCFI10:
+ 586 0008 75 46 38                		mov.L	#56, r6
+ 587 000b 4B A6                   		add	r10, r6
+ 588 000d D7 A1 06                		mov.W	r1, 12[r10]
+ 589 0010 D7 A2 07                		mov.W	r2, 14[r10]
+ 590 0013 C7 A3 10                		mov.B	r3, 16[r10]
+ 591 0016 C7 A4 11                		mov.B	r4, 17[r10]
+ 297:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	mw_util_rect_t rect;
+ 298:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	mw_handle_t temp_handle;
+ 299:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 
+ 300:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	/* check the start time */
+ 301:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	if (start_time_hour > 23U || start_time_minute > 59U)
+ 592                             		.loc 1 301 5
+ 593 0019 59 A5 10                		movu.B	16[r10], r5
+ 594 001c 75 55 17                		cmp	#23, r5
+ 595 001f 24 0A                   		bgtu	.L30
+ 596                             		.loc 1 301 28 discriminator 1
+ 597 0021 59 A5 11                		movu.B	17[r10], r5
+ 598 0024 75 55 3B                		cmp	#59, r5
+ 599 0027 25 07                   		bleu	.L31
+ 600                             	.L30:
+ 302:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	{
+ 303:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		return (MW_INVALID_HANDLE);
+ 601                             		.loc 1 303 10
+ 602 0029 66 05                   		mov.L	#0, r5
+ 603 002b 38 CB 03                		bra	.L48
+ 604                             	.L31:
+ 304:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	}
+ 305:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	mw_dialog_time_chooser_data.current_time_hours = start_time_hour;
+ 605                             		.loc 1 305 49
+ 606 002e FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+ 607 0034 CD A4 10                		mov.B	16[r10], r4
+ 608 0037 C7 54 78                		mov.B	r4, 120[r5]
+ 306:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	mw_dialog_time_chooser_data.current_time_mins = start_time_minute;
+ 609                             		.loc 1 306 48
+ 610 003a FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+ 611 0040 CD A4 11                		mov.B	17[r10], r4
+ 612 0043 C7 54 79                		mov.B	r4, 121[r5]
+ 307:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 
+ 308:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	/* check width */
+ 309:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	if (large_size)
+ 613                             		.loc 1 309 5
+ 614 0046 58 65                   		movu.B	[r6], r5
+ 615 0048 61 05                   		cmp	#0, r5
+ 616 004a 20 0D                   		beq	.L33
+ 310:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	{
+ 311:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		rect.width = 226;
+ 617                             		.loc 1 311 14
+ 618 004c F9 A9 04 E2 00          		mov.W	#0xe2, 8[r10]
+ 312:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		rect.height = 225;
+ 619                             		.loc 1 312 15
+ 620 0051 F9 A9 05 E1 00          		mov.W	#0xe1, 10[r10]
+ 621 0056 0A                      		bra	.L34
+ 622                             	.L33:
+ 313:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	}
+ 314:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	else
+ 315:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	{
+ 316:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		rect.width = 118;
+ 623                             		.loc 1 316 14
+ 624 0057 F9 A5 04 76             		mov.W	#0x76, 8[r10]
+ 317:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		rect.height = 130;
+ 625                             		.loc 1 317 15
+ 626 005b F9 A9 05 82 00          		mov.W	#0x82, 10[r10]
+ 627                             	.L34:
+ 318:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	}
+ 319:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 
+ 320:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	/* check start position */
+ 321:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	if (x + rect.width > MW_ROOT_WIDTH || x < 0)
+ 628                             		.loc 1 321 8
+ 629 0060 DD A4 06                		mov.W	12[r10], r4
+ 630                             		.loc 1 321 14
+ 631 0063 DD A5 04                		mov.W	8[r10], r5
+ 632 0066 DF 55                   		mov.W	r5, r5
+ 633                             		.loc 1 321 8
+ 634 0068 FF 2B 54                		add	r5, r4, r11
+ 635                             		.loc 1 321 23
+ 636 006b 05 00 00 00             		bsr	_mw_hal_lcd_get_display_width
+ 637 006f EF 15                   		mov.L	r1, r5
+ 638 0071 DF 55                   		mov.W	r5, r5
+ 639                             		.loc 1 321 5
+ 640 0073 47 5B                   		cmp	r5, r11
+ 641 0075 2A 09                   		bgt	.L35
+ 642                             		.loc 1 321 37 discriminator 1
+ 643 0077 DD A5 06                		mov.W	12[r10], r5
+ 644 007a 61 05                   		cmp	#0, r5
+ 645 007c 28 07                   		bge	.L36
+ 646                             	.L35:
+ 322:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	{
+ 323:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		return (MW_INVALID_HANDLE);
+ 647                             		.loc 1 323 10
+ 648 007e 66 05                   		mov.L	#0, r5
+ 649 0080 38 76 03                		bra	.L48
+ 650                             	.L36:
+ 324:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	}
+ 325:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	if (y + rect.height > MW_ROOT_HEIGHT || y < 0)
+ 651                             		.loc 1 325 8
+ 652 0083 DD A4 07                		mov.W	14[r10], r4
+ 653                             		.loc 1 325 14
+ 654 0086 DD A5 05                		mov.W	10[r10], r5
+ 655 0089 DF 55                   		mov.W	r5, r5
+ 656                             		.loc 1 325 8
+ 657 008b FF 2B 54                		add	r5, r4, r11
+ 658                             		.loc 1 325 24
+ 659 008e 05 00 00 00             		bsr	_mw_hal_lcd_get_display_height
+ 660 0092 EF 15                   		mov.L	r1, r5
+ 661 0094 DF 55                   		mov.W	r5, r5
+ 662                             		.loc 1 325 5
+ 663 0096 47 5B                   		cmp	r5, r11
+ 664 0098 2A 09                   		bgt	.L37
+ 665                             		.loc 1 325 39 discriminator 1
+ 666 009a DD A5 07                		mov.W	14[r10], r5
+ 667 009d 61 05                   		cmp	#0, r5
+ 668 009f 28 07                   		bge	.L38
+ 669                             	.L37:
+ 326:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	{
+ 327:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		return (MW_INVALID_HANDLE);
+ 670                             		.loc 1 327 10
+ 671 00a1 66 05                   		mov.L	#0, r5
+ 672 00a3 38 53 03                		bra	.L48
+ 673                             	.L38:
+ 328:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	}
+ 329:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 
+ 330:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	/* check no modal windows already showing */
+ 331:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	if (mw_is_any_window_modal())
+ 674                             		.loc 1 331 6
+ 675 00a6 05 00 00 00             		bsr	_mw_is_any_window_modal
+ 676 00aa EF 15                   		mov.L	r1, r5
+ 677                             		.loc 1 331 5
+ 678 00ac 5B 55                   		movu.B	r5, r5
+ 679 00ae 61 05                   		cmp	#0, r5
+ 680 00b0 16                      		beq	.L39
+ 332:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	{
+ 333:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		return (MW_INVALID_HANDLE);
+ 681                             		.loc 1 333 10
+ 682 00b1 66 05                   		mov.L	#0, r5
+ 683 00b3 38 43 03                		bra	.L48
+ 684                             	.L39:
+ 334:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	}
+ 335:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 
+ 336:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	/* check parent window handle */
+ 337:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	if (!mw_is_window_handle_valid(owner_window_handle))
+ 685                             		.loc 1 337 7
+ 686 00b6 A8 69                   		mov.L	4[r6], r1
+ 687 00b8 05 00 00 00             		bsr	_mw_is_window_handle_valid
+ 688 00bc EF 15                   		mov.L	r1, r5
+ 689                             		.loc 1 337 6
+ 690 00be FD 74 D5 01             		xor	#1, r5
+ 691                             		.loc 1 337 5
+ 692 00c2 5B 55                   		movu.B	r5, r5
+ 693 00c4 61 05                   		cmp	#0, r5
+ 694 00c6 16                      		beq	.L40
+ 338:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	{
+ 339:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		return (MW_INVALID_HANDLE);
+ 695                             		.loc 1 339 10
+ 696 00c7 66 05                   		mov.L	#0, r5
+ 697 00c9 38 2D 03                		bra	.L48
+ 698                             	.L40:
+ 340:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	}
+ 341:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 
+ 342:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	mw_dialog_time_chooser_data.large_size = large_size;
+ 699                             		.loc 1 342 41
+ 700 00cc FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+ 701 00d2 CC 64                   		mov.B	[r6], r4
+ 702 00d4 C7 54 7A                		mov.B	r4, 122[r5]
+ 343:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	mw_dialog_time_chooser_data.owner_window_handle = owner_window_handle;
+ 703                             		.loc 1 343 50
+ 704 00d7 FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+ 705 00dd A8 6C                   		mov.L	4[r6], r4
+ 706 00df A1 5C                   		mov.L	r4, 20[r5]
+ 344:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	rect.x = x;
+ 707                             		.loc 1 344 9
+ 708 00e1 DD A5 06                		mov.W	12[r10], r5
+ 709 00e4 D7 A5 02                		mov.W	r5, 4[r10]
+ 345:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	rect.y = y;
+ 710                             		.loc 1 345 9
+ 711 00e7 DD A5 07                		mov.W	14[r10], r5
+ 712 00ea D7 A5 03                		mov.W	r5, 6[r10]
+ 346:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 
+ 347:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	mw_dialog_time_chooser_data.time_chooser_dialog_window_handle = mw_add_window(&rect,
+ 713                             		.loc 1 347 66
+ 714 00ed 58 65                   		movu.B	[r6], r5
+ 715 00ef 61 05                   		cmp	#0, r5
+ 716 00f1 17                      		beq	.L41
+ 717                             		.loc 1 347 66 is_stmt 0 discriminator 1
+ 718 00f2 FB 4E 4B 80 00          		mov.L	#0x804b, r4
+ 719 00f7 0C                      		bra	.L42
+ 720                             	.L41:
+ 721                             		.loc 1 347 66 discriminator 2
+ 722 00f8 75 44 4B                		mov.L	#0x4b, r4
+ 723                             	.L42:
+ 724                             		.loc 1 347 66 discriminator 4
+ 725 00fb 71 A5 04                		add	#4, r10, r5
+ 726 00fe 3E 03 00                		mov.L	#0, 12[r0]
+ 727 0101 A0 84                   		mov.L	r4, 8[r0]
+ 728 0103 3C 04 00                		mov.B	#0, 4[r0]
+ 729 0106 F8 06 00                		mov.L	#0, [r0]
+ 730 0109 FB 42 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_message_function, r4
+ 731 010f FB 32 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_paint_function, r3
+ 732 0115 FB 22 3C 00 00 00       		mov.L	#.LC4, r2
+ 733 011b EF 51                   		mov.L	r5, r1
+ 734 011d 05 00 00 00             		bsr	_mw_add_window
+ 735 0121 EF 14                   		mov.L	r1, r4
+ 736                             		.loc 1 347 64 is_stmt 1 discriminator 4
+ 737 0123 FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+ 738 0129 A1 D4                   		mov.L	r4, 24[r5]
+ 348:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 			"Set time",
+ 349:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 			mw_dialog_time_chooser_paint_function,
+ 350:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 			mw_dialog_time_chooser_message_function,
+ 351:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 			NULL,
+ 352:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 			0,
+ 353:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 			MW_WINDOW_FLAG_HAS_BORDER | MW_WINDOW_FLAG_HAS_TITLE_BAR |
+ 354:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 					MW_WINDOW_FLAG_IS_VISIBLE | MW_WINDOW_FLAG_IS_MODAL | (uint32_t)(large_size ? MW_WINDOW_FLAG_L
+ 355:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 			NULL);
+ 356:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 
+ 357:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	/* check if window could be created */
+ 358:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	if (mw_dialog_time_chooser_data.time_chooser_dialog_window_handle == MW_INVALID_HANDLE)
+ 739                             		.loc 1 358 33 discriminator 4
+ 740 012b FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+ 741 0131 A9 D5                   		mov.L	24[r5], r5
+ 742                             		.loc 1 358 5 discriminator 4
+ 743 0133 61 05                   		cmp	#0, r5
+ 744 0135 1E                      		bne	.L43
+ 359:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	{
+ 360:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		/* it couldn't so exit */
+ 361:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		return (MW_INVALID_HANDLE);
+ 745                             		.loc 1 361 10
+ 746 0136 66 05                   		mov.L	#0, r5
+ 747 0138 38 BE 02                		bra	.L48
+ 748                             	.L43:
+ 362:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	}
+ 363:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 
+ 364:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	/* set controls data */
+ 365:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	(void)mw_util_safe_strcpy(mw_dialog_time_chooser_data.button_ok_data.button_label,
+ 749                             		.loc 1 365 8
+ 750 013b FB 32 45 00 00 00       		mov.L	#.LC5, r3
+ 751 0141 66 A2                   		mov.L	#10, r2
+ 752 0143 FB 12 20 00 00 00       		mov.L	#_mw_dialog_time_chooser_data+32, r1
+ 753 0149 05 00 00 00             		bsr	_mw_util_safe_strcpy
+ 366:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 			MW_UI_BUTTON_LABEL_MAX_CHARS, "OK");
+ 367:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	(void)mw_util_safe_strcpy(mw_dialog_time_chooser_data.button_cancel_data.button_label,
+ 754                             		.loc 1 367 8
+ 755 014d FB 32 48 00 00 00       		mov.L	#.LC6, r3
+ 756 0153 66 A2                   		mov.L	#10, r2
+ 757 0155 FB 12 2C 00 00 00       		mov.L	#_mw_dialog_time_chooser_data+44, r1
+ 758 015b 05 00 00 00             		bsr	_mw_util_safe_strcpy
+ 368:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 			MW_UI_BUTTON_LABEL_MAX_CHARS, "Cancel");
+ 369:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	mw_dialog_time_chooser_data.arrow_hour_up_data.mw_ui_arrow_direction = MW_UI_ARROW_UP;
+ 759                             		.loc 1 369 71
+ 760 015f FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+ 761 0165 3E 5E 00                		mov.L	#0, 56[r5]
+ 370:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	mw_dialog_time_chooser_data.arrow_hour_down_data.mw_ui_arrow_direction = MW_UI_ARROW_DOWN;
+ 762                             		.loc 1 370 73
+ 763 0168 FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+ 764 016e 3E D2 B4                		mov.L	#0xb4, 72[r5]
+ 371:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	mw_dialog_time_chooser_data.arrow_minute_up_data.mw_ui_arrow_direction = MW_UI_ARROW_UP;
+ 765                             		.loc 1 371 73
+ 766 0171 FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+ 767 0177 3E D6 00                		mov.L	#0, 88[r5]
+ 372:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	mw_dialog_time_chooser_data.arrow_minute_down_data.mw_ui_arrow_direction = MW_UI_ARROW_DOWN;
+ 768                             		.loc 1 372 75
+ 769 017a FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+ 770 0180 3E DA B4                		mov.L	#0xb4, 104[r5]
+ 373:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 
+ 374:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	if (large_size)
+ 771                             		.loc 1 374 5
+ 772 0183 58 65                   		movu.B	[r6], r5
+ 773 0185 61 05                   		cmp	#0, r5
+ 774 0187 3A F4 00                		beq	.L44
+ 375:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	{
+ 376:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		temp_handle = mw_ui_button_add_new(5,
+ 775                             		.loc 1 376 17
+ 776 018a FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+ 777 0190 A9 D5                   		mov.L	24[r5], r5
+ 778 0192 F8 02 20 00 00 00       		mov.L	#_mw_dialog_time_chooser_data+32, [r0]
+ 779 0198 66 B4                   		mov	#11, r4
+ 780 019a EF 53                   		mov.L	r5, r3
+ 781 019c 75 42 AA                		mov	#0xaa, r2
+ 782 019f 66 51                   		mov	#5, r1
+ 783 01a1 05 00 00 00             		bsr	_mw_ui_button_add_new
+ 784 01a5 E3 A1                   		mov.L	r1, [r10]
+ 377:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 				170,
+ 378:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 				mw_dialog_time_chooser_data.time_chooser_dialog_window_handle,
+ 379:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_LARGE_SIZE,
+ 380:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 				&mw_dialog_time_chooser_data.button_ok_data);
+ 381:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		mw_dialog_time_chooser_data.button_ok_handle = temp_handle;
+ 785                             		.loc 1 381 48
+ 786 01a7 FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+ 787 01ad EC A4                   		mov.L	[r10], r4
+ 788 01af E3 54                   		mov.L	r4, [r5]
+ 382:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 
+ 383:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		temp_handle = mw_ui_button_add_new(120,
+ 789                             		.loc 1 383 17
+ 790 01b1 FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+ 791 01b7 A9 D5                   		mov.L	24[r5], r5
+ 792 01b9 F8 02 2C 00 00 00       		mov.L	#_mw_dialog_time_chooser_data+44, [r0]
+ 793 01bf 66 B4                   		mov	#11, r4
+ 794 01c1 EF 53                   		mov.L	r5, r3
+ 795 01c3 75 42 AA                		mov	#0xaa, r2
+ 796 01c6 75 41 78                		mov	#0x78, r1
+ 797 01c9 05 00 00 00             		bsr	_mw_ui_button_add_new
+ 798 01cd E3 A1                   		mov.L	r1, [r10]
+ 384:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 				170,
+ 385:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 				mw_dialog_time_chooser_data.time_chooser_dialog_window_handle,
+ 386:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_LARGE_SIZE,
+ 387:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 				&mw_dialog_time_chooser_data.button_cancel_data);
+ 388:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		mw_dialog_time_chooser_data.button_cancel_handle = temp_handle;
+ 799                             		.loc 1 388 52
+ 800 01cf FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+ 801 01d5 EC A4                   		mov.L	[r10], r4
+ 802 01d7 A0 5C                   		mov.L	r4, 4[r5]
+ 389:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 
+ 390:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		temp_handle = mw_ui_arrow_add_new(186,
+ 803                             		.loc 1 390 17
+ 804 01d9 FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+ 805 01df A9 D5                   		mov.L	24[r5], r5
+ 806 01e1 F8 02 38 00 00 00       		mov.L	#_mw_dialog_time_chooser_data+56, [r0]
+ 807 01e7 66 94                   		mov	#9, r4
+ 808 01e9 EF 53                   		mov.L	r5, r3
+ 809 01eb 66 A2                   		mov	#10, r2
+ 810 01ed 75 41 BA                		mov	#0xba, r1
+ 811 01f0 05 00 00 00             		bsr	_mw_ui_arrow_add_new
+ 812 01f4 E3 A1                   		mov.L	r1, [r10]
+ 391:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 				10,
+ 392:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 				mw_dialog_time_chooser_data.time_chooser_dialog_window_handle,
+ 393:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_LARGE_SIZE,
+ 394:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 				&mw_dialog_time_chooser_data.arrow_hour_up_data);
+ 395:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		mw_dialog_time_chooser_data.arrow_hour_up_handle = temp_handle;
+ 813                             		.loc 1 395 52
+ 814 01f6 FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+ 815 01fc EC A4                   		mov.L	[r10], r4
+ 816 01fe A0 D4                   		mov.L	r4, 8[r5]
+ 396:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 
+ 397:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		temp_handle = mw_ui_arrow_add_new(186,
+ 817                             		.loc 1 397 17
+ 818 0200 FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+ 819 0206 A9 D5                   		mov.L	24[r5], r5
+ 820 0208 F8 02 48 00 00 00       		mov.L	#_mw_dialog_time_chooser_data+72, [r0]
+ 821 020e 66 94                   		mov	#9, r4
+ 822 0210 EF 53                   		mov.L	r5, r3
+ 823 0212 75 42 32                		mov	#50, r2
+ 824 0215 75 41 BA                		mov	#0xba, r1
+ 825 0218 05 00 00 00             		bsr	_mw_ui_arrow_add_new
+ 826 021c E3 A1                   		mov.L	r1, [r10]
+ 398:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 				50,
+ 399:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 				mw_dialog_time_chooser_data.time_chooser_dialog_window_handle,
+ 400:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_LARGE_SIZE,
+ 401:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 				&mw_dialog_time_chooser_data.arrow_hour_down_data);
+ 402:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		mw_dialog_time_chooser_data.arrow_hour_down_handle = temp_handle;
+ 827                             		.loc 1 402 54
+ 828 021e FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+ 829 0224 EC A4                   		mov.L	[r10], r4
+ 830 0226 A0 DC                   		mov.L	r4, 12[r5]
+ 403:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 
+ 404:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		temp_handle = mw_ui_arrow_add_new(186,
+ 831                             		.loc 1 404 17
+ 832 0228 FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+ 833 022e A9 D5                   		mov.L	24[r5], r5
+ 834 0230 F8 02 58 00 00 00       		mov.L	#_mw_dialog_time_chooser_data+88, [r0]
+ 835 0236 66 94                   		mov	#9, r4
+ 836 0238 EF 53                   		mov.L	r5, r3
+ 837 023a 75 42 5A                		mov	#0x5a, r2
+ 838 023d 75 41 BA                		mov	#0xba, r1
+ 839 0240 05 00 00 00             		bsr	_mw_ui_arrow_add_new
+ 840 0244 E3 A1                   		mov.L	r1, [r10]
+ 405:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 				90,
+ 406:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 				mw_dialog_time_chooser_data.time_chooser_dialog_window_handle,
+ 407:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_LARGE_SIZE,
+ 408:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 				&mw_dialog_time_chooser_data.arrow_minute_up_data);
+ 409:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		mw_dialog_time_chooser_data.arrow_minute_up_handle = temp_handle;
+ 841                             		.loc 1 409 54
+ 842 0246 FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+ 843 024c EC A4                   		mov.L	[r10], r4
+ 844 024e A1 DC                   		mov.L	r4, 28[r5]
+ 410:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 
+ 411:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		temp_handle = mw_ui_arrow_add_new(186,
+ 845                             		.loc 1 411 17
+ 846 0250 FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+ 847 0256 A9 D5                   		mov.L	24[r5], r5
+ 848 0258 F8 02 68 00 00 00       		mov.L	#_mw_dialog_time_chooser_data+104, [r0]
+ 849 025e 66 94                   		mov	#9, r4
+ 850 0260 EF 53                   		mov.L	r5, r3
+ 851 0262 75 42 82                		mov	#0x82, r2
+ 852 0265 75 41 BA                		mov	#0xba, r1
+ 853 0268 05 00 00 00             		bsr	_mw_ui_arrow_add_new
+ 854 026c E3 A1                   		mov.L	r1, [r10]
+ 412:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 				130,
+ 413:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 				mw_dialog_time_chooser_data.time_chooser_dialog_window_handle,
+ 414:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_LARGE_SIZE,
+ 415:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 				&mw_dialog_time_chooser_data.arrow_minute_down_data);
+ 416:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		mw_dialog_time_chooser_data.arrow_minute_down_handle = temp_handle;
+ 855                             		.loc 1 416 56
+ 856 026e FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+ 857 0274 EC A4                   		mov.L	[r10], r4
+ 858 0276 A1 54                   		mov.L	r4, 16[r5]
+ 859 0278 38 F1 00                		bra	.L45
+ 860                             	.L44:
+ 417:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	}
+ 418:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	else
+ 419:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	{
+ 420:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		temp_handle = mw_ui_button_add_new(5,
+ 861                             		.loc 1 420 17
+ 862 027b FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+ 863 0281 A9 D5                   		mov.L	24[r5], r5
+ 864 0283 F8 02 20 00 00 00       		mov.L	#_mw_dialog_time_chooser_data+32, [r0]
+ 865 0289 66 34                   		mov	#3, r4
+ 866 028b EF 53                   		mov.L	r5, r3
+ 867 028d 75 42 5A                		mov	#0x5a, r2
+ 868 0290 66 51                   		mov	#5, r1
+ 869 0292 05 00 00 00             		bsr	_mw_ui_button_add_new
+ 870 0296 E3 A1                   		mov.L	r1, [r10]
+ 421:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 				90,
+ 422:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 				mw_dialog_time_chooser_data.time_chooser_dialog_window_handle,
+ 423:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
+ 424:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 				&mw_dialog_time_chooser_data.button_ok_data);
+ 425:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		mw_dialog_time_chooser_data.button_ok_handle = temp_handle;
+ 871                             		.loc 1 425 48
+ 872 0298 FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+ 873 029e EC A4                   		mov.L	[r10], r4
+ 874 02a0 E3 54                   		mov.L	r4, [r5]
+ 426:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 
+ 427:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		temp_handle = mw_ui_button_add_new(60,
+ 875                             		.loc 1 427 17
+ 876 02a2 FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+ 877 02a8 A9 D5                   		mov.L	24[r5], r5
+ 878 02aa F8 02 2C 00 00 00       		mov.L	#_mw_dialog_time_chooser_data+44, [r0]
+ 879 02b0 66 34                   		mov	#3, r4
+ 880 02b2 EF 53                   		mov.L	r5, r3
+ 881 02b4 75 42 5A                		mov	#0x5a, r2
+ 882 02b7 75 41 3C                		mov	#60, r1
+ 883 02ba 05 00 00 00             		bsr	_mw_ui_button_add_new
+ 884 02be E3 A1                   		mov.L	r1, [r10]
+ 428:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 				90,
+ 429:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 				mw_dialog_time_chooser_data.time_chooser_dialog_window_handle,
+ 430:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
+ 431:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 				&mw_dialog_time_chooser_data.button_cancel_data);
+ 432:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		mw_dialog_time_chooser_data.button_cancel_handle = temp_handle;
+ 885                             		.loc 1 432 52
+ 886 02c0 FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+ 887 02c6 EC A4                   		mov.L	[r10], r4
+ 888 02c8 A0 5C                   		mov.L	r4, 4[r5]
+ 433:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 
+ 434:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		temp_handle = mw_ui_arrow_add_new(93,
+ 889                             		.loc 1 434 17
+ 890 02ca FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+ 891 02d0 A9 D5                   		mov.L	24[r5], r5
+ 892 02d2 F8 02 38 00 00 00       		mov.L	#_mw_dialog_time_chooser_data+56, [r0]
+ 893 02d8 66 14                   		mov	#1, r4
+ 894 02da EF 53                   		mov.L	r5, r3
+ 895 02dc 66 52                   		mov	#5, r2
+ 896 02de 75 41 5D                		mov	#0x5d, r1
+ 897 02e1 05 00 00 00             		bsr	_mw_ui_arrow_add_new
+ 898 02e5 E3 A1                   		mov.L	r1, [r10]
+ 435:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 				5,
+ 436:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 				mw_dialog_time_chooser_data.time_chooser_dialog_window_handle,
+ 437:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 				MW_CONTROL_FLAG_IS_VISIBLE,
+ 438:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 				&mw_dialog_time_chooser_data.arrow_hour_up_data);
+ 439:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		mw_dialog_time_chooser_data.arrow_hour_up_handle = temp_handle;
+ 899                             		.loc 1 439 52
+ 900 02e7 FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+ 901 02ed EC A4                   		mov.L	[r10], r4
+ 902 02ef A0 D4                   		mov.L	r4, 8[r5]
+ 440:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 
+ 441:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		temp_handle = mw_ui_arrow_add_new(93,
+ 903                             		.loc 1 441 17
+ 904 02f1 FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+ 905 02f7 A9 D5                   		mov.L	24[r5], r5
+ 906 02f9 F8 02 48 00 00 00       		mov.L	#_mw_dialog_time_chooser_data+72, [r0]
+ 907 02ff 66 14                   		mov	#1, r4
+ 908 0301 EF 53                   		mov.L	r5, r3
+ 909 0303 75 42 19                		mov	#25, r2
+ 910 0306 75 41 5D                		mov	#0x5d, r1
+ 911 0309 05 00 00 00             		bsr	_mw_ui_arrow_add_new
+ 912 030d E3 A1                   		mov.L	r1, [r10]
+ 442:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 				25,
+ 443:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 				mw_dialog_time_chooser_data.time_chooser_dialog_window_handle,
+ 444:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 				MW_CONTROL_FLAG_IS_VISIBLE,
+ 445:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 				&mw_dialog_time_chooser_data.arrow_hour_down_data);
+ 446:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		mw_dialog_time_chooser_data.arrow_hour_down_handle = temp_handle;
+ 913                             		.loc 1 446 54
+ 914 030f FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+ 915 0315 EC A4                   		mov.L	[r10], r4
+ 916 0317 A0 DC                   		mov.L	r4, 12[r5]
+ 447:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 
+ 448:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		temp_handle = mw_ui_arrow_add_new(93,
+ 917                             		.loc 1 448 17
+ 918 0319 FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+ 919 031f A9 D5                   		mov.L	24[r5], r5
+ 920 0321 F8 02 58 00 00 00       		mov.L	#_mw_dialog_time_chooser_data+88, [r0]
+ 921 0327 66 14                   		mov	#1, r4
+ 922 0329 EF 53                   		mov.L	r5, r3
+ 923 032b 75 42 2D                		mov	#45, r2
+ 924 032e 75 41 5D                		mov	#0x5d, r1
+ 925 0331 05 00 00 00             		bsr	_mw_ui_arrow_add_new
+ 926 0335 E3 A1                   		mov.L	r1, [r10]
+ 449:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 				45,
+ 450:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 				mw_dialog_time_chooser_data.time_chooser_dialog_window_handle,
+ 451:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 				MW_CONTROL_FLAG_IS_VISIBLE,
+ 452:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 				&mw_dialog_time_chooser_data.arrow_minute_up_data);
+ 453:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		mw_dialog_time_chooser_data.arrow_minute_up_handle = temp_handle;
+ 927                             		.loc 1 453 54
+ 928 0337 FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+ 929 033d EC A4                   		mov.L	[r10], r4
+ 930 033f A1 DC                   		mov.L	r4, 28[r5]
+ 454:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 
+ 455:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		temp_handle = mw_ui_arrow_add_new(93,
+ 931                             		.loc 1 455 17
+ 932 0341 FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+ 933 0347 A9 D5                   		mov.L	24[r5], r5
+ 934 0349 F8 02 68 00 00 00       		mov.L	#_mw_dialog_time_chooser_data+104, [r0]
+ 935 034f 66 14                   		mov	#1, r4
+ 936 0351 EF 53                   		mov.L	r5, r3
+ 937 0353 75 42 41                		mov	#0x41, r2
+ 938 0356 75 41 5D                		mov	#0x5d, r1
+ 939 0359 05 00 00 00             		bsr	_mw_ui_arrow_add_new
+ 940 035d E3 A1                   		mov.L	r1, [r10]
+ 456:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 				65,
+ 457:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 				mw_dialog_time_chooser_data.time_chooser_dialog_window_handle,
+ 458:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 				MW_CONTROL_FLAG_IS_VISIBLE,
+ 459:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 				&mw_dialog_time_chooser_data.arrow_minute_down_data);
+ 460:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		mw_dialog_time_chooser_data.arrow_minute_down_handle = temp_handle;
+ 941                             		.loc 1 460 56
+ 942 035f FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+ 943 0365 EC A4                   		mov.L	[r10], r4
+ 944 0367 A1 54                   		mov.L	r4, 16[r5]
+ 945                             	.L45:
+ 461:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	}
+ 462:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 
+ 463:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	if (mw_dialog_time_chooser_data.button_ok_handle == MW_INVALID_HANDLE ||
+ 946                             		.loc 1 463 33
+ 947 0369 FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+ 948 036f EC 55                   		mov.L	[r5], r5
+ 949                             		.loc 1 463 5
+ 950 0371 61 05                   		cmp	#0, r5
+ 951 0373 20 3E                   		beq	.L46
+ 464:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 			mw_dialog_time_chooser_data.button_cancel_handle == MW_INVALID_HANDLE ||
+ 952                             		.loc 1 464 31 discriminator 1
+ 953 0375 FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+ 954 037b A8 5D                   		mov.L	4[r5], r5
+ 463:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 			mw_dialog_time_chooser_data.button_cancel_handle == MW_INVALID_HANDLE ||
+ 955                             		.loc 1 463 72 discriminator 1
+ 956 037d 61 05                   		cmp	#0, r5
+ 957 037f 20 32                   		beq	.L46
+ 465:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 			mw_dialog_time_chooser_data.arrow_hour_up_handle == MW_INVALID_HANDLE ||
+ 958                             		.loc 1 465 31
+ 959 0381 FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+ 960 0387 A8 D5                   		mov.L	8[r5], r5
+ 464:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 			mw_dialog_time_chooser_data.button_cancel_handle == MW_INVALID_HANDLE ||
+ 961                             		.loc 1 464 74
+ 962 0389 61 05                   		cmp	#0, r5
+ 963 038b 20 26                   		beq	.L46
+ 466:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 			mw_dialog_time_chooser_data.arrow_hour_down_handle == MW_INVALID_HANDLE ||
+ 964                             		.loc 1 466 31
+ 965 038d FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+ 966 0393 A8 DD                   		mov.L	12[r5], r5
+ 465:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 			mw_dialog_time_chooser_data.arrow_hour_up_handle == MW_INVALID_HANDLE ||
+ 967                             		.loc 1 465 74
+ 968 0395 61 05                   		cmp	#0, r5
+ 969 0397 20 1A                   		beq	.L46
+ 467:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 			mw_dialog_time_chooser_data.arrow_minute_up_handle == MW_INVALID_HANDLE ||
+ 970                             		.loc 1 467 31
+ 971 0399 FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+ 972 039f A9 DD                   		mov.L	28[r5], r5
+ 466:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 			mw_dialog_time_chooser_data.arrow_hour_down_handle == MW_INVALID_HANDLE ||
+ 973                             		.loc 1 466 76
+ 974 03a1 61 05                   		cmp	#0, r5
+ 975 03a3 20 0E                   		beq	.L46
+ 468:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 			mw_dialog_time_chooser_data.arrow_minute_down_handle == MW_INVALID_HANDLE)
+ 976                             		.loc 1 468 31
+ 977 03a5 FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+ 978 03ab A9 55                   		mov.L	16[r5], r5
+ 467:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 			mw_dialog_time_chooser_data.arrow_minute_up_handle == MW_INVALID_HANDLE ||
+ 979                             		.loc 1 467 76
+ 980 03ad 61 05                   		cmp	#0, r5
+ 981 03af 21 14                   		bne	.L47
+ 982                             		.balign 8,3,5
+ 983                             	.L46:
+ 469:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	{
+ 470:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		/* remove all controls and window */
+ 471:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		mw_remove_window(mw_dialog_time_chooser_data.time_chooser_dialog_window_handle);
+ 984                             		.loc 1 471 3
+ 985 03b1 FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+ 986 03b7 A9 D5                   		mov.L	24[r5], r5
+ 987 03b9 EF 51                   		mov.L	r5, r1
+ 988 03bb 05 00 00 00             		bsr	_mw_remove_window
+ 472:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 
+ 473:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 		return (MW_INVALID_HANDLE);
+ 989                             		.loc 1 473 10
+ 990 03bf 66 05                   		mov.L	#0, r5
+ 991 03c1 2E 35                   		bra	.L48
+ 992                             	.L47:
+ 474:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	}
+ 475:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 
+ 476:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	/* set arrow enable states appropriately */
+ 477:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	update_arrow_enable_states();
+ 993                             		.loc 1 477 2
+ 994 03c3 05 00 00 00             		bsr	_update_arrow_enable_states
+ 478:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 
+ 479:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	/* owner window needs its title bar redrawing */
+ 480:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	mw_paint_window_frame(owner_window_handle, MW_WINDOW_FRAME_COMPONENT_TITLE_BAR);
+ 995                             		.loc 1 480 2
+ 996 03c7 66 12                   		mov	#1, r2
+ 997 03c9 A8 69                   		mov.L	4[r6], r1
+ 998 03cb 05 00 00 00             		bsr	_mw_paint_window_frame
+ 481:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 
+ 482:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	/* this window needs painting; it is coming up at the front so paint only this one */
+ 483:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	mw_paint_window_frame(mw_dialog_time_chooser_data.time_chooser_dialog_window_handle, MW_WINDOW_FRA
+ 999                             		.loc 1 483 2
+ 1000 03cf FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+ 1001 03d5 A9 D5                   		mov.L	24[r5], r5
+ 1002 03d7 75 42 1F                		mov	#31, r2
+ 1003 03da EF 51                   		mov.L	r5, r1
+ 1004 03dc 05 00 00 00             		bsr	_mw_paint_window_frame
+ 484:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	mw_paint_window_client(mw_dialog_time_chooser_data.time_chooser_dialog_window_handle);
+ 1005                             		.loc 1 484 2
+ 1006 03e0 FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+ 1007 03e6 A9 D5                   		mov.L	24[r5], r5
+ 1008 03e8 EF 51                   		mov.L	r5, r1
+ 1009 03ea 05 00 00 00             		bsr	_mw_paint_window_client
+ 485:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 
+ 486:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** 	return (mw_dialog_time_chooser_data.time_chooser_dialog_window_handle);
+ 1010                             		.loc 1 486 37
+ 1011 03ee FB 52 00 00 00 00       		mov.L	#_mw_dialog_time_chooser_data, r5
+ 1012 03f4 A9 D5                   		mov.L	24[r5], r5
+ 1013                             		.balign 8,3,1
+ 1014                             	.L48:
+ 487:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_time_chooser.c **** }
+ 1015                             		.loc 1 487 1 discriminator 1
+ 1016 03f6 EF 51                   		mov.L	r5, r1
+ 1017 03f8 3F 6B 11                		rtsd	#68, r6-r11
+ 1018                             	.LFE3:
+ 1020 03fb 77 10 01 00 00          		.section	.rodata.__func__.2989,"a"
+ 1023                             	___func__.2989:
+ 1024 0000 6D 77 5F 64 69 61 6C 6F 		.string	"mw_dialog_time_chooser_paint_function"
+ 1024      67 5F 74 69 6D 65 5F 63 
+ 1024      68 6F 6F 73 65 72 5F 70 
+ 1024      61 69 6E 74 5F 66 75 6E 
+ 1024      63 74 69 6F 6E 00 
+ 1025                             		.section	.rodata.__func__.2993,"a"
+ 1028                             	___func__.2993:
+ 1029 0000 6D 77 5F 64 69 61 6C 6F 		.string	"mw_dialog_time_chooser_message_function"
+ 1029      67 5F 74 69 6D 65 5F 63 
+ 1029      68 6F 6F 73 65 72 5F 6D 
+ 1029      65 73 73 61 67 65 5F 66 
+ 1029      75 6E 63 74 69 6F 6E 00 
+ 1158                             	.Letext0:
+ 1159                             		.file 2 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\lib\\
+ 1160                             		.file 3 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\rx-el
+ 1161                             		.file 4 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\rx-el
+ 1162                             		.file 5 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\rx-el
+ 1163                             		.file 6 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\rx-el
+ 1164                             		.file 7 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\rx-el
+ 1165                             		.file 8 "C:\\Users\\John\\Desktop\\workspace\\miniwinwm\\MiniWin/miniwin_utilities.h"
+ 1166                             		.file 9 "C:\\Users\\John\\Desktop\\workspace\\miniwinwm\\MiniWin/gl/gl.h"
+ 1167                             		.file 10 "C:\\Users\\John\\Desktop\\workspace\\miniwinwm\\MiniWin/bitmaps/mw_bitmaps.h"
+ 1168                             		.file 11 "C:\\Users\\John\\Desktop\\workspace\\miniwinwm\\MiniWin/hal/hal_timer.h"
+ 1169                             		.file 12 "C:\\Users\\John\\Desktop\\workspace\\miniwinwm\\MiniWin/miniwin.h"
+ 1170                             		.file 13 "C:\\Users\\John\\Desktop\\workspace\\miniwinwm\\MiniWin/ui/ui_button.h"
+ 1171                             		.file 14 "C:\\Users\\John\\Desktop\\workspace\\miniwinwm\\MiniWin/ui/ui_arrow.h"

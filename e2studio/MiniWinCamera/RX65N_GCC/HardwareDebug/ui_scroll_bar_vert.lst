@@ -1,0 +1,843 @@
+   1                             		.file	"ui_scroll_bar_vert.c"
+   2                             		.section P,"ax"
+   3                             	.Ltext0:
+   4                             		.section C,"a",@progbits
+   5                             		.p2align 2
+   6                             	.LC0:
+   7 0000 4E 75 6C 6C 20 70 6F 69 		.string	"Null pointer argument"
+   7      6E 74 65 72 20 61 72 67 
+   7      75 6D 65 6E 74 00 
+   8 0016 00 00                   		.section	.text.scroll_bar_vert_paint_function,"ax",@progbits
+  10                             	_scroll_bar_vert_paint_function:
+  11                             	.LFB0:
+  12                             		.file 1 "C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui/ui_scroll_bar_vert.c"
+   1:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** /*
+   2:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 
+   3:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** MIT License
+   4:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 
+   5:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** Copyright (c) John Blaiklock 2019 miniwin Embedded Window Manager
+   6:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 
+   7:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** Permission is hereby granted, free of charge, to any person obtaining a copy
+   8:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** of this software and associated documentation files (the "Software"), to deal
+   9:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** in the Software without restriction, including without limitation the rights
+  10:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  11:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** copies of the Software, and to permit persons to whom the Software is
+  12:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** furnished to do so, subject to the following conditions:
+  13:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 
+  14:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** The above copyright notice and this permission notice shall be included in all
+  15:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** copies or substantial portions of the Software.
+  16:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 
+  17:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  18:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  19:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  20:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  21:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  22:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  23:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** SOFTWARE.
+  24:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 
+  25:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** */
+  26:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 
+  27:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** /***************
+  28:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** *** INCLUDES ***
+  29:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** ***************/
+  30:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 
+  31:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** #include <stdlib.h>
+  32:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** #include "miniwin.h"
+  33:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 
+  34:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** /****************
+  35:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** *** CONSTANTS ***
+  36:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** ****************/
+  37:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 
+  38:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** /************
+  39:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** *** TYPES ***
+  40:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** ************/
+  41:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 
+  42:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** /***********************
+  43:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** *** GLOBAL VARIABLES ***
+  44:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** ***********************/
+  45:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 
+  46:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** /**********************
+  47:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** *** LOCAL VARIABLES ***
+  48:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** **********************/
+  49:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 
+  50:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** /********************************
+  51:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** *** LOCAL FUNCTION PROTOTYPES ***
+  52:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** ********************************/
+  53:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 
+  54:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** static void scroll_bar_vert_paint_function(mw_handle_t control_handle, const mw_gl_draw_info_t *dra
+  55:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** static void scroll_bar_vert_message_function(const mw_message_t *message);
+  56:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 
+  57:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** /**********************
+  58:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** *** LOCAL FUNCTIONS ***
+  59:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** **********************/
+  60:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 
+  61:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** /**
+  62:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c ****  * Control paint routine, called by window manager.
+  63:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c ****  *
+  64:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c ****  * @param control_handle The control identifier in the array of controls
+  65:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c ****  * @param draw_info draw info structure describing offset and clip region
+  66:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c ****  */
+  67:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** static void scroll_bar_vert_paint_function(mw_handle_t control_handle, const mw_gl_draw_info_t *dra
+  68:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** {
+  13                             		.loc 1 68 1
+  14 0000 6E 6A                   		pushm	r6-r10
+  15                             	.LCFI0:
+  16 0002 71 0A EC                		add	#-20, r0, r10
+  17                             	.LCFI1:
+  18 0005 71 A0 FC                		add	#-4, r10, r0
+  19                             	.LCFI2:
+  20 0008 E7 A1 03                		mov.L	r1, 12[r10]
+  21 000b E7 A2 04                		mov.L	r2, 16[r10]
+  69:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 	mw_ui_scroll_bar_vert_data_t *this_scroll_bar_vert = (mw_ui_scroll_bar_vert_data_t*)mw_get_control
+  22                             		.loc 1 69 86
+  23 000e ED A1 03                		mov.L	12[r10], r1
+  24 0011 05 00 00 00             		bsr	_mw_get_control_instance_data
+  25 0015 E7 A1 01                		mov.L	r1, 4[r10]
+  70:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 	int16_t scroll_bar_vert_slider_top;
+  71:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 	int16_t narrow_dimension;
+  72:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 	int16_t slider_size;
+  73:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 
+  74:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 	MW_ASSERT(draw_info != (void*)0, "Null pointer argument");
+  26                             		.loc 1 74 2
+  27 0018 ED A5 04                		mov.L	16[r10], r5
+  28 001b 61 05                   		cmp	#0, r5
+  29 001d FC DB 51                		scne.L	r5
+  30 0020 FB 42 00 00 00 00       		mov.L	#.LC0, r4
+  31 0026 75 43 4A                		mov.L	#0x4a, r3
+  32 0029 FB 22 00 00 00 00       		mov.L	#___func__.2876, r2
+  33 002f CF 51                   		mov.B	r5, r1
+  34 0031 05 00 00 00             		bsr	_mw_debug_print_assert
+  75:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 
+  76:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 	if ((mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_LARGE_SIZE) == MW_CONTROL_FLAG_LARGE_S
+  35                             		.loc 1 76 7
+  36 0035 ED A1 03                		mov.L	12[r10], r1
+  37 0038 05 00 00 00             		bsr	_mw_get_control_flags
+  38 003c EF 15                   		mov.L	r1, r5
+  39                             		.loc 1 76 44
+  40 003e 5F 55                   		movu.W	r5, r5
+  41 0040 64 85                   		and	#8, r5
+  42                             		.loc 1 76 5
+  43 0042 61 85                   		cmp	#8, r5
+  44 0044 19                      		bne	.L2
+  77:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 	{
+  78:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 		narrow_dimension = MW_SCROLL_BAR_LARGE_NARROW_DIMENSION;
+  45                             		.loc 1 78 20
+  46 0045 F8 A5 18                		mov.W	#24, [r10]
+  79:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 		slider_size = MW_SCROLL_BAR_LARGE_SLIDER_SIZE;
+  47                             		.loc 1 79 15
+  48 0048 F9 A5 01 18             		mov.W	#24, 2[r10]
+  49 004c 08                      		bra	.L3
+  50                             	.L2:
+  80:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 	}
+  81:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 	else
+  82:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 	{
+  83:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 		narrow_dimension = MW_SCROLL_BAR_NARROW_DIMENSION;
+  51                             		.loc 1 83 20
+  52 004d F8 A5 0C                		mov.W	#12, [r10]
+  84:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 		slider_size = MW_SCROLL_BAR_SLIDER_SIZE;
+  53                             		.loc 1 84 15
+  54 0050 F9 A5 01 0C             		mov.W	#12, 2[r10]
+  55                             	.L3:
+  85:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 	}
+  86:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 
+  87:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 	/* check if there's enough parent client rect width to draw the bar */
+  88:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 	if (mw_get_window_client_rect(mw_get_control_parent_window_handle(control_handle)).width > narrow_
+  56                             		.loc 1 88 6
+  57 0054 ED A1 03                		mov.L	12[r10], r1
+  58 0057 05 00 00 00             		bsr	_mw_get_control_parent_window_handle
+  59 005b EF 15                   		mov.L	r1, r5
+  60 005d EF 51                   		mov.L	r5, r1
+  61 005f 05 00 00 00             		bsr	_mw_get_window_client_rect
+  62 0063 EF 15                   		mov.L	r1, r5
+  63 0065 EF 26                   		mov.L	r2, r6
+  64                             		.loc 1 88 84
+  65 0067 DF 65                   		mov.W	r6, r5
+  66                             		.loc 1 88 5
+  67 0069 DC A4                   		mov.W	[r10], r4
+  68 006b DF 55                   		mov.W	r5, r5
+  69 006d 47 54                   		cmp	r5, r4
+  70 006f 29 05 38 81 01          		bge	.L7
+  89:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 	{
+  90:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 		if (mw_get_window_client_rect(mw_get_control_parent_window_handle(control_handle)).height > slide
+  71                             		.loc 1 90 7
+  72 0074 ED A1 03                		mov.L	12[r10], r1
+  73 0077 05 00 00 00             		bsr	_mw_get_control_parent_window_handle
+  74 007b EF 15                   		mov.L	r1, r5
+  75 007d EF 51                   		mov.L	r5, r1
+  76 007f 05 00 00 00             		bsr	_mw_get_window_client_rect
+  77 0083 EF 15                   		mov.L	r1, r5
+  78 0085 EF 26                   		mov.L	r2, r6
+  79                             		.loc 1 90 85
+  80 0087 EF 65                   		mov.L	r6, r5
+  81 0089 6B 05                   		shar	#16, r5
+  82                             		.loc 1 90 6
+  83 008b DD A4 01                		mov.W	2[r10], r4
+  84 008e DF 55                   		mov.W	r5, r5
+  85 0090 47 54                   		cmp	r5, r4
+  86 0092 29 05 38 5E 01          		bge	.L7
+  91:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 		{
+  92:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 			/* draw the bar */
+  93:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 			mw_gl_set_fill(MW_GL_FILL);
+  87                             		.loc 1 93 4
+  88 0097 66 11                   		mov.L	#1, r1
+  89 0099 05 00 00 00             		bsr	_mw_gl_set_fill
+  94:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 			mw_gl_set_border(MW_GL_BORDER_ON);
+  90                             		.loc 1 94 4
+  91 009d 66 11                   		mov.L	#1, r1
+  92 009f 05 00 00 00             		bsr	_mw_gl_set_border
+  95:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 			mw_gl_set_line(MW_GL_SOLID_LINE);
+  93                             		.loc 1 95 4
+  94 00a3 FB 1E FF FF 00          		mov.L	#0xffff, r1
+  95 00a8 05 00 00 00             		bsr	_mw_gl_set_line
+  96:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 			mw_gl_clear_pattern();
+  96                             		.loc 1 96 4
+  97 00ac 05 00 00 00             		bsr	_mw_gl_clear_pattern
+  97:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 			mw_gl_set_solid_fill_colour(MW_CONTROL_UP_COLOUR);
+  98                             		.loc 1 97 4
+  99 00b0 FB 12 E6 E6 E6 00       		mov.L	#0xe6e6e6, r1
+ 100 00b6 05 00 00 00             		bsr	_mw_gl_set_solid_fill_colour
+  98:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 			if ((mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_IS_ENABLED) == MW_CONTROL_FLAG_IS_EN
+ 101                             		.loc 1 98 9
+ 102 00ba ED A1 03                		mov.L	12[r10], r1
+ 103 00bd 05 00 00 00             		bsr	_mw_get_control_flags
+ 104 00c1 EF 15                   		mov.L	r1, r5
+ 105                             		.loc 1 98 46
+ 106 00c3 5F 55                   		movu.W	r5, r5
+ 107 00c5 64 25                   		and	#2, r5
+ 108                             		.loc 1 98 7
+ 109 00c7 61 25                   		cmp	#2, r5
+ 110 00c9 19                      		bne	.L5
+  99:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 			{
+ 100:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 				mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
+ 111                             		.loc 1 100 5
+ 112 00ca 66 01                   		mov.L	#0, r1
+ 113 00cc 05 00 00 00             		bsr	_mw_gl_set_fg_colour
+ 114 00d0 2E 0C                   		bra	.L6
+ 115                             	.L5:
+ 101:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 			}
+ 102:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 			else
+ 103:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 			{
+ 104:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 				mw_gl_set_fg_colour(MW_CONTROL_DISABLED_COLOUR);
+ 116                             		.loc 1 104 5
+ 117 00d2 FB 12 BF BF BF 00       		mov.L	#0xbfbfbf, r1
+ 118 00d8 05 00 00 00             		bsr	_mw_gl_set_fg_colour
+ 119                             	.L6:
+ 105:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 			}
+ 106:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 			mw_gl_rectangle(draw_info,
+ 107:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 					0,
+ 108:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 					0,
+ 109:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 					narrow_dimension,
+ 110:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 					mw_get_control_rect(control_handle).height);
+ 120                             		.loc 1 110 6
+ 121 00dc ED A1 03                		mov.L	12[r10], r1
+ 122 00df 05 00 00 00             		bsr	_mw_get_control_rect
+ 123 00e3 EF 15                   		mov.L	r1, r5
+ 124 00e5 EF 26                   		mov.L	r2, r6
+ 106:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 					0,
+ 125                             		.loc 1 106 4
+ 126 00e7 EF 65                   		mov.L	r6, r5
+ 127 00e9 6B 05                   		shar	#16, r5
+ 128 00eb D3 05                   		mov.W	r5, [r0]
+ 129 00ed DC A4                   		mov.W	[r10], r4
+ 130 00ef 66 03                   		mov	#0, r3
+ 131 00f1 66 02                   		mov	#0, r2
+ 132 00f3 ED A1 04                		mov.L	16[r10], r1
+ 133 00f6 05 00 00 00             		bsr	_mw_gl_rectangle
+ 111:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 
+ 112:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 			/* only paint slider if enabled */
+ 113:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 			if ((mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_IS_ENABLED) == MW_CONTROL_FLAG_IS_EN
+ 134                             		.loc 1 113 9
+ 135 00fa ED A1 03                		mov.L	12[r10], r1
+ 136 00fd 05 00 00 00             		bsr	_mw_get_control_flags
+ 137 0101 EF 15                   		mov.L	r1, r5
+ 138                             		.loc 1 113 46
+ 139 0103 5F 55                   		movu.W	r5, r5
+ 140 0105 64 25                   		and	#2, r5
+ 141                             		.loc 1 113 7
+ 142 0107 61 25                   		cmp	#2, r5
+ 143 0109 3B E9 00                		bne	.L7
+ 114:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 			{
+ 115:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 				scroll_bar_vert_slider_top = (mw_get_control_rect(control_handle).height - slider_size) *
+ 144                             		.loc 1 115 35
+ 145 010c ED A1 03                		mov.L	12[r10], r1
+ 146 010f 05 00 00 00             		bsr	_mw_get_control_rect
+ 147 0113 EF 15                   		mov.L	r1, r5
+ 148 0115 EF 26                   		mov.L	r2, r6
+ 149                             		.loc 1 115 70
+ 150 0117 EF 65                   		mov.L	r6, r5
+ 151 0119 6B 05                   		shar	#16, r5
+ 152 011b DF 54                   		mov.W	r5, r4
+ 153                             		.loc 1 115 78
+ 154 011d DD A5 01                		mov.W	2[r10], r5
+ 155 0120 43 54                   		sub	r5, r4
+ 116:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 						(int16_t)this_scroll_bar_vert->scroll_position / UINT8_MAX;
+ 156                             		.loc 1 116 36
+ 157 0122 ED A5 01                		mov.L	4[r10], r5
+ 158 0125 CC 55                   		mov.B	[r5], r5
+ 159                             		.loc 1 116 7
+ 160 0127 5B 55                   		movu.B	r5, r5
+ 115:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 						(int16_t)this_scroll_bar_vert->scroll_position / UINT8_MAX;
+ 161                             		.loc 1 115 93
+ 162 0129 4F 45                   		mul	r4, r5
+ 163                             		.loc 1 116 54
+ 164 012b FB 72 81 80 80 80       		mov.L	#-2139062143, r7
+ 165 0131 FC 1B 57                		emul	r5, r7
+ 166 0134 EF 73                   		mov.L	r7, r3
+ 167 0136 EF 84                   		mov.L	r8, r4
+ 168 0138 4B 54                   		add	r5, r4
+ 169 013a 6A 74                   		shar	#7, r4
+ 170 013c 6B F5                   		shar	#31, r5
+ 171 013e FF 05 54                		sub	r5, r4, r5
+ 115:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 						(int16_t)this_scroll_bar_vert->scroll_position / UINT8_MAX;
+ 172                             		.loc 1 115 32
+ 173 0141 D7 A5 04                		mov.W	r5, 8[r10]
+ 117:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 
+ 118:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 				mw_gl_set_solid_fill_colour(MW_CONTROL_DOWN_COLOUR);
+ 174                             		.loc 1 118 5
+ 175 0144 FB 12 CC CC CC 00       		mov.L	#0xcccccc, r1
+ 176 014a 05 00 00 00             		bsr	_mw_gl_set_solid_fill_colour
+ 119:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 				mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
+ 177                             		.loc 1 119 5
+ 178 014e 66 01                   		mov.L	#0, r1
+ 179 0150 05 00 00 00             		bsr	_mw_gl_set_fg_colour
+ 120:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 				mw_gl_rectangle(draw_info,
+ 121:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 						1,
+ 122:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 						scroll_bar_vert_slider_top + 1,
+ 180                             		.loc 1 122 34
+ 181 0154 DD A5 04                		mov.W	8[r10], r5
+ 182 0157 62 15                   		add	#1, r5
+ 120:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 				mw_gl_rectangle(draw_info,
+ 183                             		.loc 1 120 5
+ 184 0159 DF 53                   		mov.W	r5, r3
+ 123:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 						narrow_dimension - 2,
+ 185                             		.loc 1 123 24
+ 186 015b DC A5                   		mov.W	[r10], r5
+ 187 015d 60 25                   		sub	#2, r5
+ 120:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 				mw_gl_rectangle(draw_info,
+ 188                             		.loc 1 120 5
+ 189 015f DF 54                   		mov.W	r5, r4
+ 124:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 						slider_size - 2);
+ 190                             		.loc 1 124 19
+ 191 0161 DD A5 01                		mov.W	2[r10], r5
+ 192 0164 60 25                   		sub	#2, r5
+ 120:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 				mw_gl_rectangle(draw_info,
+ 193                             		.loc 1 120 5
+ 194 0166 D3 05                   		mov.W	r5, [r0]
+ 195 0168 66 12                   		mov	#1, r2
+ 196 016a ED A1 04                		mov.L	16[r10], r1
+ 197 016d 05 00 00 00             		bsr	_mw_gl_rectangle
+ 125:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 
+ 126:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 				/* draw 3d effect */
+ 127:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 				mw_gl_set_fg_colour(MW_HAL_LCD_WHITE);
+ 198                             		.loc 1 127 5
+ 199 0171 FB 12 FF FF FF 00       		mov.L	#0xffffff, r1
+ 200 0177 05 00 00 00             		bsr	_mw_gl_set_fg_colour
+ 128:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 				mw_gl_vline(draw_info,
+ 129:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 						2,
+ 130:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 						scroll_bar_vert_slider_top + 2,
+ 201                             		.loc 1 130 34
+ 202 017b DD A5 04                		mov.W	8[r10], r5
+ 203 017e 62 25                   		add	#2, r5
+ 128:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 				mw_gl_vline(draw_info,
+ 204                             		.loc 1 128 5
+ 205 0180 DF 53                   		mov.W	r5, r3
+ 131:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 						scroll_bar_vert_slider_top + slider_size - 3);
+ 206                             		.loc 1 131 34
+ 207 0182 DD A4 04                		mov.W	8[r10], r4
+ 208 0185 DD A5 01                		mov.W	2[r10], r5
+ 209 0188 4B 45                   		add	r4, r5
+ 210                             		.loc 1 131 48
+ 211 018a 60 35                   		sub	#3, r5
+ 128:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 				mw_gl_vline(draw_info,
+ 212                             		.loc 1 128 5
+ 213 018c DF 54                   		mov.W	r5, r4
+ 214 018e 66 22                   		mov	#2, r2
+ 215 0190 ED A1 04                		mov.L	16[r10], r1
+ 216 0193 05 00 00 00             		bsr	_mw_gl_vline
+ 132:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 				mw_gl_hline(draw_info,
+ 133:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 						2,
+ 134:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 						narrow_dimension - 4,
+ 217                             		.loc 1 134 24
+ 218 0197 DC A5                   		mov.W	[r10], r5
+ 219 0199 60 45                   		sub	#4, r5
+ 132:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 				mw_gl_hline(draw_info,
+ 220                             		.loc 1 132 5
+ 221 019b DF 53                   		mov.W	r5, r3
+ 135:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 						scroll_bar_vert_slider_top + 2);
+ 222                             		.loc 1 135 34
+ 223 019d DD A5 04                		mov.W	8[r10], r5
+ 224 01a0 62 25                   		add	#2, r5
+ 132:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 				mw_gl_hline(draw_info,
+ 225                             		.loc 1 132 5
+ 226 01a2 DF 54                   		mov.W	r5, r4
+ 227 01a4 66 22                   		mov	#2, r2
+ 228 01a6 ED A1 04                		mov.L	16[r10], r1
+ 229 01a9 05 00 00 00             		bsr	_mw_gl_hline
+ 136:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 				mw_gl_set_fg_colour(MW_HAL_LCD_GREY7);
+ 230                             		.loc 1 136 5
+ 231 01ad FB 12 A6 A6 A6 00       		mov.L	#0xa6a6a6, r1
+ 232 01b3 05 00 00 00             		bsr	_mw_gl_set_fg_colour
+ 137:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 				mw_gl_vline(draw_info,
+ 138:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 						narrow_dimension - 3,
+ 233                             		.loc 1 138 24
+ 234 01b7 DC A5                   		mov.W	[r10], r5
+ 235 01b9 60 35                   		sub	#3, r5
+ 137:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 				mw_gl_vline(draw_info,
+ 236                             		.loc 1 137 5
+ 237 01bb DF 52                   		mov.W	r5, r2
+ 139:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 						scroll_bar_vert_slider_top + 2,
+ 238                             		.loc 1 139 34
+ 239 01bd DD A5 04                		mov.W	8[r10], r5
+ 240 01c0 62 25                   		add	#2, r5
+ 137:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 				mw_gl_vline(draw_info,
+ 241                             		.loc 1 137 5
+ 242 01c2 DF 53                   		mov.W	r5, r3
+ 140:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 						scroll_bar_vert_slider_top + slider_size - 4);
+ 243                             		.loc 1 140 34
+ 244 01c4 DD A4 04                		mov.W	8[r10], r4
+ 245 01c7 DD A5 01                		mov.W	2[r10], r5
+ 246 01ca 4B 45                   		add	r4, r5
+ 247                             		.loc 1 140 48
+ 248 01cc 60 45                   		sub	#4, r5
+ 137:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 				mw_gl_vline(draw_info,
+ 249                             		.loc 1 137 5
+ 250 01ce DF 54                   		mov.W	r5, r4
+ 251 01d0 ED A1 04                		mov.L	16[r10], r1
+ 252 01d3 05 00 00 00             		bsr	_mw_gl_vline
+ 141:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 				mw_gl_hline(draw_info,
+ 142:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 						3,
+ 143:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 						narrow_dimension - 3,
+ 253                             		.loc 1 143 24
+ 254 01d7 DC A5                   		mov.W	[r10], r5
+ 255 01d9 60 35                   		sub	#3, r5
+ 141:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 				mw_gl_hline(draw_info,
+ 256                             		.loc 1 141 5
+ 257 01db DF 53                   		mov.W	r5, r3
+ 144:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 						scroll_bar_vert_slider_top + slider_size - 3);
+ 258                             		.loc 1 144 34
+ 259 01dd DD A4 04                		mov.W	8[r10], r4
+ 260 01e0 DD A5 01                		mov.W	2[r10], r5
+ 261 01e3 4B 45                   		add	r4, r5
+ 262                             		.loc 1 144 48
+ 263 01e5 60 35                   		sub	#3, r5
+ 141:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 				mw_gl_hline(draw_info,
+ 264                             		.loc 1 141 5
+ 265 01e7 DF 54                   		mov.W	r5, r4
+ 266 01e9 66 32                   		mov	#3, r2
+ 267 01eb ED A1 04                		mov.L	16[r10], r1
+ 268 01ee 05 00 00 00             		bsr	_mw_gl_hline
+ 269                             	.L7:
+ 145:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 			}
+ 146:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 		}
+ 147:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 	}
+ 148:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** }
+ 270                             		.loc 1 148 1
+ 271 01f2 03                      		nop
+ 272 01f3 3F 6A 0B                		rtsd	#44, r6-r10
+ 273                             	.LFE0:
+ 275                             		.section	.text.scroll_bar_vert_message_function,"ax",@progbits
+ 277                             	_scroll_bar_vert_message_function:
+ 278                             	.LFB1:
+ 149:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 
+ 150:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** /**
+ 151:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c ****  * Control message handler called by the window manager.
+ 152:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c ****  *
+ 153:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c ****  * @param message The message to be processed
+ 154:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c ****  */
+ 155:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** static void scroll_bar_vert_message_function(const mw_message_t *message)
+ 156:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** {
+ 279                             		.loc 1 156 1
+ 280 0000 6E 6B                   		pushm	r6-r11
+ 281                             	.LCFI3:
+ 282 0002 71 0A F0                		add	#-16, r0, r10
+ 283                             	.LCFI4:
+ 284 0005 71 A0 F8                		add	#-8, r10, r0
+ 285                             	.LCFI5:
+ 286 0008 E7 A1 03                		mov.L	r1, 12[r10]
+ 157:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 	mw_ui_scroll_bar_vert_data_t *this_scroll_bar_vert = (mw_ui_scroll_bar_vert_data_t*)mw_get_control
+ 287                             		.loc 1 157 86
+ 288 000b ED A5 03                		mov.L	12[r10], r5
+ 289 000e A8 5D                   		mov.L	4[r5], r5
+ 290 0010 EF 51                   		mov.L	r5, r1
+ 291 0012 05 00 00 00             		bsr	_mw_get_control_instance_data
+ 292 0016 E3 A1                   		mov.L	r1, [r10]
+ 158:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 	int16_t touch_y;
+ 159:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 	uint8_t new_scroll_position;
+ 160:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 	uint32_t misra_temp;
+ 161:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 
+ 162:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 	MW_ASSERT(message != (void*)0, "Null pointer argument");
+ 293                             		.loc 1 162 2
+ 294 0018 ED A5 03                		mov.L	12[r10], r5
+ 295 001b 61 05                   		cmp	#0, r5
+ 296 001d FC DB 51                		scne.L	r5
+ 297 0020 FB 42 00 00 00 00       		mov.L	#.LC0, r4
+ 298 0026 75 43 A2                		mov.L	#0xa2, r3
+ 299 0029 FB 22 00 00 00 00       		mov.L	#___func__.2884, r2
+ 300 002f CF 51                   		mov.B	r5, r1
+ 301 0031 05 00 00 00             		bsr	_mw_debug_print_assert
+ 163:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 
+ 164:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 	switch (message->message_id)
+ 302                             		.loc 1 164 17
+ 303 0035 ED A5 03                		mov.L	12[r10], r5
+ 304 0038 A8 D5                   		mov.L	8[r5], r5
+ 305                             		.loc 1 164 2
+ 306 003a 75 55 16                		cmp	#22, r5
+ 307 003d 20 36                   		beq	.L9
+ 308 003f 75 55 16                		cmp	#22, r5
+ 309 0042 24 0E                   		bgtu	.L10
+ 310 0044 61 D5                   		cmp	#13, r5
+ 311 0046 20 17                   		beq	.L11
+ 312 0048 75 55 14                		cmp	#20, r5
+ 313 004b 20 50                   		beq	.L12
+ 165:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 	{
+ 166:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 	case MW_CONTROL_CREATED_MESSAGE:
+ 167:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 		/* initialise the control */			
+ 168:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 		this_scroll_bar_vert->scroll_position = 0U;
+ 169:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 		break;
+ 170:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 		
+ 171:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 	case MW_SCROLL_BAR_SET_SCROLL_MESSAGE:
+ 172:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 		/* handle a transfer data message, which contains new position */
+ 173:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 		this_scroll_bar_vert->scroll_position  = (uint8_t)message->message_data;
+ 174:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 		break;
+ 175:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 
+ 176:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 	case MW_TOUCH_UP_MESSAGE:
+ 177:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 		mw_post_message(MW_CONTROL_VERT_SCROLL_BAR_SCROLL_ENDED,
+ 178:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 				message->recipient_handle,
+ 179:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 				mw_get_control_parent_window_handle(message->recipient_handle),
+ 180:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 				MW_UNUSED_MESSAGE_PARAMETER,
+ 181:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 				NULL,
+ 182:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 				MW_WINDOW_MESSAGE);
+ 183:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 		break;
+ 184:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 
+ 185:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 	case MW_TOUCH_DOWN_MESSAGE:
+ 186:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 	case MW_TOUCH_DRAG_MESSAGE:
+ 187:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 		/* respond to a down or drag event by recalculating the new slider position from the touch coordi
+ 188:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 		if ((mw_get_control_flags(message->recipient_handle) & MW_CONTROL_FLAG_IS_ENABLED) == MW_CONTROL_
+ 189:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 		{
+ 190:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 			misra_temp = message->message_data & 0xffffU;
+ 191:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 			touch_y = (int16_t)misra_temp;
+ 192:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 
+ 193:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 			/* scale touch point to middle 90% of scroll bar length */
+ 194:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 			touch_y = mw_ui_common_scale_scroll_bar_touch_point(mw_get_control_rect(message->recipient_handl
+ 195:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 
+ 196:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 			new_scroll_position = (uint8_t)((uint32_t)UINT8_MAX * (uint32_t)touch_y / (uint32_t)mw_get_contr
+ 197:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 			if (new_scroll_position != this_scroll_bar_vert->scroll_position)
+ 198:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 			{
+ 199:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 				/* only repaint if the scroll slider position has changed */
+ 200:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 				this_scroll_bar_vert->scroll_position = new_scroll_position;
+ 201:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 				mw_paint_control(message->recipient_handle);
+ 202:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 
+ 203:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 				mw_post_message(MW_CONTROL_VERT_SCROLL_BAR_SCROLLED_MESSAGE,
+ 204:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 						message->recipient_handle,
+ 205:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 						mw_get_control_parent_window_handle(message->recipient_handle),
+ 206:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 						this_scroll_bar_vert->scroll_position,
+ 207:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 						NULL,
+ 208:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 						MW_WINDOW_MESSAGE);
+ 209:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 			}
+ 210:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 		}
+ 211:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 		break;
+ 212:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 
+ 213:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 	default:
+ 214:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 		/* keep MISRA happy */
+ 215:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 		break;
+ 314                             		.loc 1 215 3
+ 315 004d 38 08 01                		bra	.L15
+ 316                             	.L10:
+ 164:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 	{
+ 317                             		.loc 1 164 2
+ 318 0050 75 55 17                		cmp	#23, r5
+ 319 0053 20 48                   		beq	.L12
+ 320 0055 75 55 30                		cmp	#48, r5
+ 321 0058 20 0D                   		beq	.L14
+ 322                             		.loc 1 215 3
+ 323 005a 38 FB 00                		bra	.L15
+ 324                             	.L11:
+ 168:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 		break;
+ 325                             		.loc 1 168 41
+ 326 005d EC A5                   		mov.L	[r10], r5
+ 327 005f F8 54 00                		mov.B	#0, [r5]
+ 169:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 		
+ 328                             		.loc 1 169 3
+ 329 0062 38 F3 00                		bra	.L15
+ 330                             	.L14:
+ 173:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 		break;
+ 331                             		.loc 1 173 60
+ 332 0065 ED A5 03                		mov.L	12[r10], r5
+ 333 0068 A9 55                   		mov.L	16[r5], r5
+ 173:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 		break;
+ 334                             		.loc 1 173 44
+ 335 006a CF 54                   		mov.B	r5, r4
+ 173:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 		break;
+ 336                             		.loc 1 173 42
+ 337 006c EC A5                   		mov.L	[r10], r5
+ 338 006e C3 54                   		mov.B	r4, [r5]
+ 174:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 
+ 339                             		.loc 1 174 3
+ 340 0070 38 E5 00                		bra	.L15
+ 341                             	.L9:
+ 177:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 				message->recipient_handle,
+ 342                             		.loc 1 177 3
+ 343 0073 ED A5 03                		mov.L	12[r10], r5
+ 344 0076 A8 5E                   		mov.L	4[r5], r6
+ 345 0078 ED A5 03                		mov.L	12[r10], r5
+ 346 007b A8 5D                   		mov.L	4[r5], r5
+ 347 007d EF 51                   		mov.L	r5, r1
+ 348 007f 05 00 00 00             		bsr	_mw_get_control_parent_window_handle
+ 349 0083 EF 15                   		mov.L	r1, r5
+ 350 0085 3E 01 00                		mov.L	#0, 4[r0]
+ 351 0088 F8 06 00                		mov.L	#0, [r0]
+ 352 008b 66 04                   		mov.L	#0, r4
+ 353 008d EF 53                   		mov.L	r5, r3
+ 354 008f EF 62                   		mov.L	r6, r2
+ 355 0091 75 41 20                		mov.L	#32, r1
+ 356 0094 05 00 00 00             		bsr	_mw_post_message
+ 183:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 
+ 357                             		.loc 1 183 3
+ 358 0098 38 BD 00                		bra	.L15
+ 359                             	.L12:
+ 188:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 		{
+ 360                             		.loc 1 188 8
+ 361 009b ED A5 03                		mov.L	12[r10], r5
+ 362 009e A8 5D                   		mov.L	4[r5], r5
+ 363 00a0 EF 51                   		mov.L	r5, r1
+ 364 00a2 05 00 00 00             		bsr	_mw_get_control_flags
+ 365 00a6 EF 15                   		mov.L	r1, r5
+ 188:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 		{
+ 366                             		.loc 1 188 56
+ 367 00a8 5F 55                   		movu.W	r5, r5
+ 368 00aa 64 25                   		and	#2, r5
+ 188:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 		{
+ 369                             		.loc 1 188 6
+ 370 00ac 61 25                   		cmp	#2, r5
+ 371 00ae 3B A6 00                		bne	.L17
+ 190:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 			touch_y = (int16_t)misra_temp;
+ 372                             		.loc 1 190 24
+ 373 00b1 ED A5 03                		mov.L	12[r10], r5
+ 374 00b4 A9 55                   		mov.L	16[r5], r5
+ 190:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 			touch_y = (int16_t)misra_temp;
+ 375                             		.loc 1 190 15
+ 376 00b6 77 25 FF FF 00          		and	#0xffff, r5
+ 377 00bb E7 A5 01                		mov.L	r5, 4[r10]
+ 191:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 
+ 378                             		.loc 1 191 12
+ 379 00be ED A5 01                		mov.L	4[r10], r5
+ 380 00c1 D7 A5 04                		mov.W	r5, 8[r10]
+ 194:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 
+ 381                             		.loc 1 194 56
+ 382 00c4 ED A5 03                		mov.L	12[r10], r5
+ 383 00c7 A8 5D                   		mov.L	4[r5], r5
+ 384 00c9 EF 51                   		mov.L	r5, r1
+ 385 00cb 05 00 00 00             		bsr	_mw_get_control_rect
+ 386 00cf EF 15                   		mov.L	r1, r5
+ 387 00d1 EF 26                   		mov.L	r2, r6
+ 194:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 
+ 388                             		.loc 1 194 14
+ 389 00d3 EF 65                   		mov.L	r6, r5
+ 390 00d5 6B 05                   		shar	#16, r5
+ 391 00d7 DD A2 04                		mov.W	8[r10], r2
+ 392 00da DF 51                   		mov.W	r5, r1
+ 393 00dc 05 00 00 00             		bsr	_mw_ui_common_scale_scroll_bar_touch_point
+ 394 00e0 EF 15                   		mov.L	r1, r5
+ 395 00e2 D7 A5 04                		mov.W	r5, 8[r10]
+ 196:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 			if (new_scroll_position != this_scroll_bar_vert->scroll_position)
+ 396                             		.loc 1 196 58
+ 397 00e5 DD A5 04                		mov.W	8[r10], r5
+ 196:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 			if (new_scroll_position != this_scroll_bar_vert->scroll_position)
+ 398                             		.loc 1 196 56
+ 399 00e8 75 4B FF                		mov.L	#0xff, r11
+ 400 00eb 4F 5B                   		mul	r5, r11
+ 196:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 			if (new_scroll_position != this_scroll_bar_vert->scroll_position)
+ 401                             		.loc 1 196 88
+ 402 00ed ED A5 03                		mov.L	12[r10], r5
+ 403 00f0 A8 5D                   		mov.L	4[r5], r5
+ 404 00f2 EF 51                   		mov.L	r5, r1
+ 405 00f4 05 00 00 00             		bsr	_mw_get_control_rect
+ 406 00f8 EF 15                   		mov.L	r1, r5
+ 407 00fa EF 26                   		mov.L	r2, r6
+ 196:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 			if (new_scroll_position != this_scroll_bar_vert->scroll_position)
+ 408                             		.loc 1 196 134
+ 409 00fc EF 65                   		mov.L	r6, r5
+ 410 00fe 6B 05                   		shar	#16, r5
+ 196:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 			if (new_scroll_position != this_scroll_bar_vert->scroll_position)
+ 411                             		.loc 1 196 78
+ 412 0100 DF 55                   		mov.W	r5, r5
+ 196:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 			if (new_scroll_position != this_scroll_bar_vert->scroll_position)
+ 413                             		.loc 1 196 76
+ 414 0102 EF B7                   		mov.L	r11, r7
+ 415 0104 FC 27 57                		divu	r5, r7
+ 416 0107 EF 75                   		mov.L	r7, r5
+ 196:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 			if (new_scroll_position != this_scroll_bar_vert->scroll_position)
+ 417                             		.loc 1 196 24
+ 418 0109 C7 A5 0A                		mov.B	r5, 10[r10]
+ 197:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 			{
+ 419                             		.loc 1 197 51
+ 420 010c EC A5                   		mov.L	[r10], r5
+ 421 010e CC 55                   		mov.B	[r5], r5
+ 197:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 			{
+ 422                             		.loc 1 197 7
+ 423 0110 59 A4 0A                		movu.B	10[r10], r4
+ 424 0113 5B 55                   		movu.B	r5, r5
+ 425 0115 47 54                   		cmp	r5, r4
+ 426 0117 20 3D                   		beq	.L17
+ 200:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 				mw_paint_control(message->recipient_handle);
+ 427                             		.loc 1 200 43
+ 428 0119 EC A5                   		mov.L	[r10], r5
+ 429 011b CD A4 0A                		mov.B	10[r10], r4
+ 430 011e C3 54                   		mov.B	r4, [r5]
+ 201:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 
+ 431                             		.loc 1 201 5
+ 432 0120 ED A5 03                		mov.L	12[r10], r5
+ 433 0123 A8 5D                   		mov.L	4[r5], r5
+ 434 0125 EF 51                   		mov.L	r5, r1
+ 435 0127 05 00 00 00             		bsr	_mw_paint_control
+ 203:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 						message->recipient_handle,
+ 436                             		.loc 1 203 5
+ 437 012b ED A5 03                		mov.L	12[r10], r5
+ 438 012e A8 5E                   		mov.L	4[r5], r6
+ 439 0130 ED A5 03                		mov.L	12[r10], r5
+ 440 0133 A8 5D                   		mov.L	4[r5], r5
+ 441 0135 EF 51                   		mov.L	r5, r1
+ 442 0137 05 00 00 00             		bsr	_mw_get_control_parent_window_handle
+ 443 013b EF 13                   		mov.L	r1, r3
+ 206:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 						NULL,
+ 444                             		.loc 1 206 27
+ 445 013d EC A5                   		mov.L	[r10], r5
+ 446 013f CC 55                   		mov.B	[r5], r5
+ 203:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 						message->recipient_handle,
+ 447                             		.loc 1 203 5
+ 448 0141 5B 55                   		movu.B	r5, r5
+ 449 0143 3E 01 00                		mov.L	#0, 4[r0]
+ 450 0146 F8 06 00                		mov.L	#0, [r0]
+ 451 0149 EF 54                   		mov.L	r5, r4
+ 452 014b EF 62                   		mov.L	r6, r2
+ 453 014d 75 41 1F                		mov.L	#31, r1
+ 454 0150 05 00 00 00             		bsr	_mw_post_message
+ 455                             	.L17:
+ 211:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 
+ 456                             		.loc 1 211 3
+ 457 0154 03                      		nop
+ 458                             	.L15:
+ 216:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 	}
+ 217:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** }
+ 459                             		.loc 1 217 1
+ 460 0155 03                      		nop
+ 461 0156 3F 6B 0C                		rtsd	#48, r6-r11
+ 462                             	.LFE1:
+ 464                             		.section	.text.mw_ui_scroll_bar_vert_add_new,"ax",@progbits
+ 465                             		.global	_mw_ui_scroll_bar_vert_add_new
+ 467                             	_mw_ui_scroll_bar_vert_add_new:
+ 468                             	.LFB2:
+ 218:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 
+ 219:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** /***********************
+ 220:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** *** GLOBAL FUNCTIONS ***
+ 221:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** ***********************/
+ 222:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 
+ 223:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** mw_handle_t mw_ui_scroll_bar_vert_add_new(int16_t x,
+ 224:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 		int16_t y,
+ 225:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 		int16_t height,
+ 226:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 		mw_handle_t parent_handle,
+ 227:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 		uint16_t flags,
+ 228:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 		mw_ui_scroll_bar_vert_data_t *scroll_bar_vert_instance_data)
+ 229:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** {
+ 469                             		.loc 1 229 1
+ 470 0000 7E AA                   		push.l	r10
+ 471                             	.LCFI6:
+ 472 0002 7E A6                   		push.l	r6
+ 473                             	.LCFI7:
+ 474 0004 71 0A E4                		add	#-28, r0, r10
+ 475                             	.LCFI8:
+ 476 0007 71 A0 F8                		add	#-8, r10, r0
+ 477                             	.LCFI9:
+ 478 000a 75 46 28                		mov.L	#40, r6
+ 479 000d 4B A6                   		add	r10, r6
+ 480 000f D7 A1 04                		mov.W	r1, 8[r10]
+ 481 0012 D7 A2 05                		mov.W	r2, 10[r10]
+ 482 0015 D7 A3 06                		mov.W	r3, 12[r10]
+ 483 0018 E7 A4 04                		mov.L	r4, 16[r10]
+ 230:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 	mw_util_rect_t r;
+ 231:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 
+ 232:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 	if ((flags & MW_CONTROL_FLAG_LARGE_SIZE) == MW_CONTROL_FLAG_LARGE_SIZE)
+ 484                             		.loc 1 232 13
+ 485 001b 5C 65                   		movu.W	[r6], r5
+ 486 001d 64 85                   		and	#8, r5
+ 487                             		.loc 1 232 5
+ 488 001f 61 05                   		cmp	#0, r5
+ 489 0021 20 18                   		beq	.L19
+ 233:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 	{
+ 234:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 		mw_util_set_rect(&r, x, y, MW_SCROLL_BAR_LARGE_NARROW_DIMENSION, height);
+ 490                             		.loc 1 234 3
+ 491 0023 DD A5 06                		mov.W	12[r10], r5
+ 492 0026 D3 05                   		mov.W	r5, [r0]
+ 493 0028 75 44 18                		mov	#24, r4
+ 494 002b DD A3 05                		mov.W	10[r10], r3
+ 495 002e DD A2 04                		mov.W	8[r10], r2
+ 496 0031 EF A1                   		mov.L	r10, r1
+ 497 0033 05 00 00 00             		bsr	_mw_util_set_rect
+ 498 0037 2E 15                   		bra	.L20
+ 499                             	.L19:
+ 235:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 	}
+ 236:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 	else
+ 237:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 	{
+ 238:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 		mw_util_set_rect(&r, x, y, MW_SCROLL_BAR_NARROW_DIMENSION, height);
+ 500                             		.loc 1 238 3
+ 501 0039 DD A5 06                		mov.W	12[r10], r5
+ 502 003c D3 05                   		mov.W	r5, [r0]
+ 503 003e 66 C4                   		mov	#12, r4
+ 504 0040 DD A3 05                		mov.W	10[r10], r3
+ 505 0043 DD A2 04                		mov.W	8[r10], r2
+ 506 0046 EF A1                   		mov.L	r10, r1
+ 507 0048 05 00 00 00             		bsr	_mw_util_set_rect
+ 508                             	.L20:
+ 239:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 	}
+ 240:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 
+ 241:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 	return (mw_add_control(&r,
+ 509                             		.loc 1 241 10
+ 510 004c A8 6D                   		mov.L	4[r6], r5
+ 511 004e A0 0D                   		mov.L	r5, 4[r0]
+ 512 0050 DC 65                   		mov.W	[r6], r5
+ 513 0052 D3 05                   		mov.W	r5, [r0]
+ 514 0054 FB 42 00 00 00 00       		mov.L	#_scroll_bar_vert_message_function, r4
+ 515 005a FB 32 00 00 00 00       		mov.L	#_scroll_bar_vert_paint_function, r3
+ 516 0060 ED A2 04                		mov.L	16[r10], r2
+ 517 0063 EF A1                   		mov.L	r10, r1
+ 518 0065 05 00 00 00             		bsr	_mw_add_control
+ 519 0069 EF 15                   		mov.L	r1, r5
+ 242:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 			parent_handle,
+ 243:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 			scroll_bar_vert_paint_function,
+ 244:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 			scroll_bar_vert_message_function,
+ 245:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 			flags,
+ 246:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** 			scroll_bar_vert_instance_data));
+ 247:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_scroll_bar_vert.c **** }
+ 520                             		.loc 1 247 1
+ 521 006b EF 51                   		mov.L	r5, r1
+ 522 006d 71 00 24                		add	#36, r0
+ 523 0070 7E B6                   		pop	r6
+ 524 0072 7E BA                   		pop	r10
+ 525 0074 02                      		rts
+ 526                             	.LFE2:
+ 528                             		.section	.rodata.__func__.2876,"a"
+ 531                             	___func__.2876:
+ 532 0000 73 63 72 6F 6C 6C 5F 62 		.string	"scroll_bar_vert_paint_function"
+ 532      61 72 5F 76 65 72 74 5F 
+ 532      70 61 69 6E 74 5F 66 75 
+ 532      6E 63 74 69 6F 6E 00 
+ 533                             		.section	.rodata.__func__.2884,"a"
+ 536                             	___func__.2884:
+ 537 0000 73 63 72 6F 6C 6C 5F 62 		.string	"scroll_bar_vert_message_function"
+ 537      61 72 5F 76 65 72 74 5F 
+ 537      6D 65 73 73 61 67 65 5F 
+ 537      66 75 6E 63 74 69 6F 6E 
+ 537      00 
+ 652                             	.Letext0:
+ 653                             		.file 2 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\rx-el
+ 654                             		.file 3 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\rx-el
+ 655                             		.file 4 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\rx-el
+ 656                             		.file 5 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\lib\\
+ 657                             		.file 6 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\rx-el
+ 658                             		.file 7 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\rx-el
+ 659                             		.file 8 "C:\\Users\\John\\Desktop\\workspace\\miniwinwm\\MiniWin/miniwin_utilities.h"
+ 660                             		.file 9 "C:\\Users\\John\\Desktop\\workspace\\miniwinwm\\MiniWin/gl/gl.h"
+ 661                             		.file 10 "C:\\Users\\John\\Desktop\\workspace\\miniwinwm\\MiniWin/bitmaps/mw_bitmaps.h"
+ 662                             		.file 11 "C:\\Users\\John\\Desktop\\workspace\\miniwinwm\\MiniWin/hal/hal_timer.h"
+ 663                             		.file 12 "C:\\Users\\John\\Desktop\\workspace\\miniwinwm\\MiniWin/miniwin.h"
+ 664                             		.file 13 "C:\\Users\\John\\Desktop\\workspace\\miniwinwm\\MiniWin/ui/ui_scroll_bar_vert.h"

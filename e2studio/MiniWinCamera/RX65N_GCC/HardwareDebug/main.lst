@@ -1,0 +1,112 @@
+   1                             		.file	"main.c"
+   2                             		.section P,"ax"
+   3                             	.Ltext0:
+   4                             		.section	.text.main,"ax",@progbits
+   5                             		.global	_main
+   7                             	_main:
+   8                             	.LFB0:
+   9                             		.file 1 "C:/Users/John/Desktop/workspace/miniwinwm/MiniWinCamera_Common/main.c"
+   1:C:/Users/John/Desktop/workspace/miniwinwm/MiniWinCamera_Common\main.c **** /*
+   2:C:/Users/John/Desktop/workspace/miniwinwm/MiniWinCamera_Common\main.c **** 
+   3:C:/Users/John/Desktop/workspace/miniwinwm/MiniWinCamera_Common\main.c **** MIT License
+   4:C:/Users/John/Desktop/workspace/miniwinwm/MiniWinCamera_Common\main.c **** 
+   5:C:/Users/John/Desktop/workspace/miniwinwm/MiniWinCamera_Common\main.c **** Copyright (c) John Blaiklock 2019 miniwin Embedded Window Manager
+   6:C:/Users/John/Desktop/workspace/miniwinwm/MiniWinCamera_Common\main.c **** 
+   7:C:/Users/John/Desktop/workspace/miniwinwm/MiniWinCamera_Common\main.c **** Permission is hereby granted, free of charge, to any person obtaining a copy
+   8:C:/Users/John/Desktop/workspace/miniwinwm/MiniWinCamera_Common\main.c **** of this software and associated documentation files (the "Software"), to deal
+   9:C:/Users/John/Desktop/workspace/miniwinwm/MiniWinCamera_Common\main.c **** in the Software without restriction, including without limitation the rights
+  10:C:/Users/John/Desktop/workspace/miniwinwm/MiniWinCamera_Common\main.c **** to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  11:C:/Users/John/Desktop/workspace/miniwinwm/MiniWinCamera_Common\main.c **** copies of the Software, and to permit persons to whom the Software is
+  12:C:/Users/John/Desktop/workspace/miniwinwm/MiniWinCamera_Common\main.c **** furnished to do so, subject to the following conditions:
+  13:C:/Users/John/Desktop/workspace/miniwinwm/MiniWinCamera_Common\main.c **** 
+  14:C:/Users/John/Desktop/workspace/miniwinwm/MiniWinCamera_Common\main.c **** The above copyright notice and this permission notice shall be included in all
+  15:C:/Users/John/Desktop/workspace/miniwinwm/MiniWinCamera_Common\main.c **** copies or substantial portions of the Software.
+  16:C:/Users/John/Desktop/workspace/miniwinwm/MiniWinCamera_Common\main.c **** 
+  17:C:/Users/John/Desktop/workspace/miniwinwm/MiniWinCamera_Common\main.c **** THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  18:C:/Users/John/Desktop/workspace/miniwinwm/MiniWinCamera_Common\main.c **** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  19:C:/Users/John/Desktop/workspace/miniwinwm/MiniWinCamera_Common\main.c **** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  20:C:/Users/John/Desktop/workspace/miniwinwm/MiniWinCamera_Common\main.c **** AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  21:C:/Users/John/Desktop/workspace/miniwinwm/MiniWinCamera_Common\main.c **** LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  22:C:/Users/John/Desktop/workspace/miniwinwm/MiniWinCamera_Common\main.c **** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  23:C:/Users/John/Desktop/workspace/miniwinwm/MiniWinCamera_Common\main.c **** SOFTWARE.
+  24:C:/Users/John/Desktop/workspace/miniwinwm/MiniWinCamera_Common\main.c **** 
+  25:C:/Users/John/Desktop/workspace/miniwinwm/MiniWinCamera_Common\main.c **** */
+  26:C:/Users/John/Desktop/workspace/miniwinwm/MiniWinCamera_Common\main.c **** 
+  27:C:/Users/John/Desktop/workspace/miniwinwm/MiniWinCamera_Common\main.c **** /***************
+  28:C:/Users/John/Desktop/workspace/miniwinwm/MiniWinCamera_Common\main.c **** *** INCLUDES ***
+  29:C:/Users/John/Desktop/workspace/miniwinwm/MiniWinCamera_Common\main.c **** ***************/
+  30:C:/Users/John/Desktop/workspace/miniwinwm/MiniWinCamera_Common\main.c **** 
+  31:C:/Users/John/Desktop/workspace/miniwinwm/MiniWinCamera_Common\main.c **** #include "main.h"
+  32:C:/Users/John/Desktop/workspace/miniwinwm/MiniWinCamera_Common\main.c **** #include "miniwin.h"
+  33:C:/Users/John/Desktop/workspace/miniwinwm/MiniWinCamera_Common\main.c **** #include "app.h"
+  34:C:/Users/John/Desktop/workspace/miniwinwm/MiniWinCamera_Common\main.c **** 
+  35:C:/Users/John/Desktop/workspace/miniwinwm/MiniWinCamera_Common\main.c **** /****************
+  36:C:/Users/John/Desktop/workspace/miniwinwm/MiniWinCamera_Common\main.c **** *** CONSTANTS ***
+  37:C:/Users/John/Desktop/workspace/miniwinwm/MiniWinCamera_Common\main.c **** ****************/
+  38:C:/Users/John/Desktop/workspace/miniwinwm/MiniWinCamera_Common\main.c **** 
+  39:C:/Users/John/Desktop/workspace/miniwinwm/MiniWinCamera_Common\main.c **** /************
+  40:C:/Users/John/Desktop/workspace/miniwinwm/MiniWinCamera_Common\main.c **** *** TYPES ***
+  41:C:/Users/John/Desktop/workspace/miniwinwm/MiniWinCamera_Common\main.c **** ************/
+  42:C:/Users/John/Desktop/workspace/miniwinwm/MiniWinCamera_Common\main.c **** 
+  43:C:/Users/John/Desktop/workspace/miniwinwm/MiniWinCamera_Common\main.c **** /***********************
+  44:C:/Users/John/Desktop/workspace/miniwinwm/MiniWinCamera_Common\main.c **** *** GLOBAL VARIABLES ***
+  45:C:/Users/John/Desktop/workspace/miniwinwm/MiniWinCamera_Common\main.c **** ***********************/
+  46:C:/Users/John/Desktop/workspace/miniwinwm/MiniWinCamera_Common\main.c **** 
+  47:C:/Users/John/Desktop/workspace/miniwinwm/MiniWinCamera_Common\main.c **** /**********************
+  48:C:/Users/John/Desktop/workspace/miniwinwm/MiniWinCamera_Common\main.c **** *** LOCAL VARIABLES ***
+  49:C:/Users/John/Desktop/workspace/miniwinwm/MiniWinCamera_Common\main.c **** **********************/
+  50:C:/Users/John/Desktop/workspace/miniwinwm/MiniWinCamera_Common\main.c **** 
+  51:C:/Users/John/Desktop/workspace/miniwinwm/MiniWinCamera_Common\main.c **** /********************************
+  52:C:/Users/John/Desktop/workspace/miniwinwm/MiniWinCamera_Common\main.c **** *** LOCAL FUNCTION PROTOTYPES ***
+  53:C:/Users/John/Desktop/workspace/miniwinwm/MiniWinCamera_Common\main.c **** ********************************/
+  54:C:/Users/John/Desktop/workspace/miniwinwm/MiniWinCamera_Common\main.c **** 
+  55:C:/Users/John/Desktop/workspace/miniwinwm/MiniWinCamera_Common\main.c **** /**********************
+  56:C:/Users/John/Desktop/workspace/miniwinwm/MiniWinCamera_Common\main.c **** *** LOCAL FUNCTIONS ***
+  57:C:/Users/John/Desktop/workspace/miniwinwm/MiniWinCamera_Common\main.c **** **********************/
+  58:C:/Users/John/Desktop/workspace/miniwinwm/MiniWinCamera_Common\main.c **** 
+  59:C:/Users/John/Desktop/workspace/miniwinwm/MiniWinCamera_Common\main.c **** /***********************
+  60:C:/Users/John/Desktop/workspace/miniwinwm/MiniWinCamera_Common\main.c **** *** GLOBAL FUNCTIONS ***
+  61:C:/Users/John/Desktop/workspace/miniwinwm/MiniWinCamera_Common\main.c **** ***********************/
+  62:C:/Users/John/Desktop/workspace/miniwinwm/MiniWinCamera_Common\main.c **** 
+  63:C:/Users/John/Desktop/workspace/miniwinwm/MiniWinCamera_Common\main.c **** int main(void)
+  64:C:/Users/John/Desktop/workspace/miniwinwm/MiniWinCamera_Common\main.c **** {
+  10                             		.loc 1 64 1
+  11 0000 7E AA                   		push.l	r10
+  12                             	.LCFI0:
+  13 0002 EF 0A                   		mov.L	r0, r10
+  14                             	.LCFI1:
+  65:C:/Users/John/Desktop/workspace/miniwinwm/MiniWinCamera_Common\main.c **** 	/* initialize non-miniwin parts of the application */
+  66:C:/Users/John/Desktop/workspace/miniwinwm/MiniWinCamera_Common\main.c **** 	app_init();
+  15                             		.loc 1 66 2
+  16 0004 05 00 00 00             		bsr	_app_init
+  67:C:/Users/John/Desktop/workspace/miniwinwm/MiniWinCamera_Common\main.c **** 
+  68:C:/Users/John/Desktop/workspace/miniwinwm/MiniWinCamera_Common\main.c **** 	/* initialize miniwin */
+  69:C:/Users/John/Desktop/workspace/miniwinwm/MiniWinCamera_Common\main.c **** 	mw_init();
+  17                             		.loc 1 69 2
+  18 0008 05 00 00 00             		bsr	_mw_init
+  19                             	.L2:
+  70:C:/Users/John/Desktop/workspace/miniwinwm/MiniWinCamera_Common\main.c **** 
+  71:C:/Users/John/Desktop/workspace/miniwinwm/MiniWinCamera_Common\main.c **** 	while (true)
+  72:C:/Users/John/Desktop/workspace/miniwinwm/MiniWinCamera_Common\main.c **** 	{
+  73:C:/Users/John/Desktop/workspace/miniwinwm/MiniWinCamera_Common\main.c **** 		/* do non-miniwin parts of application main loop processing */
+  74:C:/Users/John/Desktop/workspace/miniwinwm/MiniWinCamera_Common\main.c ****     	app_main_loop_process();
+  20                             		.loc 1 74 6 discriminator 1
+  21 000c 05 00 00 00             		bsr	_app_main_loop_process
+  75:C:/Users/John/Desktop/workspace/miniwinwm/MiniWinCamera_Common\main.c **** 
+  76:C:/Users/John/Desktop/workspace/miniwinwm/MiniWinCamera_Common\main.c ****     	/* do miniwin message processing */
+  77:C:/Users/John/Desktop/workspace/miniwinwm/MiniWinCamera_Common\main.c **** 		(void)mw_process_message();
+  22                             		.loc 1 77 9 discriminator 1
+  23 0010 05 00 00 00             		bsr	_mw_process_message
+  74:C:/Users/John/Desktop/workspace/miniwinwm/MiniWinCamera_Common\main.c **** 
+  24                             		.loc 1 74 6 discriminator 1
+  25 0014 2E F8                   		bra	.L2
+  26                             	.LFE0:
+  64                             	.Letext0:
+  65                             		.file 2 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\rx-el
+  66                             		.file 3 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\rx-el
+  67                             		.file 4 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\rx-el
+  68                             		.file 5 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\rx-el
+  69                             		.file 6 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\lib\\
+  70                             		.file 7 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\rx-el
+  71                             		.file 8 "C:\\Users\\John\\Desktop\\workspace\\miniwinwm\\MiniWin/bitmaps/mw_bitmaps.h"
+  72                             		.file 9 "C:\\Users\\John\\Desktop\\workspace\\miniwinwm\\MiniWin/hal/hal_timer.h"

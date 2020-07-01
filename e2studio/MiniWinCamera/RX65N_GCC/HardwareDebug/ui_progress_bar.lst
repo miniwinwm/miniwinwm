@@ -1,0 +1,574 @@
+   1                             		.file	"ui_progress_bar.c"
+   2                             		.section P,"ax"
+   3                             	.Ltext0:
+   4                             		.section C,"a",@progbits
+   5                             		.p2align 2
+   6                             	.LC0:
+   7 0000 4E 75 6C 6C 20 70 6F 69 		.string	"Null pointer argument"
+   7      6E 74 65 72 20 61 72 67 
+   7      75 6D 65 6E 74 00 
+   8                             		.section	.text.progress_bar_paint_function,"ax",@progbits
+  10                             	_progress_bar_paint_function:
+  11                             	.LFB0:
+  12                             		.file 1 "C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui/ui_progress_bar.c"
+   1:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** /*
+   2:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 
+   3:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** MIT License
+   4:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 
+   5:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** Copyright (c) John Blaiklock 2019 miniwin Embedded Window Manager
+   6:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 
+   7:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** Permission is hereby granted, free of charge, to any person obtaining a copy
+   8:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** of this software and associated documentation files (the "Software"), to deal
+   9:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** in the Software without restriction, including without limitation the rights
+  10:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  11:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** copies of the Software, and to permit persons to whom the Software is
+  12:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** furnished to do so, subject to the following conditions:
+  13:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 
+  14:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** The above copyright notice and this permission notice shall be included in all
+  15:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** copies or substantial portions of the Software.
+  16:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 
+  17:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  18:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  19:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  20:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  21:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  22:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  23:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** SOFTWARE.
+  24:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 
+  25:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** */
+  26:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 
+  27:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** /***************
+  28:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** *** INCLUDES ***
+  29:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** ***************/
+  30:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 
+  31:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** #include "miniwin.h"
+  32:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 
+  33:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** /****************
+  34:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** *** CONSTANTS ***
+  35:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** ****************/
+  36:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 
+  37:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** /************
+  38:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** *** TYPES ***
+  39:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** ************/
+  40:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 
+  41:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** /***********************
+  42:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** *** GLOBAL VARIABLES ***
+  43:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** ***********************/
+  44:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 
+  45:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** /**********************
+  46:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** *** LOCAL VARIABLES ***
+  47:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** **********************/
+  48:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 
+  49:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** /********************************
+  50:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** *** LOCAL FUNCTION PROTOTYPES ***
+  51:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** ********************************/
+  52:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 
+  53:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** static void progress_bar_paint_function(mw_handle_t control_handle, const mw_gl_draw_info_t *draw_i
+  54:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** static void progress_bar_message_function(const mw_message_t *message);
+  55:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 
+  56:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** /**********************
+  57:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** *** LOCAL FUNCTIONS ***
+  58:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** **********************/
+  59:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 
+  60:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** /**
+  61:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c ****  * Control paint routine, called by window manager.
+  62:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c ****  *
+  63:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c ****  * @param control_handle The control identifier in the array of controls
+  64:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c ****  * @param draw_info Draw info structure describing offset and clip region
+  65:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c ****  */
+  66:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** static void progress_bar_paint_function(mw_handle_t control_handle, const mw_gl_draw_info_t *draw_i
+  67:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** {
+  13                             		.loc 1 67 1
+  14 0000 6E 6B                   		pushm	r6-r11
+  15                             	.LCFI0:
+  16 0002 71 0A F4                		add	#-12, r0, r10
+  17                             	.LCFI1:
+  18 0005 71 A0 FC                		add	#-4, r10, r0
+  19                             	.LCFI2:
+  20 0008 E7 A1 01                		mov.L	r1, 4[r10]
+  21 000b E7 A2 02                		mov.L	r2, 8[r10]
+  68:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 	mw_ui_progress_bar_data_t *this_progress_bar = (mw_ui_progress_bar_data_t*)mw_get_control_instance
+  22                             		.loc 1 68 77
+  23 000e ED A1 01                		mov.L	4[r10], r1
+  24 0011 05 00 00 00             		bsr	_mw_get_control_instance_data
+  25 0015 E3 A1                   		mov.L	r1, [r10]
+  69:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 
+  70:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 	MW_ASSERT(draw_info != (void*)0, "Null pointer argument");
+  26                             		.loc 1 70 2
+  27 0017 ED A5 02                		mov.L	8[r10], r5
+  28 001a 61 05                   		cmp	#0, r5
+  29 001c FC DB 51                		scne.L	r5
+  30 001f FB 42 00 00 00 00       		mov.L	#.LC0, r4
+  31 0025 75 43 46                		mov.L	#0x46, r3
+  32 0028 FB 22 00 00 00 00       		mov.L	#___func__.2873, r2
+  33 002e CF 51                   		mov.B	r5, r1
+  34 0030 05 00 00 00             		bsr	_mw_debug_print_assert
+  71:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 
+  72:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c ****     /* draw the background */
+  73:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 	mw_gl_set_solid_fill_colour(MW_CONTROL_UP_COLOUR);
+  35                             		.loc 1 73 2
+  36 0034 FB 12 E6 E6 E6 00       		mov.L	#0xe6e6e6, r1
+  37 003a 05 00 00 00             		bsr	_mw_gl_set_solid_fill_colour
+  74:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 	mw_gl_set_fill(MW_GL_FILL);
+  38                             		.loc 1 74 2
+  39 003e 66 11                   		mov.L	#1, r1
+  40 0040 05 00 00 00             		bsr	_mw_gl_set_fill
+  75:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 	mw_gl_clear_pattern();
+  41                             		.loc 1 75 2
+  42 0044 05 00 00 00             		bsr	_mw_gl_clear_pattern
+  76:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 	mw_gl_set_line(MW_GL_SOLID_LINE);
+  43                             		.loc 1 76 2
+  44 0048 FB 1E FF FF 00          		mov.L	#0xffff, r1
+  45 004d 05 00 00 00             		bsr	_mw_gl_set_line
+  77:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 	mw_gl_set_border(MW_GL_BORDER_ON);
+  46                             		.loc 1 77 2
+  47 0051 66 11                   		mov.L	#1, r1
+  48 0053 05 00 00 00             		bsr	_mw_gl_set_border
+  78:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 	mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
+  49                             		.loc 1 78 2
+  50 0057 66 01                   		mov.L	#0, r1
+  51 0059 05 00 00 00             		bsr	_mw_gl_set_fg_colour
+  79:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 	mw_gl_set_line(MW_GL_SOLID_LINE);
+  52                             		.loc 1 79 2
+  53 005d FB 1E FF FF 00          		mov.L	#0xffff, r1
+  54 0062 05 00 00 00             		bsr	_mw_gl_set_line
+  80:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 	mw_gl_rectangle(draw_info,
+  81:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 			0,
+  82:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 			0,
+  83:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 			mw_get_control_rect(control_handle).width,
+  55                             		.loc 1 83 4
+  56 0066 ED A1 01                		mov.L	4[r10], r1
+  57 0069 05 00 00 00             		bsr	_mw_get_control_rect
+  58 006d EF 15                   		mov.L	r1, r5
+  59 006f EF 26                   		mov.L	r2, r6
+  80:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 	mw_gl_rectangle(draw_info,
+  60                             		.loc 1 80 2
+  61 0071 DF 6B                   		mov.W	r6, r11
+  84:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 			mw_get_control_rect(control_handle).height);
+  62                             		.loc 1 84 4
+  63 0073 ED A1 01                		mov.L	4[r10], r1
+  64 0076 05 00 00 00             		bsr	_mw_get_control_rect
+  65 007a EF 15                   		mov.L	r1, r5
+  66 007c EF 26                   		mov.L	r2, r6
+  80:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 	mw_gl_rectangle(draw_info,
+  67                             		.loc 1 80 2
+  68 007e EF 65                   		mov.L	r6, r5
+  69 0080 6B 05                   		shar	#16, r5
+  70 0082 D3 05                   		mov.W	r5, [r0]
+  71 0084 DF B4                   		mov.W	r11, r4
+  72 0086 66 03                   		mov	#0, r3
+  73 0088 66 02                   		mov	#0, r2
+  74 008a ED A1 02                		mov.L	8[r10], r1
+  75 008d 05 00 00 00             		bsr	_mw_gl_rectangle
+  85:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 
+  86:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 	if (this_progress_bar->progress_percent > 100U)
+  76                             		.loc 1 86 23
+  77 0091 EC A5                   		mov.L	[r10], r5
+  78 0093 CC 55                   		mov.B	[r5], r5
+  79                             		.loc 1 86 5
+  80 0095 5B 55                   		movu.B	r5, r5
+  81 0097 75 55 64                		cmp	#0x64, r5
+  82 009a 25 07                   		bleu	.L2
+  87:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 	{
+  88:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 		this_progress_bar->progress_percent = 100U;
+  83                             		.loc 1 88 39
+  84 009c EC A5                   		mov.L	[r10], r5
+  85 009e F8 54 64                		mov.B	#0x64, [r5]
+  86                             	.L2:
+  89:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 	}
+  90:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 
+  91:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 	mw_gl_set_fg_colour(MW_HAL_LCD_WHITE);
+  87                             		.loc 1 91 2
+  88 00a1 FB 12 FF FF FF 00       		mov.L	#0xffffff, r1
+  89 00a7 05 00 00 00             		bsr	_mw_gl_set_fg_colour
+  92:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 	mw_gl_vline(draw_info, 1, 1, mw_get_control_rect(control_handle).height - 2);
+  90                             		.loc 1 92 31
+  91 00ab ED A1 01                		mov.L	4[r10], r1
+  92 00ae 05 00 00 00             		bsr	_mw_get_control_rect
+  93 00b2 EF 15                   		mov.L	r1, r5
+  94 00b4 EF 26                   		mov.L	r2, r6
+  95                             		.loc 1 92 66
+  96 00b6 EF 65                   		mov.L	r6, r5
+  97 00b8 6B 05                   		shar	#16, r5
+  98                             		.loc 1 92 74
+  99 00ba 60 25                   		sub	#2, r5
+ 100                             		.loc 1 92 2
+ 101 00bc DF 54                   		mov.W	r5, r4
+ 102 00be 66 13                   		mov	#1, r3
+ 103 00c0 66 12                   		mov	#1, r2
+ 104 00c2 ED A1 02                		mov.L	8[r10], r1
+ 105 00c5 05 00 00 00             		bsr	_mw_gl_vline
+  93:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 	mw_gl_hline(draw_info, 1, mw_get_control_rect(control_handle).width - 2, 1);
+ 106                             		.loc 1 93 28
+ 107 00c9 ED A1 01                		mov.L	4[r10], r1
+ 108 00cc 05 00 00 00             		bsr	_mw_get_control_rect
+ 109 00d0 EF 15                   		mov.L	r1, r5
+ 110 00d2 EF 26                   		mov.L	r2, r6
+ 111                             		.loc 1 93 63
+ 112 00d4 DF 65                   		mov.W	r6, r5
+ 113                             		.loc 1 93 70
+ 114 00d6 60 25                   		sub	#2, r5
+ 115                             		.loc 1 93 2
+ 116 00d8 66 14                   		mov	#1, r4
+ 117 00da DF 53                   		mov.W	r5, r3
+ 118 00dc 66 12                   		mov	#1, r2
+ 119 00de ED A1 02                		mov.L	8[r10], r1
+ 120 00e1 05 00 00 00             		bsr	_mw_gl_hline
+  94:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 	mw_gl_set_fg_colour(MW_HAL_LCD_GREY7);
+ 121                             		.loc 1 94 2
+ 122 00e5 FB 12 A6 A6 A6 00       		mov.L	#0xa6a6a6, r1
+ 123 00eb 05 00 00 00             		bsr	_mw_gl_set_fg_colour
+  95:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 	mw_gl_vline(draw_info, mw_get_control_rect(control_handle).width - 2, 1, mw_get_control_rect(contr
+ 124                             		.loc 1 95 25
+ 125 00ef ED A1 01                		mov.L	4[r10], r1
+ 126 00f2 05 00 00 00             		bsr	_mw_get_control_rect
+ 127 00f6 EF 15                   		mov.L	r1, r5
+ 128 00f8 EF 26                   		mov.L	r2, r6
+ 129                             		.loc 1 95 60
+ 130 00fa DF 65                   		mov.W	r6, r5
+ 131                             		.loc 1 95 67
+ 132 00fc 60 25                   		sub	#2, r5
+ 133                             		.loc 1 95 2
+ 134 00fe DF 5B                   		mov.W	r5, r11
+ 135                             		.loc 1 95 75
+ 136 0100 ED A1 01                		mov.L	4[r10], r1
+ 137 0103 05 00 00 00             		bsr	_mw_get_control_rect
+ 138 0107 EF 15                   		mov.L	r1, r5
+ 139 0109 EF 26                   		mov.L	r2, r6
+ 140                             		.loc 1 95 110
+ 141 010b EF 65                   		mov.L	r6, r5
+ 142 010d 6B 05                   		shar	#16, r5
+ 143                             		.loc 1 95 118
+ 144 010f 60 25                   		sub	#2, r5
+ 145                             		.loc 1 95 2
+ 146 0111 DF 54                   		mov.W	r5, r4
+ 147 0113 66 13                   		mov	#1, r3
+ 148 0115 DF B2                   		mov.W	r11, r2
+ 149 0117 ED A1 02                		mov.L	8[r10], r1
+ 150 011a 05 00 00 00             		bsr	_mw_gl_vline
+  96:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 	mw_gl_hline(draw_info, 1, mw_get_control_rect(control_handle).width - 2, mw_get_control_rect(contr
+ 151                             		.loc 1 96 28
+ 152 011e ED A1 01                		mov.L	4[r10], r1
+ 153 0121 05 00 00 00             		bsr	_mw_get_control_rect
+ 154 0125 EF 15                   		mov.L	r1, r5
+ 155 0127 EF 26                   		mov.L	r2, r6
+ 156                             		.loc 1 96 63
+ 157 0129 DF 65                   		mov.W	r6, r5
+ 158                             		.loc 1 96 70
+ 159 012b 60 25                   		sub	#2, r5
+ 160                             		.loc 1 96 2
+ 161 012d DF 5B                   		mov.W	r5, r11
+ 162                             		.loc 1 96 75
+ 163 012f ED A1 01                		mov.L	4[r10], r1
+ 164 0132 05 00 00 00             		bsr	_mw_get_control_rect
+ 165 0136 EF 15                   		mov.L	r1, r5
+ 166 0138 EF 26                   		mov.L	r2, r6
+ 167                             		.loc 1 96 110
+ 168 013a EF 65                   		mov.L	r6, r5
+ 169 013c 6B 05                   		shar	#16, r5
+ 170                             		.loc 1 96 118
+ 171 013e 60 25                   		sub	#2, r5
+ 172                             		.loc 1 96 2
+ 173 0140 DF 54                   		mov.W	r5, r4
+ 174 0142 DF B3                   		mov.W	r11, r3
+ 175 0144 66 12                   		mov	#1, r2
+ 176 0146 ED A1 02                		mov.L	8[r10], r1
+ 177 0149 05 00 00 00             		bsr	_mw_gl_hline
+  97:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 
+  98:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c ****     /* set progress_bar progress fill colour according to enabled state */
+  99:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 	if ((mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_IS_ENABLED) == MW_CONTROL_FLAG_IS_ENAB
+ 178                             		.loc 1 99 7
+ 179 014d ED A1 01                		mov.L	4[r10], r1
+ 180 0150 05 00 00 00             		bsr	_mw_get_control_flags
+ 181 0154 EF 15                   		mov.L	r1, r5
+ 182                             		.loc 1 99 44
+ 183 0156 5F 55                   		movu.W	r5, r5
+ 184 0158 64 25                   		and	#2, r5
+ 185                             		.loc 1 99 5
+ 186 015a 61 25                   		cmp	#2, r5
+ 187 015c 1A                      		bne	.L3
+ 100:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 	{
+ 101:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 		mw_gl_set_solid_fill_colour(MW_PROGRESS_BAR_COLOUR);
+ 188                             		.loc 1 101 3
+ 189 015d 75 41 FF                		mov.L	#0xff, r1
+ 190 0160 05 00 00 00             		bsr	_mw_gl_set_solid_fill_colour
+ 191 0164 2E 0C                   		bra	.L4
+ 192                             	.L3:
+ 102:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 	}
+ 103:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 	else
+ 104:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 	{
+ 105:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 		mw_gl_set_solid_fill_colour(MW_CONTROL_DISABLED_COLOUR);
+ 193                             		.loc 1 105 3
+ 194 0166 FB 12 BF BF BF 00       		mov.L	#0xbfbfbf, r1
+ 195 016c 05 00 00 00             		bsr	_mw_gl_set_solid_fill_colour
+ 196                             	.L4:
+ 106:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 	}
+ 107:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 
+ 108:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 	mw_gl_set_border(MW_GL_BORDER_OFF);
+ 197                             		.loc 1 108 2
+ 198 0170 66 01                   		mov.L	#0, r1
+ 199 0172 05 00 00 00             		bsr	_mw_gl_set_border
+ 109:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 
+ 110:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 	mw_gl_rectangle(draw_info,
+ 111:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 			2,
+ 112:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 			2,
+ 113:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 			((mw_get_control_rect(control_handle).width - 4) * (int16_t)this_progress_bar->progress_percent)
+ 200                             		.loc 1 113 6
+ 201 0176 ED A1 01                		mov.L	4[r10], r1
+ 202 0179 05 00 00 00             		bsr	_mw_get_control_rect
+ 203 017d EF 15                   		mov.L	r1, r5
+ 204 017f EF 26                   		mov.L	r2, r6
+ 205                             		.loc 1 113 41
+ 206 0181 DF 65                   		mov.W	r6, r5
+ 207 0183 DF 55                   		mov.W	r5, r5
+ 208                             		.loc 1 113 48
+ 209 0185 71 54 FC                		add	#-4, r5, r4
+ 210                             		.loc 1 113 81
+ 211 0188 EC A5                   		mov.L	[r10], r5
+ 212 018a CC 55                   		mov.B	[r5], r5
+ 213                             		.loc 1 113 55
+ 214 018c 5B 55                   		movu.B	r5, r5
+ 215                             		.loc 1 113 53
+ 216 018e 4F 54                   		mul	r5, r4
+ 217                             		.loc 1 113 101
+ 218 0190 FB 72 1F 85 EB 51       		mov.L	#0x51eb851f, r7
+ 219 0196 FC 1B 47                		emul	r4, r7
+ 220 0199 EF 75                   		mov.L	r7, r5
+ 221 019b EF 86                   		mov.L	r8, r6
+ 222 019d FD A5 63                		shar	#5, r6, r3
+ 223 01a0 FD BF 45                		shar	#31, r4, r5
+ 224 01a3 FF 05 53                		sub	r5, r3, r5
+ 110:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 			2,
+ 225                             		.loc 1 110 2
+ 226 01a6 DF 5B                   		mov.W	r5, r11
+ 114:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 			mw_get_control_rect(control_handle).height - 4);
+ 227                             		.loc 1 114 4
+ 228 01a8 ED A1 01                		mov.L	4[r10], r1
+ 229 01ab 05 00 00 00             		bsr	_mw_get_control_rect
+ 230 01af EF 15                   		mov.L	r1, r5
+ 231 01b1 EF 26                   		mov.L	r2, r6
+ 232                             		.loc 1 114 39
+ 233 01b3 EF 65                   		mov.L	r6, r5
+ 234 01b5 6B 05                   		shar	#16, r5
+ 235                             		.loc 1 114 47
+ 236 01b7 60 45                   		sub	#4, r5
+ 110:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 			2,
+ 237                             		.loc 1 110 2
+ 238 01b9 D3 05                   		mov.W	r5, [r0]
+ 239 01bb DF B4                   		mov.W	r11, r4
+ 240 01bd 66 23                   		mov	#2, r3
+ 241 01bf 66 22                   		mov	#2, r2
+ 242 01c1 ED A1 02                		mov.L	8[r10], r1
+ 243 01c4 05 00 00 00             		bsr	_mw_gl_rectangle
+ 115:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** }
+ 244                             		.loc 1 115 1
+ 245 01c8 03                      		nop
+ 246 01c9 3F 6B 0A                		rtsd	#40, r6-r11
+ 247                             	.LFE0:
+ 249                             		.section	.text.progress_bar_message_function,"ax",@progbits
+ 251                             	_progress_bar_message_function:
+ 252                             	.LFB1:
+ 116:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 
+ 117:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** /**
+ 118:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c ****  * Control message handler called by the window manager.
+ 119:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c ****  *
+ 120:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c ****  * @param message The message to be processed
+ 121:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c ****  */
+ 122:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** static void progress_bar_message_function(const mw_message_t *message)
+ 123:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** {
+ 253                             		.loc 1 123 1
+ 254 0000 7E AA                   		push.l	r10
+ 255                             	.LCFI3:
+ 256 0002 71 0A F8                		add	#-8, r0, r10
+ 257                             	.LCFI4:
+ 258 0005 EF A0                   		mov.L	r10, r0
+ 259 0007 E7 A1 01                		mov.L	r1, 4[r10]
+ 124:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 	mw_ui_progress_bar_data_t *this_progress_bar = (mw_ui_progress_bar_data_t*)mw_get_control_instance
+ 260                             		.loc 1 124 77
+ 261 000a ED A5 01                		mov.L	4[r10], r5
+ 262 000d A8 5D                   		mov.L	4[r5], r5
+ 263 000f EF 51                   		mov.L	r5, r1
+ 264 0011 05 00 00 00             		bsr	_mw_get_control_instance_data
+ 265 0015 E3 A1                   		mov.L	r1, [r10]
+ 125:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 
+ 126:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 	MW_ASSERT(message != (void*)0, "Null pointer argument");
+ 266                             		.loc 1 126 2
+ 267 0017 ED A5 01                		mov.L	4[r10], r5
+ 268 001a 61 05                   		cmp	#0, r5
+ 269 001c FC DB 51                		scne.L	r5
+ 270 001f FB 42 00 00 00 00       		mov.L	#.LC0, r4
+ 271 0025 75 43 7E                		mov.L	#0x7e, r3
+ 272 0028 FB 22 00 00 00 00       		mov.L	#___func__.2878, r2
+ 273 002e CF 51                   		mov.B	r5, r1
+ 274 0030 05 00 00 00             		bsr	_mw_debug_print_assert
+ 127:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 
+ 128:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 	switch (message->message_id)
+ 275                             		.loc 1 128 17
+ 276 0034 ED A5 01                		mov.L	4[r10], r5
+ 277 0037 A8 D5                   		mov.L	8[r5], r5
+ 278                             		.loc 1 128 2
+ 279 0039 75 55 2F                		cmp	#47, r5
+ 280 003c 21 0F                   		bne	.L8
+ 129:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 	{
+ 130:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 	case MW_PROGRESS_BAR_SET_PROGRESS_MESSAGE:
+ 131:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 		/* handle a transfer data message, which contains new progress_bar progress */
+ 132:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 		this_progress_bar->progress_percent = (uint8_t)message->message_data;
+ 281                             		.loc 1 132 57
+ 282 003e ED A5 01                		mov.L	4[r10], r5
+ 283 0041 A9 55                   		mov.L	16[r5], r5
+ 284                             		.loc 1 132 41
+ 285 0043 CF 54                   		mov.B	r5, r4
+ 286                             		.loc 1 132 39
+ 287 0045 EC A5                   		mov.L	[r10], r5
+ 288 0047 C3 54                   		mov.B	r4, [r5]
+ 133:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 		break;
+ 289                             		.loc 1 133 3
+ 290 0049 2E 03                   		bra	.L7
+ 291                             	.L8:
+ 134:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 
+ 135:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 	default:
+ 136:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 		/* keep MISRA happy */
+ 137:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 		break;
+ 292                             		.loc 1 137 3
+ 293 004b 03                      		nop
+ 294                             	.L7:
+ 138:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 	}
+ 139:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** }
+ 295                             		.loc 1 139 1
+ 296 004c 03                      		nop
+ 297 004d 3F AA 03                		rtsd	#12, r10-r10
+ 298                             	.LFE1:
+ 300                             		.section C,"a",@progbits
+ 301 0016 00 00                   		.p2align 2
+ 302                             	.LC1:
+ 303 0018 48 65 69 67 68 74 20 74 		.string	"Height too small"
+ 303      6F 6F 20 73 6D 61 6C 6C 
+ 303      00 
+ 304 0029 00 00 00                		.section	.text.mw_ui_progress_bar_add_new,"ax",@progbits
+ 305                             		.global	_mw_ui_progress_bar_add_new
+ 307                             	_mw_ui_progress_bar_add_new:
+ 308                             	.LFB2:
+ 140:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 
+ 141:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** /***********************
+ 142:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** *** GLOBAL FUNCTIONS ***
+ 143:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** ***********************/
+ 144:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 
+ 145:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** mw_handle_t mw_ui_progress_bar_add_new(int16_t x,
+ 146:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 		int16_t y,
+ 147:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 		int16_t width,
+ 148:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 		int16_t height,
+ 149:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 		mw_handle_t parent_handle,
+ 150:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 		uint16_t flags,
+ 151:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 		mw_ui_progress_bar_data_t *progress_bar_instance_data)
+ 152:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** {
+ 309                             		.loc 1 152 1
+ 310 0000 7E AA                   		push.l	r10
+ 311                             	.LCFI5:
+ 312 0002 7E A6                   		push.l	r6
+ 313                             	.LCFI6:
+ 314 0004 71 0A E4                		add	#-28, r0, r10
+ 315                             	.LCFI7:
+ 316 0007 71 A0 F8                		add	#-8, r10, r0
+ 317                             	.LCFI8:
+ 318 000a 75 46 28                		mov.L	#40, r6
+ 319 000d 4B A6                   		add	r10, r6
+ 320 000f D7 A1 04                		mov.W	r1, 8[r10]
+ 321 0012 D7 A2 05                		mov.W	r2, 10[r10]
+ 322 0015 D7 A3 06                		mov.W	r3, 12[r10]
+ 323 0018 D7 A4 07                		mov.W	r4, 14[r10]
+ 153:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 	mw_util_rect_t r;
+ 154:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 
+ 155:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 	if (height < 3 || width < 3)
+ 324                             		.loc 1 155 5
+ 325 001b DD A5 07                		mov.W	14[r10], r5
+ 326 001e 61 25                   		cmp	#2, r5
+ 327 0020 2B 09                   		ble	.L10
+ 328                             		.loc 1 155 17 discriminator 1
+ 329 0022 DD A5 06                		mov.W	12[r10], r5
+ 330 0025 61 25                   		cmp	#2, r5
+ 331 0027 2A 1B                   		bgt	.L11
+ 332                             	.L10:
+ 156:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 	{
+ 157:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 		MW_ASSERT((bool)false, "Height too small");
+ 333                             		.loc 1 157 3
+ 334 0029 FB 42 18 00 00 00       		mov.L	#.LC1, r4
+ 335 002f 75 43 9D                		mov.L	#0x9d, r3
+ 336 0032 FB 22 00 00 00 00       		mov.L	#___func__.2892, r2
+ 337 0038 66 01                   		mov	#0, r1
+ 338 003a 05 00 00 00             		bsr	_mw_debug_print_assert
+ 158:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 		return (MW_INVALID_HANDLE);
+ 339                             		.loc 1 158 10
+ 340 003e 66 05                   		mov.L	#0, r5
+ 341 0040 2E 34                   		bra	.L13
+ 342                             	.L11:
+ 159:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 	}
+ 160:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 
+ 161:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 	mw_util_set_rect(&r, x, y, width, height);
+ 343                             		.loc 1 161 2
+ 344 0042 DD A5 07                		mov.W	14[r10], r5
+ 345 0045 D3 05                   		mov.W	r5, [r0]
+ 346 0047 DD A4 06                		mov.W	12[r10], r4
+ 347 004a DD A3 05                		mov.W	10[r10], r3
+ 348 004d DD A2 04                		mov.W	8[r10], r2
+ 349 0050 EF A1                   		mov.L	r10, r1
+ 350 0052 05 00 00 00             		bsr	_mw_util_set_rect
+ 162:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 
+ 163:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 	/* no account taken of the MW_CONTROL_FLAG_LARGE_SIZE flag as user sets required size of this cont
+ 164:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 
+ 165:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 	return (mw_add_control(&r,
+ 351                             		.loc 1 165 10
+ 352 0056 A8 E5                   		mov.L	8[r6], r5
+ 353 0058 A0 0D                   		mov.L	r5, 4[r0]
+ 354 005a 98 E5                   		mov.W	4[r6], r5
+ 355 005c D3 05                   		mov.W	r5, [r0]
+ 356 005e FB 42 00 00 00 00       		mov.L	#_progress_bar_message_function, r4
+ 357 0064 FB 32 00 00 00 00       		mov.L	#_progress_bar_paint_function, r3
+ 358 006a EC 62                   		mov.L	[r6], r2
+ 359 006c EF A1                   		mov.L	r10, r1
+ 360 006e 05 00 00 00             		bsr	_mw_add_control
+ 361 0072 EF 15                   		mov.L	r1, r5
+ 362                             	.L13:
+ 166:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 			parent_handle,
+ 167:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 			progress_bar_paint_function,
+ 168:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 			progress_bar_message_function,
+ 169:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 			flags,
+ 170:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** 			progress_bar_instance_data));
+ 171:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_progress_bar.c **** }
+ 363                             		.loc 1 171 1 discriminator 1
+ 364 0074 EF 51                   		mov.L	r5, r1
+ 365 0076 71 00 24                		add	#36, r0
+ 366 0079 7E B6                   		pop	r6
+ 367 007b 7E BA                   		pop	r10
+ 368 007d 02                      		rts
+ 369                             	.LFE2:
+ 371                             		.section	.rodata.__func__.2873,"a"
+ 374                             	___func__.2873:
+ 375 0000 70 72 6F 67 72 65 73 73 		.string	"progress_bar_paint_function"
+ 375      5F 62 61 72 5F 70 61 69 
+ 375      6E 74 5F 66 75 6E 63 74 
+ 375      69 6F 6E 00 
+ 376                             		.section	.rodata.__func__.2878,"a"
+ 379                             	___func__.2878:
+ 380 0000 70 72 6F 67 72 65 73 73 		.string	"progress_bar_message_function"
+ 380      5F 62 61 72 5F 6D 65 73 
+ 380      73 61 67 65 5F 66 75 6E 
+ 380      63 74 69 6F 6E 00 
+ 381                             		.section	.rodata.__func__.2892,"a"
+ 384                             	___func__.2892:
+ 385 0000 6D 77 5F 75 69 5F 70 72 		.string	"mw_ui_progress_bar_add_new"
+ 385      6F 67 72 65 73 73 5F 62 
+ 385      61 72 5F 61 64 64 5F 6E 
+ 385      65 77 00 
+ 487                             	.Letext0:
+ 488                             		.file 2 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\rx-el
+ 489                             		.file 3 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\rx-el
+ 490                             		.file 4 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\rx-el
+ 491                             		.file 5 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\rx-el
+ 492                             		.file 6 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\lib\\
+ 493                             		.file 7 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\rx-el
+ 494                             		.file 8 "C:\\Users\\John\\Desktop\\workspace\\miniwinwm\\MiniWin/miniwin_utilities.h"
+ 495                             		.file 9 "C:\\Users\\John\\Desktop\\workspace\\miniwinwm\\MiniWin/gl/gl.h"
+ 496                             		.file 10 "C:\\Users\\John\\Desktop\\workspace\\miniwinwm\\MiniWin/bitmaps/mw_bitmaps.h"
+ 497                             		.file 11 "C:\\Users\\John\\Desktop\\workspace\\miniwinwm\\MiniWin/hal/hal_timer.h"
+ 498                             		.file 12 "C:\\Users\\John\\Desktop\\workspace\\miniwinwm\\MiniWin/miniwin.h"
+ 499                             		.file 13 "C:\\Users\\John\\Desktop\\workspace\\miniwinwm\\MiniWin/ui/ui_progress_bar.h"

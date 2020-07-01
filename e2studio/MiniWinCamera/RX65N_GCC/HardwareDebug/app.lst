@@ -1,0 +1,427 @@
+   1                             		.file	"app.c"
+   2                             		.section P,"ax"
+   3                             	.Ltext0:
+   4                             		.section	.text.system_clock_config,"ax",@progbits
+   6                             	_system_clock_config:
+   7                             	.LFB0:
+   8                             		.file 1 "../src/app.c"
+   1:../src/app.c  **** /*
+   2:../src/app.c  **** 
+   3:../src/app.c  **** MIT License
+   4:../src/app.c  **** 
+   5:../src/app.c  **** Copyright (c) John Blaiklock 2020 miniwin Embedded Window Manager
+   6:../src/app.c  **** 
+   7:../src/app.c  **** Permission is hereby granted, free of charge, to any person obtaining a copy
+   8:../src/app.c  **** of this software and associated documentation files (the "Software"), to deal
+   9:../src/app.c  **** in the Software without restriction, including without limitation the rights
+  10:../src/app.c  **** to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  11:../src/app.c  **** copies of the Software, and to permit persons to whom the Software is
+  12:../src/app.c  **** furnished to do so, subject to the following conditions:
+  13:../src/app.c  **** 
+  14:../src/app.c  **** The above copyright notice and this permission notice shall be included in all
+  15:../src/app.c  **** copies or substantial portions of the Software.
+  16:../src/app.c  **** 
+  17:../src/app.c  **** THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  18:../src/app.c  **** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  19:../src/app.c  **** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  20:../src/app.c  **** AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  21:../src/app.c  **** LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  22:../src/app.c  **** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  23:../src/app.c  **** SOFTWARE.
+  24:../src/app.c  **** 
+  25:../src/app.c  **** */
+  26:../src/app.c  **** 
+  27:../src/app.c  **** /***************
+  28:../src/app.c  **** *** INCLUDES ***
+  29:../src/app.c  **** ***************/
+  30:../src/app.c  **** 
+  31:../src/app.c  **** #include <iodefine.h>
+  32:../src/app.c  **** #include "miniwin.h"
+  33:../src/app.c  **** #include "app.h"
+  34:../src/app.c  **** #include "camlib.h"
+  35:../src/app.c  **** 
+  36:../src/app.c  **** /****************
+  37:../src/app.c  **** *** CONSTANTS ***
+  38:../src/app.c  **** ****************/
+  39:../src/app.c  **** 
+  40:../src/app.c  **** /************
+  41:../src/app.c  **** *** TYPES ***
+  42:../src/app.c  **** ************/
+  43:../src/app.c  **** 
+  44:../src/app.c  **** /***********************
+  45:../src/app.c  **** *** GLOBAL VARIABLES ***
+  46:../src/app.c  **** ***********************/
+  47:../src/app.c  **** 
+  48:../src/app.c  **** /**********************
+  49:../src/app.c  **** *** LOCAL VARIABLES ***
+  50:../src/app.c  **** **********************/
+  51:../src/app.c  **** 
+  52:../src/app.c  **** /********************************
+  53:../src/app.c  **** *** LOCAL FUNCTION PROTOTYPES ***
+  54:../src/app.c  **** ********************************/
+  55:../src/app.c  **** 
+  56:../src/app.c  **** static void system_clock_config(void);
+  57:../src/app.c  **** 
+  58:../src/app.c  **** /**********************
+  59:../src/app.c  **** *** LOCAL FUNCTIONS ***
+  60:../src/app.c  **** **********************/
+  61:../src/app.c  **** 
+  62:../src/app.c  **** /**
+  63:../src/app.c  ****  * Configure the system and peripheral clocks
+  64:../src/app.c  ****  */
+  65:../src/app.c  **** static void system_clock_config(void)
+  66:../src/app.c  **** {
+   9                             		.loc 1 66 1
+  10 0000 7E AA                   		push.l	r10
+  11                             	.LCFI0:
+  12 0002 EF 0A                   		mov.L	r0, r10
+  13                             	.LCFI1:
+  67:../src/app.c  **** 	/* enable all protect register bits */
+  68:../src/app.c  **** 	SYSTEM.PRCR.WORD = 0xa50bU;
+  14                             		.loc 1 68 2
+  15 0004 FB 5E 00 00 08          		mov.L	#0x80000, r5
+  16                             		.loc 1 68 19
+  17 0009 FA 59 FF 01 0B A5       		mov.W	#-23285, 1022[r5]
+  69:../src/app.c  **** 
+  70:../src/app.c  **** 	/* select resonator as main clock source */
+  71:../src/app.c  **** 	SYSTEM.MOFCR.BIT.MOSEL = 0U;
+  18                             		.loc 1 71 2
+  19 000f FB 4E 00 00 08          		mov.L	#0x80000, r4
+  20                             		.loc 1 71 25
+  21 0014 CE 45 93 C2             		mov.B	49811[r4], r5
+  22 0018 7A 65                   		bclr	#6, r5
+  23 001a CB 45 93 C2             		mov.B	r5, 49811[r4]
+  72:../src/app.c  **** 
+  73:../src/app.c  **** 	/* stop the HOCO, not using it */
+  74:../src/app.c  **** 	SYSTEM.HOCOCR.BIT.HCSTP = 1U;
+  24                             		.loc 1 74 2
+  25 001e FB 4E 00 00 08          		mov.L	#0x80000, r4
+  26                             		.loc 1 74 26
+  27 0023 CD 45 36                		mov.B	54[r4], r5
+  28 0026 78 05                   		bset	#0, r5
+  29 0028 C7 45 36                		mov.B	r5, 54[r4]
+  75:../src/app.c  **** 
+  76:../src/app.c  **** 	/* turn off power to HOCO */
+  77:../src/app.c  **** 	SYSTEM.HOCOPCR.BIT.HOCOPCNT = 1U;
+  30                             		.loc 1 77 2
+  31 002b FB 4E 00 00 08          		mov.L	#0x80000, r4
+  32                             		.loc 1 77 30
+  33 0030 CE 45 94 C2             		mov.B	49812[r4], r5
+  34 0034 78 05                   		bset	#0, r5
+  35 0036 CB 45 94 C2             		mov.B	r5, 49812[r4]
+  78:../src/app.c  **** 
+  79:../src/app.c  ****     /* disable the sub-clock oscillator as no crystal fitted */
+  80:../src/app.c  ****     SYSTEM.SOSCCR.BIT.SOSTP = 1U;
+  36                             		.loc 1 80 5
+  37 003a FB 4E 00 00 08          		mov.L	#0x80000, r4
+  38                             		.loc 1 80 29
+  39 003f CD 45 33                		mov.B	51[r4], r5
+  40 0042 78 05                   		bset	#0, r5
+  41 0044 C7 45 33                		mov.B	r5, 51[r4]
+  81:../src/app.c  **** 
+  82:../src/app.c  **** 	/* not using USB clock */
+  83:../src/app.c  **** 	SYSTEM.SCKCR2.WORD = 0x0001U;
+  42                             		.loc 1 83 2
+  43 0047 FB 5E 00 00 08          		mov.L	#0x80000, r5
+  44                             		.loc 1 83 21
+  45 004c 3D D2 01                		mov.W	#1, 36[r5]
+  84:../src/app.c  **** 
+  85:../src/app.c  **** 	/* set drive level for 12MHz input */
+  86:../src/app.c  **** 	SYSTEM.MOFCR.BIT.MODRV2 = 2U;
+  46                             		.loc 1 86 2
+  47 004f FB 4E 00 00 08          		mov.L	#0x80000, r4
+  48                             		.loc 1 86 26
+  49 0054 CE 45 93 C2             		mov.B	49811[r4], r5
+  50 0058 75 25 CF                		and	#-49, r5
+  51 005b 75 35 20                		or	#32, r5
+  52 005e CB 45 93 C2             		mov.B	r5, 49811[r4]
+  87:../src/app.c  **** 
+  88:../src/app.c  **** 	/* set wait time for starting main clock oscillator */
+  89:../src/app.c  **** 	SYSTEM.MOSCWTCR.BYTE = 0x53U;
+  53                             		.loc 1 89 2
+  54 0062 FB 5E 00 00 08          		mov.L	#0x80000, r5
+  55                             		.loc 1 89 23
+  56 0067 F9 54 A2 53             		mov.B	#0x53, 162[r5]
+  90:../src/app.c  **** 
+  91:../src/app.c  **** 	/* start main clock oscillator */
+  92:../src/app.c  ****     SYSTEM.MOSCCR.BIT.MOSTP = 0U;
+  57                             		.loc 1 92 5
+  58 006b FB 4E 00 00 08          		mov.L	#0x80000, r4
+  59                             		.loc 1 92 29
+  60 0070 CD 45 32                		mov.B	50[r4], r5
+  61 0073 7A 05                   		bclr	#0, r5
+  62 0075 C7 45 32                		mov.B	r5, 50[r4]
+  93:../src/app.c  **** 
+  94:../src/app.c  **** 	/* set rom wait state appropriate to main clock speed */
+  95:../src/app.c  **** 	SYSTEM.ROMWT.BIT.ROMWT = 2U;
+  63                             		.loc 1 95 2
+  64 0078 FB 4E 00 00 08          		mov.L	#0x80000, r4
+  65                             		.loc 1 95 25
+  66 007d CE 45 1C 10             		mov.B	4124[r4], r5
+  67 0081 75 25 FC                		and	#-4, r5
+  68 0084 65 25                   		or	#2, r5
+  69 0086 CB 45 1C 10             		mov.B	r5, 4124[r4]
+  96:../src/app.c  **** 
+  97:../src/app.c  **** 	/* set PLL division to 1 */
+  98:../src/app.c  **** 	SYSTEM.PLLCR.BIT.PLIDIV = 0U;
+  70                             		.loc 1 98 2
+  71 008a FB 4E 00 00 08          		mov.L	#0x80000, r4
+  72                             		.loc 1 98 26
+  73 008f 9D 45                   		mov.W	40[r4], r5
+  74 0091 75 25 FC                		and	#-4, r5
+  75 0094 95 45                   		mov.W	r5, 40[r4]
+  99:../src/app.c  **** 
+ 100:../src/app.c  **** 	/* set PLL multiplication to 20 */
+ 101:../src/app.c  **** 	SYSTEM.PLLCR.BIT.STC = 39U;
+  76                             		.loc 1 101 2
+  77 0096 FB 4E 00 00 08          		mov.L	#0x80000, r4
+  78                             		.loc 1 101 23
+  79 009b 9D 45                   		mov.W	40[r4], r5
+  80 009d 76 25 FF C0             		and	#-16129, r5
+  81 00a1 76 35 00 27             		or	#0x2700, r5
+  82 00a5 95 45                   		mov.W	r5, 40[r4]
+ 102:../src/app.c  **** 
+ 103:../src/app.c  **** 	/* start the PLL */
+ 104:../src/app.c  **** 	SYSTEM.PLLCR2.BIT.PLLEN = 0U;
+  83                             		.loc 1 104 2
+  84 00a7 FB 4E 00 00 08          		mov.L	#0x80000, r4
+  85                             		.loc 1 104 26
+  86 00ac CD 45 2A                		mov.B	42[r4], r5
+  87 00af 7A 05                   		bclr	#0, r5
+  88 00b1 C7 45 2A                		mov.B	r5, 42[r4]
+ 105:../src/app.c  **** 
+ 106:../src/app.c  **** 	/* wait for clock stabilization */
+ 107:../src/app.c  **** 	while (0 == SYSTEM.OSCOVFSR.BIT.PLOVF)
+  89                             		.loc 1 107 8
+  90 00b4 2E 03                   		bra	.L2
+  91                             	.L3:
+ 108:../src/app.c  **** 	{
+ 109:../src/app.c  **** 		__asm("NOP");
+  92                             		.loc 1 109 3
+  93                             	 ; 109 "../src/app.c" 1
+  94 00b6 03                      		NOP
+  95                             	 ; 0 "" 2
+  96                             	.L2:
+ 107:../src/app.c  **** 	{
+  97                             		.loc 1 107 14
+  98 00b7 FB 5E 00 00 08          		mov.L	#0x80000, r5
+ 107:../src/app.c  **** 	{
+  99                             		.loc 1 107 33
+ 100 00bc CD 55 3C                		mov.B	60[r5], r5
+ 101 00bf 5B 55                   		movu.B	r5, r5
+ 102 00c1 68 25                   		shlr	#2, r5
+ 103 00c3 64 15                   		and	#1, r5
+ 107:../src/app.c  **** 	{
+ 104                             		.loc 1 107 8
+ 105 00c5 5B 55                   		movu.B	r5, r5
+ 106 00c7 61 05                   		cmp	#0, r5
+ 107 00c9 20 ED                   		beq	.L3
+ 110:../src/app.c  **** 	}
+ 111:../src/app.c  **** 
+ 112:../src/app.c  **** 	/* ICLK to 120MHz */
+ 113:../src/app.c  **** 	SYSTEM.SCKCR.BIT.ICK = 1U;
+ 108                             		.loc 1 113 2
+ 109 00cb FB 4E 00 00 08          		mov.L	#0x80000, r4
+ 110                             		.loc 1 113 23
+ 111 00d0 AA 45                   		mov.L	32[r4], r5
+ 112 00d2 74 25 FF FF FF F0       		and	#-251658241, r5
+ 113 00d8 74 35 00 00 00 01       		or	#0x1000000, r5
+ 114 00de A2 45                   		mov.L	r5, 32[r4]
+ 114:../src/app.c  **** 
+ 115:../src/app.c  **** 	/* FCLK to 60 MHz */
+ 116:../src/app.c  **** 	SYSTEM.SCKCR.BIT.FCK = 2U;
+ 115                             		.loc 1 116 2
+ 116 00e0 FB 4E 00 00 08          		mov.L	#0x80000, r4
+ 117                             		.loc 1 116 23
+ 118 00e5 AA 45                   		mov.L	32[r4], r5
+ 119 00e7 74 25 FF FF FF 0F       		and	#0xfffffff, r5
+ 120 00ed 74 35 00 00 00 20       		or	#0x20000000, r5
+ 121 00f3 A2 45                   		mov.L	r5, 32[r4]
+ 117:../src/app.c  **** 
+ 118:../src/app.c  **** 	/* PCLKA to 120MHz */
+ 119:../src/app.c  **** 	SYSTEM.SCKCR.BIT.PCKA = 1U;
+ 122                             		.loc 1 119 2
+ 123 00f5 FB 4E 00 00 08          		mov.L	#0x80000, r4
+ 124                             		.loc 1 119 24
+ 125 00fa AA 45                   		mov.L	32[r4], r5
+ 126 00fc 77 25 FF 0F FF          		and	#-61441, r5
+ 127 0101 76 35 00 10             		or	#0x1000, r5
+ 128 0105 A2 45                   		mov.L	r5, 32[r4]
+ 120:../src/app.c  **** 
+ 121:../src/app.c  **** 	/* PCLKB to 60MHz */
+ 122:../src/app.c  **** 	SYSTEM.SCKCR.BIT.PCKB = 2U;
+ 129                             		.loc 1 122 2
+ 130 0107 FB 4E 00 00 08          		mov.L	#0x80000, r4
+ 131                             		.loc 1 122 24
+ 132 010c AA 45                   		mov.L	32[r4], r5
+ 133 010e 76 25 FF F0             		and	#-3841, r5
+ 134 0112 76 35 00 02             		or	#0x200, r5
+ 135 0116 A2 45                   		mov.L	r5, 32[r4]
+ 123:../src/app.c  **** 
+ 124:../src/app.c  **** 	/* PCLKC to 60MHz */
+ 125:../src/app.c  **** 	SYSTEM.SCKCR.BIT.PCKC = 2U;
+ 136                             		.loc 1 125 2
+ 137 0118 FB 4E 00 00 08          		mov.L	#0x80000, r4
+ 138                             		.loc 1 125 24
+ 139 011d AA 45                   		mov.L	32[r4], r5
+ 140 011f 76 25 0F FF             		and	#-241, r5
+ 141 0123 75 35 20                		or	#32, r5
+ 142 0126 A2 45                   		mov.L	r5, 32[r4]
+ 126:../src/app.c  **** 
+ 127:../src/app.c  **** 	/* PCLKD to 60MHz */
+ 128:../src/app.c  **** 	SYSTEM.SCKCR.BIT.PCKD = 2U;
+ 143                             		.loc 1 128 2
+ 144 0128 FB 4E 00 00 08          		mov.L	#0x80000, r4
+ 145                             		.loc 1 128 24
+ 146 012d AA 45                   		mov.L	32[r4], r5
+ 147 012f 75 25 F0                		and	#-16, r5
+ 148 0132 65 25                   		or	#2, r5
+ 149 0134 A2 45                   		mov.L	r5, 32[r4]
+ 129:../src/app.c  **** 
+ 130:../src/app.c  **** 	/* SDCLK not used */
+ 131:../src/app.c  **** 	SYSTEM.SCKCR.BIT.PSTOP0 = 1U;
+ 150                             		.loc 1 131 2
+ 151 0136 FB 4E 00 00 08          		mov.L	#0x80000, r4
+ 152                             		.loc 1 131 26
+ 153 013b AA 45                   		mov.L	32[r4], r5
+ 154 013d 79 65                   		bset	#22, r5
+ 155 013f A2 45                   		mov.L	r5, 32[r4]
+ 132:../src/app.c  **** 
+ 133:../src/app.c  **** 	/* BCLK not used */
+ 134:../src/app.c  **** 	SYSTEM.SCKCR.BIT.PSTOP1 = 1U;
+ 156                             		.loc 1 134 2
+ 157 0141 FB 4E 00 00 08          		mov.L	#0x80000, r4
+ 158                             		.loc 1 134 26
+ 159 0146 AA 45                   		mov.L	32[r4], r5
+ 160 0148 79 75                   		bset	#23, r5
+ 161 014a A2 45                   		mov.L	r5, 32[r4]
+ 135:../src/app.c  **** 
+ 136:../src/app.c  **** 	/* switch main clock source to PLL */
+ 137:../src/app.c  **** 	SYSTEM.SCKCR3.BIT.CKSEL = 4U;
+ 162                             		.loc 1 137 2
+ 163 014c FB 4E 00 00 08          		mov.L	#0x80000, r4
+ 164                             		.loc 1 137 26
+ 165 0151 9C CD                   		mov.W	38[r4], r5
+ 166 0153 76 25 FF F8             		and	#-1793, r5
+ 167 0157 76 35 00 04             		or	#0x400, r5
+ 168 015b 94 CD                   		mov.W	r5, 38[r4]
+ 138:../src/app.c  **** 
+ 139:../src/app.c  **** 	/* stop LOCO as finished with it now */
+ 140:../src/app.c  **** 	SYSTEM.LOCOCR.BYTE = 1U;
+ 169                             		.loc 1 140 2
+ 170 015d FB 5E 00 00 08          		mov.L	#0x80000, r5
+ 171                             		.loc 1 140 21
+ 172 0162 F9 54 34 01             		mov.B	#1, 52[r5]
+ 141:../src/app.c  **** 
+ 142:../src/app.c  **** 	/* disable all protect register bits */
+ 143:../src/app.c  **** 	SYSTEM.PRCR.WORD = 0xa500U;
+ 173                             		.loc 1 143 2
+ 174 0166 FB 5E 00 00 08          		mov.L	#0x80000, r5
+ 175                             		.loc 1 143 19
+ 176 016b FA 59 FF 01 00 A5       		mov.W	#-23296, 1022[r5]
+ 144:../src/app.c  **** }
+ 177                             		.loc 1 144 1
+ 178 0171 03                      		nop
+ 179 0172 3F AA 01                		rtsd	#4, r10-r10
+ 180                             	.LFE0:
+ 182                             		.section	.text.app_init,"ax",@progbits
+ 183                             		.global	_app_init
+ 185                             	_app_init:
+ 186                             	.LFB1:
+ 145:../src/app.c  **** 
+ 146:../src/app.c  **** /***********************
+ 147:../src/app.c  **** *** GLOBAL FUNCTIONS ***
+ 148:../src/app.c  **** ***********************/
+ 149:../src/app.c  **** 
+ 150:../src/app.c  **** void app_init(void)
+ 151:../src/app.c  **** {
+ 187                             		.loc 1 151 1
+ 188 0000 7E AA                   		push.l	r10
+ 189                             	.LCFI2:
+ 190 0002 EF 0A                   		mov.L	r0, r10
+ 191                             	.LCFI3:
+ 152:../src/app.c  **** 	system_clock_config();
+ 192                             		.loc 1 152 2
+ 193 0004 05 00 00 00             		bsr	_system_clock_config
+ 153:../src/app.c  **** 
+ 154:../src/app.c  **** 	/* set up push button gpio input */
+ 155:../src/app.c  **** 	PORT0.PMR.BIT.B5 = 0U;	/* mode to gpio */
+ 194                             		.loc 1 155 2
+ 195 0008 FB 4E 00 C0 08          		mov.L	#0x8c000, r4
+ 196                             		.loc 1 155 19
+ 197 000d CD 45 60                		mov.B	96[r4], r5
+ 198 0010 7A 55                   		bclr	#5, r5
+ 199 0012 C7 45 60                		mov.B	r5, 96[r4]
+ 156:../src/app.c  **** 	PORT0.PDR.BIT.B5 = 0U;	/* input */
+ 200                             		.loc 1 156 2
+ 201 0015 FB 4E 00 C0 08          		mov.L	#0x8c000, r4
+ 202                             		.loc 1 156 19
+ 203 001a CC 45                   		mov.B	[r4], r5
+ 204 001c 7A 55                   		bclr	#5, r5
+ 205 001e C3 45                   		mov.B	r5, [r4]
+ 157:../src/app.c  **** 	PORT0.PCR.BIT.B5 = 0U;  /* pull-up disable */
+ 206                             		.loc 1 157 2
+ 207 0020 FB 4E 00 C0 08          		mov.L	#0x8c000, r4
+ 208                             		.loc 1 157 19
+ 209 0025 CD 45 C0                		mov.B	192[r4], r5
+ 210 0028 7A 55                   		bclr	#5, r5
+ 211 002a C7 45 C0                		mov.B	r5, 192[r4]
+ 158:../src/app.c  **** 
+ 159:../src/app.c  **** 	/* set up led gpio output */
+ 160:../src/app.c  **** 	PORT7.PMR.BIT.B0 = 0U;	/* mode to gpio */
+ 212                             		.loc 1 160 2
+ 213 002d FB 4E 07 C0 08          		mov.L	#0x8c007, r4
+ 214                             		.loc 1 160 19
+ 215 0032 CD 45 60                		mov.B	96[r4], r5
+ 216 0035 7A 05                   		bclr	#0, r5
+ 217 0037 C7 45 60                		mov.B	r5, 96[r4]
+ 161:../src/app.c  **** 	PORT7.ODR0.BIT.B0 = 0U;	/* cmos output type */
+ 218                             		.loc 1 161 2
+ 219 003a FB 4E 07 C0 08          		mov.L	#0x8c007, r4
+ 220                             		.loc 1 161 20
+ 221 003f CD 45 87                		mov.B	135[r4], r5
+ 222 0042 7A 05                   		bclr	#0, r5
+ 223 0044 C7 45 87                		mov.B	r5, 135[r4]
+ 162:../src/app.c  **** 	PORT7.PDR.BIT.B0 = 1U;	/* output */
+ 224                             		.loc 1 162 2
+ 225 0047 FB 4E 07 C0 08          		mov.L	#0x8c007, r4
+ 226                             		.loc 1 162 19
+ 227 004c CC 45                   		mov.B	[r4], r5
+ 228 004e 78 05                   		bset	#0, r5
+ 229 0050 C3 45                   		mov.B	r5, [r4]
+ 163:../src/app.c  **** 
+ 164:../src/app.c  **** 	camlib_init();
+ 230                             		.loc 1 164 2
+ 231 0052 05 00 00 00             		bsr	_camlib_init
+ 165:../src/app.c  **** }
+ 232                             		.loc 1 165 1
+ 233 0056 03                      		nop
+ 234 0057 3F AA 01                		rtsd	#4, r10-r10
+ 235                             	.LFE1:
+ 237                             		.section	.text.app_main_loop_process,"ax",@progbits
+ 238                             		.global	_app_main_loop_process
+ 240                             	_app_main_loop_process:
+ 241                             	.LFB2:
+ 166:../src/app.c  **** 
+ 167:../src/app.c  **** void app_main_loop_process(void)
+ 168:../src/app.c  **** {
+ 242                             		.loc 1 168 1
+ 243 0000 7E AA                   		push.l	r10
+ 244                             	.LCFI4:
+ 245 0002 EF 0A                   		mov.L	r0, r10
+ 246                             	.LCFI5:
+ 169:../src/app.c  **** }
+ 247                             		.loc 1 169 1
+ 248 0004 03                      		nop
+ 249 0005 3F AA 01                		rtsd	#4, r10-r10
+ 250                             	.LFE2:
+ 324                             	.Letext0:
+ 325                             		.file 2 "C:/Users/John/Desktop/workspace/miniwinwm/e2studio/MiniWinCamera/RX65N_GCC/generate/iodef
+ 326                             		.file 3 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\rx-el
+ 327                             		.file 4 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\rx-el
+ 328                             		.file 5 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\rx-el
+ 329                             		.file 6 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\rx-el
+ 330                             		.file 7 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\lib\\
+ 331                             		.file 8 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\rx-el
+ 332                             		.file 9 "C:\\Users\\John\\Desktop\\workspace\\miniwinwm\\MiniWin/bitmaps/mw_bitmaps.h"
+ 333                             		.file 10 "C:\\Users\\John\\Desktop\\workspace\\miniwinwm\\MiniWin/hal/hal_timer.h"

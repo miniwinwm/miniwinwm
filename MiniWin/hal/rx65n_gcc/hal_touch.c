@@ -240,8 +240,8 @@ static void generate_start_stop_condition(start_stop_condition_t start_stop_cond
 		break;
 
 	case stop_condition:
-		/* generate a start condition */
-		SCI6.SIMR3.BYTE = 0x53U;
+		/* generate a stop condition */
+		SCI6.SIMR3.BYTE = 0x54U;
 		break;
 
 	default:

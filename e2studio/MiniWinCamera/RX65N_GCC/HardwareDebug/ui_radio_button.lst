@@ -1,0 +1,1032 @@
+   1                             		.file	"ui_radio_button.c"
+   2                             		.section P,"ax"
+   3                             	.Ltext0:
+   4                             		.section C,"a",@progbits
+   5                             		.p2align 2
+   6                             	.LC0:
+   7 0000 4E 75 6C 6C 20 70 6F 69 		.string	"Null pointer argument"
+   7      6E 74 65 72 20 61 72 67 
+   7      75 6D 65 6E 74 00 
+   8                             		.section	.text.radio_button_paint_function,"ax",@progbits
+  10                             	_radio_button_paint_function:
+  11                             	.LFB0:
+  12                             		.file 1 "C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui/ui_radio_button.c"
+   1:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** /*
+   2:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 
+   3:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** MIT License
+   4:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 
+   5:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** Copyright (c) John Blaiklock 2019 miniwin Embedded Window Manager
+   6:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 
+   7:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** Permission is hereby granted, free of charge, to any person obtaining a copy
+   8:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** of this software and associated documentation files (the "Software"), to deal
+   9:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** in the Software without restriction, including without limitation the rights
+  10:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  11:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** copies of the Software, and to permit persons to whom the Software is
+  12:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** furnished to do so, subject to the following conditions:
+  13:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 
+  14:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** The above copyright notice and this permission notice shall be included in all
+  15:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** copies or substantial portions of the Software.
+  16:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 
+  17:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  18:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  19:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  20:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  21:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  22:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  23:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** SOFTWARE.
+  24:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 
+  25:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** */
+  26:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 
+  27:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** /***************
+  28:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** *** INCLUDES ***
+  29:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** ***************/
+  30:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 
+  31:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** #include <stdlib.h>
+  32:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** #include "miniwin.h"
+  33:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 
+  34:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** /****************
+  35:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** *** CONSTANTS ***
+  36:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** ****************/
+  37:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 
+  38:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** /************
+  39:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** *** TYPES ***
+  40:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** ************/
+  41:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 
+  42:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** /***********************
+  43:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** *** GLOBAL VARIABLES ***
+  44:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** ***********************/
+  45:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 
+  46:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** /**********************
+  47:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** *** LOCAL VARIABLES ***
+  48:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** **********************/
+  49:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 
+  50:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** /********************************
+  51:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** *** LOCAL FUNCTION PROTOTYPES ***
+  52:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** ********************************/
+  53:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 
+  54:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** static void radio_button_paint_function(mw_handle_t control_handle, const mw_gl_draw_info_t *draw_i
+  55:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** static void radio_button_message_function(const mw_message_t *message);
+  56:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 
+  57:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** /**********************
+  58:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** *** LOCAL FUNCTIONS ***
+  59:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** **********************/
+  60:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 
+  61:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** /**
+  62:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c ****  * Control paint routine, called by window manager.
+  63:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c ****  *
+  64:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c ****  * @param control_handle The control identifier in the array of controls
+  65:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c ****  * @param draw_info Draw info structure describing offset and clip region
+  66:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c ****  */
+  67:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** static void radio_button_paint_function(mw_handle_t control_handle, const mw_gl_draw_info_t *draw_i
+  68:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** {
+  13                             		.loc 1 68 1
+  14 0000 7E AA                   		push.l	r10
+  15                             	.LCFI0:
+  16 0002 71 0A EC                		add	#-20, r0, r10
+  17                             	.LCFI1:
+  18 0005 71 A0 FC                		add	#-4, r10, r0
+  19                             	.LCFI2:
+  20 0008 E7 A1 03                		mov.L	r1, 12[r10]
+  21 000b E7 A2 04                		mov.L	r2, 16[r10]
+  69:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 	int16_t i;
+  70:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 	mw_ui_radio_button_data_t *this_radio_radio_button = (mw_ui_radio_button_data_t*)mw_get_control_in
+  22                             		.loc 1 70 83
+  23 000e ED A1 03                		mov.L	12[r10], r1
+  24 0011 05 00 00 00             		bsr	_mw_get_control_instance_data
+  25 0015 E7 A1 02                		mov.L	r1, 8[r10]
+  71:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 	int16_t height;
+  72:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 	int16_t box_size;
+  73:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 
+  74:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 	MW_ASSERT(draw_info != (void*)0, "Null pointer argument");
+  26                             		.loc 1 74 2
+  27 0018 ED A5 04                		mov.L	16[r10], r5
+  28 001b 61 05                   		cmp	#0, r5
+  29 001d FC DB 51                		scne.L	r5
+  30 0020 FB 42 00 00 00 00       		mov.L	#.LC0, r4
+  31 0026 75 43 4A                		mov.L	#0x4a, r3
+  32 0029 FB 22 00 00 00 00       		mov.L	#___func__.2876, r2
+  33 002f CF 51                   		mov.B	r5, r1
+  34 0031 05 00 00 00             		bsr	_mw_debug_print_assert
+  75:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 
+  76:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 	mw_gl_set_fill(MW_GL_FILL);
+  35                             		.loc 1 76 2
+  36 0035 66 11                   		mov.L	#1, r1
+  37 0037 05 00 00 00             		bsr	_mw_gl_set_fill
+  77:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 	mw_gl_set_line(MW_GL_SOLID_LINE);
+  38                             		.loc 1 77 2
+  39 003b FB 1E FF FF 00          		mov.L	#0xffff, r1
+  40 0040 05 00 00 00             		bsr	_mw_gl_set_line
+  78:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 	mw_gl_set_border(MW_GL_BORDER_ON);
+  41                             		.loc 1 78 2
+  42 0044 66 11                   		mov.L	#1, r1
+  43 0046 05 00 00 00             		bsr	_mw_gl_set_border
+  79:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 	mw_gl_clear_pattern();
+  44                             		.loc 1 79 2
+  45 004a 05 00 00 00             		bsr	_mw_gl_clear_pattern
+  80:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 	mw_gl_set_bg_transparency(MW_GL_BG_TRANSPARENT);
+  46                             		.loc 1 80 2
+  47 004e 66 01                   		mov.L	#0, r1
+  48 0050 05 00 00 00             		bsr	_mw_gl_set_bg_transparency
+  81:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 	mw_gl_set_text_rotation(MW_GL_TEXT_ROTATION_0);
+  49                             		.loc 1 81 2
+  50 0054 66 01                   		mov.L	#0, r1
+  51 0056 05 00 00 00             		bsr	_mw_gl_set_text_rotation
+  82:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 
+  83:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 	/* set size dependent values */
+  84:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 	if ((mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_LARGE_SIZE) == MW_CONTROL_FLAG_LARGE_S
+  52                             		.loc 1 84 7
+  53 005a ED A1 03                		mov.L	12[r10], r1
+  54 005d 05 00 00 00             		bsr	_mw_get_control_flags
+  55 0061 EF 15                   		mov.L	r1, r5
+  56                             		.loc 1 84 44
+  57 0063 5F 55                   		movu.W	r5, r5
+  58 0065 64 85                   		and	#8, r5
+  59                             		.loc 1 84 5
+  60 0067 61 85                   		cmp	#8, r5
+  61 0069 21 12                   		bne	.L2
+  85:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 	{
+  86:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 		height = MW_UI_RADIO_BUTTON_LARGE_HEIGHT;
+  62                             		.loc 1 86 10
+  63 006b F9 A5 01 25             		mov.W	#37, 2[r10]
+  87:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 		box_size = MW_UI_RADIO_BUTTON_LARGE_BOX_SIZE;
+  64                             		.loc 1 87 12
+  65 006f F9 A5 02 1E             		mov.W	#30, 4[r10]
+  88:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 		mw_gl_set_font(MW_GL_TITLE_FONT);
+  66                             		.loc 1 88 3
+  67 0073 66 51                   		mov.L	#5, r1
+  68 0075 05 00 00 00             		bsr	_mw_gl_set_font
+  69 0079 2E 10                   		bra	.L3
+  70                             	.L2:
+  89:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 	}
+  90:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 	else
+  91:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 	{
+  92:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 		height = MW_UI_RADIO_BUTTON_HEIGHT;
+  71                             		.loc 1 92 10
+  72 007b F9 A5 01 12             		mov.W	#18, 2[r10]
+  93:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 		box_size = MW_UI_RADIO_BUTTON_BOX_SIZE;
+  73                             		.loc 1 93 12
+  74 007f F9 A5 02 0F             		mov.W	#15, 4[r10]
+  94:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 		mw_gl_set_font(MW_GL_FONT_9);
+  75                             		.loc 1 94 3
+  76 0083 66 01                   		mov.L	#0, r1
+  77 0085 05 00 00 00             		bsr	_mw_gl_set_font
+  78                             	.L3:
+  95:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 	}
+  96:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 
+  97:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 	for (i = 0; i < (int16_t)this_radio_radio_button->number_of_items; i++)
+  79                             		.loc 1 97 9
+  80 0089 F8 A5 00                		mov.W	#0, [r10]
+  81                             		.loc 1 97 2
+  82 008c 38 99 01                		bra	.L4
+  83                             	.L12:
+  98:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 	{
+  99:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c ****         /* set the box outline and text colour depending on enabled state */
+ 100:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 		if ((mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_IS_ENABLED) == MW_CONTROL_FLAG_IS_ENA
+  84                             		.loc 1 100 8
+  85 008f ED A1 03                		mov.L	12[r10], r1
+  86 0092 05 00 00 00             		bsr	_mw_get_control_flags
+  87 0096 EF 15                   		mov.L	r1, r5
+  88                             		.loc 1 100 45
+  89 0098 5F 55                   		movu.W	r5, r5
+  90 009a 64 25                   		and	#2, r5
+  91                             		.loc 1 100 6
+  92 009c 61 25                   		cmp	#2, r5
+  93 009e 19                      		bne	.L5
+ 101:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 		{
+ 102:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 			mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
+  94                             		.loc 1 102 4
+  95 009f 66 01                   		mov.L	#0, r1
+  96 00a1 05 00 00 00             		bsr	_mw_gl_set_fg_colour
+  97 00a5 2E 0C                   		bra	.L6
+  98                             	.L5:
+ 103:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 		}
+ 104:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 		else
+ 105:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 		{
+ 106:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 			mw_gl_set_fg_colour(MW_CONTROL_DISABLED_COLOUR);
+  99                             		.loc 1 106 4
+ 100 00a7 FB 12 BF BF BF 00       		mov.L	#0xbfbfbf, r1
+ 101 00ad 05 00 00 00             		bsr	_mw_gl_set_fg_colour
+ 102                             	.L6:
+ 107:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 		}
+ 108:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 
+ 109:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 		/* check size this control is being drawn at and draw appropriate text*/
+ 110:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 		if ((mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_LARGE_SIZE) == MW_CONTROL_FLAG_LARGE_
+ 103                             		.loc 1 110 8
+ 104 00b1 ED A1 03                		mov.L	12[r10], r1
+ 105 00b4 05 00 00 00             		bsr	_mw_get_control_flags
+ 106 00b8 EF 15                   		mov.L	r1, r5
+ 107                             		.loc 1 110 45
+ 108 00ba 5F 55                   		movu.W	r5, r5
+ 109 00bc 64 85                   		and	#8, r5
+ 110                             		.loc 1 110 6
+ 111 00be 61 85                   		cmp	#8, r5
+ 112 00c0 21 26                   		bne	.L7
+ 111:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 		{
+ 112:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 			/* draw the label text */
+ 113:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 			mw_gl_string(draw_info,
+ 114:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 					MW_UI_RADIO_BUTTON_LARGE_LABEL_X_OFFSET,
+ 115:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 					MW_UI_RADIO_BUTTON_LARGE_LABEL_Y_OFFSET + i * MW_UI_RADIO_BUTTON_LARGE_HEIGHT,
+ 113                             		.loc 1 115 50
+ 114 00c2 DC A5                   		mov.W	[r10], r5
+ 115 00c4 75 15 25                		mul	#37, r5
+ 116                             		.loc 1 115 46
+ 117 00c7 62 85                   		add	#8, r5
+ 113:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 					MW_UI_RADIO_BUTTON_LARGE_LABEL_X_OFFSET,
+ 118                             		.loc 1 113 4
+ 119 00c9 DF 53                   		mov.W	r5, r3
+ 116:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 					this_radio_radio_button->radio_button_labels[i]);
+ 120                             		.loc 1 116 29
+ 121 00cb ED A5 02                		mov.L	8[r10], r5
+ 122 00ce EC 54                   		mov.L	[r5], r4
+ 123                             		.loc 1 116 50
+ 124 00d0 DC A5                   		mov.W	[r10], r5
+ 125 00d2 6C 25                   		shll	#2, r5
+ 126 00d4 4B 45                   		add	r4, r5
+ 113:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 					MW_UI_RADIO_BUTTON_LARGE_LABEL_X_OFFSET,
+ 127                             		.loc 1 113 4
+ 128 00d6 EC 55                   		mov.L	[r5], r5
+ 129 00d8 EF 54                   		mov.L	r5, r4
+ 130 00da 75 42 25                		mov	#37, r2
+ 131 00dd ED A1 04                		mov.L	16[r10], r1
+ 132 00e0 05 00 00 00             		bsr	_mw_gl_string
+ 133 00e4 2E 24                   		bra	.L8
+ 134                             	.L7:
+ 117:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 		}
+ 118:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 		else
+ 119:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 		{
+ 120:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 			/* draw the label text */
+ 121:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 			mw_gl_string(draw_info,
+ 122:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 					MW_UI_RADIO_BUTTON_LABEL_X_OFFSET,
+ 123:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 					MW_UI_RADIO_BUTTON_LABEL_Y_OFFSET + i * MW_UI_RADIO_BUTTON_HEIGHT,
+ 135                             		.loc 1 123 44
+ 136 00e6 DC A5                   		mov.W	[r10], r5
+ 137 00e8 75 15 12                		mul	#18, r5
+ 138                             		.loc 1 123 40
+ 139 00eb 62 45                   		add	#4, r5
+ 121:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 					MW_UI_RADIO_BUTTON_LABEL_X_OFFSET,
+ 140                             		.loc 1 121 4
+ 141 00ed DF 53                   		mov.W	r5, r3
+ 124:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 					this_radio_radio_button->radio_button_labels[i]);
+ 142                             		.loc 1 124 29
+ 143 00ef ED A5 02                		mov.L	8[r10], r5
+ 144 00f2 EC 54                   		mov.L	[r5], r4
+ 145                             		.loc 1 124 50
+ 146 00f4 DC A5                   		mov.W	[r10], r5
+ 147 00f6 6C 25                   		shll	#2, r5
+ 148 00f8 4B 45                   		add	r4, r5
+ 121:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 					MW_UI_RADIO_BUTTON_LABEL_X_OFFSET,
+ 149                             		.loc 1 121 4
+ 150 00fa EC 55                   		mov.L	[r5], r5
+ 151 00fc EF 54                   		mov.L	r5, r4
+ 152 00fe 75 42 12                		mov	#18, r2
+ 153 0101 ED A1 04                		mov.L	16[r10], r1
+ 154 0104 05 00 00 00             		bsr	_mw_gl_string
+ 155                             	.L8:
+ 125:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 		}
+ 126:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 
+ 127:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c ****         /* draw the empty box */
+ 128:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 		mw_gl_set_solid_fill_colour(MW_CONTROL_UP_COLOUR);
+ 156                             		.loc 1 128 3
+ 157 0108 FB 12 E6 E6 E6 00       		mov.L	#0xe6e6e6, r1
+ 158 010e 05 00 00 00             		bsr	_mw_gl_set_solid_fill_colour
+ 129:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 		mw_gl_rectangle(draw_info,
+ 130:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 				0,
+ 131:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 				i * height,
+ 159                             		.loc 1 131 7
+ 160 0112 DC A4                   		mov.W	[r10], r4
+ 161 0114 DD A5 01                		mov.W	2[r10], r5
+ 162 0117 4F 45                   		mul	r4, r5
+ 129:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 		mw_gl_rectangle(draw_info,
+ 163                             		.loc 1 129 3
+ 164 0119 DD A4 02                		mov.W	4[r10], r4
+ 165 011c D3 04                   		mov.W	r4, [r0]
+ 166 011e DD A4 02                		mov.W	4[r10], r4
+ 167 0121 DF 53                   		mov.W	r5, r3
+ 168 0123 66 02                   		mov	#0, r2
+ 169 0125 ED A1 04                		mov.L	16[r10], r1
+ 170 0128 05 00 00 00             		bsr	_mw_gl_rectangle
+ 132:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 				box_size,
+ 133:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 				box_size);
+ 134:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 
+ 135:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 		/* draw 3d effect */
+ 136:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 		mw_gl_set_fg_colour(MW_HAL_LCD_WHITE);
+ 171                             		.loc 1 136 3
+ 172 012c FB 12 FF FF FF 00       		mov.L	#0xffffff, r1
+ 173 0132 05 00 00 00             		bsr	_mw_gl_set_fg_colour
+ 137:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 		mw_gl_vline(draw_info,
+ 138:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 				1,
+ 139:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 				1 + i * height,
+ 174                             		.loc 1 139 11
+ 175 0136 DC A4                   		mov.W	[r10], r4
+ 176 0138 DD A5 01                		mov.W	2[r10], r5
+ 177 013b 4F 45                   		mul	r4, r5
+ 178                             		.loc 1 139 7
+ 179 013d 62 15                   		add	#1, r5
+ 137:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 		mw_gl_vline(draw_info,
+ 180                             		.loc 1 137 3
+ 181 013f DF 53                   		mov.W	r5, r3
+ 140:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 				i * height + box_size - 2);
+ 182                             		.loc 1 140 7
+ 183 0141 DC A4                   		mov.W	[r10], r4
+ 184 0143 DD A5 01                		mov.W	2[r10], r5
+ 185 0146 4F 45                   		mul	r4, r5
+ 186 0148 DF 54                   		mov.W	r5, r4
+ 187                             		.loc 1 140 16
+ 188 014a DD A5 02                		mov.W	4[r10], r5
+ 189 014d 4B 45                   		add	r4, r5
+ 190                             		.loc 1 140 27
+ 191 014f 60 25                   		sub	#2, r5
+ 137:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 		mw_gl_vline(draw_info,
+ 192                             		.loc 1 137 3
+ 193 0151 DF 54                   		mov.W	r5, r4
+ 194 0153 66 12                   		mov	#1, r2
+ 195 0155 ED A1 04                		mov.L	16[r10], r1
+ 196 0158 05 00 00 00             		bsr	_mw_gl_vline
+ 141:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 		mw_gl_hline(draw_info,
+ 142:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 				1,
+ 143:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 				box_size - 2,
+ 197                             		.loc 1 143 14
+ 198 015c DD A5 02                		mov.W	4[r10], r5
+ 199 015f 60 25                   		sub	#2, r5
+ 141:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 		mw_gl_hline(draw_info,
+ 200                             		.loc 1 141 3
+ 201 0161 DF 53                   		mov.W	r5, r3
+ 144:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 				1 + i * height);
+ 202                             		.loc 1 144 11
+ 203 0163 DC A4                   		mov.W	[r10], r4
+ 204 0165 DD A5 01                		mov.W	2[r10], r5
+ 205 0168 4F 45                   		mul	r4, r5
+ 206                             		.loc 1 144 7
+ 207 016a 62 15                   		add	#1, r5
+ 141:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 		mw_gl_hline(draw_info,
+ 208                             		.loc 1 141 3
+ 209 016c DF 54                   		mov.W	r5, r4
+ 210 016e 66 12                   		mov	#1, r2
+ 211 0170 ED A1 04                		mov.L	16[r10], r1
+ 212 0173 05 00 00 00             		bsr	_mw_gl_hline
+ 145:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 		mw_gl_set_fg_colour(MW_HAL_LCD_GREY7);
+ 213                             		.loc 1 145 3
+ 214 0177 FB 12 A6 A6 A6 00       		mov.L	#0xa6a6a6, r1
+ 215 017d 05 00 00 00             		bsr	_mw_gl_set_fg_colour
+ 146:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 		mw_gl_vline(draw_info,
+ 147:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 				box_size - 2,
+ 216                             		.loc 1 147 14
+ 217 0181 DD A5 02                		mov.W	4[r10], r5
+ 218 0184 60 25                   		sub	#2, r5
+ 146:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 		mw_gl_vline(draw_info,
+ 219                             		.loc 1 146 3
+ 220 0186 DF 52                   		mov.W	r5, r2
+ 148:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 				1 + i * height,
+ 221                             		.loc 1 148 11
+ 222 0188 DC A4                   		mov.W	[r10], r4
+ 223 018a DD A5 01                		mov.W	2[r10], r5
+ 224 018d 4F 45                   		mul	r4, r5
+ 225                             		.loc 1 148 7
+ 226 018f 62 15                   		add	#1, r5
+ 146:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 		mw_gl_vline(draw_info,
+ 227                             		.loc 1 146 3
+ 228 0191 DF 53                   		mov.W	r5, r3
+ 149:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 				 i * height + box_size - 2);
+ 229                             		.loc 1 149 8
+ 230 0193 DC A4                   		mov.W	[r10], r4
+ 231 0195 DD A5 01                		mov.W	2[r10], r5
+ 232 0198 4F 45                   		mul	r4, r5
+ 233 019a DF 54                   		mov.W	r5, r4
+ 234                             		.loc 1 149 17
+ 235 019c DD A5 02                		mov.W	4[r10], r5
+ 236 019f 4B 45                   		add	r4, r5
+ 237                             		.loc 1 149 28
+ 238 01a1 60 25                   		sub	#2, r5
+ 146:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 		mw_gl_vline(draw_info,
+ 239                             		.loc 1 146 3
+ 240 01a3 DF 54                   		mov.W	r5, r4
+ 241 01a5 ED A1 04                		mov.L	16[r10], r1
+ 242 01a8 05 00 00 00             		bsr	_mw_gl_vline
+ 150:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 		mw_gl_hline(draw_info,
+ 151:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 				1,
+ 152:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 				box_size - 2,
+ 243                             		.loc 1 152 14
+ 244 01ac DD A5 02                		mov.W	4[r10], r5
+ 245 01af 60 25                   		sub	#2, r5
+ 150:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 		mw_gl_hline(draw_info,
+ 246                             		.loc 1 150 3
+ 247 01b1 DF 53                   		mov.W	r5, r3
+ 153:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 				i * height + box_size - 2);
+ 248                             		.loc 1 153 7
+ 249 01b3 DC A4                   		mov.W	[r10], r4
+ 250 01b5 DD A5 01                		mov.W	2[r10], r5
+ 251 01b8 4F 45                   		mul	r4, r5
+ 252 01ba DF 54                   		mov.W	r5, r4
+ 253                             		.loc 1 153 16
+ 254 01bc DD A5 02                		mov.W	4[r10], r5
+ 255 01bf 4B 45                   		add	r4, r5
+ 256                             		.loc 1 153 27
+ 257 01c1 60 25                   		sub	#2, r5
+ 150:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 		mw_gl_hline(draw_info,
+ 258                             		.loc 1 150 3
+ 259 01c3 DF 54                   		mov.W	r5, r4
+ 260 01c5 66 12                   		mov	#1, r2
+ 261 01c7 ED A1 04                		mov.L	16[r10], r1
+ 262 01ca 05 00 00 00             		bsr	_mw_gl_hline
+ 154:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c ****         
+ 155:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c ****         /* check if this radio_button is selected */
+ 156:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 		if (i == (int16_t)this_radio_radio_button->selected_radio_button)
+ 263                             		.loc 1 156 9
+ 264 01ce DC A4                   		mov.W	[r10], r4
+ 265                             		.loc 1 156 44
+ 266 01d0 ED A5 02                		mov.L	8[r10], r5
+ 267 01d3 89 5D                   		mov.B	5[r5], r5
+ 268                             		.loc 1 156 12
+ 269 01d5 5B 55                   		movu.B	r5, r5
+ 270                             		.loc 1 156 6
+ 271 01d7 47 54                   		cmp	r5, r4
+ 272 01d9 21 46                   		bne	.L9
+ 157:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 		{
+ 158:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c ****             /* it is so set the box fill colour according to enabled state */
+ 159:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 			if ((mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_IS_ENABLED) == MW_CONTROL_FLAG_IS_EN
+ 273                             		.loc 1 159 9
+ 274 01db ED A1 03                		mov.L	12[r10], r1
+ 275 01de 05 00 00 00             		bsr	_mw_get_control_flags
+ 276 01e2 EF 15                   		mov.L	r1, r5
+ 277                             		.loc 1 159 46
+ 278 01e4 5F 55                   		movu.W	r5, r5
+ 279 01e6 64 25                   		and	#2, r5
+ 280                             		.loc 1 159 7
+ 281 01e8 61 25                   		cmp	#2, r5
+ 282 01ea 19                      		bne	.L10
+ 160:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 			{
+ 161:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 				mw_gl_set_solid_fill_colour(MW_HAL_LCD_BLACK);
+ 283                             		.loc 1 161 5
+ 284 01eb 66 01                   		mov.L	#0, r1
+ 285 01ed 05 00 00 00             		bsr	_mw_gl_set_solid_fill_colour
+ 286 01f1 2E 0C                   		bra	.L11
+ 287                             	.L10:
+ 162:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 			}
+ 163:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 			else
+ 164:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 			{
+ 165:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 				mw_gl_set_solid_fill_colour(MW_CONTROL_DISABLED_COLOUR);
+ 288                             		.loc 1 165 5
+ 289 01f3 FB 12 BF BF BF 00       		mov.L	#0xbfbfbf, r1
+ 290 01f9 05 00 00 00             		bsr	_mw_gl_set_solid_fill_colour
+ 291                             	.L11:
+ 166:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 			}
+ 167:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c ****             
+ 168:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c ****             /* draw the fill box */
+ 169:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 			mw_gl_rectangle(draw_info,
+ 170:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 					3,
+ 171:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 					i * height + 3,
+ 292                             		.loc 1 171 8
+ 293 01fd DC A4                   		mov.W	[r10], r4
+ 294 01ff DD A5 01                		mov.W	2[r10], r5
+ 295 0202 4F 45                   		mul	r4, r5
+ 296                             		.loc 1 171 17
+ 297 0204 62 35                   		add	#3, r5
+ 169:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 					3,
+ 298                             		.loc 1 169 4
+ 299 0206 DF 53                   		mov.W	r5, r3
+ 172:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 					box_size - 6,
+ 300                             		.loc 1 172 15
+ 301 0208 DD A5 02                		mov.W	4[r10], r5
+ 302 020b 60 65                   		sub	#6, r5
+ 169:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 					3,
+ 303                             		.loc 1 169 4
+ 304 020d DF 54                   		mov.W	r5, r4
+ 173:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 					box_size - 6);
+ 305                             		.loc 1 173 15
+ 306 020f DD A5 02                		mov.W	4[r10], r5
+ 307 0212 60 65                   		sub	#6, r5
+ 169:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 					3,
+ 308                             		.loc 1 169 4
+ 309 0214 D3 05                   		mov.W	r5, [r0]
+ 310 0216 66 32                   		mov	#3, r2
+ 311 0218 ED A1 04                		mov.L	16[r10], r1
+ 312 021b 05 00 00 00             		bsr	_mw_gl_rectangle
+ 313                             	.L9:
+  97:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 	{
+ 314                             		.loc 1 97 70 discriminator 2
+ 315 021f DC A5                   		mov.W	[r10], r5
+ 316 0221 62 15                   		add	#1, r5
+ 317 0223 D3 A5                   		mov.W	r5, [r10]
+ 318                             	.L4:
+  97:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 	{
+ 319                             		.loc 1 97 16 discriminator 1
+ 320 0225 DC A4                   		mov.W	[r10], r4
+  97:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 	{
+ 321                             		.loc 1 97 50 discriminator 1
+ 322 0227 ED A5 02                		mov.L	8[r10], r5
+ 323 022a 89 55                   		mov.B	4[r5], r5
+  97:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 	{
+ 324                             		.loc 1 97 18 discriminator 1
+ 325 022c 5B 55                   		movu.B	r5, r5
+  97:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 	{
+ 326                             		.loc 1 97 2 discriminator 1
+ 327 022e 47 54                   		cmp	r5, r4
+ 328 0230 28 05 38 5D FE          		blt	.L12
+ 174:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 		}
+ 175:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 	}
+ 176:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** }
+ 329                             		.loc 1 176 1
+ 330 0235 03                      		nop
+ 331 0236 3F AA 07                		rtsd	#28, r10-r10
+ 332                             	.LFE0:
+ 334                             		.section	.text.radio_button_message_function,"ax",@progbits
+ 336                             	_radio_button_message_function:
+ 337                             	.LFB1:
+ 177:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 
+ 178:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** /**
+ 179:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c ****  * Control message handler called by the window manager.
+ 180:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c ****  *
+ 181:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c ****  * @param message The message to be processed
+ 182:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c ****  */
+ 183:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** static void radio_button_message_function(const mw_message_t *message)
+ 184:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** {
+ 338                             		.loc 1 184 1
+ 339 0000 6E 6A                   		pushm	r6-r10
+ 340                             	.LCFI3:
+ 341 0002 71 0A F0                		add	#-16, r0, r10
+ 342                             	.LCFI4:
+ 343 0005 71 A0 F8                		add	#-8, r10, r0
+ 344                             	.LCFI5:
+ 345 0008 E7 A1 03                		mov.L	r1, 12[r10]
+ 185:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 	mw_ui_radio_button_data_t *this_radio_radio_button = (mw_ui_radio_button_data_t*)mw_get_control_in
+ 346                             		.loc 1 185 83
+ 347 000b ED A5 03                		mov.L	12[r10], r5
+ 348 000e A8 5D                   		mov.L	4[r5], r5
+ 349 0010 EF 51                   		mov.L	r5, r1
+ 350 0012 05 00 00 00             		bsr	_mw_get_control_instance_data
+ 351 0016 E7 A1 01                		mov.L	r1, 4[r10]
+ 186:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 	int16_t height;
+ 187:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 	uint32_t misra_temp;
+ 188:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 
+ 189:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 	MW_ASSERT(message != (void*)0, "Null pointer argument");
+ 352                             		.loc 1 189 2
+ 353 0019 ED A5 03                		mov.L	12[r10], r5
+ 354 001c 61 05                   		cmp	#0, r5
+ 355 001e FC DB 51                		scne.L	r5
+ 356 0021 FB 42 00 00 00 00       		mov.L	#.LC0, r4
+ 357 0027 75 43 BD                		mov.L	#0xbd, r3
+ 358 002a FB 22 00 00 00 00       		mov.L	#___func__.2886, r2
+ 359 0030 CF 51                   		mov.B	r5, r1
+ 360 0032 05 00 00 00             		bsr	_mw_debug_print_assert
+ 190:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 
+ 191:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 	/* set size dependent values */
+ 192:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 	if ((mw_get_control_flags(message->recipient_handle) & MW_CONTROL_FLAG_LARGE_SIZE) == MW_CONTROL_F
+ 361                             		.loc 1 192 7
+ 362 0036 ED A5 03                		mov.L	12[r10], r5
+ 363 0039 A8 5D                   		mov.L	4[r5], r5
+ 364 003b EF 51                   		mov.L	r5, r1
+ 365 003d 05 00 00 00             		bsr	_mw_get_control_flags
+ 366 0041 EF 15                   		mov.L	r1, r5
+ 367                             		.loc 1 192 55
+ 368 0043 5F 55                   		movu.W	r5, r5
+ 369 0045 64 85                   		and	#8, r5
+ 370                             		.loc 1 192 5
+ 371 0047 61 85                   		cmp	#8, r5
+ 372 0049 1D                      		bne	.L14
+ 193:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 	{
+ 194:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 		height = MW_UI_RADIO_BUTTON_LARGE_HEIGHT;
+ 373                             		.loc 1 194 10
+ 374 004a F8 A5 25                		mov.W	#37, [r10]
+ 375 004d 0C                      		bra	.L15
+ 376                             	.L14:
+ 195:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 	}
+ 196:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 	else
+ 197:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 	{
+ 198:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 		height = MW_UI_RADIO_BUTTON_HEIGHT;
+ 377                             		.loc 1 198 10
+ 378 004e F8 A5 12                		mov.W	#18, [r10]
+ 379                             	.L15:
+ 199:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 	}
+ 200:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 
+ 201:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 	switch (message->message_id)
+ 380                             		.loc 1 201 17
+ 381 0051 ED A5 03                		mov.L	12[r10], r5
+ 382 0054 A8 D5                   		mov.L	8[r5], r5
+ 383                             		.loc 1 201 2
+ 384 0056 75 55 14                		cmp	#20, r5
+ 385 0059 20 33                   		beq	.L16
+ 386 005b 75 55 34                		cmp	#52, r5
+ 387 005e 20 10                   		beq	.L17
+ 388 0060 61 D5                   		cmp	#13, r5
+ 389 0062 3B 97 00                		bne	.L22
+ 202:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 	{
+ 203:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 	case MW_CONTROL_CREATED_MESSAGE:
+ 204:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 		/* initialise the control */				
+ 205:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 		this_radio_radio_button->selected_radio_button = 0U;
+ 390                             		.loc 1 205 50
+ 391 0065 ED A5 01                		mov.L	4[r10], r5
+ 392 0068 3C 55 00                		mov.B	#0, 5[r5]
+ 206:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 		break;
+ 393                             		.loc 1 206 3
+ 394 006b 38 94 00                		bra	.L19
+ 395                             	.L17:
+ 207:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 		
+ 208:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 	case MW_RADIO_BUTTON_SET_SELECTED_MESSAGE:
+ 209:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 		/* handle a transfer data message, which contains new position */
+ 210:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 		if (message->message_data < this_radio_radio_button->number_of_items)
+ 396                             		.loc 1 210 14
+ 397 006e ED A5 03                		mov.L	12[r10], r5
+ 398 0071 A9 54                   		mov.L	16[r5], r4
+ 399                             		.loc 1 210 54
+ 400 0073 ED A5 01                		mov.L	4[r10], r5
+ 401 0076 89 55                   		mov.B	4[r5], r5
+ 402                             		.loc 1 210 29
+ 403 0078 5B 55                   		movu.B	r5, r5
+ 404                             		.loc 1 210 6
+ 405 007a 47 54                   		cmp	r5, r4
+ 406 007c 22 7F                   		bgeu	.L23
+ 211:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 		{
+ 212:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 			this_radio_radio_button->selected_radio_button  = (uint8_t)message->message_data;
+ 407                             		.loc 1 212 70
+ 408 007e ED A5 03                		mov.L	12[r10], r5
+ 409 0081 A9 55                   		mov.L	16[r5], r5
+ 410                             		.loc 1 212 54
+ 411 0083 CF 54                   		mov.B	r5, r4
+ 412                             		.loc 1 212 52
+ 413 0085 ED A5 01                		mov.L	4[r10], r5
+ 414 0088 81 5C                   		mov.B	r4, 5[r5]
+ 213:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 		}
+ 214:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 		break;
+ 415                             		.loc 1 214 3
+ 416 008a 2E 71                   		bra	.L23
+ 417                             	.L16:
+ 215:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 
+ 216:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 	case MW_TOUCH_DOWN_MESSAGE:
+ 217:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 		/* handle a touch down event within this control */		
+ 218:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 		if ((mw_get_control_flags(message->recipient_handle) & MW_CONTROL_FLAG_IS_ENABLED) == MW_CONTROL_
+ 418                             		.loc 1 218 8
+ 419 008c ED A5 03                		mov.L	12[r10], r5
+ 420 008f A8 5D                   		mov.L	4[r5], r5
+ 421 0091 EF 51                   		mov.L	r5, r1
+ 422 0093 05 00 00 00             		bsr	_mw_get_control_flags
+ 423 0097 EF 15                   		mov.L	r1, r5
+ 424                             		.loc 1 218 56
+ 425 0099 5F 55                   		movu.W	r5, r5
+ 426 009b 64 25                   		and	#2, r5
+ 427                             		.loc 1 218 6
+ 428 009d 61 25                   		cmp	#2, r5
+ 429 009f 21 5F                   		bne	.L24
+ 219:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 		{
+ 220:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 			/* find which button was touched */
+ 221:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 			misra_temp = (message->message_data & 0xffffU) / (uint32_t)height;
+ 430                             		.loc 1 221 25
+ 431 00a1 ED A5 03                		mov.L	12[r10], r5
+ 432 00a4 A9 55                   		mov.L	16[r5], r5
+ 433                             		.loc 1 221 40
+ 434 00a6 FB 4E FF FF 00          		mov.L	#0xffff, r4
+ 435 00ab 53 54                   		and	r5, r4
+ 436                             		.loc 1 221 53
+ 437 00ad DC A5                   		mov.W	[r10], r5
+ 438                             		.loc 1 221 15
+ 439 00af EF 47                   		mov.L	r4, r7
+ 440 00b1 FC 27 57                		divu	r5, r7
+ 441 00b4 EF 75                   		mov.L	r7, r5
+ 442 00b6 E7 A5 02                		mov.L	r5, 8[r10]
+ 222:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 			this_radio_radio_button->selected_radio_button = (uint8_t)misra_temp;
+ 443                             		.loc 1 222 53
+ 444 00b9 ED A5 02                		mov.L	8[r10], r5
+ 445 00bc CF 54                   		mov.B	r5, r4
+ 446                             		.loc 1 222 51
+ 447 00be ED A5 01                		mov.L	4[r10], r5
+ 448 00c1 81 5C                   		mov.B	r4, 5[r5]
+ 223:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 			
+ 224:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 			/* send control response message */
+ 225:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 			mw_post_message(MW_RADIO_BUTTON_ITEM_SELECTED_MESSAGE,
+ 449                             		.loc 1 225 4
+ 450 00c3 ED A5 03                		mov.L	12[r10], r5
+ 451 00c6 A8 5E                   		mov.L	4[r5], r6
+ 452 00c8 ED A5 03                		mov.L	12[r10], r5
+ 453 00cb A8 5D                   		mov.L	4[r5], r5
+ 454 00cd EF 51                   		mov.L	r5, r1
+ 455 00cf 05 00 00 00             		bsr	_mw_get_control_parent_window_handle
+ 456 00d3 EF 13                   		mov.L	r1, r3
+ 226:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 					message->recipient_handle,
+ 227:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 					mw_get_control_parent_window_handle(message->recipient_handle),
+ 228:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 					this_radio_radio_button->selected_radio_button,
+ 457                             		.loc 1 228 29
+ 458 00d5 ED A5 01                		mov.L	4[r10], r5
+ 459 00d8 89 5D                   		mov.B	5[r5], r5
+ 225:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 					message->recipient_handle,
+ 460                             		.loc 1 225 4
+ 461 00da 5B 55                   		movu.B	r5, r5
+ 462 00dc 3E 01 00                		mov.L	#0, 4[r0]
+ 463 00df F8 06 00                		mov.L	#0, [r0]
+ 464 00e2 EF 54                   		mov.L	r5, r4
+ 465 00e4 EF 62                   		mov.L	r6, r2
+ 466 00e6 75 41 1C                		mov.L	#28, r1
+ 467 00e9 05 00 00 00             		bsr	_mw_post_message
+ 229:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 					NULL,
+ 230:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 					MW_WINDOW_MESSAGE);
+ 231:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 			mw_paint_control(message->recipient_handle);
+ 468                             		.loc 1 231 4
+ 469 00ed ED A5 03                		mov.L	12[r10], r5
+ 470 00f0 A8 5D                   		mov.L	4[r5], r5
+ 471 00f2 EF 51                   		mov.L	r5, r1
+ 472 00f4 05 00 00 00             		bsr	_mw_paint_control
+ 232:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 		}
+ 233:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 		break;
+ 473                             		.loc 1 233 3
+ 474 00f8 0E                      		bra	.L24
+ 475                             	.L22:
+ 234:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 
+ 235:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 	default:
+ 236:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 		/* keep MISRA happy */
+ 237:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 		break;
+ 476                             		.loc 1 237 3
+ 477 00f9 03                      		nop
+ 478 00fa 0D                      		bra	.L19
+ 479                             	.L23:
+ 214:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 
+ 480                             		.loc 1 214 3
+ 481 00fb 03                      		nop
+ 482 00fc 2E 03                   		bra	.L19
+ 483                             	.L24:
+ 233:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 
+ 484                             		.loc 1 233 3
+ 485 00fe 03                      		nop
+ 486                             	.L19:
+ 238:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 	}
+ 239:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** }
+ 487                             		.loc 1 239 1
+ 488 00ff 03                      		nop
+ 489 0100 3F 6A 0B                		rtsd	#44, r6-r10
+ 490                             	.LFE1:
+ 492                             		.section C,"a",@progbits
+ 493 0016 00 00                   		.p2align 2
+ 494                             	.LC1:
+ 495 0018 5A 65 72 6F 20 61 72 67 		.string	"Zero argument"
+ 495      75 6D 65 6E 74 00 
+ 496                             	.LC2:
+ 497 0026 4E 75 6C 6C 20 70 6F 69 		.string	"Null pointer value in array"
+ 497      6E 74 65 72 20 76 61 6C 
+ 497      75 65 20 69 6E 20 61 72 
+ 497      72 61 79 00 
+ 498 0042 00 00                   		.section	.text.mw_ui_radio_button_add_new,"ax",@progbits
+ 499                             		.global	_mw_ui_radio_button_add_new
+ 501                             	_mw_ui_radio_button_add_new:
+ 502                             	.LFB2:
+ 240:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 
+ 241:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** /***********************
+ 242:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** *** GLOBAL FUNCTIONS ***
+ 243:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** ***********************/
+ 244:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 
+ 245:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** mw_handle_t mw_ui_radio_button_add_new(int16_t x,
+ 246:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 		int16_t y,
+ 247:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 		int16_t width,
+ 248:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 		mw_handle_t parent_handle,
+ 249:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 		uint16_t flags,
+ 250:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 		mw_ui_radio_button_data_t *radio_button_instance_data)
+ 251:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** {
+ 503                             		.loc 1 251 1
+ 504 0000 7E AA                   		push.l	r10
+ 505                             	.LCFI6:
+ 506 0002 7E A6                   		push.l	r6
+ 507                             	.LCFI7:
+ 508 0004 71 0A E0                		add	#-32, r0, r10
+ 509                             	.LCFI8:
+ 510 0007 71 A0 F8                		add	#-8, r10, r0
+ 511                             	.LCFI9:
+ 512 000a 75 46 2C                		mov.L	#44, r6
+ 513 000d 4B A6                   		add	r10, r6
+ 514 000f D7 A1 06                		mov.W	r1, 12[r10]
+ 515 0012 D7 A2 07                		mov.W	r2, 14[r10]
+ 516 0015 D7 A3 08                		mov.W	r3, 16[r10]
+ 517 0018 E7 A4 05                		mov.L	r4, 20[r10]
+ 252:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 	mw_util_rect_t r;
+ 253:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 	uint8_t i;
+ 254:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 
+ 255:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 	/* check for null parameters */
+ 256:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 	if (radio_button_instance_data == NULL ||
+ 518                             		.loc 1 256 5
+ 519 001b A8 6D                   		mov.L	4[r6], r5
+ 520 001d 61 05                   		cmp	#0, r5
+ 521 001f 11                      		beq	.L26
+ 257:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 			radio_button_instance_data->radio_button_labels == NULL)
+ 522                             		.loc 1 257 30 discriminator 1
+ 523 0020 A8 6D                   		mov.L	4[r6], r5
+ 524 0022 EC 55                   		mov.L	[r5], r5
+ 256:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 			radio_button_instance_data->radio_button_labels == NULL)
+ 525                             		.loc 1 256 41 discriminator 1
+ 526 0024 61 05                   		cmp	#0, r5
+ 527 0026 21 1D                   		bne	.L27
+ 528                             	.L26:
+ 258:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 	{
+ 259:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 		MW_ASSERT((bool)false, "Null pointer argument");
+ 529                             		.loc 1 259 3
+ 530 0028 FB 42 00 00 00 00       		mov.L	#.LC0, r4
+ 531 002e FB 3A 03 01             		mov.L	#0x103, r3
+ 532 0032 FB 22 00 00 00 00       		mov.L	#___func__.2902, r2
+ 533 0038 66 01                   		mov	#0, r1
+ 534 003a 05 00 00 00             		bsr	_mw_debug_print_assert
+ 260:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 		return (MW_INVALID_HANDLE);
+ 535                             		.loc 1 260 10
+ 536 003e 66 05                   		mov.L	#0, r5
+ 537 0040 38 EC 00                		bra	.L37
+ 538                             	.L27:
+ 261:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 	}
+ 262:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 
+ 263:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 	/* check for 0 entries */
+ 264:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 	if (radio_button_instance_data->number_of_items == 0U)
+ 539                             		.loc 1 264 32
+ 540 0043 A8 6D                   		mov.L	4[r6], r5
+ 541 0045 89 55                   		mov.B	4[r5], r5
+ 542                             		.loc 1 264 5
+ 543 0047 5B 55                   		movu.B	r5, r5
+ 544 0049 61 05                   		cmp	#0, r5
+ 545 004b 21 1D                   		bne	.L29
+ 265:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 	{
+ 266:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 		MW_ASSERT((bool)false, "Zero argument");
+ 546                             		.loc 1 266 3
+ 547 004d FB 42 18 00 00 00       		mov.L	#.LC1, r4
+ 548 0053 FB 3A 0A 01             		mov.L	#0x10a, r3
+ 549 0057 FB 22 00 00 00 00       		mov.L	#___func__.2902, r2
+ 550 005d 66 01                   		mov	#0, r1
+ 551 005f 05 00 00 00             		bsr	_mw_debug_print_assert
+ 267:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 		return (MW_INVALID_HANDLE);
+ 552                             		.loc 1 267 10
+ 553 0063 66 05                   		mov.L	#0, r5
+ 554 0065 38 C7 00                		bra	.L37
+ 555                             	.L29:
+ 268:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 	}
+ 269:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 
+ 270:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 	/* check for null pointers in entry text */
+ 271:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 	for (i = 0U; i < radio_button_instance_data->number_of_items; i++)
+ 556                             		.loc 1 271 9
+ 557 0068 F8 A4 00                		mov.B	#0, [r10]
+ 558                             		.loc 1 271 2
+ 559 006b 2E 33                   		bra	.L30
+ 560                             	.L32:
+ 272:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 	{
+ 273:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 		if (radio_button_instance_data->radio_button_labels[i] == NULL)
+ 561                             		.loc 1 273 33
+ 562 006d A8 6D                   		mov.L	4[r6], r5
+ 563 006f EC 54                   		mov.L	[r5], r4
+ 564                             		.loc 1 273 54
+ 565 0071 58 A5                   		movu.B	[r10], r5
+ 566 0073 6C 25                   		shll	#2, r5
+ 567 0075 4B 45                   		add	r4, r5
+ 568 0077 EC 55                   		mov.L	[r5], r5
+ 569                             		.loc 1 273 6
+ 570 0079 61 05                   		cmp	#0, r5
+ 571 007b 21 1D                   		bne	.L31
+ 274:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 		{
+ 275:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 			MW_ASSERT((bool)false, "Null pointer value in array");
+ 572                             		.loc 1 275 4
+ 573 007d FB 42 26 00 00 00       		mov.L	#.LC2, r4
+ 574 0083 FB 3A 13 01             		mov.L	#0x113, r3
+ 575 0087 FB 22 00 00 00 00       		mov.L	#___func__.2902, r2
+ 576 008d 66 01                   		mov	#0, r1
+ 577 008f 05 00 00 00             		bsr	_mw_debug_print_assert
+ 276:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 			return (MW_INVALID_HANDLE);
+ 578                             		.loc 1 276 11
+ 579 0093 66 05                   		mov.L	#0, r5
+ 580 0095 38 97 00                		bra	.L37
+ 581                             	.L31:
+ 271:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 	{
+ 582                             		.loc 1 271 65 discriminator 2
+ 583 0098 CC A5                   		mov.B	[r10], r5
+ 584 009a 62 15                   		add	#1, r5
+ 585 009c C3 A5                   		mov.B	r5, [r10]
+ 586                             	.L30:
+ 271:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 	{
+ 587                             		.loc 1 271 45 discriminator 1
+ 588 009e A8 6D                   		mov.L	4[r6], r5
+ 589 00a0 89 55                   		mov.B	4[r5], r5
+ 271:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 	{
+ 590                             		.loc 1 271 2 discriminator 1
+ 591 00a2 58 A4                   		movu.B	[r10], r4
+ 592 00a4 5B 55                   		movu.B	r5, r5
+ 593 00a6 47 54                   		cmp	r5, r4
+ 594 00a8 23 C5                   		bltu	.L32
+ 277:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 		}
+ 278:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 	}
+ 279:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 
+ 280:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 	if ((flags & MW_CONTROL_FLAG_LARGE_SIZE) == MW_CONTROL_FLAG_LARGE_SIZE)
+ 595                             		.loc 1 280 13
+ 596 00aa 5C 65                   		movu.W	[r6], r5
+ 597 00ac 64 85                   		and	#8, r5
+ 598                             		.loc 1 280 5
+ 599 00ae 61 05                   		cmp	#0, r5
+ 600 00b0 20 2F                   		beq	.L33
+ 281:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 	{
+ 282:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 		if (width < MW_UI_RADIO_BUTTON_LARGE_HEIGHT)
+ 601                             		.loc 1 282 6
+ 602 00b2 DD A5 08                		mov.W	16[r10], r5
+ 603 00b5 75 55 24                		cmp	#36, r5
+ 604 00b8 2A 06                   		bgt	.L34
+ 283:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 		{
+ 284:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 			return (MW_INVALID_HANDLE);
+ 605                             		.loc 1 284 11
+ 606 00ba 66 05                   		mov.L	#0, r5
+ 607 00bc 2E 70                   		bra	.L37
+ 608                             	.L34:
+ 285:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 		}
+ 286:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 		mw_util_set_rect(&r, x, y, width, MW_UI_RADIO_BUTTON_LARGE_HEIGHT * (int16_t)radio_button_instanc
+ 609                             		.loc 1 286 106
+ 610 00be A8 6D                   		mov.L	4[r6], r5
+ 611 00c0 89 55                   		mov.B	4[r5], r5
+ 612                             		.loc 1 286 3
+ 613 00c2 5B 55                   		movu.B	r5, r5
+ 614 00c4 75 15 25                		mul	#37, r5
+ 615 00c7 DF 54                   		mov.W	r5, r4
+ 616 00c9 71 A5 02                		add	#2, r10, r5
+ 617 00cc D3 04                   		mov.W	r4, [r0]
+ 618 00ce DD A4 08                		mov.W	16[r10], r4
+ 619 00d1 DD A3 07                		mov.W	14[r10], r3
+ 620 00d4 DD A2 06                		mov.W	12[r10], r2
+ 621 00d7 EF 51                   		mov.L	r5, r1
+ 622 00d9 05 00 00 00             		bsr	_mw_util_set_rect
+ 623 00dd 2E 2D                   		bra	.L35
+ 624                             	.L33:
+ 287:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 	}
+ 288:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 	else
+ 289:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 	{
+ 290:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 		if (width < MW_UI_RADIO_BUTTON_HEIGHT)
+ 625                             		.loc 1 290 6
+ 626 00df DD A5 08                		mov.W	16[r10], r5
+ 627 00e2 75 55 11                		cmp	#17, r5
+ 628 00e5 2A 06                   		bgt	.L36
+ 291:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 		{
+ 292:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 			return (MW_INVALID_HANDLE);
+ 629                             		.loc 1 292 11
+ 630 00e7 66 05                   		mov.L	#0, r5
+ 631 00e9 2E 43                   		bra	.L37
+ 632                             	.L36:
+ 293:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 		}
+ 294:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 		mw_util_set_rect(&r, x, y, width, MW_UI_RADIO_BUTTON_HEIGHT * (int16_t)radio_button_instance_data
+ 633                             		.loc 1 294 100
+ 634 00eb A8 6D                   		mov.L	4[r6], r5
+ 635 00ed 89 55                   		mov.B	4[r5], r5
+ 636                             		.loc 1 294 3
+ 637 00ef 5B 55                   		movu.B	r5, r5
+ 638 00f1 75 15 12                		mul	#18, r5
+ 639 00f4 DF 54                   		mov.W	r5, r4
+ 640 00f6 71 A5 02                		add	#2, r10, r5
+ 641 00f9 D3 04                   		mov.W	r4, [r0]
+ 642 00fb DD A4 08                		mov.W	16[r10], r4
+ 643 00fe DD A3 07                		mov.W	14[r10], r3
+ 644 0101 DD A2 06                		mov.W	12[r10], r2
+ 645 0104 EF 51                   		mov.L	r5, r1
+ 646 0106 05 00 00 00             		bsr	_mw_util_set_rect
+ 647                             	.L35:
+ 295:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 	}
+ 296:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 
+ 297:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 	return (mw_add_control(&r,
+ 648                             		.loc 1 297 10
+ 649 010a 71 A5 02                		add	#2, r10, r5
+ 650 010d A8 6C                   		mov.L	4[r6], r4
+ 651 010f A0 0C                   		mov.L	r4, 4[r0]
+ 652 0111 DC 64                   		mov.W	[r6], r4
+ 653 0113 D3 04                   		mov.W	r4, [r0]
+ 654 0115 FB 42 00 00 00 00       		mov.L	#_radio_button_message_function, r4
+ 655 011b FB 32 00 00 00 00       		mov.L	#_radio_button_paint_function, r3
+ 656 0121 ED A2 05                		mov.L	20[r10], r2
+ 657 0124 EF 51                   		mov.L	r5, r1
+ 658 0126 05 00 00 00             		bsr	_mw_add_control
+ 659 012a EF 15                   		mov.L	r1, r5
+ 660                             		.balign 8,3,1
+ 661                             	.L37:
+ 298:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 			parent_handle,
+ 299:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 			radio_button_paint_function,
+ 300:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 			radio_button_message_function,
+ 301:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 			flags,
+ 302:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** 			radio_button_instance_data));
+ 303:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_radio_button.c **** }
+ 662                             		.loc 1 303 1 discriminator 1
+ 663 012c EF 51                   		mov.L	r5, r1
+ 664 012e 71 00 28                		add	#40, r0
+ 665 0131 7E B6                   		pop	r6
+ 666 0133 7E BA                   		pop	r10
+ 667 0135 02                      		rts
+ 668                             	.LFE2:
+ 670 0136 EF 00                   		.section	.rodata.__func__.2876,"a"
+ 673                             	___func__.2876:
+ 674 0000 72 61 64 69 6F 5F 62 75 		.string	"radio_button_paint_function"
+ 674      74 74 6F 6E 5F 70 61 69 
+ 674      6E 74 5F 66 75 6E 63 74 
+ 674      69 6F 6E 00 
+ 675                             		.section	.rodata.__func__.2886,"a"
+ 678                             	___func__.2886:
+ 679 0000 72 61 64 69 6F 5F 62 75 		.string	"radio_button_message_function"
+ 679      74 74 6F 6E 5F 6D 65 73 
+ 679      73 61 67 65 5F 66 75 6E 
+ 679      63 74 69 6F 6E 00 
+ 680                             		.section	.rodata.__func__.2902,"a"
+ 683                             	___func__.2902:
+ 684 0000 6D 77 5F 75 69 5F 72 61 		.string	"mw_ui_radio_button_add_new"
+ 684      64 69 6F 5F 62 75 74 74 
+ 684      6F 6E 5F 61 64 64 5F 6E 
+ 684      65 77 00 
+ 789                             	.Letext0:
+ 790                             		.file 2 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\rx-el
+ 791                             		.file 3 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\rx-el
+ 792                             		.file 4 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\rx-el
+ 793                             		.file 5 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\lib\\
+ 794                             		.file 6 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\rx-el
+ 795                             		.file 7 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\rx-el
+ 796                             		.file 8 "C:\\Users\\John\\Desktop\\workspace\\miniwinwm\\MiniWin/miniwin_utilities.h"
+ 797                             		.file 9 "C:\\Users\\John\\Desktop\\workspace\\miniwinwm\\MiniWin/gl/gl.h"
+ 798                             		.file 10 "C:\\Users\\John\\Desktop\\workspace\\miniwinwm\\MiniWin/bitmaps/mw_bitmaps.h"
+ 799                             		.file 11 "C:\\Users\\John\\Desktop\\workspace\\miniwinwm\\MiniWin/hal/hal_timer.h"
+ 800                             		.file 12 "C:\\Users\\John\\Desktop\\workspace\\miniwinwm\\MiniWin/miniwin.h"
+ 801                             		.file 13 "C:\\Users\\John\\Desktop\\workspace\\miniwinwm\\MiniWin/ui/ui_radio_button.h"

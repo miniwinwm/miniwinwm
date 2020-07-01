@@ -1,0 +1,919 @@
+   1                             		.file	"ui_arrow.c"
+   2                             		.section P,"ax"
+   3                             	.Ltext0:
+   4                             		.section	.rodata.shape_x_const,"a"
+   5                             		.balign 2
+   8                             	_shape_x_const:
+   9 0000 FD FF                   		.short	-3
+  10 0002 00 00                   		.short	0
+  11 0004 04 00                   		.short	4
+  12                             		.section	.rodata.shape_y_const,"a"
+  13                             		.balign 2
+  16                             	_shape_y_const:
+  17 0000 04 00                   		.short	4
+  18 0002 FD FF                   		.short	-3
+  19 0004 04 00                   		.short	4
+  20                             		.section	.rodata.shape_large_x_const,"a"
+  21                             		.balign 2
+  24                             	_shape_large_x_const:
+  25 0000 F9 FF                   		.short	-7
+  26 0002 00 00                   		.short	0
+  27 0004 08 00                   		.short	8
+  28                             		.section	.rodata.shape_large_y_const,"a"
+  29                             		.balign 2
+  32                             	_shape_large_y_const:
+  33 0000 08 00                   		.short	8
+  34 0002 F9 FF                   		.short	-7
+  35 0004 08 00                   		.short	8
+  36                             		.section	.bss.shape_x,"aw",@nobits
+  37                             		.balign 2
+  40                             	_shape_x:
+  41 0000 00 00 00 00 00 00       		.zero	6
+  42                             		.section	.bss.shape_y,"aw",@nobits
+  43                             		.balign 2
+  46                             	_shape_y:
+  47 0000 00 00 00 00 00 00       		.zero	6
+  48                             		.section C,"a",@progbits
+  49                             		.p2align 2
+  50                             	.LC0:
+  51 0000 4E 75 6C 6C 20 70 6F 69 		.string	"Null pointer argument"
+  51      6E 74 65 72 20 61 72 67 
+  51      75 6D 65 6E 74 00 
+  52 0016 00 00                   		.section	.text.arrow_paint_function,"ax",@progbits
+  54                             	_arrow_paint_function:
+  55                             	.LFB0:
+  56                             		.file 1 "C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui/ui_arrow.c"
+   1:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** /*
+   2:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 
+   3:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** MIT License
+   4:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 
+   5:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** Copyright (c) John Blaiklock 2019 miniwin Embedded Window Manager
+   6:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 
+   7:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** Permission is hereby granted, free of charge, to any person obtaining a copy
+   8:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** of this software and associated documentation files (the "Software"), to deal
+   9:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** in the Software without restriction, including without limitation the rights
+  10:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  11:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** copies of the Software, and to permit persons to whom the Software is
+  12:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** furnished to do so, subject to the following conditions:
+  13:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 
+  14:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** The above copyright notice and this permission notice shall be included in all
+  15:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** copies or substantial portions of the Software.
+  16:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 
+  17:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  18:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  19:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  20:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  21:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  22:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  23:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** SOFTWARE.
+  24:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 
+  25:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** */
+  26:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 
+  27:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** /***************
+  28:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** *** INCLUDES ***
+  29:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** ***************/
+  30:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 
+  31:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** #include <string.h>
+  32:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** #include "miniwin.h"
+  33:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 
+  34:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** /****************
+  35:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** *** CONSTANTS ***
+  36:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** ****************/
+  37:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 
+  38:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** #define ARROW_POINTS 			(sizeof(shape_x_const) / sizeof(int16_t))
+  39:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** static const int16_t shape_x_const[] = {-3, 0, 4};
+  40:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** static const int16_t shape_y_const[] = {4, -3, 4};
+  41:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** static const int16_t shape_large_x_const[] = {-7, 0, 8};
+  42:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** static const int16_t shape_large_y_const[] = {8, -7, 8};
+  43:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 
+  44:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** /************
+  45:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** *** TYPES ***
+  46:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** ************/
+  47:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 
+  48:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** /***********************
+  49:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** *** GLOBAL VARIABLES ***
+  50:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** ***********************/
+  51:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 
+  52:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** /**********************
+  53:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** *** LOCAL VARIABLES ***
+  54:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** **********************/
+  55:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 
+  56:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** static int16_t shape_x[ARROW_POINTS];
+  57:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** static int16_t shape_y[ARROW_POINTS];
+  58:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 
+  59:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** /********************************
+  60:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** *** LOCAL FUNCTION PROTOTYPES ***
+  61:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** ********************************/
+  62:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 
+  63:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** static void arrow_paint_function(mw_handle_t control_handle, const mw_gl_draw_info_t *draw_info);
+  64:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** static void arrow_message_function(const mw_message_t *message);
+  65:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 
+  66:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** /**********************
+  67:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** *** LOCAL FUNCTIONS ***
+  68:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** **********************/
+  69:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 
+  70:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** /**
+  71:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c ****  * Control paint routine, called by window manager.
+  72:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c ****  *
+  73:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c ****  * @param control_handle The control identifier in the array of controls
+  74:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c ****  * @param draw_info Draw info structure describing offset and clip region
+  75:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c ****  */
+  76:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** static void arrow_paint_function(mw_handle_t control_handle, const mw_gl_draw_info_t *draw_info)
+  77:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** {
+  57                             		.loc 1 77 1
+  58 0000 6E 6B                   		pushm	r6-r11
+  59                             	.LCFI0:
+  60 0002 71 0A E8                		add	#-24, r0, r10
+  61                             	.LCFI1:
+  62 0005 71 A0 FC                		add	#-4, r10, r0
+  63                             	.LCFI2:
+  64 0008 E7 A1 04                		mov.L	r1, 16[r10]
+  65 000b E7 A2 05                		mov.L	r2, 20[r10]
+  78:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 	mw_ui_arrow_data_t *this_arrow = (mw_ui_arrow_data_t*)mw_get_control_instance_data(control_handle)
+  66                             		.loc 1 78 56
+  67 000e ED A1 04                		mov.L	16[r10], r1
+  68 0011 05 00 00 00             		bsr	_mw_get_control_instance_data
+  69 0015 E7 A1 03                		mov.L	r1, 12[r10]
+  79:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 	int16_t arrow_size;
+  80:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 	int16_t arrow_offset;
+  81:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 	mw_hal_lcd_colour_t highlighted_colour;
+  82:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 	mw_hal_lcd_colour_t lowlighted_colour;
+  83:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 
+  84:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 	MW_ASSERT(draw_info != (void*)0, "Null pointer argument");
+  70                             		.loc 1 84 2
+  71 0018 ED A5 05                		mov.L	20[r10], r5
+  72 001b 61 05                   		cmp	#0, r5
+  73 001d FC DB 51                		scne.L	r5
+  74 0020 FB 42 00 00 00 00       		mov.L	#.LC0, r4
+  75 0026 75 43 54                		mov.L	#0x54, r3
+  76 0029 FB 22 00 00 00 00       		mov.L	#___func__.2970, r2
+  77 002f CF 51                   		mov.B	r5, r1
+  78 0031 05 00 00 00             		bsr	_mw_debug_print_assert
+  85:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 
+  86:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c ****     /* set the arrow box fill colour depending on up/down state */
+  87:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 	if (this_arrow->arrow_down)
+  79                             		.loc 1 87 16
+  80 0035 ED A5 03                		mov.L	12[r10], r5
+  81 0038 89 55                   		mov.B	4[r5], r5
+  82                             		.loc 1 87 5
+  83 003a 5B 55                   		movu.B	r5, r5
+  84 003c 61 05                   		cmp	#0, r5
+  85 003e 20 0E                   		beq	.L2
+  88:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 	{
+  89:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 		mw_gl_set_solid_fill_colour(MW_CONTROL_DOWN_COLOUR);
+  86                             		.loc 1 89 3
+  87 0040 FB 12 CC CC CC 00       		mov.L	#0xcccccc, r1
+  88 0046 05 00 00 00             		bsr	_mw_gl_set_solid_fill_colour
+  89 004a 2E 0C                   		bra	.L3
+  90                             	.L2:
+  90:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 	}
+  91:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 	else
+  92:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 	{
+  93:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 		mw_gl_set_solid_fill_colour(MW_CONTROL_UP_COLOUR);
+  91                             		.loc 1 93 3
+  92 004c FB 12 E6 E6 E6 00       		mov.L	#0xe6e6e6, r1
+  93 0052 05 00 00 00             		bsr	_mw_gl_set_solid_fill_colour
+  94                             	.L3:
+  94:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 	}
+  95:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 
+  96:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c ****     /* draw the arrow's box */
+  97:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 	mw_gl_set_fill(MW_GL_FILL);
+  95                             		.loc 1 97 2
+  96 0056 66 11                   		mov.L	#1, r1
+  97 0058 05 00 00 00             		bsr	_mw_gl_set_fill
+  98:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 	mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
+  98                             		.loc 1 98 2
+  99 005c 66 01                   		mov.L	#0, r1
+ 100 005e 05 00 00 00             		bsr	_mw_gl_set_fg_colour
+  99:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 	mw_gl_clear_pattern();
+ 101                             		.loc 1 99 2
+ 102 0062 05 00 00 00             		bsr	_mw_gl_clear_pattern
+ 100:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 	mw_gl_set_line(MW_GL_SOLID_LINE);
+ 103                             		.loc 1 100 2
+ 104 0066 FB 1E FF FF 00          		mov.L	#0xffff, r1
+ 105 006b 05 00 00 00             		bsr	_mw_gl_set_line
+ 101:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 	mw_gl_set_border(MW_GL_BORDER_ON);
+ 106                             		.loc 1 101 2
+ 107 006f 66 11                   		mov.L	#1, r1
+ 108 0071 05 00 00 00             		bsr	_mw_gl_set_border
+ 102:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 	mw_gl_rectangle(draw_info,
+ 103:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 			0,
+ 104:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 			0,
+ 105:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 			mw_get_control_rect(control_handle).width,
+ 109                             		.loc 1 105 4
+ 110 0075 ED A1 04                		mov.L	16[r10], r1
+ 111 0078 05 00 00 00             		bsr	_mw_get_control_rect
+ 112 007c EF 15                   		mov.L	r1, r5
+ 113 007e EF 26                   		mov.L	r2, r6
+ 102:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 	mw_gl_rectangle(draw_info,
+ 114                             		.loc 1 102 2
+ 115 0080 DF 6B                   		mov.W	r6, r11
+ 106:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 			mw_get_control_rect(control_handle).height);
+ 116                             		.loc 1 106 4
+ 117 0082 ED A1 04                		mov.L	16[r10], r1
+ 118 0085 05 00 00 00             		bsr	_mw_get_control_rect
+ 119 0089 EF 15                   		mov.L	r1, r5
+ 120 008b EF 26                   		mov.L	r2, r6
+ 102:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 	mw_gl_rectangle(draw_info,
+ 121                             		.loc 1 102 2
+ 122 008d EF 65                   		mov.L	r6, r5
+ 123 008f 6B 05                   		shar	#16, r5
+ 124 0091 D3 05                   		mov.W	r5, [r0]
+ 125 0093 DF B4                   		mov.W	r11, r4
+ 126 0095 66 03                   		mov	#0, r3
+ 127 0097 66 02                   		mov	#0, r2
+ 128 0099 ED A1 05                		mov.L	20[r10], r1
+ 129 009c 05 00 00 00             		bsr	_mw_gl_rectangle
+ 107:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 
+ 108:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 	if (this_arrow->arrow_down)
+ 130                             		.loc 1 108 16
+ 131 00a0 ED A5 03                		mov.L	12[r10], r5
+ 132 00a3 89 55                   		mov.B	4[r5], r5
+ 133                             		.loc 1 108 5
+ 134 00a5 5B 55                   		movu.B	r5, r5
+ 135 00a7 61 05                   		cmp	#0, r5
+ 136 00a9 20 0F                   		beq	.L4
+ 109:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 	{
+ 110:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 		highlighted_colour = MW_HAL_LCD_BLACK;
+ 137                             		.loc 1 110 22
+ 138 00ab F9 A6 01 00             		mov.L	#0, 4[r10]
+ 111:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 		lowlighted_colour = MW_HAL_LCD_GREY2;
+ 139                             		.loc 1 111 21
+ 140 00af F9 A2 02 E6 E6 E6 00    		mov.L	#0xe6e6e6, 8[r10]
+ 141 00b6 2E 10                   		bra	.L5
+ 142                             	.L4:
+ 112:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 	}
+ 113:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 	else
+ 114:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 	{
+ 115:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 		highlighted_colour = MW_HAL_LCD_WHITE;
+ 143                             		.loc 1 115 22
+ 144 00b8 F9 A2 01 FF FF FF 00    		mov.L	#0xffffff, 4[r10]
+ 116:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 		lowlighted_colour = MW_HAL_LCD_GREY7;
+ 145                             		.loc 1 116 21
+ 146 00bf F9 A2 02 A6 A6 A6 00    		mov.L	#0xa6a6a6, 8[r10]
+ 147                             	.L5:
+ 117:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 	}
+ 118:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 
+ 119:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 	mw_gl_set_fg_colour(highlighted_colour);
+ 148                             		.loc 1 119 2
+ 149 00c6 ED A1 01                		mov.L	4[r10], r1
+ 150 00c9 05 00 00 00             		bsr	_mw_gl_set_fg_colour
+ 120:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 	mw_gl_vline(draw_info, 1, 1, mw_get_control_rect(control_handle).height - 2);
+ 151                             		.loc 1 120 31
+ 152 00cd ED A1 04                		mov.L	16[r10], r1
+ 153 00d0 05 00 00 00             		bsr	_mw_get_control_rect
+ 154 00d4 EF 15                   		mov.L	r1, r5
+ 155 00d6 EF 26                   		mov.L	r2, r6
+ 156                             		.loc 1 120 66
+ 157 00d8 EF 65                   		mov.L	r6, r5
+ 158 00da 6B 05                   		shar	#16, r5
+ 159                             		.loc 1 120 74
+ 160 00dc 60 25                   		sub	#2, r5
+ 161                             		.loc 1 120 2
+ 162 00de DF 54                   		mov.W	r5, r4
+ 163 00e0 66 13                   		mov	#1, r3
+ 164 00e2 66 12                   		mov	#1, r2
+ 165 00e4 ED A1 05                		mov.L	20[r10], r1
+ 166 00e7 05 00 00 00             		bsr	_mw_gl_vline
+ 121:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 	mw_gl_hline(draw_info, 1, mw_get_control_rect(control_handle).width - 2, 1);
+ 167                             		.loc 1 121 28
+ 168 00eb ED A1 04                		mov.L	16[r10], r1
+ 169 00ee 05 00 00 00             		bsr	_mw_get_control_rect
+ 170 00f2 EF 15                   		mov.L	r1, r5
+ 171 00f4 EF 26                   		mov.L	r2, r6
+ 172                             		.loc 1 121 63
+ 173 00f6 DF 65                   		mov.W	r6, r5
+ 174                             		.loc 1 121 70
+ 175 00f8 60 25                   		sub	#2, r5
+ 176                             		.loc 1 121 2
+ 177 00fa 66 14                   		mov	#1, r4
+ 178 00fc DF 53                   		mov.W	r5, r3
+ 179 00fe 66 12                   		mov	#1, r2
+ 180 0100 ED A1 05                		mov.L	20[r10], r1
+ 181 0103 05 00 00 00             		bsr	_mw_gl_hline
+ 122:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 	mw_gl_set_fg_colour(lowlighted_colour);
+ 182                             		.loc 1 122 2
+ 183 0107 ED A1 02                		mov.L	8[r10], r1
+ 184 010a 05 00 00 00             		bsr	_mw_gl_set_fg_colour
+ 123:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 	mw_gl_vline(draw_info, mw_get_control_rect(control_handle).width - 2, 1, mw_get_control_rect(contr
+ 185                             		.loc 1 123 25
+ 186 010e ED A1 04                		mov.L	16[r10], r1
+ 187 0111 05 00 00 00             		bsr	_mw_get_control_rect
+ 188 0115 EF 15                   		mov.L	r1, r5
+ 189 0117 EF 26                   		mov.L	r2, r6
+ 190                             		.loc 1 123 60
+ 191 0119 DF 65                   		mov.W	r6, r5
+ 192                             		.loc 1 123 67
+ 193 011b 60 25                   		sub	#2, r5
+ 194                             		.loc 1 123 2
+ 195 011d DF 5B                   		mov.W	r5, r11
+ 196                             		.loc 1 123 75
+ 197 011f ED A1 04                		mov.L	16[r10], r1
+ 198 0122 05 00 00 00             		bsr	_mw_get_control_rect
+ 199 0126 EF 15                   		mov.L	r1, r5
+ 200 0128 EF 26                   		mov.L	r2, r6
+ 201                             		.loc 1 123 110
+ 202 012a EF 65                   		mov.L	r6, r5
+ 203 012c 6B 05                   		shar	#16, r5
+ 204                             		.loc 1 123 118
+ 205 012e 60 25                   		sub	#2, r5
+ 206                             		.loc 1 123 2
+ 207 0130 DF 54                   		mov.W	r5, r4
+ 208 0132 66 13                   		mov	#1, r3
+ 209 0134 DF B2                   		mov.W	r11, r2
+ 210 0136 ED A1 05                		mov.L	20[r10], r1
+ 211 0139 05 00 00 00             		bsr	_mw_gl_vline
+ 124:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 	mw_gl_hline(draw_info, 1, mw_get_control_rect(control_handle).width - 2, mw_get_control_rect(contr
+ 212                             		.loc 1 124 28
+ 213 013d ED A1 04                		mov.L	16[r10], r1
+ 214 0140 05 00 00 00             		bsr	_mw_get_control_rect
+ 215 0144 EF 15                   		mov.L	r1, r5
+ 216 0146 EF 26                   		mov.L	r2, r6
+ 217                             		.loc 1 124 63
+ 218 0148 DF 65                   		mov.W	r6, r5
+ 219                             		.loc 1 124 70
+ 220 014a 60 25                   		sub	#2, r5
+ 221                             		.loc 1 124 2
+ 222 014c DF 5B                   		mov.W	r5, r11
+ 223                             		.loc 1 124 75
+ 224 014e ED A1 04                		mov.L	16[r10], r1
+ 225 0151 05 00 00 00             		bsr	_mw_get_control_rect
+ 226 0155 EF 15                   		mov.L	r1, r5
+ 227 0157 EF 26                   		mov.L	r2, r6
+ 228                             		.loc 1 124 110
+ 229 0159 EF 65                   		mov.L	r6, r5
+ 230 015b 6B 05                   		shar	#16, r5
+ 231                             		.loc 1 124 118
+ 232 015d 60 25                   		sub	#2, r5
+ 233                             		.loc 1 124 2
+ 234 015f DF 54                   		mov.W	r5, r4
+ 235 0161 DF B3                   		mov.W	r11, r3
+ 236 0163 66 12                   		mov	#1, r2
+ 237 0165 ED A1 05                		mov.L	20[r10], r1
+ 238 0168 05 00 00 00             		bsr	_mw_gl_hline
+ 125:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 
+ 126:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 	if ((mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_LARGE_SIZE) == MW_CONTROL_FLAG_LARGE_S
+ 239                             		.loc 1 126 7
+ 240 016c ED A1 04                		mov.L	16[r10], r1
+ 241 016f 05 00 00 00             		bsr	_mw_get_control_flags
+ 242 0173 EF 15                   		mov.L	r1, r5
+ 243                             		.loc 1 126 44
+ 244 0175 5F 55                   		movu.W	r5, r5
+ 245 0177 64 85                   		and	#8, r5
+ 246                             		.loc 1 126 5
+ 247 0179 61 85                   		cmp	#8, r5
+ 248 017b 21 2F                   		bne	.L6
+ 127:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 	{
+ 128:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 		(void)memcpy((shape_x), (shape_large_x_const), (sizeof(shape_x)));
+ 249                             		.loc 1 128 9
+ 250 017d FB 52 00 00 00 00       		mov.L	#_shape_x, r5
+ 251 0183 FB 42 00 00 00 00       		mov.L	#_shape_large_x_const, r4
+ 252 0189 EC 43                   		mov.L	[r4], r3
+ 253 018b E3 53                   		mov.L	r3, [r5]
+ 254 018d 98 C4                   		mov.W	4[r4], r4
+ 255 018f 90 D4                   		mov.W	r4, 4[r5]
+ 129:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 		(void)memcpy((shape_y), (shape_large_y_const), (sizeof(shape_y)));
+ 256                             		.loc 1 129 9
+ 257 0191 FB 52 00 00 00 00       		mov.L	#_shape_y, r5
+ 258 0197 FB 42 00 00 00 00       		mov.L	#_shape_large_y_const, r4
+ 259 019d EC 43                   		mov.L	[r4], r3
+ 260 019f E3 53                   		mov.L	r3, [r5]
+ 261 01a1 98 C4                   		mov.W	4[r4], r4
+ 262 01a3 90 D4                   		mov.W	r4, 4[r5]
+ 130:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 		arrow_size = MW_UI_ARROW_LARGE_SIZE;
+ 263                             		.loc 1 130 14
+ 264 01a5 F8 A5 1E                		mov.W	#30, [r10]
+ 265 01a8 2E 2D                   		bra	.L7
+ 266                             	.L6:
+ 131:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 	}
+ 132:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 	else
+ 133:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 	{
+ 134:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 		(void)memcpy((shape_x), (shape_x_const), (sizeof(shape_x)));
+ 267                             		.loc 1 134 9
+ 268 01aa FB 52 00 00 00 00       		mov.L	#_shape_x, r5
+ 269 01b0 FB 42 00 00 00 00       		mov.L	#_shape_x_const, r4
+ 270 01b6 EC 43                   		mov.L	[r4], r3
+ 271 01b8 E3 53                   		mov.L	r3, [r5]
+ 272 01ba 98 C4                   		mov.W	4[r4], r4
+ 273 01bc 90 D4                   		mov.W	r4, 4[r5]
+ 135:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 		(void)memcpy((shape_y), (shape_y_const), (sizeof(shape_y)));
+ 274                             		.loc 1 135 9
+ 275 01be FB 52 00 00 00 00       		mov.L	#_shape_y, r5
+ 276 01c4 FB 42 00 00 00 00       		mov.L	#_shape_y_const, r4
+ 277 01ca EC 43                   		mov.L	[r4], r3
+ 278 01cc E3 53                   		mov.L	r3, [r5]
+ 279 01ce 98 C4                   		mov.W	4[r4], r4
+ 280 01d0 90 D4                   		mov.W	r4, 4[r5]
+ 136:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 		arrow_size = MW_UI_ARROW_SIZE;
+ 281                             		.loc 1 136 14
+ 282 01d2 F8 A5 0F                		mov.W	#15, [r10]
+ 283                             	.L7:
+ 137:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 	}
+ 138:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 	mw_gl_rotate_shape((uint8_t)ARROW_POINTS, shape_x, shape_y, (int16_t)this_arrow->mw_ui_arrow_direc
+ 284                             		.loc 1 138 81
+ 285 01d5 ED A5 03                		mov.L	12[r10], r5
+ 286 01d8 EC 55                   		mov.L	[r5], r5
+ 287                             		.loc 1 138 2
+ 288 01da DF 54                   		mov.W	r5, r4
+ 289 01dc FB 32 00 00 00 00       		mov.L	#_shape_y, r3
+ 290 01e2 FB 22 00 00 00 00       		mov.L	#_shape_x, r2
+ 291 01e8 66 31                   		mov	#3, r1
+ 292 01ea 05 00 00 00             		bsr	_mw_gl_rotate_shape
+ 139:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 
+ 140:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 	if (this_arrow->arrow_down)
+ 293                             		.loc 1 140 16
+ 294 01ee ED A5 03                		mov.L	12[r10], r5
+ 295 01f1 89 55                   		mov.B	4[r5], r5
+ 296                             		.loc 1 140 5
+ 297 01f3 5B 55                   		movu.B	r5, r5
+ 298 01f5 61 05                   		cmp	#0, r5
+ 299 01f7 20 12                   		beq	.L8
+ 141:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 	{
+ 142:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 		arrow_offset = arrow_size / 2 + 1;
+ 300                             		.loc 1 142 33
+ 301 01f9 DC A5                   		mov.W	[r10], r5
+ 302 01fb FD 9F 54                		shlr	#31, r5, r4
+ 303 01fe 4B 45                   		add	r4, r5
+ 304 0200 6A 15                   		shar	#1, r5
+ 305 0202 62 15                   		add	#1, r5
+ 306                             		.loc 1 142 16
+ 307 0204 D7 A5 01                		mov.W	r5, 2[r10]
+ 308 0207 2E 0E                   		bra	.L9
+ 309                             	.L8:
+ 143:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 	}
+ 144:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 	else
+ 145:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 	{
+ 146:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 		arrow_offset = arrow_size / 2;
+ 310                             		.loc 1 146 16
+ 311 0209 DC A5                   		mov.W	[r10], r5
+ 312 020b FD 9F 54                		shlr	#31, r5, r4
+ 313 020e 4B 45                   		add	r4, r5
+ 314 0210 6A 15                   		shar	#1, r5
+ 315 0212 D7 A5 01                		mov.W	r5, 2[r10]
+ 316                             	.L9:
+ 147:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 	}
+ 148:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 
+ 149:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 	if ((mw_get_control_flags(control_handle) & MW_CONTROL_FLAG_IS_ENABLED) == MW_CONTROL_FLAG_IS_ENAB
+ 317                             		.loc 1 149 7
+ 318 0215 ED A1 04                		mov.L	16[r10], r1
+ 319 0218 05 00 00 00             		bsr	_mw_get_control_flags
+ 320 021c EF 15                   		mov.L	r1, r5
+ 321                             		.loc 1 149 44
+ 322 021e 5F 55                   		movu.W	r5, r5
+ 323 0220 64 25                   		and	#2, r5
+ 324                             		.loc 1 149 5
+ 325 0222 61 25                   		cmp	#2, r5
+ 326 0224 19                      		bne	.L10
+ 150:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 	{
+ 151:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 		mw_gl_set_solid_fill_colour(MW_HAL_LCD_BLACK);
+ 327                             		.loc 1 151 3
+ 328 0225 66 01                   		mov.L	#0, r1
+ 329 0227 05 00 00 00             		bsr	_mw_gl_set_solid_fill_colour
+ 330 022b 2E 0C                   		bra	.L11
+ 331                             	.L10:
+ 152:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 	}
+ 153:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 	else
+ 154:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 	{
+ 155:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 		mw_gl_set_solid_fill_colour(MW_CONTROL_DOWN_COLOUR);
+ 332                             		.loc 1 155 3
+ 333 022d FB 12 CC CC CC 00       		mov.L	#0xcccccc, r1
+ 334 0233 05 00 00 00             		bsr	_mw_gl_set_solid_fill_colour
+ 335                             	.L11:
+ 156:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 	}
+ 157:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 	mw_gl_set_fill(MW_GL_FILL);
+ 336                             		.loc 1 157 2
+ 337 0237 66 11                   		mov.L	#1, r1
+ 338 0239 05 00 00 00             		bsr	_mw_gl_set_fill
+ 158:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 	mw_gl_set_border(MW_GL_BORDER_ON);
+ 339                             		.loc 1 158 2
+ 340 023d 66 11                   		mov.L	#1, r1
+ 341 023f 05 00 00 00             		bsr	_mw_gl_set_border
+ 159:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 	mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
+ 342                             		.loc 1 159 2
+ 343 0243 66 01                   		mov.L	#0, r1
+ 344 0245 05 00 00 00             		bsr	_mw_gl_set_fg_colour
+ 160:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 	mw_gl_set_line(MW_GL_SOLID_LINE);
+ 345                             		.loc 1 160 2
+ 346 0249 FB 1E FF FF 00          		mov.L	#0xffff, r1
+ 347 024e 05 00 00 00             		bsr	_mw_gl_set_line
+ 161:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 
+ 162:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 	mw_gl_poly(draw_info,
+ 348                             		.loc 1 162 2
+ 349 0252 DD A5 01                		mov.W	2[r10], r5
+ 350 0255 90 0D                   		mov.W	r5, 2[r0]
+ 351 0257 DD A5 01                		mov.W	2[r10], r5
+ 352 025a D3 05                   		mov.W	r5, [r0]
+ 353 025c FB 42 00 00 00 00       		mov.L	#_shape_y, r4
+ 354 0262 FB 32 00 00 00 00       		mov.L	#_shape_x, r3
+ 355 0268 66 32                   		mov	#3, r2
+ 356 026a ED A1 05                		mov.L	20[r10], r1
+ 357 026d 05 00 00 00             		bsr	_mw_gl_poly
+ 163:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 			(uint8_t)ARROW_POINTS,
+ 164:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 			shape_x,
+ 165:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 			shape_y,
+ 166:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 			arrow_offset,
+ 167:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 			arrow_offset);
+ 168:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** }
+ 358                             		.loc 1 168 1
+ 359 0271 03                      		nop
+ 360 0272 3F 6B 0D                		rtsd	#52, r6-r11
+ 361                             	.LFE0:
+ 363                             		.section	.text.arrow_message_function,"ax",@progbits
+ 365                             	_arrow_message_function:
+ 366                             	.LFB1:
+ 169:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 
+ 170:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** /**
+ 171:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c ****  * Control message handler called by the window manager.
+ 172:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c ****  *
+ 173:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c ****  * @param message The message to be processed
+ 174:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c ****  */
+ 175:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** static void arrow_message_function(const mw_message_t *message)
+ 176:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** {
+ 367                             		.loc 1 176 1
+ 368 0000 7E AA                   		push.l	r10
+ 369                             	.LCFI3:
+ 370 0002 7E A6                   		push.l	r6
+ 371                             	.LCFI4:
+ 372 0004 71 0A F8                		add	#-8, r0, r10
+ 373                             	.LCFI5:
+ 374 0007 71 A0 F8                		add	#-8, r10, r0
+ 375                             	.LCFI6:
+ 376 000a E7 A1 01                		mov.L	r1, 4[r10]
+ 177:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 	mw_ui_arrow_data_t *this_arrow = (mw_ui_arrow_data_t*)mw_get_control_instance_data(message->recipi
+ 377                             		.loc 1 177 56
+ 378 000d ED A5 01                		mov.L	4[r10], r5
+ 379 0010 A8 5D                   		mov.L	4[r5], r5
+ 380 0012 EF 51                   		mov.L	r5, r1
+ 381 0014 05 00 00 00             		bsr	_mw_get_control_instance_data
+ 382 0018 E3 A1                   		mov.L	r1, [r10]
+ 178:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 
+ 179:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 	MW_ASSERT(message != (void*)0, "Null pointer argument");
+ 383                             		.loc 1 179 2
+ 384 001a ED A5 01                		mov.L	4[r10], r5
+ 385 001d 61 05                   		cmp	#0, r5
+ 386 001f FC DB 51                		scne.L	r5
+ 387 0022 FB 42 00 00 00 00       		mov.L	#.LC0, r4
+ 388 0028 75 43 B3                		mov.L	#0xb3, r3
+ 389 002b FB 22 00 00 00 00       		mov.L	#___func__.2975, r2
+ 390 0031 CF 51                   		mov.B	r5, r1
+ 391 0033 05 00 00 00             		bsr	_mw_debug_print_assert
+ 180:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 
+ 181:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 	switch (message->message_id)
+ 392                             		.loc 1 181 17
+ 393 0037 ED A5 01                		mov.L	4[r10], r5
+ 394 003a A8 D5                   		mov.L	8[r5], r5
+ 395                             		.loc 1 181 2
+ 396 003c 75 55 15                		cmp	#21, r5
+ 397 003f 20 63                   		beq	.L13
+ 398 0041 75 55 15                		cmp	#21, r5
+ 399 0044 24 0F                   		bgtu	.L14
+ 400 0046 61 D5                   		cmp	#13, r5
+ 401 0048 20 18                   		beq	.L15
+ 402 004a 75 55 14                		cmp	#20, r5
+ 403 004d 3A BB 00                		beq	.L16
+ 182:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 	{
+ 183:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 	case MW_CONTROL_CREATED_MESSAGE:
+ 184:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 		/* initialise the control */			
+ 185:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 		this_arrow->arrow_down = false;
+ 186:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 		break;
+ 187:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 
+ 188:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 	case MW_TIMER_MESSAGE:
+ 189:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 		/* set arrow pressed to false, send the control response message and repaint the control */
+ 190:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 		this_arrow->arrow_down = false;
+ 191:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 		mw_post_message(MW_ARROW_PRESSED_MESSAGE,
+ 192:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 				message->recipient_handle,
+ 193:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 				mw_get_control_parent_window_handle(message->recipient_handle),
+ 194:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 				(uint32_t)this_arrow->mw_ui_arrow_direction,
+ 195:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 				NULL,
+ 196:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 				MW_WINDOW_MESSAGE);
+ 197:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 		mw_paint_control(message->recipient_handle);
+ 198:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 		break;
+ 199:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 
+ 200:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 	case MW_TOUCH_DRAG_MESSAGE:
+ 201:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 	case MW_TOUCH_HOLD_DOWN_MESSAGE:
+ 202:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 		mw_cancel_timer(this_arrow->timer_handle);
+ 203:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 		this_arrow->timer_handle = mw_set_timer(mw_tick_counter + MW_CONTROL_DOWN_TIME, message->recipien
+ 204:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 		if (mw_tick_counter - this_arrow->touch_down_time > MW_HOLD_DOWN_DELAY_TICKS)
+ 205:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 		{
+ 206:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 			mw_post_message(MW_ARROW_PRESSED_MESSAGE,
+ 207:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 					message->recipient_handle,
+ 208:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 					mw_get_control_parent_window_handle(message->recipient_handle),
+ 209:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 					(uint32_t)this_arrow->mw_ui_arrow_direction,
+ 210:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 					NULL,
+ 211:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 					MW_WINDOW_MESSAGE);
+ 212:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 		}
+ 213:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 		break;
+ 214:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 
+ 215:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 	case MW_TOUCH_DOWN_MESSAGE:
+ 216:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 		/* handle a touch down event within this control */	
+ 217:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 		if ((mw_get_control_flags(message->recipient_handle) & MW_CONTROL_FLAG_IS_ENABLED) == MW_CONTROL_
+ 218:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 		{
+ 219:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 			this_arrow->timer_handle = mw_set_timer(mw_tick_counter + MW_CONTROL_DOWN_TIME, message->recipie
+ 220:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 			this_arrow->arrow_down = true;
+ 221:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 			mw_paint_control(message->recipient_handle);
+ 222:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 			this_arrow->touch_down_time = mw_tick_counter;
+ 223:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 		}
+ 224:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 		break;
+ 225:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 
+ 226:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 	default:
+ 227:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 		/* keep MISRA happy */
+ 228:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 		break;
+ 404                             		.loc 1 228 3
+ 405 0050 38 0E 01                		bra	.L19
+ 406                             	.L14:
+ 181:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 	{
+ 407                             		.loc 1 181 2
+ 408 0053 75 55 17                		cmp	#23, r5
+ 409 0056 20 4C                   		beq	.L13
+ 410 0058 75 55 19                		cmp	#25, r5
+ 411 005b 20 0D                   		beq	.L18
+ 412                             		.loc 1 228 3
+ 413 005d 38 01 01                		bra	.L19
+ 414                             	.L15:
+ 185:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 		break;
+ 415                             		.loc 1 185 26
+ 416 0060 EC A5                   		mov.L	[r10], r5
+ 417 0062 3C 54 00                		mov.B	#0, 4[r5]
+ 186:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 
+ 418                             		.loc 1 186 3
+ 419 0065 38 F9 00                		bra	.L19
+ 420                             	.L18:
+ 190:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 		mw_post_message(MW_ARROW_PRESSED_MESSAGE,
+ 421                             		.loc 1 190 26
+ 422 0068 EC A5                   		mov.L	[r10], r5
+ 423 006a 3C 54 00                		mov.B	#0, 4[r5]
+ 191:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 				message->recipient_handle,
+ 424                             		.loc 1 191 3
+ 425 006d ED A5 01                		mov.L	4[r10], r5
+ 426 0070 A8 5E                   		mov.L	4[r5], r6
+ 427 0072 ED A5 01                		mov.L	4[r10], r5
+ 428 0075 A8 5D                   		mov.L	4[r5], r5
+ 429 0077 EF 51                   		mov.L	r5, r1
+ 430 0079 05 00 00 00             		bsr	_mw_get_control_parent_window_handle
+ 431 007d EF 13                   		mov.L	r1, r3
+ 194:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 				NULL,
+ 432                             		.loc 1 194 25
+ 433 007f EC A5                   		mov.L	[r10], r5
+ 434 0081 EC 55                   		mov.L	[r5], r5
+ 191:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 				message->recipient_handle,
+ 435                             		.loc 1 191 3
+ 436 0083 3E 01 00                		mov.L	#0, 4[r0]
+ 437 0086 F8 06 00                		mov.L	#0, [r0]
+ 438 0089 EF 54                   		mov.L	r5, r4
+ 439 008b EF 62                   		mov.L	r6, r2
+ 440 008d 75 41 23                		mov.L	#35, r1
+ 441 0090 05 00 00 00             		bsr	_mw_post_message
+ 197:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 		break;
+ 442                             		.loc 1 197 3
+ 443 0094 ED A5 01                		mov.L	4[r10], r5
+ 444 0097 A8 5D                   		mov.L	4[r5], r5
+ 445 0099 EF 51                   		mov.L	r5, r1
+ 446 009b 05 00 00 00             		bsr	_mw_paint_control
+ 198:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 
+ 447                             		.loc 1 198 3
+ 448 009f 38 BF 00                		bra	.L19
+ 449                             	.L13:
+ 202:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 		this_arrow->timer_handle = mw_set_timer(mw_tick_counter + MW_CONTROL_DOWN_TIME, message->recipien
+ 450                             		.loc 1 202 3
+ 451 00a2 EC A5                   		mov.L	[r10], r5
+ 452 00a4 A8 D5                   		mov.L	8[r5], r5
+ 453 00a6 EF 51                   		mov.L	r5, r1
+ 454 00a8 05 00 00 00             		bsr	_mw_cancel_timer
+ 203:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 		if (mw_tick_counter - this_arrow->touch_down_time > MW_HOLD_DOWN_DELAY_TICKS)
+ 455                             		.loc 1 203 30
+ 456 00ac FB 52 00 00 00 00       		mov.L	#_mw_tick_counter, r5
+ 457 00b2 EC 55                   		mov.L	[r5], r5
+ 458 00b4 71 54 04                		add	#4, r5, r4
+ 459 00b7 ED A5 01                		mov.L	4[r10], r5
+ 460 00ba A8 5D                   		mov.L	4[r5], r5
+ 461 00bc 66 13                   		mov.L	#1, r3
+ 462 00be EF 52                   		mov.L	r5, r2
+ 463 00c0 EF 41                   		mov.L	r4, r1
+ 464 00c2 05 00 00 00             		bsr	_mw_set_timer
+ 465 00c6 EF 14                   		mov.L	r1, r4
+ 203:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 		if (mw_tick_counter - this_arrow->touch_down_time > MW_HOLD_DOWN_DELAY_TICKS)
+ 466                             		.loc 1 203 28
+ 467 00c8 EC A5                   		mov.L	[r10], r5
+ 468 00ca A0 D4                   		mov.L	r4, 8[r5]
+ 204:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 		{
+ 469                             		.loc 1 204 23
+ 470 00cc FB 52 00 00 00 00       		mov.L	#_mw_tick_counter, r5
+ 471 00d2 EC 54                   		mov.L	[r5], r4
+ 204:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 		{
+ 472                             		.loc 1 204 35
+ 473 00d4 EC A5                   		mov.L	[r10], r5
+ 474 00d6 A8 DD                   		mov.L	12[r5], r5
+ 204:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 		{
+ 475                             		.loc 1 204 23
+ 476 00d8 FF 05 54                		sub	r5, r4, r5
+ 204:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 		{
+ 477                             		.loc 1 204 6
+ 478 00db 61 A5                   		cmp	#10, r5
+ 479 00dd 25 7D                   		bleu	.L22
+ 206:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 					message->recipient_handle,
+ 480                             		.loc 1 206 4
+ 481 00df ED A5 01                		mov.L	4[r10], r5
+ 482 00e2 A8 5E                   		mov.L	4[r5], r6
+ 483 00e4 ED A5 01                		mov.L	4[r10], r5
+ 484 00e7 A8 5D                   		mov.L	4[r5], r5
+ 485 00e9 EF 51                   		mov.L	r5, r1
+ 486 00eb 05 00 00 00             		bsr	_mw_get_control_parent_window_handle
+ 487 00ef EF 13                   		mov.L	r1, r3
+ 209:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 					NULL,
+ 488                             		.loc 1 209 26
+ 489 00f1 EC A5                   		mov.L	[r10], r5
+ 490 00f3 EC 55                   		mov.L	[r5], r5
+ 206:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 					message->recipient_handle,
+ 491                             		.loc 1 206 4
+ 492 00f5 3E 01 00                		mov.L	#0, 4[r0]
+ 493 00f8 F8 06 00                		mov.L	#0, [r0]
+ 494 00fb EF 54                   		mov.L	r5, r4
+ 495 00fd EF 62                   		mov.L	r6, r2
+ 496 00ff 75 41 23                		mov.L	#35, r1
+ 497 0102 05 00 00 00             		bsr	_mw_post_message
+ 213:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 
+ 498                             		.loc 1 213 3
+ 499 0106 2E 54                   		bra	.L22
+ 500                             	.L16:
+ 217:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 		{
+ 501                             		.loc 1 217 8
+ 502 0108 ED A5 01                		mov.L	4[r10], r5
+ 503 010b A8 5D                   		mov.L	4[r5], r5
+ 504 010d EF 51                   		mov.L	r5, r1
+ 505 010f 05 00 00 00             		bsr	_mw_get_control_flags
+ 506 0113 EF 15                   		mov.L	r1, r5
+ 217:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 		{
+ 507                             		.loc 1 217 56
+ 508 0115 5F 55                   		movu.W	r5, r5
+ 509 0117 64 25                   		and	#2, r5
+ 217:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 		{
+ 510                             		.loc 1 217 6
+ 511 0119 61 25                   		cmp	#2, r5
+ 512 011b 21 42                   		bne	.L23
+ 219:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 			this_arrow->arrow_down = true;
+ 513                             		.loc 1 219 31
+ 514 011d FB 52 00 00 00 00       		mov.L	#_mw_tick_counter, r5
+ 515 0123 EC 55                   		mov.L	[r5], r5
+ 516 0125 71 54 04                		add	#4, r5, r4
+ 517 0128 ED A5 01                		mov.L	4[r10], r5
+ 518 012b A8 5D                   		mov.L	4[r5], r5
+ 519 012d 66 13                   		mov.L	#1, r3
+ 520 012f EF 52                   		mov.L	r5, r2
+ 521 0131 EF 41                   		mov.L	r4, r1
+ 522 0133 05 00 00 00             		bsr	_mw_set_timer
+ 523 0137 EF 14                   		mov.L	r1, r4
+ 219:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 			this_arrow->arrow_down = true;
+ 524                             		.loc 1 219 29
+ 525 0139 EC A5                   		mov.L	[r10], r5
+ 526 013b A0 D4                   		mov.L	r4, 8[r5]
+ 220:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 			mw_paint_control(message->recipient_handle);
+ 527                             		.loc 1 220 27
+ 528 013d EC A5                   		mov.L	[r10], r5
+ 529 013f 3C 54 01                		mov.B	#1, 4[r5]
+ 221:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 			this_arrow->touch_down_time = mw_tick_counter;
+ 530                             		.loc 1 221 4
+ 531 0142 ED A5 01                		mov.L	4[r10], r5
+ 532 0145 A8 5D                   		mov.L	4[r5], r5
+ 533 0147 EF 51                   		mov.L	r5, r1
+ 534 0149 05 00 00 00             		bsr	_mw_paint_control
+ 222:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 		}
+ 535                             		.loc 1 222 32
+ 536 014d FB 52 00 00 00 00       		mov.L	#_mw_tick_counter, r5
+ 537 0153 EC 54                   		mov.L	[r5], r4
+ 538 0155 EC A5                   		mov.L	[r10], r5
+ 539 0157 A0 DC                   		mov.L	r4, 12[r5]
+ 224:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 
+ 540                             		.loc 1 224 3
+ 541 0159 0C                      		bra	.L23
+ 542                             	.L22:
+ 213:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 
+ 543                             		.loc 1 213 3
+ 544 015a 03                      		nop
+ 545 015b 2E 03                   		bra	.L19
+ 546                             	.L23:
+ 224:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 
+ 547                             		.loc 1 224 3
+ 548 015d 03                      		nop
+ 549                             	.L19:
+ 229:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 	}
+ 230:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** }
+ 550                             		.loc 1 230 1
+ 551 015e 03                      		nop
+ 552 015f 71 00 10                		add	#16, r0
+ 553 0162 7E B6                   		pop	r6
+ 554 0164 7E BA                   		pop	r10
+ 555 0166 02                      		rts
+ 556                             	.LFE1:
+ 558                             		.section	.text.mw_ui_arrow_add_new,"ax",@progbits
+ 559                             		.global	_mw_ui_arrow_add_new
+ 561                             	_mw_ui_arrow_add_new:
+ 562                             	.LFB2:
+ 231:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 
+ 232:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** /***********************
+ 233:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** *** GLOBAL FUNCTIONS ***
+ 234:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** ***********************/
+ 235:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 
+ 236:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** mw_handle_t mw_ui_arrow_add_new(int16_t x,
+ 237:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 		int16_t y,
+ 238:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 		mw_handle_t parent_handle,
+ 239:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 		uint16_t flags,
+ 240:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 		mw_ui_arrow_data_t *arrow_instance_data)
+ 241:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** {
+ 563                             		.loc 1 241 1
+ 564 0000 7E AA                   		push.l	r10
+ 565                             	.LCFI7:
+ 566 0002 7E A6                   		push.l	r6
+ 567                             	.LCFI8:
+ 568 0004 71 0A E8                		add	#-24, r0, r10
+ 569                             	.LCFI9:
+ 570 0007 71 A0 F8                		add	#-8, r10, r0
+ 571                             	.LCFI10:
+ 572 000a 75 46 24                		mov.L	#36, r6
+ 573 000d 4B A6                   		add	r10, r6
+ 574 000f D7 A1 04                		mov.W	r1, 8[r10]
+ 575 0012 D7 A2 05                		mov.W	r2, 10[r10]
+ 576 0015 E7 A3 03                		mov.L	r3, 12[r10]
+ 577 0018 D7 A4 08                		mov.W	r4, 16[r10]
+ 242:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 	mw_util_rect_t r;
+ 243:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 
+ 244:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 	if ((flags & MW_CONTROL_FLAG_LARGE_SIZE) == MW_CONTROL_FLAG_LARGE_SIZE)
+ 578                             		.loc 1 244 13
+ 579 001b 5D A5 08                		movu.W	16[r10], r5
+ 580 001e 64 85                   		and	#8, r5
+ 581                             		.loc 1 244 5
+ 582 0020 61 05                   		cmp	#0, r5
+ 583 0022 20 16                   		beq	.L25
+ 245:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 	{
+ 246:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 		mw_util_set_rect(&r, x, y, MW_UI_ARROW_LARGE_SIZE + 1, MW_UI_ARROW_LARGE_SIZE + 1);
+ 584                             		.loc 1 246 3
+ 585 0024 F8 05 1F                		mov.W	#31, [r0]
+ 586 0027 75 44 1F                		mov	#31, r4
+ 587 002a DD A3 05                		mov.W	10[r10], r3
+ 588 002d DD A2 04                		mov.W	8[r10], r2
+ 589 0030 EF A1                   		mov.L	r10, r1
+ 590 0032 05 00 00 00             		bsr	_mw_util_set_rect
+ 591 0036 2E 14                   		bra	.L26
+ 592                             	.L25:
+ 247:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 	}
+ 248:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 	else
+ 249:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 	{
+ 250:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 		mw_util_set_rect(&r, x, y, MW_UI_ARROW_SIZE + 1, MW_UI_ARROW_SIZE + 1);
+ 593                             		.loc 1 250 3
+ 594 0038 F8 05 10                		mov.W	#16, [r0]
+ 595 003b 75 44 10                		mov	#16, r4
+ 596 003e DD A3 05                		mov.W	10[r10], r3
+ 597 0041 DD A2 04                		mov.W	8[r10], r2
+ 598 0044 EF A1                   		mov.L	r10, r1
+ 599 0046 05 00 00 00             		bsr	_mw_util_set_rect
+ 600                             	.L26:
+ 251:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 	}
+ 252:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 
+ 253:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 	return (mw_add_control(&r,
+ 601                             		.loc 1 253 10
+ 602 004a EC 65                   		mov.L	[r6], r5
+ 603 004c A0 0D                   		mov.L	r5, 4[r0]
+ 604 004e DD A5 08                		mov.W	16[r10], r5
+ 605 0051 D3 05                   		mov.W	r5, [r0]
+ 606 0053 FB 42 00 00 00 00       		mov.L	#_arrow_message_function, r4
+ 607 0059 FB 32 00 00 00 00       		mov.L	#_arrow_paint_function, r3
+ 608 005f ED A2 03                		mov.L	12[r10], r2
+ 609 0062 EF A1                   		mov.L	r10, r1
+ 610 0064 05 00 00 00             		bsr	_mw_add_control
+ 611 0068 EF 15                   		mov.L	r1, r5
+ 254:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 			parent_handle,
+ 255:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 			arrow_paint_function,
+ 256:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 			arrow_message_function,
+ 257:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 			flags,
+ 258:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** 			arrow_instance_data));
+ 259:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_arrow.c **** }
+ 612                             		.loc 1 259 1
+ 613 006a EF 51                   		mov.L	r5, r1
+ 614 006c 71 00 20                		add	#32, r0
+ 615 006f 7E B6                   		pop	r6
+ 616 0071 7E BA                   		pop	r10
+ 617 0073 02                      		rts
+ 618                             	.LFE2:
+ 620                             		.section	.rodata.__func__.2970,"a"
+ 623                             	___func__.2970:
+ 624 0000 61 72 72 6F 77 5F 70 61 		.string	"arrow_paint_function"
+ 624      69 6E 74 5F 66 75 6E 63 
+ 624      74 69 6F 6E 00 
+ 625                             		.section	.rodata.__func__.2975,"a"
+ 628                             	___func__.2975:
+ 629 0000 61 72 72 6F 77 5F 6D 65 		.string	"arrow_message_function"
+ 629      73 73 61 67 65 5F 66 75 
+ 629      6E 63 74 69 6F 6E 00 
+ 742                             	.Letext0:
+ 743                             		.file 2 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\rx-el
+ 744                             		.file 3 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\rx-el
+ 745                             		.file 4 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\rx-el
+ 746                             		.file 5 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\lib\\
+ 747                             		.file 6 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\rx-el
+ 748                             		.file 7 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\rx-el
+ 749                             		.file 8 "C:\\Users\\John\\Desktop\\workspace\\miniwinwm\\MiniWin/miniwin_utilities.h"
+ 750                             		.file 9 "C:\\Users\\John\\Desktop\\workspace\\miniwinwm\\MiniWin/hal/hal_lcd.h"
+ 751                             		.file 10 "C:\\Users\\John\\Desktop\\workspace\\miniwinwm\\MiniWin/gl/gl.h"
+ 752                             		.file 11 "C:\\Users\\John\\Desktop\\workspace\\miniwinwm\\MiniWin/bitmaps/mw_bitmaps.h"
+ 753                             		.file 12 "C:\\Users\\John\\Desktop\\workspace\\miniwinwm\\MiniWin/hal/hal_timer.h"
+ 754                             		.file 13 "C:\\Users\\John\\Desktop\\workspace\\miniwinwm\\MiniWin/miniwin.h"
+ 755                             		.file 14 "C:\\Users\\John\\Desktop\\workspace\\miniwinwm\\MiniWin/ui/ui_arrow.h"

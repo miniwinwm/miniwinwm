@@ -1,0 +1,40 @@
+   1                             		.file	"close_icon.c"
+   2                             		.section P,"ax"
+   3                             	.Ltext0:
+   4                             		.global	_mw_bitmaps_close_icon
+   5                             		.section	.rodata.mw_bitmaps_close_icon,"a"
+   8                             	_mw_bitmaps_close_icon:
+   9 0000 FF                      		.byte	-1
+  10 0001 FC                      		.byte	-4
+  11 0002 80                      		.byte	-128
+  12 0003 04                      		.byte	4
+  13 0004 8F                      		.byte	-113
+  14 0005 E4                      		.byte	-28
+  15 0006 A7                      		.byte	-89
+  16 0007 C4                      		.byte	-60
+  17 0008 B3                      		.byte	-77
+  18 0009 94                      		.byte	-108
+  19 000a B9                      		.byte	-71
+  20 000b 34                      		.byte	52
+  21 000c BC                      		.byte	-68
+  22 000d 74                      		.byte	0x74
+  23 000e BC                      		.byte	-68
+  24 000f 74                      		.byte	0x74
+  25 0010 B9                      		.byte	-71
+  26 0011 34                      		.byte	52
+  27 0012 B3                      		.byte	-77
+  28 0013 94                      		.byte	-108
+  29 0014 A7                      		.byte	-89
+  30 0015 C4                      		.byte	-60
+  31 0016 8F                      		.byte	-113
+  32 0017 E4                      		.byte	-28
+  33 0018 80                      		.byte	-128
+  34 0019 04                      		.byte	4
+  35 001a FF                      		.byte	-1
+  36 001b FC                      		.byte	-4
+  37                             		.section P,"ax"
+  38                             	.Letext0:
+  39                             		.file 1 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\rx-el
+  40                             		.file 2 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\rx-el
+  41                             		.file 3 "C:\\Users\\John\\Desktop\\workspace\\miniwinwm\\MiniWin/bitmaps/mw_bitmaps.h"
+  42                             		.file 4 "C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/bitmaps/close_icon.c"

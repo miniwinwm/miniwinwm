@@ -1,0 +1,395 @@
+   1                             		.file	"miniwin_message_queue.c"
+   2                             		.section P,"ax"
+   3                             	.Ltext0:
+   4                             		.section	.bss.message_queue,"aw",@nobits
+   5                             		.balign 4
+   8                             	_message_queue:
+   9 0000 00 00 00 00 00 00 00 00 		.zero	1920
+   9      00 00 00 00 00 00 00 00 
+   9      00 00 00 00 00 00 00 00 
+   9      00 00 00 00 00 00 00 00 
+   9      00 00 00 00 00 00 00 00 
+  10                             		.section	.bss.items_in_queue,"aw",@nobits
+  13                             	_items_in_queue:
+  14 0000 00                      		.zero	1
+  15                             		.section	.bss.next_write_slot,"aw",@nobits
+  18                             	_next_write_slot:
+  19 0000 00                      		.zero	1
+  20                             		.section	.bss.next_read_slot,"aw",@nobits
+  23                             	_next_read_slot:
+  24 0000 00                      		.zero	1
+  25                             		.section	.bss.max_queue_usage,"aw",@nobits
+  28                             	_max_queue_usage:
+  29 0000 00                      		.zero	1
+  30                             		.section C,"a",@progbits
+  31                             		.p2align 2
+  32                             	.LC0:
+  33 0000 4E 75 6C 6C 20 70 6F 69 		.string	"Null pointer argument"
+  33      6E 74 65 72 20 61 72 67 
+  33      75 6D 65 6E 74 00 
+  34                             	.LC1:
+  35 0016 4D 65 73 73 61 67 65 20 		.string	"Message queue full"
+  35      71 75 65 75 65 20 66 75 
+  35      6C 6C 00 
+  36                             		.section	.text.mw_message_queue_insert,"ax",@progbits
+  37                             		.global	_mw_message_queue_insert
+  39                             	_mw_message_queue_insert:
+  40                             	.LFB0:
+  41                             		.file 1 "C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/miniwin_message_queue.c"
+   1:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** /*
+   2:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** 
+   3:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** MIT License
+   4:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** 
+   5:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** Copyright (c) John Blaiklock 2019 miniwin Embedded Window Manager
+   6:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** 
+   7:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** Permission is hereby granted, free of charge, to any person obtaining a copy
+   8:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** of this software and associated documentation files (the "Software"), to deal
+   9:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** in the Software without restriction, including without limitation the rights
+  10:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  11:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** copies of the Software, and to permit persons to whom the Software is
+  12:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** furnished to do so, subject to the following conditions:
+  13:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** 
+  14:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** The above copyright notice and this permission notice shall be included in all
+  15:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** copies or substantial portions of the Software.
+  16:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** 
+  17:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  18:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  19:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  20:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  21:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  22:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  23:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** SOFTWARE.
+  24:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** 
+  25:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** */
+  26:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** 
+  27:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** /***************
+  28:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** *** INCLUDES ***
+  29:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** ***************/
+  30:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** 
+  31:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** #include <stdint.h>
+  32:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** #include <stdbool.h>
+  33:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** #include <string.h>
+  34:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** #include "miniwin.h"
+  35:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** #include "miniwin_message_queue.h"
+  36:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** 
+  37:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** /****************
+  38:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** *** CONSTANTS ***
+  39:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** ****************/
+  40:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** 
+  41:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** /************
+  42:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** *** TYPES ***
+  43:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** ************/
+  44:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** 
+  45:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** /***********************
+  46:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** *** GLOBAL VARIABLES ***
+  47:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** ***********************/
+  48:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** 
+  49:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** /**********************
+  50:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** *** LOCAL VARIABLES ***
+  51:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** **********************/
+  52:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** 
+  53:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** static mw_message_t message_queue[MW_MESSAGE_QUEUE_SIZE];  	/**< Array of structures holding the me
+  54:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** static uint8_t items_in_queue;                              /**< Number of items currently in the q
+  55:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** static uint8_t next_write_slot;                             /**< Place in storage to write next inc
+  56:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** static uint8_t next_read_slot;                              /**< Place in storage to remove next me
+  57:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** #ifndef NDEBUG
+  58:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** static uint8_t max_queue_usage;                             /**< Always increasing value of how ful
+  59:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** #endif
+  60:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** 
+  61:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** /********************************
+  62:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** *** LOCAL FUNCTION PROTOTYPES ***
+  63:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** ********************************/
+  64:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** 
+  65:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** /**********************
+  66:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** *** LOCAL FUNCTIONS ***
+  67:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** **********************/
+  68:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** 
+  69:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** /***********************
+  70:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** *** GLOBAL FUNCTIONS ***
+  71:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** ***********************/
+  72:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** 
+  73:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** bool mw_message_queue_insert(const mw_message_t *incoming_message)
+  74:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** {
+  42                             		.loc 1 74 1
+  43 0000 7E AA                   		push.l	r10
+  44                             	.LCFI0:
+  45 0002 71 0A FC                		add	#-4, r0, r10
+  46                             	.LCFI1:
+  47 0005 EF A0                   		mov.L	r10, r0
+  48 0007 E3 A1                   		mov.L	r1, [r10]
+  75:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** 	/* check pointer */
+  76:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** 	MW_ASSERT(incoming_message != (void*)0, "Null pointer argument");
+  49                             		.loc 1 76 2
+  50 0009 EC A5                   		mov.L	[r10], r5
+  51 000b 61 05                   		cmp	#0, r5
+  52 000d FC DB 51                		scne.L	r5
+  53 0010 FB 42 00 00 00 00       		mov.L	#.LC0, r4
+  54 0016 75 43 4C                		mov.L	#0x4c, r3
+  55 0019 FB 22 00 00 00 00       		mov.L	#___func__.2964, r2
+  56 001f CF 51                   		mov.B	r5, r1
+  57 0021 05 00 00 00             		bsr	_mw_debug_print_assert
+  77:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** 
+  78:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** 	/* check for space in the queue */
+  79:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** 	MW_ASSERT(items_in_queue < MW_MESSAGE_QUEUE_SIZE, "Message queue full");
+  58                             		.loc 1 79 2
+  59 0025 FB 52 00 00 00 00       		mov.L	#_items_in_queue, r5
+  60 002b CC 55                   		mov.B	[r5], r5
+  61 002d 5B 55                   		movu.B	r5, r5
+  62 002f 75 55 4F                		cmp	#0x4f, r5
+  63 0032 FC DB 55                		scleu.L	r5
+  64 0035 FB 42 16 00 00 00       		mov.L	#.LC1, r4
+  65 003b 75 43 4F                		mov.L	#0x4f, r3
+  66 003e FB 22 00 00 00 00       		mov.L	#___func__.2964, r2
+  67 0044 CF 51                   		mov.B	r5, r1
+  68 0046 05 00 00 00             		bsr	_mw_debug_print_assert
+  80:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** 
+  81:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** 	/* there's space so copy in the new message */
+  82:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** 	(void)memcpy((&message_queue[next_write_slot]), (incoming_message), (sizeof(mw_message_t)));
+  69                             		.loc 1 82 30
+  70 004a FB 52 00 00 00 00       		mov.L	#_next_write_slot, r5
+  71 0050 CC 55                   		mov.B	[r5], r5
+  72 0052 5B 55                   		movu.B	r5, r5
+  73                             		.loc 1 82 16
+  74 0054 75 15 18                		mul	#24, r5
+  75 0057 70 55 00 00 00 00       		add	#_message_queue, r5
+  76                             		.loc 1 82 8
+  77 005d 75 43 18                		mov.L	#24, r3
+  78 0060 EC A2                   		mov.L	[r10], r2
+  79 0062 EF 51                   		mov.L	r5, r1
+  80 0064 05 00 00 00             		bsr	_memcpy
+  83:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** 	next_write_slot++;
+  81                             		.loc 1 83 17
+  82 0068 FB 52 00 00 00 00       		mov.L	#_next_write_slot, r5
+  83 006e CC 55                   		mov.B	[r5], r5
+  84 0070 62 15                   		add	#1, r5
+  85 0072 CF 54                   		mov.B	r5, r4
+  86 0074 FB 52 00 00 00 00       		mov.L	#_next_write_slot, r5
+  87 007a C3 54                   		mov.B	r4, [r5]
+  84:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** 	if (next_write_slot == MW_MESSAGE_QUEUE_SIZE)
+  88                             		.loc 1 84 22
+  89 007c FB 52 00 00 00 00       		mov.L	#_next_write_slot, r5
+  90 0082 CC 55                   		mov.B	[r5], r5
+  91                             		.loc 1 84 5
+  92 0084 5B 55                   		movu.B	r5, r5
+  93 0086 75 55 50                		cmp	#0x50, r5
+  94 0089 1A                      		bne	.L2
+  85:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** 	{
+  86:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** 		next_write_slot = 0U;
+  95                             		.loc 1 86 19
+  96 008a FB 52 00 00 00 00       		mov.L	#_next_write_slot, r5
+  97 0090 F8 54 00                		mov.B	#0, [r5]
+  98                             	.L2:
+  87:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** 	}
+  88:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** 
+  89:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** 	items_in_queue++;
+  99                             		.loc 1 89 16
+ 100 0093 FB 52 00 00 00 00       		mov.L	#_items_in_queue, r5
+ 101 0099 CC 55                   		mov.B	[r5], r5
+ 102 009b 62 15                   		add	#1, r5
+ 103 009d CF 54                   		mov.B	r5, r4
+ 104 009f FB 52 00 00 00 00       		mov.L	#_items_in_queue, r5
+ 105 00a5 C3 54                   		mov.B	r4, [r5]
+  90:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** 
+  91:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** 	/* keep a record of how full the queue becomes in debug mode */
+  92:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** #ifndef NDEBUG
+  93:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** 	if (items_in_queue > max_queue_usage)
+ 106                             		.loc 1 93 21
+ 107 00a7 FB 52 00 00 00 00       		mov.L	#_items_in_queue, r5
+ 108 00ad CC 54                   		mov.B	[r5], r4
+ 109 00af FB 52 00 00 00 00       		mov.L	#_max_queue_usage, r5
+ 110 00b5 CC 55                   		mov.B	[r5], r5
+ 111                             		.loc 1 93 5
+ 112 00b7 5B 44                   		movu.B	r4, r4
+ 113 00b9 5B 55                   		movu.B	r5, r5
+ 114 00bb 47 54                   		cmp	r5, r4
+ 115 00bd 25 12                   		bleu	.L3
+  94:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** 	{
+  95:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** 		max_queue_usage = items_in_queue;
+ 116                             		.loc 1 95 19
+ 117 00bf FB 52 00 00 00 00       		mov.L	#_items_in_queue, r5
+ 118 00c5 CC 54                   		mov.B	[r5], r4
+ 119 00c7 FB 52 00 00 00 00       		mov.L	#_max_queue_usage, r5
+ 120 00cd C3 54                   		mov.B	r4, [r5]
+ 121                             	.L3:
+  96:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** 	}
+  97:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** #endif
+  98:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** 
+  99:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** 	return (true);
+ 122                             		.loc 1 99 9
+ 123 00cf 66 15                   		mov	#1, r5
+ 124 00d1 5B 55                   		movu.B	r5, r5
+ 100:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** }
+ 125                             		.loc 1 100 1
+ 126 00d3 EF 51                   		mov.L	r5, r1
+ 127 00d5 3F AA 02                		rtsd	#8, r10-r10
+ 128                             	.LFE0:
+ 130                             		.section	.text.mw_message_queue_remove,"ax",@progbits
+ 131                             		.global	_mw_message_queue_remove
+ 133                             	_mw_message_queue_remove:
+ 134                             	.LFB1:
+ 101:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** 
+ 102:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** bool mw_message_queue_remove(mw_message_t *outgoing_message)
+ 103:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** {
+ 135                             		.loc 1 103 1
+ 136 0000 7E AA                   		push.l	r10
+ 137                             	.LCFI2:
+ 138 0002 71 0A FC                		add	#-4, r0, r10
+ 139                             	.LCFI3:
+ 140 0005 EF A0                   		mov.L	r10, r0
+ 141 0007 E3 A1                   		mov.L	r1, [r10]
+ 104:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** 	MW_ASSERT(outgoing_message != (void*)0, "Null pointer argument");
+ 142                             		.loc 1 104 2
+ 143 0009 EC A5                   		mov.L	[r10], r5
+ 144 000b 61 05                   		cmp	#0, r5
+ 145 000d FC DB 51                		scne.L	r5
+ 146 0010 FB 42 00 00 00 00       		mov.L	#.LC0, r4
+ 147 0016 75 43 68                		mov.L	#0x68, r3
+ 148 0019 FB 22 00 00 00 00       		mov.L	#___func__.2968, r2
+ 149 001f CF 51                   		mov.B	r5, r1
+ 150 0021 05 00 00 00             		bsr	_mw_debug_print_assert
+ 105:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** 
+ 106:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** 	/* check if there is anything in the queue */
+ 107:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** 	if (items_in_queue == 0U)
+ 151                             		.loc 1 107 21
+ 152 0025 FB 52 00 00 00 00       		mov.L	#_items_in_queue, r5
+ 153 002b CC 55                   		mov.B	[r5], r5
+ 154                             		.loc 1 107 5
+ 155 002d 5B 55                   		movu.B	r5, r5
+ 156 002f 61 05                   		cmp	#0, r5
+ 157 0031 1D                      		bne	.L6
+ 108:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** 	{
+ 109:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** 		return (false);
+ 158                             		.loc 1 109 10
+ 159 0032 66 05                   		mov	#0, r5
+ 160 0034 2E 61                   		bra	.L7
+ 161                             	.L6:
+ 110:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** 	}
+ 111:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** 
+ 112:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** 	/* there is an item in the queue so copy it out */
+ 113:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** 	(void)memcpy((outgoing_message), (&message_queue[next_read_slot]), (sizeof(mw_message_t)));
+ 162                             		.loc 1 113 50
+ 163 0036 FB 52 00 00 00 00       		mov.L	#_next_read_slot, r5
+ 164 003c CC 55                   		mov.B	[r5], r5
+ 165 003e 5B 55                   		movu.B	r5, r5
+ 166                             		.loc 1 113 36
+ 167 0040 75 15 18                		mul	#24, r5
+ 168 0043 70 55 00 00 00 00       		add	#_message_queue, r5
+ 169                             		.loc 1 113 8
+ 170 0049 75 43 18                		mov.L	#24, r3
+ 171 004c EF 52                   		mov.L	r5, r2
+ 172 004e EC A1                   		mov.L	[r10], r1
+ 173 0050 05 00 00 00             		bsr	_memcpy
+ 114:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** 	next_read_slot++;
+ 174                             		.loc 1 114 16
+ 175 0054 FB 52 00 00 00 00       		mov.L	#_next_read_slot, r5
+ 176 005a CC 55                   		mov.B	[r5], r5
+ 177 005c 62 15                   		add	#1, r5
+ 178 005e CF 54                   		mov.B	r5, r4
+ 179 0060 FB 52 00 00 00 00       		mov.L	#_next_read_slot, r5
+ 180 0066 C3 54                   		mov.B	r4, [r5]
+ 115:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** 	if (next_read_slot == MW_MESSAGE_QUEUE_SIZE)
+ 181                             		.loc 1 115 21
+ 182 0068 FB 52 00 00 00 00       		mov.L	#_next_read_slot, r5
+ 183 006e CC 55                   		mov.B	[r5], r5
+ 184                             		.loc 1 115 5
+ 185 0070 5B 55                   		movu.B	r5, r5
+ 186 0072 75 55 50                		cmp	#0x50, r5
+ 187 0075 1A                      		bne	.L8
+ 116:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** 	{
+ 117:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** 		next_read_slot = 0U;
+ 188                             		.loc 1 117 18
+ 189 0076 FB 52 00 00 00 00       		mov.L	#_next_read_slot, r5
+ 190 007c F8 54 00                		mov.B	#0, [r5]
+ 191                             	.L8:
+ 118:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** 	}
+ 119:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** 
+ 120:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** 	items_in_queue--;
+ 192                             		.loc 1 120 16
+ 193 007f FB 52 00 00 00 00       		mov.L	#_items_in_queue, r5
+ 194 0085 CC 55                   		mov.B	[r5], r5
+ 195 0087 60 15                   		sub	#1, r5
+ 196 0089 CF 54                   		mov.B	r5, r4
+ 197 008b FB 52 00 00 00 00       		mov.L	#_items_in_queue, r5
+ 198 0091 C3 54                   		mov.B	r4, [r5]
+ 121:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** 
+ 122:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** 	return (true);
+ 199                             		.loc 1 122 9
+ 200 0093 66 15                   		mov	#1, r5
+ 201                             	.L7:
+ 202 0095 5B 55                   		movu.B	r5, r5
+ 123:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** }
+ 203                             		.loc 1 123 1
+ 204 0097 EF 51                   		mov.L	r5, r1
+ 205 0099 3F AA 02                		rtsd	#8, r10-r10
+ 206                             	.LFE1:
+ 208                             		.section C,"a",@progbits
+ 209 0029 00 00 00                		.p2align 2
+ 210                             	.LC2:
+ 211 002c 4F 75 74 20 6F 66 20 62 		.string	"Out of bounds message queue position"
+ 211      6F 75 6E 64 73 20 6D 65 
+ 211      73 73 61 67 65 20 71 75 
+ 211      65 75 65 20 70 6F 73 69 
+ 211      74 69 6F 6E 00 
+ 212 0051 00 00 00                		.section	.text.mw_message_queue_get_ref_to_item_at_position,"ax",@progbits
+ 213                             		.global	_mw_message_queue_get_ref_to_item_at_position
+ 215                             	_mw_message_queue_get_ref_to_item_at_position:
+ 216                             	.LFB2:
+ 124:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** 
+ 125:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** mw_message_t *mw_message_queue_get_ref_to_item_at_position(uint8_t position)
+ 126:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** {
+ 217                             		.loc 1 126 1
+ 218 0000 7E AA                   		push.l	r10
+ 219                             	.LCFI4:
+ 220 0002 71 0A FC                		add	#-4, r0, r10
+ 221                             	.LCFI5:
+ 222 0005 EF A0                   		mov.L	r10, r0
+ 223 0007 C3 A1                   		mov.B	r1, [r10]
+ 127:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** 	MW_ASSERT(position < MW_MESSAGE_QUEUE_SIZE, "Out of bounds message queue position");
+ 224                             		.loc 1 127 2
+ 225 0009 58 A5                   		movu.B	[r10], r5
+ 226 000b 75 55 4F                		cmp	#0x4f, r5
+ 227 000e FC DB 55                		scleu.L	r5
+ 228 0011 FB 42 2C 00 00 00       		mov.L	#.LC2, r4
+ 229 0017 75 43 7F                		mov.L	#0x7f, r3
+ 230 001a FB 22 00 00 00 00       		mov.L	#___func__.2972, r2
+ 231 0020 CF 51                   		mov.B	r5, r1
+ 232 0022 05 00 00 00             		bsr	_mw_debug_print_assert
+ 128:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** 
+ 129:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** 	return (&message_queue[position]);
+ 233                             		.loc 1 129 24
+ 234 0026 58 A5                   		movu.B	[r10], r5
+ 235                             		.loc 1 129 10
+ 236 0028 75 15 18                		mul	#24, r5
+ 237 002b 70 55 00 00 00 00       		add	#_message_queue, r5
+ 130:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_message_queue.c **** }
+ 238                             		.loc 1 130 1
+ 239 0031 EF 51                   		mov.L	r5, r1
+ 240 0033 3F AA 02                		rtsd	#8, r10-r10
+ 241                             	.LFE2:
+ 243                             		.section	.rodata.__func__.2964,"a"
+ 246                             	___func__.2964:
+ 247 0000 6D 77 5F 6D 65 73 73 61 		.string	"mw_message_queue_insert"
+ 247      67 65 5F 71 75 65 75 65 
+ 247      5F 69 6E 73 65 72 74 00 
+ 248                             		.section	.rodata.__func__.2968,"a"
+ 251                             	___func__.2968:
+ 252 0000 6D 77 5F 6D 65 73 73 61 		.string	"mw_message_queue_remove"
+ 252      67 65 5F 71 75 65 75 65 
+ 252      5F 72 65 6D 6F 76 65 00 
+ 253                             		.section	.rodata.__func__.2972,"a"
+ 256                             	___func__.2972:
+ 257 0000 6D 77 5F 6D 65 73 73 61 		.string	"mw_message_queue_get_ref_to_item_at_position"
+ 257      67 65 5F 71 75 65 75 65 
+ 257      5F 67 65 74 5F 72 65 66 
+ 257      5F 74 6F 5F 69 74 65 6D 
+ 257      5F 61 74 5F 70 6F 73 69 
+ 333                             	.Letext0:
+ 334                             		.file 2 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\rx-el
+ 335                             		.file 3 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\rx-el
+ 336                             		.file 4 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\rx-el
+ 337                             		.file 5 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\rx-el
+ 338                             		.file 6 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\lib\\
+ 339                             		.file 7 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\rx-el
+ 340                             		.file 8 "C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/bitmaps/mw_bitmaps.h"
+ 341                             		.file 9 "C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/hal/hal_timer.h"
+ 342                             		.file 10 "C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/miniwin.h"

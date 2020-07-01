@@ -1,0 +1,1000 @@
+   1                             		.file	"ui_text_box.c"
+   2                             		.section P,"ax"
+   3                             	.Ltext0:
+   4                             		.section C,"a",@progbits
+   5                             		.p2align 2
+   6                             	.LC0:
+   7 0000 4E 75 6C 6C 20 70 6F 69 		.string	"Null pointer argument"
+   7      6E 74 65 72 20 61 72 67 
+   7      75 6D 65 6E 74 00 
+   8 0016 00 00                   		.section	.text.text_box_paint_function,"ax",@progbits
+  10                             	_text_box_paint_function:
+  11                             	.LFB0:
+  12                             		.file 1 "C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui/ui_text_box.c"
+   1:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** /*
+   2:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 
+   3:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** MIT License
+   4:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 
+   5:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** Copyright (c) John Blaiklock 2019 miniwin Embedded Window Manager
+   6:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 
+   7:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** Permission is hereby granted, free of charge, to any person obtaining a copy
+   8:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** of this software and associated documentation files (the "Software"), to deal
+   9:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** in the Software without restriction, including without limitation the rights
+  10:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  11:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** copies of the Software, and to permit persons to whom the Software is
+  12:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** furnished to do so, subject to the following conditions:
+  13:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 
+  14:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** The above copyright notice and this permission notice shall be included in all
+  15:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** copies or substantial portions of the Software.
+  16:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 
+  17:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  18:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  19:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  20:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  21:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  22:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  23:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** SOFTWARE.
+  24:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 
+  25:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** */
+  26:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 
+  27:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** /***************
+  28:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** *** INCLUDES ***
+  29:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** ***************/
+  30:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 
+  31:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** #include <stdlib.h>
+  32:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** #include "miniwin.h"
+  33:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 
+  34:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** /****************
+  35:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** *** CONSTANTS ***
+  36:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** ****************/
+  37:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 
+  38:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** /************
+  39:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** *** TYPES ***
+  40:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** ************/
+  41:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 
+  42:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** /***********************
+  43:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** *** GLOBAL VARIABLES ***
+  44:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** ***********************/
+  45:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 
+  46:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** /**********************
+  47:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** *** LOCAL VARIABLES ***
+  48:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** **********************/
+  49:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 
+  50:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** /********************************
+  51:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** *** LOCAL FUNCTION PROTOTYPES ***
+  52:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** ********************************/
+  53:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 
+  54:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** static void text_box_paint_function(mw_handle_t control_handle, const mw_gl_draw_info_t *draw_info)
+  55:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** static void text_box_message_function(const mw_message_t *message);
+  56:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 
+  57:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** /**********************
+  58:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** *** LOCAL FUNCTIONS ***
+  59:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** **********************/
+  60:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 
+  61:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** /**
+  62:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c ****  * Control paint routine, called by window manager.
+  63:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c ****  *
+  64:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c ****  * @param control_handle The control identifier in the array of controls
+  65:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c ****  * @param draw_info Draw info structure describing offset and clip region
+  66:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c ****  */
+  67:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** static void text_box_paint_function(mw_handle_t control_handle, const mw_gl_draw_info_t *draw_info)
+  68:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** {
+  13                             		.loc 1 68 1
+  14 0000 6E 6B                   		pushm	r6-r11
+  15                             	.LCFI0:
+  16 0002 71 0A EC                		add	#-20, r0, r10
+  17                             	.LCFI1:
+  18 0005 71 A0 F8                		add	#-8, r10, r0
+  19                             	.LCFI2:
+  20 0008 E7 A1 03                		mov.L	r1, 12[r10]
+  21 000b E7 A2 04                		mov.L	r2, 16[r10]
+  69:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 	mw_ui_text_box_data_t *this_text_box = (mw_ui_text_box_data_t*)mw_get_control_instance_data(contro
+  22                             		.loc 1 69 65
+  23 000e ED A1 03                		mov.L	12[r10], r1
+  24 0011 05 00 00 00             		bsr	_mw_get_control_instance_data
+  25 0015 E3 A1                   		mov.L	r1, [r10]
+  70:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 	mw_util_rect_t control_rect;
+  71:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 
+  72:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 	MW_ASSERT(draw_info != (void*)0, "Null pointer argument");
+  26                             		.loc 1 72 2
+  27 0017 ED A5 04                		mov.L	16[r10], r5
+  28 001a 61 05                   		cmp	#0, r5
+  29 001c FC DB 51                		scne.L	r5
+  30 001f FB 42 00 00 00 00       		mov.L	#.LC0, r4
+  31 0025 75 43 48                		mov.L	#0x48, r3
+  32 0028 FB 22 00 00 00 00       		mov.L	#___func__.2874, r2
+  33 002e CF 51                   		mov.B	r5, r1
+  34 0030 05 00 00 00             		bsr	_mw_debug_print_assert
+  73:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 
+  74:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 	/* get control's client rect */
+  75:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 	mw_util_set_rect(&control_rect,
+  76:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			0,
+  77:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			0,
+  78:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			mw_get_control_rect(control_handle).width,
+  35                             		.loc 1 78 4
+  36 0034 ED A1 03                		mov.L	12[r10], r1
+  37 0037 05 00 00 00             		bsr	_mw_get_control_rect
+  38 003b EF 15                   		mov.L	r1, r5
+  39 003d EF 26                   		mov.L	r2, r6
+  75:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			0,
+  40                             		.loc 1 75 2
+  41 003f DF 6B                   		mov.W	r6, r11
+  79:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			mw_get_control_rect(control_handle).height);
+  42                             		.loc 1 79 4
+  43 0041 ED A1 03                		mov.L	12[r10], r1
+  44 0044 05 00 00 00             		bsr	_mw_get_control_rect
+  45 0048 EF 15                   		mov.L	r1, r5
+  46 004a EF 26                   		mov.L	r2, r6
+  75:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			0,
+  47                             		.loc 1 75 2
+  48 004c EF 65                   		mov.L	r6, r5
+  49 004e 6B 05                   		shar	#16, r5
+  50 0050 DF 54                   		mov.W	r5, r4
+  51 0052 71 A5 04                		add	#4, r10, r5
+  52 0055 D3 04                   		mov.W	r4, [r0]
+  53 0057 DF B4                   		mov.W	r11, r4
+  54 0059 66 03                   		mov	#0, r3
+  55 005b 66 02                   		mov	#0, r2
+  56 005d EF 51                   		mov.L	r5, r1
+  57 005f 05 00 00 00             		bsr	_mw_util_set_rect
+  80:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 
+  81:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 	/* render text */
+  82:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 	mw_gl_set_fg_colour(this_text_box->fg_colour);
+  58                             		.loc 1 82 2
+  59 0063 EC A5                   		mov.L	[r10], r5
+  60 0065 A8 DD                   		mov.L	12[r5], r5
+  61 0067 EF 51                   		mov.L	r5, r1
+  62 0069 05 00 00 00             		bsr	_mw_gl_set_fg_colour
+  83:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 	mw_gl_set_bg_colour(this_text_box->bg_colour);
+  63                             		.loc 1 83 2
+  64 006d EC A5                   		mov.L	[r10], r5
+  65 006f A9 55                   		mov.L	16[r5], r5
+  66 0071 EF 51                   		mov.L	r5, r1
+  67 0073 05 00 00 00             		bsr	_mw_gl_set_bg_colour
+  84:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 	mw_gl_tt_render_text(draw_info,
+  68                             		.loc 1 84 2
+  69 0077 EC A5                   		mov.L	[r10], r5
+  70 0079 A8 5B                   		mov.L	4[r5], r3
+  71 007b EC A5                   		mov.L	[r10], r5
+  72 007d EC 54                   		mov.L	[r5], r4
+  85:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			&control_rect,
+  86:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			this_text_box->justification,
+  87:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			this_text_box->tt_font,
+  88:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			this_text_box->text,
+  73                             		.loc 1 88 17
+  74 007f EC A5                   		mov.L	[r10], r5
+  75 0081 A8 D2                   		mov.L	8[r5], r2
+  84:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 	mw_gl_tt_render_text(draw_info,
+  76                             		.loc 1 84 2
+  77 0083 EC A5                   		mov.L	[r10], r5
+  78 0085 9A D1                   		mov.W	20[r5], r1
+  79 0087 71 A5 04                		add	#4, r10, r5
+  80 008a 90 81                   		mov.W	r1, 4[r0]
+  81 008c E3 02                   		mov.L	r2, [r0]
+  82 008e EF 52                   		mov.L	r5, r2
+  83 0090 ED A1 04                		mov.L	16[r10], r1
+  84 0093 05 00 00 00             		bsr	_mw_gl_tt_render_text
+  89:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			this_text_box->lines_to_scroll);
+  90:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 
+  91:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 	/* if the text has not filled the whole control paint the background of what remains */
+  92:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 	if (control_rect.height > this_text_box->text_height_pixels)
+  85                             		.loc 1 92 18
+  86 0097 DD A4 05                		mov.W	10[r10], r4
+  87                             		.loc 1 92 41
+  88 009a EC A5                   		mov.L	[r10], r5
+  89 009c 9A DD                   		mov.W	22[r5], r5
+  90                             		.loc 1 92 5
+  91 009e DF 44                   		mov.W	r4, r4
+  92 00a0 DF 55                   		mov.W	r5, r5
+  93 00a2 47 54                   		cmp	r5, r4
+  94 00a4 2B 3C                   		ble	.L3
+  93:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 	{
+  94:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 		mw_gl_set_fill(MW_GL_FILL);
+  95                             		.loc 1 94 3
+  96 00a6 66 11                   		mov.L	#1, r1
+  97 00a8 05 00 00 00             		bsr	_mw_gl_set_fill
+  95:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 		mw_gl_set_solid_fill_colour(this_text_box->bg_colour);
+  98                             		.loc 1 95 3
+  99 00ac EC A5                   		mov.L	[r10], r5
+ 100 00ae A9 55                   		mov.L	16[r5], r5
+ 101 00b0 EF 51                   		mov.L	r5, r1
+ 102 00b2 05 00 00 00             		bsr	_mw_gl_set_solid_fill_colour
+  96:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 		mw_gl_set_border(MW_GL_BORDER_OFF);
+ 103                             		.loc 1 96 3
+ 104 00b6 66 01                   		mov.L	#0, r1
+ 105 00b8 05 00 00 00             		bsr	_mw_gl_set_border
+  97:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 		mw_gl_clear_pattern();
+ 106                             		.loc 1 97 3
+ 107 00bc 05 00 00 00             		bsr	_mw_gl_clear_pattern
+  98:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 		mw_gl_rectangle(draw_info,
+ 108                             		.loc 1 98 3
+ 109 00c0 EC A5                   		mov.L	[r10], r5
+ 110 00c2 9A DB                   		mov.W	22[r5], r3
+ 111 00c4 DD A2 04                		mov.W	8[r10], r2
+  99:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 				0,
+ 100:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 				this_text_box->text_height_pixels,
+ 101:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 				control_rect.width,
+ 102:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 				control_rect.height - this_text_box->text_height_pixels);
+ 112                             		.loc 1 102 17
+ 113 00c7 DD A5 05                		mov.W	10[r10], r5
+ 114 00ca DF 54                   		mov.W	r5, r4
+ 115                             		.loc 1 102 40
+ 116 00cc EC A5                   		mov.L	[r10], r5
+ 117 00ce 9A DD                   		mov.W	22[r5], r5
+ 118                             		.loc 1 102 25
+ 119 00d0 FF 05 54                		sub	r5, r4, r5
+  98:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 		mw_gl_rectangle(draw_info,
+ 120                             		.loc 1 98 3
+ 121 00d3 D3 05                   		mov.W	r5, [r0]
+ 122 00d5 DF 24                   		mov.W	r2, r4
+ 123 00d7 66 02                   		mov	#0, r2
+ 124 00d9 ED A1 04                		mov.L	16[r10], r1
+ 125 00dc 05 00 00 00             		bsr	_mw_gl_rectangle
+ 126                             	.L3:
+ 103:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 	}
+ 104:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** }
+ 127                             		.loc 1 104 1
+ 128 00e0 03                      		nop
+ 129 00e1 3F 6B 0D                		rtsd	#52, r6-r11
+ 130                             	.LFE0:
+ 132                             		.section	.text.text_box_message_function,"ax",@progbits
+ 134                             	_text_box_message_function:
+ 135                             	.LFB1:
+ 105:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 
+ 106:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** /**
+ 107:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c ****  * Control message handler called by the window manager.
+ 108:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c ****  *
+ 109:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c ****  * @param message The message to be processed
+ 110:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c ****  */
+ 111:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** static void text_box_message_function(const mw_message_t *message)
+ 112:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** {
+ 136                             		.loc 1 112 1
+ 137 0000 6E 6B                   		pushm	r6-r11
+ 138                             	.LCFI3:
+ 139 0002 71 0A E4                		add	#-28, r0, r10
+ 140                             	.LCFI4:
+ 141 0005 71 A0 F8                		add	#-8, r10, r0
+ 142                             	.LCFI5:
+ 143 0008 E7 A1 06                		mov.L	r1, 24[r10]
+ 113:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 	mw_ui_text_box_data_t *this_text_box = (mw_ui_text_box_data_t*)mw_get_control_instance_data(messag
+ 144                             		.loc 1 113 65
+ 145 000b ED A5 06                		mov.L	24[r10], r5
+ 146 000e A8 5D                   		mov.L	4[r5], r5
+ 147 0010 EF 51                   		mov.L	r5, r1
+ 148 0012 05 00 00 00             		bsr	_mw_get_control_instance_data
+ 149 0016 E7 A1 02                		mov.L	r1, 8[r10]
+ 114:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 
+ 115:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 	MW_ASSERT(message != (void*)0, "Null pointer argument");
+ 150                             		.loc 1 115 2
+ 151 0019 ED A5 06                		mov.L	24[r10], r5
+ 152 001c 61 05                   		cmp	#0, r5
+ 153 001e FC DB 51                		scne.L	r5
+ 154 0021 FB 42 00 00 00 00       		mov.L	#.LC0, r4
+ 155 0027 75 43 73                		mov.L	#0x73, r3
+ 156 002a FB 22 00 00 00 00       		mov.L	#___func__.2879, r2
+ 157 0030 CF 51                   		mov.B	r5, r1
+ 158 0032 05 00 00 00             		bsr	_mw_debug_print_assert
+ 116:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 
+ 117:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 	switch (message->message_id)
+ 159                             		.loc 1 117 17
+ 160 0036 ED A5 06                		mov.L	24[r10], r5
+ 161 0039 A8 D5                   		mov.L	8[r5], r5
+ 162                             		.loc 1 117 2
+ 163 003b 75 55 35                		cmp	#53, r5
+ 164 003e 3A B4 01                		beq	.L5
+ 165 0041 75 55 35                		cmp	#53, r5
+ 166 0044 24 09                   		bgtu	.L6
+ 167 0046 61 D5                   		cmp	#13, r5
+ 168 0048 20 14                   		beq	.L7
+ 118:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 	{
+ 119:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 	case MW_CONTROL_CREATED_MESSAGE:
+ 120:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 		{
+ 121:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			uint32_t message_data;
+ 122:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 
+ 123:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			/* initialise the control */
+ 124:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			this_text_box->lines_to_scroll = 0;
+ 125:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 
+ 126:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			/* get height of rendered text in pixels without actually rendering it */
+ 127:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			this_text_box->text_height_pixels = mw_gl_tt_get_render_text_lines(mw_get_control_rect(message->
+ 128:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 					this_text_box->justification,
+ 129:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 					this_text_box->tt_font,
+ 130:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 					this_text_box->text);
+ 131:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 
+ 132:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			/* send message about whether scrolling is needed */
+ 133:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			message_data = (uint32_t)(this_text_box->text_height_pixels > mw_get_control_rect(message->recip
+ 134:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			message_data <<= 16U;
+ 135:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			if (message_data != 0U)
+ 136:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			{
+ 137:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 				message_data |= ((uint32_t)this_text_box->text_height_pixels - (uint32_t)mw_get_control_rect(me
+ 138:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			}
+ 139:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			mw_post_message(MW_TEXT_BOX_SCROLLING_REQUIRED_MESSAGE,
+ 140:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 					message->recipient_handle,
+ 141:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 					mw_get_control_parent_window_handle(message->recipient_handle),
+ 142:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 					message_data,
+ 143:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 					NULL,
+ 144:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 					MW_WINDOW_MESSAGE);
+ 145:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 		}
+ 146:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 		break;
+ 147:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 
+ 148:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 	case MW_TEXT_BOX_SCROLL_BAR_POSITION_MESSAGE:
+ 149:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 		{
+ 150:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			int16_t max_scroll_lines;
+ 151:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			uint32_t misra_temp;
+ 152:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 
+ 153:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			/* check if scrolling is appropriate */
+ 154:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			if (this_text_box->text_height_pixels <= mw_get_control_rect(message->recipient_handle).height)
+ 155:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			{
+ 156:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 				/* no, so set scroll pixels to zero */
+ 157:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 				this_text_box->lines_to_scroll = 0;
+ 158:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			}
+ 159:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			else
+ 160:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			{
+ 161:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 				/* yes so recalculate vertical scroll pixels from last scroll bar position recorded */
+ 162:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 				max_scroll_lines = this_text_box->text_height_pixels - mw_get_control_rect(message->recipient_h
+ 163:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 				misra_temp = ((uint32_t)max_scroll_lines * message->message_data) / (uint32_t)UINT8_MAX;
+ 164:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 				this_text_box->lines_to_scroll = (int16_t)misra_temp;
+ 165:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			}
+ 166:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 		}
+ 167:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 		break;
+ 168:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 
+ 169:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 	case MW_TEXT_BOX_LINES_TO_SCROLL_MESSAGE:
+ 170:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 		{
+ 171:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			int16_t max_scroll_lines;
+ 172:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 
+ 173:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			/* check if scrolling is appropriate */
+ 174:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			if (this_text_box->text_height_pixels <= mw_get_control_rect(message->recipient_handle).height)
+ 175:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			{
+ 176:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 				/* no, so set scroll pixels to zero */
+ 177:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 				this_text_box->lines_to_scroll = 0;
+ 178:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			}
+ 179:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			else
+ 180:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			{
+ 181:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 				/* yes so set new scroll position */
+ 182:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 				max_scroll_lines = this_text_box->text_height_pixels - mw_get_control_rect(message->recipient_h
+ 183:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 
+ 184:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 				/* check that the new scroll position doesn't exceed maximum possible */
+ 185:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 				this_text_box->lines_to_scroll = (int16_t)message->message_data;
+ 186:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 				if (this_text_box->lines_to_scroll > max_scroll_lines)
+ 187:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 				{
+ 188:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 					this_text_box->lines_to_scroll = max_scroll_lines;
+ 189:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 				}
+ 190:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			}
+ 191:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 		}
+ 192:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 		break;
+ 193:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 
+ 194:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 	case MW_TEXT_BOX_SET_TEXT_MESSAGE:
+ 195:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 		{
+ 196:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			uint32_t message_data;
+ 197:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 
+ 198:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			/* message pointer field contains pointer to new text */
+ 199:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			if (message->message_pointer != NULL)
+ 200:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			{
+ 201:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 				this_text_box->text = (char *)(message->message_pointer);
+ 202:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 				this_text_box->lines_to_scroll = 0;
+ 203:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 				mw_paint_control(message->recipient_handle);
+ 204:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 
+ 205:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 				/* get height of rendered text in pixels without actually rendering it */
+ 206:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 				this_text_box->text_height_pixels = mw_gl_tt_get_render_text_lines(mw_get_control_rect(message-
+ 207:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 						this_text_box->justification,
+ 208:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 						this_text_box->tt_font,
+ 209:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 						this_text_box->text);
+ 210:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 
+ 211:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 				/* send message about whether scrolling is needed */
+ 212:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 				message_data = (uint32_t)(this_text_box->text_height_pixels > mw_get_control_rect(message->reci
+ 213:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 				message_data <<= 16U;
+ 214:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 				if (message_data != 0U)
+ 215:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 				{
+ 216:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 					message_data |= ((uint32_t)this_text_box->text_height_pixels - (uint32_t)mw_get_control_rect(m
+ 217:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 				}
+ 218:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 				mw_post_message(MW_TEXT_BOX_SCROLLING_REQUIRED_MESSAGE,
+ 219:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 						message->recipient_handle,
+ 220:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 						mw_get_control_parent_window_handle(message->recipient_handle),
+ 221:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 						message_data,
+ 222:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 						NULL,
+ 223:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 						MW_WINDOW_MESSAGE);
+ 224:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			}
+ 225:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			else
+ 226:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			{
+ 227:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 				MW_ASSERT((bool)false, "Null pointer argument");
+ 228:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			}
+ 229:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 		}
+ 230:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 		break;
+ 231:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 
+ 232:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 	default:
+ 233:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 		/* keep MISRA happy */
+ 234:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 		break;
+ 169                             		.loc 1 234 3
+ 170 004a 38 99 02                		bra	.L12
+ 171                             	.L6:
+ 117:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 	{
+ 172                             		.loc 1 117 2
+ 173 004d 75 55 36                		cmp	#54, r5
+ 174 0050 3A C0 00                		beq	.L9
+ 175 0053 75 55 37                		cmp	#55, r5
+ 176 0056 3A 2A 01                		beq	.L10
+ 177                             		.loc 1 234 3
+ 178 0059 38 8A 02                		bra	.L12
+ 179                             	.L7:
+ 180                             	.LBB2:
+ 124:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 
+ 181                             		.loc 1 124 35
+ 182 005c ED A5 02                		mov.L	8[r10], r5
+ 183 005f 3D 5A 00                		mov.W	#0, 20[r5]
+ 127:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 					this_text_box->justification,
+ 184                             		.loc 1 127 71
+ 185 0062 ED A5 06                		mov.L	24[r10], r5
+ 186 0065 A8 5D                   		mov.L	4[r5], r5
+ 187 0067 EF 51                   		mov.L	r5, r1
+ 188 0069 05 00 00 00             		bsr	_mw_get_control_rect
+ 189 006d EF 15                   		mov.L	r1, r5
+ 190 006f EF 26                   		mov.L	r2, r6
+ 127:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 					this_text_box->justification,
+ 191                             		.loc 1 127 40
+ 192 0071 DF 61                   		mov.W	r6, r1
+ 193 0073 ED A5 02                		mov.L	8[r10], r5
+ 194 0076 A8 5A                   		mov.L	4[r5], r2
+ 195 0078 ED A5 02                		mov.L	8[r10], r5
+ 196 007b EC 53                   		mov.L	[r5], r3
+ 130:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 
+ 197                             		.loc 1 130 19
+ 198 007d ED A5 02                		mov.L	8[r10], r5
+ 199 0080 A8 D5                   		mov.L	8[r5], r5
+ 127:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 					this_text_box->justification,
+ 200                             		.loc 1 127 40
+ 201 0082 EF 54                   		mov.L	r5, r4
+ 202 0084 05 00 00 00             		bsr	_mw_gl_tt_get_render_text_lines
+ 203 0088 EF 15                   		mov.L	r1, r5
+ 204 008a DF 54                   		mov.W	r5, r4
+ 127:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 					this_text_box->justification,
+ 205                             		.loc 1 127 38
+ 206 008c ED A5 02                		mov.L	8[r10], r5
+ 207 008f 92 DC                   		mov.W	r4, 22[r5]
+ 133:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			message_data <<= 16U;
+ 208                             		.loc 1 133 43
+ 209 0091 ED A5 02                		mov.L	8[r10], r5
+ 210 0094 DD 5B 0B                		mov.W	22[r5], r11
+ 133:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			message_data <<= 16U;
+ 211                             		.loc 1 133 66
+ 212 0097 ED A5 06                		mov.L	24[r10], r5
+ 213 009a A8 5D                   		mov.L	4[r5], r5
+ 214 009c EF 51                   		mov.L	r5, r1
+ 215 009e 05 00 00 00             		bsr	_mw_get_control_rect
+ 216 00a2 EF 15                   		mov.L	r1, r5
+ 217 00a4 EF 26                   		mov.L	r2, r6
+ 133:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			message_data <<= 16U;
+ 218                             		.loc 1 133 112
+ 219 00a6 EF 65                   		mov.L	r6, r5
+ 220 00a8 6B 05                   		shar	#16, r5
+ 133:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			message_data <<= 16U;
+ 221                             		.loc 1 133 19
+ 222 00aa DF B4                   		mov.W	r11, r4
+ 223 00ac DF 55                   		mov.W	r5, r5
+ 224 00ae 47 54                   		cmp	r5, r4
+ 225 00b0 FC DB 5A                		scgt.L	r5
+ 133:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			message_data <<= 16U;
+ 226                             		.loc 1 133 17
+ 227 00b3 5B 55                   		movu.B	r5, r5
+ 228 00b5 E3 A5                   		mov.L	r5, [r10]
+ 134:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			if (message_data != 0U)
+ 229                             		.loc 1 134 17
+ 230 00b7 EC A5                   		mov.L	[r10], r5
+ 231 00b9 6D 05                   		shll	#16, r5
+ 232 00bb E3 A5                   		mov.L	r5, [r10]
+ 135:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			{
+ 233                             		.loc 1 135 7
+ 234 00bd EC A5                   		mov.L	[r10], r5
+ 235 00bf 61 05                   		cmp	#0, r5
+ 236 00c1 20 27                   		beq	.L11
+ 137:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			}
+ 237                             		.loc 1 137 45
+ 238 00c3 ED A5 02                		mov.L	8[r10], r5
+ 239 00c6 9A DD                   		mov.W	22[r5], r5
+ 137:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			}
+ 240                             		.loc 1 137 22
+ 241 00c8 DF 5B                   		mov.W	r5, r11
+ 137:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			}
+ 242                             		.loc 1 137 78
+ 243 00ca ED A5 06                		mov.L	24[r10], r5
+ 244 00cd A8 5D                   		mov.L	4[r5], r5
+ 245 00cf EF 51                   		mov.L	r5, r1
+ 246 00d1 05 00 00 00             		bsr	_mw_get_control_rect
+ 247 00d5 EF 15                   		mov.L	r1, r5
+ 248 00d7 EF 26                   		mov.L	r2, r6
+ 137:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			}
+ 249                             		.loc 1 137 124
+ 250 00d9 EF 65                   		mov.L	r6, r5
+ 251 00db 6B 05                   		shar	#16, r5
+ 137:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			}
+ 252                             		.loc 1 137 68
+ 253 00dd DF 55                   		mov.W	r5, r5
+ 137:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			}
+ 254                             		.loc 1 137 66
+ 255 00df FF 05 5B                		sub	r5, r11, r5
+ 137:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			}
+ 256                             		.loc 1 137 18
+ 257 00e2 EC A4                   		mov.L	[r10], r4
+ 258 00e4 57 45                   		or	r4, r5
+ 259 00e6 E3 A5                   		mov.L	r5, [r10]
+ 260                             	.L11:
+ 139:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 					message->recipient_handle,
+ 261                             		.loc 1 139 4
+ 262 00e8 ED A5 06                		mov.L	24[r10], r5
+ 263 00eb A8 5E                   		mov.L	4[r5], r6
+ 264 00ed ED A5 06                		mov.L	24[r10], r5
+ 265 00f0 A8 5D                   		mov.L	4[r5], r5
+ 266 00f2 EF 51                   		mov.L	r5, r1
+ 267 00f4 05 00 00 00             		bsr	_mw_get_control_parent_window_handle
+ 268 00f8 EF 15                   		mov.L	r1, r5
+ 269 00fa 3E 01 00                		mov.L	#0, 4[r0]
+ 270 00fd F8 06 00                		mov.L	#0, [r0]
+ 271 0100 EC A4                   		mov.L	[r10], r4
+ 272 0102 EF 53                   		mov.L	r5, r3
+ 273 0104 EF 62                   		mov.L	r6, r2
+ 274 0106 75 41 25                		mov.L	#37, r1
+ 275 0109 05 00 00 00             		bsr	_mw_post_message
+ 276                             	.LBE2:
+ 146:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 
+ 277                             		.loc 1 146 3
+ 278 010d 38 D6 01                		bra	.L12
+ 279                             	.L9:
+ 280                             	.LBB3:
+ 154:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			{
+ 281                             		.loc 1 154 21
+ 282 0110 ED A5 02                		mov.L	8[r10], r5
+ 283 0113 DD 5B 0B                		mov.W	22[r5], r11
+ 154:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			{
+ 284                             		.loc 1 154 45
+ 285 0116 ED A5 06                		mov.L	24[r10], r5
+ 286 0119 A8 5D                   		mov.L	4[r5], r5
+ 287 011b EF 51                   		mov.L	r5, r1
+ 288 011d 05 00 00 00             		bsr	_mw_get_control_rect
+ 289 0121 EF 15                   		mov.L	r1, r5
+ 290 0123 EF 26                   		mov.L	r2, r6
+ 154:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			{
+ 291                             		.loc 1 154 91
+ 292 0125 EF 65                   		mov.L	r6, r5
+ 293 0127 6B 05                   		shar	#16, r5
+ 154:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			{
+ 294                             		.loc 1 154 7
+ 295 0129 DF B4                   		mov.W	r11, r4
+ 296 012b DF 55                   		mov.W	r5, r5
+ 297 012d 47 54                   		cmp	r5, r4
+ 298 012f 2A 0B                   		bgt	.L13
+ 157:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			}
+ 299                             		.loc 1 157 36
+ 300 0131 ED A5 02                		mov.L	8[r10], r5
+ 301 0134 3D 5A 00                		mov.W	#0, 20[r5]
+ 302                             	.LBE3:
+ 167:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 
+ 303                             		.loc 1 167 3
+ 304 0137 38 AC 01                		bra	.L12
+ 305                             	.L13:
+ 306                             	.LBB4:
+ 162:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 				misra_temp = ((uint32_t)max_scroll_lines * message->message_data) / (uint32_t)UINT8_MAX;
+ 307                             		.loc 1 162 37
+ 308 013a ED A5 02                		mov.L	8[r10], r5
+ 309 013d 9A DD                   		mov.W	22[r5], r5
+ 310 013f DF 5B                   		mov.W	r5, r11
+ 162:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 				misra_temp = ((uint32_t)max_scroll_lines * message->message_data) / (uint32_t)UINT8_MAX;
+ 311                             		.loc 1 162 60
+ 312 0141 ED A5 06                		mov.L	24[r10], r5
+ 313 0144 A8 5D                   		mov.L	4[r5], r5
+ 314 0146 EF 51                   		mov.L	r5, r1
+ 315 0148 05 00 00 00             		bsr	_mw_get_control_rect
+ 316 014c EF 15                   		mov.L	r1, r5
+ 317 014e EF 26                   		mov.L	r2, r6
+ 162:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 				misra_temp = ((uint32_t)max_scroll_lines * message->message_data) / (uint32_t)UINT8_MAX;
+ 318                             		.loc 1 162 106
+ 319 0150 EF 65                   		mov.L	r6, r5
+ 320 0152 6B 05                   		shar	#16, r5
+ 162:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 				misra_temp = ((uint32_t)max_scroll_lines * message->message_data) / (uint32_t)UINT8_MAX;
+ 321                             		.loc 1 162 58
+ 322 0154 FF 05 5B                		sub	r5, r11, r5
+ 162:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 				misra_temp = ((uint32_t)max_scroll_lines * message->message_data) / (uint32_t)UINT8_MAX;
+ 323                             		.loc 1 162 22
+ 324 0157 D7 A5 06                		mov.W	r5, 12[r10]
+ 163:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 				this_text_box->lines_to_scroll = (int16_t)misra_temp;
+ 325                             		.loc 1 163 19
+ 326 015a DD A5 06                		mov.W	12[r10], r5
+ 163:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 				this_text_box->lines_to_scroll = (int16_t)misra_temp;
+ 327                             		.loc 1 163 55
+ 328 015d ED A4 06                		mov.L	24[r10], r4
+ 329 0160 A9 44                   		mov.L	16[r4], r4
+ 163:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 				this_text_box->lines_to_scroll = (int16_t)misra_temp;
+ 330                             		.loc 1 163 46
+ 331 0162 4F 45                   		mul	r4, r5
+ 163:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 				this_text_box->lines_to_scroll = (int16_t)misra_temp;
+ 332                             		.loc 1 163 16
+ 333 0164 FB 42 81 80 80 80       		mov.L	#-2139062143, r4
+ 334 016a FC 1F 45                		emulu	r4, r5
+ 335 016d FD 87 65                		shlr	#7, r6, r5
+ 336 0170 E7 A5 04                		mov.L	r5, 16[r10]
+ 164:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			}
+ 337                             		.loc 1 164 38
+ 338 0173 ED A5 04                		mov.L	16[r10], r5
+ 339 0176 DF 54                   		mov.W	r5, r4
+ 164:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			}
+ 340                             		.loc 1 164 36
+ 341 0178 ED A5 02                		mov.L	8[r10], r5
+ 342 017b 92 D4                   		mov.W	r4, 20[r5]
+ 343                             	.LBE4:
+ 167:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 
+ 344                             		.loc 1 167 3
+ 345 017d 38 66 01                		bra	.L12
+ 346                             	.L10:
+ 347                             	.LBB5:
+ 174:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			{
+ 348                             		.loc 1 174 21
+ 349 0180 ED A5 02                		mov.L	8[r10], r5
+ 350 0183 DD 5B 0B                		mov.W	22[r5], r11
+ 174:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			{
+ 351                             		.loc 1 174 45
+ 352 0186 ED A5 06                		mov.L	24[r10], r5
+ 353 0189 A8 5D                   		mov.L	4[r5], r5
+ 354 018b EF 51                   		mov.L	r5, r1
+ 355 018d 05 00 00 00             		bsr	_mw_get_control_rect
+ 356 0191 EF 15                   		mov.L	r1, r5
+ 357 0193 EF 26                   		mov.L	r2, r6
+ 174:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			{
+ 358                             		.loc 1 174 91
+ 359 0195 EF 65                   		mov.L	r6, r5
+ 360 0197 6B 05                   		shar	#16, r5
+ 174:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			{
+ 361                             		.loc 1 174 7
+ 362 0199 DF B4                   		mov.W	r11, r4
+ 363 019b DF 55                   		mov.W	r5, r5
+ 364 019d 47 54                   		cmp	r5, r4
+ 365 019f 2A 0B                   		bgt	.L15
+ 177:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			}
+ 366                             		.loc 1 177 36
+ 367 01a1 ED A5 02                		mov.L	8[r10], r5
+ 368 01a4 3D 5A 00                		mov.W	#0, 20[r5]
+ 369                             	.LBE5:
+ 192:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 
+ 370                             		.loc 1 192 3
+ 371 01a7 38 3B 01                		bra	.L20
+ 372                             	.L15:
+ 373                             	.LBB6:
+ 182:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 
+ 374                             		.loc 1 182 37
+ 375 01aa ED A5 02                		mov.L	8[r10], r5
+ 376 01ad 9A DD                   		mov.W	22[r5], r5
+ 377 01af DF 5B                   		mov.W	r5, r11
+ 182:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 
+ 378                             		.loc 1 182 60
+ 379 01b1 ED A5 06                		mov.L	24[r10], r5
+ 380 01b4 A8 5D                   		mov.L	4[r5], r5
+ 381 01b6 EF 51                   		mov.L	r5, r1
+ 382 01b8 05 00 00 00             		bsr	_mw_get_control_rect
+ 383 01bc EF 15                   		mov.L	r1, r5
+ 384 01be EF 26                   		mov.L	r2, r6
+ 182:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 
+ 385                             		.loc 1 182 106
+ 386 01c0 EF 65                   		mov.L	r6, r5
+ 387 01c2 6B 05                   		shar	#16, r5
+ 182:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 
+ 388                             		.loc 1 182 58
+ 389 01c4 FF 05 5B                		sub	r5, r11, r5
+ 182:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 
+ 390                             		.loc 1 182 22
+ 391 01c7 D7 A5 0A                		mov.W	r5, 20[r10]
+ 185:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 				if (this_text_box->lines_to_scroll > max_scroll_lines)
+ 392                             		.loc 1 185 54
+ 393 01ca ED A5 06                		mov.L	24[r10], r5
+ 394 01cd A9 55                   		mov.L	16[r5], r5
+ 185:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 				if (this_text_box->lines_to_scroll > max_scroll_lines)
+ 395                             		.loc 1 185 38
+ 396 01cf DF 54                   		mov.W	r5, r4
+ 185:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 				if (this_text_box->lines_to_scroll > max_scroll_lines)
+ 397                             		.loc 1 185 36
+ 398 01d1 ED A5 02                		mov.L	8[r10], r5
+ 399 01d4 92 D4                   		mov.W	r4, 20[r5]
+ 186:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 				{
+ 400                             		.loc 1 186 22
+ 401 01d6 ED A5 02                		mov.L	8[r10], r5
+ 402 01d9 9A D5                   		mov.W	20[r5], r5
+ 186:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 				{
+ 403                             		.loc 1 186 8
+ 404 01db DD A4 0A                		mov.W	20[r10], r4
+ 405 01de DF 55                   		mov.W	r5, r5
+ 406 01e0 47 54                   		cmp	r5, r4
+ 407 01e2 29 05 38 FE 00          		bge	.L20
+ 188:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 				}
+ 408                             		.loc 1 188 37
+ 409 01e7 ED A5 02                		mov.L	8[r10], r5
+ 410 01ea DD A4 0A                		mov.W	20[r10], r4
+ 411 01ed 92 D4                   		mov.W	r4, 20[r5]
+ 412                             	.LBE6:
+ 192:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 
+ 413                             		.loc 1 192 3
+ 414 01ef 38 F3 00                		bra	.L20
+ 415                             	.L5:
+ 416                             	.LBB7:
+ 199:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			{
+ 417                             		.loc 1 199 15
+ 418 01f2 ED A5 06                		mov.L	24[r10], r5
+ 419 01f5 A9 5D                   		mov.L	20[r5], r5
+ 199:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			{
+ 420                             		.loc 1 199 7
+ 421 01f7 61 05                   		cmp	#0, r5
+ 422 01f9 3A D2 00                		beq	.L17
+ 201:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 				this_text_box->lines_to_scroll = 0;
+ 423                             		.loc 1 201 43
+ 424 01fc ED A5 06                		mov.L	24[r10], r5
+ 425 01ff A9 5C                   		mov.L	20[r5], r4
+ 201:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 				this_text_box->lines_to_scroll = 0;
+ 426                             		.loc 1 201 25
+ 427 0201 ED A5 02                		mov.L	8[r10], r5
+ 428 0204 A0 D4                   		mov.L	r4, 8[r5]
+ 202:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 				mw_paint_control(message->recipient_handle);
+ 429                             		.loc 1 202 36
+ 430 0206 ED A5 02                		mov.L	8[r10], r5
+ 431 0209 3D 5A 00                		mov.W	#0, 20[r5]
+ 203:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 
+ 432                             		.loc 1 203 5
+ 433 020c ED A5 06                		mov.L	24[r10], r5
+ 434 020f A8 5D                   		mov.L	4[r5], r5
+ 435 0211 EF 51                   		mov.L	r5, r1
+ 436 0213 05 00 00 00             		bsr	_mw_paint_control
+ 206:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 						this_text_box->justification,
+ 437                             		.loc 1 206 72
+ 438 0217 ED A5 06                		mov.L	24[r10], r5
+ 439 021a A8 5D                   		mov.L	4[r5], r5
+ 440 021c EF 51                   		mov.L	r5, r1
+ 441 021e 05 00 00 00             		bsr	_mw_get_control_rect
+ 442 0222 EF 15                   		mov.L	r1, r5
+ 443 0224 EF 26                   		mov.L	r2, r6
+ 206:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 						this_text_box->justification,
+ 444                             		.loc 1 206 41
+ 445 0226 DF 61                   		mov.W	r6, r1
+ 446 0228 ED A5 02                		mov.L	8[r10], r5
+ 447 022b A8 5A                   		mov.L	4[r5], r2
+ 448 022d ED A5 02                		mov.L	8[r10], r5
+ 449 0230 EC 53                   		mov.L	[r5], r3
+ 209:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 
+ 450                             		.loc 1 209 20
+ 451 0232 ED A5 02                		mov.L	8[r10], r5
+ 452 0235 A8 D5                   		mov.L	8[r5], r5
+ 206:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 						this_text_box->justification,
+ 453                             		.loc 1 206 41
+ 454 0237 EF 54                   		mov.L	r5, r4
+ 455 0239 05 00 00 00             		bsr	_mw_gl_tt_get_render_text_lines
+ 456 023d EF 15                   		mov.L	r1, r5
+ 457 023f DF 54                   		mov.W	r5, r4
+ 206:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 						this_text_box->justification,
+ 458                             		.loc 1 206 39
+ 459 0241 ED A5 02                		mov.L	8[r10], r5
+ 460 0244 92 DC                   		mov.W	r4, 22[r5]
+ 212:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 				message_data <<= 16U;
+ 461                             		.loc 1 212 44
+ 462 0246 ED A5 02                		mov.L	8[r10], r5
+ 463 0249 DD 5B 0B                		mov.W	22[r5], r11
+ 212:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 				message_data <<= 16U;
+ 464                             		.loc 1 212 67
+ 465 024c ED A5 06                		mov.L	24[r10], r5
+ 466 024f A8 5D                   		mov.L	4[r5], r5
+ 467 0251 EF 51                   		mov.L	r5, r1
+ 468 0253 05 00 00 00             		bsr	_mw_get_control_rect
+ 469 0257 EF 15                   		mov.L	r1, r5
+ 470 0259 EF 26                   		mov.L	r2, r6
+ 212:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 				message_data <<= 16U;
+ 471                             		.loc 1 212 113
+ 472 025b EF 65                   		mov.L	r6, r5
+ 473 025d 6B 05                   		shar	#16, r5
+ 212:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 				message_data <<= 16U;
+ 474                             		.loc 1 212 20
+ 475 025f DF B4                   		mov.W	r11, r4
+ 476 0261 DF 55                   		mov.W	r5, r5
+ 477 0263 47 54                   		cmp	r5, r4
+ 478 0265 FC DB 5A                		scgt.L	r5
+ 212:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 				message_data <<= 16U;
+ 479                             		.loc 1 212 18
+ 480 0268 5B 55                   		movu.B	r5, r5
+ 481 026a E7 A5 01                		mov.L	r5, 4[r10]
+ 213:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 				if (message_data != 0U)
+ 482                             		.loc 1 213 18
+ 483 026d ED A5 01                		mov.L	4[r10], r5
+ 484 0270 6D 05                   		shll	#16, r5
+ 485 0272 E7 A5 01                		mov.L	r5, 4[r10]
+ 214:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 				{
+ 486                             		.loc 1 214 8
+ 487 0275 ED A5 01                		mov.L	4[r10], r5
+ 488 0278 61 05                   		cmp	#0, r5
+ 489 027a 20 29                   		beq	.L18
+ 216:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 				}
+ 490                             		.loc 1 216 46
+ 491 027c ED A5 02                		mov.L	8[r10], r5
+ 492 027f 9A DD                   		mov.W	22[r5], r5
+ 216:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 				}
+ 493                             		.loc 1 216 23
+ 494 0281 DF 5B                   		mov.W	r5, r11
+ 216:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 				}
+ 495                             		.loc 1 216 79
+ 496 0283 ED A5 06                		mov.L	24[r10], r5
+ 497 0286 A8 5D                   		mov.L	4[r5], r5
+ 498 0288 EF 51                   		mov.L	r5, r1
+ 499 028a 05 00 00 00             		bsr	_mw_get_control_rect
+ 500 028e EF 15                   		mov.L	r1, r5
+ 501 0290 EF 26                   		mov.L	r2, r6
+ 216:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 				}
+ 502                             		.loc 1 216 125
+ 503 0292 EF 65                   		mov.L	r6, r5
+ 504 0294 6B 05                   		shar	#16, r5
+ 216:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 				}
+ 505                             		.loc 1 216 69
+ 506 0296 DF 55                   		mov.W	r5, r5
+ 216:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 				}
+ 507                             		.loc 1 216 67
+ 508 0298 FF 05 5B                		sub	r5, r11, r5
+ 216:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 				}
+ 509                             		.loc 1 216 19
+ 510 029b ED A4 01                		mov.L	4[r10], r4
+ 511 029e 57 45                   		or	r4, r5
+ 512 02a0 E7 A5 01                		mov.L	r5, 4[r10]
+ 513                             	.L18:
+ 218:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 						message->recipient_handle,
+ 514                             		.loc 1 218 5
+ 515 02a3 ED A5 06                		mov.L	24[r10], r5
+ 516 02a6 A8 5E                   		mov.L	4[r5], r6
+ 517 02a8 ED A5 06                		mov.L	24[r10], r5
+ 518 02ab A8 5D                   		mov.L	4[r5], r5
+ 519 02ad EF 51                   		mov.L	r5, r1
+ 520 02af 05 00 00 00             		bsr	_mw_get_control_parent_window_handle
+ 521 02b3 EF 15                   		mov.L	r1, r5
+ 522 02b5 3E 01 00                		mov.L	#0, 4[r0]
+ 523 02b8 F8 06 00                		mov.L	#0, [r0]
+ 524 02bb ED A4 01                		mov.L	4[r10], r4
+ 525 02be EF 53                   		mov.L	r5, r3
+ 526 02c0 EF 62                   		mov.L	r6, r2
+ 527 02c2 75 41 25                		mov.L	#37, r1
+ 528 02c5 05 00 00 00             		bsr	_mw_post_message
+ 529                             	.LBE7:
+ 230:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 
+ 530                             		.loc 1 230 3
+ 531 02c9 2E 1A                   		bra	.L12
+ 532                             	.L17:
+ 533                             	.LBB8:
+ 227:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			}
+ 534                             		.loc 1 227 5
+ 535 02cb FB 42 00 00 00 00       		mov.L	#.LC0, r4
+ 536 02d1 75 43 E3                		mov.L	#0xe3, r3
+ 537 02d4 FB 22 00 00 00 00       		mov.L	#___func__.2879, r2
+ 538 02da 66 01                   		mov	#0, r1
+ 539 02dc 05 00 00 00             		bsr	_mw_debug_print_assert
+ 540                             	.LBE8:
+ 230:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 
+ 541                             		.loc 1 230 3
+ 542 02e0 2E 03                   		bra	.L12
+ 543                             	.L20:
+ 192:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 
+ 544                             		.loc 1 192 3
+ 545 02e2 03                      		nop
+ 546                             	.L12:
+ 235:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 	}
+ 236:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** }
+ 547                             		.loc 1 236 1
+ 548 02e3 03                      		nop
+ 549 02e4 3F 6B 0F                		rtsd	#60, r6-r11
+ 550                             	.LFE1:
+ 552                             		.section	.text.mw_ui_text_box_add_new,"ax",@progbits
+ 553                             		.global	_mw_ui_text_box_add_new
+ 555                             	_mw_ui_text_box_add_new:
+ 556                             	.LFB2:
+ 237:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 
+ 238:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** /***********************
+ 239:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** *** GLOBAL FUNCTIONS ***
+ 240:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** ***********************/
+ 241:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 
+ 242:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** mw_handle_t mw_ui_text_box_add_new(mw_util_rect_t *control_rect,
+ 243:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 		mw_handle_t parent_handle,
+ 244:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 		uint16_t flags,
+ 245:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 		mw_ui_text_box_data_t *text_box_instance_data)
+ 246:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** {
+ 557                             		.loc 1 246 1
+ 558 0000 7E AA                   		push.l	r10
+ 559                             	.LCFI6:
+ 560 0002 71 0A F0                		add	#-16, r0, r10
+ 561                             	.LCFI7:
+ 562 0005 71 A0 F8                		add	#-8, r10, r0
+ 563                             	.LCFI8:
+ 564 0008 E3 A1                   		mov.L	r1, [r10]
+ 565 000a E7 A2 01                		mov.L	r2, 4[r10]
+ 566 000d D7 A3 04                		mov.W	r3, 8[r10]
+ 567 0010 E7 A4 03                		mov.L	r4, 12[r10]
+ 247:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 	/* check for null parameters */
+ 248:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 	if (control_rect == NULL ||
+ 568                             		.loc 1 248 5
+ 569 0013 EC A5                   		mov.L	[r10], r5
+ 570 0015 61 05                   		cmp	#0, r5
+ 571 0017 20 1A                   		beq	.L22
+ 572                             		.loc 1 248 27 discriminator 1
+ 573 0019 ED A5 03                		mov.L	12[r10], r5
+ 574 001c 61 05                   		cmp	#0, r5
+ 575 001e 20 13                   		beq	.L22
+ 249:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			text_box_instance_data == NULL ||
+ 250:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			text_box_instance_data->tt_font == NULL ||
+ 576                             		.loc 1 250 26
+ 577 0020 ED A5 03                		mov.L	12[r10], r5
+ 578 0023 EC 55                   		mov.L	[r5], r5
+ 249:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			text_box_instance_data == NULL ||
+ 579                             		.loc 1 249 35
+ 580 0025 61 05                   		cmp	#0, r5
+ 581 0027 12                      		beq	.L22
+ 251:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			text_box_instance_data->text == NULL)
+ 582                             		.loc 1 251 26
+ 583 0028 ED A5 03                		mov.L	12[r10], r5
+ 584 002b A8 D5                   		mov.L	8[r5], r5
+ 250:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			text_box_instance_data->text == NULL)
+ 585                             		.loc 1 250 44
+ 586 002d 61 05                   		cmp	#0, r5
+ 587 002f 21 1B                   		bne	.L23
+ 588                             		.balign 8,3,5
+ 589                             	.L22:
+ 252:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 	{
+ 253:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 		MW_ASSERT((bool)false, "Null pointer argument");
+ 590                             		.loc 1 253 3
+ 591 0031 FB 42 00 00 00 00       		mov.L	#.LC0, r4
+ 592 0037 75 43 FD                		mov.L	#0xfd, r3
+ 593 003a FB 22 00 00 00 00       		mov.L	#___func__.2897, r2
+ 594 0040 66 01                   		mov	#0, r1
+ 595 0042 05 00 00 00             		bsr	_mw_debug_print_assert
+ 254:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 		return MW_INVALID_HANDLE;
+ 596                             		.loc 1 254 10
+ 597 0046 66 05                   		mov.L	#0, r5
+ 598 0048 2E 23                   		bra	.L24
+ 599                             	.L23:
+ 255:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 	}
+ 256:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 
+ 257:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 	return (mw_add_control(control_rect,
+ 600                             		.loc 1 257 10
+ 601 004a ED A5 03                		mov.L	12[r10], r5
+ 602 004d A0 0D                   		mov.L	r5, 4[r0]
+ 603 004f DD A5 04                		mov.W	8[r10], r5
+ 604 0052 D3 05                   		mov.W	r5, [r0]
+ 605 0054 FB 42 00 00 00 00       		mov.L	#_text_box_message_function, r4
+ 606 005a FB 32 00 00 00 00       		mov.L	#_text_box_paint_function, r3
+ 607 0060 ED A2 01                		mov.L	4[r10], r2
+ 608 0063 EC A1                   		mov.L	[r10], r1
+ 609 0065 05 00 00 00             		bsr	_mw_add_control
+ 610 0069 EF 15                   		mov.L	r1, r5
+ 611                             	.L24:
+ 258:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			parent_handle,
+ 259:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			text_box_paint_function,
+ 260:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			text_box_message_function,
+ 261:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			flags,
+ 262:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** 			text_box_instance_data));
+ 263:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/ui\ui_text_box.c **** }
+ 612                             		.loc 1 263 1
+ 613 006b EF 51                   		mov.L	r5, r1
+ 614 006d 3F AA 07                		rtsd	#28, r10-r10
+ 615                             	.LFE2:
+ 617                             		.section	.rodata.__func__.2874,"a"
+ 620                             	___func__.2874:
+ 621 0000 74 65 78 74 5F 62 6F 78 		.string	"text_box_paint_function"
+ 621      5F 70 61 69 6E 74 5F 66 
+ 621      75 6E 63 74 69 6F 6E 00 
+ 622                             		.section	.rodata.__func__.2879,"a"
+ 625                             	___func__.2879:
+ 626 0000 74 65 78 74 5F 62 6F 78 		.string	"text_box_message_function"
+ 626      5F 6D 65 73 73 61 67 65 
+ 626      5F 66 75 6E 63 74 69 6F 
+ 626      6E 00 
+ 627                             		.section	.rodata.__func__.2897,"a"
+ 630                             	___func__.2897:
+ 631 0000 6D 77 5F 75 69 5F 74 65 		.string	"mw_ui_text_box_add_new"
+ 631      78 74 5F 62 6F 78 5F 61 
+ 631      64 64 5F 6E 65 77 00 
+ 742                             	.Letext0:
+ 743                             		.file 2 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\rx-el
+ 744                             		.file 3 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\rx-el
+ 745                             		.file 4 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\rx-el
+ 746                             		.file 5 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\lib\\
+ 747                             		.file 6 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\rx-el
+ 748                             		.file 7 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\rx-el
+ 749                             		.file 8 "C:\\Users\\John\\Desktop\\workspace\\miniwinwm\\MiniWin/miniwin_utilities.h"
+ 750                             		.file 9 "C:\\Users\\John\\Desktop\\workspace\\miniwinwm\\MiniWin/hal/hal_lcd.h"
+ 751                             		.file 10 "C:\\Users\\John\\Desktop\\workspace\\miniwinwm\\MiniWin/gl/gl.h"
+ 752                             		.file 11 "C:\\Users\\John\\Desktop\\workspace\\miniwinwm\\MiniWin/bitmaps/mw_bitmaps.h"
+ 753                             		.file 12 "C:\\Users\\John\\Desktop\\workspace\\miniwinwm\\MiniWin/hal/hal_timer.h"
+ 754                             		.file 13 "C:\\Users\\John\\Desktop\\workspace\\miniwinwm\\MiniWin/miniwin.h"
+ 755                             		.file 14 "C:\\Users\\John\\Desktop\\workspace\\miniwinwm\\MiniWin/ui/ui_text_box.h"

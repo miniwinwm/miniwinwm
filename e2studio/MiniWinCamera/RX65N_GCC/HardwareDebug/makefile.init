@@ -1,0 +1,11 @@
+################################################################################
+# Automatically-generated file. Do not edit!
+################################################################################
+
+arg1 = $(1)
+export PATH=C:\Program Files (x86)\GCC for Renesas RX 8.3.0.201904-GNURX-ELF\rx-elf\rx-elf\bin\;C:\Program Files (x86)\GCC for Renesas RX 8.3.0.201904-GNURX-ELF\rx-elf\rx-elf\libexec\gcc\rx-elf\8.3.0.201904-GNURX\;C:\Renesas\e2_studio\Utilities;C:/Renesas/e2_studio/eclipse//features/com.renesas.jre.win32.win32.x86_1.8.0.181/jre/bin/client;C:/Renesas/e2_studio/eclipse//features/com.renesas.jre.win32.win32.x86_1.8.0.181/jre/bin;C:/Renesas/e2_studio/eclipse//features/com.renesas.jre.win32.win32.x86_1.8.0.181/jre/lib/i386;c:\msys64\usr\bin;c:\msys64\mingw64\bin;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\Program Files (x86)\Microchip\mplabc18\v3.47\mpasm;C:\Program Files (x86)\Microchip\mplabc18\v3.47\bin;C:\Program Files (x86)\GCC for Renesas RX 8.3.0.201904-GNURX-ELF\rx-elf\rx-elf\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files\PuTTY\;C:\Program Files (x86)\STMicroelectronics\STM32 ST-LINK Utility\ST-LINK Utility;C:\Users\John\AppData\Local\Microsoft\WindowsApps;;C:\Renesas\e2_studio\eclipse
+export TCINSTALL=C:\Program Files (x86)\GCC for Renesas RX 8.3.0.201904-GNURX-ELF\rx-elf\rx-elf$(call arg1,\)
+export CWD=$(CURDIR)
+export TC_VERSION=8.3.0.201904
+export PWD=$(CURDIR)
+export GCC_VERSION=8.3.0.201904-GNURX

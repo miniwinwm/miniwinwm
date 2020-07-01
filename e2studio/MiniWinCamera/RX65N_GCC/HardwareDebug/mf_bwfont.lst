@@ -1,0 +1,668 @@
+   1                             		.file	"mf_bwfont.c"
+   2                             		.section P,"ax"
+   3                             	.Ltext0:
+   4                             		.section	.text.find_char_range,"ax",@progbits
+   6                             	_find_char_range:
+   7                             	.LFB0:
+   8                             		.file 1 "C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont/mf_bwfont.c"
+   1:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c **** #include "mf_bwfont.h"
+   2:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c **** #include <stdbool.h>
+   3:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c **** 
+   4:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c **** /* Find the character range and index that contains a given glyph.. */
+   5:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c **** static const struct mf_bwfont_char_range_s *find_char_range(
+   6:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****     const struct mf_bwfont_s *font, uint16_t character, uint16_t *index_ret)
+   7:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c **** {
+   9                             		.loc 1 7 1
+  10 0000 7E AA                   		push.l	r10
+  11                             	.LCFI0:
+  12 0002 71 0A E8                		add	#-24, r0, r10
+  13                             	.LCFI1:
+  14 0005 EF A0                   		mov.L	r10, r0
+  15 0007 E7 A1 03                		mov.L	r1, 12[r10]
+  16 000a D7 A2 08                		mov.W	r2, 16[r10]
+  17 000d E7 A3 05                		mov.L	r3, 20[r10]
+   8:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****     unsigned i, index;
+   9:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****     const struct mf_bwfont_char_range_s *range;
+  10:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****     for (i = 0; i < font->char_range_count; i++)
+  18                             		.loc 1 10 12
+  19 0010 F8 A6 00                		mov.L	#0, [r10]
+  20                             		.loc 1 10 5
+  21 0013 2E 52                   		bra	.L2
+  22                             	.L5:
+  11:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****     {
+  12:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****         range = &font->char_ranges[i];
+  23                             		.loc 1 12 22
+  24 0015 ED A5 03                		mov.L	12[r10], r5
+  25 0018 AA 54                   		mov.L	32[r5], r4
+  26                             		.loc 1 12 35
+  27 001a EC A5                   		mov.L	[r10], r5
+  28 001c 75 15 18                		mul	#24, r5
+  29                             		.loc 1 12 15
+  30 001f 4B 45                   		add	r4, r5
+  31 0021 E7 A5 01                		mov.L	r5, 4[r10]
+  13:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****         index = character - range->first_char;
+  32                             		.loc 1 13 27
+  33 0024 5D A4 08                		movu.W	16[r10], r4
+  34                             		.loc 1 13 34
+  35 0027 ED A5 01                		mov.L	4[r10], r5
+  36 002a DC 55                   		mov.W	[r5], r5
+  37 002c 5F 55                   		movu.W	r5, r5
+  38                             		.loc 1 13 27
+  39 002e FF 05 54                		sub	r5, r4, r5
+  40                             		.loc 1 13 15
+  41 0031 E7 A5 02                		mov.L	r5, 8[r10]
+  14:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****         if (character >= range->first_char && index < range->char_count)
+  42                             		.loc 1 14 31
+  43 0034 ED A5 01                		mov.L	4[r10], r5
+  44 0037 DC 55                   		mov.W	[r5], r5
+  45                             		.loc 1 14 12
+  46 0039 5D A4 08                		movu.W	16[r10], r4
+  47 003c 5F 55                   		movu.W	r5, r5
+  48 003e 47 54                   		cmp	r5, r4
+  49 0040 23 1F                   		bltu	.L3
+  50                             		.loc 1 14 60 discriminator 1
+  51 0042 ED A5 01                		mov.L	4[r10], r5
+  52 0045 98 5D                   		mov.W	2[r5], r5
+  53 0047 5F 55                   		movu.W	r5, r5
+  54                             		.loc 1 14 44 discriminator 1
+  55 0049 ED A4 02                		mov.L	8[r10], r4
+  56 004c 47 54                   		cmp	r5, r4
+  57 004e 22 11                   		bgeu	.L3
+  15:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****         {
+  16:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****             *index_ret = index;
+  58                             		.loc 1 16 24
+  59 0050 ED A5 02                		mov.L	8[r10], r5
+  60 0053 DF 54                   		mov.W	r5, r4
+  61 0055 ED A5 05                		mov.L	20[r10], r5
+  62 0058 D3 54                   		mov.W	r4, [r5]
+  17:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****             return range;
+  63                             		.loc 1 17 20
+  64 005a ED A5 01                		mov.L	4[r10], r5
+  65 005d 2E 17                   		bra	.L4
+  66                             	.L3:
+  10:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****     {
+  67                             		.loc 1 10 46 discriminator 2
+  68 005f EC A5                   		mov.L	[r10], r5
+  69 0061 62 15                   		add	#1, r5
+  70 0063 E3 A5                   		mov.L	r5, [r10]
+  71                             	.L2:
+  10:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****     {
+  72                             		.loc 1 10 25 discriminator 1
+  73 0065 ED A5 03                		mov.L	12[r10], r5
+  74 0068 8F 5D                   		mov.B	29[r5], r5
+  75 006a 5B 55                   		movu.B	r5, r5
+  10:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****     {
+  76                             		.loc 1 10 5 discriminator 1
+  77 006c EC A4                   		mov.L	[r10], r4
+  78 006e 47 54                   		cmp	r5, r4
+  79 0070 23 A5                   		bltu	.L5
+  18:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****         }
+  19:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****     }
+  20:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****     
+  21:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****     return 0;
+  80                             		.loc 1 21 12
+  81 0072 66 05                   		mov.L	#0, r5
+  82                             	.L4:
+  22:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c **** }
+  83                             		.loc 1 22 1
+  84 0074 EF 51                   		mov.L	r5, r1
+  85 0076 3F AA 07                		rtsd	#28, r10-r10
+  86                             	.LFE0:
+  88                             		.section	.text.get_width,"ax",@progbits
+  90                             	_get_width:
+  91                             	.LFB1:
+  23:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c **** 
+  24:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c **** static uint8_t get_width(const struct mf_bwfont_char_range_s *r, uint16_t index)
+  25:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c **** {
+  92                             		.loc 1 25 1
+  93 0000 7E AA                   		push.l	r10
+  94                             	.LCFI2:
+  95 0002 71 0A F8                		add	#-8, r0, r10
+  96                             	.LCFI3:
+  97 0005 EF A0                   		mov.L	r10, r0
+  98 0007 E3 A1                   		mov.L	r1, [r10]
+  99 0009 D7 A2 02                		mov.W	r2, 4[r10]
+  26:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****     if (r->width)
+ 100                             		.loc 1 26 10
+ 101 000c EC A5                   		mov.L	[r10], r5
+ 102 000e 8A 55                   		mov.B	8[r5], r5
+ 103                             		.loc 1 26 8
+ 104 0010 5B 55                   		movu.B	r5, r5
+ 105 0012 61 05                   		cmp	#0, r5
+ 106 0014 20 0E                   		beq	.L7
+  27:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****     {
+  28:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****         return r->width + r->offset_x;
+ 107                             		.loc 1 28 17
+ 108 0016 EC A5                   		mov.L	[r10], r5
+ 109 0018 8A 54                   		mov.B	8[r5], r4
+ 110                             		.loc 1 28 28
+ 111 001a EC A5                   		mov.L	[r10], r5
+ 112 001c 89 55                   		mov.B	4[r5], r5
+ 113                             		.loc 1 28 25
+ 114 001e 4B 45                   		add	r4, r5
+ 115 0020 2E 0D                   		bra	.L8
+ 116                             	.L7:
+  29:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****     }
+  30:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****     else
+  31:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****     {
+  32:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****         return r->glyph_widths[index];
+ 117                             		.loc 1 32 17
+ 118 0022 EC A5                   		mov.L	[r10], r5
+ 119 0024 A8 DC                   		mov.L	12[r5], r4
+ 120                             		.loc 1 32 31
+ 121 0026 5D A5 02                		movu.W	4[r10], r5
+ 122 0029 4B 45                   		add	r4, r5
+ 123 002b CC 55                   		mov.B	[r5], r5
+ 124                             	.L8:
+ 125 002d 5B 55                   		movu.B	r5, r5
+  33:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****     }
+  34:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c **** }
+ 126                             		.loc 1 34 1
+ 127 002f EF 51                   		mov.L	r5, r1
+ 128 0031 3F AA 03                		rtsd	#12, r10-r10
+ 129                             	.LFE1:
+ 131                             		.section	.text.render_char,"ax",@progbits
+ 133                             	_render_char:
+ 134                             	.LFB2:
+  35:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c **** 
+  36:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c **** static uint8_t render_char(const struct mf_bwfont_char_range_s *r,
+  37:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****                            int16_t x0, int16_t y0, uint16_t index,
+  38:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****                            mf_pixel_callback_t callback,
+  39:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****                            void *state)
+  40:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c **** {
+ 135                             		.loc 1 40 1
+ 136 0000 6E 6A                   		pushm	r6-r10
+ 137                             	.LCFI4:
+ 138 0002 71 0A D8                		add	#-40, r0, r10
+ 139                             	.LCFI5:
+ 140 0005 71 A0 FC                		add	#-4, r10, r0
+ 141                             	.LCFI6:
+ 142 0008 75 46 40                		mov.L	#0x40, r6
+ 143 000b 4B A6                   		add	r10, r6
+ 144 000d E7 A1 05                		mov.L	r1, 20[r10]
+ 145 0010 D7 A2 0C                		mov.W	r2, 24[r10]
+ 146 0013 D7 A3 0D                		mov.W	r3, 26[r10]
+ 147 0016 D7 A4 0E                		mov.W	r4, 28[r10]
+  41:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****     const uint8_t *data, *p;
+  42:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****     uint8_t stride, runlen;
+  43:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****     uint8_t x, y, height, num_cols;
+  44:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****     uint8_t bit, byte, mask;
+  45:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****     bool oldstate, newstate;
+  46:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****     
+  47:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****     if (r->width)
+ 148                             		.loc 1 47 10
+ 149 0019 ED A5 05                		mov.L	20[r10], r5
+ 150 001c 8A 55                   		mov.B	8[r5], r5
+ 151                             		.loc 1 47 8
+ 152 001e 5B 55                   		movu.B	r5, r5
+ 153 0020 61 05                   		cmp	#0, r5
+ 154 0022 20 2A                   		beq	.L10
+  48:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****     {
+  49:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****         data = r->glyph_data + r->width * index * r->height_bytes;
+ 155                             		.loc 1 49 17
+ 156 0024 ED A5 05                		mov.L	20[r10], r5
+ 157 0027 A9 5B                   		mov.L	20[r5], r3
+ 158                             		.loc 1 49 33
+ 159 0029 ED A5 05                		mov.L	20[r10], r5
+ 160 002c 8A 55                   		mov.B	8[r5], r5
+ 161 002e 5B 54                   		movu.B	r5, r4
+ 162                             		.loc 1 49 41
+ 163 0030 5D A5 0E                		movu.W	28[r10], r5
+ 164 0033 4F 54                   		mul	r5, r4
+ 165                             		.loc 1 49 52
+ 166 0035 ED A5 05                		mov.L	20[r10], r5
+ 167 0038 89 D5                   		mov.B	6[r5], r5
+ 168 003a 5B 55                   		movu.B	r5, r5
+ 169                             		.loc 1 49 49
+ 170 003c 4F 45                   		mul	r4, r5
+ 171                             		.loc 1 49 14
+ 172 003e 4B 35                   		add	r3, r5
+ 173 0040 E3 A5                   		mov.L	r5, [r10]
+  50:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****         num_cols = r->width;
+ 174                             		.loc 1 50 18
+ 175 0042 ED A5 05                		mov.L	20[r10], r5
+ 176 0045 8A 55                   		mov.B	8[r5], r5
+ 177 0047 C7 A5 0B                		mov.B	r5, 11[r10]
+ 178 004a 2E 4A                   		bra	.L11
+ 179                             	.L10:
+  51:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****     }
+  52:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****     else
+  53:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****     {
+  54:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****         data = r->glyph_data + r->glyph_offsets[index] * r->height_bytes;
+ 180                             		.loc 1 54 17
+ 181 004c ED A5 05                		mov.L	20[r10], r5
+ 182 004f A9 5B                   		mov.L	20[r5], r3
+ 183                             		.loc 1 54 33
+ 184 0051 ED A5 05                		mov.L	20[r10], r5
+ 185 0054 A9 54                   		mov.L	16[r5], r4
+ 186                             		.loc 1 54 48
+ 187 0056 5D A5 0E                		movu.W	28[r10], r5
+ 188 0059 4B 55                   		add	r5, r5
+ 189 005b 4B 45                   		add	r4, r5
+ 190 005d DC 55                   		mov.W	[r5], r5
+ 191 005f 5F 54                   		movu.W	r5, r4
+ 192                             		.loc 1 54 59
+ 193 0061 ED A5 05                		mov.L	20[r10], r5
+ 194 0064 89 D5                   		mov.B	6[r5], r5
+ 195 0066 5B 55                   		movu.B	r5, r5
+ 196                             		.loc 1 54 56
+ 197 0068 4F 45                   		mul	r4, r5
+ 198                             		.loc 1 54 14
+ 199 006a 4B 35                   		add	r3, r5
+ 200 006c E3 A5                   		mov.L	r5, [r10]
+  55:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****         num_cols = r->glyph_offsets[index + 1] - r->glyph_offsets[index];
+ 201                             		.loc 1 55 21
+ 202 006e ED A5 05                		mov.L	20[r10], r5
+ 203 0071 A9 54                   		mov.L	16[r5], r4
+ 204                             		.loc 1 55 36
+ 205 0073 5D A5 0E                		movu.W	28[r10], r5
+ 206 0076 62 15                   		add	#1, r5
+ 207 0078 4B 55                   		add	r5, r5
+ 208 007a 4B 45                   		add	r4, r5
+ 209 007c DC 55                   		mov.W	[r5], r5
+ 210                             		.loc 1 55 48
+ 211 007e CF 54                   		mov.B	r5, r4
+ 212                             		.loc 1 55 51
+ 213 0080 ED A5 05                		mov.L	20[r10], r5
+ 214 0083 A9 53                   		mov.L	16[r5], r3
+ 215                             		.loc 1 55 66
+ 216 0085 5D A5 0E                		movu.W	28[r10], r5
+ 217 0088 4B 55                   		add	r5, r5
+ 218 008a 4B 35                   		add	r3, r5
+ 219 008c DC 55                   		mov.W	[r5], r5
+ 220                             		.loc 1 55 18
+ 221 008e FF 05 54                		sub	r5, r4, r5
+ 222 0091 C7 A5 0B                		mov.B	r5, 11[r10]
+ 223                             	.L11:
+  56:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****     }
+  57:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****     
+  58:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****     stride = r->height_bytes;
+ 224                             		.loc 1 58 12
+ 225 0094 ED A5 05                		mov.L	20[r10], r5
+ 226 0097 89 D5                   		mov.B	6[r5], r5
+ 227 0099 C7 A5 0F                		mov.B	r5, 15[r10]
+  59:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****     height = r->height_pixels;
+ 228                             		.loc 1 59 12
+ 229 009c ED A5 05                		mov.L	20[r10], r5
+ 230 009f 89 DD                   		mov.B	7[r5], r5
+ 231 00a1 C7 A5 10                		mov.B	r5, 16[r10]
+  60:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****     y0 += r->offset_y;
+ 232                             		.loc 1 60 12
+ 233 00a4 ED A5 05                		mov.L	20[r10], r5
+ 234 00a7 89 5D                   		mov.B	5[r5], r5
+ 235 00a9 5B 55                   		movu.B	r5, r5
+ 236 00ab DF 54                   		mov.W	r5, r4
+ 237                             		.loc 1 60 8
+ 238 00ad DD A5 0D                		mov.W	26[r10], r5
+ 239 00b0 4B 45                   		add	r4, r5
+ 240 00b2 D7 A5 0D                		mov.W	r5, 26[r10]
+  61:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****     x0 += r->offset_x;
+ 241                             		.loc 1 61 12
+ 242 00b5 ED A5 05                		mov.L	20[r10], r5
+ 243 00b8 89 55                   		mov.B	4[r5], r5
+ 244 00ba 5B 55                   		movu.B	r5, r5
+ 245 00bc DF 54                   		mov.W	r5, r4
+ 246                             		.loc 1 61 8
+ 247 00be DD A5 0C                		mov.W	24[r10], r5
+ 248 00c1 4B 45                   		add	r4, r5
+ 249 00c3 D7 A5 0C                		mov.W	r5, 24[r10]
+  62:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****     bit = 0;
+ 250                             		.loc 1 62 9
+ 251 00c6 F9 A4 0C 00             		mov.B	#0, 12[r10]
+  63:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****     byte = 0;
+ 252                             		.loc 1 63 10
+ 253 00ca F9 A4 0D 00             		mov.B	#0, 13[r10]
+  64:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****     
+  65:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****     for (y = 0; y < height; y++)
+ 254                             		.loc 1 65 12
+ 255 00ce F9 A4 0A 00             		mov.B	#0, 10[r10]
+ 256                             		.loc 1 65 5
+ 257 00d2 38 16 01                		bra	.L12
+ 258                             	.L19:
+  66:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****     {
+  67:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****         mask = (1 << bit);
+ 259                             		.loc 1 67 19
+ 260 00d5 59 A5 0C                		movu.B	12[r10], r5
+ 261 00d8 66 14                   		mov.L	#1, r4
+ 262 00da EF 47                   		mov.L	r4, r7
+ 263 00dc FD 62 57                		shll	r5, r7
+ 264 00df EF 75                   		mov.L	r7, r5
+ 265                             		.loc 1 67 14
+ 266 00e1 C7 A5 11                		mov.B	r5, 17[r10]
+  68:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****         
+  69:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****         oldstate = false;
+ 267                             		.loc 1 69 18
+ 268 00e4 F9 A4 0E 00             		mov.B	#0, 14[r10]
+  70:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****         runlen = 0;
+ 269                             		.loc 1 70 16
+ 270 00e8 F9 A4 08 00             		mov.B	#0, 8[r10]
+  71:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****         p = data + byte;
+ 271                             		.loc 1 71 18
+ 272 00ec 59 A5 0D                		movu.B	13[r10], r5
+ 273                             		.loc 1 71 11
+ 274 00ef EC A4                   		mov.L	[r10], r4
+ 275 00f1 4B 45                   		add	r4, r5
+ 276 00f3 E7 A5 01                		mov.L	r5, 4[r10]
+  72:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****         for (x = 0; x < num_cols; x++, p += stride)
+ 277                             		.loc 1 72 16
+ 278 00f6 F9 A4 09 00             		mov.B	#0, 9[r10]
+ 279                             		.loc 1 72 9
+ 280 00fa 38 82 00                		bra	.L13
+ 281                             	.L16:
+  73:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****         {
+  74:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****             newstate = pgm_read_byte(p) & mask;
+ 282                             		.loc 1 74 24
+ 283 00fd ED A5 01                		mov.L	4[r10], r5
+ 284 0100 CC 55                   		mov.B	[r5], r5
+ 285                             		.loc 1 74 41
+ 286 0102 CD A4 11                		mov.B	17[r10], r4
+ 287 0105 53 45                   		and	r4, r5
+ 288                             		.loc 1 74 22
+ 289 0107 5B 55                   		movu.B	r5, r5
+ 290 0109 61 05                   		cmp	#0, r5
+ 291 010b FC DB 51                		scne.L	r5
+ 292 010e C7 A5 12                		mov.B	r5, 18[r10]
+  75:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****             if (newstate != oldstate)
+ 293                             		.loc 1 75 16
+ 294 0111 59 A4 12                		movu.B	18[r10], r4
+ 295 0114 59 A5 0E                		movu.B	14[r10], r5
+ 296 0117 47 54                   		cmp	r5, r4
+ 297 0119 20 48                   		beq	.L14
+  76:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****             {
+  77:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****                 if (oldstate && runlen)
+ 298                             		.loc 1 77 20
+ 299 011b 59 A5 0E                		movu.B	14[r10], r5
+ 300 011e 61 05                   		cmp	#0, r5
+ 301 0120 20 37                   		beq	.L15
+ 302                             		.loc 1 77 30 discriminator 1
+ 303 0122 59 A5 08                		movu.B	8[r10], r5
+ 304 0125 61 05                   		cmp	#0, r5
+ 305 0127 20 30                   		beq	.L15
+  78:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****                 {
+  79:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****                     callback(x0 + x - runlen, y0 + y, runlen, 255, state);
+ 306                             		.loc 1 79 33
+ 307 0129 59 A5 09                		movu.B	9[r10], r5
+ 308 012c DF 54                   		mov.W	r5, r4
+ 309 012e DD A5 0C                		mov.W	24[r10], r5
+ 310 0131 4B 45                   		add	r4, r5
+ 311 0133 DF 54                   		mov.W	r5, r4
+ 312                             		.loc 1 79 37
+ 313 0135 59 A5 08                		movu.B	8[r10], r5
+ 314 0138 FF 05 54                		sub	r5, r4, r5
+ 315                             		.loc 1 79 21
+ 316 013b DF 51                   		mov.W	r5, r1
+ 317                             		.loc 1 79 50
+ 318 013d 59 A5 0A                		movu.B	10[r10], r5
+ 319 0140 DF 54                   		mov.W	r5, r4
+ 320 0142 DD A5 0D                		mov.W	26[r10], r5
+ 321 0145 4B 45                   		add	r4, r5
+ 322                             		.loc 1 79 21
+ 323 0147 DF 52                   		mov.W	r5, r2
+ 324 0149 A8 6D                   		mov.L	4[r6], r5
+ 325 014b E3 05                   		mov.L	r5, [r0]
+ 326 014d EC 65                   		mov.L	[r6], r5
+ 327 014f FB 46 FF                		mov	#-1, r4
+ 328 0152 CD A3 08                		mov.B	8[r10], r3
+ 329 0155 7F 15                   		jsr	r5
+ 330                             	.LVL0:
+ 331                             	.L15:
+  80:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****                 }
+  81:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****                 
+  82:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****                 oldstate = newstate;
+ 332                             		.loc 1 82 26
+ 333 0157 CD A5 12                		mov.B	18[r10], r5
+ 334 015a C7 A5 0E                		mov.B	r5, 14[r10]
+  83:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****                 runlen = 0;
+ 335                             		.loc 1 83 24
+ 336 015d F9 A4 08 00             		mov.B	#0, 8[r10]
+ 337                             	.L14:
+  84:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****             }
+  85:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****             
+  86:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****             runlen++;
+ 338                             		.loc 1 86 19 discriminator 2
+ 339 0161 CD A5 08                		mov.B	8[r10], r5
+ 340 0164 62 15                   		add	#1, r5
+ 341 0166 C7 A5 08                		mov.B	r5, 8[r10]
+  72:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****         {
+ 342                             		.loc 1 72 36 discriminator 2
+ 343 0169 CD A5 09                		mov.B	9[r10], r5
+ 344 016c 62 15                   		add	#1, r5
+ 345 016e C7 A5 09                		mov.B	r5, 9[r10]
+  72:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****         {
+ 346                             		.loc 1 72 42 discriminator 2
+ 347 0171 59 A5 0F                		movu.B	15[r10], r5
+ 348 0174 ED A4 01                		mov.L	4[r10], r4
+ 349 0177 4B 45                   		add	r4, r5
+ 350 0179 E7 A5 01                		mov.L	r5, 4[r10]
+ 351                             	.L13:
+  72:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****         {
+ 352                             		.loc 1 72 9 discriminator 1
+ 353 017c 59 A4 09                		movu.B	9[r10], r4
+ 354 017f 59 A5 0B                		movu.B	11[r10], r5
+ 355 0182 47 54                   		cmp	r5, r4
+ 356 0184 22 05 38 77 FF          		bltu	.L16
+  87:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****         }
+  88:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****         
+  89:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****         if (oldstate && runlen)
+ 357                             		.loc 1 89 12
+ 358 0189 59 A5 0E                		movu.B	14[r10], r5
+ 359 018c 61 05                   		cmp	#0, r5
+ 360 018e 20 37                   		beq	.L17
+ 361                             		.loc 1 89 22 discriminator 1
+ 362 0190 59 A5 08                		movu.B	8[r10], r5
+ 363 0193 61 05                   		cmp	#0, r5
+ 364 0195 20 30                   		beq	.L17
+  90:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****         {
+  91:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****             callback(x0 + x - runlen, y0 + y, runlen, 255, state);
+ 365                             		.loc 1 91 25
+ 366 0197 59 A5 09                		movu.B	9[r10], r5
+ 367 019a DF 54                   		mov.W	r5, r4
+ 368 019c DD A5 0C                		mov.W	24[r10], r5
+ 369 019f 4B 45                   		add	r4, r5
+ 370 01a1 DF 54                   		mov.W	r5, r4
+ 371                             		.loc 1 91 29
+ 372 01a3 59 A5 08                		movu.B	8[r10], r5
+ 373 01a6 FF 05 54                		sub	r5, r4, r5
+ 374                             		.loc 1 91 13
+ 375 01a9 DF 51                   		mov.W	r5, r1
+ 376                             		.loc 1 91 42
+ 377 01ab 59 A5 0A                		movu.B	10[r10], r5
+ 378 01ae DF 54                   		mov.W	r5, r4
+ 379 01b0 DD A5 0D                		mov.W	26[r10], r5
+ 380 01b3 4B 45                   		add	r4, r5
+ 381                             		.loc 1 91 13
+ 382 01b5 DF 52                   		mov.W	r5, r2
+ 383 01b7 A8 6D                   		mov.L	4[r6], r5
+ 384 01b9 E3 05                   		mov.L	r5, [r0]
+ 385 01bb EC 65                   		mov.L	[r6], r5
+ 386 01bd FB 46 FF                		mov	#-1, r4
+ 387 01c0 CD A3 08                		mov.B	8[r10], r3
+ 388 01c3 7F 15                   		jsr	r5
+ 389                             	.LVL1:
+ 390                             	.L17:
+  92:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****         }
+  93:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****         
+  94:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****         bit++;
+ 391                             		.loc 1 94 12
+ 392 01c5 CD A5 0C                		mov.B	12[r10], r5
+ 393 01c8 62 15                   		add	#1, r5
+ 394 01ca C7 A5 0C                		mov.B	r5, 12[r10]
+  95:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****         if (bit > 7)
+ 395                             		.loc 1 95 12
+ 396 01cd 59 A5 0C                		movu.B	12[r10], r5
+ 397 01d0 61 75                   		cmp	#7, r5
+ 398 01d2 25 0E                   		bleu	.L18
+  96:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****         {
+  97:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****             bit = 0;
+ 399                             		.loc 1 97 17
+ 400 01d4 F9 A4 0C 00             		mov.B	#0, 12[r10]
+  98:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****             byte++;
+ 401                             		.loc 1 98 17
+ 402 01d8 CD A5 0D                		mov.B	13[r10], r5
+ 403 01db 62 15                   		add	#1, r5
+ 404 01dd C7 A5 0D                		mov.B	r5, 13[r10]
+ 405                             	.L18:
+  65:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****     {
+ 406                             		.loc 1 65 30 discriminator 2
+ 407 01e0 CD A5 0A                		mov.B	10[r10], r5
+ 408 01e3 62 15                   		add	#1, r5
+ 409 01e5 C7 A5 0A                		mov.B	r5, 10[r10]
+ 410                             	.L12:
+  65:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****     {
+ 411                             		.loc 1 65 5 discriminator 1
+ 412 01e8 59 A4 0A                		movu.B	10[r10], r4
+ 413 01eb 59 A5 10                		movu.B	16[r10], r5
+ 414 01ee 47 54                   		cmp	r5, r4
+ 415 01f0 22 05 38 E3 FE          		bltu	.L19
+  99:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****         }
+ 100:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****     }
+ 101:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****     
+ 102:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****     return get_width(r, index);
+ 416                             		.loc 1 102 12
+ 417 01f5 DD A2 0E                		mov.W	28[r10], r2
+ 418 01f8 ED A1 05                		mov.L	20[r10], r1
+ 419 01fb 05 00 00 00             		bsr	_get_width
+ 420 01ff EF 15                   		mov.L	r1, r5
+ 421 0201 5B 55                   		movu.B	r5, r5
+ 103:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c **** }
+ 422                             		.loc 1 103 1
+ 423 0203 EF 51                   		mov.L	r5, r1
+ 424 0205 3F 6A 10                		rtsd	#64, r6-r10
+ 425                             	.LFE2:
+ 427                             		.section	.text.mf_bwfont_render_character,"ax",@progbits
+ 428                             		.global	_mf_bwfont_render_character
+ 430                             	_mf_bwfont_render_character:
+ 431                             	.LFB3:
+ 104:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c **** 
+ 105:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c **** uint8_t mf_bwfont_render_character(const struct mf_font_s *font,
+ 106:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****                                    int16_t x0, int16_t y0,
+ 107:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****                                    uint16_t character,
+ 108:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****                                    mf_pixel_callback_t callback,
+ 109:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****                                    void *state)
+ 110:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c **** {
+ 432                             		.loc 1 110 1
+ 433 0000 7E AA                   		push.l	r10
+ 434                             	.LCFI7:
+ 435 0002 7E A6                   		push.l	r6
+ 436                             	.LCFI8:
+ 437 0004 71 0A E0                		add	#-32, r0, r10
+ 438                             	.LCFI9:
+ 439 0007 71 A0 F8                		add	#-8, r10, r0
+ 440                             	.LCFI10:
+ 441 000a 75 46 2C                		mov.L	#44, r6
+ 442 000d 4B A6                   		add	r10, r6
+ 443 000f E7 A1 03                		mov.L	r1, 12[r10]
+ 444 0012 D7 A2 08                		mov.W	r2, 16[r10]
+ 445 0015 D7 A3 09                		mov.W	r3, 18[r10]
+ 446 0018 D7 A4 0A                		mov.W	r4, 20[r10]
+ 111:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****     const struct mf_bwfont_s *bwfont = (const struct mf_bwfont_s*)font;
+ 447                             		.loc 1 111 31
+ 448 001b ED A5 03                		mov.L	12[r10], r5
+ 449 001e E3 A5                   		mov.L	r5, [r10]
+ 112:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****     const struct mf_bwfont_char_range_s *range;
+ 113:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****     uint16_t index;
+ 114:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****     
+ 115:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****     range = find_char_range(bwfont, character, &index);
+ 450                             		.loc 1 115 13
+ 451 0020 71 A5 08                		add	#8, r10, r5
+ 452 0023 EF 53                   		mov.L	r5, r3
+ 453 0025 DD A2 0A                		mov.W	20[r10], r2
+ 454 0028 EC A1                   		mov.L	[r10], r1
+ 455 002a 05 00 00 00             		bsr	_find_char_range
+ 456 002e E7 A1 01                		mov.L	r1, 4[r10]
+ 116:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****     if (!range)
+ 457                             		.loc 1 116 8
+ 458 0031 ED A5 01                		mov.L	4[r10], r5
+ 459 0034 61 05                   		cmp	#0, r5
+ 460 0036 1D                      		bne	.L22
+ 117:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****         return 0;
+ 461                             		.loc 1 117 16
+ 462 0037 66 05                   		mov	#0, r5
+ 463 0039 2E 1E                   		bra	.L24
+ 464                             	.L22:
+ 118:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****     
+ 119:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****     return render_char(range, x0, y0, index, callback, state);
+ 465                             		.loc 1 119 12
+ 466 003b DD A5 04                		mov.W	8[r10], r5
+ 467 003e A8 6C                   		mov.L	4[r6], r4
+ 468 0040 A0 0C                   		mov.L	r4, 4[r0]
+ 469 0042 EC 64                   		mov.L	[r6], r4
+ 470 0044 E3 04                   		mov.L	r4, [r0]
+ 471 0046 DF 54                   		mov.W	r5, r4
+ 472 0048 DD A3 09                		mov.W	18[r10], r3
+ 473 004b DD A2 08                		mov.W	16[r10], r2
+ 474 004e ED A1 01                		mov.L	4[r10], r1
+ 475 0051 05 00 00 00             		bsr	_render_char
+ 476 0055 EF 15                   		mov.L	r1, r5
+ 477                             	.L24:
+ 478 0057 5B 55                   		movu.B	r5, r5
+ 120:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c **** }
+ 479                             		.loc 1 120 1 discriminator 1
+ 480 0059 EF 51                   		mov.L	r5, r1
+ 481 005b 71 00 28                		add	#40, r0
+ 482 005e 7E B6                   		pop	r6
+ 483 0060 7E BA                   		pop	r10
+ 484 0062 02                      		rts
+ 485                             	.LFE3:
+ 487                             		.section	.text.mf_bwfont_character_width,"ax",@progbits
+ 488                             		.global	_mf_bwfont_character_width
+ 490                             	_mf_bwfont_character_width:
+ 491                             	.LFB4:
+ 121:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c **** 
+ 122:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c **** uint8_t mf_bwfont_character_width(const struct mf_font_s *font,
+ 123:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****                                   uint16_t character)
+ 124:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c **** {
+ 492                             		.loc 1 124 1
+ 493 0000 7E AA                   		push.l	r10
+ 494                             	.LCFI11:
+ 495 0002 71 0A EC                		add	#-20, r0, r10
+ 496                             	.LCFI12:
+ 497 0005 EF A0                   		mov.L	r10, r0
+ 498 0007 E7 A1 03                		mov.L	r1, 12[r10]
+ 499 000a D7 A2 08                		mov.W	r2, 16[r10]
+ 125:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****     const struct mf_bwfont_s *bwfont = (const struct mf_bwfont_s*)font;
+ 500                             		.loc 1 125 31
+ 501 000d ED A5 03                		mov.L	12[r10], r5
+ 502 0010 E3 A5                   		mov.L	r5, [r10]
+ 126:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****     const struct mf_bwfont_char_range_s *range;
+ 127:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****     uint16_t index;
+ 128:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****     
+ 129:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****     range = find_char_range(bwfont, character, &index);
+ 503                             		.loc 1 129 13
+ 504 0012 71 A5 08                		add	#8, r10, r5
+ 505 0015 EF 53                   		mov.L	r5, r3
+ 506 0017 DD A2 08                		mov.W	16[r10], r2
+ 507 001a EC A1                   		mov.L	[r10], r1
+ 508 001c 05 00 00 00             		bsr	_find_char_range
+ 509 0020 E7 A1 01                		mov.L	r1, 4[r10]
+ 130:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****     if (!range)
+ 510                             		.loc 1 130 8
+ 511 0023 ED A5 01                		mov.L	4[r10], r5
+ 512 0026 61 05                   		cmp	#0, r5
+ 513 0028 1D                      		bne	.L26
+ 131:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****         return 0;
+ 514                             		.loc 1 131 16
+ 515 0029 66 05                   		mov	#0, r5
+ 516 002b 2E 10                   		bra	.L28
+ 517                             	.L26:
+ 132:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****     
+ 133:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c ****     return get_width(range, index);
+ 518                             		.loc 1 133 12
+ 519 002d DD A5 04                		mov.W	8[r10], r5
+ 520 0030 DF 52                   		mov.W	r5, r2
+ 521 0032 ED A1 01                		mov.L	4[r10], r1
+ 522 0035 05 00 00 00             		bsr	_get_width
+ 523 0039 EF 15                   		mov.L	r1, r5
+ 524                             	.L28:
+ 525 003b 5B 55                   		movu.B	r5, r5
+ 134:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_bwfont.c **** }
+ 526                             		.loc 1 134 1 discriminator 1
+ 527 003d EF 51                   		mov.L	r5, r1
+ 528 003f 3F AA 06                		rtsd	#24, r10-r10
+ 529                             	.LFE4:
+ 668                             	.Letext0:
+ 669                             		.file 2 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\rx-el
+ 670                             		.file 3 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\rx-el
+ 671                             		.file 4 "C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont/mf_encoding.h
+ 672                             		.file 5 "C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont/mf_font.h"
+ 673                             		.file 6 "C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont/mf_bwfont.h"

@@ -796,10 +796,10 @@ void remove_minimised_window_from_list(mw_handle_t window_handle)
 	{
 		if (minimised_windows[i] == window_id)
 		{
-			shift = true;;
+			shift = true;
 		}
 
-		if (shift && i < (MW_MAX_WINDOW_COUNT - 2U))
+		if (shift && i < (MW_MAX_WINDOW_COUNT - 1U))
 		{
 			minimised_windows[i] = minimised_windows[i + 1U];
 		}
@@ -3948,7 +3948,7 @@ static void do_paint_all(void)
 	visible_windows = find_number_of_displayed_windows() + 1U;
 
 	/* loop to paint that number of windows */
-	while(windows_painted < visible_windows)
+	while (windows_painted < visible_windows)
 	{
 		paint_window_frame_and_client_with_z_order(next_z_order);
 		windows_painted++;

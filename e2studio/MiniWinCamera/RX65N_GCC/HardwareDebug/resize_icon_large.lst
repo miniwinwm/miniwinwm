@@ -1,0 +1,72 @@
+   1                             		.file	"resize_icon_large.c"
+   2                             		.section P,"ax"
+   3                             	.Ltext0:
+   4                             		.global	_mw_bitmaps_resize_icon_large
+   5                             		.section	.rodata.mw_bitmaps_resize_icon_large,"a"
+   8                             	_mw_bitmaps_resize_icon_large:
+   9 0000 00                      		.byte	0
+  10 0001 00                      		.byte	0
+  11 0002 00                      		.byte	0
+  12 0003 00                      		.byte	0
+  13 0004 00                      		.byte	0
+  14 0005 10                      		.byte	16
+  15 0006 00                      		.byte	0
+  16 0007 00                      		.byte	0
+  17 0008 30                      		.byte	48
+  18 0009 00                      		.byte	0
+  19 000a 00                      		.byte	0
+  20 000b 70                      		.byte	0x70
+  21 000c 00                      		.byte	0
+  22 000d 00                      		.byte	0
+  23 000e F0                      		.byte	-16
+  24 000f 00                      		.byte	0
+  25 0010 01                      		.byte	1
+  26 0011 F0                      		.byte	-16
+  27 0012 00                      		.byte	0
+  28 0013 03                      		.byte	3
+  29 0014 F0                      		.byte	-16
+  30 0015 00                      		.byte	0
+  31 0016 07                      		.byte	7
+  32 0017 F0                      		.byte	-16
+  33 0018 00                      		.byte	0
+  34 0019 0F                      		.byte	15
+  35 001a F0                      		.byte	-16
+  36 001b 00                      		.byte	0
+  37 001c 1F                      		.byte	31
+  38 001d F0                      		.byte	-16
+  39 001e 00                      		.byte	0
+  40 001f 3F                      		.byte	63
+  41 0020 F0                      		.byte	-16
+  42 0021 00                      		.byte	0
+  43 0022 7F                      		.byte	0x7f
+  44 0023 F0                      		.byte	-16
+  45 0024 00                      		.byte	0
+  46 0025 FF                      		.byte	-1
+  47 0026 F0                      		.byte	-16
+  48 0027 01                      		.byte	1
+  49 0028 FF                      		.byte	-1
+  50 0029 F0                      		.byte	-16
+  51 002a 03                      		.byte	3
+  52 002b FF                      		.byte	-1
+  53 002c F0                      		.byte	-16
+  54 002d 07                      		.byte	7
+  55 002e FF                      		.byte	-1
+  56 002f F0                      		.byte	-16
+  57 0030 0F                      		.byte	15
+  58 0031 FF                      		.byte	-1
+  59 0032 F0                      		.byte	-16
+  60 0033 1F                      		.byte	31
+  61 0034 FF                      		.byte	-1
+  62 0035 F0                      		.byte	-16
+  63 0036 3F                      		.byte	63
+  64 0037 FF                      		.byte	-1
+  65 0038 F0                      		.byte	-16
+  66 0039 7F                      		.byte	0x7f
+  67 003a FF                      		.byte	-1
+  68 003b F0                      		.byte	-16
+  69                             		.section P,"ax"
+  70                             	.Letext0:
+  71                             		.file 1 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\rx-el
+  72                             		.file 2 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\rx-el
+  73                             		.file 3 "C:\\Users\\John\\Desktop\\workspace\\miniwinwm\\MiniWin/bitmaps/mw_bitmaps.h"
+  74                             		.file 4 "C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/bitmaps/resize_icon_large.c"

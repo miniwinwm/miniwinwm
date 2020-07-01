@@ -1,0 +1,4 @@
+   1                             		.file	"hal_timer.c"
+   2                             		.section P,"ax"
+   3                             	.Ltext0:
+   4                             	.Letext0:

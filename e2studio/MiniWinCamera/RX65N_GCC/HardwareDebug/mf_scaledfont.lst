@@ -1,0 +1,400 @@
+   1                             		.file	"mf_scaledfont.c"
+   2                             		.section P,"ax"
+   3                             	.Ltext0:
+   4                             		.section	.text.scaled_pixel_callback,"ax",@progbits
+   6                             	_scaled_pixel_callback:
+   7                             	.LFB0:
+   8                             		.file 1 "C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont/mf_scaledfont
+   1:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c **** #include "mf_scaledfont.h"
+   2:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c **** 
+   3:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c **** struct scaled_renderstate
+   4:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c **** {
+   5:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c ****     mf_pixel_callback_t orig_callback;
+   6:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c ****     void *orig_state;
+   7:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c ****     uint8_t x_scale;
+   8:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c ****     uint8_t y_scale;
+   9:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c ****     int16_t x0;
+  10:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c ****     int16_t y0;
+  11:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c **** };
+  12:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c **** 
+  13:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c **** static void scaled_pixel_callback(int16_t x, int16_t y, uint8_t count,
+  14:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c ****                                   uint8_t alpha, void *state)
+  15:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c **** {
+   9                             		.loc 1 15 1
+  10 0000 7E AA                   		push.l	r10
+  11                             	.LCFI0:
+  12 0002 71 0A EC                		add	#-20, r0, r10
+  13                             	.LCFI1:
+  14 0005 71 A0 FC                		add	#-4, r10, r0
+  15                             	.LCFI2:
+  16 0008 75 45 1C                		mov.L	#28, r5
+  17 000b 4B A5                   		add	r10, r5
+  18 000d D7 A1 04                		mov.W	r1, 8[r10]
+  19 0010 D7 A2 05                		mov.W	r2, 10[r10]
+  20 0013 C7 A3 0C                		mov.B	r3, 12[r10]
+  21 0016 C7 A4 0D                		mov.B	r4, 13[r10]
+  16:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c ****     struct scaled_renderstate *rstate = state;
+  22                             		.loc 1 16 32
+  23 0019 EC 55                   		mov.L	[r5], r5
+  24 001b E7 A5 01                		mov.L	r5, 4[r10]
+  17:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c ****     uint8_t dy;
+  18:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c ****     
+  19:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c ****     count *= rstate->x_scale;
+  25                             		.loc 1 19 20
+  26 001e ED A5 01                		mov.L	4[r10], r5
+  27 0021 8A 55                   		mov.B	8[r5], r5
+  28                             		.loc 1 19 11
+  29 0023 CD A4 0C                		mov.B	12[r10], r4
+  30 0026 4F 45                   		mul	r4, r5
+  31 0028 C7 A5 0C                		mov.B	r5, 12[r10]
+  20:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c ****     x = rstate->x0 + x * rstate->x_scale;
+  32                             		.loc 1 20 15
+  33 002b ED A5 01                		mov.L	4[r10], r5
+  34 002e 99 5D                   		mov.W	10[r5], r5
+  35 0030 DF 53                   		mov.W	r5, r3
+  36                             		.loc 1 20 32
+  37 0032 ED A5 01                		mov.L	4[r10], r5
+  38 0035 8A 55                   		mov.B	8[r5], r5
+  39                             		.loc 1 20 20
+  40 0037 5B 55                   		movu.B	r5, r5
+  41 0039 DF 54                   		mov.W	r5, r4
+  42 003b DD A5 04                		mov.W	8[r10], r5
+  43 003e 4F 45                   		mul	r4, r5
+  44 0040 4B 35                   		add	r3, r5
+  45                             		.loc 1 20 7
+  46 0042 D7 A5 04                		mov.W	r5, 8[r10]
+  21:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c ****     y = rstate->y0 + y * rstate->y_scale;
+  47                             		.loc 1 21 15
+  48 0045 ED A5 01                		mov.L	4[r10], r5
+  49 0048 99 D5                   		mov.W	12[r5], r5
+  50 004a DF 53                   		mov.W	r5, r3
+  51                             		.loc 1 21 32
+  52 004c ED A5 01                		mov.L	4[r10], r5
+  53 004f 8A 5D                   		mov.B	9[r5], r5
+  54                             		.loc 1 21 20
+  55 0051 5B 55                   		movu.B	r5, r5
+  56 0053 DF 54                   		mov.W	r5, r4
+  57 0055 DD A5 05                		mov.W	10[r10], r5
+  58 0058 4F 45                   		mul	r4, r5
+  59 005a 4B 35                   		add	r3, r5
+  60                             		.loc 1 21 7
+  61 005c D7 A5 05                		mov.W	r5, 10[r10]
+  22:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c ****     
+  23:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c ****     for (dy = 0; dy < rstate->y_scale; dy++)
+  62                             		.loc 1 23 13
+  63 005f F8 A4 00                		mov.B	#0, [r10]
+  64                             		.loc 1 23 5
+  65 0062 2E 2A                   		bra	.L2
+  66                             	.L3:
+  24:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c ****     {
+  25:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c ****         rstate->orig_callback(x, y + dy, count, alpha, rstate->orig_state);
+  67                             		.loc 1 25 15 discriminator 3
+  68 0064 ED A5 01                		mov.L	4[r10], r5
+  69 0067 EC 55                   		mov.L	[r5], r5
+  70                             		.loc 1 25 36 discriminator 3
+  71 0069 58 A4                   		movu.B	[r10], r4
+  72 006b DF 43                   		mov.W	r4, r3
+  73 006d DD A4 05                		mov.W	10[r10], r4
+  74 0070 4B 34                   		add	r3, r4
+  75                             		.loc 1 25 9 discriminator 3
+  76 0072 DF 42                   		mov.W	r4, r2
+  77 0074 ED A4 01                		mov.L	4[r10], r4
+  78 0077 A8 4C                   		mov.L	4[r4], r4
+  79 0079 E3 04                   		mov.L	r4, [r0]
+  80 007b CD A4 0D                		mov.B	13[r10], r4
+  81 007e CD A3 0C                		mov.B	12[r10], r3
+  82 0081 DD A1 04                		mov.W	8[r10], r1
+  83 0084 7F 15                   		jsr	r5
+  84                             	.LVL0:
+  23:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c ****     {
+  85                             		.loc 1 23 42 discriminator 3
+  86 0086 CC A5                   		mov.B	[r10], r5
+  87 0088 62 15                   		add	#1, r5
+  88 008a C3 A5                   		mov.B	r5, [r10]
+  89                             	.L2:
+  23:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c ****     {
+  90                             		.loc 1 23 29 discriminator 1
+  91 008c ED A5 01                		mov.L	4[r10], r5
+  92 008f 8A 5D                   		mov.B	9[r5], r5
+  23:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c ****     {
+  93                             		.loc 1 23 5 discriminator 1
+  94 0091 58 A4                   		movu.B	[r10], r4
+  95 0093 5B 55                   		movu.B	r5, r5
+  96 0095 47 54                   		cmp	r5, r4
+  97 0097 23 CD                   		bltu	.L3
+  26:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c ****     }
+  27:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c **** }
+  98                             		.loc 1 27 1
+  99 0099 03                      		nop
+ 100 009a 3F AA 07                		rtsd	#28, r10-r10
+ 101                             	.LFE0:
+ 103                             		.section	.text.scaled_character_width,"ax",@progbits
+ 105                             	_scaled_character_width:
+ 106                             	.LFB1:
+  28:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c ****     
+  29:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c **** static uint8_t scaled_character_width(const struct mf_font_s *font,
+  30:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c ****                                       mf_char character)
+  31:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c **** {
+ 107                             		.loc 1 31 1
+ 108 0000 7E AA                   		push.l	r10
+ 109                             	.LCFI3:
+ 110 0002 71 0A F0                		add	#-16, r0, r10
+ 111                             	.LCFI4:
+ 112 0005 EF A0                   		mov.L	r10, r0
+ 113 0007 E7 A1 02                		mov.L	r1, 8[r10]
+ 114 000a C7 A2 0C                		mov.B	r2, 12[r10]
+  32:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c ****     struct mf_scaledfont_s *sfont = (struct mf_scaledfont_s*)font;
+ 115                             		.loc 1 32 29
+ 116 000d ED A5 02                		mov.L	8[r10], r5
+ 117 0010 E3 A5                   		mov.L	r5, [r10]
+  33:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c ****     uint8_t basewidth;
+  34:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c ****     
+  35:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c ****     basewidth = sfont->basefont->character_width(sfont->basefont, character);
+ 118                             		.loc 1 35 22
+ 119 0012 EC A5                   		mov.L	[r10], r5
+ 120 0014 A9 DD                   		mov.L	28[r5], r5
+ 121                             		.loc 1 35 32
+ 122 0016 A9 5D                   		mov.L	20[r5], r5
+ 123                             		.loc 1 35 17
+ 124 0018 EC A4                   		mov.L	[r10], r4
+ 125 001a A9 CC                   		mov.L	28[r4], r4
+ 126 001c CD A2 0C                		mov.B	12[r10], r2
+ 127 001f EF 41                   		mov.L	r4, r1
+ 128 0021 7F 15                   		jsr	r5
+ 129                             	.LVL1:
+ 130 0023 EF 15                   		mov.L	r1, r5
+ 131 0025 C7 A5 04                		mov.B	r5, 4[r10]
+  36:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c ****     
+  37:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c ****     return sfont->x_scale * basewidth;
+ 132                             		.loc 1 37 17
+ 133 0028 EC A5                   		mov.L	[r10], r5
+ 134 002a CD 55 20                		mov.B	32[r5], r5
+ 135                             		.loc 1 37 27
+ 136 002d CD A4 04                		mov.B	4[r10], r4
+ 137 0030 4F 45                   		mul	r4, r5
+ 138 0032 5B 55                   		movu.B	r5, r5
+  38:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c **** }
+ 139                             		.loc 1 38 1
+ 140 0034 EF 51                   		mov.L	r5, r1
+ 141 0036 3F AA 05                		rtsd	#20, r10-r10
+ 142                             	.LFE1:
+ 144                             		.section	.text.scaled_render_character,"ax",@progbits
+ 146                             	_scaled_render_character:
+ 147                             	.LFB2:
+  39:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c **** 
+  40:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c **** static uint8_t scaled_render_character(const struct mf_font_s *font,
+  41:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c ****                                        int16_t x0, int16_t y0,
+  42:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c ****                                        mf_char character,
+  43:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c ****                                        mf_pixel_callback_t callback,
+  44:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c ****                                        void *state)
+  45:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c **** {
+ 148                             		.loc 1 45 1
+ 149 0000 7E AA                   		push.l	r10
+ 150                             	.LCFI5:
+ 151 0002 71 0A D4                		add	#-44, r0, r10
+ 152                             	.LCFI6:
+ 153 0005 71 A0 F8                		add	#-8, r10, r0
+ 154                             	.LCFI7:
+ 155 0008 75 45 34                		mov.L	#52, r5
+ 156 000b 4B A5                   		add	r10, r5
+ 157 000d E7 A1 06                		mov.L	r1, 24[r10]
+ 158 0010 D7 A2 0E                		mov.W	r2, 28[r10]
+ 159 0013 D7 A3 0F                		mov.W	r3, 30[r10]
+ 160 0016 C7 A4 20                		mov.B	r4, 32[r10]
+  46:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c ****     struct mf_scaledfont_s *sfont = (struct mf_scaledfont_s*)font;
+ 161                             		.loc 1 46 29
+ 162 0019 ED A4 06                		mov.L	24[r10], r4
+ 163 001c E3 A4                   		mov.L	r4, [r10]
+  47:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c ****     struct scaled_renderstate rstate;
+  48:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c ****     uint8_t basewidth;
+  49:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c ****     
+  50:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c ****     rstate.orig_callback = callback;
+ 164                             		.loc 1 50 26
+ 165 001e EC 54                   		mov.L	[r5], r4
+ 166 0020 E7 A4 02                		mov.L	r4, 8[r10]
+  51:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c ****     rstate.orig_state = state;
+ 167                             		.loc 1 51 23
+ 168 0023 A8 5D                   		mov.L	4[r5], r5
+ 169 0025 E7 A5 03                		mov.L	r5, 12[r10]
+  52:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c ****     rstate.x_scale = sfont->x_scale;
+ 170                             		.loc 1 52 27
+ 171 0028 EC A5                   		mov.L	[r10], r5
+ 172 002a CD 55 20                		mov.B	32[r5], r5
+ 173                             		.loc 1 52 20
+ 174 002d C7 A5 10                		mov.B	r5, 16[r10]
+  53:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c ****     rstate.y_scale = sfont->y_scale;
+ 175                             		.loc 1 53 27
+ 176 0030 EC A5                   		mov.L	[r10], r5
+ 177 0032 CD 55 21                		mov.B	33[r5], r5
+ 178                             		.loc 1 53 20
+ 179 0035 C7 A5 11                		mov.B	r5, 17[r10]
+  54:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c ****     rstate.x0 = x0;
+ 180                             		.loc 1 54 15
+ 181 0038 DD A5 0E                		mov.W	28[r10], r5
+ 182 003b D7 A5 09                		mov.W	r5, 18[r10]
+  55:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c ****     rstate.y0 = y0;
+ 183                             		.loc 1 55 15
+ 184 003e DD A5 0F                		mov.W	30[r10], r5
+ 185 0041 D7 A5 0A                		mov.W	r5, 20[r10]
+  56:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c ****     
+  57:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c ****     basewidth = sfont->basefont->render_character(sfont->basefont, 0, 0,
+ 186                             		.loc 1 57 22
+ 187 0044 EC A5                   		mov.L	[r10], r5
+ 188 0046 A9 DD                   		mov.L	28[r5], r5
+ 189                             		.loc 1 57 32
+ 190 0048 A9 D5                   		mov.L	24[r5], r5
+ 191                             		.loc 1 57 17
+ 192 004a EC A4                   		mov.L	[r10], r4
+ 193 004c A9 C9                   		mov.L	28[r4], r1
+ 194 004e 71 A4 08                		add	#8, r10, r4
+ 195 0051 A0 0C                   		mov.L	r4, 4[r0]
+ 196 0053 F8 02 00 00 00 00       		mov.L	#_scaled_pixel_callback, [r0]
+ 197 0059 CD A4 20                		mov.B	32[r10], r4
+ 198 005c 66 03                   		mov	#0, r3
+ 199 005e 66 02                   		mov	#0, r2
+ 200 0060 7F 15                   		jsr	r5
+ 201                             	.LVL2:
+ 202 0062 EF 15                   		mov.L	r1, r5
+ 203 0064 C7 A5 04                		mov.B	r5, 4[r10]
+  58:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c ****                             character, scaled_pixel_callback, &rstate);
+  59:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c ****     
+  60:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c ****     return sfont->x_scale * basewidth;
+ 204                             		.loc 1 60 17
+ 205 0067 EC A5                   		mov.L	[r10], r5
+ 206 0069 CD 55 20                		mov.B	32[r5], r5
+ 207                             		.loc 1 60 27
+ 208 006c CD A4 04                		mov.B	4[r10], r4
+ 209 006f 4F 45                   		mul	r4, r5
+ 210 0071 5B 55                   		movu.B	r5, r5
+  61:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c **** }
+ 211                             		.loc 1 61 1
+ 212 0073 EF 51                   		mov.L	r5, r1
+ 213 0075 3F AA 0E                		rtsd	#56, r10-r10
+ 214                             	.LFE2:
+ 216                             		.section	.text.mf_scale_font,"ax",@progbits
+ 217                             		.global	_mf_scale_font
+ 219                             	_mf_scale_font:
+ 220                             	.LFB3:
+  62:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c **** 
+  63:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c **** void mf_scale_font(struct mf_scaledfont_s *newfont,
+  64:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c ****                    const struct mf_font_s *basefont,
+  65:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c ****                    uint8_t x_scale, uint8_t y_scale)
+  66:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c **** {
+ 221                             		.loc 1 66 1
+ 222 0000 7E AA                   		push.l	r10
+ 223                             	.LCFI8:
+ 224 0002 71 0A F4                		add	#-12, r0, r10
+ 225                             	.LCFI9:
+ 226 0005 EF A0                   		mov.L	r10, r0
+ 227 0007 E3 A1                   		mov.L	r1, [r10]
+ 228 0009 E7 A2 01                		mov.L	r2, 4[r10]
+ 229 000c C7 A3 08                		mov.B	r3, 8[r10]
+ 230 000f C7 A4 09                		mov.B	r4, 9[r10]
+  67:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c ****     newfont->font = *basefont;
+ 231                             		.loc 1 67 19
+ 232 0012 EC A3                   		mov.L	[r10], r3
+ 233 0014 ED A4 01                		mov.L	4[r10], r4
+ 234 0017 75 45 1C                		mov.L	#28, r5
+ 235 001a EF 31                   		mov.L	r3, r1
+ 236 001c EF 42                   		mov.L	r4, r2
+ 237 001e EF 53                   		mov.L	r5, r3
+ 238 0020 7F 8F                   		smovf
+  68:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c ****     newfont->basefont = basefont;
+ 239                             		.loc 1 68 23
+ 240 0022 EC A5                   		mov.L	[r10], r5
+ 241 0024 ED A4 01                		mov.L	4[r10], r4
+ 242 0027 A1 DC                   		mov.L	r4, 28[r5]
+  69:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c ****     
+  70:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c ****     newfont->font.width *= x_scale;
+ 243                             		.loc 1 70 25
+ 244 0029 EC A5                   		mov.L	[r10], r5
+ 245 002b 8A 55                   		mov.B	8[r5], r5
+ 246 002d CD A4 08                		mov.B	8[r10], r4
+ 247 0030 4F 45                   		mul	r4, r5
+ 248 0032 CF 54                   		mov.B	r5, r4
+ 249 0034 EC A5                   		mov.L	[r10], r5
+ 250 0036 82 54                   		mov.B	r4, 8[r5]
+  71:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c ****     newfont->font.height *= y_scale;
+ 251                             		.loc 1 71 26
+ 252 0038 EC A5                   		mov.L	[r10], r5
+ 253 003a 8A 5D                   		mov.B	9[r5], r5
+ 254 003c CD A4 09                		mov.B	9[r10], r4
+ 255 003f 4F 45                   		mul	r4, r5
+ 256 0041 CF 54                   		mov.B	r5, r4
+ 257 0043 EC A5                   		mov.L	[r10], r5
+ 258 0045 82 5C                   		mov.B	r4, 9[r5]
+  72:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c ****     newfont->font.baseline_x *= x_scale;
+ 259                             		.loc 1 72 30
+ 260 0047 EC A5                   		mov.L	[r10], r5
+ 261 0049 8B 55                   		mov.B	12[r5], r5
+ 262 004b CD A4 08                		mov.B	8[r10], r4
+ 263 004e 4F 45                   		mul	r4, r5
+ 264 0050 CF 54                   		mov.B	r5, r4
+ 265 0052 EC A5                   		mov.L	[r10], r5
+ 266 0054 83 54                   		mov.B	r4, 12[r5]
+  73:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c ****     newfont->font.baseline_y *= y_scale;
+ 267                             		.loc 1 73 30
+ 268 0056 EC A5                   		mov.L	[r10], r5
+ 269 0058 8B 5D                   		mov.B	13[r5], r5
+ 270 005a CD A4 09                		mov.B	9[r10], r4
+ 271 005d 4F 45                   		mul	r4, r5
+ 272 005f CF 54                   		mov.B	r5, r4
+ 273 0061 EC A5                   		mov.L	[r10], r5
+ 274 0063 83 5C                   		mov.B	r4, 13[r5]
+  74:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c ****     newfont->font.min_x_advance *= x_scale;
+ 275                             		.loc 1 74 33
+ 276 0065 EC A5                   		mov.L	[r10], r5
+ 277 0067 8A D5                   		mov.B	10[r5], r5
+ 278 0069 CD A4 08                		mov.B	8[r10], r4
+ 279 006c 4F 45                   		mul	r4, r5
+ 280 006e CF 54                   		mov.B	r5, r4
+ 281 0070 EC A5                   		mov.L	[r10], r5
+ 282 0072 82 D4                   		mov.B	r4, 10[r5]
+  75:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c ****     newfont->font.max_x_advance *= x_scale;
+ 283                             		.loc 1 75 33
+ 284 0074 EC A5                   		mov.L	[r10], r5
+ 285 0076 8A DD                   		mov.B	11[r5], r5
+ 286 0078 CD A4 08                		mov.B	8[r10], r4
+ 287 007b 4F 45                   		mul	r4, r5
+ 288 007d CF 54                   		mov.B	r5, r4
+ 289 007f EC A5                   		mov.L	[r10], r5
+ 290 0081 82 DC                   		mov.B	r4, 11[r5]
+  76:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c ****     newfont->font.line_height *= y_scale;
+ 291                             		.loc 1 76 31
+ 292 0083 EC A5                   		mov.L	[r10], r5
+ 293 0085 8B D5                   		mov.B	14[r5], r5
+ 294 0087 CD A4 09                		mov.B	9[r10], r4
+ 295 008a 4F 45                   		mul	r4, r5
+ 296 008c CF 54                   		mov.B	r5, r4
+ 297 008e EC A5                   		mov.L	[r10], r5
+ 298 0090 83 D4                   		mov.B	r4, 14[r5]
+  77:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c ****     newfont->font.character_width = &scaled_character_width;
+ 299                             		.loc 1 77 35
+ 300 0092 EC A5                   		mov.L	[r10], r5
+ 301 0094 F9 52 05 00 00 00 00    		mov.L	#_scaled_character_width, 20[r5]
+  78:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c ****     newfont->font.render_character = &scaled_render_character;
+ 302                             		.loc 1 78 36
+ 303 009b EC A5                   		mov.L	[r10], r5
+ 304 009d F9 52 06 00 00 00 00    		mov.L	#_scaled_render_character, 24[r5]
+  79:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c ****     
+  80:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c ****     newfont->x_scale = x_scale;
+ 305                             		.loc 1 80 22
+ 306 00a4 EC A5                   		mov.L	[r10], r5
+ 307 00a6 CD A4 08                		mov.B	8[r10], r4
+ 308 00a9 C7 54 20                		mov.B	r4, 32[r5]
+  81:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c ****     newfont->y_scale = y_scale;
+ 309                             		.loc 1 81 22
+ 310 00ac EC A5                   		mov.L	[r10], r5
+ 311 00ae CD A4 09                		mov.B	9[r10], r4
+ 312 00b1 C7 54 21                		mov.B	r4, 33[r5]
+  82:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont\mf_scaledfont.c **** }
+ 313                             		.loc 1 82 1
+ 314 00b4 03                      		nop
+ 315 00b5 3F AA 04                		rtsd	#16, r10-r10
+ 316                             	.LFE3:
+ 422                             	.Letext0:
+ 423                             		.file 2 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\rx-el
+ 424                             		.file 3 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\rx-el
+ 425                             		.file 4 "C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont/mf_encoding.h
+ 426                             		.file 5 "C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont/mf_font.h"
+ 427                             		.file 6 "C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/gl/fonts/truetype/mcufont/mf_scaledfont

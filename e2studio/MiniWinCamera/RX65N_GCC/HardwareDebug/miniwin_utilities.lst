@@ -1,0 +1,1945 @@
+   1                             		.file	"miniwin_utilities.c"
+   2                             		.section P,"ax"
+   3                             	.Ltext0:
+   4                             		.section	.bss.empty_string,"aw",@nobits
+   7                             	_empty_string:
+   8 0000 00                      		.zero	1
+   9                             		.section C,"a",@progbits
+  10                             		.p2align 2
+  11                             	.LC0:
+  12 0000 4E 75 6C 6C 20 70 6F 69 		.string	"Null pointer argument"
+  12      6E 74 65 72 20 61 72 67 
+  12      75 6D 65 6E 74 00 
+  13                             		.section	.text.mw_util_set_rect,"ax",@progbits
+  14                             		.global	_mw_util_set_rect
+  16                             	_mw_util_set_rect:
+  17                             	.LFB0:
+  18                             		.file 1 "C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/miniwin_utilities.c"
+   1:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** /*
+   2:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 
+   3:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** MIT License
+   4:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 
+   5:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** Copyright (c) John Blaiklock 2019 miniwin Embedded Window Manager
+   6:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 
+   7:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** Permission is hereby granted, free of charge, to any person obtaining a copy
+   8:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** of this software and associated documentation files (the "Software"), to deal
+   9:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** in the Software without restriction, including without limitation the rights
+  10:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  11:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** copies of the Software, and to permit persons to whom the Software is
+  12:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** furnished to do so, subject to the following conditions:
+  13:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 
+  14:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** The above copyright notice and this permission notice shall be included in all
+  15:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** copies or substantial portions of the Software.
+  16:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 
+  17:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  18:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  19:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  20:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  21:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  22:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  23:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** SOFTWARE.
+  24:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 
+  25:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** */
+  26:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 
+  27:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** /***************
+  28:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** *** INCLUDES ***
+  29:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** ***************/
+  30:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 
+  31:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** #include <string.h>
+  32:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** #include <ctype.h>
+  33:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** #include "miniwin_debug.h"
+  34:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** #include "miniwin_utilities.h"
+  35:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 
+  36:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** /****************
+  37:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** *** CONSTANTS ***
+  38:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** ****************/
+  39:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 
+  40:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** /************
+  41:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** *** TYPES ***
+  42:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** ************/
+  43:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 
+  44:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** /***********************
+  45:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** *** GLOBAL VARIABLES ***
+  46:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** ***********************/
+  47:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 
+  48:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** /**********************
+  49:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** *** LOCAL VARIABLES ***
+  50:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** **********************/
+  51:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 
+  52:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** static char empty_string[] = "";
+  53:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 
+  54:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** /********************************
+  55:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** *** LOCAL FUNCTION PROTOTYPES ***
+  56:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** ********************************/
+  57:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 
+  58:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** /**********************
+  59:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** *** LOCAL FUNCTIONS ***
+  60:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** **********************/
+  61:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 
+  62:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** /***********************
+  63:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** *** GLOBAL FUNCTIONS ***
+  64:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** ***********************/
+  65:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 
+  66:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** void mw_util_set_rect(mw_util_rect_t *r, int16_t x, int16_t y, int16_t width, int16_t height)
+  67:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** {
+  19                             		.loc 1 67 1
+  20 0000 7E AA                   		push.l	r10
+  21                             	.LCFI0:
+  22 0002 7E A6                   		push.l	r6
+  23                             	.LCFI1:
+  24 0004 71 0A F0                		add	#-16, r0, r10
+  25                             	.LCFI2:
+  26 0007 EF A0                   		mov.L	r10, r0
+  27 0009 75 46 1C                		mov.L	#28, r6
+  28 000c 4B A6                   		add	r10, r6
+  29 000e E3 A1                   		mov.L	r1, [r10]
+  30 0010 D7 A2 02                		mov.W	r2, 4[r10]
+  31 0013 D7 A3 03                		mov.W	r3, 6[r10]
+  32 0016 D7 A4 04                		mov.W	r4, 8[r10]
+  68:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	if (r == (void*)0)
+  33                             		.loc 1 68 5
+  34 0019 EC A5                   		mov.L	[r10], r5
+  35 001b 61 05                   		cmp	#0, r5
+  36 001d 21 19                   		bne	.L2
+  69:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	{
+  70:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 		MW_ASSERT((bool)false, "Null pointer argument");
+  37                             		.loc 1 70 3
+  38 001f FB 42 00 00 00 00       		mov.L	#.LC0, r4
+  39 0025 75 43 46                		mov.L	#0x46, r3
+  40 0028 FB 22 00 00 00 00       		mov.L	#___func__.2048, r2
+  41 002e 66 01                   		mov	#0, r1
+  42 0030 05 00 00 00             		bsr	_mw_debug_print_assert
+  71:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 		return;
+  43                             		.loc 1 71 3
+  44 0034 2E 1D                   		bra	.L1
+  45                             	.L2:
+  72:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	}
+  73:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 
+  74:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	r->x = x;
+  46                             		.loc 1 74 7
+  47 0036 EC A5                   		mov.L	[r10], r5
+  48 0038 DD A4 02                		mov.W	4[r10], r4
+  49 003b D3 54                   		mov.W	r4, [r5]
+  75:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	r->y = y;
+  50                             		.loc 1 75 7
+  51 003d EC A5                   		mov.L	[r10], r5
+  52 003f DD A4 03                		mov.W	6[r10], r4
+  53 0042 90 5C                   		mov.W	r4, 2[r5]
+  76:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	r->width = width;
+  54                             		.loc 1 76 11
+  55 0044 EC A5                   		mov.L	[r10], r5
+  56 0046 DD A4 04                		mov.W	8[r10], r4
+  57 0049 90 D4                   		mov.W	r4, 4[r5]
+  77:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	r->height = height;
+  58                             		.loc 1 77 12
+  59 004b EC A5                   		mov.L	[r10], r5
+  60 004d DC 64                   		mov.W	[r6], r4
+  61 004f 90 DC                   		mov.W	r4, 6[r5]
+  62                             	.L1:
+  78:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** }
+  63                             		.loc 1 78 1
+  64 0051 71 00 10                		add	#16, r0
+  65 0054 7E B6                   		pop	r6
+  66 0056 7E BA                   		pop	r10
+  67 0058 02                      		rts
+  68                             	.LFE0:
+  70                             		.section	.text.mw_util_is_point_in_rect,"ax",@progbits
+  71                             		.global	_mw_util_is_point_in_rect
+  73                             	_mw_util_is_point_in_rect:
+  74                             	.LFB1:
+  79:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 
+  80:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** bool mw_util_is_point_in_rect(const mw_util_rect_t *r, int16_t x, int16_t y)
+  81:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** {
+  75                             		.loc 1 81 1
+  76 0000 7E AA                   		push.l	r10
+  77                             	.LCFI3:
+  78 0002 71 0A F8                		add	#-8, r0, r10
+  79                             	.LCFI4:
+  80 0005 EF A0                   		mov.L	r10, r0
+  81 0007 E3 A1                   		mov.L	r1, [r10]
+  82 0009 D7 A2 02                		mov.W	r2, 4[r10]
+  83 000c D7 A3 03                		mov.W	r3, 6[r10]
+  82:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	if (r == (void*)0)
+  84                             		.loc 1 82 5
+  85 000f EC A5                   		mov.L	[r10], r5
+  86 0011 61 05                   		cmp	#0, r5
+  87 0013 21 1B                   		bne	.L5
+  83:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	{
+  84:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 		MW_ASSERT((bool)false, "Null pointer argument");
+  88                             		.loc 1 84 3
+  89 0015 FB 42 00 00 00 00       		mov.L	#.LC0, r4
+  90 001b 75 43 54                		mov.L	#0x54, r3
+  91 001e FB 22 00 00 00 00       		mov.L	#___func__.2054, r2
+  92 0024 66 01                   		mov	#0, r1
+  93 0026 05 00 00 00             		bsr	_mw_debug_print_assert
+  85:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 		return (false);
+  94                             		.loc 1 85 10
+  95 002a 66 05                   		mov	#0, r5
+  96 002c 2E 4B                   		bra	.L6
+  97                             	.L5:
+  86:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	}
+  87:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 
+  88:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	if (x < r->x || x >= (r->x + r->width) || y < r->y || y >= (r->y + r->height))
+  98                             		.loc 1 88 11
+  99 002e EC A5                   		mov.L	[r10], r5
+ 100 0030 DC 55                   		mov.W	[r5], r5
+ 101                             		.loc 1 88 5
+ 102 0032 DD A4 02                		mov.W	4[r10], r4
+ 103 0035 DF 55                   		mov.W	r5, r5
+ 104 0037 47 54                   		cmp	r5, r4
+ 105 0039 29 39                   		blt	.L7
+ 106                             		.loc 1 88 20 discriminator 1
+ 107 003b DD A4 02                		mov.W	4[r10], r4
+ 108                             		.loc 1 88 25 discriminator 1
+ 109 003e EC A5                   		mov.L	[r10], r5
+ 110 0040 DC 55                   		mov.W	[r5], r5
+ 111 0042 DF 53                   		mov.W	r5, r3
+ 112                             		.loc 1 88 32 discriminator 1
+ 113 0044 EC A5                   		mov.L	[r10], r5
+ 114 0046 98 D5                   		mov.W	4[r5], r5
+ 115 0048 DF 55                   		mov.W	r5, r5
+ 116                             		.loc 1 88 29 discriminator 1
+ 117 004a 4B 35                   		add	r3, r5
+ 118                             		.loc 1 88 15 discriminator 1
+ 119 004c 47 54                   		cmp	r5, r4
+ 120 004e 28 24                   		bge	.L7
+ 121                             		.loc 1 88 49 discriminator 2
+ 122 0050 EC A5                   		mov.L	[r10], r5
+ 123 0052 98 5D                   		mov.W	2[r5], r5
+ 124                             		.loc 1 88 41 discriminator 2
+ 125 0054 DD A4 03                		mov.W	6[r10], r4
+ 126 0057 DF 55                   		mov.W	r5, r5
+ 127 0059 47 54                   		cmp	r5, r4
+ 128 005b 29 17                   		blt	.L7
+ 129                             		.loc 1 88 58 discriminator 3
+ 130 005d DD A4 03                		mov.W	6[r10], r4
+ 131                             		.loc 1 88 63 discriminator 3
+ 132 0060 EC A5                   		mov.L	[r10], r5
+ 133 0062 98 5D                   		mov.W	2[r5], r5
+ 134 0064 DF 53                   		mov.W	r5, r3
+ 135                             		.loc 1 88 70 discriminator 3
+ 136 0066 EC A5                   		mov.L	[r10], r5
+ 137 0068 98 DD                   		mov.W	6[r5], r5
+ 138 006a DF 55                   		mov.W	r5, r5
+ 139                             		.loc 1 88 67 discriminator 3
+ 140 006c 4B 35                   		add	r3, r5
+ 141                             		.loc 1 88 53 discriminator 3
+ 142 006e 47 54                   		cmp	r5, r4
+ 143 0070 29 05                   		blt	.L8
+ 144                             		.balign 8,3,1
+ 145                             	.L7:
+  89:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	{
+  90:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 		return (false);
+ 146                             		.loc 1 90 10
+ 147 0072 66 05                   		mov	#0, r5
+ 148 0074 0B                      		bra	.L6
+ 149                             	.L8:
+  91:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	}
+  92:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 
+  93:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	return (true);
+ 150                             		.loc 1 93 9
+ 151 0075 66 15                   		mov	#1, r5
+ 152                             	.L6:
+ 153 0077 5B 55                   		movu.B	r5, r5
+  94:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** }
+ 154                             		.loc 1 94 1
+ 155 0079 EF 51                   		mov.L	r5, r1
+ 156 007b 3F AA 03                		rtsd	#12, r10-r10
+ 157                             	.LFE1:
+ 159 007e EF 00                   		.section	.text.mw_util_do_rects_coincide,"ax",@progbits
+ 160                             		.global	_mw_util_do_rects_coincide
+ 162                             	_mw_util_do_rects_coincide:
+ 163                             	.LFB2:
+  95:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 
+  96:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** bool mw_util_do_rects_coincide(const mw_util_rect_t *a, const mw_util_rect_t *b)
+  97:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** {
+ 164                             		.loc 1 97 1
+ 165 0000 7E AA                   		push.l	r10
+ 166                             	.LCFI5:
+ 167 0002 71 0A F8                		add	#-8, r0, r10
+ 168                             	.LCFI6:
+ 169 0005 EF A0                   		mov.L	r10, r0
+ 170 0007 E3 A1                   		mov.L	r1, [r10]
+ 171 0009 E7 A2 01                		mov.L	r2, 4[r10]
+  98:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	if (a == (void*)0 || b == (void*)0)
+ 172                             		.loc 1 98 5
+ 173 000c EC A5                   		mov.L	[r10], r5
+ 174 000e 61 05                   		cmp	#0, r5
+ 175 0010 10                      		beq	.L10
+ 176                             		.loc 1 98 20 discriminator 1
+ 177 0011 ED A5 01                		mov.L	4[r10], r5
+ 178 0014 61 05                   		cmp	#0, r5
+ 179 0016 21 1B                   		bne	.L11
+ 180                             	.L10:
+  99:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	{
+ 100:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 		MW_ASSERT((bool)false, "Null pointer argument");
+ 181                             		.loc 1 100 3
+ 182 0018 FB 42 00 00 00 00       		mov.L	#.LC0, r4
+ 183 001e 75 43 64                		mov.L	#0x64, r3
+ 184 0021 FB 22 00 00 00 00       		mov.L	#___func__.2059, r2
+ 185 0027 66 01                   		mov	#0, r1
+ 186 0029 05 00 00 00             		bsr	_mw_debug_print_assert
+ 101:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 		return (false);
+ 187                             		.loc 1 101 10
+ 188 002d 66 05                   		mov	#0, r5
+ 189 002f 2E 6F                   		bra	.L12
+ 190                             	.L11:
+ 102:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	}
+ 103:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 
+ 104:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****     return (!(a->x + a->width < b->x || a->y + a->height < b->y || a->x > b->x + b->width || a->y >
+ 191                             		.loc 1 104 16
+ 192 0031 EC A5                   		mov.L	[r10], r5
+ 193 0033 DC 55                   		mov.W	[r5], r5
+ 194 0035 DF 54                   		mov.W	r5, r4
+ 195                             		.loc 1 104 23
+ 196 0037 EC A5                   		mov.L	[r10], r5
+ 197 0039 98 D5                   		mov.W	4[r5], r5
+ 198 003b DF 55                   		mov.W	r5, r5
+ 199                             		.loc 1 104 20
+ 200 003d 4B 54                   		add	r5, r4
+ 201                             		.loc 1 104 34
+ 202 003f ED A5 01                		mov.L	4[r10], r5
+ 203 0042 DC 55                   		mov.W	[r5], r5
+ 204 0044 DF 55                   		mov.W	r5, r5
+ 205                             		.loc 1 104 13
+ 206 0046 47 54                   		cmp	r5, r4
+ 207 0048 29 52                   		blt	.L13
+ 208                             		.loc 1 104 42 discriminator 1
+ 209 004a EC A5                   		mov.L	[r10], r5
+ 210 004c 98 5D                   		mov.W	2[r5], r5
+ 211 004e DF 54                   		mov.W	r5, r4
+ 212                             		.loc 1 104 49 discriminator 1
+ 213 0050 EC A5                   		mov.L	[r10], r5
+ 214 0052 98 DD                   		mov.W	6[r5], r5
+ 215 0054 DF 55                   		mov.W	r5, r5
+ 216                             		.loc 1 104 46 discriminator 1
+ 217 0056 4B 54                   		add	r5, r4
+ 218                             		.loc 1 104 61 discriminator 1
+ 219 0058 ED A5 01                		mov.L	4[r10], r5
+ 220 005b 98 5D                   		mov.W	2[r5], r5
+ 221 005d DF 55                   		mov.W	r5, r5
+ 222                             		.loc 1 104 38 discriminator 1
+ 223 005f 47 54                   		cmp	r5, r4
+ 224 0061 29 39                   		blt	.L13
+ 225                             		.loc 1 104 69 discriminator 3
+ 226 0063 EC A5                   		mov.L	[r10], r5
+ 227 0065 DC 55                   		mov.W	[r5], r5
+ 228 0067 DF 54                   		mov.W	r5, r4
+ 229                             		.loc 1 104 76 discriminator 3
+ 230 0069 ED A5 01                		mov.L	4[r10], r5
+ 231 006c DC 55                   		mov.W	[r5], r5
+ 232 006e DF 53                   		mov.W	r5, r3
+ 233                             		.loc 1 104 83 discriminator 3
+ 234 0070 ED A5 01                		mov.L	4[r10], r5
+ 235 0073 98 D5                   		mov.W	4[r5], r5
+ 236 0075 DF 55                   		mov.W	r5, r5
+ 237                             		.loc 1 104 80 discriminator 3
+ 238 0077 4B 35                   		add	r3, r5
+ 239                             		.loc 1 104 65 discriminator 3
+ 240 0079 47 54                   		cmp	r5, r4
+ 241 007b 2A 1F                   		bgt	.L13
+ 242                             		.loc 1 104 95 discriminator 5
+ 243 007d EC A5                   		mov.L	[r10], r5
+ 244 007f 98 5D                   		mov.W	2[r5], r5
+ 245 0081 DF 54                   		mov.W	r5, r4
+ 246                             		.loc 1 104 102 discriminator 5
+ 247 0083 ED A5 01                		mov.L	4[r10], r5
+ 248 0086 98 5D                   		mov.W	2[r5], r5
+ 249 0088 DF 53                   		mov.W	r5, r3
+ 250                             		.loc 1 104 109 discriminator 5
+ 251 008a ED A5 01                		mov.L	4[r10], r5
+ 252 008d 98 DD                   		mov.W	6[r5], r5
+ 253 008f DF 55                   		mov.W	r5, r5
+ 254                             		.loc 1 104 106 discriminator 5
+ 255 0091 4B 35                   		add	r3, r5
+ 256                             		.loc 1 104 13 discriminator 5
+ 257 0093 47 54                   		cmp	r5, r4
+ 258 0095 2A 05                   		bgt	.L13
+ 259                             		.loc 1 104 13 is_stmt 0 discriminator 7
+ 260 0097 66 15                   		mov.L	#1, r5
+ 261 0099 0B                      		bra	.L14
+ 262                             	.L13:
+ 263                             		.loc 1 104 13 discriminator 8
+ 264 009a 66 05                   		mov.L	#0, r5
+ 265                             	.L14:
+ 266                             		.loc 1 104 13 discriminator 10
+ 267 009c 64 15                   		and	#1, r5
+ 268                             	.L12:
+ 269 009e 5B 55                   		movu.B	r5, r5
+ 105:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** }
+ 270                             		.loc 1 105 1 is_stmt 1
+ 271 00a0 EF 51                   		mov.L	r5, r1
+ 272 00a2 3F AA 03                		rtsd	#12, r10-r10
+ 273                             	.LFE2:
+ 275                             		.section	.text.mw_util_does_rect_a_obscure_rect_b,"ax",@progbits
+ 276                             		.global	_mw_util_does_rect_a_obscure_rect_b
+ 278                             	_mw_util_does_rect_a_obscure_rect_b:
+ 279                             	.LFB3:
+ 106:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 
+ 107:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** bool mw_util_does_rect_a_obscure_rect_b(const mw_util_rect_t *a, const mw_util_rect_t *b)
+ 108:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** {
+ 280                             		.loc 1 108 1
+ 281 0000 7E AA                   		push.l	r10
+ 282                             	.LCFI7:
+ 283 0002 71 0A F8                		add	#-8, r0, r10
+ 284                             	.LCFI8:
+ 285 0005 EF A0                   		mov.L	r10, r0
+ 286 0007 E3 A1                   		mov.L	r1, [r10]
+ 287 0009 E7 A2 01                		mov.L	r2, 4[r10]
+ 109:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	if (a == (void*)0 || b == (void*)0)
+ 288                             		.loc 1 109 5
+ 289 000c EC A5                   		mov.L	[r10], r5
+ 290 000e 61 05                   		cmp	#0, r5
+ 291 0010 10                      		beq	.L16
+ 292                             		.loc 1 109 20 discriminator 1
+ 293 0011 ED A5 01                		mov.L	4[r10], r5
+ 294 0014 61 05                   		cmp	#0, r5
+ 295 0016 21 1B                   		bne	.L17
+ 296                             	.L16:
+ 110:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	{
+ 111:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 		MW_ASSERT((bool)false, "Null pointer argument");
+ 297                             		.loc 1 111 3
+ 298 0018 FB 42 00 00 00 00       		mov.L	#.LC0, r4
+ 299 001e 75 43 6F                		mov.L	#0x6f, r3
+ 300 0021 FB 22 00 00 00 00       		mov.L	#___func__.2064, r2
+ 301 0027 66 01                   		mov	#0, r1
+ 302 0029 05 00 00 00             		bsr	_mw_debug_print_assert
+ 112:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 		return (false);
+ 303                             		.loc 1 112 10
+ 304 002d 66 05                   		mov	#0, r5
+ 305 002f 2E 6D                   		bra	.L18
+ 306                             	.L17:
+ 113:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	}
+ 114:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 
+ 115:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	if (a->x <= b->x &&
+ 307                             		.loc 1 115 7
+ 308 0031 EC A5                   		mov.L	[r10], r5
+ 309 0033 DC 54                   		mov.W	[r5], r4
+ 310                             		.loc 1 115 15
+ 311 0035 ED A5 01                		mov.L	4[r10], r5
+ 312 0038 DC 55                   		mov.W	[r5], r5
+ 313                             		.loc 1 115 5
+ 314 003a DF 44                   		mov.W	r4, r4
+ 315 003c DF 55                   		mov.W	r5, r5
+ 316 003e 47 54                   		cmp	r5, r4
+ 317 0040 2A 5A                   		bgt	.L19
+ 116:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 			a->y <= b->y &&
+ 318                             		.loc 1 116 5 discriminator 1
+ 319 0042 EC A5                   		mov.L	[r10], r5
+ 320 0044 98 5C                   		mov.W	2[r5], r4
+ 321                             		.loc 1 116 13 discriminator 1
+ 322 0046 ED A5 01                		mov.L	4[r10], r5
+ 323 0049 98 5D                   		mov.W	2[r5], r5
+ 115:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 			a->y <= b->y &&
+ 324                             		.loc 1 115 19 discriminator 1
+ 325 004b DF 44                   		mov.W	r4, r4
+ 326 004d DF 55                   		mov.W	r5, r5
+ 327 004f 47 54                   		cmp	r5, r4
+ 328 0051 2A 49                   		bgt	.L19
+ 117:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 			a->x + a->width >= b->x + b->width &&
+ 329                             		.loc 1 117 5
+ 330 0053 EC A5                   		mov.L	[r10], r5
+ 331 0055 DC 55                   		mov.W	[r5], r5
+ 332 0057 DF 54                   		mov.W	r5, r4
+ 333                             		.loc 1 117 12
+ 334 0059 EC A5                   		mov.L	[r10], r5
+ 335 005b 98 D5                   		mov.W	4[r5], r5
+ 336 005d DF 55                   		mov.W	r5, r5
+ 337                             		.loc 1 117 9
+ 338 005f 4B 54                   		add	r5, r4
+ 339                             		.loc 1 117 24
+ 340 0061 ED A5 01                		mov.L	4[r10], r5
+ 341 0064 DC 55                   		mov.W	[r5], r5
+ 342 0066 DF 53                   		mov.W	r5, r3
+ 343                             		.loc 1 117 31
+ 344 0068 ED A5 01                		mov.L	4[r10], r5
+ 345 006b 98 D5                   		mov.W	4[r5], r5
+ 346 006d DF 55                   		mov.W	r5, r5
+ 347                             		.loc 1 117 28
+ 348 006f 4B 35                   		add	r3, r5
+ 116:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 			a->y <= b->y &&
+ 349                             		.loc 1 116 17
+ 350 0071 47 54                   		cmp	r5, r4
+ 351 0073 29 27                   		blt	.L19
+ 118:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 			a->y + a->height >= b->y + b->height)
+ 352                             		.loc 1 118 5
+ 353 0075 EC A5                   		mov.L	[r10], r5
+ 354 0077 98 5D                   		mov.W	2[r5], r5
+ 355 0079 DF 54                   		mov.W	r5, r4
+ 356                             		.loc 1 118 12
+ 357 007b EC A5                   		mov.L	[r10], r5
+ 358 007d 98 DD                   		mov.W	6[r5], r5
+ 359 007f DF 55                   		mov.W	r5, r5
+ 360                             		.loc 1 118 9
+ 361 0081 4B 54                   		add	r5, r4
+ 362                             		.loc 1 118 25
+ 363 0083 ED A5 01                		mov.L	4[r10], r5
+ 364 0086 98 5D                   		mov.W	2[r5], r5
+ 365 0088 DF 53                   		mov.W	r5, r3
+ 366                             		.loc 1 118 32
+ 367 008a ED A5 01                		mov.L	4[r10], r5
+ 368 008d 98 DD                   		mov.W	6[r5], r5
+ 369 008f DF 55                   		mov.W	r5, r5
+ 370                             		.loc 1 118 29
+ 371 0091 4B 35                   		add	r3, r5
+ 117:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 			a->x + a->width >= b->x + b->width &&
+ 372                             		.loc 1 117 39
+ 373 0093 47 54                   		cmp	r5, r4
+ 374 0095 29 05                   		blt	.L19
+ 119:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	{
+ 120:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 		return (true);
+ 375                             		.loc 1 120 10
+ 376 0097 66 15                   		mov	#1, r5
+ 377 0099 0B                      		bra	.L18
+ 378                             	.L19:
+ 121:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	}
+ 122:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 
+ 123:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	return (false);
+ 379                             		.loc 1 123 9
+ 380 009a 66 05                   		mov	#0, r5
+ 381                             	.L18:
+ 382 009c 5B 55                   		movu.B	r5, r5
+ 124:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** }
+ 383                             		.loc 1 124 1
+ 384 009e EF 51                   		mov.L	r5, r1
+ 385 00a0 3F AA 03                		rtsd	#12, r10-r10
+ 386                             	.LFE3:
+ 388                             		.section	.text.mw_util_safe_strcpy,"ax",@progbits
+ 389                             		.global	_mw_util_safe_strcpy
+ 391                             	_mw_util_safe_strcpy:
+ 392                             	.LFB4:
+ 125:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 
+ 126:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** char *mw_util_safe_strcpy(char *dest, size_t size, const char *src)
+ 127:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** {
+ 393                             		.loc 1 127 1
+ 394 0000 7E AA                   		push.l	r10
+ 395                             	.LCFI9:
+ 396 0002 71 0A F0                		add	#-16, r0, r10
+ 397                             	.LCFI10:
+ 398 0005 EF A0                   		mov.L	r10, r0
+ 399 0007 E7 A1 01                		mov.L	r1, 4[r10]
+ 400 000a E7 A2 02                		mov.L	r2, 8[r10]
+ 401 000d E7 A3 03                		mov.L	r3, 12[r10]
+ 128:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****     size_t i;
+ 129:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 
+ 130:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****     if (dest == (void*)0 || src == (void*)0)
+ 402                             		.loc 1 130 8
+ 403 0010 ED A5 01                		mov.L	4[r10], r5
+ 404 0013 61 05                   		cmp	#0, r5
+ 405 0015 10                      		beq	.L21
+ 406                             		.loc 1 130 26 discriminator 1
+ 407 0016 ED A5 03                		mov.L	12[r10], r5
+ 408 0019 61 05                   		cmp	#0, r5
+ 409 001b 21 1F                   		bne	.L22
+ 410                             	.L21:
+ 131:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****     {
+ 132:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****     	MW_ASSERT((bool)false, "Null pointer argument");
+ 411                             		.loc 1 132 6
+ 412 001d FB 42 00 00 00 00       		mov.L	#.LC0, r4
+ 413 0023 75 43 84                		mov.L	#0x84, r3
+ 414 0026 FB 22 00 00 00 00       		mov.L	#___func__.2071, r2
+ 415 002c 66 01                   		mov	#0, r1
+ 416 002e 05 00 00 00             		bsr	_mw_debug_print_assert
+ 133:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****     	return (empty_string);
+ 417                             		.loc 1 133 13
+ 418 0032 FB 52 00 00 00 00       		mov.L	#_empty_string, r5
+ 419 0038 2E 4B                   		bra	.L23
+ 420                             	.L22:
+ 134:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****     }
+ 135:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 
+ 136:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****     if (size > 0U)
+ 421                             		.loc 1 136 8
+ 422 003a ED A5 02                		mov.L	8[r10], r5
+ 423 003d 61 05                   		cmp	#0, r5
+ 424 003f 20 41                   		beq	.L24
+ 137:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****     {
+ 138:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****         for (i = (size_t)0; i < size - (size_t)1 && src[i] != '\0'; i++)
+ 425                             		.loc 1 138 16
+ 426 0041 F8 A6 00                		mov.L	#0, [r10]
+ 427                             		.loc 1 138 9
+ 428 0044 2E 1A                   		bra	.L25
+ 429                             	.L27:
+ 139:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****         {
+ 140:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****              dest[i] = src[i];
+ 430                             		.loc 1 140 27 discriminator 4
+ 431 0046 ED A5 03                		mov.L	12[r10], r5
+ 432 0049 EF 54                   		mov.L	r5, r4
+ 433 004b 06 88 A4                		add	[r10].L, r4
+ 434                             		.loc 1 140 18 discriminator 4
+ 435 004e ED A5 01                		mov.L	4[r10], r5
+ 436 0051 06 88 A5                		add	[r10].L, r5
+ 437                             		.loc 1 140 27 discriminator 4
+ 438 0054 CC 44                   		mov.B	[r4], r4
+ 439                             		.loc 1 140 22 discriminator 4
+ 440 0056 C3 54                   		mov.B	r4, [r5]
+ 138:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****         {
+ 441                             		.loc 1 138 70 discriminator 4
+ 442 0058 EC A5                   		mov.L	[r10], r5
+ 443 005a 62 15                   		add	#1, r5
+ 444 005c E3 A5                   		mov.L	r5, [r10]
+ 445                             	.L25:
+ 138:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****         {
+ 446                             		.loc 1 138 38 discriminator 1
+ 447 005e ED A5 02                		mov.L	8[r10], r5
+ 448 0061 60 15                   		sub	#1, r5
+ 138:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****         {
+ 449                             		.loc 1 138 9 discriminator 1
+ 450 0063 EC A4                   		mov.L	[r10], r4
+ 451 0065 47 54                   		cmp	r5, r4
+ 452 0067 22 10                   		bgeu	.L26
+ 138:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****         {
+ 453                             		.loc 1 138 56 discriminator 3
+ 454 0069 ED A5 03                		mov.L	12[r10], r5
+ 455 006c 06 88 A5                		add	[r10].L, r5
+ 456 006f CC 55                   		mov.B	[r5], r5
+ 138:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****         {
+ 457                             		.loc 1 138 50 discriminator 3
+ 458 0071 5B 55                   		movu.B	r5, r5
+ 459 0073 61 05                   		cmp	#0, r5
+ 460 0075 21 D1                   		bne	.L27
+ 461                             	.L26:
+ 141:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****         }
+ 142:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****         dest[i] = '\0';
+ 462                             		.loc 1 142 13
+ 463 0077 ED A5 01                		mov.L	4[r10], r5
+ 464 007a 06 88 A5                		add	[r10].L, r5
+ 465                             		.loc 1 142 17
+ 466 007d F8 54 00                		mov.B	#0, [r5]
+ 467                             	.L24:
+ 143:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****     }
+ 144:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 
+ 145:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****     return (dest);
+ 468                             		.loc 1 145 12
+ 469 0080 ED A5 01                		mov.L	4[r10], r5
+ 470                             	.L23:
+ 146:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** }
+ 471                             		.loc 1 146 1
+ 472 0083 EF 51                   		mov.L	r5, r1
+ 473 0085 3F AA 05                		rtsd	#20, r10-r10
+ 474                             	.LFE4:
+ 476                             		.section	.text.mw_util_safe_strcat,"ax",@progbits
+ 477                             		.global	_mw_util_safe_strcat
+ 479                             	_mw_util_safe_strcat:
+ 480                             	.LFB5:
+ 147:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 
+ 148:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** char *mw_util_safe_strcat(char *dest, size_t size, const char *src)
+ 149:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** {
+ 481                             		.loc 1 149 1
+ 482 0000 7E AA                   		push.l	r10
+ 483                             	.LCFI11:
+ 484 0002 71 0A F4                		add	#-12, r0, r10
+ 485                             	.LCFI12:
+ 486 0005 EF A0                   		mov.L	r10, r0
+ 487 0007 E3 A1                   		mov.L	r1, [r10]
+ 488 0009 E7 A2 01                		mov.L	r2, 4[r10]
+ 489 000c E7 A3 02                		mov.L	r3, 8[r10]
+ 150:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****     if (dest == (void*)0 || src == (void*)0)
+ 490                             		.loc 1 150 8
+ 491 000f EC A5                   		mov.L	[r10], r5
+ 492 0011 61 05                   		cmp	#0, r5
+ 493 0013 10                      		beq	.L29
+ 494                             		.loc 1 150 26 discriminator 1
+ 495 0014 ED A5 02                		mov.L	8[r10], r5
+ 496 0017 61 05                   		cmp	#0, r5
+ 497 0019 21 1F                   		bne	.L30
+ 498                             	.L29:
+ 151:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****     {
+ 152:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****     	MW_ASSERT((bool)false, "Null pointer argument");
+ 499                             		.loc 1 152 6
+ 500 001b FB 42 00 00 00 00       		mov.L	#.LC0, r4
+ 501 0021 75 43 98                		mov.L	#0x98, r3
+ 502 0024 FB 22 00 00 00 00       		mov.L	#___func__.2080, r2
+ 503 002a 66 01                   		mov	#0, r1
+ 504 002c 05 00 00 00             		bsr	_mw_debug_print_assert
+ 153:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****     	return (empty_string);
+ 505                             		.loc 1 153 13
+ 506 0030 FB 52 00 00 00 00       		mov.L	#_empty_string, r5
+ 507 0036 2E 1F                   		bra	.L31
+ 508                             	.L30:
+ 154:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****     }
+ 155:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 
+ 156:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	return (strncat((dest), (src), (size - strlen(dest) - (size_t)1U)));
+ 509                             		.loc 1 156 41
+ 510 0038 EC A1                   		mov.L	[r10], r1
+ 511 003a 05 00 00 00             		bsr	_strlen
+ 512 003e EF 15                   		mov.L	r1, r5
+ 513                             		.loc 1 156 39
+ 514 0040 ED A4 01                		mov.L	4[r10], r4
+ 515 0043 FF 05 54                		sub	r5, r4, r5
+ 516                             		.loc 1 156 10
+ 517 0046 60 15                   		sub	#1, r5
+ 518 0048 EF 53                   		mov.L	r5, r3
+ 519 004a ED A2 02                		mov.L	8[r10], r2
+ 520 004d EC A1                   		mov.L	[r10], r1
+ 521 004f 05 00 00 00             		bsr	_strncat
+ 522 0053 EF 15                   		mov.L	r1, r5
+ 523                             	.L31:
+ 157:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** }
+ 524                             		.loc 1 157 1
+ 525 0055 EF 51                   		mov.L	r5, r1
+ 526 0057 3F AA 04                		rtsd	#16, r10-r10
+ 527                             	.LFE5:
+ 529                             		.section	.text.mw_util_strrev,"ax",@progbits
+ 530                             		.global	_mw_util_strrev
+ 532                             	_mw_util_strrev:
+ 533                             	.LFB6:
+ 158:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 
+ 159:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** char *mw_util_strrev(char *str)
+ 160:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** {
+ 534                             		.loc 1 160 1
+ 535 0000 7E AA                   		push.l	r10
+ 536                             	.LCFI13:
+ 537 0002 71 0A F4                		add	#-12, r0, r10
+ 538                             	.LCFI14:
+ 539 0005 EF A0                   		mov.L	r10, r0
+ 540 0007 E7 A1 02                		mov.L	r1, 8[r10]
+ 161:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	uint8_t *p1;
+ 162:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	uint8_t *p2;
+ 163:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 
+ 164:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****     if (str == (void*)0)
+ 541                             		.loc 1 164 8
+ 542 000a ED A5 02                		mov.L	8[r10], r5
+ 543 000d 61 05                   		cmp	#0, r5
+ 544 000f 21 1F                   		bne	.L33
+ 165:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****     {
+ 166:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****     	MW_ASSERT((bool)false, "Null pointer argument");
+ 545                             		.loc 1 166 6
+ 546 0011 FB 42 00 00 00 00       		mov.L	#.LC0, r4
+ 547 0017 75 43 A6                		mov.L	#0xa6, r3
+ 548 001a FB 22 00 00 00 00       		mov.L	#___func__.2086, r2
+ 549 0020 66 01                   		mov	#0, r1
+ 550 0022 05 00 00 00             		bsr	_mw_debug_print_assert
+ 167:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****     	return (empty_string);
+ 551                             		.loc 1 167 13
+ 552 0026 FB 52 00 00 00 00       		mov.L	#_empty_string, r5
+ 553 002c 2E 7C                   		bra	.L34
+ 554                             	.L33:
+ 168:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****     }
+ 169:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 
+ 170:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	if (*str == '\0')
+ 555                             		.loc 1 170 6
+ 556 002e ED A5 02                		mov.L	8[r10], r5
+ 557 0031 CC 55                   		mov.B	[r5], r5
+ 558                             		.loc 1 170 5
+ 559 0033 5B 55                   		movu.B	r5, r5
+ 560 0035 61 05                   		cmp	#0, r5
+ 561 0037 1E                      		bne	.L35
+ 171:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	{
+ 172:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 		return (str);
+ 562                             		.loc 1 172 10
+ 563 0038 ED A5 02                		mov.L	8[r10], r5
+ 564 003b 2E 6D                   		bra	.L34
+ 565                             	.L35:
+ 173:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	}
+ 174:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 
+ 175:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	for (p1 = (uint8_t *)str, p2 = (uint8_t *)(str + strlen(str) - 1); p2 > p1; ++p1, --p2)
+ 566                             		.loc 1 175 10
+ 567 003d ED A5 02                		mov.L	8[r10], r5
+ 568 0040 E3 A5                   		mov.L	r5, [r10]
+ 569                             		.loc 1 175 51
+ 570 0042 ED A1 02                		mov.L	8[r10], r1
+ 571 0045 05 00 00 00             		bsr	_strlen
+ 572 0049 EF 15                   		mov.L	r1, r5
+ 573                             		.loc 1 175 63
+ 574 004b 60 15                   		sub	#1, r5
+ 575                             		.loc 1 175 31
+ 576 004d ED A4 02                		mov.L	8[r10], r4
+ 577 0050 4B 45                   		add	r4, r5
+ 578 0052 E7 A5 01                		mov.L	r5, 4[r10]
+ 579                             		.loc 1 175 2
+ 580 0055 2E 47                   		bra	.L36
+ 581                             	.L37:
+ 176:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	{
+ 177:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 		(*p1) ^= (*p2);
+ 582                             		.loc 1 177 9 discriminator 3
+ 583 0057 EC A5                   		mov.L	[r10], r5
+ 584 0059 CC 54                   		mov.B	[r5], r4
+ 585                             		.loc 1 177 13 discriminator 3
+ 586 005b ED A5 01                		mov.L	4[r10], r5
+ 587 005e CC 55                   		mov.B	[r5], r5
+ 588                             		.loc 1 177 9 discriminator 3
+ 589 0060 FC 37 45                		xor	r4, r5
+ 590 0063 CF 54                   		mov.B	r5, r4
+ 591 0065 EC A5                   		mov.L	[r10], r5
+ 592 0067 C3 54                   		mov.B	r4, [r5]
+ 178:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 		(*p2) ^= (*p1);
+ 593                             		.loc 1 178 9 discriminator 3
+ 594 0069 ED A5 01                		mov.L	4[r10], r5
+ 595 006c CC 54                   		mov.B	[r5], r4
+ 596                             		.loc 1 178 13 discriminator 3
+ 597 006e EC A5                   		mov.L	[r10], r5
+ 598 0070 CC 55                   		mov.B	[r5], r5
+ 599                             		.loc 1 178 9 discriminator 3
+ 600 0072 FC 37 45                		xor	r4, r5
+ 601 0075 CF 54                   		mov.B	r5, r4
+ 602 0077 ED A5 01                		mov.L	4[r10], r5
+ 603 007a C3 54                   		mov.B	r4, [r5]
+ 179:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 		(*p1) ^= (*p2);
+ 604                             		.loc 1 179 9 discriminator 3
+ 605 007c EC A5                   		mov.L	[r10], r5
+ 606 007e CC 54                   		mov.B	[r5], r4
+ 607                             		.loc 1 179 13 discriminator 3
+ 608 0080 ED A5 01                		mov.L	4[r10], r5
+ 609 0083 CC 55                   		mov.B	[r5], r5
+ 610                             		.loc 1 179 9 discriminator 3
+ 611 0085 FC 37 45                		xor	r4, r5
+ 612 0088 CF 54                   		mov.B	r5, r4
+ 613 008a EC A5                   		mov.L	[r10], r5
+ 614 008c C3 54                   		mov.B	r4, [r5]
+ 175:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	{
+ 615                             		.loc 1 175 78 discriminator 3
+ 616 008e EC A5                   		mov.L	[r10], r5
+ 617 0090 62 15                   		add	#1, r5
+ 618 0092 E3 A5                   		mov.L	r5, [r10]
+ 175:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	{
+ 619                             		.loc 1 175 84 discriminator 3
+ 620 0094 ED A5 01                		mov.L	4[r10], r5
+ 621 0097 60 15                   		sub	#1, r5
+ 622 0099 E7 A5 01                		mov.L	r5, 4[r10]
+ 623                             	.L36:
+ 175:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	{
+ 624                             		.loc 1 175 2 discriminator 1
+ 625 009c ED A4 01                		mov.L	4[r10], r4
+ 626 009f EC A5                   		mov.L	[r10], r5
+ 627 00a1 47 54                   		cmp	r5, r4
+ 628 00a3 24 B4                   		bgtu	.L37
+ 180:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	}
+ 181:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 
+ 182:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	return (str);
+ 629                             		.loc 1 182 9
+ 630 00a5 ED A5 02                		mov.L	8[r10], r5
+ 631                             	.L34:
+ 183:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** }
+ 632                             		.loc 1 183 1
+ 633 00a8 EF 51                   		mov.L	r5, r1
+ 634 00aa 3F AA 04                		rtsd	#16, r10-r10
+ 635                             	.LFE6:
+ 637                             		.section	.text.mw_util_change_bit,"ax",@progbits
+ 638                             		.global	_mw_util_change_bit
+ 640                             	_mw_util_change_bit:
+ 641                             	.LFB7:
+ 184:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 
+ 185:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** uint16_t mw_util_change_bit(uint16_t word, uint8_t bit, bool state)
+ 186:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** {
+ 642                             		.loc 1 186 1
+ 643 0000 7E AA                   		push.l	r10
+ 644                             	.LCFI15:
+ 645 0002 71 0A F8                		add	#-8, r0, r10
+ 646                             	.LCFI16:
+ 647 0005 EF A0                   		mov.L	r10, r0
+ 648 0007 D7 A1 02                		mov.W	r1, 4[r10]
+ 649 000a C7 A2 06                		mov.B	r2, 6[r10]
+ 650 000d C7 A3 07                		mov.B	r3, 7[r10]
+ 187:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	uint16_t mask;
+ 188:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	uint8_t i;
+ 189:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 
+ 190:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	if (bit < 16U)
+ 651                             		.loc 1 190 5
+ 652 0010 59 A5 06                		movu.B	6[r10], r5
+ 653 0013 61 F5                   		cmp	#15, r5
+ 654 0015 24 44                   		bgtu	.L39
+ 191:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	{
+ 192:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 		mask = 1U;
+ 655                             		.loc 1 192 8
+ 656 0017 F8 A5 01                		mov.W	#1, [r10]
+ 193:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 		for (i = 0U; i < bit; i++)
+ 657                             		.loc 1 193 10
+ 658 001a F9 A4 02 00             		mov.B	#0, 2[r10]
+ 659                             		.loc 1 193 3
+ 660 001e 2E 10                   		bra	.L40
+ 661                             	.L41:
+ 194:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 		{
+ 195:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 			mask <<= 1U;
+ 662                             		.loc 1 195 9 discriminator 3
+ 663 0020 DC A5                   		mov.W	[r10], r5
+ 664 0022 4B 55                   		add	r5, r5
+ 665 0024 D3 A5                   		mov.W	r5, [r10]
+ 193:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 		for (i = 0U; i < bit; i++)
+ 666                             		.loc 1 193 26 discriminator 3
+ 667 0026 CD A5 02                		mov.B	2[r10], r5
+ 668 0029 62 15                   		add	#1, r5
+ 669 002b C7 A5 02                		mov.B	r5, 2[r10]
+ 670                             	.L40:
+ 193:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 		for (i = 0U; i < bit; i++)
+ 671                             		.loc 1 193 3 discriminator 1
+ 672 002e 59 A4 02                		movu.B	2[r10], r4
+ 673 0031 59 A5 06                		movu.B	6[r10], r5
+ 674 0034 47 54                   		cmp	r5, r4
+ 675 0036 23 EA                   		bltu	.L41
+ 196:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 		}
+ 197:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 
+ 198:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 		if (state)
+ 676                             		.loc 1 198 6
+ 677 0038 59 A5 07                		movu.B	7[r10], r5
+ 678 003b 61 05                   		cmp	#0, r5
+ 679 003d 20 0E                   		beq	.L42
+ 199:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 		{
+ 200:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 			word |= mask;
+ 680                             		.loc 1 200 9
+ 681 003f DD A4 02                		mov.W	4[r10], r4
+ 682 0042 DC A5                   		mov.W	[r10], r5
+ 683 0044 57 45                   		or	r4, r5
+ 684 0046 D7 A5 02                		mov.W	r5, 4[r10]
+ 685 0049 2E 10                   		bra	.L39
+ 686                             	.L42:
+ 201:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 		}
+ 202:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 		else
+ 203:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 		{
+ 204:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 			word &= ~mask;
+ 687                             		.loc 1 204 9
+ 688 004b DC A5                   		mov.W	[r10], r5
+ 689 004d 7E 05                   		not	r5
+ 690 004f DF 54                   		mov.W	r5, r4
+ 691 0051 DD A5 02                		mov.W	4[r10], r5
+ 692 0054 53 45                   		and	r4, r5
+ 693 0056 D7 A5 02                		mov.W	r5, 4[r10]
+ 694                             	.L39:
+ 205:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 		}
+ 206:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	}
+ 207:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 
+ 208:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	return (word);
+ 695                             		.loc 1 208 9
+ 696 0059 DD A5 02                		mov.W	4[r10], r5
+ 697 005c 5F 55                   		movu.W	r5, r5
+ 209:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** }
+ 698                             		.loc 1 209 1
+ 699 005e EF 51                   		mov.L	r5, r1
+ 700 0060 3F AA 03                		rtsd	#12, r10-r10
+ 701                             	.LFE7:
+ 703                             		.section	.text.mw_util_get_bit,"ax",@progbits
+ 704                             		.global	_mw_util_get_bit
+ 706                             	_mw_util_get_bit:
+ 707                             	.LFB8:
+ 210:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 
+ 211:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** bool mw_util_get_bit(uint16_t word, uint8_t bit)
+ 212:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** {
+ 708                             		.loc 1 212 1
+ 709 0000 7E AA                   		push.l	r10
+ 710                             	.LCFI17:
+ 711 0002 71 0A F8                		add	#-8, r0, r10
+ 712                             	.LCFI18:
+ 713 0005 EF A0                   		mov.L	r10, r0
+ 714 0007 D7 A1 02                		mov.W	r1, 4[r10]
+ 715 000a C7 A2 06                		mov.B	r2, 6[r10]
+ 213:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	uint16_t mask;
+ 214:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	bool result = false;
+ 716                             		.loc 1 214 7
+ 717 000d F9 A4 02 00             		mov.B	#0, 2[r10]
+ 215:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	uint8_t i;
+ 216:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 
+ 217:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	if (bit < 16U)
+ 718                             		.loc 1 217 5
+ 719 0011 59 A5 06                		movu.B	6[r10], r5
+ 720 0014 61 F5                   		cmp	#15, r5
+ 721 0016 24 35                   		bgtu	.L45
+ 218:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	{
+ 219:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 		mask = 1U;
+ 722                             		.loc 1 219 8
+ 723 0018 F8 A5 01                		mov.W	#1, [r10]
+ 220:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 		for (i = 0U; i < bit; i++)
+ 724                             		.loc 1 220 10
+ 725 001b F9 A4 03 00             		mov.B	#0, 3[r10]
+ 726                             		.loc 1 220 3
+ 727 001f 2E 10                   		bra	.L46
+ 728                             	.L47:
+ 221:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 		{
+ 222:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 			mask <<= 1U;
+ 729                             		.loc 1 222 9 discriminator 3
+ 730 0021 DC A5                   		mov.W	[r10], r5
+ 731 0023 4B 55                   		add	r5, r5
+ 732 0025 D3 A5                   		mov.W	r5, [r10]
+ 220:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 		for (i = 0U; i < bit; i++)
+ 733                             		.loc 1 220 26 discriminator 3
+ 734 0027 CD A5 03                		mov.B	3[r10], r5
+ 735 002a 62 15                   		add	#1, r5
+ 736 002c C7 A5 03                		mov.B	r5, 3[r10]
+ 737                             	.L46:
+ 220:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 		for (i = 0U; i < bit; i++)
+ 738                             		.loc 1 220 3 discriminator 1
+ 739 002f 59 A4 03                		movu.B	3[r10], r4
+ 740 0032 59 A5 06                		movu.B	6[r10], r5
+ 741 0035 47 54                   		cmp	r5, r4
+ 742 0037 23 EA                   		bltu	.L47
+ 223:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 		}
+ 224:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 
+ 225:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 		if ((word & mask) == mask)
+ 743                             		.loc 1 225 21
+ 744 0039 DD A4 02                		mov.W	4[r10], r4
+ 745 003c DC A5                   		mov.W	[r10], r5
+ 746 003e 53 45                   		and	r4, r5
+ 747                             		.loc 1 225 6
+ 748 0040 5C A4                   		movu.W	[r10], r4
+ 749 0042 5F 55                   		movu.W	r5, r5
+ 750 0044 47 54                   		cmp	r5, r4
+ 751 0046 1D                      		bne	.L45
+ 226:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 		{
+ 227:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 			result = true;
+ 752                             		.loc 1 227 11
+ 753 0047 F9 A4 02 01             		mov.B	#1, 2[r10]
+ 754                             	.L45:
+ 228:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 		}
+ 229:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	}
+ 230:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 
+ 231:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	return (result);
+ 755                             		.loc 1 231 9
+ 756 004b CD A5 02                		mov.B	2[r10], r5
+ 757 004e 5B 55                   		movu.B	r5, r5
+ 232:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** }
+ 758                             		.loc 1 232 1
+ 759 0050 EF 51                   		mov.L	r5, r1
+ 760 0052 3F AA 03                		rtsd	#12, r10-r10
+ 761                             	.LFE8:
+ 763                             		.section	.text.mw_util_shell_sort,"ax",@progbits
+ 764                             		.global	_mw_util_shell_sort
+ 766                             	_mw_util_shell_sort:
+ 767                             	.LFB9:
+ 233:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 
+ 234:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 
+ 235:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** void mw_util_shell_sort(int16_t *array, uint16_t n)
+ 236:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** {
+ 768                             		.loc 1 236 1
+ 769 0000 7E AA                   		push.l	r10
+ 770                             	.LCFI19:
+ 771 0002 71 0A F0                		add	#-16, r0, r10
+ 772                             	.LCFI20:
+ 773 0005 EF A0                   		mov.L	r10, r0
+ 774 0007 E7 A1 02                		mov.L	r1, 8[r10]
+ 775 000a D7 A2 06                		mov.W	r2, 12[r10]
+ 237:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****     int16_t temp;
+ 238:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****     uint16_t increment;
+ 239:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****     uint16_t i;
+ 240:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****     uint16_t j;
+ 241:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 
+ 242:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****     if (array == (void*)0)
+ 776                             		.loc 1 242 8
+ 777 000d ED A5 02                		mov.L	8[r10], r5
+ 778 0010 61 05                   		cmp	#0, r5
+ 779 0012 21 1A                   		bne	.L50
+ 243:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****     {
+ 244:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****     	MW_ASSERT((bool)false, "Null pointer argument");
+ 780                             		.loc 1 244 6
+ 781 0014 FB 42 00 00 00 00       		mov.L	#.LC0, r4
+ 782 001a 75 43 F4                		mov.L	#0xf4, r3
+ 783 001d FB 22 00 00 00 00       		mov.L	#___func__.2118, r2
+ 784 0023 66 01                   		mov	#0, r1
+ 785 0025 05 00 00 00             		bsr	_mw_debug_print_assert
+ 245:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****     	return;
+ 786                             		.loc 1 245 6
+ 787 0029 38 AA 00                		bra	.L49
+ 788                             	.L50:
+ 246:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****     }
+ 247:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 
+ 248:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****     for (increment = n/2U; increment > 0U; increment /= 2U)
+ 789                             		.loc 1 248 20
+ 790 002c 5D A5 06                		movu.W	12[r10], r5
+ 791 002f 68 15                   		shlr	#1, r5
+ 792 0031 D3 A5                   		mov.W	r5, [r10]
+ 793                             		.loc 1 248 5
+ 794 0033 38 99 00                		bra	.L52
+ 795                             	.L60:
+ 249:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****     {
+ 250:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****         for (i = increment; i < n; i++)
+ 796                             		.loc 1 250 16
+ 797 0036 DC A5                   		mov.W	[r10], r5
+ 798 0038 D7 A5 01                		mov.W	r5, 2[r10]
+ 799                             		.loc 1 250 9
+ 800 003b 2E 7E                   		bra	.L53
+ 801                             	.L59:
+ 251:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****         {
+ 252:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****         	temp = array[i];
+ 802                             		.loc 1 252 22
+ 803 003d 5D A5 01                		movu.W	2[r10], r5
+ 804 0040 4B 55                   		add	r5, r5
+ 805 0042 ED A4 02                		mov.L	8[r10], r4
+ 806 0045 4B 45                   		add	r4, r5
+ 807                             		.loc 1 252 15
+ 808 0047 DC 55                   		mov.W	[r5], r5
+ 809 0049 D7 A5 03                		mov.W	r5, 6[r10]
+ 253:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****             for (j = i; j >= increment; j -= increment)
+ 810                             		.loc 1 253 20
+ 811 004c DD A5 01                		mov.W	2[r10], r5
+ 812 004f D7 A5 02                		mov.W	r5, 4[r10]
+ 813                             		.loc 1 253 13
+ 814 0052 2E 44                   		bra	.L54
+ 815                             	.L58:
+ 254:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****             {
+ 255:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****                 if(temp < array[j-increment])
+ 816                             		.loc 1 255 34
+ 817 0054 5D A4 02                		movu.W	4[r10], r4
+ 818 0057 5C A5                   		movu.W	[r10], r5
+ 819 0059 FF 05 54                		sub	r5, r4, r5
+ 820                             		.loc 1 255 32
+ 821 005c 4B 55                   		add	r5, r5
+ 822 005e ED A4 02                		mov.L	8[r10], r4
+ 823 0061 4B 45                   		add	r4, r5
+ 824 0063 DC 55                   		mov.W	[r5], r5
+ 825                             		.loc 1 255 19
+ 826 0065 DD A4 03                		mov.W	6[r10], r4
+ 827 0068 DF 55                   		mov.W	r5, r5
+ 828 006a 47 54                   		cmp	r5, r4
+ 829 006c 28 35                   		bge	.L61
+ 256:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****                 {
+ 257:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****                 	array[j] = array[j-increment];
+ 830                             		.loc 1 257 36
+ 831 006e 5D A4 02                		movu.W	4[r10], r4
+ 832 0071 5C A5                   		movu.W	[r10], r5
+ 833 0073 FF 05 54                		sub	r5, r4, r5
+ 834                             		.loc 1 257 34
+ 835 0076 4B 55                   		add	r5, r5
+ 836 0078 ED A4 02                		mov.L	8[r10], r4
+ 837 007b 4B 54                   		add	r5, r4
+ 838                             		.loc 1 257 23
+ 839 007d 5D A5 02                		movu.W	4[r10], r5
+ 840 0080 4B 55                   		add	r5, r5
+ 841 0082 ED A3 02                		mov.L	8[r10], r3
+ 842 0085 4B 35                   		add	r3, r5
+ 843                             		.loc 1 257 34
+ 844 0087 DC 44                   		mov.W	[r4], r4
+ 845                             		.loc 1 257 27
+ 846 0089 D3 54                   		mov.W	r4, [r5]
+ 253:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****             {
+ 847                             		.loc 1 253 43
+ 848 008b DD A4 02                		mov.W	4[r10], r4
+ 849 008e DC A5                   		mov.W	[r10], r5
+ 850 0090 FF 05 54                		sub	r5, r4, r5
+ 851 0093 D7 A5 02                		mov.W	r5, 4[r10]
+ 852                             	.L54:
+ 253:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****             {
+ 853                             		.loc 1 253 13 discriminator 1
+ 854 0096 5D A4 02                		movu.W	4[r10], r4
+ 855 0099 5C A5                   		movu.W	[r10], r5
+ 856 009b 47 54                   		cmp	r5, r4
+ 857 009d 22 B7                   		bgeu	.L58
+ 858 009f 2E 03                   		bra	.L57
+ 859                             	.L61:
+ 258:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****                 }
+ 259:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****                 else
+ 260:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****                 {
+ 261:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****                     break;
+ 860                             		.loc 1 261 21
+ 861 00a1 03                      		nop
+ 862                             	.L57:
+ 262:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****                 }
+ 263:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****             }
+ 264:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****             array[j] = temp;
+ 863                             		.loc 1 264 18 discriminator 2
+ 864 00a2 5D A5 02                		movu.W	4[r10], r5
+ 865 00a5 4B 55                   		add	r5, r5
+ 866 00a7 ED A4 02                		mov.L	8[r10], r4
+ 867 00aa 4B 45                   		add	r4, r5
+ 868                             		.loc 1 264 22 discriminator 2
+ 869 00ac DD A4 03                		mov.W	6[r10], r4
+ 870 00af D3 54                   		mov.W	r4, [r5]
+ 250:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****         {
+ 871                             		.loc 1 250 37 discriminator 2
+ 872 00b1 DD A5 01                		mov.W	2[r10], r5
+ 873 00b4 62 15                   		add	#1, r5
+ 874 00b6 D7 A5 01                		mov.W	r5, 2[r10]
+ 875                             	.L53:
+ 250:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****         {
+ 876                             		.loc 1 250 9 discriminator 1
+ 877 00b9 5D A4 01                		movu.W	2[r10], r4
+ 878 00bc 5D A5 06                		movu.W	12[r10], r5
+ 879 00bf 47 54                   		cmp	r5, r4
+ 880 00c1 22 05 38 7A FF          		bltu	.L59
+ 248:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****     {
+ 881                             		.loc 1 248 54 discriminator 2
+ 882 00c6 5C A5                   		movu.W	[r10], r5
+ 883 00c8 68 15                   		shlr	#1, r5
+ 884 00ca D3 A5                   		mov.W	r5, [r10]
+ 885                             	.L52:
+ 248:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****     {
+ 886                             		.loc 1 248 5 discriminator 1
+ 887 00cc 5C A5                   		movu.W	[r10], r5
+ 888 00ce 61 05                   		cmp	#0, r5
+ 889 00d0 3B 66 FF                		bne	.L60
+ 890                             	.L49:
+ 265:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****         }
+ 266:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****     }
+ 267:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** }
+ 891                             		.loc 1 267 1
+ 892 00d3 3F AA 05                		rtsd	#20, r10-r10
+ 893                             	.LFE9:
+ 895                             		.section C,"a",@progbits
+ 896 0016 00 00                   		.p2align 2
+ 897                             	.LC1:
+ 898 0018 00                      		.string	""
+ 899                             		.section	.text.mw_util_get_filename_ext,"ax",@progbits
+ 900                             		.global	_mw_util_get_filename_ext
+ 902                             	_mw_util_get_filename_ext:
+ 903                             	.LFB10:
+ 268:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 
+ 269:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** const char *mw_util_get_filename_ext(const char *filename)
+ 270:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** {
+ 904                             		.loc 1 270 1
+ 905 0000 7E AA                   		push.l	r10
+ 906                             	.LCFI21:
+ 907 0002 71 0A F8                		add	#-8, r0, r10
+ 908                             	.LCFI22:
+ 909 0005 EF A0                   		mov.L	r10, r0
+ 910 0007 E7 A1 01                		mov.L	r1, 4[r10]
+ 271:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	if (filename == (void*)0)
+ 911                             		.loc 1 271 5
+ 912 000a ED A5 01                		mov.L	4[r10], r5
+ 913 000d 61 05                   		cmp	#0, r5
+ 914 000f 21 20                   		bne	.L63
+ 272:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	{
+ 273:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****     	MW_ASSERT((bool)false, "Null pointer argument");
+ 915                             		.loc 1 273 6
+ 916 0011 FB 42 00 00 00 00       		mov.L	#.LC0, r4
+ 917 0017 FB 3A 11 01             		mov.L	#0x111, r3
+ 918 001b FB 22 00 00 00 00       		mov.L	#___func__.2131, r2
+ 919 0021 66 01                   		mov	#0, r1
+ 920 0023 05 00 00 00             		bsr	_mw_debug_print_assert
+ 274:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****     	return ("");
+ 921                             		.loc 1 274 13
+ 922 0027 FB 52 18 00 00 00       		mov.L	#.LC1, r5
+ 923 002d 2E 26                   		bra	.L64
+ 924                             	.L63:
+ 275:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	}
+ 276:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 
+ 277:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****     const char *dot = strrchr(filename, (long)'.');
+ 925                             		.loc 1 277 23
+ 926 002f 75 42 2E                		mov.L	#46, r2
+ 927 0032 ED A1 01                		mov.L	4[r10], r1
+ 928 0035 05 00 00 00             		bsr	_strrchr
+ 929 0039 E3 A1                   		mov.L	r1, [r10]
+ 278:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 
+ 279:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****     if (dot == (void*)0 || dot == filename)
+ 930                             		.loc 1 279 8
+ 931 003b EC A5                   		mov.L	[r10], r5
+ 932 003d 61 05                   		cmp	#0, r5
+ 933 003f 11                      		beq	.L65
+ 934                             		.loc 1 279 25 discriminator 1
+ 935 0040 EC A4                   		mov.L	[r10], r4
+ 936 0042 ED A5 01                		mov.L	4[r10], r5
+ 937 0045 47 54                   		cmp	r5, r4
+ 938 0047 18                      		bne	.L66
+ 939                             	.L65:
+ 280:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****     {
+ 281:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****     	return ("");
+ 940                             		.loc 1 281 13
+ 941 0048 FB 52 18 00 00 00       		mov.L	#.LC1, r5
+ 942 004e 0D                      		bra	.L64
+ 943                             	.L66:
+ 282:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****     }
+ 283:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 
+ 284:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****     return (dot + 1);
+ 944                             		.loc 1 284 17
+ 945 004f EC A5                   		mov.L	[r10], r5
+ 946 0051 62 15                   		add	#1, r5
+ 947                             	.L64:
+ 285:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** }
+ 948                             		.loc 1 285 1
+ 949 0053 EF 51                   		mov.L	r5, r1
+ 950 0055 3F AA 03                		rtsd	#12, r10-r10
+ 951                             	.LFE10:
+ 953                             		.section	.text.mw_util_strcicmp,"ax",@progbits
+ 954                             		.global	_mw_util_strcicmp
+ 956                             	_mw_util_strcicmp:
+ 957                             	.LFB11:
+ 286:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 
+ 287:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** int32_t mw_util_strcicmp(char const *a, char const *b)
+ 288:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** {
+ 958                             		.loc 1 288 1
+ 959 0000 7E AA                   		push.l	r10
+ 960                             	.LCFI23:
+ 961 0002 71 0A F0                		add	#-16, r0, r10
+ 962                             	.LCFI24:
+ 963 0005 EF A0                   		mov.L	r10, r0
+ 964 0007 E7 A1 02                		mov.L	r1, 8[r10]
+ 965 000a E7 A2 03                		mov.L	r2, 12[r10]
+ 289:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	int32_t d;
+ 290:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 
+ 291:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	if (a == (void*)0 || b == (void*)0)
+ 966                             		.loc 1 291 5
+ 967 000d ED A5 02                		mov.L	8[r10], r5
+ 968 0010 61 05                   		cmp	#0, r5
+ 969 0012 17                      		beq	.L68
+ 970                             		.loc 1 291 20 discriminator 1
+ 971 0013 ED A5 03                		mov.L	12[r10], r5
+ 972 0016 61 05                   		cmp	#0, r5
+ 973 0018 1D                      		bne	.L69
+ 974                             	.L68:
+ 292:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	{
+ 293:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 		return (0);
+ 975                             		.loc 1 293 10
+ 976 0019 66 05                   		mov.L	#0, r5
+ 977 001b 2E 78                   		bra	.L70
+ 978                             	.L69:
+ 979                             	.LBB2:
+ 294:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	}
+ 295:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 
+ 296:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****     for (;; a++, b++)
+ 297:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****     {
+ 298:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****         d = (int32_t)tolower((unsigned char)*a) - (int32_t)tolower((unsigned char)*b);
+ 980                             		.loc 1 298 22
+ 981 001d ED A5 02                		mov.L	8[r10], r5
+ 982 0020 CC 55                   		mov.B	[r5], r5
+ 983 0022 C3 A5                   		mov.B	r5, [r10]
+ 984 0024 58 A5                   		movu.B	[r10], r5
+ 985 0026 62 15                   		add	#1, r5
+ 986 0028 70 55 00 00 00 00       		add	#__ctype_, r5
+ 987 002e CC 55                   		mov.B	[r5], r5
+ 988 0030 5B 55                   		movu.B	r5, r5
+ 989 0032 64 35                   		and	#3, r5
+ 990 0034 61 15                   		cmp	#1, r5
+ 991 0036 1F                      		bne	.L71
+ 992                             		.loc 1 298 22 is_stmt 0 discriminator 1
+ 993 0037 58 A5                   		movu.B	[r10], r5
+ 994 0039 71 54 20                		add	#32, r5, r4
+ 995 003c 0B                      		bra	.L72
+ 996                             	.L71:
+ 997                             		.loc 1 298 22 discriminator 2
+ 998 003d 58 A4                   		movu.B	[r10], r4
+ 999                             	.L72:
+ 1000                             	.LBE2:
+ 1001                             	.LBB3:
+ 1002                             		.loc 1 298 60 is_stmt 1 discriminator 4
+ 1003 003f ED A5 03                		mov.L	12[r10], r5
+ 1004 0042 CC 55                   		mov.B	[r5], r5
+ 1005 0044 C7 A5 01                		mov.B	r5, 1[r10]
+ 1006 0047 59 A5 01                		movu.B	1[r10], r5
+ 1007 004a 62 15                   		add	#1, r5
+ 1008 004c 70 55 00 00 00 00       		add	#__ctype_, r5
+ 1009 0052 CC 55                   		mov.B	[r5], r5
+ 1010 0054 5B 55                   		movu.B	r5, r5
+ 1011 0056 64 35                   		and	#3, r5
+ 1012 0058 61 15                   		cmp	#1, r5
+ 1013 005a 18                      		bne	.L73
+ 1014                             		.loc 1 298 60 is_stmt 0 discriminator 5
+ 1015 005b 59 A5 01                		movu.B	1[r10], r5
+ 1016 005e 71 55 20                		add	#32, r5
+ 1017 0061 0C                      		bra	.L74
+ 1018                             	.L73:
+ 1019                             		.loc 1 298 60 discriminator 6
+ 1020 0062 59 A5 01                		movu.B	1[r10], r5
+ 1021                             	.L74:
+ 1022                             	.LBE3:
+ 1023                             		.loc 1 298 11 is_stmt 1 discriminator 8
+ 1024 0065 FF 05 54                		sub	r5, r4, r5
+ 1025 0068 E7 A5 01                		mov.L	r5, 4[r10]
+ 299:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****         if (d != 0 || *a == '\0')
+ 1026                             		.loc 1 299 12 discriminator 8
+ 1027 006b ED A5 01                		mov.L	4[r10], r5
+ 1028 006e 61 05                   		cmp	#0, r5
+ 1029 0070 21 0C                   		bne	.L75
+ 1030                             		.loc 1 299 23 discriminator 1
+ 1031 0072 ED A5 02                		mov.L	8[r10], r5
+ 1032 0075 CC 55                   		mov.B	[r5], r5
+ 1033                             		.loc 1 299 20 discriminator 1
+ 1034 0077 5B 55                   		movu.B	r5, r5
+ 1035 0079 61 05                   		cmp	#0, r5
+ 1036 007b 1E                      		bne	.L76
+ 1037                             	.L75:
+ 300:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****         {
+ 301:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****             return (d);
+ 1038                             		.loc 1 301 20
+ 1039 007c ED A5 01                		mov.L	4[r10], r5
+ 1040 007f 2E 14                   		bra	.L70
+ 1041                             	.L76:
+ 296:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****     {
+ 1042                             		.loc 1 296 14
+ 1043 0081 ED A5 02                		mov.L	8[r10], r5
+ 1044 0084 62 15                   		add	#1, r5
+ 1045 0086 E7 A5 02                		mov.L	r5, 8[r10]
+ 296:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****     {
+ 1046                             		.loc 1 296 19
+ 1047 0089 ED A5 03                		mov.L	12[r10], r5
+ 1048 008c 62 15                   		add	#1, r5
+ 1049 008e E7 A5 03                		mov.L	r5, 12[r10]
+ 298:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****         if (d != 0 || *a == '\0')
+ 1050                             		.loc 1 298 11
+ 1051 0091 2E 8C                   		bra	.L69
+ 1052                             	.L70:
+ 302:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****         }
+ 303:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****     }
+ 304:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 
+ 305:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c ****     return (0);
+ 306:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** }
+ 1053                             		.loc 1 306 1
+ 1054 0093 EF 51                   		mov.L	r5, r1
+ 1055 0095 3F AA 05                		rtsd	#20, r10-r10
+ 1056                             	.LFE11:
+ 1058                             		.section C,"a",@progbits
+ 1059 0019 00 00 00                		.p2align 2
+ 1060                             	.LC2:
+ 1061 001c 4E 75 6C 6C 20 70 6F 69 		.string	"Null pointer"
+ 1061      6E 74 65 72 00 
+ 1062                             		.section	.text.mw_util_limit_point_to_rect_size,"ax",@progbits
+ 1063                             		.global	_mw_util_limit_point_to_rect_size
+ 1065                             	_mw_util_limit_point_to_rect_size:
+ 1066                             	.LFB12:
+ 307:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 
+ 308:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** void mw_util_limit_point_to_rect_size(int16_t *x, int16_t *y, const mw_util_rect_t *r)
+ 309:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** {
+ 1067                             		.loc 1 309 1
+ 1068 0000 7E AA                   		push.l	r10
+ 1069                             	.LCFI25:
+ 1070 0002 71 0A F4                		add	#-12, r0, r10
+ 1071                             	.LCFI26:
+ 1072 0005 EF A0                   		mov.L	r10, r0
+ 1073 0007 E3 A1                   		mov.L	r1, [r10]
+ 1074 0009 E7 A2 01                		mov.L	r2, 4[r10]
+ 1075 000c E7 A3 02                		mov.L	r3, 8[r10]
+ 310:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	if (x == (void*)0 || y == (void*)0 || r == (void*)0)
+ 1076                             		.loc 1 310 5
+ 1077 000f EC A5                   		mov.L	[r10], r5
+ 1078 0011 61 05                   		cmp	#0, r5
+ 1079 0013 20 0F                   		beq	.L78
+ 1080                             		.loc 1 310 20 discriminator 1
+ 1081 0015 ED A5 01                		mov.L	4[r10], r5
+ 1082 0018 61 05                   		cmp	#0, r5
+ 1083 001a 10                      		beq	.L78
+ 1084                             		.loc 1 310 37 discriminator 2
+ 1085 001b ED A5 02                		mov.L	8[r10], r5
+ 1086 001e 61 05                   		cmp	#0, r5
+ 1087 0020 21 1A                   		bne	.L79
+ 1088                             	.L78:
+ 311:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	{
+ 312:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 		MW_ASSERT((bool)false, "Null pointer");
+ 1089                             		.loc 1 312 3
+ 1090 0022 FB 42 1C 00 00 00       		mov.L	#.LC2, r4
+ 1091 0028 FB 3A 38 01             		mov.L	#0x138, r3
+ 1092 002c FB 22 00 00 00 00       		mov.L	#___func__.2148, r2
+ 1093 0032 66 01                   		mov	#0, r1
+ 1094 0034 05 00 00 00             		bsr	_mw_debug_print_assert
+ 313:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 		return;
+ 1095                             		.loc 1 313 3
+ 1096 0038 2E 60                   		bra	.L77
+ 1097                             	.L79:
+ 314:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	}
+ 315:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 
+ 316:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	if (*x < 0)
+ 1098                             		.loc 1 316 6
+ 1099 003a EC A5                   		mov.L	[r10], r5
+ 1100 003c DC 55                   		mov.W	[r5], r5
+ 1101                             		.loc 1 316 5
+ 1102 003e DF 55                   		mov.W	r5, r5
+ 1103 0040 61 05                   		cmp	#0, r5
+ 1104 0042 28 07                   		bge	.L81
+ 317:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	{
+ 318:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 		*x = 0;
+ 1105                             		.loc 1 318 6
+ 1106 0044 EC A5                   		mov.L	[r10], r5
+ 1107 0046 F8 55 00                		mov.W	#0, [r5]
+ 1108                             	.L81:
+ 319:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	}
+ 320:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	if (*y < 0)
+ 1109                             		.loc 1 320 6
+ 1110 0049 ED A5 01                		mov.L	4[r10], r5
+ 1111 004c DC 55                   		mov.W	[r5], r5
+ 1112                             		.loc 1 320 5
+ 1113 004e DF 55                   		mov.W	r5, r5
+ 1114 0050 61 05                   		cmp	#0, r5
+ 1115 0052 28 08                   		bge	.L82
+ 321:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	{
+ 322:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 		*y = 0;
+ 1116                             		.loc 1 322 6
+ 1117 0054 ED A5 01                		mov.L	4[r10], r5
+ 1118 0057 F8 55 00                		mov.W	#0, [r5]
+ 1119                             	.L82:
+ 323:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	}
+ 324:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	if (*x >= r->width)
+ 1120                             		.loc 1 324 6
+ 1121 005a EC A5                   		mov.L	[r10], r5
+ 1122 005c DC 54                   		mov.W	[r5], r4
+ 1123                             		.loc 1 324 13
+ 1124 005e ED A5 02                		mov.L	8[r10], r5
+ 1125 0061 98 D5                   		mov.W	4[r5], r5
+ 1126                             		.loc 1 324 5
+ 1127 0063 DF 44                   		mov.W	r4, r4
+ 1128 0065 DF 55                   		mov.W	r5, r5
+ 1129 0067 47 54                   		cmp	r5, r4
+ 1130 0069 29 0F                   		blt	.L83
+ 325:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	{
+ 326:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 		*x = r->width - 1;
+ 1131                             		.loc 1 326 9
+ 1132 006b ED A5 02                		mov.L	8[r10], r5
+ 1133 006e 98 D5                   		mov.W	4[r5], r5
+ 1134                             		.loc 1 326 17
+ 1135 0070 60 15                   		sub	#1, r5
+ 1136 0072 DF 54                   		mov.W	r5, r4
+ 1137                             		.loc 1 326 6
+ 1138 0074 EC A5                   		mov.L	[r10], r5
+ 1139 0076 D3 54                   		mov.W	r4, [r5]
+ 1140                             	.L83:
+ 327:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	}
+ 328:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	if (*y >= r->height)
+ 1141                             		.loc 1 328 6
+ 1142 0078 ED A5 01                		mov.L	4[r10], r5
+ 1143 007b DC 54                   		mov.W	[r5], r4
+ 1144                             		.loc 1 328 13
+ 1145 007d ED A5 02                		mov.L	8[r10], r5
+ 1146 0080 98 DD                   		mov.W	6[r5], r5
+ 1147                             		.loc 1 328 5
+ 1148 0082 DF 44                   		mov.W	r4, r4
+ 1149 0084 DF 55                   		mov.W	r5, r5
+ 1150 0086 47 54                   		cmp	r5, r4
+ 1151 0088 29 10                   		blt	.L77
+ 329:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	{
+ 330:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 		*y = r->height - 1;
+ 1152                             		.loc 1 330 9
+ 1153 008a ED A5 02                		mov.L	8[r10], r5
+ 1154 008d 98 DD                   		mov.W	6[r5], r5
+ 1155                             		.loc 1 330 18
+ 1156 008f 60 15                   		sub	#1, r5
+ 1157 0091 DF 54                   		mov.W	r5, r4
+ 1158                             		.loc 1 330 6
+ 1159 0093 ED A5 01                		mov.L	4[r10], r5
+ 1160 0096 D3 54                   		mov.W	r4, [r5]
+ 1161                             	.L77:
+ 331:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	}
+ 332:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** }
+ 1162                             		.loc 1 332 1
+ 1163 0098 3F AA 04                		rtsd	#16, r10-r10
+ 1164                             	.LFE12:
+ 1166                             		.section C,"a",@progbits
+ 1167 0029 00 00 00                		.p2align 2
+ 1168                             	.LC3:
+ 1169 002c 4E 6F 20 62 75 66 66 65 		.string	"No buffer space"
+ 1169      72 20 73 70 61 63 65 00 
+ 1170                             	.LC4:
+ 1171 003c 49 6C 6C 65 67 61 6C 20 		.string	"Illegal base"
+ 1171      62 61 73 65 00 
+ 1172                             	.LC5:
+ 1173 0049 49 6E 73 75 66 66 69 63 		.string	"Insufficient buffer space"
+ 1173      69 65 6E 74 20 62 75 66 
+ 1173      66 65 72 20 73 70 61 63 
+ 1173      65 00 
+ 1174                             	.LC6:
+ 1175 0063 46 45 44 43 42 41 39 38 		.string	"FEDCBA9876543210123456789ABCDEF"
+ 1175      37 36 35 34 33 32 31 30 
+ 1175      31 32 33 34 35 36 37 38 
+ 1175      39 41 42 43 44 45 46 00 
+ 1176 0083 00                      		.section	.text.mw_util_safe_itoa,"ax",@progbits
+ 1177                             		.global	_mw_util_safe_itoa
+ 1179                             	_mw_util_safe_itoa:
+ 1180                             	.LFB13:
+ 333:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 
+ 334:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** char* mw_util_safe_itoa(int32_t value, char *const result, size_t buffer_length, int32_t base, bool
+ 335:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** {
+ 1181                             		.loc 1 335 1
+ 1182 0000 6E 6A                   		pushm	r6-r10
+ 1183                             	.LCFI27:
+ 1184 0002 71 0A D8                		add	#-40, r0, r10
+ 1185                             	.LCFI28:
+ 1186 0005 EF A0                   		mov.L	r10, r0
+ 1187 0007 75 46 40                		mov.L	#0x40, r6
+ 1188 000a 4B A6                   		add	r10, r6
+ 1189 000c E7 A1 05                		mov.L	r1, 20[r10]
+ 1190 000f E7 A2 06                		mov.L	r2, 24[r10]
+ 1191 0012 E7 A3 07                		mov.L	r3, 28[r10]
+ 1192 0015 E7 A4 08                		mov.L	r4, 32[r10]
+ 336:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	char *interator_pointer = result;
+ 1193                             		.loc 1 336 8
+ 1194 0018 ED A5 06                		mov.L	24[r10], r5
+ 1195 001b E3 A5                   		mov.L	r5, [r10]
+ 337:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	char *swap_pointer = result;
+ 1196                             		.loc 1 337 8
+ 1197 001d ED A5 06                		mov.L	24[r10], r5
+ 1198 0020 E7 A5 01                		mov.L	r5, 4[r10]
+ 338:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	char swap_char;
+ 339:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	int32_t predivision_value;
+ 340:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	uint32_t next_pad_position;
+ 341:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 
+ 342:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	if (result == (void*)0)
+ 1199                             		.loc 1 342 5
+ 1200 0023 ED A5 06                		mov.L	24[r10], r5
+ 1201 0026 61 05                   		cmp	#0, r5
+ 1202 0028 21 1D                   		bne	.L85
+ 343:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	{
+ 344:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 		MW_ASSERT((bool)false, "Null pointer");
+ 1203                             		.loc 1 344 3
+ 1204 002a FB 42 1C 00 00 00       		mov.L	#.LC2, r4
+ 1205 0030 FB 3A 58 01             		mov.L	#0x158, r3
+ 1206 0034 FB 22 00 00 00 00       		mov.L	#___func__.2163, r2
+ 1207 003a 66 01                   		mov	#0, r1
+ 1208 003c 05 00 00 00             		bsr	_mw_debug_print_assert
+ 345:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 		return (void*)0;
+ 1209                             		.loc 1 345 10
+ 1210 0040 66 05                   		mov.L	#0, r5
+ 1211 0042 38 89 01                		bra	.L86
+ 1212                             	.L85:
+ 346:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	}
+ 347:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 
+ 348:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	*result = '\0';
+ 1213                             		.loc 1 348 10
+ 1214 0045 ED A5 06                		mov.L	24[r10], r5
+ 1215 0048 F8 54 00                		mov.B	#0, [r5]
+ 349:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	if (buffer_length < (size_t)2)
+ 1216                             		.loc 1 349 5
+ 1217 004b ED A5 07                		mov.L	28[r10], r5
+ 1218 004e 61 15                   		cmp	#1, r5
+ 1219 0050 24 1E                   		bgtu	.L87
+ 350:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	{
+ 351:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 		MW_ASSERT((bool)false, "No buffer space");
+ 1220                             		.loc 1 351 3
+ 1221 0052 FB 42 2C 00 00 00       		mov.L	#.LC3, r4
+ 1222 0058 FB 3A 5F 01             		mov.L	#0x15f, r3
+ 1223 005c FB 22 00 00 00 00       		mov.L	#___func__.2163, r2
+ 1224 0062 66 01                   		mov	#0, r1
+ 1225 0064 05 00 00 00             		bsr	_mw_debug_print_assert
+ 352:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 		return (result);
+ 1226                             		.loc 1 352 10
+ 1227 0068 ED A5 06                		mov.L	24[r10], r5
+ 1228 006b 38 60 01                		bra	.L86
+ 1229                             	.L87:
+ 353:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	}
+ 354:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 
+ 355:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	if (base < 2 || base > 16)
+ 1230                             		.loc 1 355 5
+ 1231 006e ED A5 08                		mov.L	32[r10], r5
+ 1232 0071 61 15                   		cmp	#1, r5
+ 1233 0073 2B 0A                   		ble	.L88
+ 1234                             		.loc 1 355 15 discriminator 1
+ 1235 0075 ED A5 08                		mov.L	32[r10], r5
+ 1236 0078 75 55 10                		cmp	#16, r5
+ 1237 007b 2B 1E                   		ble	.L89
+ 1238                             	.L88:
+ 356:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	{
+ 357:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 		MW_ASSERT((bool)false, "Illegal base");
+ 1239                             		.loc 1 357 3
+ 1240 007d FB 42 3C 00 00 00       		mov.L	#.LC4, r4
+ 1241 0083 FB 3A 65 01             		mov.L	#0x165, r3
+ 1242 0087 FB 22 00 00 00 00       		mov.L	#___func__.2163, r2
+ 1243 008d 66 01                   		mov	#0, r1
+ 1244 008f 05 00 00 00             		bsr	_mw_debug_print_assert
+ 358:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 		return (result);
+ 1245                             		.loc 1 358 10
+ 1246 0093 ED A5 06                		mov.L	24[r10], r5
+ 1247 0096 38 35 01                		bra	.L86
+ 1248                             	.L89:
+ 359:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	}
+ 360:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 
+ 361:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	if (do_padding && width > (buffer_length - (size_t)1))
+ 1249                             		.loc 1 361 5
+ 1250 0099 58 65                   		movu.B	[r6], r5
+ 1251 009b 61 05                   		cmp	#0, r5
+ 1252 009d 20 29                   		beq	.L93
+ 1253                             		.loc 1 361 26 discriminator 1
+ 1254 009f B0 6C                   		movu.B	1[r6], r4
+ 1255                             		.loc 1 361 43 discriminator 1
+ 1256 00a1 ED A5 07                		mov.L	28[r10], r5
+ 1257 00a4 60 15                   		sub	#1, r5
+ 1258                             		.loc 1 361 17 discriminator 1
+ 1259 00a6 47 54                   		cmp	r5, r4
+ 1260 00a8 25 1E                   		bleu	.L93
+ 362:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	{
+ 363:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 		MW_ASSERT((bool)false, "Insufficient buffer space");
+ 1261                             		.loc 1 363 3
+ 1262 00aa FB 42 49 00 00 00       		mov.L	#.LC5, r4
+ 1263 00b0 FB 3A 6B 01             		mov.L	#0x16b, r3
+ 1264 00b4 FB 22 00 00 00 00       		mov.L	#___func__.2163, r2
+ 1265 00ba 66 01                   		mov	#0, r1
+ 1266 00bc 05 00 00 00             		bsr	_mw_debug_print_assert
+ 364:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 		return (result);
+ 1267                             		.loc 1 364 10
+ 1268 00c0 ED A5 06                		mov.L	24[r10], r5
+ 1269 00c3 38 08 01                		bra	.L86
+ 1270                             	.L93:
+ 365:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	}
+ 366:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 
+ 367:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	/* do the base conversion */
+ 368:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	do
+ 369:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	{
+ 370:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 		predivision_value = value;
+ 1271                             		.loc 1 370 21
+ 1272 00c6 ED A5 05                		mov.L	20[r10], r5
+ 1273 00c9 E7 A5 03                		mov.L	r5, 12[r10]
+ 371:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 		value /= base;
+ 1274                             		.loc 1 371 9
+ 1275 00cc ED A4 05                		mov.L	20[r10], r4
+ 1276 00cf ED A5 08                		mov.L	32[r10], r5
+ 1277 00d2 EF 47                   		mov.L	r4, r7
+ 1278 00d4 FC 23 57                		div	r5, r7
+ 1279 00d7 EF 75                   		mov.L	r7, r5
+ 1280 00d9 E7 A5 05                		mov.L	r5, 20[r10]
+ 372:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 		if ((size_t)interator_pointer - (size_t)result < (buffer_length - (size_t)1))
+ 1281                             		.loc 1 372 7
+ 1282 00dc EC A4                   		mov.L	[r10], r4
+ 1283                             		.loc 1 372 35
+ 1284 00de ED A5 06                		mov.L	24[r10], r5
+ 1285                             		.loc 1 372 33
+ 1286 00e1 43 54                   		sub	r5, r4
+ 1287                             		.loc 1 372 67
+ 1288 00e3 ED A5 07                		mov.L	28[r10], r5
+ 1289 00e6 60 15                   		sub	#1, r5
+ 1290                             		.loc 1 372 6
+ 1291 00e8 47 54                   		cmp	r5, r4
+ 1292 00ea 22 27                   		bgeu	.L91
+ 373:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 		{
+ 374:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 			*interator_pointer = "FEDCBA9876543210123456789ABCDEF"[15 + (predivision_value - value * base)];
+ 1293                             		.loc 1 374 91
+ 1294 00ec ED A4 05                		mov.L	20[r10], r4
+ 1295 00ef ED A5 08                		mov.L	32[r10], r5
+ 1296 00f2 4F 45                   		mul	r4, r5
+ 1297                             		.loc 1 374 83
+ 1298 00f4 ED A4 03                		mov.L	12[r10], r4
+ 1299 00f7 FF 05 54                		sub	r5, r4, r5
+ 1300                             		.loc 1 374 62
+ 1301 00fa 62 F5                   		add	#15, r5
+ 1302                             		.loc 1 374 58
+ 1303 00fc FB 42 63 00 00 00       		mov.L	#.LC6, r4
+ 1304 0102 FE 45 44                		mov.B	[r5,r4], r4
+ 1305                             		.loc 1 374 23
+ 1306 0105 EC A5                   		mov.L	[r10], r5
+ 1307 0107 C3 54                   		mov.B	r4, [r5]
+ 375:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 			interator_pointer++;
+ 1308                             		.loc 1 375 21
+ 1309 0109 EC A5                   		mov.L	[r10], r5
+ 1310 010b 62 15                   		add	#1, r5
+ 1311 010d E3 A5                   		mov.L	r5, [r10]
+ 1312 010f 2E 0E                   		bra	.L101
+ 1313                             	.L91:
+ 376:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 		}
+ 377:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 		else
+ 378:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 		{
+ 379:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 			/* overflow so give up */
+ 380:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 			*result = '\0';
+ 1314                             		.loc 1 380 12
+ 1315 0111 ED A5 06                		mov.L	24[r10], r5
+ 1316 0114 F8 54 00                		mov.B	#0, [r5]
+ 381:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 			return (result);
+ 1317                             		.loc 1 381 11
+ 1318 0117 ED A5 06                		mov.L	24[r10], r5
+ 1319 011a 38 B1 00                		bra	.L86
+ 1320                             	.L101:
+ 382:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 			break;
+ 383:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 		}
+ 384:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	}
+ 385:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	while (value != 0);
+ 1321                             		.loc 1 385 2
+ 1322 011d ED A5 05                		mov.L	20[r10], r5
+ 1323 0120 61 05                   		cmp	#0, r5
+ 1324 0122 21 A4                   		bne	.L93
+ 386:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 
+ 387:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	/* do padding if required */
+ 388:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	*interator_pointer = '\0';
+ 1325                             		.loc 1 388 21
+ 1326 0124 EC A5                   		mov.L	[r10], r5
+ 1327 0126 F8 54 00                		mov.B	#0, [r5]
+ 389:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	if (do_padding)
+ 1328                             		.loc 1 389 5
+ 1329 0129 58 65                   		movu.B	[r6], r5
+ 1330 012b 61 05                   		cmp	#0, r5
+ 1331 012d 20 2B                   		beq	.L94
+ 390:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	{
+ 391:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 		for (next_pad_position = strlen(result); next_pad_position < width; next_pad_position++)
+ 1332                             		.loc 1 391 28
+ 1333 012f ED A1 06                		mov.L	24[r10], r1
+ 1334 0132 05 00 00 00             		bsr	_strlen
+ 1335 0136 E7 A1 02                		mov.L	r1, 8[r10]
+ 1336                             		.loc 1 391 3
+ 1337 0139 2E 16                   		bra	.L95
+ 1338                             	.L96:
+ 392:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 		{
+ 393:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 			*interator_pointer = pad_character;
+ 1339                             		.loc 1 393 23 discriminator 3
+ 1340 013b EC A5                   		mov.L	[r10], r5
+ 1341 013d 88 E4                   		mov.B	2[r6], r4
+ 1342 013f C3 54                   		mov.B	r4, [r5]
+ 394:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 			interator_pointer++;
+ 1343                             		.loc 1 394 21 discriminator 3
+ 1344 0141 EC A5                   		mov.L	[r10], r5
+ 1345 0143 62 15                   		add	#1, r5
+ 1346 0145 E3 A5                   		mov.L	r5, [r10]
+ 391:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 		{
+ 1347                             		.loc 1 391 88 discriminator 3
+ 1348 0147 ED A5 02                		mov.L	8[r10], r5
+ 1349 014a 62 15                   		add	#1, r5
+ 1350 014c E7 A5 02                		mov.L	r5, 8[r10]
+ 1351                             	.L95:
+ 391:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 		{
+ 1352                             		.loc 1 391 62 discriminator 1
+ 1353 014f B0 6D                   		movu.B	1[r6], r5
+ 391:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 		{
+ 1354                             		.loc 1 391 3 discriminator 1
+ 1355 0151 ED A4 02                		mov.L	8[r10], r4
+ 1356 0154 47 54                   		cmp	r5, r4
+ 1357 0156 23 E5                   		bltu	.L96
+ 1358                             	.L94:
+ 395:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 		}
+ 396:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	}
+ 397:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 
+ 398:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	/* apply negative sign */
+ 399:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	if (predivision_value < 0)
+ 1359                             		.loc 1 399 5
+ 1360 0158 ED A5 03                		mov.L	12[r10], r5
+ 1361 015b 61 05                   		cmp	#0, r5
+ 1362 015d 28 29                   		bge	.L97
+ 400:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	{
+ 401:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 		if ((size_t)interator_pointer - (size_t)result < buffer_length - (size_t)1)
+ 1363                             		.loc 1 401 7
+ 1364 015f EC A4                   		mov.L	[r10], r4
+ 1365                             		.loc 1 401 35
+ 1366 0161 ED A5 06                		mov.L	24[r10], r5
+ 1367                             		.loc 1 401 33
+ 1368 0164 43 54                   		sub	r5, r4
+ 1369                             		.loc 1 401 66
+ 1370 0166 ED A5 07                		mov.L	28[r10], r5
+ 1371 0169 60 15                   		sub	#1, r5
+ 1372                             		.loc 1 401 6
+ 1373 016b 47 54                   		cmp	r5, r4
+ 1374 016d 22 0E                   		bgeu	.L98
+ 402:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 		{
+ 403:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 			*interator_pointer++ = '-';
+ 1375                             		.loc 1 403 22
+ 1376 016f EC A5                   		mov.L	[r10], r5
+ 1377 0171 71 54 01                		add	#1, r5, r4
+ 1378 0174 E3 A4                   		mov.L	r4, [r10]
+ 1379                             		.loc 1 403 25
+ 1380 0176 F8 54 2D                		mov.B	#45, [r5]
+ 1381 0179 2E 0D                   		bra	.L97
+ 1382                             	.L98:
+ 404:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 		}
+ 405:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 		else
+ 406:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 		{
+ 407:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 			/* overflow so give up */
+ 408:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 			*result = '\0';
+ 1383                             		.loc 1 408 12
+ 1384 017b ED A5 06                		mov.L	24[r10], r5
+ 1385 017e F8 54 00                		mov.B	#0, [r5]
+ 409:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 			return (result);
+ 1386                             		.loc 1 409 11
+ 1387 0181 ED A5 06                		mov.L	24[r10], r5
+ 1388 0184 2E 47                   		bra	.L86
+ 1389                             	.L97:
+ 410:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 		}
+ 411:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	}
+ 412:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	*interator_pointer = '\0';
+ 1390                             		.loc 1 412 21
+ 1391 0186 EC A5                   		mov.L	[r10], r5
+ 1392 0188 F8 54 00                		mov.B	#0, [r5]
+ 413:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	interator_pointer--;
+ 1393                             		.loc 1 413 19
+ 1394 018b EC A5                   		mov.L	[r10], r5
+ 1395 018d 60 15                   		sub	#1, r5
+ 1396 018f E3 A5                   		mov.L	r5, [r10]
+ 414:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 
+ 415:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	/* reverse string */
+ 416:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	swap_pointer = result;
+ 1397                             		.loc 1 416 15
+ 1398 0191 ED A5 06                		mov.L	24[r10], r5
+ 1399 0194 E7 A5 01                		mov.L	r5, 4[r10]
+ 417:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	while (swap_pointer < interator_pointer)
+ 1400                             		.loc 1 417 8
+ 1401 0197 2E 28                   		bra	.L99
+ 1402                             	.L100:
+ 418:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	{
+ 419:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 		swap_char = *interator_pointer;
+ 1403                             		.loc 1 419 13
+ 1404 0199 EC A5                   		mov.L	[r10], r5
+ 1405 019b CC 55                   		mov.B	[r5], r5
+ 1406 019d C7 A5 10                		mov.B	r5, 16[r10]
+ 420:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 		*interator_pointer = *swap_pointer;
+ 1407                             		.loc 1 420 24
+ 1408 01a0 ED A5 01                		mov.L	4[r10], r5
+ 1409 01a3 CC 54                   		mov.B	[r5], r4
+ 1410                             		.loc 1 420 22
+ 1411 01a5 EC A5                   		mov.L	[r10], r5
+ 1412 01a7 C3 54                   		mov.B	r4, [r5]
+ 421:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 		interator_pointer--;
+ 1413                             		.loc 1 421 20
+ 1414 01a9 EC A5                   		mov.L	[r10], r5
+ 1415 01ab 60 15                   		sub	#1, r5
+ 1416 01ad E3 A5                   		mov.L	r5, [r10]
+ 422:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 		*swap_pointer = swap_char;
+ 1417                             		.loc 1 422 17
+ 1418 01af ED A5 01                		mov.L	4[r10], r5
+ 1419 01b2 CD A4 10                		mov.B	16[r10], r4
+ 1420 01b5 C3 54                   		mov.B	r4, [r5]
+ 423:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 		swap_pointer++;
+ 1421                             		.loc 1 423 15
+ 1422 01b7 ED A5 01                		mov.L	4[r10], r5
+ 1423 01ba 62 15                   		add	#1, r5
+ 1424 01bc E7 A5 01                		mov.L	r5, 4[r10]
+ 1425                             	.L99:
+ 417:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	{
+ 1426                             		.loc 1 417 8
+ 1427 01bf ED A4 01                		mov.L	4[r10], r4
+ 1428 01c2 EC A5                   		mov.L	[r10], r5
+ 1429 01c4 47 54                   		cmp	r5, r4
+ 1430 01c6 23 D3                   		bltu	.L100
+ 424:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	}
+ 425:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 
+ 426:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** 	return (result);
+ 1431                             		.loc 1 426 9
+ 1432 01c8 ED A5 06                		mov.L	24[r10], r5
+ 1433                             		.balign 8,3,1
+ 1434                             	.L86:
+ 427:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin\miniwin_utilities.c **** }
+ 1435                             		.loc 1 427 1
+ 1436 01cb EF 51                   		mov.L	r5, r1
+ 1437 01cd 3F 6A 0F                		rtsd	#60, r6-r10
+ 1438                             	.LFE13:
+ 1440                             		.section	.rodata.__func__.2048,"a"
+ 1443                             	___func__.2048:
+ 1444 0000 6D 77 5F 75 74 69 6C 5F 		.string	"mw_util_set_rect"
+ 1444      73 65 74 5F 72 65 63 74 
+ 1444      00 
+ 1445                             		.section	.rodata.__func__.2054,"a"
+ 1448                             	___func__.2054:
+ 1449 0000 6D 77 5F 75 74 69 6C 5F 		.string	"mw_util_is_point_in_rect"
+ 1449      69 73 5F 70 6F 69 6E 74 
+ 1449      5F 69 6E 5F 72 65 63 74 
+ 1449      00 
+ 1450                             		.section	.rodata.__func__.2059,"a"
+ 1453                             	___func__.2059:
+ 1454 0000 6D 77 5F 75 74 69 6C 5F 		.string	"mw_util_do_rects_coincide"
+ 1454      64 6F 5F 72 65 63 74 73 
+ 1454      5F 63 6F 69 6E 63 69 64 
+ 1454      65 00 
+ 1455                             		.section	.rodata.__func__.2064,"a"
+ 1458                             	___func__.2064:
+ 1459 0000 6D 77 5F 75 74 69 6C 5F 		.string	"mw_util_does_rect_a_obscure_rect_b"
+ 1459      64 6F 65 73 5F 72 65 63 
+ 1459      74 5F 61 5F 6F 62 73 63 
+ 1459      75 72 65 5F 72 65 63 74 
+ 1459      5F 62 00 
+ 1460                             		.section	.rodata.__func__.2071,"a"
+ 1463                             	___func__.2071:
+ 1464 0000 6D 77 5F 75 74 69 6C 5F 		.string	"mw_util_safe_strcpy"
+ 1464      73 61 66 65 5F 73 74 72 
+ 1464      63 70 79 00 
+ 1465                             		.section	.rodata.__func__.2080,"a"
+ 1468                             	___func__.2080:
+ 1469 0000 6D 77 5F 75 74 69 6C 5F 		.string	"mw_util_safe_strcat"
+ 1469      73 61 66 65 5F 73 74 72 
+ 1469      63 61 74 00 
+ 1470                             		.section	.rodata.__func__.2086,"a"
+ 1473                             	___func__.2086:
+ 1474 0000 6D 77 5F 75 74 69 6C 5F 		.string	"mw_util_strrev"
+ 1474      73 74 72 72 65 76 00 
+ 1475                             		.section	.rodata.__func__.2118,"a"
+ 1478                             	___func__.2118:
+ 1479 0000 6D 77 5F 75 74 69 6C 5F 		.string	"mw_util_shell_sort"
+ 1479      73 68 65 6C 6C 5F 73 6F 
+ 1479      72 74 00 
+ 1480                             		.section	.rodata.__func__.2131,"a"
+ 1483                             	___func__.2131:
+ 1484 0000 6D 77 5F 75 74 69 6C 5F 		.string	"mw_util_get_filename_ext"
+ 1484      67 65 74 5F 66 69 6C 65 
+ 1484      6E 61 6D 65 5F 65 78 74 
+ 1484      00 
+ 1485                             		.section	.rodata.__func__.2148,"a"
+ 1488                             	___func__.2148:
+ 1489 0000 6D 77 5F 75 74 69 6C 5F 		.string	"mw_util_limit_point_to_rect_size"
+ 1489      6C 69 6D 69 74 5F 70 6F 
+ 1489      69 6E 74 5F 74 6F 5F 72 
+ 1489      65 63 74 5F 73 69 7A 65 
+ 1489      00 
+ 1490                             		.section	.rodata.__func__.2163,"a"
+ 1493                             	___func__.2163:
+ 1494 0000 6D 77 5F 75 74 69 6C 5F 		.string	"mw_util_safe_itoa"
+ 1494      73 61 66 65 5F 69 74 6F 
+ 1494      61 00 
+ 1793                             	.Letext0:
+ 1794                             		.file 2 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\lib\\
+ 1795                             		.file 3 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\rx-el
+ 1796                             		.file 4 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\rx-el
+ 1797                             		.file 5 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\rx-el
+ 1798                             		.file 6 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\rx-el
+ 1799                             		.file 7 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\rx-el
+ 1800                             		.file 8 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\rx-el
+ 1801                             		.file 9 "C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/miniwin_utilities.h"

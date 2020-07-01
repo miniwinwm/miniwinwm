@@ -1,0 +1,784 @@
+   1                             		.file	"dialog_one_button.c"
+   2                             		.section P,"ax"
+   3                             	.Ltext0:
+   4                             		.section	.bss.mw_dialog_one_button_data,"aw",@nobits
+   5                             		.balign 4
+   8                             	_mw_dialog_one_button_data:
+   9 0000 00 00 00 00 00 00 00 00 		.zero	32
+   9      00 00 00 00 00 00 00 00 
+   9      00 00 00 00 00 00 00 00 
+   9      00 00 00 00 00 00 00 00 
+  10                             		.section C,"a",@progbits
+  11                             		.p2align 2
+  12                             	.LC0:
+  13 0000 4E 75 6C 6C 20 70 6F 69 		.string	"Null pointer argument"
+  13      6E 74 65 72 20 61 72 67 
+  13      75 6D 65 6E 74 00 
+  14 0016 00 00                   		.section	.text.mw_dialog_one_button_paint_function,"ax",@progbits
+  16                             	_mw_dialog_one_button_paint_function:
+  17                             	.LFB0:
+  18                             		.file 1 "C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs/dialog_one_button.c"
+   1:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** /*
+   2:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 
+   3:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** MIT License
+   4:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 
+   5:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** Copyright (c) John Blaiklock 2019 miniwin Embedded Window Manager
+   6:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 
+   7:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** Permission is hereby granted, free of charge, to any person obtaining a copy
+   8:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** of this software and associated documentation files (the "Software"), to deal
+   9:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** in the Software without restriction, including without limitation the rights
+  10:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  11:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** copies of the Software, and to permit persons to whom the Software is
+  12:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** furnished to do so, subject to the following conditions:
+  13:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 
+  14:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** The above copyright notice and this permission notice shall be included in all
+  15:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** copies or substantial portions of the Software.
+  16:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 
+  17:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  18:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  19:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  20:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  21:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  22:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  23:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** SOFTWARE.
+  24:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 
+  25:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** */
+  26:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 
+  27:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** /***************
+  28:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** *** INCLUDES ***
+  29:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** ***************/
+  30:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 
+  31:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** #include <string.h>
+  32:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** #include "dialogs/dialog_common.h"
+  33:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** #include "miniwin.h"
+  34:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** #include "ui/ui_button.h"
+  35:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 
+  36:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** /****************
+  37:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** *** CONSTANTS ***
+  38:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** ****************/
+  39:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 
+  40:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** /************
+  41:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** *** TYPES ***
+  42:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** ************/
+  43:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 
+  44:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** /**
+  45:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c ****  * Window data structure
+  46:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c ****  */
+  47:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** typedef struct
+  48:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** {
+  49:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	mw_handle_t button_handle;						/**< Control handle of button */
+  50:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	mw_handle_t owner_window_handle;				/**< Window handle to send response message to */
+  51:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	mw_handle_t one_button_dialog_window_handle;	/**< Handle of one button dialog window */
+  52:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	const char *message;							/**< Text to display in dialog */
+  53:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	mw_ui_button_data_t button_data;				/**< Instance data of button */
+  54:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	bool large_size;								/**< True for large size false for standard size */
+  55:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** } mw_dialog_one_button_data_t;
+  56:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 
+  57:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** /***********************
+  58:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** *** GLOBAL VARIABLES ***
+  59:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** ***********************/
+  60:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 
+  61:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** /**********************
+  62:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** *** LOCAL VARIABLES ***
+  63:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** **********************/
+  64:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 
+  65:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** static mw_dialog_one_button_data_t mw_dialog_one_button_data;
+  66:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 
+  67:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** /********************************
+  68:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** *** LOCAL FUNCTION PROTOTYPES ***
+  69:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** ********************************/
+  70:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 
+  71:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** static void mw_dialog_one_button_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_t 
+  72:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** static void mw_dialog_one_button_message_function(const mw_message_t *message);
+  73:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 
+  74:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** /**********************
+  75:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** *** LOCAL FUNCTIONS ***
+  76:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** **********************/
+  77:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 
+  78:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** /**
+  79:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c ****  * Window paint routine, called by window manager.
+  80:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c ****  *
+  81:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c ****  * @param window_handle The window identifier in the array of windows
+  82:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c ****  * @param draw_info Draw info structure describing offset and clip region
+  83:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c ****  * @note Do not call this directly from user code
+  84:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c ****  */
+  85:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** static void mw_dialog_one_button_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_t 
+  86:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** {
+  19                             		.loc 1 86 1
+  20 0000 6E 6B                   		pushm	r6-r11
+  21                             	.LCFI0:
+  22 0002 71 0A F8                		add	#-8, r0, r10
+  23                             	.LCFI1:
+  24 0005 71 A0 FC                		add	#-4, r10, r0
+  25                             	.LCFI2:
+  26 0008 E3 A1                   		mov.L	r1, [r10]
+  27 000a E7 A2 01                		mov.L	r2, 4[r10]
+  87:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	MW_ASSERT(draw_info != (void*)0, "Null pointer argument");
+  28                             		.loc 1 87 2
+  29 000d ED A5 01                		mov.L	4[r10], r5
+  30 0010 61 05                   		cmp	#0, r5
+  31 0012 FC DB 51                		scne.L	r5
+  32 0015 FB 42 00 00 00 00       		mov.L	#.LC0, r4
+  33 001b 75 43 57                		mov.L	#0x57, r3
+  34 001e FB 22 00 00 00 00       		mov.L	#___func__.2968, r2
+  35 0024 CF 51                   		mov.B	r5, r1
+  36 0026 05 00 00 00             		bsr	_mw_debug_print_assert
+  88:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 
+  89:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	mw_gl_set_fill(MW_GL_FILL);
+  37                             		.loc 1 89 2
+  38 002a 66 11                   		mov.L	#1, r1
+  39 002c 05 00 00 00             		bsr	_mw_gl_set_fill
+  90:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	mw_gl_set_solid_fill_colour(MW_HAL_LCD_WHITE);
+  40                             		.loc 1 90 2
+  41 0030 FB 12 FF FF FF 00       		mov.L	#0xffffff, r1
+  42 0036 05 00 00 00             		bsr	_mw_gl_set_solid_fill_colour
+  91:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	mw_gl_set_border(MW_GL_BORDER_OFF);
+  43                             		.loc 1 91 2
+  44 003a 66 01                   		mov.L	#0, r1
+  45 003c 05 00 00 00             		bsr	_mw_gl_set_border
+  92:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	mw_gl_clear_pattern();
+  46                             		.loc 1 92 2
+  47 0040 05 00 00 00             		bsr	_mw_gl_clear_pattern
+  93:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	mw_gl_rectangle(draw_info,
+  94:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 			0,
+  95:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 			0,
+  96:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 			mw_get_window_client_rect(window_handle).width,
+  48                             		.loc 1 96 4
+  49 0044 EC A1                   		mov.L	[r10], r1
+  50 0046 05 00 00 00             		bsr	_mw_get_window_client_rect
+  51 004a EF 15                   		mov.L	r1, r5
+  52 004c EF 26                   		mov.L	r2, r6
+  93:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	mw_gl_rectangle(draw_info,
+  53                             		.loc 1 93 2
+  54 004e DF 6B                   		mov.W	r6, r11
+  97:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 			mw_get_window_client_rect(window_handle).height);
+  55                             		.loc 1 97 4
+  56 0050 EC A1                   		mov.L	[r10], r1
+  57 0052 05 00 00 00             		bsr	_mw_get_window_client_rect
+  58 0056 EF 15                   		mov.L	r1, r5
+  59 0058 EF 26                   		mov.L	r2, r6
+  93:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	mw_gl_rectangle(draw_info,
+  60                             		.loc 1 93 2
+  61 005a EF 65                   		mov.L	r6, r5
+  62 005c 6B 05                   		shar	#16, r5
+  63 005e D3 05                   		mov.W	r5, [r0]
+  64 0060 DF B4                   		mov.W	r11, r4
+  65 0062 66 03                   		mov	#0, r3
+  66 0064 66 02                   		mov	#0, r2
+  67 0066 ED A1 01                		mov.L	4[r10], r1
+  68 0069 05 00 00 00             		bsr	_mw_gl_rectangle
+  98:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 
+  99:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
+  69                             		.loc 1 99 2
+  70 006d 66 01                   		mov.L	#0, r1
+  71 006f 05 00 00 00             		bsr	_mw_gl_set_fg_colour
+ 100:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	mw_gl_set_bg_transparency(MW_GL_BG_TRANSPARENT);
+  72                             		.loc 1 100 2
+  73 0073 66 01                   		mov.L	#0, r1
+  74 0075 05 00 00 00             		bsr	_mw_gl_set_bg_transparency
+ 101:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	mw_gl_set_text_rotation(MW_GL_TEXT_ROTATION_0);
+  75                             		.loc 1 101 2
+  76 0079 66 01                   		mov.L	#0, r1
+  77 007b 05 00 00 00             		bsr	_mw_gl_set_text_rotation
+ 102:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 
+ 103:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	if (mw_dialog_one_button_data.large_size)
+  78                             		.loc 1 103 31
+  79 007f FB 52 00 00 00 00       		mov.L	#_mw_dialog_one_button_data, r5
+  80 0085 8F 55                   		mov.B	28[r5], r5
+  81                             		.loc 1 103 5
+  82 0087 5B 55                   		movu.B	r5, r5
+  83 0089 61 05                   		cmp	#0, r5
+  84 008b 20 1F                   		beq	.L2
+ 104:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	{
+ 105:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 		mw_gl_set_font(MW_GL_TITLE_FONT);
+  85                             		.loc 1 105 3
+  86 008d 66 51                   		mov.L	#5, r1
+  87 008f 05 00 00 00             		bsr	_mw_gl_set_font
+ 106:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 		mw_gl_string(draw_info, 12, 10, mw_dialog_one_button_data.message);
+  88                             		.loc 1 106 3
+  89 0093 FB 52 00 00 00 00       		mov.L	#_mw_dialog_one_button_data, r5
+  90 0099 A8 DD                   		mov.L	12[r5], r5
+  91 009b EF 54                   		mov.L	r5, r4
+  92 009d 66 A3                   		mov	#10, r3
+  93 009f 66 C2                   		mov	#12, r2
+  94 00a1 ED A1 01                		mov.L	4[r10], r1
+  95 00a4 05 00 00 00             		bsr	_mw_gl_string
+ 107:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	}
+ 108:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	else
+ 109:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	{
+ 110:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 		mw_gl_set_font(MW_GL_FONT_9);
+ 111:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 		mw_gl_string(draw_info, 12, 10, mw_dialog_one_button_data.message);
+ 112:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	}
+ 113:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** }
+  96                             		.loc 1 113 1
+  97 00a8 2E 1D                   		bra	.L4
+  98                             	.L2:
+ 110:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 		mw_gl_string(draw_info, 12, 10, mw_dialog_one_button_data.message);
+  99                             		.loc 1 110 3
+ 100 00aa 66 01                   		mov.L	#0, r1
+ 101 00ac 05 00 00 00             		bsr	_mw_gl_set_font
+ 111:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	}
+ 102                             		.loc 1 111 3
+ 103 00b0 FB 52 00 00 00 00       		mov.L	#_mw_dialog_one_button_data, r5
+ 104 00b6 A8 DD                   		mov.L	12[r5], r5
+ 105 00b8 EF 54                   		mov.L	r5, r4
+ 106 00ba 66 A3                   		mov	#10, r3
+ 107 00bc 66 C2                   		mov	#12, r2
+ 108 00be ED A1 01                		mov.L	4[r10], r1
+ 109 00c1 05 00 00 00             		bsr	_mw_gl_string
+ 110                             	.L4:
+ 111                             		.loc 1 113 1
+ 112 00c5 03                      		nop
+ 113 00c6 3F 6B 09                		rtsd	#36, r6-r11
+ 114                             	.LFE0:
+ 116                             		.section	.text.mw_dialog_one_button_message_function,"ax",@progbits
+ 118                             	_mw_dialog_one_button_message_function:
+ 119                             	.LFB1:
+ 114:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 
+ 115:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** /**
+ 116:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c ****  * Window message handler called by the window manager.
+ 117:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c ****  *
+ 118:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c ****  * @param message The message to be processed
+ 119:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c ****  * @note Do not call this directly from user code
+ 120:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c ****  */
+ 121:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** static void mw_dialog_one_button_message_function(const mw_message_t *message)
+ 122:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** {
+ 120                             		.loc 1 122 1
+ 121 0000 7E AA                   		push.l	r10
+ 122                             	.LCFI3:
+ 123 0002 71 0A FC                		add	#-4, r0, r10
+ 124                             	.LCFI4:
+ 125 0005 71 A0 F8                		add	#-8, r10, r0
+ 126                             	.LCFI5:
+ 127 0008 E3 A1                   		mov.L	r1, [r10]
+ 123:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	MW_ASSERT(message != (void*)0, "Null pointer argument");
+ 128                             		.loc 1 123 2
+ 129 000a EC A5                   		mov.L	[r10], r5
+ 130 000c 61 05                   		cmp	#0, r5
+ 131 000e FC DB 51                		scne.L	r5
+ 132 0011 FB 42 00 00 00 00       		mov.L	#.LC0, r4
+ 133 0017 75 43 7B                		mov.L	#0x7b, r3
+ 134 001a FB 22 00 00 00 00       		mov.L	#___func__.2972, r2
+ 135 0020 CF 51                   		mov.B	r5, r1
+ 136 0022 05 00 00 00             		bsr	_mw_debug_print_assert
+ 124:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 
+ 125:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	switch (message->message_id)
+ 137                             		.loc 1 125 17
+ 138 0026 EC A5                   		mov.L	[r10], r5
+ 139 0028 A8 D5                   		mov.L	8[r5], r5
+ 140                             		.loc 1 125 2
+ 141 002a 75 55 1A                		cmp	#26, r5
+ 142 002d 21 31                   		bne	.L8
+ 126:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	{
+ 127:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	case MW_BUTTON_PRESSED_MESSAGE:
+ 128:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 		/* remove all controls and window */
+ 129:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 		mw_remove_window(mw_dialog_one_button_data.one_button_dialog_window_handle);
+ 143                             		.loc 1 129 3
+ 144 002f FB 52 00 00 00 00       		mov.L	#_mw_dialog_one_button_data, r5
+ 145 0035 A8 D5                   		mov.L	8[r5], r5
+ 146 0037 EF 51                   		mov.L	r5, r1
+ 147 0039 05 00 00 00             		bsr	_mw_remove_window
+ 130:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 
+ 131:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 		/* a window has changed visibility so repaint all */
+ 132:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 		mw_paint_all();
+ 148                             		.loc 1 132 3
+ 149 003d 05 00 00 00             		bsr	_mw_paint_all
+ 133:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 
+ 134:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 		/* post response to receiving window */
+ 135:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 		mw_post_message(MW_DIALOG_ONE_BUTTON_DISMISSED_MESSAGE,
+ 150                             		.loc 1 135 3
+ 151 0041 FB 52 00 00 00 00       		mov.L	#_mw_dialog_one_button_data, r5
+ 152 0047 A8 5D                   		mov.L	4[r5], r5
+ 153 0049 3E 01 00                		mov.L	#0, 4[r0]
+ 154 004c F8 06 00                		mov.L	#0, [r0]
+ 155 004f 66 04                   		mov.L	#0, r4
+ 156 0051 EF 53                   		mov.L	r5, r3
+ 157 0053 66 02                   		mov.L	#0, r2
+ 158 0055 75 41 3B                		mov.L	#59, r1
+ 159 0058 05 00 00 00             		bsr	_mw_post_message
+ 136:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 				MW_UNUSED_MESSAGE_PARAMETER,
+ 137:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 				mw_dialog_one_button_data.owner_window_handle,
+ 138:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 				MW_UNUSED_MESSAGE_PARAMETER,
+ 139:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 				NULL,
+ 140:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 				MW_WINDOW_MESSAGE);
+ 141:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 		break;
+ 160                             		.loc 1 141 3
+ 161 005c 2E 03                   		bra	.L7
+ 162                             	.L8:
+ 142:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 
+ 143:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	default:
+ 144:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 		/* keep MISRA happy */
+ 145:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 		break;
+ 163                             		.loc 1 145 3
+ 164 005e 03                      		nop
+ 165                             	.L7:
+ 146:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	}
+ 147:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** }
+ 166                             		.loc 1 147 1
+ 167 005f 03                      		nop
+ 168 0060 3F AA 04                		rtsd	#16, r10-r10
+ 169                             	.LFE1:
+ 171                             		.section	.text.mw_create_window_dialog_one_button,"ax",@progbits
+ 172                             		.global	_mw_create_window_dialog_one_button
+ 174                             	_mw_create_window_dialog_one_button:
+ 175                             	.LFB2:
+ 148:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 
+ 149:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** /***********************
+ 150:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** *** GLOBAL FUNCTIONS ***
+ 151:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** ***********************/
+ 152:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 
+ 153:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** mw_handle_t mw_create_window_dialog_one_button(int16_t x,
+ 154:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 		int16_t y,
+ 155:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 		int16_t width,
+ 156:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 		const char *title,
+ 157:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 		const char *message,
+ 158:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 		const char *button_label,
+ 159:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 		bool large_size,
+ 160:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 		mw_handle_t owner_window_handle)
+ 161:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** {
+ 176                             		.loc 1 161 1
+ 177 0000 6E 6B                   		pushm	r6-r11
+ 178                             	.LCFI6:
+ 179 0002 71 0A D4                		add	#-44, r0, r10
+ 180                             	.LCFI7:
+ 181 0005 71 A0 F0                		add	#-16, r10, r0
+ 182                             	.LCFI8:
+ 183 0008 75 46 48                		mov.L	#0x48, r6
+ 184 000b 4B A6                   		add	r10, r6
+ 185 000d D7 A1 08                		mov.W	r1, 16[r10]
+ 186 0010 D7 A2 09                		mov.W	r2, 18[r10]
+ 187 0013 D7 A3 0A                		mov.W	r3, 20[r10]
+ 188 0016 E7 A4 06                		mov.L	r4, 24[r10]
+ 162:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	mw_util_rect_t rect;
+ 163:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	int16_t window_client_width;
+ 164:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	mw_handle_t temp_handle;
+ 165:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 
+ 166:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	/* check pointer parameters */
+ 167:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	if (title == NULL || message == NULL || button_label == NULL)
+ 189                             		.loc 1 167 5
+ 190 0019 ED A5 06                		mov.L	24[r10], r5
+ 191 001c 61 05                   		cmp	#0, r5
+ 192 001e 20 0D                   		beq	.L10
+ 193                             		.loc 1 167 20 discriminator 1
+ 194 0020 EC 65                   		mov.L	[r6], r5
+ 195 0022 61 05                   		cmp	#0, r5
+ 196 0024 17                      		beq	.L10
+ 197                             		.loc 1 167 39 discriminator 2
+ 198 0025 A8 6D                   		mov.L	4[r6], r5
+ 199 0027 61 05                   		cmp	#0, r5
+ 200 0029 21 1C                   		bne	.L11
+ 201                             	.L10:
+ 168:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	{
+ 169:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 		MW_ASSERT((bool)false, "Null pointer argument");
+ 202                             		.loc 1 169 3
+ 203 002b FB 42 00 00 00 00       		mov.L	#.LC0, r4
+ 204 0031 75 43 A9                		mov.L	#0xa9, r3
+ 205 0034 FB 22 00 00 00 00       		mov.L	#___func__.2989, r2
+ 206 003a 66 01                   		mov	#0, r1
+ 207 003c 05 00 00 00             		bsr	_mw_debug_print_assert
+ 170:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 		return (MW_INVALID_HANDLE);
+ 208                             		.loc 1 170 10
+ 209 0040 66 05                   		mov.L	#0, r5
+ 210 0042 38 F3 01                		bra	.L29
+ 211                             	.L11:
+ 171:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	}
+ 172:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 
+ 173:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	/* check width */
+ 174:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	if (large_size)
+ 212                             		.loc 1 174 5
+ 213 0045 B2 65                   		movu.B	8[r6], r5
+ 214 0047 61 05                   		cmp	#0, r5
+ 215 0049 20 15                   		beq	.L13
+ 175:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	{
+ 176:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 		if (width < MW_UI_BUTTON_LARGE_WIDTH + 2 * MW_BORDER_WIDTH)
+ 216                             		.loc 1 176 6
+ 217 004b DD A5 0A                		mov.W	20[r10], r5
+ 218 004e 75 55 65                		cmp	#0x65, r5
+ 219 0051 2A 07                   		bgt	.L14
+ 177:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 		{
+ 178:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 			return (MW_INVALID_HANDLE);
+ 220                             		.loc 1 178 11
+ 221 0053 66 05                   		mov.L	#0, r5
+ 222 0055 38 E0 01                		bra	.L29
+ 223                             	.L14:
+ 179:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 		}
+ 180:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 		rect.height = 95;
+ 224                             		.loc 1 180 15
+ 225 0058 F9 A5 07 5F             		mov.W	#0x5f, 14[r10]
+ 226 005c 2E 13                   		bra	.L15
+ 227                             	.L13:
+ 181:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	}
+ 182:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	else
+ 183:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	{
+ 184:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 		if (width < MW_UI_BUTTON_WIDTH + 2 * MW_BORDER_WIDTH)
+ 228                             		.loc 1 184 6
+ 229 005e DD A5 0A                		mov.W	20[r10], r5
+ 230 0061 75 55 33                		cmp	#51, r5
+ 231 0064 2A 07                   		bgt	.L16
+ 185:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 		{
+ 186:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 			return (MW_INVALID_HANDLE);
+ 232                             		.loc 1 186 11
+ 233 0066 66 05                   		mov.L	#0, r5
+ 234 0068 38 CD 01                		bra	.L29
+ 235                             	.L16:
+ 187:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 		}
+ 188:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 		rect.height = 75;
+ 236                             		.loc 1 188 15
+ 237 006b F9 A5 07 4B             		mov.W	#0x4b, 14[r10]
+ 238                             	.L15:
+ 189:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	}
+ 190:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 
+ 191:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	/* check start position */
+ 192:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	if (x + width > MW_ROOT_WIDTH || x < 0)
+ 239                             		.loc 1 192 8
+ 240 006f DD A4 08                		mov.W	16[r10], r4
+ 241 0072 DD A5 0A                		mov.W	20[r10], r5
+ 242 0075 FF 2B 54                		add	r5, r4, r11
+ 243                             		.loc 1 192 18
+ 244 0078 05 00 00 00             		bsr	_mw_hal_lcd_get_display_width
+ 245 007c EF 15                   		mov.L	r1, r5
+ 246 007e DF 55                   		mov.W	r5, r5
+ 247                             		.loc 1 192 5
+ 248 0080 47 5B                   		cmp	r5, r11
+ 249 0082 2A 09                   		bgt	.L17
+ 250                             		.loc 1 192 32 discriminator 1
+ 251 0084 DD A5 08                		mov.W	16[r10], r5
+ 252 0087 61 05                   		cmp	#0, r5
+ 253 0089 28 07                   		bge	.L18
+ 254                             	.L17:
+ 193:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	{
+ 194:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 		return (MW_INVALID_HANDLE);
+ 255                             		.loc 1 194 10
+ 256 008b 66 05                   		mov.L	#0, r5
+ 257 008d 38 A8 01                		bra	.L29
+ 258                             	.L18:
+ 195:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	}
+ 196:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	if (y + rect.height > MW_ROOT_HEIGHT || y < 0)
+ 259                             		.loc 1 196 8
+ 260 0090 DD A4 09                		mov.W	18[r10], r4
+ 261                             		.loc 1 196 14
+ 262 0093 DD A5 07                		mov.W	14[r10], r5
+ 263 0096 DF 55                   		mov.W	r5, r5
+ 264                             		.loc 1 196 8
+ 265 0098 FF 2B 54                		add	r5, r4, r11
+ 266                             		.loc 1 196 24
+ 267 009b 05 00 00 00             		bsr	_mw_hal_lcd_get_display_height
+ 268 009f EF 15                   		mov.L	r1, r5
+ 269 00a1 DF 55                   		mov.W	r5, r5
+ 270                             		.loc 1 196 5
+ 271 00a3 47 5B                   		cmp	r5, r11
+ 272 00a5 2A 09                   		bgt	.L19
+ 273                             		.loc 1 196 39 discriminator 1
+ 274 00a7 DD A5 09                		mov.W	18[r10], r5
+ 275 00aa 61 05                   		cmp	#0, r5
+ 276 00ac 28 07                   		bge	.L20
+ 277                             	.L19:
+ 197:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	{
+ 198:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 		return (MW_INVALID_HANDLE);
+ 278                             		.loc 1 198 10
+ 279 00ae 66 05                   		mov.L	#0, r5
+ 280 00b0 38 85 01                		bra	.L29
+ 281                             	.L20:
+ 199:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	}
+ 200:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 
+ 201:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	/* check no modal windows already showing */
+ 202:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	if (mw_is_any_window_modal())
+ 282                             		.loc 1 202 6
+ 283 00b3 05 00 00 00             		bsr	_mw_is_any_window_modal
+ 284 00b7 EF 15                   		mov.L	r1, r5
+ 285                             		.loc 1 202 5
+ 286 00b9 5B 55                   		movu.B	r5, r5
+ 287 00bb 61 05                   		cmp	#0, r5
+ 288 00bd 16                      		beq	.L21
+ 203:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	{
+ 204:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 		return (MW_INVALID_HANDLE);
+ 289                             		.loc 1 204 10
+ 290 00be 66 05                   		mov.L	#0, r5
+ 291 00c0 38 75 01                		bra	.L29
+ 292                             	.L21:
+ 205:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	}
+ 206:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 
+ 207:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	/* check response window handle */
+ 208:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	if (!mw_is_window_handle_valid(owner_window_handle))
+ 293                             		.loc 1 208 7
+ 294 00c3 A8 E9                   		mov.L	12[r6], r1
+ 295 00c5 05 00 00 00             		bsr	_mw_is_window_handle_valid
+ 296 00c9 EF 15                   		mov.L	r1, r5
+ 297                             		.loc 1 208 6
+ 298 00cb FD 74 D5 01             		xor	#1, r5
+ 299                             		.loc 1 208 5
+ 300 00cf 5B 55                   		movu.B	r5, r5
+ 301 00d1 61 05                   		cmp	#0, r5
+ 302 00d3 16                      		beq	.L22
+ 209:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	{
+ 210:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 		return (MW_INVALID_HANDLE);
+ 303                             		.loc 1 210 10
+ 304 00d4 66 05                   		mov.L	#0, r5
+ 305 00d6 38 5F 01                		bra	.L29
+ 306                             	.L22:
+ 211:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	}
+ 212:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 
+ 213:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	mw_dialog_one_button_data.large_size = large_size;
+ 307                             		.loc 1 213 39
+ 308 00d9 FB 52 00 00 00 00       		mov.L	#_mw_dialog_one_button_data, r5
+ 309 00df 8A 64                   		mov.B	8[r6], r4
+ 310 00e1 87 54                   		mov.B	r4, 28[r5]
+ 214:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	mw_dialog_one_button_data.message = message;
+ 311                             		.loc 1 214 36
+ 312 00e3 FB 52 00 00 00 00       		mov.L	#_mw_dialog_one_button_data, r5
+ 313 00e9 EC 64                   		mov.L	[r6], r4
+ 314 00eb A0 DC                   		mov.L	r4, 12[r5]
+ 215:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	mw_dialog_one_button_data.owner_window_handle = owner_window_handle;
+ 315                             		.loc 1 215 48
+ 316 00ed FB 52 00 00 00 00       		mov.L	#_mw_dialog_one_button_data, r5
+ 317 00f3 A8 EC                   		mov.L	12[r6], r4
+ 318 00f5 A0 5C                   		mov.L	r4, 4[r5]
+ 216:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	rect.x = x;
+ 319                             		.loc 1 216 9
+ 320 00f7 DD A5 08                		mov.W	16[r10], r5
+ 321 00fa D7 A5 04                		mov.W	r5, 8[r10]
+ 217:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	rect.y = y;
+ 322                             		.loc 1 217 9
+ 323 00fd DD A5 09                		mov.W	18[r10], r5
+ 324 0100 D7 A5 05                		mov.W	r5, 10[r10]
+ 218:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	rect.width = width;
+ 325                             		.loc 1 218 13
+ 326 0103 DD A5 0A                		mov.W	20[r10], r5
+ 327 0106 D7 A5 06                		mov.W	r5, 12[r10]
+ 219:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 
+ 220:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	mw_dialog_one_button_data.one_button_dialog_window_handle = mw_add_window(&rect,
+ 328                             		.loc 1 220 62
+ 329 0109 B2 65                   		movu.B	8[r6], r5
+ 330 010b 61 05                   		cmp	#0, r5
+ 331 010d 17                      		beq	.L23
+ 332                             		.loc 1 220 62 is_stmt 0 discriminator 1
+ 333 010e FB 4E 4B 80 00          		mov.L	#0x804b, r4
+ 334 0113 0C                      		bra	.L24
+ 335                             	.L23:
+ 336                             		.loc 1 220 62 discriminator 2
+ 337 0114 75 44 4B                		mov.L	#0x4b, r4
+ 338                             	.L24:
+ 339                             		.loc 1 220 62 discriminator 4
+ 340 0117 71 A5 08                		add	#8, r10, r5
+ 341 011a 3E 03 00                		mov.L	#0, 12[r0]
+ 342 011d A0 84                   		mov.L	r4, 8[r0]
+ 343 011f 3C 04 00                		mov.B	#0, 4[r0]
+ 344 0122 F8 06 00                		mov.L	#0, [r0]
+ 345 0125 FB 42 00 00 00 00       		mov.L	#_mw_dialog_one_button_message_function, r4
+ 346 012b FB 32 00 00 00 00       		mov.L	#_mw_dialog_one_button_paint_function, r3
+ 347 0131 ED A2 06                		mov.L	24[r10], r2
+ 348 0134 EF 51                   		mov.L	r5, r1
+ 349 0136 05 00 00 00             		bsr	_mw_add_window
+ 350 013a EF 14                   		mov.L	r1, r4
+ 351                             		.loc 1 220 60 is_stmt 1 discriminator 4
+ 352 013c FB 52 00 00 00 00       		mov.L	#_mw_dialog_one_button_data, r5
+ 353 0142 A0 D4                   		mov.L	r4, 8[r5]
+ 221:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 			title,
+ 222:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 			mw_dialog_one_button_paint_function,
+ 223:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 			mw_dialog_one_button_message_function,
+ 224:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 			NULL,
+ 225:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 			0,
+ 226:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 			MW_WINDOW_FLAG_HAS_BORDER | MW_WINDOW_FLAG_HAS_TITLE_BAR |
+ 227:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 					MW_WINDOW_FLAG_IS_VISIBLE | MW_WINDOW_FLAG_IS_MODAL | (uint32_t)(large_size ? MW_WINDOW_FLAG_L
+ 228:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 			NULL);
+ 229:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 
+ 230:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	/* check if window could be created */
+ 231:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	if (mw_dialog_one_button_data.one_button_dialog_window_handle == MW_INVALID_HANDLE)
+ 354                             		.loc 1 231 31 discriminator 4
+ 355 0144 FB 52 00 00 00 00       		mov.L	#_mw_dialog_one_button_data, r5
+ 356 014a A8 D5                   		mov.L	8[r5], r5
+ 357                             		.loc 1 231 5 discriminator 4
+ 358 014c 61 05                   		cmp	#0, r5
+ 359 014e 1E                      		bne	.L25
+ 232:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	{
+ 233:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 		/* it couldn't so exit */
+ 234:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 		return (MW_INVALID_HANDLE);
+ 360                             		.loc 1 234 10
+ 361 014f 66 05                   		mov.L	#0, r5
+ 362 0151 38 E4 00                		bra	.L29
+ 363                             	.L25:
+ 235:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	}
+ 236:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 
+ 237:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	/* get window client rect width */
+ 238:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	window_client_width = mw_get_window_client_rect(mw_dialog_one_button_data.one_button_dialog_window
+ 364                             		.loc 1 238 24
+ 365 0154 FB 52 00 00 00 00       		mov.L	#_mw_dialog_one_button_data, r5
+ 366 015a A8 D5                   		mov.L	8[r5], r5
+ 367 015c EF 51                   		mov.L	r5, r1
+ 368 015e 05 00 00 00             		bsr	_mw_get_window_client_rect
+ 369 0162 EF 14                   		mov.L	r1, r4
+ 370 0164 EF 25                   		mov.L	r2, r5
+ 371                             		.loc 1 238 22
+ 372 0166 D3 A5                   		mov.W	r5, [r10]
+ 239:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 
+ 240:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	/* create a button control and add it to the  window */
+ 241:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	(void)mw_util_safe_strcpy(mw_dialog_one_button_data.button_data.button_label,
+ 373                             		.loc 1 241 8
+ 374 0168 A8 6B                   		mov.L	4[r6], r3
+ 375 016a 66 A2                   		mov.L	#10, r2
+ 376 016c FB 12 10 00 00 00       		mov.L	#_mw_dialog_one_button_data+16, r1
+ 377 0172 05 00 00 00             		bsr	_mw_util_safe_strcpy
+ 242:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 			MW_UI_BUTTON_LABEL_MAX_CHARS, button_label);
+ 243:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	if (large_size)
+ 378                             		.loc 1 243 5
+ 379 0176 B2 65                   		movu.B	8[r6], r5
+ 380 0178 61 05                   		cmp	#0, r5
+ 381 017a 20 39                   		beq	.L26
+ 244:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	{
+ 245:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 		temp_handle = mw_ui_button_add_new(
+ 246:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 				(window_client_width - MW_UI_BUTTON_LARGE_WIDTH) / 2,
+ 382                             		.loc 1 246 26
+ 383 017c DC A5                   		mov.W	[r10], r5
+ 384 017e 71 55 9C                		add	#-100, r5
+ 385                             		.loc 1 246 54
+ 386 0181 FD 9F 54                		shlr	#31, r5, r4
+ 387 0184 4B 45                   		add	r4, r5
+ 388 0186 6A 15                   		shar	#1, r5
+ 245:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 				(window_client_width - MW_UI_BUTTON_LARGE_WIDTH) / 2,
+ 389                             		.loc 1 245 17
+ 390 0188 DF 51                   		mov.W	r5, r1
+ 391 018a FB 52 00 00 00 00       		mov.L	#_mw_dialog_one_button_data, r5
+ 392 0190 A8 D5                   		mov.L	8[r5], r5
+ 393 0192 F8 02 10 00 00 00       		mov.L	#_mw_dialog_one_button_data+16, [r0]
+ 394 0198 66 B4                   		mov	#11, r4
+ 395 019a EF 53                   		mov.L	r5, r3
+ 396 019c 75 42 23                		mov	#35, r2
+ 397 019f 05 00 00 00             		bsr	_mw_ui_button_add_new
+ 398 01a3 E7 A1 01                		mov.L	r1, 4[r10]
+ 247:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 				35,
+ 248:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 				mw_dialog_one_button_data.one_button_dialog_window_handle,
+ 249:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED | MW_CONTROL_FLAG_LARGE_SIZE,
+ 250:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 				&mw_dialog_one_button_data.button_data);
+ 251:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 		mw_dialog_one_button_data.button_handle = temp_handle;
+ 399                             		.loc 1 251 43
+ 400 01a6 FB 52 00 00 00 00       		mov.L	#_mw_dialog_one_button_data, r5
+ 401 01ac ED A4 01                		mov.L	4[r10], r4
+ 402 01af E3 54                   		mov.L	r4, [r5]
+ 403 01b1 2E 37                   		bra	.L27
+ 404                             	.L26:
+ 252:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	}
+ 253:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	else
+ 254:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	{
+ 255:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 		temp_handle = mw_ui_button_add_new(
+ 256:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 				(window_client_width - MW_UI_BUTTON_WIDTH) / 2,
+ 405                             		.loc 1 256 26
+ 406 01b3 DC A5                   		mov.W	[r10], r5
+ 407 01b5 71 55 CE                		add	#-50, r5
+ 408                             		.loc 1 256 48
+ 409 01b8 FD 9F 54                		shlr	#31, r5, r4
+ 410 01bb 4B 45                   		add	r4, r5
+ 411 01bd 6A 15                   		shar	#1, r5
+ 255:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 				(window_client_width - MW_UI_BUTTON_WIDTH) / 2,
+ 412                             		.loc 1 255 17
+ 413 01bf DF 51                   		mov.W	r5, r1
+ 414 01c1 FB 52 00 00 00 00       		mov.L	#_mw_dialog_one_button_data, r5
+ 415 01c7 A8 D5                   		mov.L	8[r5], r5
+ 416 01c9 F8 02 10 00 00 00       		mov.L	#_mw_dialog_one_button_data+16, [r0]
+ 417 01cf 66 34                   		mov	#3, r4
+ 418 01d1 EF 53                   		mov.L	r5, r3
+ 419 01d3 75 42 1E                		mov	#30, r2
+ 420 01d6 05 00 00 00             		bsr	_mw_ui_button_add_new
+ 421 01da E7 A1 01                		mov.L	r1, 4[r10]
+ 257:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 				30,
+ 258:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 				mw_dialog_one_button_data.one_button_dialog_window_handle,
+ 259:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 				MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
+ 260:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 				&mw_dialog_one_button_data.button_data);
+ 261:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 		mw_dialog_one_button_data.button_handle = temp_handle;
+ 422                             		.loc 1 261 43
+ 423 01dd FB 52 00 00 00 00       		mov.L	#_mw_dialog_one_button_data, r5
+ 424 01e3 ED A4 01                		mov.L	4[r10], r4
+ 425 01e6 E3 54                   		mov.L	r4, [r5]
+ 426                             	.L27:
+ 262:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	}
+ 263:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 
+ 264:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	/* check if button could be created */
+ 265:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	if (mw_dialog_one_button_data.button_handle == MW_INVALID_HANDLE)
+ 427                             		.loc 1 265 31
+ 428 01e8 FB 52 00 00 00 00       		mov.L	#_mw_dialog_one_button_data, r5
+ 429 01ee EC 55                   		mov.L	[r5], r5
+ 430                             		.loc 1 265 5
+ 431 01f0 61 05                   		cmp	#0, r5
+ 432 01f2 21 14                   		bne	.L28
+ 266:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	{
+ 267:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 		/* remove all controls and window */
+ 268:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 		mw_remove_window(mw_dialog_one_button_data.one_button_dialog_window_handle);
+ 433                             		.loc 1 268 3
+ 434 01f4 FB 52 00 00 00 00       		mov.L	#_mw_dialog_one_button_data, r5
+ 435 01fa A8 D5                   		mov.L	8[r5], r5
+ 436 01fc EF 51                   		mov.L	r5, r1
+ 437 01fe 05 00 00 00             		bsr	_mw_remove_window
+ 269:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 
+ 270:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 		return (MW_INVALID_HANDLE);
+ 438                             		.loc 1 270 10
+ 439 0202 66 05                   		mov.L	#0, r5
+ 440 0204 2E 31                   		bra	.L29
+ 441                             	.L28:
+ 271:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	}
+ 272:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 
+ 273:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	/* owner window needs its title bar redrawing */
+ 274:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	mw_paint_window_frame(owner_window_handle, MW_WINDOW_FRAME_COMPONENT_TITLE_BAR);
+ 442                             		.loc 1 274 2
+ 443 0206 66 12                   		mov	#1, r2
+ 444 0208 A8 E9                   		mov.L	12[r6], r1
+ 445 020a 05 00 00 00             		bsr	_mw_paint_window_frame
+ 275:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 
+ 276:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	/* this window needs painting; it is coming up at the front so paint only this one */
+ 277:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	mw_paint_window_frame(mw_dialog_one_button_data.one_button_dialog_window_handle, MW_WINDOW_FRAME_C
+ 446                             		.loc 1 277 2
+ 447 020e FB 52 00 00 00 00       		mov.L	#_mw_dialog_one_button_data, r5
+ 448 0214 A8 D5                   		mov.L	8[r5], r5
+ 449 0216 75 42 1F                		mov	#31, r2
+ 450 0219 EF 51                   		mov.L	r5, r1
+ 451 021b 05 00 00 00             		bsr	_mw_paint_window_frame
+ 278:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	mw_paint_window_client(mw_dialog_one_button_data.one_button_dialog_window_handle);
+ 452                             		.loc 1 278 2
+ 453 021f FB 52 00 00 00 00       		mov.L	#_mw_dialog_one_button_data, r5
+ 454 0225 A8 D5                   		mov.L	8[r5], r5
+ 455 0227 EF 51                   		mov.L	r5, r1
+ 456 0229 05 00 00 00             		bsr	_mw_paint_window_client
+ 279:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 
+ 280:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** 	return (mw_dialog_one_button_data.one_button_dialog_window_handle);
+ 457                             		.loc 1 280 35
+ 458 022d FB 52 00 00 00 00       		mov.L	#_mw_dialog_one_button_data, r5
+ 459 0233 A8 D5                   		mov.L	8[r5], r5
+ 460                             		.balign 8,3,1
+ 461                             	.L29:
+ 281:C:/Users/John/Desktop/workspace/miniwinwm/MiniWin/dialogs\dialog_one_button.c **** }
+ 462                             		.loc 1 281 1 discriminator 1
+ 463 0235 EF 51                   		mov.L	r5, r1
+ 464 0237 3F 6B 15                		rtsd	#84, r6-r11
+ 465                             	.LFE2:
+ 467 023a 74 10 01 00 00 00       		.section	.rodata.__func__.2968,"a"
+ 470                             	___func__.2968:
+ 471 0000 6D 77 5F 64 69 61 6C 6F 		.string	"mw_dialog_one_button_paint_function"
+ 471      67 5F 6F 6E 65 5F 62 75 
+ 471      74 74 6F 6E 5F 70 61 69 
+ 471      6E 74 5F 66 75 6E 63 74 
+ 471      69 6F 6E 00 
+ 472                             		.section	.rodata.__func__.2972,"a"
+ 475                             	___func__.2972:
+ 476 0000 6D 77 5F 64 69 61 6C 6F 		.string	"mw_dialog_one_button_message_function"
+ 476      67 5F 6F 6E 65 5F 62 75 
+ 476      74 74 6F 6E 5F 6D 65 73 
+ 476      73 61 67 65 5F 66 75 6E 
+ 476      63 74 69 6F 6E 00 
+ 477                             		.section	.rodata.__func__.2989,"a"
+ 480                             	___func__.2989:
+ 481 0000 6D 77 5F 63 72 65 61 74 		.string	"mw_create_window_dialog_one_button"
+ 481      65 5F 77 69 6E 64 6F 77 
+ 481      5F 64 69 61 6C 6F 67 5F 
+ 481      6F 6E 65 5F 62 75 74 74 
+ 481      6F 6E 00 
+ 592                             	.Letext0:
+ 593                             		.file 2 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\rx-el
+ 594                             		.file 3 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\rx-el
+ 595                             		.file 4 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\rx-el
+ 596                             		.file 5 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\lib\\
+ 597                             		.file 6 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\rx-el
+ 598                             		.file 7 "c:\\program files (x86)\\gcc for renesas rx 8.3.0.201904-gnurx-elf\\rx-elf\\rx-elf\\rx-el
+ 599                             		.file 8 "C:\\Users\\John\\Desktop\\workspace\\miniwinwm\\MiniWin/miniwin_utilities.h"
+ 600                             		.file 9 "C:\\Users\\John\\Desktop\\workspace\\miniwinwm\\MiniWin/gl/gl.h"
+ 601                             		.file 10 "C:\\Users\\John\\Desktop\\workspace\\miniwinwm\\MiniWin/bitmaps/mw_bitmaps.h"
+ 602                             		.file 11 "C:\\Users\\John\\Desktop\\workspace\\miniwinwm\\MiniWin/hal/hal_timer.h"
+ 603                             		.file 12 "C:\\Users\\John\\Desktop\\workspace\\miniwinwm\\MiniWin/miniwin.h"
+ 604                             		.file 13 "C:\\Users\\John\\Desktop\\workspace\\miniwinwm\\MiniWin/ui/ui_button.h"
