@@ -28,7 +28,7 @@ MiniWinRoot_Common contains platform independant files for an example applicatio
 
 MiniWinTTFonts_Common contains platform independant files for an example appliocation. Builds for Windows and Linux simulators and embedded platforms.
 
-MiniWinCamera_Common contains platform independant files for an example application. Builds for Windows and Linux simulators and embedded platforms except Renesas RX.
+MiniWinCamera_Common contains platform independant files for an example application. Builds for Windows and Linux simulators and embedded platforms.
 
 Tools contains source and project files for MiniWin tool applications. These are built using GCC and for Windows require the mingw64 and MSYS2 environments. Details are in the documentaion. These tools are...
 
