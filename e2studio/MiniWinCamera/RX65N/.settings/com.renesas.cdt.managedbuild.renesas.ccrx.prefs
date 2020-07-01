@@ -1,0 +1,7 @@
+com.renesas.cdt.managedbuild.renesas.ccrx.common.option.checkRtos=unusedRtos
+com.renesas.cdt.managedbuild.renesas.ccrx.rtosConfig.option.cfgFilePath=../generate/${ArtifactName}.cfg
+com.renesas.cdt.managedbuild.renesas.ccrx.rtosConfig.option.output=${workspace_loc\:/${ProjName}}\\cfg_output
+com.renesas.cdt.managedbuild.renesas.ccrx.rtosConfig.option.rtosName=None
+com.renesas.cdt.managedbuild.renesas.ccrx.rtosConfig.option.rtosPath=
+com.renesas.cdt.managedbuild.renesas.ccrx.rtosConfig.option.rtosVersion=
+eclipse.preferences.version=1
