@@ -252,7 +252,7 @@ void mw_util_shell_sort(int16_t *array, uint16_t n)
         	temp = array[i];
             for (j = i; j >= increment; j -= increment)
             {
-                if(temp < array[j-increment])
+                if (temp < array[j-increment])
                 {
                 	array[j] = array[j-increment];
                 }

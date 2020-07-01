@@ -138,7 +138,7 @@ mw_hal_touch_state_t mw_hal_touch_get_state(void)
 
 	(void)R_SCI_IIC_MasterReceive(&i2c_info);
 	busy = true;
-	while(busy)
+	while (busy)
 	{
 	}
 

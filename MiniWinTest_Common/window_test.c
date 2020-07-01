@@ -92,7 +92,7 @@ void window_test_paint_function(mw_handle_t window_handle, const mw_gl_draw_info
 			mw_get_window_client_rect(window_handle).width,
 			mw_get_window_client_rect(window_handle).height);
 	mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
-	if(window_test_data.draw_circle)
+	if (window_test_data.draw_circle)
 	{
 		mw_gl_set_solid_fill_colour(MW_HAL_LCD_YELLOW);
 		mw_gl_set_line(MW_GL_SOLID_LINE);

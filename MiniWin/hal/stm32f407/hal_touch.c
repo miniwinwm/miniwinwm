@@ -197,7 +197,7 @@ bool mw_hal_touch_get_point(uint16_t* x, uint16_t* y)
 		sorted = true;
 		for (i = 0U; i < touch_count - 1U; i++)
 		{
-			if(databuffer[0][i] > databuffer[0][i + 1U])
+			if (databuffer[0][i] > databuffer[0][i + 1U])
 			{
 				swap_value = databuffer[0][i + 1U];
 				databuffer[0][i + 1U] = databuffer[0][i];

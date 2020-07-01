@@ -185,7 +185,7 @@ static void list_box_paint_function(mw_handle_t control_handle, const mw_gl_draw
 
 				/* draw icon */
 				mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
-				if(this_list_box->line_is_selected && (this_list_box->selection - this_list_box->lines_to_scroll) == i)
+				if (this_list_box->line_is_selected && (this_list_box->selection - this_list_box->lines_to_scroll) == i)
 				{
 					mw_gl_monochrome_bitmap(draw_info,
 							icon_x_offset + 2,
@@ -210,7 +210,7 @@ static void list_box_paint_function(mw_handle_t control_handle, const mw_gl_draw
 				text_x_offset = MW_UI_LIST_BOX_LARGE_LABEL_X_OFFSET;
 			}
 
-			if(this_list_box->line_is_selected && (this_list_box->selection - this_list_box->lines_to_scroll) == i)
+			if (this_list_box->line_is_selected && (this_list_box->selection - this_list_box->lines_to_scroll) == i)
 			{
 				mw_gl_string(draw_info,
 						text_x_offset + 2,
@@ -236,7 +236,7 @@ static void list_box_paint_function(mw_handle_t control_handle, const mw_gl_draw
 
 				/* draw icon */
 				mw_gl_set_fg_colour(MW_HAL_LCD_BLACK);
-				if(this_list_box->line_is_selected && (this_list_box->selection - this_list_box->lines_to_scroll) == i)
+				if (this_list_box->line_is_selected && (this_list_box->selection - this_list_box->lines_to_scroll) == i)
 				{
 					mw_gl_monochrome_bitmap(draw_info,
 							icon_x_offset + 1,
@@ -260,7 +260,7 @@ static void list_box_paint_function(mw_handle_t control_handle, const mw_gl_draw
 				text_x_offset = MW_UI_LIST_BOX_LABEL_X_OFFSET;
 			}
 
-			if(this_list_box->line_is_selected && (this_list_box->selection - this_list_box->lines_to_scroll) == i)
+			if (this_list_box->line_is_selected && (this_list_box->selection - this_list_box->lines_to_scroll) == i)
 			{
 				mw_gl_string(draw_info,
 						text_x_offset + 1,

@@ -2083,7 +2083,7 @@ static void do_paint_window_frame(mw_handle_t window_handle, uint8_t components)
 			rect_current.height = (horizontal_edges[horizontal_edge_counter + 1U] - rect_current.y);
 
 			/* iterate through vertical edges along current row */
-			for(vertical_edge_counter = 0U; vertical_edge_counter < vert_edges_count - 1U; vertical_edge_counter++)
+			for (vertical_edge_counter = 0U; vertical_edge_counter < vert_edges_count - 1U; vertical_edge_counter++)
 			{
 				/* get next rect in current row to examine */
 				rect_current.x = vertical_edges[vertical_edge_counter];
@@ -2309,7 +2309,7 @@ static void do_paint_window_client(mw_handle_t window_handle)
 			rect_current.height = (horizontal_edges[horizontal_edge_counter + 1U] - rect_current.y);
 
 			/* iterate through vertical edges along current row */
-			for(vertical_edge_counter = 0U; vertical_edge_counter < vert_edges_count - 1U; vertical_edge_counter++)
+			for (vertical_edge_counter = 0U; vertical_edge_counter < vert_edges_count - 1U; vertical_edge_counter++)
 			{
 				/* get next rect in current row to examine */
 				rect_current.x = vertical_edges[vertical_edge_counter];
@@ -2449,7 +2449,7 @@ static void do_paint_window_client_rect(mw_handle_t window_handle, const mw_util
 			rect_current.height = (horizontal_edges[horizontal_edge_counter + 1U] - rect_current.y);
 
 			/* iterate through vertical edges along current row */
-			for(vertical_edge_counter = 0U; vertical_edge_counter < vert_edges_count - 1U; vertical_edge_counter++)
+			for (vertical_edge_counter = 0U; vertical_edge_counter < vert_edges_count - 1U; vertical_edge_counter++)
 			{
 				/* get next rect in current row to examine */
 				rect_current.x = vertical_edges[vertical_edge_counter];
@@ -4050,7 +4050,7 @@ static void rationalize_z_orders(void)
 	existing_window_count = find_number_of_displayed_windows();
 
 	/* loop until number of windows rationalized is number of used windows */
-	while(number_of_windows_rationalized < existing_window_count)
+	while (number_of_windows_rationalized < existing_window_count)
 	{
 		/* find the next z order beyond the last z order found */
 		next_z_order_existing = find_next_z_order(next_z_order_existing);

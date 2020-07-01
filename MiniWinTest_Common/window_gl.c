@@ -159,7 +159,7 @@ void window_gl_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_t
 		mw_gl_clear_pattern();
 		for (y = 20; y < 40; y++)
 		{
-			for(x = 30; x < 50; x++)
+			for (x = 30; x < 50; x++)
 			{
 				mw_gl_fg_pixel(draw_info, x, y);
 				mw_gl_bg_pixel(draw_info, x, y + 30);
