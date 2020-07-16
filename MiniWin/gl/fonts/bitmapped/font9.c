@@ -1089,7 +1089,7 @@ const uint8_t Font9_Table[] =
 const sFONT Font9 = {
   Font9_Table,
   5,	/* Width */
-  9,	/* Height */
+  9		/* Height */
 };
 
 /************

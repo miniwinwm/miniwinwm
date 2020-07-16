@@ -269,8 +269,11 @@ static void mw_dialog_text_entry_message_function(const mw_message_t *message)
 						/* move everything from 1 place before cursor onwards backwards and delete 1 character */
 						source = &mw_dialog_text_entry_data.text_buffer[mw_dialog_text_entry_data.cursor_position];
 						destination = &mw_dialog_text_entry_data.text_buffer[mw_dialog_text_entry_data.cursor_position - 1];
-						(void)memmove((destination), (source), ((size_t)current_length - (size_t)mw_dialog_text_entry_data.cursor_position + (size_t)1));
 
+						/* this memmove gives a false warning with some versions of GCC with Os optimization */
+#pragma GCC diagnostic ignored "-Warray-bounds"
+						(void)memmove((destination), (source), ((size_t)current_length - (size_t)mw_dialog_text_entry_data.cursor_position + (size_t)1));
+#pragma GCC diagnostic error "-Warray-bounds"
 						if (mw_dialog_text_entry_data.cursor_position > 0)
 						{
 							mw_dialog_text_entry_data.cursor_position--;
@@ -294,8 +297,11 @@ static void mw_dialog_text_entry_message_function(const mw_message_t *message)
 						/* move everything from cursor onwards along and insert character */
 						destination = &mw_dialog_text_entry_data.text_buffer[mw_dialog_text_entry_data.cursor_position + 1];
 						source = &mw_dialog_text_entry_data.text_buffer[mw_dialog_text_entry_data.cursor_position];
-						(void)memmove((destination), (source), ((size_t)current_length - (size_t)mw_dialog_text_entry_data.cursor_position));
 
+						/* this memmove gives a false warning with some versions of GCC with Os optimization */
+#pragma GCC diagnostic ignored "-Warray-bounds"
+						(void)memmove((destination), (source), ((size_t)current_length - (size_t)mw_dialog_text_entry_data.cursor_position));
+#pragma GCC diagnostic error "-Warray-bounds"
 						mw_dialog_text_entry_data.text_buffer[mw_dialog_text_entry_data.cursor_position] = (char)message->message_data;
 						mw_dialog_text_entry_data.cursor_position++;
 					}

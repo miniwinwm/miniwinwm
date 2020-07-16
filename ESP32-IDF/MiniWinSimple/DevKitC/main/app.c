@@ -28,31 +28,17 @@ SOFTWARE.
 *** INCLUDES ***
 ***************/
 
-#include <string.h>
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
 #include "miniwin.h"
-#include "miniwin_debug.h"
-#include "miniwin_settings.h"
-#include "hal/hal_non_vol.h"
 
 /****************
 *** CONSTANTS ***
 ****************/
 
-#define SETTINGS_INIT_FLAG	0xBADD10DEUL     /**< Signature of the initialisation flag */
-
 /************
 *** TYPES ***
 ************/
-
-/**
- * Structure defining the layout of settings held in non-vol storage
- */
-typedef struct
-{
-	uint32_t		init_flag;              /**< flag to indicate that the settings in non-vol storage have been initialised */
-	bool			is_calibrated;          /**< flag to indicate that the touch screen has been calibrated and the calibration matrix is valid */
-	MATRIX			calibration_matrix;     /**< the touch screen calibration matrix */
-} settings_t;
 
 /***********************
 *** GLOBAL VARIABLES ***
@@ -61,8 +47,6 @@ typedef struct
 /**********************
 *** LOCAL VARIABLES ***
 **********************/
-
-static settings_t settings;                  /**< Structure containing the settings in memory */
 
 /********************************
 *** LOCAL FUNCTION PROTOTYPES ***
@@ -76,45 +60,12 @@ static settings_t settings;                  /**< Structure containing the setti
 *** GLOBAL FUNCTIONS ***
 ***********************/
 
-void mw_settings_load(void)
+void app_init(void)
 {
-	mw_hal_non_vol_load((uint8_t *)&settings, (uint16_t)sizeof(settings));
 }
 
-void mw_settings_save(void)
+void app_main_loop_process(void)
 {
-	mw_hal_non_vol_save((uint8_t *)&settings, (uint16_t)sizeof(settings));
-}
-
-bool mw_settings_is_initialised(void)
-{
-	return (settings.init_flag == SETTINGS_INIT_FLAG);
-}
-
-void mw_settings_set_to_defaults(void)
-{
-	settings.init_flag = SETTINGS_INIT_FLAG;
-	settings.is_calibrated = false;
-}
-
-bool mw_settings_is_calibrated(void)
-{
-	return (settings.is_calibrated);
-}
-
-void mw_settings_set_calibrated(bool calibrated)
-{
-	settings.is_calibrated = calibrated;
-}
-
-MATRIX *mw_settings_get_calibration_matrix(void)
-{
-	return (&settings.calibration_matrix);
-}
-
-void mw_settings_set_calibration_matrix(const MATRIX *new_calibration_matrix)
-{
-	MW_ASSERT(new_calibration_matrix != (void*)0, "Null pointer argument");
-
-	(void)memcpy((&settings.calibration_matrix), (new_calibration_matrix), (sizeof(MATRIX)));
+	/* this is required to stop task watchdog timing out if it is enabled */
+	vTaskDelay(1);
 }
