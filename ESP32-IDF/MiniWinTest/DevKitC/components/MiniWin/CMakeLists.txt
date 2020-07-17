@@ -78,6 +78,6 @@ idf_component_register(SRCS "../../../../../MiniWin/calibrate.c"
                             "../../../../../MiniWin/hal/esp32-idf/hal_non_vol.c"
                     REQUIRES "nvs_flash"
                     INCLUDE_DIRS "../../../../../MiniWin"
-                    			 "../../../../../MiniWinSimple_Common"
+                    			 "../../../../../MiniWinTest_Common"
                     			 "../../main"
                     			 "../../../../../MiniWin/gl/fonts/truetype/mcufont")
