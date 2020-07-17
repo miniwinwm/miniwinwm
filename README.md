@@ -6,6 +6,8 @@ Please note: The latest formal release contains the latest stable tested code co
 The latest commit may contain work in progress, not all features may work for all variants, and the documentation may not be updated to the code.
 For further information on current work in progress please contact me by the contact box on the MiniWin website, address above.
 
+ESP32-IDF contains project files and application specific source files for the example projects running on the DevKitC dev board.
+
 MCUXpresso contains project files and application specific source files for the example projects running on the LPC54628 dev board.
 
 STM32CubeIDE contains project files and application specific source files for the example projects running on the STM32F429 and STM32F407 dev boards.
