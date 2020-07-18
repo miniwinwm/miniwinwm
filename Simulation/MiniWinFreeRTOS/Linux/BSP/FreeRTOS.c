@@ -32,7 +32,7 @@ void vTaskDelayUntil(TickType_t *last, uint32_t increment)
 	usleep(increment * 1000);
 }
 
-MessageBufferHandle_t xMessageBufferCreateStatic(size_t s, uint8_t *b, StaticMessageBuffer_t *mb)
+QueueHandle_t xQueueCreateStatic(UBaseType_t s1, UBaseType_t s2, uint8_t *sa, StaticQueue_t *b)
 {
 	static uint8_t h = 0;
 
@@ -40,39 +40,38 @@ MessageBufferHandle_t xMessageBufferCreateStatic(size_t s, uint8_t *b, StaticMes
 	return h - 1;
 }
 
-void xMessageBufferSend(MessageBufferHandle_t mbh, const void *r, size_t s, uint8_t i)
+void xQueueSend(QueueHandle_t qh, const void *r, TickType_t t)
 {
-	if (mbh == 0)
+	if (qh == 0)
 	{
 		x = *(float *)r;
 	}
-	else if (mbh == 1)
+	else if (qh == 1)
 	{
 		y = *(float *)r;
 	}
-	else if (mbh == 2)
+	else if (qh == 2)
 	{
 		z = *(float *)r;
 	}
 }
 
-uint8_t xMessageBufferReceive(MessageBufferHandle_t mbh, void *r, size_t s, uint8_t a)
+uint8_t xQueueReceive(QueueHandle_t qh, void *r, TickType_t t)
 {
-	if (mbh == 0)
+	if (qh == 0)
 	{
 		*(float *)r = x;
 	}
-	else if (mbh == 1)
+	else if (qh == 1)
 	{
 		*(float *)r = y;
 	}
-	else if (mbh == 2)
+	else if (qh == 2)
 	{
 		*(float *)r = z;
 	}
 
-
-	return 1;
+	return pdTRUE;
 }
 
 void xTaskCreateStatic(void (main_thread)(void *), char *name, uint32_t ss, void *n, uint8_t u, uint8_t *s, uint8_t *th)
