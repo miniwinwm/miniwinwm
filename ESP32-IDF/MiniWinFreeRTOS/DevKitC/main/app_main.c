@@ -2,7 +2,7 @@
 
 MIT License
 
-Copyright (c) John Blaiklock 2019 miniwin Embedded Window Manager
+Copyright (c) John Blaiklock 2020 miniwin Embedded Window Manager
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -28,13 +28,11 @@ SOFTWARE.
 *** INCLUDES ***
 ***************/
 
-#include "main.h"
-#include "miniwin.h"
-#include "app.h"
 #include "FreeRTOS.h"
 #include "semphr.h"
 #include "task.h"
-#include "queue.h"
+#include "miniwin.h"
+#include "app.h"
 
 /****************
 *** CONSTANTS ***
@@ -65,9 +63,9 @@ static uint8_t gyro_y_queue_storage_area[sizeof(float)];
 static uint8_t gyro_z_queue_storage_area[sizeof(float)];
 
 /* thread stacks */
-static StackType_t main_stack[128];
-static StackType_t miniwin_stack[1024];
-static StackType_t gyro_stack[128];
+static StackType_t main_stack[512];
+static StackType_t miniwin_stack[4096];
+static StackType_t gyro_stack[512];
 
 /* thread tasks */
 static StaticTask_t main_task_handle;
@@ -157,6 +155,7 @@ static void gyro_thread(void *parameters)
 		{
 			continue;
 		}
+
 		gyro_readings = app_get_gyro_readings();
 
 		/* the next line cannot be made MISRA compliant because of the FreeRTOS API */
@@ -171,7 +170,7 @@ static void gyro_thread(void *parameters)
 			/* the next 3 lines cannot be made MISRA compliant because of the FreeRTOS API */
 			(void)xQueueSend(gyro_x_queue, ((const void *)(gyro_readings + GYRO_READING_X)), (TickType_t)0);
 			(void)xQueueSend(gyro_y_queue, ((const void *)(gyro_readings + GYRO_READING_Y)), (TickType_t)0);
-			(void)xQueueSend(gyro_z_queue, ((const void *)(gyro_readings + GYRO_READING_Z)), (TickType_t)0);			
+			(void)xQueueSend(gyro_z_queue, ((const void *)(gyro_readings + GYRO_READING_Z)), (TickType_t)0);
 		}
 
 		/* pause thread until next reading */
@@ -183,7 +182,7 @@ static void gyro_thread(void *parameters)
 *** GLOBAL FUNCTIONS ***
 ***********************/
 
-int main(void)
+int app_main(void)
 {
 	/* initialize non-miniwin parts of the application */
 	app_init();
@@ -191,75 +190,24 @@ int main(void)
 	/* the next 3 lines cannot be made MISRA compliant because of the FreeRTOS API */
 
 	/* initialise the message buffers to send gyro reading data from gyro thread to gyro windows */
-	gyro_x_queue = xQueueCreateStatic((UBaseType_t)1,
-			(UBaseType_t)sizeof(float),
-			gyro_x_queue_storage_area,
-			&gyro_x_queue_buffer);
-
-	gyro_y_queue = xQueueCreateStatic((UBaseType_t)1,
-			(UBaseType_t)sizeof(float),
-			gyro_y_queue_storage_area,
-			&gyro_y_queue_buffer);
-
-	gyro_z_queue = xQueueCreateStatic((UBaseType_t)1,
-			(UBaseType_t)sizeof(float),
-			gyro_z_queue_storage_area,
-			&gyro_z_queue_buffer);
+	gyro_x_queue = xQueueCreateStatic(1, sizeof(float), gyro_x_queue_storage_area, &gyro_x_queue_buffer);
+	gyro_y_queue = xQueueCreateStatic(1, sizeof(float), gyro_y_queue_storage_area, &gyro_y_queue_buffer);
+	gyro_z_queue = xQueueCreateStatic(1, sizeof(float), gyro_z_queue_storage_area, &gyro_z_queue_buffer);
 
 	/* initialize the mutex */
 	semaphore_handle = xSemaphoreCreateMutexStatic(&semaphore_buffer);
 
 	/* create the led task */
-	(void)xTaskCreateStatic(main_thread, "MAIN", 128U, NULL, 1, main_stack, &main_task_handle);
+	(void)xTaskCreateStatic(main_thread, "MAIN", 512U, NULL, 1, main_stack, &main_task_handle);
 
 	/* create the gyro task */
-	(void)xTaskCreateStatic(gyro_thread, "GYRO", 128U, NULL, 2, gyro_stack, &gyro_task_handle);
+	(void)xTaskCreateStatic(gyro_thread, "GYRO", 512U, NULL, 2, gyro_stack, &gyro_task_handle);
 
 	/* create the miniwin task */
-	(void)xTaskCreateStatic(miniwin_thread, "MINIWIN", 1024U, NULL, 1, miniwin_stack, &miniwin_task_handle);
-
-	/* start the scheduler */
-	vTaskStartScheduler();
+	(void)xTaskCreateStatic(miniwin_thread, "MINIWIN", 4096U, NULL, 1, miniwin_stack, &miniwin_task_handle);
 
 	while (true)
 	{
+		vTaskDelay(10U);
 	}
-}
-
-/**
- * FreeRTOS memory allocation for idle task
- *
- * @param ppxIdleTaskTCBBuffer Pointer to pointer of idle task TCB
- * @param ppxIdleTaskStackBuffer Pointer to pointer of idle task stack
- * @param pulIdleTaskStackSize Pointer to idle task stack size
- */
-void vApplicationGetIdleTaskMemory(StaticTask_t **ppxIdleTaskTCBBuffer,
-		StackType_t **ppxIdleTaskStackBuffer,
-		uint32_t *pulIdleTaskStackSize)
-{
-	static StaticTask_t xIdleTaskTCB;
-	static StackType_t uxIdleTaskStack[configMINIMAL_STACK_SIZE];
-
-	*ppxIdleTaskTCBBuffer = &xIdleTaskTCB;
-	*ppxIdleTaskStackBuffer = uxIdleTaskStack;
-	*pulIdleTaskStackSize = configMINIMAL_STACK_SIZE;
-}
-
-/**
- * FreeRTOS memory allocation for timer task
- *
- * @param ppxIdleTaskTCBBuffer Pointer to pointer of timer task TCB
- * @param ppxIdleTaskStackBuffer Pointer to pointer of timer task stack
- * @param pulIdleTaskStackSize Pointer to timer task stack size
- */
-void vApplicationGetTimerTaskMemory(StaticTask_t **ppxTimerTaskTCBBuffer,
-		StackType_t **ppxTimerTaskStackBuffer,
-		uint32_t *pulTimerTaskStackSize)
-{
-	static StaticTask_t xTimerTaskTCB;
-	static StackType_t uxTimerTaskStack[configTIMER_TASK_STACK_DEPTH];
-
-	*ppxTimerTaskTCBBuffer = &xTimerTaskTCB;
-	*ppxTimerTaskStackBuffer = uxTimerTaskStack;
-	*pulTimerTaskStackSize = configTIMER_TASK_STACK_DEPTH;
 }

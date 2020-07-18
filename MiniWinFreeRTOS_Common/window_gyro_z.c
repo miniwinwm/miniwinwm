@@ -29,11 +29,10 @@ SOFTWARE.
 ***************/
 
 #include <string.h>
+#include "main.h"
 #include "miniwin.h"
 #include "miniwin_user.h"
-#include "main.h"
 #include "ui/ui_common.h"
-#include "FreeRTOS.h"
 #include "gyro_util.h"
 #include "window_gyro_z.h"
 
@@ -128,16 +127,9 @@ void window_gyro_z_message_function(const mw_message_t *message)
 	case MW_TIMER_MESSAGE:
 		{
 			float angle;
-			size_t bytes;
 			int16_t offset_adjusted_angle;
 
-			/* the next line cannot be made MISRA compliant because of the FreeRTOS API */
-			bytes = xMessageBufferReceive((gyro_z_message_buffer),
-		                              ((void *)&angle),
-		                              (sizeof(float)),
-		                              (0));
-
-			if (bytes > (size_t)0)
+			if (xQueueReceive((gyro_z_queue), ((void *)&angle), ((TickType_t)0)) == pdTRUE)
 			{
 				window_gyro_z_data.angle = (int16_t)angle;
 

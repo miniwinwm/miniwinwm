@@ -2,7 +2,7 @@
 
 MIT License
 
-Copyright (c) John Blaiklock 2019 miniwin Embedded Window Manager
+Copyright (c) John Blaiklock 2020 miniwin Embedded Window Manager
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -24,8 +24,8 @@ SOFTWARE.
 
 */
 
-#ifndef MAIN_H
-#define MAIN_H
+#ifndef APP_H
+#define APP_H
 
 #ifdef __cplusplus
  extern "C" {
@@ -35,9 +35,6 @@ SOFTWARE.
 *** INCLUDES ***
 ***************/
 
-#include "FreeRTOS.h"
-#include "queue.h"
-
 /****************
 *** CONSTANTS ***
 ****************/
@@ -45,6 +42,13 @@ SOFTWARE.
 /************
 *** TYPES ***
 ************/
+
+ typedef enum
+ {
+	 GYRO_READING_X = 0,
+	 GYRO_READING_Y = 1,
+	 GYRO_READING_Z = 2
+ } gyro_reading_t;
 
 /*************************
 *** EXTERNAL VARIABLES ***
@@ -54,42 +58,22 @@ SOFTWARE.
 *** FUNCTIONS PROTOTYPES ***
 ***************************/
 
-/**
-* Program entry point.
-*
-* return Will never return
-*/
-int main(void);
+ /**
+  * Function called from main to perform application initializations
+  */
+ void app_init(void);
 
-/**
- * FreeRTOS memory allocation for timer task
- *
- * @param ppxIdleTaskTCBBuffer Pointer to pointer of timer task TCB
- * @param ppxIdleTaskStackBuffer Pointer to pointer of timer task stack
- * @param pulIdleTaskStackSize Pointer to timer task stack size
- */
-void vApplicationGetTimerTaskMemory(StaticTask_t **ppxTimerTaskTCBBuffer,
-	StackType_t **ppxTimerTaskStackBuffer,
-	uint32_t *pulTimerTaskStackSize);
+ /**
+  * Function called from main to perform application main loop processing
+  */
+ void app_main_loop_process(void);
 
-/**
- * FreeRTOS memory allocation for idle task
- *
- * @param ppxIdleTaskTCBBuffer Pointer to pointer of idle task TCB
- * @param ppxIdleTaskStackBuffer Pointer to pointer of idle task stack
- * @param pulIdleTaskStackSize Pointer to idle task stack size
- */
-void vApplicationGetIdleTaskMemory(StaticTask_t **ppxIdleTaskTCBBuffer,
-		StackType_t **ppxIdleTaskStackBuffer,
-		uint32_t *pulIdleTaskStackSize);
-
-/*************************
-*** EXTERNAL VARIABLES ***
-**************************/
-
-extern QueueHandle_t gyro_x_queue;
-extern QueueHandle_t gyro_y_queue;
-extern QueueHandle_t gyro_z_queue;
+ /**
+  * Get the gyroscope accumulated readings
+  *
+  * @return The cumulative readings in degrees
+  */
+ float *app_get_gyro_readings(void);
 
 #ifdef __cplusplus
 }
