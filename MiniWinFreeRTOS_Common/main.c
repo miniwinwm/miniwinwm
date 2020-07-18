@@ -133,7 +133,7 @@ static void miniwin_thread(void *parameters)
 		(void)mw_process_message();
 
 		/* the next line cannot be made MISRA compliant because of the FreeRTOS API */
-		xSemaphoreGive(semaphore_handle);
+		(void)xSemaphoreGive(semaphore_handle);
 		vTaskDelay(10U);
 	}
 }
@@ -160,7 +160,7 @@ static void gyro_thread(void *parameters)
 		gyro_readings = app_get_gyro_readings();
 
 		/* the next line cannot be made MISRA compliant because of the FreeRTOS API */
-		xSemaphoreGive(semaphore_handle);
+		(void)xSemaphoreGive(semaphore_handle);
 
 		/* only send 1 in every 10 readings to window */
 		reading_counter++;
