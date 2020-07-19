@@ -1,0 +1,12 @@
+idf_component_register(SRCS "../../../../../MiniWinFile_Common/miniwin_user.c"
+							"../../../../../MiniWinFile_Common/window_file.c"
+							"../../../../../MiniWinFile_Common/window_file_tree.c"
+							"../../../../../MiniWinFile_Common/window_image.c"
+							"../../../../../MiniWinFile_Common/window_selection.c"
+							"../../../../../MiniWinFile_Common/window_text.c"
+					REQUIRES "MiniWin"
+					         "MiniWinFile"
+                    INCLUDE_DIRS "../../../../../MiniWin"
+                    			 "../../../../../MiniWinFile_Common"
+                    			 "../../main"
+                    			 "../../../../../MiniWin/gl/fonts/truetype/mcufont")

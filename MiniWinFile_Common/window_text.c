@@ -75,7 +75,8 @@ static void get_file_dimensions(text_window_data_t* text_window_data)
 	{
 		/* get file size, number of chars */
 		file_size = app_file_size();
-
+		(void)app_file_seek(0UL);
+		
 		/* going to get maximum width and height of text so initialize to start values */
 		text_window_data->max_line_width = 0;
 		text_window_data->number_of_lines = 1;
@@ -174,6 +175,7 @@ void window_text_paint_function(mw_handle_t window_handle, const mw_gl_draw_info
 	{
 		/* get file size, number of chars */
 		file_size = app_file_size();
+		(void)app_file_seek(0UL);
 
 		/* loop through the whole file */
 		for (i = 0; i < file_size; i++)

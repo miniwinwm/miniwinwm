@@ -290,7 +290,7 @@ void mw_hal_lcd_init(void)
     };
 
     /* initialize the SPI bus */
-    spi_bus_initialize(HSPI_HOST, &spi_bus_config, 1);
+    spi_bus_initialize(HSPI_HOST, &spi_bus_config, 2);
 
     /* attach the LCD to the SPI bus */
     spi_bus_add_device(HSPI_HOST, &spi_device_interface_config_lcd, &spi_device_handle_lcd);
