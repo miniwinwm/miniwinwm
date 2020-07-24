@@ -4345,9 +4345,15 @@ void mw_bring_window_to_front(mw_handle_t window_handle)
 
 	/* get window id from window handle and check it's in range */
 	window_id = get_window_id_for_handle(window_handle);
-	if (window_id == MW_MAX_WINDOW_COUNT)
+	if (window_id >= MW_MAX_WINDOW_COUNT || window_id == MW_ROOT_WINDOW_ID)
 	{
 		MW_ASSERT((bool)false, "Bad window handle");
+		return;
+	}
+
+	/* ignore if a modal window is showing and window to bring to front isn't modal */
+	if (mw_is_any_window_modal() && (mw_all_windows[window_id].window_flags & MW_WINDOW_FLAG_IS_MODAL) == 0UL)
+	{
 		return;
 	}
 
@@ -4368,9 +4374,15 @@ void mw_send_window_to_back(mw_handle_t window_handle)
 
 	/* get window id from window handle and check it's in range */
 	window_id = get_window_id_for_handle(window_handle);
-	if (window_id >= MW_MAX_WINDOW_COUNT)
+	if (window_id >= MW_MAX_WINDOW_COUNT || window_id == MW_ROOT_WINDOW_ID)
 	{
 		MW_ASSERT((bool)false, "Bad window handle");
+		return;
+	}
+
+	/* ignore if a modal window is showing */
+	if (mw_is_any_window_modal())
+	{
 		return;
 	}
 
@@ -4393,7 +4405,7 @@ void mw_set_window_visible(mw_handle_t window_handle, bool visible)
 
 	/* get window id from window handle and check it's in range */
 	window_id = get_window_id_for_handle(window_handle);
-	if (window_id >= MW_MAX_WINDOW_COUNT)
+	if (window_id >= MW_MAX_WINDOW_COUNT || window_id == MW_ROOT_WINDOW_ID)
 	{
 		MW_ASSERT((bool)false, "Bad window handle");
 		return;
@@ -4458,7 +4470,7 @@ void mw_set_window_minimised(mw_handle_t window_handle, bool minimised)
 
 	/* get window id from window handle and check it's in range */
 	window_id = get_window_id_for_handle(window_handle);
-	if (window_id >= MW_MAX_WINDOW_COUNT)
+	if (window_id >= MW_MAX_WINDOW_COUNT || window_id == MW_ROOT_WINDOW_ID)
 	{
 		MW_ASSERT((bool)false, "Bad window handle");
 		return;
@@ -4492,7 +4504,7 @@ void mw_reposition_window(mw_handle_t window_handle, int16_t new_x, int16_t new_
 
 	/* get window id from window handle and check it's in range */
 	window_id = get_window_id_for_handle(window_handle);
-	if (window_id >= MW_MAX_WINDOW_COUNT)
+	if (window_id >= MW_MAX_WINDOW_COUNT || window_id == MW_ROOT_WINDOW_ID)
 	{
 		MW_ASSERT((bool)false, "Bad window handle");
 		return;
@@ -4542,7 +4554,7 @@ bool mw_resize_window(mw_handle_t window_handle, int16_t new_width, int16_t new_
 
 	/* get window id from window handle and check it's in range */
 	window_id = get_window_id_for_handle(window_handle);
-	if (window_id >= MW_MAX_WINDOW_COUNT)
+	if (window_id >= MW_MAX_WINDOW_COUNT || window_id == MW_ROOT_WINDOW_ID)
 	{
 		MW_ASSERT((bool)false, "Bad window handle");
 		return (false);
@@ -4620,7 +4632,7 @@ void mw_set_window_modal(mw_handle_t window_handle, bool modal)
 
 	/* get window id from window handle and check it's in range */
 	window_id = get_window_id_for_handle(window_handle);
-	if (window_id >= MW_MAX_WINDOW_COUNT)
+	if (window_id >= MW_MAX_WINDOW_COUNT || window_id == MW_ROOT_WINDOW_ID)
 	{
 		MW_ASSERT((bool)false, "Bad window handle");
 		return;
@@ -4665,7 +4677,7 @@ void mw_set_menu_bar_enabled_state(mw_handle_t window_handle, bool enabled)
 
 	/* get window id from window handle and check it's in range */
 	window_id = get_window_id_for_handle(window_handle);
-	if (window_id >= MW_MAX_WINDOW_COUNT)
+	if (window_id >= MW_MAX_WINDOW_COUNT || window_id == MW_ROOT_WINDOW_ID)
 	{
 		MW_ASSERT((bool)false, "Bad window handle");
 		return;
@@ -4687,7 +4699,7 @@ void mw_set_menu_bar_items_enabled_state(mw_handle_t window_handle, uint16_t ite
 
 	/* get window id from window handle and check it's in range */
 	window_id = get_window_id_for_handle(window_handle);
-	if (window_id >= MW_MAX_WINDOW_COUNT)
+	if (window_id >= MW_MAX_WINDOW_COUNT || window_id == MW_ROOT_WINDOW_ID)
 	{
 		MW_ASSERT((bool)false, "Bad window handle");
 		return;
@@ -4702,7 +4714,7 @@ void mw_set_window_horiz_scroll_bar_enabled_state(mw_handle_t window_handle, boo
 
 	/* get window id from window handle and check it's in range */
 	window_id = get_window_id_for_handle(window_handle);
-	if (window_id >= MW_MAX_WINDOW_COUNT)
+	if (window_id >= MW_MAX_WINDOW_COUNT || window_id == MW_ROOT_WINDOW_ID)
 	{
 		MW_ASSERT((bool)false, "Bad window handle");
 		return;
@@ -4726,7 +4738,7 @@ void mw_set_window_vert_scroll_bar_enabled_state(mw_handle_t window_handle, bool
 
 	/* get window id from window handle and check it's in range */
 	window_id = get_window_id_for_handle(window_handle);
-	if (window_id >= MW_MAX_WINDOW_COUNT)
+	if (window_id >= MW_MAX_WINDOW_COUNT || window_id == MW_ROOT_WINDOW_ID)
 	{
 		MW_ASSERT((bool)false, "Bad window handle");
 		return;
@@ -4750,7 +4762,7 @@ void mw_set_position_window_horiz_scroll_bar(mw_handle_t window_handle, uint8_t 
 
 	/* get window id from window handle and check it's in range */
 	window_id = get_window_id_for_handle(window_handle);
-	if (window_id >= MW_MAX_WINDOW_COUNT)
+	if (window_id >= MW_MAX_WINDOW_COUNT || window_id == MW_ROOT_WINDOW_ID)
 	{
 		MW_ASSERT((bool)false, "Bad window handle");
 		return;
@@ -4766,7 +4778,7 @@ void mw_set_position_window_vert_scroll_bar(mw_handle_t window_handle, uint8_t p
 
 	/* get window id from window handle and check it's in range */
 	window_id = get_window_id_for_handle(window_handle);
-	if (window_id >= MW_MAX_WINDOW_COUNT)
+	if (window_id >= MW_MAX_WINDOW_COUNT || window_id == MW_ROOT_WINDOW_ID)
 	{
 		MW_ASSERT((bool)false, "Bad window handle");
 		return;
@@ -4778,8 +4790,11 @@ void mw_set_position_window_vert_scroll_bar(mw_handle_t window_handle, uint8_t p
 
 void mw_paint_window_frame(mw_handle_t window_handle, uint8_t components)
 {
-	/* check window handle is valid */
-	if (get_window_id_for_handle(window_handle) >= MW_MAX_WINDOW_COUNT)
+	uint8_t window_id;
+
+	/* get window id from window handle and check it's in range */
+	window_id = get_window_id_for_handle(window_handle);
+	if (window_id >= MW_MAX_WINDOW_COUNT)
 	{
 		MW_ASSERT((bool)false, "Bad window handle");
 		return;
@@ -4856,17 +4871,9 @@ void mw_remove_window(mw_handle_t window_handle)
 
 	/* get window id from window handle and check it's in range */
 	window_id = get_window_id_for_handle(window_handle);
-	if (window_id >= MW_MAX_WINDOW_COUNT)
+	if (window_id >= MW_MAX_WINDOW_COUNT || window_id == MW_ROOT_WINDOW_ID)
 	{
 		MW_ASSERT((bool)false, "Bad window handle");
-		reentered = false;
-		return;
-	}
-
-	/* cannot remove root window */
-	if (window_id == MW_ROOT_WINDOW_ID)
-	{
-		MW_ASSERT((bool)false, "Can't remove root window");
 		reentered = false;
 		return;
 	}
@@ -4981,7 +4988,7 @@ void wm_set_window_title(mw_handle_t window_handle, char *title_text)
 
 	/* get window id from window handle and check it's in range */
 	window_id = get_window_id_for_handle(window_handle);
-	if (window_id >= MW_MAX_WINDOW_COUNT)
+	if (window_id >= MW_MAX_WINDOW_COUNT || window_id == MW_ROOT_WINDOW_ID)
 	{
 		MW_ASSERT((bool)false, "Bad window handle");
 		return;

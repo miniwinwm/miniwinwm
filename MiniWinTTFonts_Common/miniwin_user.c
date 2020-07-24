@@ -217,6 +217,7 @@ void mw_user_init(void)
 			MW_CONTROL_FLAG_IS_VISIBLE | MW_CONTROL_FLAG_IS_ENABLED,
 			&button_arrows_data);
 
+	/* create up arrow */
 	arrow_up_data.mw_ui_arrow_direction = MW_UI_ARROW_UP;
 	arrow_up_handle = mw_ui_arrow_add_new(180,
 			10,
@@ -224,6 +225,7 @@ void mw_user_init(void)
 			MW_CONTROL_FLAG_IS_VISIBLE,
 			&arrow_up_data);
 
+	/* create down arrow */
 	arrow_down_data.mw_ui_arrow_direction = MW_UI_ARROW_DOWN;
 	arrow_down_handle = mw_ui_arrow_add_new(180,
 			125,
@@ -231,6 +233,7 @@ void mw_user_init(void)
 			MW_CONTROL_FLAG_IS_VISIBLE,
 			&arrow_down_data);
 
+	/* create window with anti-aliased tt font */
 	mw_util_set_rect(&r, 15, 60, 210, 150);
 	window_blkchcry_bw_font_data.text = test_text;
 	window_blkchcry_bw_font_data.rle_font = &mf_rlefont_BLKCHCRY16;
@@ -249,6 +252,7 @@ void mw_user_init(void)
 				MW_WINDOW_FLAG_LARGE_SIZE,
 			&window_blkchcry_bw_font_data);
 
+	/* create window with ordinary tt font */
 	mw_util_set_rect(&r, 30, 110, 210, 150);
 	window_blkchcry_font_data.text = test_text;
 	window_blkchcry_font_data.rle_font = &mf_rlefont_BLKCHCRY16bw;
