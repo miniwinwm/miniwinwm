@@ -108,7 +108,7 @@ void app_init(void)
         .allocation_unit_size = 16 * 1024
     };
 
-    (void)esp_vfs_fat_sdmmc_mount("/sdcard", &host, &slot_config, &mount_config, &card);
+    (void)esp_vfs_fat_sdmmc_mount("", &host, &slot_config, &mount_config, &card);
 }
 
 void app_main_loop_process(void)
@@ -170,7 +170,7 @@ void app_file_close(void)
 
 char *app_get_root_folder_path(void)
 {
-	static char root_folder_path[] = "/sdcard/";
+	static char root_folder_path[] = "/";
 
 	return (root_folder_path);
 }
