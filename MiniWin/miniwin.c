@@ -2,7 +2,7 @@
 
 MIT License
 
-Copyright (c) John Blaiklock 2019 miniwin Embedded Window Manager
+Copyright (c) John Blaiklock 2020 miniwin Embedded Window Manager
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -126,7 +126,7 @@ typedef struct
 } control_t;
 
 /**
- * WIndow timer information structure
+ * Window timer information structure
  */
 typedef struct
 {

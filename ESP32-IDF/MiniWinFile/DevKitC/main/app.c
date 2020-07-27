@@ -42,10 +42,10 @@ SOFTWARE.
 *** CONSTANTS ***
 ****************/
 
-#define PIN_NUM_MISO 	2
-#define PIN_NUM_MOSI 	15
-#define PIN_NUM_CLK  	14
-#define PIN_NUM_CS   	13
+#define PIN_NUM_MISO 	2			/**< SD card SPI MISO pin */
+#define PIN_NUM_MOSI 	15			/**< SD catd SPI MOSI pin */
+#define PIN_NUM_CLK  	14			/**< SD card SPI clock pin */
+#define PIN_NUM_CS   	13			/**< SD card SPI chip select pin */
 
 /************
 *** TYPES ***
@@ -59,7 +59,7 @@ SOFTWARE.
 *** LOCAL VARIABLES ***
 **********************/
 
-static FILE* f;
+static FILE* f;						/**< Handle of the single file opened by the application at a time */
 
 /********************************
 *** LOCAL FUNCTION PROTOTYPES ***

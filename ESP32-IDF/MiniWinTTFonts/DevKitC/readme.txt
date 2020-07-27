@@ -1,4 +1,4 @@
-Building into the default build folder ('Build' subdirectory under this folder) may
+Building into the default build folder ('build' subdirectory under this folder) may
 give errors as the path and filename can exceed the Windows maximum length limit of 260
 characters. To prevent this specify a build folder on the build command line with a 
 shorter path, for example C:\build, like this...
