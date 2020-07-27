@@ -9,7 +9,7 @@ The following connections are needed. See connections.jpg in this folder.
 
 Pmod CN14	SD Card Reader (function)
 1		CS/		(chip select active low)
-2		MOSI		(master out save in)
+2		MOSI		(master out slave in)
 3		MISO		(master in slave out)
 4		SCK		(SPI clock)
 5		GND		(power supply ground)
