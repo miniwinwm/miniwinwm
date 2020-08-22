@@ -73,7 +73,6 @@ DMA_ATTR static uint16_t line_buffer[LCD_DISPLAY_WIDTH_PIXELS];
 static int16_t previous_x = -1;
 static int16_t previous_width = -1;
 static int16_t previous_y = -1;
-static int16_t previous_height = -1;
 
 /********************************
 *** LOCAL FUNCTION PROTOTYPES ***
@@ -197,7 +196,6 @@ static inline void IRAM_ATTR filled_rectangle_rotated(int16_t start_x,
 	}
 
 	previous_y = y - 1;
-	previous_height = height;
 
 	spi_device_release_bus(spi_device_handle_lcd);
 }
@@ -234,7 +232,7 @@ static inline void IRAM_ATTR pixel_rotated(int16_t x, int16_t y, mw_hal_lcd_colo
 		previous_width = 1;
 	}
 
-	if (y != previous_y || previous_height != 1)
+	if (y != previous_y)
 	{
 		gpio_set_level(PIN_NUM_DC, 0);
 		spi_device_polling_transmit(spi_device_handle_lcd, &spi_transactions[2]);
@@ -247,7 +245,6 @@ static inline void IRAM_ATTR pixel_rotated(int16_t x, int16_t y, mw_hal_lcd_colo
 		spi_device_polling_transmit(spi_device_handle_lcd, &spi_transactions[3]);
 
 		previous_y = y;
-		previous_height = 1;
 	}
 
     gpio_set_level(PIN_NUM_DC, 0);
@@ -533,8 +530,7 @@ void mw_hal_lcd_colour_bitmap_clip(int16_t image_start_x,
 		    spi_device_polling_transmit(spi_device_handle_lcd, &spi_transactions[5]);			
 		}
 		
-		previous_y = y - 1;
-		previous_height = bitmap_height;
+		previous_y = image_start_y + y - 1;
 
 		spi_device_release_bus(spi_device_handle_lcd);
 		
@@ -580,7 +576,44 @@ void mw_hal_lcd_monochrome_bitmap_clip(int16_t image_start_x,
 	uint8_t image_byte;
 	uint8_t mask;
 	int16_t array_width_bytes;
+#if defined(MW_DISPLAY_ROTATION_0)
+	uint16_t rgb565_fg_colour;
+	uint16_t rgb565_bg_colour;
 
+	rgb565_fg_colour = (uint16_t)((((uint32_t)fg_colour & 0x00f80000UL) >> 8) |
+				(((uint32_t)fg_colour & 0x0000fc00UL) >> 5) |
+				(((uint32_t)fg_colour & 0x000000f8UL) >> 3));
+	
+	rgb565_fg_colour = __builtin_bswap16(rgb565_fg_colour);
+	
+	rgb565_bg_colour = (uint16_t)((((uint32_t)bg_colour & 0x00f80000UL) >> 8) |
+				(((uint32_t)bg_colour & 0x0000fc00UL) >> 5) |
+				(((uint32_t)bg_colour & 0x000000f8UL) >> 3));
+	
+	rgb565_bg_colour = __builtin_bswap16(rgb565_bg_colour);	
+	
+	spi_device_acquire_bus(spi_device_handle_lcd, portMAX_DELAY);
+	
+	if (image_start_x != previous_x || bitmap_width != previous_width)
+	{
+		gpio_set_level(PIN_NUM_DC, 0);
+		spi_device_polling_transmit(spi_device_handle_lcd, &spi_transactions[0]);
+
+		spi_transactions[1].tx_data[1] = (uint8_t)image_start_x;
+		spi_transactions[1].tx_data[3] = (uint8_t)(image_start_x + bitmap_width - 1);
+		gpio_set_level(PIN_NUM_DC, 1);
+		spi_device_polling_transmit(spi_device_handle_lcd, &spi_transactions[1]);
+
+		previous_x = image_start_x;
+		previous_width = bitmap_width;
+	}		
+	
+	spi_transactions[5].length = (size_t)(bitmap_width * 2 * 8);
+	spi_transactions[5].rxlength = (size_t)(bitmap_width * 2 * 8);
+	spi_transactions[5].flags = 0UL;
+	spi_transactions[5].tx_buffer = line_buffer;
+#endif
+	
 	array_width_bytes = (int16_t)bitmap_width / 8;
 	if (bitmap_width % 8U > 0U)
 	{
@@ -604,6 +637,18 @@ void mw_hal_lcd_monochrome_bitmap_clip(int16_t image_start_x,
 						y + image_start_y >= clip_start_y &&
 						y + image_start_y < clip_start_y + clip_height)
 				{
+#if defined(MW_DISPLAY_ROTATION_0)
+					if ((image_byte & mask) == 0U)
+					{
+						//mw_hal_lcd_pixel((a * 8) + x + image_start_x, y + image_start_y, fg_colour);
+						line_buffer[(a * 8) + x] = rgb565_fg_colour;
+					}
+					else
+					{
+						//mw_hal_lcd_pixel((a * 8) + x + image_start_x, y + image_start_y, bg_colour);
+						line_buffer[(a * 8) + x] = rgb565_bg_colour;
+					}
+#else
 					if ((image_byte & mask) == 0U)
 					{
 						mw_hal_lcd_pixel((a * 8) + x + image_start_x, y + image_start_y, fg_colour);
@@ -612,11 +657,35 @@ void mw_hal_lcd_monochrome_bitmap_clip(int16_t image_start_x,
 					{
 						mw_hal_lcd_pixel((a * 8) + x + image_start_x, y + image_start_y, bg_colour);
 					}
+#endif
 				}
 				mask >>= 1;
 			}
 		}
+		
+#if defined(MW_DISPLAY_ROTATION_0)
+	    gpio_set_level(PIN_NUM_DC, 0);
+	    spi_device_polling_transmit(spi_device_handle_lcd, &spi_transactions[2]);
+
+		spi_transactions[3].tx_data[0] = (uint8_t)((image_start_y + y) >> 8);        		/* start row high */
+		spi_transactions[3].tx_data[1] = (uint8_t)(image_start_y + y);		      			/* start row low */
+		spi_transactions[3].tx_data[2] = (uint8_t)((image_start_y + y) >> 8);    			/* end row high */
+		spi_transactions[3].tx_data[3] = (uint8_t)(image_start_y + y);						/* end row low */
+	    gpio_set_level(PIN_NUM_DC, 1);
+	    spi_device_polling_transmit(spi_device_handle_lcd, &spi_transactions[3]);
+
+	    gpio_set_level(PIN_NUM_DC, 0);
+	    spi_device_polling_transmit(spi_device_handle_lcd, &spi_transactions[4]);
+
+	    gpio_set_level(PIN_NUM_DC, 1);
+	    spi_device_polling_transmit(spi_device_handle_lcd, &spi_transactions[5]);		
+#endif
 	}
+	
+#if defined(MW_DISPLAY_ROTATION_0)
+	previous_y = image_start_y + y - 1;
+	spi_device_release_bus(spi_device_handle_lcd);
+#endif
 }
 
 #endif
