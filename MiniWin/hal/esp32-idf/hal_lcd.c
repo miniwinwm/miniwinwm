@@ -469,6 +469,78 @@ void mw_hal_lcd_colour_bitmap_clip(int16_t image_start_x,
 	int16_t x;
 	int16_t y;
 	mw_hal_lcd_colour_t pixel_colour;
+	uint16_t rgb565_colour;
+
+#if defined(MW_DISPLAY_ROTATION_0)
+	/* check if pixels in data buffer are all to be drawn and if so use dma */
+	if (image_start_x >= clip_start_x &&
+			image_start_y >= clip_start_y &&
+			image_start_x + (int16_t)bitmap_width <= clip_start_x + clip_width &&
+			image_start_y + (int16_t)bitmap_height <= clip_start_y + clip_height)
+	{
+		spi_device_acquire_bus(spi_device_handle_lcd, portMAX_DELAY);
+		
+		if (image_start_x != previous_x || previous_width != bitmap_width)
+		{
+			gpio_set_level(PIN_NUM_DC, 0);
+			spi_device_polling_transmit(spi_device_handle_lcd, &spi_transactions[0]);
+
+			spi_transactions[1].tx_data[1] = (uint8_t)image_start_x;
+			spi_transactions[1].tx_data[3] = (uint8_t)(image_start_x + bitmap_width - 1);
+			gpio_set_level(PIN_NUM_DC, 1);
+			spi_device_polling_transmit(spi_device_handle_lcd, &spi_transactions[1]);
+
+			previous_x = image_start_x;
+			previous_width = bitmap_width;
+		}		
+		
+		spi_transactions[5].length = (size_t)(bitmap_width * 2 * 8);
+		spi_transactions[5].rxlength = (size_t)(bitmap_width * 2 * 8);
+		spi_transactions[5].flags = 0UL;
+		spi_transactions[5].tx_buffer = line_buffer;
+		
+		for (y = 0; y < (int16_t)bitmap_height; y++)
+		{
+			for (x = 0; x < (int16_t)bitmap_width; x++)
+			{
+				pixel_colour = *(2 + image_data + (x + y * (int16_t)bitmap_width) * 3);
+				pixel_colour <<= 8;
+				pixel_colour += *(1 + image_data + (x + y * (int16_t)bitmap_width) * 3);
+				pixel_colour <<= 8;
+				pixel_colour += *(image_data + (x + y * (int16_t)bitmap_width) * 3);
+				
+				rgb565_colour = (uint16_t)((((uint32_t)pixel_colour & 0x00f80000UL) >> 8) |
+							(((uint32_t)pixel_colour & 0x0000fc00UL) >> 5) |
+							(((uint32_t)pixel_colour & 0x000000f8UL) >> 3));
+				
+				line_buffer[x] = __builtin_bswap16(rgb565_colour);
+			}
+			
+		    gpio_set_level(PIN_NUM_DC, 0);
+		    spi_device_polling_transmit(spi_device_handle_lcd, &spi_transactions[2]);
+
+			spi_transactions[3].tx_data[0] = (uint8_t)((image_start_y + y) >> 8);        		/* start row high */
+			spi_transactions[3].tx_data[1] = (uint8_t)(image_start_y + y);		      			/* start row low */
+			spi_transactions[3].tx_data[2] = (uint8_t)((image_start_y + y) >> 8);    			/* end row high */
+			spi_transactions[3].tx_data[3] = (uint8_t)(image_start_y + y);						/* end row low */
+		    gpio_set_level(PIN_NUM_DC, 1);
+		    spi_device_polling_transmit(spi_device_handle_lcd, &spi_transactions[3]);
+
+		    gpio_set_level(PIN_NUM_DC, 0);
+		    spi_device_polling_transmit(spi_device_handle_lcd, &spi_transactions[4]);
+
+		    gpio_set_level(PIN_NUM_DC, 1);
+		    spi_device_polling_transmit(spi_device_handle_lcd, &spi_transactions[5]);			
+		}
+		
+		previous_y = y - 1;
+		previous_height = bitmap_height;
+
+		spi_device_release_bus(spi_device_handle_lcd);
+		
+		return;
+	}
+#endif	
 
 	for (y = 0; y < (int16_t)bitmap_height; y++)
 	{
