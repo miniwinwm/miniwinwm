@@ -1,4 +1,4 @@
-idf_component_register(SRCS "../../../../../MiniWinFixedWindows_Common/minwin_user.c"
+idf_component_register(SRCS "../../../../../MiniWinFixedWindows_Common/miniwin_user.c"
 							"../../../../../MiniWinFixedWindows_Common/date_bitmap.c"
 							"../../../../../MiniWinFixedWindows_Common/date_down_bitmap.c"
 							"../../../../../MiniWinFixedWindows_Common/file_bitmap.c"
