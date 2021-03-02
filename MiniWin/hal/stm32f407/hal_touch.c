@@ -169,12 +169,12 @@ bool mw_hal_touch_get_point(uint16_t* x, uint16_t* y)
 	touch_count = 0U;
 	do
 	{
-		spi_transfer(COMMAND_READ_X);
+		(void)spi_transfer(COMMAND_READ_X);
 		x_raw = (uint16_t)spi_transfer(0U) << 8;
 		x_raw |= (uint16_t)spi_transfer(0U);
 		x_raw >>= 3;
 
-		spi_transfer(COMMAND_READ_Y);
+		(void)spi_transfer(COMMAND_READ_Y);
 		y_raw = (uint16_t)spi_transfer(0U) << 8;
 		y_raw |= (uint16_t)spi_transfer(0U);
 		y_raw >>= 3;

@@ -2282,8 +2282,8 @@ void mw_gl_rotate_shape(uint8_t poly_corners, int16_t *poly_x, int16_t *poly_y, 
 	angle_rads = (float)angle_degrees / DEGREES_IN_RAD;
 	for (i = 0U; i < poly_corners; i++)
 	{
-		x = (int16_t)roundf(((float)poly_x[i] * cosf(angle_rads) - (float)poly_y[i] * sinf(angle_rads)));
-		poly_y[i] = (int16_t)roundf(((float)poly_x[i] * sinf(angle_rads) + (float)poly_y[i] * cosf(angle_rads)));
+		x = (int16_t)floor(((float)poly_x[i] * cosf(angle_rads) - (float)poly_y[i] * sinf(angle_rads)));
+		poly_y[i] = (int16_t)floor(((float)poly_x[i] * sinf(angle_rads) + (float)poly_y[i] * cosf(angle_rads)));
 		poly_x[i] = x;
 	}
 }
