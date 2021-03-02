@@ -442,7 +442,51 @@ void mw_hal_lcd_monochrome_bitmap_clip(int16_t image_start_x,
 	uint8_t image_byte;
 	uint8_t mask;
 	int16_t array_width_bytes;
+    uint16_t rgb565_fg_colour = (mw_hal_lcd_colour_t)0;
+    uint16_t rgb565_bg_colour = (mw_hal_lcd_colour_t)0;    
+    bool use_line_buffer = false;
+    
+#if defined(MW_DISPLAY_ROTATION_0)
+	if (image_start_x >= clip_start_x &&
+			image_start_y >= clip_start_y &&
+			image_start_x + (int16_t)bitmap_width <= clip_start_x + clip_width &&
+			image_start_y + (int16_t)bitmap_height <= clip_start_y + clip_height)
+	{
+        use_line_buffer = true;
+    }    
+#endif
 
+    if (use_line_buffer)
+    {
+        rgb565_fg_colour = (uint16_t)((((uint32_t)fg_colour & 0x00f80000UL) >> 8) |
+                    (((uint32_t)fg_colour & 0x0000fc00UL) >> 5) |
+                    (((uint32_t)fg_colour & 0x000000f8UL) >> 3));
+
+        rgb565_fg_colour = __builtin_bswap16(rgb565_fg_colour);
+
+        rgb565_bg_colour = (uint16_t)((((uint32_t)bg_colour & 0x00f80000UL) >> 8) |
+                    (((uint32_t)bg_colour & 0x0000fc00UL) >> 5) |
+                    (((uint32_t)bg_colour & 0x000000f8UL) >> 3));
+
+        rgb565_bg_colour = __builtin_bswap16(rgb565_bg_colour);	
+
+        LCD_CS_Clear();
+
+        if (image_start_x != previous_x || bitmap_width != previous_width)
+        {
+            LCD_DC_Clear();
+            (void)SPI2_Write((void *)&window_x_command, sizeof(window_x_command));
+
+            window_x_bounds[1] = (uint8_t)image_start_x;
+            window_x_bounds[3] = (uint8_t)(image_start_x + bitmap_width - 1);
+            LCD_DC_Set();
+            (void)SPI2_Write((void *)window_x_bounds, sizeof(window_x_bounds));
+
+            previous_x = image_start_x;
+            previous_width = bitmap_width;
+        }
+    }
+	
 	array_width_bytes = (int16_t)bitmap_width / 8;
 	if (bitmap_width % 8U > 0U)
 	{
@@ -466,19 +510,58 @@ void mw_hal_lcd_monochrome_bitmap_clip(int16_t image_start_x,
 						y + image_start_y >= clip_start_y &&
 						y + image_start_y < clip_start_y + clip_height)
 				{
-					if ((image_byte & mask) == 0U)
-					{
-						mw_hal_lcd_pixel((a * 8) + x + image_start_x, y + image_start_y, fg_colour);
-					}
-					else
-					{
-						mw_hal_lcd_pixel((a * 8) + x + image_start_x, y + image_start_y, bg_colour);
-					}
+                    if (use_line_buffer)
+                    {
+                        if ((image_byte & mask) == 0U)
+                        {
+                            line_buffer[(a * 8) + x] = rgb565_fg_colour;
+                        }
+                        else
+                        {
+                            line_buffer[(a * 8) + x] = rgb565_bg_colour;
+                        }
+                    }
+                    else
+                    {
+                        if ((image_byte & mask) == 0U)
+                        {
+                            mw_hal_lcd_pixel((a * 8) + x + image_start_x, y + image_start_y, fg_colour);
+                        }
+                        else
+                        {
+                            mw_hal_lcd_pixel((a * 8) + x + image_start_x, y + image_start_y, bg_colour);
+                        }
+                    }
 				}
 				mask >>= 1;
 			}
 		}
-	}
-}
+		
+        if (use_line_buffer)
+        {
+            LCD_DC_Clear();
+            (void)SPI2_Write((void *)&window_y_command, sizeof(window_y_command));
 
+            window_y_bounds[0] = (uint8_t)((image_start_y + y) >> 8);
+            window_y_bounds[1] = (uint8_t)(image_start_y + y);
+            window_y_bounds[2] = (uint8_t)((image_start_y + y) >> 8);
+            window_y_bounds[3] = (uint8_t)(image_start_y + y);
+
+            LCD_DC_Set();
+            (void)SPI2_Write((void *)window_y_bounds, sizeof(window_y_bounds));
+
+            LCD_DC_Clear();        
+            (void)SPI2_Write((void *)&pixel_data_command, sizeof(pixel_data_command));
+
+            LCD_DC_Set();
+            (void)SPI2_Write((void *)line_buffer, (size_t)(bitmap_width * 2U));       
+        }
+	}
+	
+    if (use_line_buffer)
+    {
+        previous_y = image_start_y + y - 1;
+        LCD_CS_Set();
+    }
+}
 #endif

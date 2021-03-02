@@ -640,12 +640,10 @@ void mw_hal_lcd_monochrome_bitmap_clip(int16_t image_start_x,
 #if defined(MW_DISPLAY_ROTATION_0)
 					if ((image_byte & mask) == 0U)
 					{
-						//mw_hal_lcd_pixel((a * 8) + x + image_start_x, y + image_start_y, fg_colour);
 						line_buffer[(a * 8) + x] = rgb565_fg_colour;
 					}
 					else
 					{
-						//mw_hal_lcd_pixel((a * 8) + x + image_start_x, y + image_start_y, bg_colour);
 						line_buffer[(a * 8) + x] = rgb565_bg_colour;
 					}
 #else
