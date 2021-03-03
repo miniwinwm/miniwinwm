@@ -120,9 +120,9 @@ static inline void filled_rectangle_rotated(int16_t start_x,
 		int16_t height,
 		mw_hal_lcd_colour_t colour)
 {
-	int_fast16_t y;
+	int16_t y;
 	uint16_t rgb565_colour;
-	int_fast16_t i;
+	int16_t i;
 
 	/* convert pixel colour from rgb888 to rgb565 format */
 	rgb565_colour = (uint16_t)((((uint32_t)colour & 0x00f80000UL) >> 8) |
@@ -414,7 +414,7 @@ void mw_hal_lcd_colour_bitmap_clip(int16_t image_start_x,
 	{
         LCD_CS_Clear();
 		
-		if (image_start_x != previous_x || previous_width != bitmap_width)
+		if ((image_start_x != previous_x) || (previous_width != bitmap_width))
 		{
             LCD_DC_Clear();
             (void)SPI2_Write((void *)&window_x_command, sizeof(window_x_command));
@@ -544,7 +544,7 @@ void mw_hal_lcd_monochrome_bitmap_clip(int16_t image_start_x,
 
         LCD_CS_Clear();
 
-        if (image_start_x != previous_x || bitmap_width != previous_width)
+        if ((image_start_x != previous_x) || (bitmap_width != previous_width))
         {
             LCD_DC_Clear();
             (void)SPI2_Write((void *)&window_x_command, sizeof(window_x_command));
@@ -560,7 +560,7 @@ void mw_hal_lcd_monochrome_bitmap_clip(int16_t image_start_x,
     }
 	
 	array_width_bytes = (int16_t)bitmap_width / 8;
-	if (bitmap_width % 8U > 0U)
+	if ((bitmap_width % 8U) > 0U)
 	{
 		array_width_bytes++;
 	}
@@ -569,7 +569,7 @@ void mw_hal_lcd_monochrome_bitmap_clip(int16_t image_start_x,
 	{
 		for (a = 0; a < array_width_bytes; a++)
 		{
-			image_byte = image_data[y * array_width_bytes + a];
+			image_byte = image_data[(y * array_width_bytes) + a];
 			mask = 0x80U;
 			for (x = 0; x < 8; x++)
 			{

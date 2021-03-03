@@ -128,7 +128,7 @@ bool mw_hal_touch_get_point(uint16_t* x, uint16_t* y)
 		databuffer[1][touch_count] = y_raw;
 		touch_count++;
 	}
-	while (mw_hal_touch_get_state() == MW_HAL_TOUCH_STATE_DOWN && touch_count < MW_HAL_TOUCH_READ_POINTS_COUNT);
+	while ((mw_hal_touch_get_state() == MW_HAL_TOUCH_STATE_DOWN) && (touch_count < MW_HAL_TOUCH_READ_POINTS_COUNT));
     
     TS_CS_Set();
     (void)SPI2_TransferSetup(&spi_lcd_setup, 0UL);
@@ -141,7 +141,7 @@ bool mw_hal_touch_get_point(uint16_t* x, uint16_t* y)
 	do
 	{
 		sorted = true;
-		for (i = 0U; i < touch_count - 1U; i++)
+		for (i = 0U; i < (touch_count - 1U); i++)
 		{
 			if (databuffer[0][i] > databuffer[0][i + 1U])
 			{
@@ -157,7 +157,7 @@ bool mw_hal_touch_get_point(uint16_t* x, uint16_t* y)
 	do
 	{
 		sorted = true;
-		for (i = 0U; i < touch_count - 1U; i++)
+		for (i = 0U; i < (touch_count - 1U); i++)
 		{
 			if (databuffer[1][i] > databuffer[1][i + 1U])
 			{

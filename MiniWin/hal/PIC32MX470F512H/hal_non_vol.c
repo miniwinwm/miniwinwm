@@ -82,7 +82,9 @@ void mw_hal_non_vol_init(void)
 {
     NVM_CallbackRegister(eventHandler, (uintptr_t)NULL);
     
-    while (NVM_IsBusy() == true);
+    while (NVM_IsBusy() == true)
+    {
+    }
 }
 
 void mw_hal_non_vol_load(uint8_t *data, uint16_t length)
