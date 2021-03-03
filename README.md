@@ -10,7 +10,7 @@ ESP32-IDF contains project files and application specific source files for the e
 
 MCUXpresso contains project files and application specific source files for the example projects running on the LPC54628 development board.
 
-STM32CubeIDE contains project files and application specific source files for the example projects running on the STM32F429 and STM32F407 dev boards.
+STM32CubeIDE contains project files and application specific source files for the example projects running on the STM32F429 and STM32F407 development boards.
 
 Simulation contains projectfiles and application specific source files for example projects running on the Windows and Linux MiniWin simulators.
 
@@ -18,7 +18,7 @@ e2studio contains project files and application specific source files for the ex
 
 MPLABX contains project files and application specific source files for example projects running on the Microchip Curiosity PIC32MX 470 development board. This is under development currently and has not been formally released yet.
 
-MiniWinFile_Common contains platform independant files for an example application. Builds for Windows and Linux simulators and various embedded platforms.
+MiniWinFile_Common contains platform independant files for an example application. Builds for Windows and Linux simulators and embedded platforms.
 
 MiniWinFixedWindows_Common contains platform independant files for an example application. Builds for Windows and Linux simulators and embedded platforms.
 
