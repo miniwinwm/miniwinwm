@@ -18,7 +18,7 @@ e2studio contains project files and application specific source files for the ex
 
 MPLABX contains project files and application specific source files for example projects running on the Microchip Curiosity PIC32MX 470 development board. This is under development currently and has not been formally released yet.
 
-MiniWinFile_Common contains platform independant files for an example application. Builds for Windows and Linux simulators and embedded platforms.
+MiniWinFile_Common contains platform independant files for an example application. Builds for Windows and Linux simulators and various embedded platforms.
 
 MiniWinFixedWindows_Common contains platform independant files for an example application. Builds for Windows and Linux simulators and embedded platforms.
 
