@@ -31,7 +31,6 @@ SOFTWARE.
 ***************/
 
 #include <windows.h>
-#include <stdio.h>
 #include "miniwin.h"
 #include "hal/hal_touch.h"
 #include "app.h"

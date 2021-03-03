@@ -403,6 +403,72 @@ void mw_hal_lcd_colour_bitmap_clip(int16_t image_start_x,
 	int16_t x;
 	int16_t y;
 	mw_hal_lcd_colour_t pixel_colour;
+	uint16_t rgb565_colour;
+
+#if defined(MW_DISPLAY_ROTATION_0)
+	/* check if pixels in data buffer are all to be drawn and if so use dma */
+	if (image_start_x >= clip_start_x &&
+			image_start_y >= clip_start_y &&
+			image_start_x + (int16_t)bitmap_width <= clip_start_x + clip_width &&
+			image_start_y + (int16_t)bitmap_height <= clip_start_y + clip_height)
+	{
+        LCD_CS_Clear();
+		
+		if (image_start_x != previous_x || previous_width != bitmap_width)
+		{
+            LCD_DC_Clear();
+            (void)SPI2_Write((void *)&window_x_command, sizeof(window_x_command));
+
+            window_x_bounds[1] = (uint8_t)image_start_x;
+            window_x_bounds[3] = (uint8_t)(image_start_x + bitmap_width - 1);
+            LCD_DC_Set();
+            (void)SPI2_Write((void *)window_x_bounds, sizeof(window_x_bounds));            
+
+			previous_x = image_start_x;
+			previous_width = bitmap_width;
+		}		
+		
+		for (y = 0; y < (int16_t)bitmap_height; y++)
+		{
+			for (x = 0; x < (int16_t)bitmap_width; x++)
+			{
+				pixel_colour = *(2 + image_data + (x + y * (int16_t)bitmap_width) * 3);
+				pixel_colour <<= 8;
+				pixel_colour += *(1 + image_data + (x + y * (int16_t)bitmap_width) * 3);
+				pixel_colour <<= 8;
+				pixel_colour += *(image_data + (x + y * (int16_t)bitmap_width) * 3);
+				
+				rgb565_colour = (uint16_t)((((uint32_t)pixel_colour & 0x00f80000UL) >> 8) |
+							(((uint32_t)pixel_colour & 0x0000fc00UL) >> 5) |
+							(((uint32_t)pixel_colour & 0x000000f8UL) >> 3));
+				
+				line_buffer[x] = __builtin_bswap16(rgb565_colour);
+			}
+			
+            LCD_DC_Clear();
+            (void)SPI2_Write((void *)&window_y_command, sizeof(window_y_command));
+
+            window_y_bounds[0] = (uint8_t)((image_start_y + y) >> 8);
+            window_y_bounds[1] = (uint8_t)(image_start_y + y);
+            window_y_bounds[2] = (uint8_t)((image_start_y + y) >> 8);
+            window_y_bounds[3] = (uint8_t)(image_start_y + y);
+            LCD_DC_Set();
+            (void)SPI2_Write((void *)window_y_bounds, sizeof(window_y_bounds));
+
+            LCD_DC_Clear();
+            (void)SPI2_Write((void *)&pixel_data_command, sizeof(pixel_data_command));
+
+            LCD_DC_Set();
+            (void)SPI2_Write((void *)line_buffer, (size_t)(bitmap_width * 2U));       
+		}
+		
+		previous_y = image_start_y + y - 1;
+
+        LCD_CS_Set();
+		
+		return;
+	}
+#endif	
 
 	for (y = 0; y < (int16_t)bitmap_height; y++)
 	{
@@ -423,6 +489,12 @@ void mw_hal_lcd_colour_bitmap_clip(int16_t image_start_x,
 		}
 	}
 }
+
+
+
+
+
+
 
 void mw_hal_lcd_monochrome_bitmap_clip(int16_t image_start_x,
 		int16_t image_start_y,
