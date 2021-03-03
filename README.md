@@ -8,7 +8,7 @@ For further information on current work in progress please contact me by the con
 
 ESP32-IDF contains project files and application specific source files for the example projects running on the DevKitC development board. 
 
-MCUXpresso contains project files and application specific source files for the example projects running on the LPC54628 dev board.
+MCUXpresso contains project files and application specific source files for the example projects running on the LPC54628 development board.
 
 STM32CubeIDE contains project files and application specific source files for the example projects running on the STM32F429 and STM32F407 dev boards.
 
