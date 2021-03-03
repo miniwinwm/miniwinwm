@@ -20,7 +20,7 @@ MPLABX contains project files and application specific source files for example 
 
 MiniWinFile_Common contains platform independant files for an example application. Builds for Windows and Linux simulators and embedded platforms.
 
-MiniWinFixedWindows_Common contains platform independant files for an example application. Builds for Windows and Linux simulators and various embedded platforms.
+MiniWinFixedWindows_Common contains platform independant files for an example application. Builds for Windows and Linux simulators and embedded platforms.
 
 MiniWinFreeRTOS_Common contains platform independant files for an example application. Builds for Windows and Linux simulators and embedded platforms.
 
