@@ -1,6 +1,6 @@
 See https://miniwinwm.wixsite.com/miniwinwm
 
-MiniWin contains the MiniWin window manager source code in C99. Builds for the Windows and Linux MiniWin simulator, and various embedded devices. Full documentation is in the MiniWin/docs folder above.
+MiniWin contains the MiniWin window manager source code in C99. Builds for the Windows and Linux MiniWin simulator, and embedded devices. Full documentation is in the MiniWin/docs folder above.
 
 Please note: The latest formal release contains the latest stable tested code completed for all variants with up-to-date documentation. 
 The latest commit may contain work in progress, not all features may work for all variants, and the documentation may not be updated to the code.
