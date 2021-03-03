@@ -123,6 +123,12 @@ static inline void filled_rectangle_rotated(int16_t start_x,
 	int16_t y;
 	uint16_t rgb565_colour;
 	int16_t i;
+    
+    if (width > LCD_DISPLAY_WIDTH_PIXELS)
+    {
+        /* something gone wrong here */
+        return;
+    }
 
 	/* convert pixel colour from rgb888 to rgb565 format */
 	rgb565_colour = (uint16_t)((((uint32_t)colour & 0x00f80000UL) >> 8) |
@@ -406,11 +412,12 @@ void mw_hal_lcd_colour_bitmap_clip(int16_t image_start_x,
 	uint16_t rgb565_colour;
 
 #if defined(MW_DISPLAY_ROTATION_0)
-	/* check if pixels in data buffer are all to be drawn and if so use dma */
+	/* check if pixels in data buffer are all to be drawn */
 	if (image_start_x >= clip_start_x &&
 			image_start_y >= clip_start_y &&
 			image_start_x + (int16_t)bitmap_width <= clip_start_x + clip_width &&
-			image_start_y + (int16_t)bitmap_height <= clip_start_y + clip_height)
+			image_start_y + (int16_t)bitmap_height <= clip_start_y + clip_height &&
+            bitmap_width <= LCD_DISPLAY_WIDTH_PIXELS)
 	{
         LCD_CS_Clear();
 		
@@ -490,12 +497,6 @@ void mw_hal_lcd_colour_bitmap_clip(int16_t image_start_x,
 	}
 }
 
-
-
-
-
-
-
 void mw_hal_lcd_monochrome_bitmap_clip(int16_t image_start_x,
 		int16_t image_start_y,
 		uint16_t bitmap_width,
@@ -522,7 +523,8 @@ void mw_hal_lcd_monochrome_bitmap_clip(int16_t image_start_x,
 	if (image_start_x >= clip_start_x &&
 			image_start_y >= clip_start_y &&
 			image_start_x + (int16_t)bitmap_width <= clip_start_x + clip_width &&
-			image_start_y + (int16_t)bitmap_height <= clip_start_y + clip_height)
+			image_start_y + (int16_t)bitmap_height <= clip_start_y + clip_height &&
+            bitmap_width <= LCD_DISPLAY_WIDTH_PIXELS)
 	{
         use_line_buffer = true;
     }    
