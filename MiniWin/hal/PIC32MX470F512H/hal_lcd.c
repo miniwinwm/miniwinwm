@@ -43,9 +43,9 @@ SOFTWARE.
 
 #define LCD_DISPLAY_WIDTH_PIXELS	240							/**< This is the width of the display in pixels irrespective of user specified display rotation */
 #define LCD_DISPLAY_HEIGHT_PIXELS	320							/**< This is the height of the display in pixels irrespective of user specified display rotation */
-const static uint8_t window_x_command = 0x2aU;
-const static uint8_t window_y_command = 0x2bu;
-const static uint8_t pixel_data_command = 0x2cu;
+const static uint8_t window_x_command = 0x2aU;					/**< SPI command to set x bounds of plotting window */
+const static uint8_t window_y_command = 0x2bu;					/**< SPI command to set y bounds of plotting window */
+const static uint8_t pixel_data_command = 0x2cu;				/**< SPI command to send pixel data to plotting window */
 
 /************
 *** TYPES ***
