@@ -24,7 +24,7 @@ SOFTWARE.
 
 */
 
-#ifdef ESP_PLATFORM
+#ifdef DEVKITC
 
 /***************
 *** INCLUDES ***
