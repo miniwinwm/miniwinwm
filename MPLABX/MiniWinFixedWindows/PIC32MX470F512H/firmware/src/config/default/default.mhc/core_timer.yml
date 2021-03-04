@@ -1,0 +1,47 @@
+format_version: v1.0
+type: UniqueComponent
+attributes: {id: core_timer}
+children:
+- type: Symbols
+  children:
+  - type: Integer
+    attributes: {id: CORE_TIMER_FREQUENCY}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: core_timer, value: '60000000'}
+  - type: Comment
+    attributes: {id: CORE_TIMER_FREQUENCY_COMMENT}
+    children:
+    - type: Attributes
+      children:
+      - type: String
+        attributes: {id: text}
+        children:
+        - {type: Value, value: '*** Core Timer Clock Frequency 60000000 Hz ***'}
+  - type: Float
+    attributes: {id: CORE_TIMER_PERIOD_MS}
+    children:
+    - type: Attributes
+      children:
+      - type: Float
+        attributes: {id: max}
+        children:
+        - {type: Value, value: '71582.79'}
+  - type: Integer
+    attributes: {id: CORE_TIMER_PERIOD_US}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: core_timer, value: '1000'}
+  - type: String
+    attributes: {id: CORE_TIMER_PERIOD_VALUE}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: core_timer, value: '0xea60'}
+- type: ElementPosition
+  attributes: {x: '320', y: '20', id: core_timer}
