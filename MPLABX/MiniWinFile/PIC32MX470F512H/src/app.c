@@ -78,8 +78,10 @@ static void TMR3_InterruptSvcRoutine(uint32_t status, uintptr_t context)
     quarter_second++;
     if (quarter_second == 4U)
     {
+        /* whole second has elapsed */
         quarter_second = 0U;
         
+        /* update internal clock value */
         mw_time_now.tm_sec++;
         if (mw_time_now.tm_sec == 60U)
         {
@@ -124,9 +126,10 @@ static void TMR3_InterruptSvcRoutine(uint32_t status, uintptr_t context)
 
 void app_init(void)
 {
-    /* Initialize all modules */
+    /* initialize all modules */
     SYS_Initialize(NULL);
     
+    /* start the clock used for real time */
     TMR3_CallbackRegister(TMR3_InterruptSvcRoutine, NULL);
     TMR3_Start();    
     
@@ -139,7 +142,7 @@ void app_init(void)
 
 void app_main_loop_process(void)
 {
-    /* Maintain state machines of all polled MPLAB Harmony modules. */
+    /* maintain state machines of all polled MPLAB Harmony modules. */
     SYS_Tasks();
 }
 
