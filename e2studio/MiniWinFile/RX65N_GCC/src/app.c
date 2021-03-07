@@ -380,7 +380,6 @@ char *app_get_root_folder_path(void)
 bool app_file_open(char *path_and_filename)
 {
 	bool result = false;
-	FILINFO file_info;
 
 	if (f_open(&file_handle, path_and_filename, FA_READ) == FR_OK)
 	{

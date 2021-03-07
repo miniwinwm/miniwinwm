@@ -1,0 +1,14 @@
+configName: default
+folderName: MiniWinFile
+format_version: v1.0
+frameworkPath: ..\..\..\..\..\..\Harmony3
+processor: PIC32MX470F512H
+projectName: MiniWinFile
+settings:
+  PackageFilter: bsp;core;core_apps_pic32mx;csp;csp_apps_pic32mx;MPLAB-Harmony-Reference-Apps;quick_docs;usb
+  FORCE_OPTIMIZATION: 'false'
+  GENERATE_BACKUP: 'true'
+  TRUSTZONE: 'false'
+  CMSISPath: .\dev_packs\arm\CMSIS\5.7.0
+  MERGE_STRATEGY: USER_ALL
+  DFPPath: .\dev_packs\Microchip\PIC32MX_DFP\1.4.241\atdf\PIC32MX470F512H.atdf

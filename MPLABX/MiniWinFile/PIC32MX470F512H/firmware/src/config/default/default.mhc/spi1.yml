@@ -1,0 +1,66 @@
+format_version: v1.0
+type: UniqueComponent
+attributes: {id: spi1}
+children:
+- type: Symbols
+  children:
+  - type: Integer
+    attributes: {id: SPI_BAUD_RATE}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: '8000000'}
+  - type: Integer
+    attributes: {id: SPI_BRG_VALUE}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: spi1, value: '3'}
+  - type: Comment
+    attributes: {id: SPI_CLOCK_MODE_COMMENT}
+    children:
+    - type: Attributes
+      children:
+      - type: String
+        attributes: {id: text}
+        children:
+        - {type: Value, value: '***SPI Mode 0 is Selected***'}
+  - type: Boolean
+    attributes: {id: SPI_INTERRUPT_MODE}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: 'false'}
+  - type: KeyValueSet
+    attributes: {id: SPI_SPICON_CLK_PH}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: '0'}
+  - type: KeyValueSet
+    attributes: {id: SPI_SPICON_CLK_POL}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: '1'}
+  - type: KeyValueSet
+    attributes: {id: SPI_SPICON_MSSEN}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: '1'}
+  - type: KeyValueSet
+    attributes: {id: SPI_SPICON_SMP}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: '1'}
+- type: ElementPosition
+  attributes: {x: '361', y: '291', id: spi1}
