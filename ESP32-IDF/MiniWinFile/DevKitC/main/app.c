@@ -137,7 +137,8 @@ uint32_t app_file_size(void)
 	
 	(void)fseek(f, 0L, SEEK_END);   
 	size = ftell(f);
-		
+	(void)fseek(f, 0L, SEEK_SET);
+	
 	return ((uint32_t)size);
 }
 
