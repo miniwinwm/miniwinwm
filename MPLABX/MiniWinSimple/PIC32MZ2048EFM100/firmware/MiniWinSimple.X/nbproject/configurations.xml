@@ -1,0 +1,606 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="65">
+  <logicalFolder name="root" displayName="root" projectFiles="true">
+    <logicalFolder name="HeaderFiles"
+                   displayName="Header Files"
+                   projectFiles="true">
+      <logicalFolder name="f1" displayName="config" projectFiles="true">
+        <logicalFolder name="f1" displayName="default" projectFiles="true">
+          <logicalFolder name="f1" displayName="peripheral" projectFiles="true">
+            <logicalFolder name="f3" displayName="clk" projectFiles="true">
+              <itemPath>../src/config/default/peripheral/clk/plib_clk.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f1" displayName="coretimer" projectFiles="true">
+              <itemPath>../src/config/default/peripheral/coretimer/plib_coretimer.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f5" displayName="evic" projectFiles="true">
+              <itemPath>../src/config/default/peripheral/evic/plib_evic.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f4" displayName="gpio" projectFiles="true">
+              <itemPath>../src/config/default/peripheral/gpio/plib_gpio.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f7" displayName="nvm" projectFiles="true">
+              <itemPath>../src/config/default/peripheral/nvm/plib_nvm.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f6" displayName="spi" projectFiles="true">
+              <logicalFolder name="f1" displayName="spi_master" projectFiles="true">
+                <itemPath>../src/config/default/peripheral/spi/spi_master/plib_spi_master_common.h</itemPath>
+                <itemPath>../src/config/default/peripheral/spi/spi_master/plib_spi2_master.h</itemPath>
+              </logicalFolder>
+            </logicalFolder>
+            <logicalFolder name="f2" displayName="tmr" projectFiles="true">
+              <itemPath>../src/config/default/peripheral/tmr/plib_tmr_common.h</itemPath>
+              <itemPath>../src/config/default/peripheral/tmr/plib_tmr2.h</itemPath>
+            </logicalFolder>
+          </logicalFolder>
+          <itemPath>../src/config/default/device.h</itemPath>
+          <itemPath>../src/config/default/toolchain_specifics.h</itemPath>
+          <itemPath>../src/config/default/definitions.h</itemPath>
+        </logicalFolder>
+      </logicalFolder>
+    </logicalFolder>
+    <logicalFolder name="LinkerScript"
+                   displayName="Linker Files"
+                   projectFiles="true">
+      <logicalFolder name="f1" displayName="config" projectFiles="true">
+        <logicalFolder name="f1" displayName="default" projectFiles="true">
+          <itemPath>../src/config/default/p32MZ2048EFM100.ld</itemPath>
+        </logicalFolder>
+      </logicalFolder>
+    </logicalFolder>
+    <logicalFolder name="SourceFiles"
+                   displayName="Source Files"
+                   projectFiles="true">
+      <logicalFolder name="f1" displayName="config" projectFiles="true">
+        <logicalFolder name="f1" displayName="default" projectFiles="true">
+          <logicalFolder name="f1" displayName="peripheral" projectFiles="true">
+            <logicalFolder name="f3" displayName="clk" projectFiles="true">
+              <itemPath>../src/config/default/peripheral/clk/plib_clk.c</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f1" displayName="coretimer" projectFiles="true">
+              <itemPath>../src/config/default/peripheral/coretimer/plib_coretimer.c</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f5" displayName="evic" projectFiles="true">
+              <itemPath>../src/config/default/peripheral/evic/plib_evic.c</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f4" displayName="gpio" projectFiles="true">
+              <itemPath>../src/config/default/peripheral/gpio/plib_gpio.c</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f7" displayName="nvm" projectFiles="true">
+              <itemPath>../src/config/default/peripheral/nvm/plib_nvm.c</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f6" displayName="spi" projectFiles="true">
+              <logicalFolder name="f1" displayName="spi_master" projectFiles="true">
+                <itemPath>../src/config/default/peripheral/spi/spi_master/plib_spi2_master.c</itemPath>
+              </logicalFolder>
+            </logicalFolder>
+            <logicalFolder name="f2" displayName="tmr" projectFiles="true">
+              <itemPath>../src/config/default/peripheral/tmr/plib_tmr2.c</itemPath>
+            </logicalFolder>
+          </logicalFolder>
+          <logicalFolder name="f2" displayName="stdio" projectFiles="true">
+            <itemPath>../src/config/default/stdio/xc32_monitor.c</itemPath>
+          </logicalFolder>
+          <itemPath>../src/config/default/initialization.c</itemPath>
+          <itemPath>../src/config/default/interrupts.c</itemPath>
+          <itemPath>../src/config/default/exceptions.c</itemPath>
+        </logicalFolder>
+      </logicalFolder>
+      <logicalFolder name="MiniWin" displayName="MiniWin" projectFiles="true">
+        <logicalFolder name="bitmaps" displayName="bitmaps" projectFiles="true">
+          <itemPath>../../../../../MiniWin/bitmaps/backspace_key.c</itemPath>
+          <itemPath>../../../../../MiniWin/bitmaps/close_icon.c</itemPath>
+          <itemPath>../../../../../MiniWin/bitmaps/close_icon_large.c</itemPath>
+          <itemPath>../../../../../MiniWin/bitmaps/file_icon_large.c</itemPath>
+          <itemPath>../../../../../MiniWin/bitmaps/file_icon_small.c</itemPath>
+          <itemPath>../../../../../MiniWin/bitmaps/folder_close_icon_large.c</itemPath>
+          <itemPath>../../../../../MiniWin/bitmaps/folder_close_icon_small.c</itemPath>
+          <itemPath>../../../../../MiniWin/bitmaps/folder_icon_large.c</itemPath>
+          <itemPath>../../../../../MiniWin/bitmaps/folder_icon_small.c</itemPath>
+          <itemPath>../../../../../MiniWin/bitmaps/folder_open_icon_large.c</itemPath>
+          <itemPath>../../../../../MiniWin/bitmaps/folder_open_icon_small.c</itemPath>
+          <itemPath>../../../../../MiniWin/bitmaps/let_key.c</itemPath>
+          <itemPath>../../../../../MiniWin/bitmaps/maximise_icon.c</itemPath>
+          <itemPath>../../../../../MiniWin/bitmaps/maximise_icon_large.c</itemPath>
+          <itemPath>../../../../../MiniWin/bitmaps/minimise_icon.c</itemPath>
+          <itemPath>../../../../../MiniWin/bitmaps/minimise_icon_large.c</itemPath>
+          <itemPath>../../../../../MiniWin/bitmaps/num_key.c</itemPath>
+          <itemPath>../../../../../MiniWin/bitmaps/resize_icon.c</itemPath>
+          <itemPath>../../../../../MiniWin/bitmaps/resize_icon_large.c</itemPath>
+          <itemPath>../../../../../MiniWin/bitmaps/shift_key.c</itemPath>
+          <itemPath>../../../../../MiniWin/bitmaps/sym_key.c</itemPath>
+          <itemPath>../../../../../MiniWin/bitmaps/tick.c</itemPath>
+          <itemPath>../../../../../MiniWin/bitmaps/tick_large.c</itemPath>
+        </logicalFolder>
+        <logicalFolder name="dialogs" displayName="dialogs" projectFiles="true">
+          <itemPath>../../../../../MiniWin/dialogs/dialog_colour_chooser.c</itemPath>
+          <itemPath>../../../../../MiniWin/dialogs/dialog_date_chooser.c</itemPath>
+          <itemPath>../../../../../MiniWin/dialogs/dialog_file_chooser.c</itemPath>
+          <itemPath>../../../../../MiniWin/dialogs/dialog_number_entry.c</itemPath>
+          <itemPath>../../../../../MiniWin/dialogs/dialog_one_button.c</itemPath>
+          <itemPath>../../../../../MiniWin/dialogs/dialog_text_entry.c</itemPath>
+          <itemPath>../../../../../MiniWin/dialogs/dialog_time_chooser.c</itemPath>
+          <itemPath>../../../../../MiniWin/dialogs/dialog_two_button.c</itemPath>
+        </logicalFolder>
+        <logicalFolder name="docs" displayName="docs" projectFiles="true">
+        </logicalFolder>
+        <logicalFolder name="gl" displayName="gl" projectFiles="true">
+          <logicalFolder name="fonts" displayName="fonts" projectFiles="true">
+            <logicalFolder name="bitmapped" displayName="bitmapped" projectFiles="true">
+              <itemPath>../../../../../MiniWin/gl/fonts/bitmapped/font12.c</itemPath>
+              <itemPath>../../../../../MiniWin/gl/fonts/bitmapped/font16.c</itemPath>
+              <itemPath>../../../../../MiniWin/gl/fonts/bitmapped/font20.c</itemPath>
+              <itemPath>../../../../../MiniWin/gl/fonts/bitmapped/font24.c</itemPath>
+              <itemPath>../../../../../MiniWin/gl/fonts/bitmapped/font9.c</itemPath>
+              <itemPath>../../../../../MiniWin/gl/fonts/bitmapped/gl_title_font.c</itemPath>
+            </logicalFolder>
+            <logicalFolder name="truetype" displayName="truetype" projectFiles="true">
+              <logicalFolder name="mcufont" displayName="mcufont" projectFiles="true">
+                <itemPath>../../../../../MiniWin/gl/fonts/truetype/mcufont/mf_bwfont.c</itemPath>
+                <itemPath>../../../../../MiniWin/gl/fonts/truetype/mcufont/mf_encoding.c</itemPath>
+                <itemPath>../../../../../MiniWin/gl/fonts/truetype/mcufont/mf_font.c</itemPath>
+                <itemPath>../../../../../MiniWin/gl/fonts/truetype/mcufont/mf_justify.c</itemPath>
+                <itemPath>../../../../../MiniWin/gl/fonts/truetype/mcufont/mf_kerning.c</itemPath>
+                <itemPath>../../../../../MiniWin/gl/fonts/truetype/mcufont/mf_rlefont.c</itemPath>
+                <itemPath>../../../../../MiniWin/gl/fonts/truetype/mcufont/mf_scaledfont.c</itemPath>
+                <itemPath>../../../../../MiniWin/gl/fonts/truetype/mcufont/mf_wordwrap.c</itemPath>
+              </logicalFolder>
+              <itemPath>../../../../../MiniWin/gl/fonts/truetype/BLKCHCRY16.c</itemPath>
+              <itemPath>../../../../../MiniWin/gl/fonts/truetype/BLKCHCRY16bw.c</itemPath>
+              <itemPath>../../../../../MiniWin/gl/fonts/truetype/dejavu_sans_12.c</itemPath>
+            </logicalFolder>
+          </logicalFolder>
+          <itemPath>../../../../../MiniWin/gl/gl.c</itemPath>
+        </logicalFolder>
+        <logicalFolder name="hal" displayName="hal" projectFiles="true">
+          <logicalFolder name="DevKitC" displayName="DevKitC" projectFiles="true">
+            <itemPath>../../../../../MiniWin/hal/DevKitC/hal_delay.c</itemPath>
+            <itemPath>../../../../../MiniWin/hal/DevKitC/hal_lcd.c</itemPath>
+            <itemPath>../../../../../MiniWin/hal/DevKitC/hal_non_vol.c</itemPath>
+            <itemPath>../../../../../MiniWin/hal/DevKitC/hal_timer.c</itemPath>
+            <itemPath>../../../../../MiniWin/hal/DevKitC/hal_touch.c</itemPath>
+          </logicalFolder>
+          <logicalFolder name="linux" displayName="linux" projectFiles="true">
+            <itemPath>../../../../../MiniWin/hal/linux/hal_delay.c</itemPath>
+            <itemPath>../../../../../MiniWin/hal/linux/hal_lcd.c</itemPath>
+            <itemPath>../../../../../MiniWin/hal/linux/hal_non_vol.c</itemPath>
+            <itemPath>../../../../../MiniWin/hal/linux/hal_timer.c</itemPath>
+            <itemPath>../../../../../MiniWin/hal/linux/hal_touch.c</itemPath>
+          </logicalFolder>
+          <logicalFolder name="lpc54628" displayName="lpc54628" projectFiles="true">
+            <itemPath>../../../../../MiniWin/hal/lpc54628/hal_delay.c</itemPath>
+            <itemPath>../../../../../MiniWin/hal/lpc54628/hal_lcd.c</itemPath>
+            <itemPath>../../../../../MiniWin/hal/lpc54628/hal_non_vol.c</itemPath>
+            <itemPath>../../../../../MiniWin/hal/lpc54628/hal_timer.c</itemPath>
+            <itemPath>../../../../../MiniWin/hal/lpc54628/hal_touch.c</itemPath>
+          </logicalFolder>
+          <logicalFolder name="PIC32MX470F512H"
+                         displayName="PIC32MX470F512H"
+                         projectFiles="true">
+            <itemPath>../../../../../MiniWin/hal/PIC32MX470F512H/hal_delay.c</itemPath>
+            <itemPath>../../../../../MiniWin/hal/PIC32MX470F512H/hal_lcd.c</itemPath>
+            <itemPath>../../../../../MiniWin/hal/PIC32MX470F512H/hal_non_vol.c</itemPath>
+            <itemPath>../../../../../MiniWin/hal/PIC32MX470F512H/hal_timer.c</itemPath>
+            <itemPath>../../../../../MiniWin/hal/PIC32MX470F512H/hal_touch.c</itemPath>
+          </logicalFolder>
+          <logicalFolder name="PIC32MZ2048EFM100"
+                         displayName="PIC32MZ2048EFM100"
+                         projectFiles="true">
+            <itemPath>../../../../../MiniWin/hal/PIC32MZ2048EFM100/hal_delay.c</itemPath>
+            <itemPath>../../../../../MiniWin/hal/PIC32MZ2048EFM100/hal_lcd.c</itemPath>
+            <itemPath>../../../../../MiniWin/hal/PIC32MZ2048EFM100/hal_non_vol.c</itemPath>
+            <itemPath>../../../../../MiniWin/hal/PIC32MZ2048EFM100/hal_timer.c</itemPath>
+            <itemPath>../../../../../MiniWin/hal/PIC32MZ2048EFM100/hal_touch.c</itemPath>
+          </logicalFolder>
+          <logicalFolder name="rx65n" displayName="rx65n" projectFiles="true">
+            <itemPath>../../../../../MiniWin/hal/rx65n/hal_delay.c</itemPath>
+            <itemPath>../../../../../MiniWin/hal/rx65n/hal_lcd.c</itemPath>
+            <itemPath>../../../../../MiniWin/hal/rx65n/hal_non_vol.c</itemPath>
+            <itemPath>../../../../../MiniWin/hal/rx65n/hal_timer.c</itemPath>
+            <itemPath>../../../../../MiniWin/hal/rx65n/hal_touch.c</itemPath>
+          </logicalFolder>
+          <logicalFolder name="rx65n_gcc" displayName="rx65n_gcc" projectFiles="true">
+            <itemPath>../../../../../MiniWin/hal/rx65n_gcc/hal_delay.c</itemPath>
+            <itemPath>../../../../../MiniWin/hal/rx65n_gcc/hal_lcd.c</itemPath>
+            <itemPath>../../../../../MiniWin/hal/rx65n_gcc/hal_non_vol.c</itemPath>
+            <itemPath>../../../../../MiniWin/hal/rx65n_gcc/hal_timer.c</itemPath>
+            <itemPath>../../../../../MiniWin/hal/rx65n_gcc/hal_touch.c</itemPath>
+          </logicalFolder>
+          <logicalFolder name="stm32f407" displayName="stm32f407" projectFiles="true">
+            <itemPath>../../../../../MiniWin/hal/stm32f407/hal_delay.c</itemPath>
+            <itemPath>../../../../../MiniWin/hal/stm32f407/hal_lcd.c</itemPath>
+            <itemPath>../../../../../MiniWin/hal/stm32f407/hal_non_vol.c</itemPath>
+            <itemPath>../../../../../MiniWin/hal/stm32f407/hal_timer.c</itemPath>
+            <itemPath>../../../../../MiniWin/hal/stm32f407/hal_touch.c</itemPath>
+          </logicalFolder>
+          <logicalFolder name="stm32f429" displayName="stm32f429" projectFiles="true">
+            <itemPath>../../../../../MiniWin/hal/stm32f429/hal_delay.c</itemPath>
+            <itemPath>../../../../../MiniWin/hal/stm32f429/hal_lcd.c</itemPath>
+            <itemPath>../../../../../MiniWin/hal/stm32f429/hal_non_vol.c</itemPath>
+            <itemPath>../../../../../MiniWin/hal/stm32f429/hal_timer.c</itemPath>
+            <itemPath>../../../../../MiniWin/hal/stm32f429/hal_touch.c</itemPath>
+          </logicalFolder>
+          <logicalFolder name="windows" displayName="windows" projectFiles="true">
+            <itemPath>../../../../../MiniWin/hal/windows/hal_delay.c</itemPath>
+            <itemPath>../../../../../MiniWin/hal/windows/hal_lcd.c</itemPath>
+            <itemPath>../../../../../MiniWin/hal/windows/hal_non_vol.c</itemPath>
+            <itemPath>../../../../../MiniWin/hal/windows/hal_timer.c</itemPath>
+            <itemPath>../../../../../MiniWin/hal/windows/hal_touch.c</itemPath>
+          </logicalFolder>
+          <itemPath>../../../../../MiniWin/hal/hal_init.c</itemPath>
+        </logicalFolder>
+        <logicalFolder name="templates" displayName="templates" projectFiles="true">
+        </logicalFolder>
+        <logicalFolder name="ui" displayName="ui" projectFiles="true">
+          <itemPath>../../../../../MiniWin/ui/ui_arrow.c</itemPath>
+          <itemPath>../../../../../MiniWin/ui/ui_button.c</itemPath>
+          <itemPath>../../../../../MiniWin/ui/ui_check_box.c</itemPath>
+          <itemPath>../../../../../MiniWin/ui/ui_common.c</itemPath>
+          <itemPath>../../../../../MiniWin/ui/ui_keyboard.c</itemPath>
+          <itemPath>../../../../../MiniWin/ui/ui_keypad.c</itemPath>
+          <itemPath>../../../../../MiniWin/ui/ui_label.c</itemPath>
+          <itemPath>../../../../../MiniWin/ui/ui_list_box.c</itemPath>
+          <itemPath>../../../../../MiniWin/ui/ui_progress_bar.c</itemPath>
+          <itemPath>../../../../../MiniWin/ui/ui_radio_button.c</itemPath>
+          <itemPath>../../../../../MiniWin/ui/ui_scroll_bar_horiz.c</itemPath>
+          <itemPath>../../../../../MiniWin/ui/ui_scroll_bar_vert.c</itemPath>
+          <itemPath>../../../../../MiniWin/ui/ui_tabs.c</itemPath>
+          <itemPath>../../../../../MiniWin/ui/ui_text_box.c</itemPath>
+          <itemPath>../../../../../MiniWin/ui/ui_tree.c</itemPath>
+        </logicalFolder>
+        <itemPath>../../../../../MiniWin/calibrate.c</itemPath>
+        <itemPath>../../../../../MiniWin/miniwin.c</itemPath>
+        <itemPath>../../../../../MiniWin/miniwin_debug.c</itemPath>
+        <itemPath>../../../../../MiniWin/miniwin_message_queue.c</itemPath>
+        <itemPath>../../../../../MiniWin/miniwin_settings.c</itemPath>
+        <itemPath>../../../../../MiniWin/miniwin_touch.c</itemPath>
+        <itemPath>../../../../../MiniWin/miniwin_tree_container.c</itemPath>
+        <itemPath>../../../../../MiniWin/miniwin_utilities.c</itemPath>
+      </logicalFolder>
+      <logicalFolder name="MiniWinSimple_Common"
+                     displayName="MiniWinSimple_Common"
+                     projectFiles="true">
+        <itemPath>../../../../../MiniWinSimple_Common/main.c</itemPath>
+        <itemPath>../../../../../MiniWinSimple_Common/miniwin_user.c</itemPath>
+        <itemPath>../../../../../MiniWinSimple_Common/window_simple.c</itemPath>
+      </logicalFolder>
+      <logicalFolder name="src" displayName="src" projectFiles="true">
+        <itemPath>../../src/app.c</itemPath>
+      </logicalFolder>
+    </logicalFolder>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false">
+      <logicalFolder name="f1" displayName="default.mhc" projectFiles="true">
+        <itemPath>../src/config/default/default.mhc/core.yml</itemPath>
+        <itemPath>../src/config/default/default.mhc/core_timer.yml</itemPath>
+        <itemPath>../src/config/default/default.mhc/dfp.yml</itemPath>
+        <itemPath>../src/config/default/default.mhc/GraphSettings.yml</itemPath>
+        <itemPath>../src/config/default/default.mhc/nvm.yml</itemPath>
+        <itemPath>../src/config/default/default.mhc/project.yml</itemPath>
+        <itemPath>../src/config/default/default.mhc/settings.yml</itemPath>
+        <itemPath>../src/config/default/default.mhc/spi2.yml</itemPath>
+        <itemPath>../src/config/default/default.mhc/tmr2.yml</itemPath>
+      </logicalFolder>
+      <itemPath>Makefile</itemPath>
+      <itemPath>../src/config/default/harmony-manifest-success.yml</itemPath>
+    </logicalFolder>
+  </logicalFolder>
+  <sourceRootList>
+    <Elem>../src</Elem>
+    <Elem>../../../../../MiniWinSimple_Common</Elem>
+    <Elem>../../../../../MiniWin</Elem>
+    <Elem>../../src</Elem>
+  </sourceRootList>
+  <projectmakefile>Makefile</projectmakefile>
+  <confs>
+    <conf name="default" type="2">
+      <toolsSet>
+        <developmentServer>localhost</developmentServer>
+        <targetDevice>PIC32MZ2048EFM100</targetDevice>
+        <targetHeader></targetHeader>
+        <targetPluginBoard></targetPluginBoard>
+        <platformTool>PKOBSKDEPlatformTool</platformTool>
+        <languageToolchain>XC32</languageToolchain>
+        <languageToolchainVersion>2.50</languageToolchainVersion>
+        <platform>3</platform>
+      </toolsSet>
+      <packs>
+        <pack name="PIC32MZ-EF_DFP" vendor="Microchip" version="1.2.51"/>
+      </packs>
+      <ScriptingSettings>
+      </ScriptingSettings>
+      <compileType>
+        <linkerTool>
+          <linkerLibItems>
+          </linkerLibItems>
+        </linkerTool>
+        <archiverTool>
+        </archiverTool>
+        <loading>
+          <useAlternateLoadableFile>false</useAlternateLoadableFile>
+          <parseOnProdLoad>false</parseOnProdLoad>
+          <alternateLoadableFile></alternateLoadableFile>
+        </loading>
+        <subordinates>
+        </subordinates>
+      </compileType>
+      <makeCustomizationType>
+        <makeCustomizationPreStepEnabled>false</makeCustomizationPreStepEnabled>
+        <makeUseCleanTarget>false</makeUseCleanTarget>
+        <makeCustomizationPreStep></makeCustomizationPreStep>
+        <makeCustomizationPostStepEnabled>false</makeCustomizationPostStepEnabled>
+        <makeCustomizationPostStep></makeCustomizationPostStep>
+        <makeCustomizationPutChecksumInUserID>false</makeCustomizationPutChecksumInUserID>
+        <makeCustomizationEnableLongLines>false</makeCustomizationEnableLongLines>
+        <makeCustomizationNormalizeHexFile>false</makeCustomizationNormalizeHexFile>
+      </makeCustomizationType>
+      <C32>
+        <property key="additional-warnings" value="true"/>
+        <property key="addresss-attribute-use" value="false"/>
+        <property key="enable-app-io" value="false"/>
+        <property key="enable-omit-frame-pointer" value="false"/>
+        <property key="enable-symbols" value="true"/>
+        <property key="enable-unroll-loops" value="false"/>
+        <property key="exclude-floating-point" value="false"/>
+        <property key="extra-include-directories"
+                  value="../src;../src/config/default;../src/packs/PIC32MZ2048EFM100_DFP;..\..\src;..\..\..\..\..\MiniWinSimple_Common;..\..\..\..\..\MiniWin;..\..\..\..\..\MiniWin\gl\fonts\truetype\mcufont"/>
+        <property key="generate-16-bit-code" value="false"/>
+        <property key="generate-micro-compressed-code" value="false"/>
+        <property key="isolate-each-function" value="true"/>
+        <property key="make-warnings-into-errors" value="true"/>
+        <property key="optimization-level" value="-O1"/>
+        <property key="place-data-into-section" value="false"/>
+        <property key="post-instruction-scheduling" value="default"/>
+        <property key="pre-instruction-scheduling" value="default"/>
+        <property key="preprocessor-macros" value="PIC32MZ2048EFM100"/>
+        <property key="strict-ansi" value="false"/>
+        <property key="support-ansi" value="false"/>
+        <property key="toplevel-reordering" value=""/>
+        <property key="unaligned-access" value=""/>
+        <property key="use-cci" value="false"/>
+        <property key="use-iar" value="false"/>
+        <property key="use-indirect-calls" value="false"/>
+      </C32>
+      <C32-AR>
+        <property key="additional-options-chop-files" value="false"/>
+      </C32-AR>
+      <C32-AS>
+        <property key="assembler-symbols" value=""/>
+        <property key="enable-symbols" value="true"/>
+        <property key="exclude-floating-point-library" value="false"/>
+        <property key="expand-macros" value="false"/>
+        <property key="extra-include-directories-for-assembler" value=""/>
+        <property key="extra-include-directories-for-preprocessor" value=""/>
+        <property key="false-conditionals" value="false"/>
+        <property key="generate-16-bit-code" value="false"/>
+        <property key="generate-micro-compressed-code" value="false"/>
+        <property key="keep-locals" value="false"/>
+        <property key="list-assembly" value="false"/>
+        <property key="list-source" value="false"/>
+        <property key="list-symbols" value="false"/>
+        <property key="oXC32asm-list-to-file" value="false"/>
+        <property key="omit-debug-dirs" value="false"/>
+        <property key="omit-forms" value="false"/>
+        <property key="preprocessor-macros" value=""/>
+        <property key="warning-level" value=""/>
+      </C32-AS>
+      <C32-CO>
+        <property key="coverage-enable" value=""/>
+      </C32-CO>
+      <C32-LD>
+        <property key="additional-options-use-response-files" value="false"/>
+        <property key="additional-options-write-sla" value="false"/>
+        <property key="allocate-dinit" value="false"/>
+        <property key="code-dinit" value="false"/>
+        <property key="ebase-addr" value=""/>
+        <property key="enable-check-sections" value="false"/>
+        <property key="exclude-floating-point-library" value="false"/>
+        <property key="exclude-standard-libraries" value="false"/>
+        <property key="extra-lib-directories" value=""/>
+        <property key="fill-flash-options-addr" value=""/>
+        <property key="fill-flash-options-const" value=""/>
+        <property key="fill-flash-options-how" value="0"/>
+        <property key="fill-flash-options-inc-const" value="1"/>
+        <property key="fill-flash-options-increment" value=""/>
+        <property key="fill-flash-options-seq" value=""/>
+        <property key="fill-flash-options-what" value="0"/>
+        <property key="generate-16-bit-code" value="false"/>
+        <property key="generate-cross-reference-file" value="false"/>
+        <property key="generate-micro-compressed-code" value="false"/>
+        <property key="heap-size" value="512"/>
+        <property key="input-libraries" value=""/>
+        <property key="kseg-length" value=""/>
+        <property key="kseg-origin" value=""/>
+        <property key="linker-symbols" value=""/>
+        <property key="map-file" value="${DISTDIR}/${PROJECTNAME}.${IMAGE_TYPE}.map"/>
+        <property key="no-device-startup-code" value="true"/>
+        <property key="no-startup-files" value="false"/>
+        <property key="oXC32ld-extra-opts" value="-mreserve=prog@0x1D1FC000:0x1D1FFFFF"/>
+        <property key="optimization-level" value=""/>
+        <property key="preprocessor-macros" value=""/>
+        <property key="remove-unused-sections" value="true"/>
+        <property key="report-memory-usage" value="false"/>
+        <property key="serial-length" value=""/>
+        <property key="serial-origin" value=""/>
+        <property key="stack-size" value=""/>
+        <property key="symbol-stripping" value=""/>
+        <property key="trace-symbols" value=""/>
+        <property key="warn-section-align" value="false"/>
+      </C32-LD>
+      <C32CPP>
+        <property key="additional-warnings" value="false"/>
+        <property key="addresss-attribute-use" value="false"/>
+        <property key="check-new" value="false"/>
+        <property key="eh-specs" value="true"/>
+        <property key="enable-app-io" value="false"/>
+        <property key="enable-omit-frame-pointer" value="false"/>
+        <property key="enable-symbols" value="true"/>
+        <property key="enable-unroll-loops" value="false"/>
+        <property key="exceptions" value="true"/>
+        <property key="exclude-floating-point" value="false"/>
+        <property key="extra-include-directories"
+                  value="../src;../src/config/default;../src/packs/PIC32MZ2048EFM100_DFP"/>
+        <property key="generate-16-bit-code" value="false"/>
+        <property key="generate-micro-compressed-code" value="false"/>
+        <property key="isolate-each-function" value="true"/>
+        <property key="make-warnings-into-errors" value="false"/>
+        <property key="optimization-level" value="-O1"/>
+        <property key="place-data-into-section" value="false"/>
+        <property key="post-instruction-scheduling" value="default"/>
+        <property key="pre-instruction-scheduling" value="default"/>
+        <property key="preprocessor-macros" value=""/>
+        <property key="rtti" value="true"/>
+        <property key="strict-ansi" value="false"/>
+        <property key="toplevel-reordering" value=""/>
+        <property key="unaligned-access" value=""/>
+        <property key="use-cci" value="false"/>
+        <property key="use-iar" value="false"/>
+        <property key="use-indirect-calls" value="false"/>
+      </C32CPP>
+      <C32Global>
+        <property key="common-include-directories" value=""/>
+        <property key="gp-relative-option" value=""/>
+        <property key="legacy-libc" value="false"/>
+        <property key="mdtcm" value=""/>
+        <property key="mitcm" value=""/>
+        <property key="mstacktcm" value="false"/>
+        <property key="omit-pack-options" value="1"/>
+        <property key="relaxed-math" value="false"/>
+        <property key="save-temps" value="false"/>
+        <property key="wpo-lto" value="false"/>
+      </C32Global>
+      <PICkit3PlatformTool>
+        <property key="ADC" value="true"/>
+        <property key="AutoSelectMemRanges" value="auto"/>
+        <property key="CAN1" value="true"/>
+        <property key="CAN2" value="true"/>
+        <property key="CHANGE NOTICE A" value="true"/>
+        <property key="CHANGE NOTICE B" value="true"/>
+        <property key="CHANGE NOTICE C" value="true"/>
+        <property key="CHANGE NOTICE D" value="true"/>
+        <property key="CHANGE NOTICE E" value="true"/>
+        <property key="CHANGE NOTICE F" value="true"/>
+        <property key="CHANGE NOTICE G" value="true"/>
+        <property key="COMPARATOR" value="true"/>
+        <property key="DMA" value="true"/>
+        <property key="ETHERNET CONTROLLER" value="true"/>
+        <property key="Freeze All Other Peripherals" value="true"/>
+        <property key="I2C 1" value="true"/>
+        <property key="I2C 2" value="true"/>
+        <property key="I2C 3" value="true"/>
+        <property key="I2C 4" value="true"/>
+        <property key="I2C 5" value="true"/>
+        <property key="INPUT CAPTURE 1" value="true"/>
+        <property key="INPUT CAPTURE 2" value="true"/>
+        <property key="INPUT CAPTURE 3" value="true"/>
+        <property key="INPUT CAPTURE 4" value="true"/>
+        <property key="INPUT CAPTURE 5" value="true"/>
+        <property key="INPUT CAPTURE 6" value="true"/>
+        <property key="INPUT CAPTURE 7" value="true"/>
+        <property key="INPUT CAPTURE 8" value="true"/>
+        <property key="INPUT CAPTURE 9" value="true"/>
+        <property key="INTERRUPT CONTROL" value="true"/>
+        <property key="OUTPUT COMPARE 1" value="true"/>
+        <property key="OUTPUT COMPARE 2" value="true"/>
+        <property key="OUTPUT COMPARE 3" value="true"/>
+        <property key="OUTPUT COMPARE 4" value="true"/>
+        <property key="OUTPUT COMPARE 5" value="true"/>
+        <property key="OUTPUT COMPARE 6" value="true"/>
+        <property key="OUTPUT COMPARE 7" value="true"/>
+        <property key="OUTPUT COMPARE 8" value="true"/>
+        <property key="OUTPUT COMPARE 9" value="true"/>
+        <property key="PARALLEL MASTER/SLAVE PORT" value="true"/>
+        <property key="REAL TIME CLOCK" value="true"/>
+        <property key="REFERENCE CLOCK1" value="true"/>
+        <property key="REFERENCE CLOCK2" value="true"/>
+        <property key="REFERENCE CLOCK3" value="true"/>
+        <property key="REFERENCE CLOCK4" value="true"/>
+        <property key="SPI/I2S 1" value="true"/>
+        <property key="SPI/I2S 2" value="true"/>
+        <property key="SPI/I2S 3" value="true"/>
+        <property key="SPI/I2S 4" value="true"/>
+        <property key="SPI/I2S 5" value="true"/>
+        <property key="SPI/I2S 6" value="true"/>
+        <property key="SecureSegment.SegmentProgramming" value="FullChipProgramming"/>
+        <property key="TIMER1" value="true"/>
+        <property key="TIMER2" value="true"/>
+        <property key="TIMER3" value="true"/>
+        <property key="TIMER4" value="true"/>
+        <property key="TIMER5" value="true"/>
+        <property key="TIMER6" value="true"/>
+        <property key="TIMER7" value="true"/>
+        <property key="TIMER8" value="true"/>
+        <property key="TIMER9" value="true"/>
+        <property key="ToolFirmwareFilePath"
+                  value="Press to browse for a specific firmware version"/>
+        <property key="ToolFirmwareOption.UseLatestFirmware" value="true"/>
+        <property key="UART1" value="true"/>
+        <property key="UART2" value="true"/>
+        <property key="UART3" value="true"/>
+        <property key="UART4" value="true"/>
+        <property key="UART5" value="true"/>
+        <property key="UART6" value="true"/>
+        <property key="debugoptions.useswbreakpoints" value="false"/>
+        <property key="hwtoolclock.frcindebug" value="false"/>
+        <property key="memories.aux" value="false"/>
+        <property key="memories.bootflash" value="true"/>
+        <property key="memories.configurationmemory" value="true"/>
+        <property key="memories.configurationmemory2" value="true"/>
+        <property key="memories.dataflash" value="true"/>
+        <property key="memories.eeprom" value="true"/>
+        <property key="memories.flashdata" value="true"/>
+        <property key="memories.id" value="true"/>
+        <property key="memories.instruction.ram" value="true"/>
+        <property key="memories.instruction.ram.ranges"
+                  value="${memories.instruction.ram.ranges}"/>
+        <property key="memories.programmemory" value="true"/>
+        <property key="memories.programmemory.ranges" value="1d000000-1d003fff"/>
+        <property key="poweroptions.powerenable" value="false"/>
+        <property key="programmertogo.imagename" value=""/>
+        <property key="programoptions.donoteraseauxmem" value="false"/>
+        <property key="programoptions.eraseb4program" value="true"/>
+        <property key="programoptions.pgmspeed" value="2"/>
+        <property key="programoptions.preservedataflash" value="false"/>
+        <property key="programoptions.preservedataflash.ranges"
+                  value="${programoptions.preservedataflash.ranges}"/>
+        <property key="programoptions.preserveeeprom" value="false"/>
+        <property key="programoptions.preserveeeprom.ranges" value=""/>
+        <property key="programoptions.preserveprogram.ranges" value=""/>
+        <property key="programoptions.preserveprogramrange" value="false"/>
+        <property key="programoptions.preserveuserid" value="false"/>
+        <property key="programoptions.programcalmem" value="false"/>
+        <property key="programoptions.programuserotp" value="false"/>
+        <property key="programoptions.testmodeentrymethod" value="VPPFirst"/>
+        <property key="programoptions.usehighvoltageonmclr" value="false"/>
+        <property key="programoptions.uselvpprogramming" value="false"/>
+        <property key="voltagevalue" value="3.25"/>
+      </PICkit3PlatformTool>
+      <PKOBSKDEPlatformTool>
+        <property key="AutoSelectMemRanges" value="auto"/>
+        <property key="SecureSegment.SegmentProgramming" value="FullChipProgramming"/>
+        <property key="ToolFirmwareFilePath"
+                  value="Press to browse for a specific firmware version"/>
+        <property key="ToolFirmwareOption.UseLatestFirmware" value="true"/>
+        <property key="memories.configurationmemory" value="true"/>
+        <property key="memories.dataflash" value="true"/>
+        <property key="memories.eeprom" value="true"/>
+        <property key="memories.id" value="true"/>
+        <property key="memories.programmemory" value="true"/>
+        <property key="memories.programmemory.ranges" value="1d000000-1d1fffff"/>
+        <property key="memories.userotp" value="true"/>
+        <property key="programoptions.donoteraseauxmem" value="false"/>
+        <property key="programoptions.eraseb4program" value="true"/>
+        <property key="programoptions.preservedataflash" value="false"/>
+        <property key="programoptions.preservedataflash.ranges" value=""/>
+        <property key="programoptions.preserveeeprom" value="false"/>
+        <property key="programoptions.preserveeeprom.ranges"
+                  value="${memories.eedata.default}"/>
+        <property key="programoptions.preserveprogram.ranges" value=""/>
+        <property key="programoptions.preserveprogramrange" value="false"/>
+        <property key="programoptions.usehighvoltageonmclr" value="false"/>
+        <property key="programoptions.uselvpprogramming" value="true"/>
+      </PKOBSKDEPlatformTool>
+    </conf>
+  </confs>
+</configurationDescriptor>
