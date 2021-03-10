@@ -1,0 +1,22 @@
+format_version: v1.0
+type: UniqueComponent
+attributes: {id: spi2}
+children:
+- type: Symbols
+  children:
+  - type: Integer
+    attributes: {id: SPI_BRG_VALUE}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: spi2, value: '62'}
+  - type: Boolean
+    attributes: {id: SPI_INTERRUPT_MODE}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: 'false'}
+- type: ElementPosition
+  attributes: {x: '600', y: '20', id: spi2}
