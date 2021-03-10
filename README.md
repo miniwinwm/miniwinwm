@@ -4,7 +4,7 @@ MiniWin contains the MiniWin window manager source code in C99. Builds for the W
 
 Please note: The latest formal release contains the latest stable tested code completed for all variants with up-to-date documentation. 
 The latest commit may contain work in progress, not all features may work for all variants, and the documentation may not be updated to the code.
-For further information on current work in progress please contact me by the contact box on the MiniWin website, address above.
+For further information on current work in progress and support questions please contact me by the contact box on the MiniWin website, address above.
 
 ESP32-IDF contains project files and application specific source files for the example projects running on the DevKitC development board. 
 
@@ -16,7 +16,7 @@ Simulation contains projectfiles and application specific source files for examp
 
 e2studio contains project files and application specific source files for the example projects running on the Renesas RX65N Envision dev board.
 
-MPLABX contains project files and application specific source files for example projects running on the Microchip Curiosity PIC32MX 470 development board. This is under development currently and has not been formally released yet.
+MPLABX contains project files and application specific source files for example projects running on the Microchip Curiosity PIC32MX and PIC32MZ development boards. 
 
 MiniWinFile_Common contains platform independant files for an example application. Builds for Windows and Linux simulators and embedded platforms.
 
