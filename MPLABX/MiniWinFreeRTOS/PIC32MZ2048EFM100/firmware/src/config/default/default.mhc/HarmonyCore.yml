@@ -11,6 +11,186 @@ children:
       children:
       - type: Dynamic
         attributes: {id: HarmonyCore, value: 'false'}
+  - type: Boolean
+    attributes: {id: GEN_APP_RTOS_TASK_0_OPT_USE_FPU_CONTEXT}
+    children:
+    - type: Attributes
+      children:
+      - type: Boolean
+        attributes: {id: visible}
+        children:
+        - {type: Value, value: 'true'}
+  - type: Boolean
+    attributes: {id: GEN_APP_RTOS_TASK_10_OPT_USE_FPU_CONTEXT}
+    children:
+    - type: Attributes
+      children:
+      - type: Boolean
+        attributes: {id: visible}
+        children:
+        - {type: Value, value: 'true'}
+  - type: Boolean
+    attributes: {id: GEN_APP_RTOS_TASK_11_OPT_USE_FPU_CONTEXT}
+    children:
+    - type: Attributes
+      children:
+      - type: Boolean
+        attributes: {id: visible}
+        children:
+        - {type: Value, value: 'true'}
+  - type: Boolean
+    attributes: {id: GEN_APP_RTOS_TASK_12_OPT_USE_FPU_CONTEXT}
+    children:
+    - type: Attributes
+      children:
+      - type: Boolean
+        attributes: {id: visible}
+        children:
+        - {type: Value, value: 'true'}
+  - type: Boolean
+    attributes: {id: GEN_APP_RTOS_TASK_13_OPT_USE_FPU_CONTEXT}
+    children:
+    - type: Attributes
+      children:
+      - type: Boolean
+        attributes: {id: visible}
+        children:
+        - {type: Value, value: 'true'}
+  - type: Boolean
+    attributes: {id: GEN_APP_RTOS_TASK_14_OPT_USE_FPU_CONTEXT}
+    children:
+    - type: Attributes
+      children:
+      - type: Boolean
+        attributes: {id: visible}
+        children:
+        - {type: Value, value: 'true'}
+  - type: Boolean
+    attributes: {id: GEN_APP_RTOS_TASK_15_OPT_USE_FPU_CONTEXT}
+    children:
+    - type: Attributes
+      children:
+      - type: Boolean
+        attributes: {id: visible}
+        children:
+        - {type: Value, value: 'true'}
+  - type: Boolean
+    attributes: {id: GEN_APP_RTOS_TASK_16_OPT_USE_FPU_CONTEXT}
+    children:
+    - type: Attributes
+      children:
+      - type: Boolean
+        attributes: {id: visible}
+        children:
+        - {type: Value, value: 'true'}
+  - type: Boolean
+    attributes: {id: GEN_APP_RTOS_TASK_17_OPT_USE_FPU_CONTEXT}
+    children:
+    - type: Attributes
+      children:
+      - type: Boolean
+        attributes: {id: visible}
+        children:
+        - {type: Value, value: 'true'}
+  - type: Boolean
+    attributes: {id: GEN_APP_RTOS_TASK_18_OPT_USE_FPU_CONTEXT}
+    children:
+    - type: Attributes
+      children:
+      - type: Boolean
+        attributes: {id: visible}
+        children:
+        - {type: Value, value: 'true'}
+  - type: Boolean
+    attributes: {id: GEN_APP_RTOS_TASK_19_OPT_USE_FPU_CONTEXT}
+    children:
+    - type: Attributes
+      children:
+      - type: Boolean
+        attributes: {id: visible}
+        children:
+        - {type: Value, value: 'true'}
+  - type: Boolean
+    attributes: {id: GEN_APP_RTOS_TASK_1_OPT_USE_FPU_CONTEXT}
+    children:
+    - type: Attributes
+      children:
+      - type: Boolean
+        attributes: {id: visible}
+        children:
+        - {type: Value, value: 'true'}
+  - type: Boolean
+    attributes: {id: GEN_APP_RTOS_TASK_2_OPT_USE_FPU_CONTEXT}
+    children:
+    - type: Attributes
+      children:
+      - type: Boolean
+        attributes: {id: visible}
+        children:
+        - {type: Value, value: 'true'}
+  - type: Boolean
+    attributes: {id: GEN_APP_RTOS_TASK_3_OPT_USE_FPU_CONTEXT}
+    children:
+    - type: Attributes
+      children:
+      - type: Boolean
+        attributes: {id: visible}
+        children:
+        - {type: Value, value: 'true'}
+  - type: Boolean
+    attributes: {id: GEN_APP_RTOS_TASK_4_OPT_USE_FPU_CONTEXT}
+    children:
+    - type: Attributes
+      children:
+      - type: Boolean
+        attributes: {id: visible}
+        children:
+        - {type: Value, value: 'true'}
+  - type: Boolean
+    attributes: {id: GEN_APP_RTOS_TASK_5_OPT_USE_FPU_CONTEXT}
+    children:
+    - type: Attributes
+      children:
+      - type: Boolean
+        attributes: {id: visible}
+        children:
+        - {type: Value, value: 'true'}
+  - type: Boolean
+    attributes: {id: GEN_APP_RTOS_TASK_6_OPT_USE_FPU_CONTEXT}
+    children:
+    - type: Attributes
+      children:
+      - type: Boolean
+        attributes: {id: visible}
+        children:
+        - {type: Value, value: 'true'}
+  - type: Boolean
+    attributes: {id: GEN_APP_RTOS_TASK_7_OPT_USE_FPU_CONTEXT}
+    children:
+    - type: Attributes
+      children:
+      - type: Boolean
+        attributes: {id: visible}
+        children:
+        - {type: Value, value: 'true'}
+  - type: Boolean
+    attributes: {id: GEN_APP_RTOS_TASK_8_OPT_USE_FPU_CONTEXT}
+    children:
+    - type: Attributes
+      children:
+      - type: Boolean
+        attributes: {id: visible}
+        children:
+        - {type: Value, value: 'true'}
+  - type: Boolean
+    attributes: {id: GEN_APP_RTOS_TASK_9_OPT_USE_FPU_CONTEXT}
+    children:
+    - type: Attributes
+      children:
+      - type: Boolean
+        attributes: {id: visible}
+        children:
+        - {type: Value, value: 'true'}
   - type: Menu
     attributes: {id: GEN_APP_RTOS_TASK_CONF_MENU0}
     children:

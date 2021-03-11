@@ -104,13 +104,13 @@ files:
   security: NON_SECURE
   type: SOURCE
   userChecksum: CA41C0116AA86AA82F796A658ADFE1E7
-- generatedChecksum: 4416B3CB0543941EB66D635F151B11EB
+- generatedChecksum: 55A3D0EFE9181BA5C24767B8E8AAFEF0
   logicalPath: config\default\peripheral\spi\spi_master
   name: plib_spi2_master.c
   physicalPath: peripheral\spi\spi_master
   security: NON_SECURE
   type: SOURCE
-  userChecksum: 4416B3CB0543941EB66D635F151B11EB
+  userChecksum: 55A3D0EFE9181BA5C24767B8E8AAFEF0
 - generatedChecksum: 1BF5AD113B77C5AB32A5CD820D6EEA91
   logicalPath: config\default\peripheral\tmr
   name: plib_tmr2.c

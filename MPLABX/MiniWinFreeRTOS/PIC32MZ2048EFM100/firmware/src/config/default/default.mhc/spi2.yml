@@ -18,5 +18,12 @@ children:
       children:
       - type: User
         attributes: {value: 'false'}
+  - type: KeyValueSet
+    attributes: {id: SPI_SPICON_MSSEN}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: '1'}
 - type: ElementPosition
   attributes: {x: '170', y: '60', id: spi2}
