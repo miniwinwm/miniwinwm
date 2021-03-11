@@ -5,7 +5,7 @@ frameworkPath: ..\..\..\..\..\..\Harmony3
 processor: PIC32MX470F512H
 projectName: MiniWinTTFonts
 settings:
-  PackageFilter: bsp;core;core_apps_pic32mx;csp;csp_apps_pic32mx;quick_docs;usb;
+  PackageFilter: bsp;core;core_apps_pic32mx;csp;csp_apps_pic32mx;MPLAB-Harmony-Reference-Apps;quick_docs;usb
   FORCE_OPTIMIZATION: 'false'
   GENERATE_BACKUP: 'true'
   TRUSTZONE: 'false'

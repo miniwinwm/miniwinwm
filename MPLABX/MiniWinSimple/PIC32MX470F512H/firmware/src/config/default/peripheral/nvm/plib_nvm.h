@@ -81,7 +81,6 @@ typedef enum
 
 } NVM_ERROR;
 
-typedef void (*NVM_CALLBACK)( uintptr_t context );
 
 void NVM_Initialize( void );
 
@@ -97,7 +96,6 @@ NVM_ERROR NVM_ErrorGet( void );
 
 bool NVM_IsBusy( void );
 
-void NVM_CallbackRegister( NVM_CALLBACK callback, uintptr_t context );
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus // Provide C++ Compatibility

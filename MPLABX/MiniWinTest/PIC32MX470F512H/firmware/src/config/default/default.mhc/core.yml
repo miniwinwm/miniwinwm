@@ -425,6 +425,13 @@ children:
       - type: User
         attributes: {value: PRIPLL}
   - type: Combo
+    attributes: {id: CONFIG_FPBDIV}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: DIV_1}
+  - type: Combo
     attributes: {id: CONFIG_FPLLIDIV}
     children:
     - type: Values
@@ -458,7 +465,7 @@ children:
     - type: Values
       children:
       - type: User
-        attributes: {value: '60000000'}
+        attributes: {value: '120000000'}
   - type: String
     attributes: {id: CONFIG_SYS_CLK_REFCLK_FREQ}
     children:
@@ -558,21 +565,21 @@ children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: core, value: 'true'}
+        attributes: {id: core, value: 'false'}
   - type: Boolean
     attributes: {id: EVIC_26_HANDLER_LOCK}
     children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: core, value: 'true'}
+        attributes: {id: core, value: 'false'}
   - type: String
     attributes: {id: EVIC_26_INTERRUPT_HANDLER}
     children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: core, value: NVM_InterruptHandler}
+        attributes: {id: core, value: FCE_Handler}
   - type: Boolean
     attributes: {id: EVIC_31_ENABLE}
     children:
@@ -642,28 +649,28 @@ children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: nvm, value: 'true'}
+        attributes: {id: nvm, value: 'false'}
   - type: Boolean
     attributes: {id: FCE_INTERRUPT_ENABLE_UPDATE}
     children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: core, value: 'false'}
+        attributes: {id: core, value: 'true'}
   - type: String
     attributes: {id: FCE_INTERRUPT_HANDLER}
     children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: nvm, value: NVM_InterruptHandler}
+        attributes: {id: nvm, value: FCE_Handler}
   - type: Boolean
     attributes: {id: FCE_INTERRUPT_HANDLER_LOCK}
     children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: nvm, value: 'true'}
+        attributes: {id: nvm, value: 'false'}
   - type: Integer
     attributes: {id: I2C1_CLOCK_FREQUENCY}
     children:
@@ -798,7 +805,7 @@ children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: core, value: '60000000'}
+        attributes: {id: core, value: '120000000'}
   - type: Integer
     attributes: {id: RTCC_CLOCK_FREQUENCY}
     children:
@@ -826,7 +833,7 @@ children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: core, value: '60000000'}
+        attributes: {id: core, value: '120000000'}
   - type: Boolean
     attributes: {id: SPI_2_INTERRUPT_ENABLE}
     children:
@@ -1084,7 +1091,7 @@ children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: core, value: '60000000'}
+        attributes: {id: core, value: '120000000'}
   - type: Integer
     attributes: {id: TMR3_CLOCK_FREQUENCY}
     children:

@@ -76,7 +76,7 @@ static void TMR3_InterruptSvcRoutine(uint32_t status, uintptr_t context)
     uint8_t days_in_month;
     
     quarter_second++;
-    if (quarter_second == 4U)
+    if (quarter_second == 8U)
     {
         /* whole second has elapsed */
         quarter_second = 0U;

@@ -65,7 +65,7 @@
 
 /*** DEVCFG1 ***/
 #pragma config FNOSC =      PRIPLL
-#pragma config FPBDIV =     DIV_2
+#pragma config FPBDIV =     DIV_1
 #pragma config FSOSCEN =    OFF
 #pragma config IESO =       ON
 #pragma config POSCMOD =    HS

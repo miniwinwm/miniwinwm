@@ -24,7 +24,7 @@ SOFTWARE.
 
 */
 
-#ifdef PIC32MX470F512H 
+#ifdef PIC32MX470F512H
 
 /***************
 *** INCLUDES ***
@@ -54,25 +54,15 @@ SOFTWARE.
 *** LOCAL VARIABLES ***
 **********************/
 
-static volatile bool transfer_done = false;
 static uint32_t flash_data_buffer[BUFFER_SIZE] CACHE_ALIGN;
 
 /********************************
 *** LOCAL FUNCTION PROTOTYPES ***
 ********************************/
 
-static void eventHandler(uintptr_t context);
-
 /**********************
 *** LOCAL FUNCTIONS ***
 **********************/
-
-static void eventHandler(uintptr_t context)
-{
-    (void)context;
-    
-    transfer_done = true;
-}
 
 /***********************
 *** GLOBAL FUNCTIONS ***
@@ -80,11 +70,6 @@ static void eventHandler(uintptr_t context)
 
 void mw_hal_non_vol_init(void)
 {
-    NVM_CallbackRegister(eventHandler, (uintptr_t)NULL);
-    
-    while (NVM_IsBusy() == true)
-    {
-    }
 }
 
 void mw_hal_non_vol_load(uint8_t *data, uint16_t length)
@@ -101,11 +86,10 @@ void mw_hal_non_vol_save(uint8_t *data, uint16_t length)
     
     /* Erase the Page */
     (void)NVM_PageErase(APP_FLASH_ADDRESS);
-    while (transfer_done == false)
+    while (NVM_IsBusy() == true)
     {
     }
-    transfer_done = false;
-    
+
     (void)memcpy((void *)flash_data_buffer, (void *)data, (size_t)length);
 
     for (i = 0U; i < NVM_FLASH_PAGESIZE; i+= NVM_FLASH_ROWSIZE)
@@ -113,11 +97,9 @@ void mw_hal_non_vol_save(uint8_t *data, uint16_t length)
         /* Program a row of data */
         (void)NVM_RowWrite((uint32_t *)writePtr, address);
 
-        while(transfer_done == false)
+        while (NVM_IsBusy() == true)
         {
-        }
-
-        transfer_done = false;
+        }        
 
         writePtr += NVM_FLASH_ROWSIZE;
         address  += NVM_FLASH_ROWSIZE;

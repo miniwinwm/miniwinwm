@@ -153,12 +153,12 @@
           <itemPath>../../../../../MiniWin/gl/gl.c</itemPath>
         </logicalFolder>
         <logicalFolder name="hal" displayName="hal" projectFiles="true">
-          <logicalFolder name="esp32-idf" displayName="esp32-idf" projectFiles="true">
-            <itemPath>../../../../../MiniWin/hal/esp32-idf/hal_delay.c</itemPath>
-            <itemPath>../../../../../MiniWin/hal/esp32-idf/hal_lcd.c</itemPath>
-            <itemPath>../../../../../MiniWin/hal/esp32-idf/hal_non_vol.c</itemPath>
-            <itemPath>../../../../../MiniWin/hal/esp32-idf/hal_timer.c</itemPath>
-            <itemPath>../../../../../MiniWin/hal/esp32-idf/hal_touch.c</itemPath>
+          <logicalFolder name="DevKitC" displayName="DevKitC" projectFiles="true">
+            <itemPath>../../../../../MiniWin/hal/DevKitC/hal_delay.c</itemPath>
+            <itemPath>../../../../../MiniWin/hal/DevKitC/hal_lcd.c</itemPath>
+            <itemPath>../../../../../MiniWin/hal/DevKitC/hal_non_vol.c</itemPath>
+            <itemPath>../../../../../MiniWin/hal/DevKitC/hal_timer.c</itemPath>
+            <itemPath>../../../../../MiniWin/hal/DevKitC/hal_touch.c</itemPath>
           </logicalFolder>
           <logicalFolder name="linux" displayName="linux" projectFiles="true">
             <itemPath>../../../../../MiniWin/hal/linux/hal_delay.c</itemPath>
@@ -182,6 +182,15 @@
             <itemPath>../../../../../MiniWin/hal/PIC32MX470F512H/hal_non_vol.c</itemPath>
             <itemPath>../../../../../MiniWin/hal/PIC32MX470F512H/hal_timer.c</itemPath>
             <itemPath>../../../../../MiniWin/hal/PIC32MX470F512H/hal_touch.c</itemPath>
+          </logicalFolder>
+          <logicalFolder name="PIC32MZ2048EFM100"
+                         displayName="PIC32MZ2048EFM100"
+                         projectFiles="true">
+            <itemPath>../../../../../MiniWin/hal/PIC32MZ2048EFM100/hal_delay.c</itemPath>
+            <itemPath>../../../../../MiniWin/hal/PIC32MZ2048EFM100/hal_lcd.c</itemPath>
+            <itemPath>../../../../../MiniWin/hal/PIC32MZ2048EFM100/hal_non_vol.c</itemPath>
+            <itemPath>../../../../../MiniWin/hal/PIC32MZ2048EFM100/hal_timer.c</itemPath>
+            <itemPath>../../../../../MiniWin/hal/PIC32MZ2048EFM100/hal_touch.c</itemPath>
           </logicalFolder>
           <logicalFolder name="rx65n" displayName="rx65n" projectFiles="true">
             <itemPath>../../../../../MiniWin/hal/rx65n/hal_delay.c</itemPath>
@@ -334,144 +343,6 @@
         <makeCustomizationEnableLongLines>false</makeCustomizationEnableLongLines>
         <makeCustomizationNormalizeHexFile>false</makeCustomizationNormalizeHexFile>
       </makeCustomizationType>
-      <item path="../../../../../MiniWin/miniwin.c" ex="false" overriding="false">
-        <C32>
-          <property key="additional-warnings" value="true"/>
-          <property key="addresss-attribute-use" value="false"/>
-          <property key="enable-app-io" value="false"/>
-          <property key="enable-omit-frame-pointer" value="false"/>
-          <property key="enable-symbols" value="true"/>
-          <property key="enable-unroll-loops" value="false"/>
-          <property key="exclude-floating-point" value="false"/>
-          <property key="extra-include-directories"
-                    value="../src;../src/config/default;../src/packs/PIC32MX470F512H_DFP;..\..\..\..\..\MiniWin;..\..\..\..\..\MiniWinTest_Common;..\..\..\..\..\MiniWin\gl\fonts\truetype\mcufont;..\..\src"/>
-          <property key="generate-16-bit-code" value="false"/>
-          <property key="generate-micro-compressed-code" value="false"/>
-          <property key="isolate-each-function" value="true"/>
-          <property key="make-warnings-into-errors" value="true"/>
-          <property key="optimization-level" value=""/>
-          <property key="place-data-into-section" value="false"/>
-          <property key="post-instruction-scheduling" value="default"/>
-          <property key="pre-instruction-scheduling" value="default"/>
-          <property key="preprocessor-macros" value="PIC32MX470F512H"/>
-          <property key="strict-ansi" value="false"/>
-          <property key="support-ansi" value="false"/>
-          <property key="toplevel-reordering" value=""/>
-          <property key="unaligned-access" value=""/>
-          <property key="use-cci" value="false"/>
-          <property key="use-iar" value="false"/>
-          <property key="use-indirect-calls" value="false"/>
-          <appendMe value="-std=c99"/>
-        </C32>
-        <C32-AR>
-          <property key="additional-options-chop-files" value="false"/>
-        </C32-AR>
-        <C32-AS>
-          <property key="assembler-symbols" value=""/>
-          <property key="enable-symbols" value="true"/>
-          <property key="exclude-floating-point-library" value="false"/>
-          <property key="expand-macros" value="false"/>
-          <property key="extra-include-directories-for-assembler" value=""/>
-          <property key="extra-include-directories-for-preprocessor" value=""/>
-          <property key="false-conditionals" value="false"/>
-          <property key="generate-16-bit-code" value="false"/>
-          <property key="generate-micro-compressed-code" value="false"/>
-          <property key="keep-locals" value="false"/>
-          <property key="list-assembly" value="false"/>
-          <property key="list-source" value="false"/>
-          <property key="list-symbols" value="false"/>
-          <property key="oXC32asm-list-to-file" value="false"/>
-          <property key="omit-debug-dirs" value="false"/>
-          <property key="omit-forms" value="false"/>
-          <property key="preprocessor-macros" value=""/>
-          <property key="warning-level" value=""/>
-        </C32-AS>
-        <C32-CO>
-          <property key="coverage-enable" value=""/>
-        </C32-CO>
-        <C32-LD>
-          <property key="additional-options-use-response-files" value="false"/>
-          <property key="additional-options-write-sla" value="false"/>
-          <property key="allocate-dinit" value="false"/>
-          <property key="code-dinit" value="false"/>
-          <property key="ebase-addr" value=""/>
-          <property key="enable-check-sections" value="false"/>
-          <property key="exclude-floating-point-library" value="false"/>
-          <property key="exclude-standard-libraries" value="false"/>
-          <property key="extra-lib-directories" value=""/>
-          <property key="fill-flash-options-addr" value=""/>
-          <property key="fill-flash-options-const" value=""/>
-          <property key="fill-flash-options-how" value="0"/>
-          <property key="fill-flash-options-inc-const" value="1"/>
-          <property key="fill-flash-options-increment" value=""/>
-          <property key="fill-flash-options-seq" value=""/>
-          <property key="fill-flash-options-what" value="0"/>
-          <property key="generate-16-bit-code" value="false"/>
-          <property key="generate-cross-reference-file" value="false"/>
-          <property key="generate-micro-compressed-code" value="false"/>
-          <property key="heap-size" value="1024"/>
-          <property key="input-libraries" value=""/>
-          <property key="kseg-length" value=""/>
-          <property key="kseg-origin" value=""/>
-          <property key="linker-symbols" value=""/>
-          <property key="map-file" value="${DISTDIR}/${PROJECTNAME}.${IMAGE_TYPE}.map"/>
-          <property key="no-device-startup-code" value="true"/>
-          <property key="no-startup-files" value="false"/>
-          <property key="oXC32ld-extra-opts" value="-mreserve=prog@0x1D07F000:0x1D07FFFF"/>
-          <property key="optimization-level" value="-O2"/>
-          <property key="preprocessor-macros" value=""/>
-          <property key="remove-unused-sections" value="true"/>
-          <property key="report-memory-usage" value="false"/>
-          <property key="serial-length" value=""/>
-          <property key="serial-origin" value=""/>
-          <property key="stack-size" value="2048"/>
-          <property key="symbol-stripping" value=""/>
-          <property key="trace-symbols" value=""/>
-          <property key="warn-section-align" value="false"/>
-        </C32-LD>
-        <C32CPP>
-          <property key="additional-warnings" value="false"/>
-          <property key="addresss-attribute-use" value="false"/>
-          <property key="check-new" value="false"/>
-          <property key="eh-specs" value="true"/>
-          <property key="enable-app-io" value="false"/>
-          <property key="enable-omit-frame-pointer" value="false"/>
-          <property key="enable-symbols" value="true"/>
-          <property key="enable-unroll-loops" value="false"/>
-          <property key="exceptions" value="true"/>
-          <property key="exclude-floating-point" value="false"/>
-          <property key="extra-include-directories"
-                    value="../src;../src/config/default;../src/packs/PIC32MX470F512H_DFP"/>
-          <property key="generate-16-bit-code" value="false"/>
-          <property key="generate-micro-compressed-code" value="false"/>
-          <property key="isolate-each-function" value="true"/>
-          <property key="make-warnings-into-errors" value="false"/>
-          <property key="optimization-level" value="-O1"/>
-          <property key="place-data-into-section" value="false"/>
-          <property key="post-instruction-scheduling" value="default"/>
-          <property key="pre-instruction-scheduling" value="default"/>
-          <property key="preprocessor-macros" value=""/>
-          <property key="rtti" value="true"/>
-          <property key="strict-ansi" value="false"/>
-          <property key="toplevel-reordering" value=""/>
-          <property key="unaligned-access" value=""/>
-          <property key="use-cci" value="false"/>
-          <property key="use-iar" value="false"/>
-          <property key="use-indirect-calls" value="false"/>
-        </C32CPP>
-        <C32Global>
-          <property key="common-include-directories" value=""/>
-          <property key="gp-relative-option" value=""/>
-          <property key="legacy-libc" value="false"/>
-          <property key="mdtcm" value=""/>
-          <property key="mitcm" value=""/>
-          <property key="mstacktcm" value="false"/>
-          <property key="omit-pack-options" value="1"/>
-          <property key="relaxed-math" value="false"/>
-          <property key="save-temps" value="false"/>
-          <property key="wpo-lto" value="false"/>
-        </C32Global>
-      </item>
       <C32>
         <property key="additional-warnings" value="true"/>
         <property key="addresss-attribute-use" value="false"/>
@@ -687,6 +558,7 @@
         <property key="ToolFirmwareFilePath"
                   value="Press to browse for a specific firmware version"/>
         <property key="ToolFirmwareOption.UseLatestFirmware" value="true"/>
+        <property key="firmware.download.all" value="false"/>
         <property key="memories.configurationmemory" value="true"/>
         <property key="memories.dataflash" value="true"/>
         <property key="memories.eeprom" value="true"/>

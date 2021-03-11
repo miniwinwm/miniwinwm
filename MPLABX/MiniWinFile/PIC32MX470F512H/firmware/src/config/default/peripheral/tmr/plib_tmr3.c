@@ -110,7 +110,7 @@ uint16_t TMR3_CounterGet(void)
 
 uint32_t TMR3_FrequencyGet(void)
 {
-    return (234375);
+    return (468750);
 }
 
 

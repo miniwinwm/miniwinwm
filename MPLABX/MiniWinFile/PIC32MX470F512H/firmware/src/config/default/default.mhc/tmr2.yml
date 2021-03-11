@@ -10,28 +10,28 @@ children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: tmr2, value: '96'}
+        attributes: {id: tmr2, value: '112'}
   - type: Integer
     attributes: {id: TIMER_CLOCK_FREQ}
     children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: tmr2, value: '937500'}
+        attributes: {id: tmr2, value: '468750'}
   - type: Long
     attributes: {id: TIMER_PERIOD}
     children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: tmr2, value: '46874'}
+        attributes: {id: tmr2, value: '23436'}
   - type: KeyValueSet
     attributes: {id: TIMER_PRE_SCALER}
     children:
     - type: Values
       children:
       - type: User
-        attributes: {value: '1'}
+        attributes: {value: '0'}
   - type: Float
     attributes: {id: TIMER_TIME_PERIOD_MS}
     children:
@@ -40,7 +40,7 @@ children:
       - type: Float
         attributes: {id: max}
         children:
-        - {type: Value, value: '69.904'}
+        - {type: Value, value: '139.808'}
     - type: Values
       children:
       - type: User
@@ -58,7 +58,7 @@ children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: tmr2, value: '64'}
+        attributes: {id: tmr2, value: '256'}
   - type: Boolean
     attributes: {id: TMR_SLAVE_INTERRUPT_MODE}
     children:
@@ -67,4 +67,4 @@ children:
       - type: Dynamic
         attributes: {id: tmr2, value: 'true'}
 - type: ElementPosition
-  attributes: {x: '30', y: '60', id: tmr2}
+  attributes: {x: '30', y: '59', id: tmr2}

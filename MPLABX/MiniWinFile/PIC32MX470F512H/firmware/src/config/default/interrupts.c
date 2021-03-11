@@ -60,7 +60,6 @@
 
 void TIMER_2_InterruptHandler( void );
 void TIMER_3_InterruptHandler( void );
-void NVM_InterruptHandler( void );
 
 
 
@@ -73,11 +72,6 @@ void __ISR(_TIMER_2_VECTOR, ipl1SOFT) TIMER_2_Handler (void)
 void __ISR(_TIMER_3_VECTOR, ipl1SOFT) TIMER_3_Handler (void)
 {
     TIMER_3_InterruptHandler();
-}
-
-void __ISR(_FCE_VECTOR, ipl1SOFT) FCE_Handler (void)
-{
-    NVM_InterruptHandler();
 }
 
 

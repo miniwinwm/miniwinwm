@@ -17,7 +17,7 @@ children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: spi2, value: '2'}
+        attributes: {id: spi2, value: '4'}
   - type: Boolean
     attributes: {id: SPI_INTERRUPT_MODE}
     children:

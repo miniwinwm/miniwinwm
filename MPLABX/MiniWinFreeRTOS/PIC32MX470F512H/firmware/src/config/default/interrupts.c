@@ -59,7 +59,6 @@
 
 
 void TIMER_2_InterruptHandler( void );
-void NVM_InterruptHandler( void );
 
 
 
@@ -69,11 +68,6 @@ void NVM_InterruptHandler( void );
 void TIMER_2_Handler (void)
 {
     TIMER_2_InterruptHandler();
-}
-
-void FCE_Handler (void)
-{
-    NVM_InterruptHandler();
 }
 
 

@@ -17,7 +17,7 @@ children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: spi1, value: '3'}
+        attributes: {id: spi1, value: '7'}
   - type: Comment
     attributes: {id: SPI_CLOCK_MODE_COMMENT}
     children:

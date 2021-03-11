@@ -94,26 +94,6 @@ typedef enum
 // *****************************************************************************
 // *****************************************************************************
 
-NVM_CALLBACK nvmCallbackFunc;
-
-uintptr_t nvmContext;
-
-void NVM_CallbackRegister( NVM_CALLBACK callback, uintptr_t context )
-{
-    /* Register callback function */
-    nvmCallbackFunc    = callback;
-    nvmContext         = context;
-}
-
-void NVM_InterruptHandler( void )
-{
-    IFS0CLR = NVM_INTERRUPT_FLAG_MASK;
-
-    if(nvmCallbackFunc != NULL)
-    {
-        nvmCallbackFunc(nvmContext);
-    }
-}
 
 static void NVM_StartOperationAtAddress( uint32_t address,  NVM_OPERATION_MODE operation )
 {
@@ -143,7 +123,6 @@ static void NVM_StartOperationAtAddress( uint32_t address,  NVM_OPERATION_MODE o
 
     __builtin_mtc0(12, 0, processorStatus);
 
-    IEC0SET   = NVM_INTERRUPT_ENABLE_MASK;
 }
 
 /* ************************************************************************** */

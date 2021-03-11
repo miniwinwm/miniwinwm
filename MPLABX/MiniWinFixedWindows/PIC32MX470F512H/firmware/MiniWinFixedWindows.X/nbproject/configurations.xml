@@ -153,12 +153,12 @@
           <itemPath>../../../../../MiniWin/gl/gl.c</itemPath>
         </logicalFolder>
         <logicalFolder name="hal" displayName="hal" projectFiles="true">
-          <logicalFolder name="esp32-idf" displayName="esp32-idf" projectFiles="true">
-            <itemPath>../../../../../MiniWin/hal/esp32-idf/hal_delay.c</itemPath>
-            <itemPath>../../../../../MiniWin/hal/esp32-idf/hal_lcd.c</itemPath>
-            <itemPath>../../../../../MiniWin/hal/esp32-idf/hal_non_vol.c</itemPath>
-            <itemPath>../../../../../MiniWin/hal/esp32-idf/hal_timer.c</itemPath>
-            <itemPath>../../../../../MiniWin/hal/esp32-idf/hal_touch.c</itemPath>
+          <logicalFolder name="DevKitC" displayName="DevKitC" projectFiles="true">
+            <itemPath>../../../../../MiniWin/hal/DevKitC/hal_delay.c</itemPath>
+            <itemPath>../../../../../MiniWin/hal/DevKitC/hal_lcd.c</itemPath>
+            <itemPath>../../../../../MiniWin/hal/DevKitC/hal_non_vol.c</itemPath>
+            <itemPath>../../../../../MiniWin/hal/DevKitC/hal_timer.c</itemPath>
+            <itemPath>../../../../../MiniWin/hal/DevKitC/hal_touch.c</itemPath>
           </logicalFolder>
           <logicalFolder name="linux" displayName="linux" projectFiles="true">
             <itemPath>../../../../../MiniWin/hal/linux/hal_delay.c</itemPath>
@@ -182,6 +182,15 @@
             <itemPath>../../../../../MiniWin/hal/PIC32MX470F512H/hal_non_vol.c</itemPath>
             <itemPath>../../../../../MiniWin/hal/PIC32MX470F512H/hal_timer.c</itemPath>
             <itemPath>../../../../../MiniWin/hal/PIC32MX470F512H/hal_touch.c</itemPath>
+          </logicalFolder>
+          <logicalFolder name="PIC32MZ2048EFM100"
+                         displayName="PIC32MZ2048EFM100"
+                         projectFiles="true">
+            <itemPath>../../../../../MiniWin/hal/PIC32MZ2048EFM100/hal_delay.c</itemPath>
+            <itemPath>../../../../../MiniWin/hal/PIC32MZ2048EFM100/hal_lcd.c</itemPath>
+            <itemPath>../../../../../MiniWin/hal/PIC32MZ2048EFM100/hal_non_vol.c</itemPath>
+            <itemPath>../../../../../MiniWin/hal/PIC32MZ2048EFM100/hal_timer.c</itemPath>
+            <itemPath>../../../../../MiniWin/hal/PIC32MZ2048EFM100/hal_touch.c</itemPath>
           </logicalFolder>
           <logicalFolder name="rx65n" displayName="rx65n" projectFiles="true">
             <itemPath>../../../../../MiniWin/hal/rx65n/hal_delay.c</itemPath>

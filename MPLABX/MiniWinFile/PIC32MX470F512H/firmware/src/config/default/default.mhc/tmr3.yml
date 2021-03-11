@@ -17,7 +17,7 @@ children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: tmr3, value: '234375'}
+        attributes: {id: tmr3, value: '468750'}
   - type: Long
     attributes: {id: TIMER_PERIOD}
     children:
@@ -40,11 +40,11 @@ children:
       - type: Float
         attributes: {id: max}
         children:
-        - {type: Value, value: '279.616'}
+        - {type: Value, value: '139.808'}
     - type: Values
       children:
       - type: User
-        attributes: {value: '250.0'}
+        attributes: {value: '125.0'}
   - type: Boolean
     attributes: {id: TMR_INTERRUPT_MODE}
     children:

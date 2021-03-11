@@ -92,7 +92,7 @@
 
 
 /* Interrupt nesting behaviour configuration. */
-#define configPERIPHERAL_CLOCK_HZ               ( 60000000UL )
+#define configPERIPHERAL_CLOCK_HZ               ( 120000000UL )
 #define configISR_STACK_SIZE                    ( 512 )
 /* The priority at which the tick interrupt runs.  This should probably be kept at lowest priority. */
 #define configKERNEL_INTERRUPT_PRIORITY         (1)

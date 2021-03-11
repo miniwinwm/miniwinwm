@@ -4,13 +4,13 @@
 
 
 project: PIC32MX470F512H
-creation_date: 2021-03-04T09:34:31.622Z[Europe/London]    # ISO 8601 format: https://www.w3.org/TR/NOTE-datetime
+creation_date: 2021-03-11T14:57:44.728Z[Europe/London]    # ISO 8601 format: https://www.w3.org/TR/NOTE-datetime
 operating_system: Windows 10
 mhc_mode: IDE            # [IDE|Standalone|Headless]
-mhc_version: v3.6.5
+mhc_version: v3.7.0
 mplabx_version: v5.45        # if MPLAB X plugin only
-plugin_version: v3.6.3        # if MPLAB X plugin only
-compiler: XC32 (2.00)
+plugin_version: v3.6.4        # if MPLAB X plugin only
+compiler: XC32 (2.50)
 
 modules:
     - {name: "csp", version: "v3.8.3"}

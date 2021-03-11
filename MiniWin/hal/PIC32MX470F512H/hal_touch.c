@@ -104,7 +104,7 @@ bool mw_hal_touch_get_point(uint16_t* x, uint16_t* y)
     uint8_t ts_response[3];
 
     static SPI_TRANSFER_SETUP spi_ts_setup = {1000000UL, SPI_CLOCK_PHASE_LEADING_EDGE, SPI_CLOCK_POLARITY_IDLE_LOW, SPI_DATA_BITS_8};
-    static SPI_TRANSFER_SETUP spi_lcd_setup = {12000000UL, SPI_CLOCK_PHASE_LEADING_EDGE, SPI_CLOCK_POLARITY_IDLE_LOW, SPI_DATA_BITS_8};
+    static SPI_TRANSFER_SETUP spi_lcd_setup = {16000000UL, SPI_CLOCK_PHASE_LEADING_EDGE, SPI_CLOCK_POLARITY_IDLE_LOW, SPI_DATA_BITS_8};
 
     (void)SPI2_TransferSetup(&spi_ts_setup, 0UL);
     TS_CS_Clear();
