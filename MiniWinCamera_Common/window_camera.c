@@ -70,16 +70,18 @@ void window_window_camera_paint_function(mw_handle_t window_handle, const mw_gl_
 {
 	uint16_t *frame_data;
 	uint16_t pixel;
+    uint32_t x;
+    uint32_t y;
 
 	MW_ASSERT(draw_info != (void*)0, "Null pointer parameter");
 
 	frame_data = camlib_get_frame();
 	if (window_window_camera_data.captured && frame_data != NULL)
 	{
-		for (uint32_t y = 0U; y < 120U; y++)
+		for (y = 0U; y < 120U; y++)
 		{
 			uint32_t i = 0UL;
-			for (uint32_t x = 0U; x < 160U; x++)
+			for (x = 0U; x < 160U; x++)
 			{
 				pixel = frame_data[(y * 160U + x)];
 

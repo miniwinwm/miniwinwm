@@ -1,0 +1,15 @@
+format_version: v1.0
+type: UniqueComponent
+attributes: {id: nvm}
+children:
+- type: Symbols
+  children:
+  - type: Boolean
+    attributes: {id: INTERRUPT_ENABLE}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: 'false'}
+- type: ElementPosition
+  attributes: {x: '600', y: '20', id: nvm}

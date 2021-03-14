@@ -1,0 +1,36 @@
+format_version: v1.0
+type: UniqueComponent
+attributes: {id: ocmp1}
+children:
+- type: Symbols
+  children:
+  - type: KeyValueSet
+    attributes: {id: OCMP_OCxCON_OCM}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: '3'}
+  - type: KeyValueSet
+    attributes: {id: OCMP_OCxCON_OCTSEL}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: '1'}
+  - type: Long
+    attributes: {id: OCMP_OCxR}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: '1'}
+  - type: Hex
+    attributes: {id: OCxCON_VALUE}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: ocmp1, value: '11'}
+- type: ElementPosition
+  attributes: {x: '30', y: '60', id: ocmp1}
