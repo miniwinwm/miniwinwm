@@ -49,7 +49,7 @@ SOFTWARE.
 #define _08_TMR_CLK_SRC_PCLK                        (0x08U) /* Use PCLK */
 #define _00_TMR_PCLK_DIV_1                          (0x00U) /* Count at PCLK */
 #define BSP_REG_PROTECT_MPC
-#define OV7670_WRITE_ADDR 							0x42U
+#define OV7670_WRITE_ADDR 							0x42
 
 static const uint8_t OV7670_register_setup[][2] =
 {
@@ -161,6 +161,7 @@ typedef enum
 	write_frame				/**< Frame type is a write frame */
 } frame_type_t;
 
+
 /***********************
 *** GLOBAL VARIABLES ***
 ***********************/
@@ -169,10 +170,10 @@ typedef enum
 *** LOCAL VARIABLES ***
 **********************/
 
-static uint8_t frame_buffer[160 * 120 * 2];
 static volatile bool rx_complete_interrupt_flag = false;
 static volatile bool tx_complete_interrupt_flag = false;
 static volatile uint8_t received_byte;
+static uint8_t frame_buffer[160 * 120 * 2];
 
 /********************************
 *** LOCAL FUNCTION PROTOTYPES ***
@@ -229,12 +230,15 @@ static void xclk_init(void)
     TMR3.TCCR.BYTE = _08_TMR_CLK_SRC_PCLK | _00_TMR_PCLK_DIV_1;
 }
 
-__attribute__ ((interrupt)) void INT_Excep_SCI2_RXI2(void)
+#pragma interrupt (INT_Excep_SCI2_RXI2(vect=VECT_SCI2_RXI2))
+void INT_Excep_SCI2_RXI2(void)
 {
 	received_byte = SCI2.RDR;
 	rx_complete_interrupt_flag = true;
 }
-__attribute__ ((interrupt)) void INT_Excep_SCI2_TXI2(void)
+
+#pragma interrupt (INT_Excep_SCI2_TXI2(vect=VECT_SCI2_TXI2))
+void INT_Excep_SCI2_TXI2(void)
 {
 	tx_complete_interrupt_flag = true;
 }
@@ -244,8 +248,8 @@ static void sccb_init(void)
 	/* set up pins in pin controller */
 
 	/* enable writing to MPC */
-    MPC.PWPR.BIT.B0WI = 0U;
-    MPC.PWPR.BIT.PFSWE = 1U;
+    MPC.PWPR.BIT.B0WI = 0;
+    MPC.PWPR.BIT.PFSWE = 1;
 
     /* set SSDA2 pin to P50 */
     MPC.P50PFS.BYTE = 0x0AU;
@@ -285,7 +289,6 @@ static void sccb_init(void)
 	PORT5.DSCR.BIT.B0 = 1U;
 
 	/* set P50 pull-up resistor off */
-	//PORT5.PCR.BIT.B0 = 0U;
 	PORT5.PCR.BIT.B0 = 1U;
 
 	/* set P50 port direction to input */
@@ -302,7 +305,7 @@ static void sccb_init(void)
 	SCI2.SIMR3.BIT.IICSDAS = 3U;
 
     /* clock select */
-    SCI2.SMR.BYTE = 0U;
+    SCI2.SMR.BYTE = 0;
 
     /* msb first */
     SCI2.SCMR.BIT.SDIR = 1U;
@@ -584,11 +587,11 @@ void camlib_capture(void)
 			{
 			}
 
-			frame_buffer[i] = PORTC.PIDR.BYTE & 0b01110011U;
-			frame_buffer[i] |= (PORT3.PIDR.BYTE & 0b00001100U);
-			if (PORT5.PIDR.BIT.B1 == 1)
+			frame_buffer[i] = PORTC.PIDR.BYTE & 0x73U;
+			frame_buffer[i] |= (PORT3.PIDR.BYTE & 0x0cU);
+			if (PORT5.PIDR.BIT.B1 == 1U)
 			{
-				frame_buffer[i] |= 0b10000000U;
+				frame_buffer[i] |= 0x80U;
 			}
 			i++;
 
@@ -602,11 +605,11 @@ void camlib_capture(void)
 			{
 			}
 
-			frame_buffer[i] = PORTC.PIDR.BYTE & 0b01110011;
-			frame_buffer[i] |= (PORT3.PIDR.BYTE & 0b00001100);
-			if (PORT5.PIDR.BIT.B1 == 1)
+			frame_buffer[i] = PORTC.PIDR.BYTE & 0x73U;
+			frame_buffer[i] |= (PORT3.PIDR.BYTE & 0x0cU);
+			if (PORT5.PIDR.BIT.B1 == 1U)
 			{
-				frame_buffer[i] |= 0b10000000U;
+				frame_buffer[i] |= 0x80U;
 			}
 			i++;
 
@@ -620,7 +623,7 @@ void camlib_capture(void)
 			{
 			}
 
-			while (PORTJ.PIDR.BIT.B5 == 1U)
+			while (PORTJ.PIDR.BIT.B5 == 1)
 			{
 			}
 
