@@ -1,0 +1,36 @@
+format_version: v1.0
+type: UniqueComponent
+attributes: {id: i2c1}
+children:
+- type: Symbols
+  children:
+  - type: Integer
+    attributes: {id: BRG_VALUE}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: i2c1, value: '1250'}
+  - type: Integer
+    attributes: {id: I2CS_RISE_TIME_CORE_TIMER_CNTS}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: i2c1, value: '37'}
+  - type: Integer
+    attributes: {id: I2CS_SETUP_TIME_CORE_TIMER_CNTS}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: i2c1, value: '12'}
+  - type: Boolean
+    attributes: {id: I2C_INCLUDE_FORCED_WRITE_API}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: 'true'}
+- type: ElementPosition
+  attributes: {x: '298', y: '341', id: i2c1}

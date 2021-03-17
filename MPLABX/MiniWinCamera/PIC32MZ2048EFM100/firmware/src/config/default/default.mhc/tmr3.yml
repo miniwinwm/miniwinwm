@@ -1,0 +1,31 @@
+format_version: v1.0
+type: UniqueComponent
+attributes: {id: tmr3}
+children:
+- type: Symbols
+  children:
+  - type: Long
+    attributes: {id: TIMER_PERIOD}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: tmr3, value: '5'}
+  - type: Float
+    attributes: {id: TIMER_TIME_PERIOD_MS}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: '5.0E-5'}
+  - type: Boolean
+    attributes: {id: TMR_INTERRUPT_MODE}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: tmr3, value: 'true'}
+      - type: User
+        attributes: {value: 'false'}
+- type: ElementPosition
+  attributes: {x: '71', y: '269', id: tmr3}
