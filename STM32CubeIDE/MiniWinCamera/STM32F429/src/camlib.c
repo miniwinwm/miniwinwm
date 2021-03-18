@@ -176,8 +176,8 @@ static void xclk_init(void)
 	Tim10Handle.Instance = TIM10;
 	Tim10Handle.Init.Prescaler = 0U;
 	Tim10Handle.Init.CounterMode = TIM_COUNTERMODE_UP;
-	Tim10Handle.Init.Period = 1U;
-	Tim10Handle.Init.ClockDivision = 0U;
+	Tim10Handle.Init.Period = 2U;
+	Tim10Handle.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
 	Tim10Handle.Init.RepetitionCounter = 0U;
 	(void)HAL_TIM_Base_Init(&Tim10Handle);
 	(void)HAL_TIM_OC_Init(&Tim10Handle);
@@ -199,12 +199,11 @@ static void cam_paralell_io_init(void)
 	__HAL_RCC_GPIOA_CLK_ENABLE();
 	__HAL_RCC_GPIOB_CLK_ENABLE();
 	__HAL_RCC_GPIOC_CLK_ENABLE();
-	__HAL_RCC_GPIOG_CLK_ENABLE();
 	__HAL_RCC_GPIOE_CLK_ENABLE();
+	__HAL_RCC_GPIOG_CLK_ENABLE();
 
 	GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-	GPIO_InitStruct.Pull = GPIO_PULLUP;
-	GPIO_InitStruct.Speed = GPIO_SPEED_HIGH;
+	GPIO_InitStruct.Pull = GPIO_NOPULL;
 
 	GPIO_InitStruct.Pin = GPIO_PIN_5;
 	HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
@@ -215,10 +214,10 @@ static void cam_paralell_io_init(void)
 	GPIO_InitStruct.Pin = GPIO_PIN_11;
 	HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-	GPIO_InitStruct.Pin =  GPIO_PIN_2 | GPIO_PIN_3 | GPIO_PIN_4 | GPIO_PIN_5 | GPIO_PIN_6;
+	GPIO_InitStruct.Pin = GPIO_PIN_2 | GPIO_PIN_3 | GPIO_PIN_4 | GPIO_PIN_5 | GPIO_PIN_6;
 	HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
 
-	GPIO_InitStruct.Pin =  GPIO_PIN_2 | GPIO_PIN_3 | GPIO_PIN_9;
+	GPIO_InitStruct.Pin = GPIO_PIN_2 | GPIO_PIN_3 | GPIO_PIN_9;
 	HAL_GPIO_Init(GPIOG, &GPIO_InitStruct);
 }
 
@@ -245,7 +244,7 @@ static void sccb_init(void)
 	hi2c1.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
 	hi2c1.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
 
-	HAL_I2C_Init(&hi2c1);
+	(void)HAL_I2C_Init(&hi2c1);
 }
 
 static void delay(volatile uint16_t count)
@@ -283,7 +282,7 @@ void camlib_init(void)
 	sccb_init();
 	cam_paralell_io_init();
 	ov7670_init();
-	HAL_I2C_DeInit(&hi2c1);
+	(void)HAL_I2C_DeInit(&hi2c1);
 }
 
 uint16_t *camlib_get_frame(void)
@@ -294,7 +293,6 @@ uint16_t *camlib_get_frame(void)
 void camlib_capture(void)
 {
 	uint_fast32_t i;
-	uint8_t dummy;
 
 	__disable_irq();
 
@@ -330,9 +328,8 @@ void camlib_capture(void)
 			{
 			}
 
-			frame_buffer[i] = GPIOE->IDR;
-			frame_buffer[i] &= ~0b0000000010000011U;
-			frame_buffer[i] |= (GPIOG->IDR & 0b0000001000001100U) >> 2;
+			frame_buffer[i] = (uint8_t)GPIOE->IDR & 0b01111100U;
+			frame_buffer[i] |= (uint8_t)(GPIOG->IDR >> 2) & 0b10000011U;
 			i++;
 
 			/* wait for ~PLK */
@@ -345,9 +342,8 @@ void camlib_capture(void)
 			{
 			}
 
-			frame_buffer[i] = GPIOE->IDR;
-			frame_buffer[i] &= ~0b0000000010000011U;
-			frame_buffer[i] |= (GPIOG->IDR & 0b0000001000001100U) >> 2;
+			frame_buffer[i] = (uint8_t)GPIOE->IDR & 0b01111100U;
+			frame_buffer[i] |= (uint8_t)(GPIOG->IDR >> 2) & 0b10000011U;
 			i++;
 
 			/* wait for ~PLK */
@@ -355,14 +351,10 @@ void camlib_capture(void)
 			{
 			}
 
-			/* repeat doing dummy read */
+			/* repeat ignoring read */
 			while (!(GPIOB->IDR & GPIO_PIN_4))
 			{
 			}
-
-			dummy = GPIOE->IDR;
-			dummy &= ~0b0000000010000011U;
-			dummy |= (GPIOG->IDR & 0b0000001000001100U) >> 2;
 
 			while ((GPIOB->IDR & GPIO_PIN_4))
 			{
@@ -371,10 +363,6 @@ void camlib_capture(void)
 			while (!(GPIOB->IDR & GPIO_PIN_4))
 			{
 			}
-
-			dummy = GPIOE->IDR;
-			dummy &= ~0b0000000010000011U;
-			dummy |= (GPIOG->IDR & 0b0000001000001100U) >> 2;
 
 			while ((GPIOB->IDR & GPIO_PIN_4))
 			{
