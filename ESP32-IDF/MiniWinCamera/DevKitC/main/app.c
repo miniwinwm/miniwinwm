@@ -62,7 +62,6 @@ SOFTWARE.
 ***********************/
 
 #include "driver/gpio.h"
-#include "esp_log.h"
 
 void app_init(void)
 {
