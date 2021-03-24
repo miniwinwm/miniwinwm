@@ -77,7 +77,6 @@ void mw_hal_timer_fired(void)
 	mw_tick_counter++;
 }
 
-
 void mw_hal_timer_init(void)
 {
     ctimer_config_t config;

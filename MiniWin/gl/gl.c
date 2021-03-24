@@ -32,7 +32,6 @@ SOFTWARE.
 #include <math.h>
 #include "miniwin_debug.h"
 #include "miniwin_config.h"
-#include "hal/hal_delay.h"
 #include "gl/gl.h"
 #include "gl/fonts/bitmapped/fonts.h"
 #include "gl/fonts/bitmapped/gl_title_font.h"

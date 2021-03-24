@@ -29,9 +29,7 @@ SOFTWARE.
 ***************/
 
 #include <stdlib.h>
-#include "dialogs/dialog_common.h"
 #include "miniwin.h"
-#include "ui/ui_common.h"
 
 /****************
 *** CONSTANTS ***

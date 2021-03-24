@@ -29,9 +29,7 @@ SOFTWARE.
 ***************/
 
 #include <string.h>
-#include "dialogs/dialog_common.h"
 #include "miniwin.h"
-#include "ui/ui_common.h"
 #include "app.h"
 
 #ifdef MW_DIALOG_FILE_CHOOSER
