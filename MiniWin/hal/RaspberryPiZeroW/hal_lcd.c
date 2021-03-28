@@ -113,12 +113,12 @@ static inline void pixel_rotated(int16_t x, int16_t y, mw_hal_lcd_colour_t colou
 	if (x != previous_x || previous_width != 1)
 	{
 		GPIO_CLR = 1 << LCD_DC_GPIO;
-        wiringPiSPIDataRW2(LCD_SPI_CHANNEL, &window_x_command, NULL, sizeof(window_x_command));
+        (void)app_spi_transfer(LCD_SPI_CHANNEL, &window_x_command, NULL, sizeof(window_x_command));
 
 		GPIO_SET = 1 << LCD_DC_GPIO;
         window_x_bounds[1] = (uint8_t)x;
         window_x_bounds[3] = (uint8_t)x;
-        wiringPiSPIDataRW2(LCD_SPI_CHANNEL, window_x_bounds, NULL, sizeof(window_x_bounds));
+        (void)app_spi_transfer(LCD_SPI_CHANNEL, window_x_bounds, NULL, sizeof(window_x_bounds));
 
 		previous_x = x;
 		previous_width = 1;
@@ -127,23 +127,23 @@ static inline void pixel_rotated(int16_t x, int16_t y, mw_hal_lcd_colour_t colou
 	if (y != previous_y)
 	{
 		GPIO_CLR = 1 << LCD_DC_GPIO;
-        wiringPiSPIDataRW2(LCD_SPI_CHANNEL, &window_y_command, NULL, sizeof(window_y_command));
+        (void)app_spi_transfer(LCD_SPI_CHANNEL, &window_y_command, NULL, sizeof(window_y_command));
         
 		GPIO_SET = 1 << LCD_DC_GPIO;
         window_y_bounds[0] = (uint8_t)(y >> 8);
         window_y_bounds[1] = (uint8_t)y;
         window_y_bounds[2] = (uint8_t)(y >> 8);
         window_y_bounds[3] = (uint8_t)y;
-        wiringPiSPIDataRW2(LCD_SPI_CHANNEL, window_y_bounds, NULL, sizeof(window_y_bounds));
+        (void)app_spi_transfer(LCD_SPI_CHANNEL, window_y_bounds, NULL, sizeof(window_y_bounds));
 
 		previous_y = y;
 	}
 
 	GPIO_CLR = 1 << LCD_DC_GPIO;
-    wiringPiSPIDataRW2(LCD_SPI_CHANNEL, &pixel_data_command, NULL, sizeof(pixel_data_command));
+    (void)app_spi_transfer(LCD_SPI_CHANNEL, &pixel_data_command, NULL, sizeof(pixel_data_command));
         
 	GPIO_SET = 1 << LCD_DC_GPIO;
-    wiringPiSPIDataRW2(LCD_SPI_CHANNEL, (uint8_t *)&rgb565_colour, NULL, sizeof(rgb565_colour));     
+    (void)app_spi_transfer(LCD_SPI_CHANNEL, (uint8_t *)&rgb565_colour, NULL, sizeof(rgb565_colour));     
 }
 
 /**
@@ -182,29 +182,29 @@ static inline void filled_rectangle_rotated(int16_t start_x,
 	if (start_x != previous_x || previous_width != width)
 	{
 		GPIO_CLR = 1 << LCD_DC_GPIO;
-        wiringPiSPIDataRW2(LCD_SPI_CHANNEL, &window_x_command, NULL, sizeof(window_x_command));
+        (void)app_spi_transfer(LCD_SPI_CHANNEL, &window_x_command, NULL, sizeof(window_x_command));
 
         window_x_bounds[1] = (uint8_t)start_x;
         window_x_bounds[3] = (uint8_t)(start_x + width - 1);
 		GPIO_SET = 1 << LCD_DC_GPIO;
-        wiringPiSPIDataRW2(LCD_SPI_CHANNEL, window_x_bounds, NULL, sizeof(window_x_bounds));
+        (void)app_spi_transfer(LCD_SPI_CHANNEL, window_x_bounds, NULL, sizeof(window_x_bounds));
 
 		previous_x = start_x;
 		previous_width = width;
 	}
 
 	GPIO_CLR = 1 << LCD_DC_GPIO;
-    wiringPiSPIDataRW2(LCD_SPI_CHANNEL, &window_y_command, NULL, sizeof(window_y_command));
+    (void)app_spi_transfer(LCD_SPI_CHANNEL, &window_y_command, NULL, sizeof(window_y_command));
 
     window_y_bounds[0] = (uint8_t)(start_y >> 8);
     window_y_bounds[1] = (uint8_t)start_y;
     window_y_bounds[2] = (uint8_t)((start_y + height - 1) >> 8);
     window_y_bounds[3] = (uint8_t)(start_y + height - 1);
 	GPIO_SET = 1 << LCD_DC_GPIO;
-    wiringPiSPIDataRW2(LCD_SPI_CHANNEL, window_y_bounds, NULL, sizeof(window_y_bounds));
+    (void)app_spi_transfer(LCD_SPI_CHANNEL, window_y_bounds, NULL, sizeof(window_y_bounds));
 
 	GPIO_CLR = 1 << LCD_DC_GPIO;
-    wiringPiSPIDataRW2(LCD_SPI_CHANNEL, &pixel_data_command, NULL, sizeof(pixel_data_command));
+    (void)app_spi_transfer(LCD_SPI_CHANNEL, &pixel_data_command, NULL, sizeof(pixel_data_command));
 
 	for (i = 0U; i < width; i++)
 	{
@@ -213,7 +213,7 @@ static inline void filled_rectangle_rotated(int16_t start_x,
 	GPIO_SET = 1 << LCD_DC_GPIO;
 	for (y = 0; y < height; y++)
 	{
-        wiringPiSPIDataRW2(LCD_SPI_CHANNEL, (uint8_t *)line_buffer, NULL, width * 2);
+        (void)app_spi_transfer(LCD_SPI_CHANNEL, (uint8_t *)line_buffer, NULL, width * 2);
 	}
 
 	previous_y = -1;
@@ -227,7 +227,7 @@ static inline void filled_rectangle_rotated(int16_t start_x,
 static void write_command(const uint8_t command)
 {  
 	GPIO_CLR = 1 << LCD_DC_GPIO;
-	wiringPiSPIDataRW2(LCD_SPI_CHANNEL, &command, NULL, sizeof(command));
+	(void)app_spi_transfer(LCD_SPI_CHANNEL, &command, NULL, sizeof(command));
 }
 
 /**
@@ -238,7 +238,7 @@ static void write_command(const uint8_t command)
 static void write_data(const uint8_t data)
 {
 	GPIO_SET = 1 << LCD_DC_GPIO;
-	wiringPiSPIDataRW2(LCD_SPI_CHANNEL, &data, NULL, sizeof(data));
+	(void)app_spi_transfer(LCD_SPI_CHANNEL, &data, NULL, sizeof(data));
 }
 
 /***********************
@@ -247,7 +247,7 @@ static void write_data(const uint8_t data)
 
 void mw_hal_lcd_init(void)
 {
-	wiringPiSPISetupMode2(LCD_SPI_CHANNEL, 32000000, 0);
+	(void)app_spi_setup(LCD_SPI_CHANNEL, 32000000U, 0U);
 
 	GPIO_CLR = 1 << LCD_RESET_GPIO;
 	usleep(100000);

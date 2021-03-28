@@ -48,8 +48,8 @@ SOFTWARE.
 #define GPIO_BASE           		(BCM2708_PERI_BASE + 0x200000) 
 #define INP_GPIO(g) 				*(gpio + ((g) / 10)) &= ~(7 << (((g) % 10) * 3))
 #define OUT_GPIO(g) 				*(gpio + ((g) / 10)) |=  (1 << (((g) % 10) * 3))
-const static char *spiDev0  = "/dev/spidev0.0";
-const static char *spiDev1  = "/dev/spidev0.1";
+const static char *spi_device_0  = "/dev/spidev0.0";
+const static char *spi_device_1  = "/dev/spidev0.1";
 
 /************
 *** TYPES ***
@@ -65,8 +65,8 @@ volatile unsigned int *gpio;
 *** LOCAL VARIABLES ***
 **********************/
 
-static uint32_t spiSpeeds[2];
-static int spiFds[2];
+static uint32_t spi_speeds[2];
+static uint32_t spi_fds[2];
 
 /********************************
 *** LOCAL FUNCTION PROTOTYPES ***
@@ -123,56 +123,54 @@ void app_main_loop_process(void)
 {
 }
 
-// todo these need tidying
-
-int wiringPiSPISetupMode2(int channel, int speed, int mode)
+int32_t app_spi_setup(uint8_t channel, uint32_t speed, uint32_t mode)
 {
-	int fd;
-	static uint8_t spiBPW = 8U;
+	int32_t fd;
+	static int spiBPW = 8U;
 
-	mode &= 0x03;	
-	channel &= 0x01;	
+	mode &= 0x03U;	
+	channel &= 0x01U;	
 
-	if ((fd = open(channel == 0 ? spiDev0 : spiDev1, O_RDWR)) < 0)
+	if ((fd = (int32_t)open(channel == 0U ? spi_device_0 : spi_device_1, O_RDWR)) < 0)
 	{
 		return -1;
 	}
 
-	spiSpeeds[channel] = speed;
-	spiFds[channel] = fd;
+	spi_fds[channel] = fd;
+	spi_speeds[channel] = speed;
+	
+	if (ioctl(fd, SPI_IOC_WR_BITS_PER_WORD, &spiBPW) < 0)
+	{
+		return -1;
+	}
 
 	if (ioctl(fd, SPI_IOC_WR_MODE, &mode) < 0)
 	{
 		return -1;
 	}
 
-	if (ioctl(fd, SPI_IOC_WR_BITS_PER_WORD, &spiBPW) < 0)
+	if (ioctl(fd, SPI_IOC_WR_MAX_SPEED_HZ, &speed) < 0)
 	{
 		return -1;
 	}
 
-	if (ioctl(fd, SPI_IOC_WR_MAX_SPEED_HZ, &speed)   < 0)
-	{
-		return -1;
-	}
-
-	return fd ;
+	return fd;
 }
 
-int wiringPiSPIDataRW2(int channel, const uint8_t *data_in, uint8_t *data_out, int len)
+int32_t app_spi_transfer(uint8_t channel, const uint8_t *data_in, uint8_t *data_out, uint32_t length)
 {
   struct spi_ioc_transfer spi;
 
-  channel &= 1;
+  channel &= 0x01U;
 
-  memset (&spi, 0, sizeof (spi));
+  memset (&spi, 0, sizeof(spi));
 
   spi.tx_buf        = (unsigned long)data_in;
   spi.rx_buf        = (unsigned long)data_out;
-  spi.len           = len;
+  spi.len           = (int)length;
   spi.delay_usecs   = 0;
-  spi.speed_hz      = spiSpeeds[channel];
+  spi.speed_hz      = spi_speeds[channel];
   spi.bits_per_word = 8;
 
-  return ioctl(spiFds [channel], SPI_IOC_MESSAGE(1), &spi);
+  return (int32_t)ioctl(spi_fds [channel], SPI_IOC_MESSAGE(1), &spi);
 }

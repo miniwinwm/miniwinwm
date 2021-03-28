@@ -71,9 +71,26 @@ void app_init(void);
  */
 void app_main_loop_process(void);
  
- // todo 
-int wiringPiSPISetupMode2(int channel, int speed, int mode);
-int wiringPiSPIDataRW2(int channel, const uint8_t *data_in, uint8_t *data_out, int len);
+/**
+ * Initialize a SPI interface
+ * 
+ * @param channel SPI channel, 0 or 1
+ * @param speed SPI speed in bits per second 
+ * @param mode SPI mode, 0 to 3
+ * @return -1 on failure
+ */
+int32_t app_spi_setup(uint8_t channel, uint32_t speed, uint32_t mode);
+
+/**
+ * Transfer data by SPI
+ * 
+ * @param channel The SPI channel, 0 or 1
+ * @param data_in Pointer to buffer of data to be send, can be NULL if read only
+ * @param data_in Pointer to buffer for data to be received, can be NULL if write only only
+ * @param length Number of bytes to transfer which is space in buffers
+ * @note The space in the buffers must be at least length in both unless either is NULL
+ */
+int32_t app_spi_transfer(uint8_t channel, const uint8_t *data_in, uint8_t *data_out, uint32_t len);
  
 #ifdef __cplusplus
 }

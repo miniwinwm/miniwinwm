@@ -72,7 +72,7 @@ SOFTWARE.
 
 void mw_hal_touch_init(void)
 {
-    wiringPiSPISetupMode2(TS_SPI_CHANNEL, 1000000, 0);
+    (void)app_spi_setup(TS_SPI_CHANNEL, 1000000U, 0U);
 }
 
 bool mw_hal_touch_is_recalibration_required(void)
@@ -96,13 +96,13 @@ bool mw_hal_touch_get_point(uint16_t* x, uint16_t* y)
     do                                             
     {              
         command_buffer[0] = COMMAND_READ_X;
-	wiringPiSPIDataRW2(TS_SPI_CHANNEL, command_buffer, response_buffer, sizeof(command_buffer));	
+	(void)app_spi_transfer(TS_SPI_CHANNEL, command_buffer, response_buffer, sizeof(command_buffer));	
 	x_raw = (uint16_t)response_buffer[1] << 8;
 	x_raw |= (uint16_t)response_buffer[2];
 	x_raw >>= 3;
 
         command_buffer[0] = COMMAND_READ_Y;    
-	wiringPiSPIDataRW2(TS_SPI_CHANNEL, command_buffer, response_buffer, sizeof(command_buffer));		
+	(void)app_spi_transfer(TS_SPI_CHANNEL, command_buffer, response_buffer, sizeof(command_buffer));		
 	y_raw = (uint16_t)response_buffer[1] << 8;
 	y_raw |= (uint16_t)response_buffer[2];
 	y_raw >>= 3;      
