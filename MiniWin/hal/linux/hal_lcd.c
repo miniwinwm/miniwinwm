@@ -24,7 +24,7 @@ SOFTWARE.
 
 */
 
-#ifdef __linux
+#ifdef LINUX_SIM
 
 /***************
 *** INCLUDES ***
