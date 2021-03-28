@@ -3735,7 +3735,7 @@ int main(int argc, char **argv)
     }
 	else if (json["TargetType"].string_value() == "Linux")
 	{
-   	    outfileMake << "CFLAGS = ";
+   	    outfileMake << "CFLAGS = -DLINUX_SIM ";
     }
 
 	outfileMake <<
