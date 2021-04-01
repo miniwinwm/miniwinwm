@@ -2,7 +2,7 @@
 
 MIT License
 
-Copyright (c) John Blaiklock 2018 miniwin Embedded Window Manager
+Copyright (c) John Blaiklock 2021 miniwin Embedded Window Manager
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -28,13 +28,15 @@ SOFTWARE.
 *** INCLUDES ***
 ***************/
 
-#include <X11/Xlib.h>
+#include <stdio.h>
+#include <string.h>
 #include <unistd.h>
 #include <dirent.h>
-#include <string.h>
+#include <linux/rtc.h>
 #include <fcntl.h>
 #include <sys/ioctl.h>
-#include <linux/rtc.h>
+#include "bcm2835.h"
+#include "miniwin.h"
 #include "app.h"
 
 /****************
@@ -48,11 +50,6 @@ SOFTWARE.
 /***********************
 *** GLOBAL VARIABLES ***
 ***********************/
-
-Display *display;
-Window frame_window;
-GC graphical_context;
-Atom wm_delete_window_message;
 
 /**********************
 *** LOCAL VARIABLES ***
@@ -75,51 +72,31 @@ static char root_folder[MAX_FOLDER_AND_FILENAME_LENGTH] = {"/home/"};
 
 void app_init(void)
 {
-	static	Visual *visual;
-	static int depth;
-	static XSetWindowAttributes frame_attributes;
+	if (!bcm2835_init())
+	{
+		exit(1);
+	}
+	
+	if (!bcm2835_spi_begin())
+	{
+		exit(1);
+	}
+	
+    bcm2835_spi_set_speed_hz(SPI_LCD_SPEED);    
+    bcm2835_spi_chipSelect(SPI_LCD_CS);        	
+	
+	bcm2835_gpio_fsel(GPIO_TOUCH_IRQ, BCM2835_GPIO_FSEL_INPT);
+	bcm2835_gpio_fsel(GPIO_LCD_DC, BCM2835_GPIO_FSEL_OUTP);
+	bcm2835_gpio_fsel(GPIO_LCD_RESET, BCM2835_GPIO_FSEL_OUTP);	
+}
 
-	display = XOpenDisplay(NULL);
-	visual = DefaultVisual(display, 0);
-	depth  = DefaultDepth(display, 0);
-
-	frame_attributes.background_pixel = XBlackPixel(display, 0);
-
-	/* create the application window */
-	frame_window = XCreateWindow(display, 
-		XRootWindow(display, 0),
-		0, 
-		0, 
-		(unsigned int)MW_ROOT_WIDTH,
-		(unsigned int)MW_ROOT_HEIGHT,
-		5, 
-		depth,
-		InputOutput, 
-		visual, 
-		CWBackPixel,
-		&frame_attributes);
-
-	/* register interest in delete window message */
-	wm_delete_window_message = XInternAtom(display, "WM_DELETE_WINDOW", False);
-	XSetWMProtocols(display, frame_window, &wm_delete_window_message, 1);
-
-	XStoreName(display, frame_window, "MiniWin Sim");
-
-	XSelectInput(display, frame_window, ExposureMask | StructureNotifyMask);
-
-	graphical_context = XCreateGC(display, frame_window, 0U, NULL);
-
-	XMapWindow(display, frame_window);
-	(void)XFlush(display);
+void app_main_loop_process(void)
+{
 }
 
 char *app_get_root_folder_path(void)
 {
 	return (root_folder);
-}
-
-void app_main_loop_process(void)
-{
 }
 
 void app_populate_tree_from_file_system(struct mw_tree_container_t *tree,
@@ -336,3 +313,4 @@ void app_set_time_date(mw_time_t new_time)
 	/* do nothing for linux build */
 	(void)new_time;
 }
+
