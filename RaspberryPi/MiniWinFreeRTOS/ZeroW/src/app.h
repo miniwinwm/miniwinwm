@@ -2,7 +2,7 @@
 
 MIT License
 
-Copyright (c) John Blaiklock 2018 miniwin Embedded Window Manager
+Copyright (c) John Blaiklock 2021 miniwin Embedded Window Manager
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -35,31 +35,35 @@ SOFTWARE.
 *** INCLUDES ***
 ***************/
 
-#include <X11/Xlib.h>
+#include <stdint.h>
 
 /****************
 *** CONSTANTS ***
 ****************/
+
+#define SPI_LCD_SPEED		32000000UL
+#define SPI_LCD_CS			BCM2835_SPI_CS1
+#define GPIO_LCD_DC			RPI_V2_GPIO_P1_38
+#define GPIO_LCD_RESET		RPI_V2_GPIO_P1_40
+
+#define SPI_TOUCH_SPEED		1000000UL
+#define SPI_TOUCH_CS		BCM2835_SPI_CS0
+#define GPIO_TOUCH_IRQ		RPI_V2_GPIO_P1_35
 
 /************
 *** TYPES ***
 ************/
 
 typedef enum
-{
-   GYRO_READING_X = 0,
-   GYRO_READING_Y = 1,
-   GYRO_READING_Z = 2
-} gyro_reading_t;
-
+ {
+	 GYRO_READING_X = 0,
+	 GYRO_READING_Y = 1,
+	 GYRO_READING_Z = 2
+ } gyro_reading_t;
 
 /*************************
 *** EXTERNAL VARIABLES ***
 *************************/
-
-extern Display *display;
-extern Window frame_window;
-extern GC graphical_context;
 
 /***************************
 *** FUNCTIONS PROTOTYPES ***
