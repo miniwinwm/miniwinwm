@@ -33,6 +33,7 @@ SOFTWARE.
 #include <stdint.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include "hal/hal_non_vol.h"
 
 /****************
 *** CONSTANTS ***

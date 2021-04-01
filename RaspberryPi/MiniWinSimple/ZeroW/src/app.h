@@ -2,7 +2,7 @@
 
 MIT License
 
-Copyright (c) John Blaiklock 2018 miniwin Embedded Window Manager
+Copyright (c) John Blaiklock 2021 miniwin Embedded Window Manager
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -41,11 +41,14 @@ SOFTWARE.
 *** CONSTANTS ***
 ****************/
 
-#define TS_SPI_CHANNEL	            0
-#define LCD_SPI_CHANNEL				1
-#define TS_IRQ_GPIO		            19
-#define LCD_DC_GPIO					20
-#define LCD_RESET_GPIO				21
+#define SPI_LCD_SPEED		32000000UL
+#define SPI_LCD_CS			BCM2835_SPI_CS1
+#define GPIO_LCD_DC			RPI_V2_GPIO_P1_38
+#define GPIO_LCD_RESET		RPI_V2_GPIO_P1_40
+
+#define SPI_TOUCH_SPEED		1000000UL
+#define SPI_TOUCH_CS		BCM2835_SPI_CS0
+#define GPIO_TOUCH_IRQ		RPI_V2_GPIO_P1_35
 
 /************
 *** TYPES ***
@@ -54,8 +57,6 @@ SOFTWARE.
 /*************************
 *** EXTERNAL VARIABLES ***
 *************************/
-
-extern volatile unsigned int *gpio;
 
 /***************************
 *** FUNCTIONS PROTOTYPES ***
@@ -70,28 +71,7 @@ void app_init(void);
  * Function called from main to perform application main loop processing
  */
 void app_main_loop_process(void);
- 
-/**
- * Initialize a SPI interface
- * 
- * @param channel SPI channel, 0 or 1
- * @param speed SPI speed in bits per second 
- * @param mode SPI mode, 0 to 3
- * @return -1 on failure
- */
-int32_t app_spi_setup(uint8_t channel, uint32_t speed, uint32_t mode);
 
-/**
- * Transfer data by SPI
- * 
- * @param channel The SPI channel, 0 or 1
- * @param data_in Pointer to buffer of data to be send, can be NULL if read only
- * @param data_in Pointer to buffer for data to be received, can be NULL if write only only
- * @param length Number of bytes to transfer which is space in buffers
- * @note The space in the buffers must be at least length in both unless either is NULL
- */
-int32_t app_spi_transfer(uint8_t channel, const uint8_t *data_in, uint8_t *data_out, uint32_t len);
- 
 #ifdef __cplusplus
 }
 #endif

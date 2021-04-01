@@ -2,7 +2,7 @@
 
 MIT License
 
-Copyright (c) John Blaiklock 2019 miniwin Embedded Window Manager
+Copyright (c) John Blaiklock 2021 miniwin Embedded Window Manager
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -31,11 +31,9 @@ SOFTWARE.
 ***************/
 
 #include <stdint.h>
-#include <string.h>
 #include <stdbool.h>
-#include <fcntl.h>
 #include <unistd.h>
-#include <sys/ioctl.h>
+#include "bcm2835.h"
 #include "hal/hal_lcd.h"
 #include "miniwin_config.h"
 #include "app.h"
@@ -46,11 +44,6 @@ SOFTWARE.
 
 #define LCD_DISPLAY_WIDTH_PIXELS	240							/**< This is the width of the display in pixels irrespective of user specified display rotation */
 #define LCD_DISPLAY_HEIGHT_PIXELS	320							/**< This is the height of the display in pixels irrespective of user specified display rotation */
-#define GPIO_SET 					*(gpio + 7)  
-#define GPIO_CLR 					*(gpio + 10) 
-#define LCD_SPI_CHANNEL				1
-#define LCD_DC_GPIO					20
-#define LCD_RESET_GPIO				21
 const static uint8_t window_x_command = 0x2aU;					/**< SPI command to set x bounds of plotting window */
 const static uint8_t window_y_command = 0x2bu;					/**< SPI command to set y bounds of plotting window */
 const static uint8_t pixel_data_command = 0x2cu;				/**< SPI command to send pixel data to plotting window */
@@ -101,6 +94,7 @@ static inline void filled_rectangle_rotated(int16_t start_x,
 static inline void pixel_rotated(int16_t x, int16_t y, mw_hal_lcd_colour_t colour)
 {
 	uint16_t rgb565_colour;
+	char dummy;
 
 	/* convert pixel colour from rgb888 to rgb565 format */
 	rgb565_colour = (uint16_t)((((uint32_t)colour & 0x00f80000UL) >> 8) |
@@ -112,13 +106,15 @@ static inline void pixel_rotated(int16_t x, int16_t y, mw_hal_lcd_colour_t colou
   
 	if (x != previous_x || previous_width != 1)
 	{
-		GPIO_CLR = 1 << LCD_DC_GPIO;
-        (void)app_spi_transfer(LCD_SPI_CHANNEL, &window_x_command, NULL, sizeof(window_x_command));
+	   	bcm2835_gpio_write(GPIO_LCD_DC, 0);		
+        bcm2835_spi_transfernb((char *)&window_x_command, &dummy, (uint32_t)sizeof(window_x_command));
 
-		GPIO_SET = 1 << LCD_DC_GPIO;
+	   	bcm2835_gpio_write(GPIO_LCD_DC, 1);		
+	   	window_x_bounds[0] = 0U;		
         window_x_bounds[1] = (uint8_t)x;
+        window_x_bounds[2] = 0U;
         window_x_bounds[3] = (uint8_t)x;
-        (void)app_spi_transfer(LCD_SPI_CHANNEL, window_x_bounds, NULL, sizeof(window_x_bounds));
+        bcm2835_spi_transfern((char *)&window_x_bounds, (uint32_t)sizeof(window_x_bounds));
 
 		previous_x = x;
 		previous_width = 1;
@@ -126,24 +122,24 @@ static inline void pixel_rotated(int16_t x, int16_t y, mw_hal_lcd_colour_t colou
 
 	if (y != previous_y)
 	{
-		GPIO_CLR = 1 << LCD_DC_GPIO;
-        (void)app_spi_transfer(LCD_SPI_CHANNEL, &window_y_command, NULL, sizeof(window_y_command));
+	   	bcm2835_gpio_write(GPIO_LCD_DC, 0);				
+        bcm2835_spi_transfernb((char *)&window_y_command, &dummy, (uint32_t)sizeof(window_y_command));        
         
-		GPIO_SET = 1 << LCD_DC_GPIO;
+	   	bcm2835_gpio_write(GPIO_LCD_DC, 1);				
         window_y_bounds[0] = (uint8_t)(y >> 8);
         window_y_bounds[1] = (uint8_t)y;
         window_y_bounds[2] = (uint8_t)(y >> 8);
         window_y_bounds[3] = (uint8_t)y;
-        (void)app_spi_transfer(LCD_SPI_CHANNEL, window_y_bounds, NULL, sizeof(window_y_bounds));
+        bcm2835_spi_transfern((char *)&window_y_bounds, (uint32_t)sizeof(window_y_bounds));        
 
 		previous_y = y;
 	}
 
-	GPIO_CLR = 1 << LCD_DC_GPIO;
-    (void)app_spi_transfer(LCD_SPI_CHANNEL, &pixel_data_command, NULL, sizeof(pixel_data_command));
+	bcm2835_gpio_write(GPIO_LCD_DC, 0);			
+    bcm2835_spi_transfernb((char *)&pixel_data_command, &dummy, (uint32_t)sizeof(pixel_data_command));    
         
-	GPIO_SET = 1 << LCD_DC_GPIO;
-    (void)app_spi_transfer(LCD_SPI_CHANNEL, (uint8_t *)&rgb565_colour, NULL, sizeof(rgb565_colour));     
+   	bcm2835_gpio_write(GPIO_LCD_DC, 1);			
+    bcm2835_spi_transfern((char *)&rgb565_colour, sizeof(rgb565_colour));        
 }
 
 /**
@@ -164,6 +160,7 @@ static inline void filled_rectangle_rotated(int16_t start_x,
 	int16_t y;
 	uint16_t rgb565_colour;
 	int16_t i;
+	char dummy;
     
     if (width > LCD_DISPLAY_WIDTH_PIXELS)
     {
@@ -181,39 +178,41 @@ static inline void filled_rectangle_rotated(int16_t start_x,
 
 	if (start_x != previous_x || previous_width != width)
 	{
-		GPIO_CLR = 1 << LCD_DC_GPIO;
-        (void)app_spi_transfer(LCD_SPI_CHANNEL, &window_x_command, NULL, sizeof(window_x_command));
+	   	bcm2835_gpio_write(GPIO_LCD_DC, 0);			
+        bcm2835_spi_transfernb((char *)&window_x_command, &dummy, (uint32_t)sizeof(window_x_command));        
 
+		window_x_bounds[0] = 0U;
         window_x_bounds[1] = (uint8_t)start_x;
+        window_x_bounds[2] = 0U;
         window_x_bounds[3] = (uint8_t)(start_x + width - 1);
-		GPIO_SET = 1 << LCD_DC_GPIO;
-        (void)app_spi_transfer(LCD_SPI_CHANNEL, window_x_bounds, NULL, sizeof(window_x_bounds));
+	   	bcm2835_gpio_write(GPIO_LCD_DC, 1);				
+        bcm2835_spi_transfern((char *)&window_x_bounds, (uint32_t)sizeof(window_x_bounds));        
 
 		previous_x = start_x;
 		previous_width = width;
 	}
 
-	GPIO_CLR = 1 << LCD_DC_GPIO;
-    (void)app_spi_transfer(LCD_SPI_CHANNEL, &window_y_command, NULL, sizeof(window_y_command));
+	bcm2835_gpio_write(GPIO_LCD_DC, 0);			
+    bcm2835_spi_transfernb((char *)&window_y_command, &dummy, (uint32_t)sizeof(window_y_command));        
 
     window_y_bounds[0] = (uint8_t)(start_y >> 8);
     window_y_bounds[1] = (uint8_t)start_y;
     window_y_bounds[2] = (uint8_t)((start_y + height - 1) >> 8);
     window_y_bounds[3] = (uint8_t)(start_y + height - 1);
-	GPIO_SET = 1 << LCD_DC_GPIO;
-    (void)app_spi_transfer(LCD_SPI_CHANNEL, window_y_bounds, NULL, sizeof(window_y_bounds));
+	bcm2835_gpio_write(GPIO_LCD_DC, 1);			
+    bcm2835_spi_transfern((char *)&window_y_bounds, (uint32_t)sizeof(window_y_bounds));            
 
-	GPIO_CLR = 1 << LCD_DC_GPIO;
-    (void)app_spi_transfer(LCD_SPI_CHANNEL, &pixel_data_command, NULL, sizeof(pixel_data_command));
+	bcm2835_gpio_write(GPIO_LCD_DC, 0);			
+    bcm2835_spi_transfernb((char *)&pixel_data_command, &dummy, (uint32_t)sizeof(pixel_data_command));        
 
-	for (i = 0U; i < width; i++)
-	{
-		line_buffer[i] = rgb565_colour;
-	}
-	GPIO_SET = 1 << LCD_DC_GPIO;
+	bcm2835_gpio_write(GPIO_LCD_DC, 1);			
 	for (y = 0; y < height; y++)
 	{
-        (void)app_spi_transfer(LCD_SPI_CHANNEL, (uint8_t *)line_buffer, NULL, width * 2);
+		for (i = 0U; i < width; i++)
+		{
+			line_buffer[i] = rgb565_colour;
+		}		
+		bcm2835_spi_transfern((char *)line_buffer, (uint32_t)(width * 2));                    
 	}
 
 	previous_y = -1;
@@ -226,8 +225,10 @@ static inline void filled_rectangle_rotated(int16_t start_x,
  */
 static void write_command(const uint8_t command)
 {  
-	GPIO_CLR = 1 << LCD_DC_GPIO;
-	(void)app_spi_transfer(LCD_SPI_CHANNEL, &command, NULL, sizeof(command));
+	uint8_t c = command;
+
+	bcm2835_gpio_write(GPIO_LCD_DC, 0);			
+	bcm2835_spi_transfern((char *)&c, (uint32_t)sizeof(c));                    	
 }
 
 /**
@@ -237,8 +238,10 @@ static void write_command(const uint8_t command)
  */
 static void write_data(const uint8_t data)
 {
-	GPIO_SET = 1 << LCD_DC_GPIO;
-	(void)app_spi_transfer(LCD_SPI_CHANNEL, &data, NULL, sizeof(data));
+	uint8_t d = data;
+
+	bcm2835_gpio_write(GPIO_LCD_DC, 1);	
+	bcm2835_spi_transfern((char *)&d, (uint32_t)sizeof(d));		
 }
 
 /***********************
@@ -247,11 +250,9 @@ static void write_data(const uint8_t data)
 
 void mw_hal_lcd_init(void)
 {
-	(void)app_spi_setup(LCD_SPI_CHANNEL, 32000000U, 0U);
-
-	GPIO_CLR = 1 << LCD_RESET_GPIO;
+   	bcm2835_gpio_write(GPIO_LCD_RESET, 0);			
 	usleep(100000);
-	GPIO_SET = 1 << LCD_RESET_GPIO;
+	bcm2835_gpio_write(GPIO_LCD_RESET, 1);			
 	usleep(100000);
 
 	write_command(0x01U);

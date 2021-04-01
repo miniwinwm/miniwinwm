@@ -30,6 +30,8 @@ SOFTWARE.
 *** INCLUDES ***
 ***************/
 
+#include "hal/hal_delay.h"
+
 /****************
 *** CONSTANTS ***
 ****************/

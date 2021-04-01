@@ -30,6 +30,7 @@ SOFTWARE.
 *** INCLUDES ***
 ***************/
 
+#include "bcm2835.h"
 #include "hal/hal_touch.h"
 #include "app.h"
 
@@ -37,7 +38,6 @@ SOFTWARE.
 *** CONSTANTS ***
 ****************/
 
-#define GET_GPIO(g) 				(*(gpio + 13) & (1 << g))
 #define MW_HAL_TOUCH_READ_POINTS_COUNT		10U					/**< Number of samples to take to reduce noise */
 #define COMMAND_READ_X             		0xd0U					/**< Command to read X position from touch screen */
 #define COMMAND_READ_Y             		0x90U					/**< Command to read Y position from touch screen */
@@ -72,7 +72,6 @@ SOFTWARE.
 
 void mw_hal_touch_init(void)
 {
-    (void)app_spi_setup(TS_SPI_CHANNEL, 1000000U, 0U);
 }
 
 bool mw_hal_touch_is_recalibration_required(void)
@@ -92,17 +91,23 @@ bool mw_hal_touch_get_point(uint16_t* x, uint16_t* y)
     uint8_t command_buffer[3] = {0};
     uint8_t response_buffer[3] = {0};
     
+    /* set spi speed to that needed by touch controller */
+    bcm2835_spi_set_speed_hz(SPI_TOUCH_SPEED);
+    
+    /* select touch controller cs */
+    bcm2835_spi_chipSelect(SPI_TOUCH_CS);
+    
     touch_count = 0U;
     do                                             
     {              
         command_buffer[0] = COMMAND_READ_X;
-	(void)app_spi_transfer(TS_SPI_CHANNEL, command_buffer, response_buffer, sizeof(command_buffer));	
+	bcm2835_spi_transfernb((char *)command_buffer, (char *)response_buffer, (uint32_t)sizeof(command_buffer));
 	x_raw = (uint16_t)response_buffer[1] << 8;
 	x_raw |= (uint16_t)response_buffer[2];
 	x_raw >>= 3;
 
         command_buffer[0] = COMMAND_READ_Y;    
-	(void)app_spi_transfer(TS_SPI_CHANNEL, command_buffer, response_buffer, sizeof(command_buffer));		
+	bcm2835_spi_transfernb((char *)command_buffer, (char *)response_buffer, (uint32_t)sizeof(command_buffer));		
 	y_raw = (uint16_t)response_buffer[1] << 8;
 	y_raw |= (uint16_t)response_buffer[2];
 	y_raw >>= 3;      
@@ -112,10 +117,16 @@ bool mw_hal_touch_get_point(uint16_t* x, uint16_t* y)
 	touch_count++;
     }
     while ((mw_hal_touch_get_state() == MW_HAL_TOUCH_STATE_DOWN) && (touch_count < MW_HAL_TOUCH_READ_POINTS_COUNT));
+    
+    /* set spi speed back to that need by lcd */
+    bcm2835_spi_set_speed_hz(SPI_LCD_SPEED);    
+    
+    /* set spi cs back to that of lcd */
+    bcm2835_spi_chipSelect(SPI_LCD_CS);    
 
     if (touch_count != MW_HAL_TOUCH_READ_POINTS_COUNT)
     {
-	    return (false);
+	return (false);
     }
 
     do
@@ -158,7 +169,7 @@ bool mw_hal_touch_get_point(uint16_t* x, uint16_t* y)
 
 mw_hal_touch_state_t mw_hal_touch_get_state(void)
 {
-    if (GET_GPIO(TS_IRQ_GPIO))
+    if (bcm2835_gpio_lev(GPIO_TOUCH_IRQ))
     {
 	return MW_HAL_TOUCH_STATE_UP;
     }
