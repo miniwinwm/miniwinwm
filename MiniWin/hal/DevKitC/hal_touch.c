@@ -74,6 +74,9 @@ static spi_transaction_t spi_transaction;
 
 void mw_hal_touch_init(void)
 {
+    uint16_t x;
+    uint16_t y;
+
     spi_device_interface_config_t spi_device_interface_config_touch =
     {
         .clock_speed_hz = 1000000,       			/* clock out Hz */
@@ -92,6 +95,9 @@ void mw_hal_touch_init(void)
     /* set up recalibration required pin */
     gpio_set_pull_mode(PIN_NUM_RECALIBRATION, GPIO_PULLUP_ONLY);
     gpio_set_direction(PIN_NUM_RECALIBRATION, GPIO_MODE_INPUT);
+
+    /* do a dummy read to get t_irq line enabled */
+    (void)mw_hal_touch_get_point(&x, &y);
 }
 
 bool mw_hal_touch_is_recalibration_required(void)
@@ -124,7 +130,7 @@ bool mw_hal_touch_get_point(uint16_t* x, uint16_t* y)
 		return false;
 	}
 
-	spi_transaction.flags = SPI_TRANS_USE_TXDATA | SPI_TRANS_USE_RXDATA ;
+	spi_transaction.flags = SPI_TRANS_USE_TXDATA | SPI_TRANS_USE_RXDATA;
 	spi_transaction.length = (size_t)(8 * 3);
 
 	touch_count = 0U;
