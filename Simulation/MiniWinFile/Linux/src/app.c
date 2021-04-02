@@ -33,8 +33,7 @@ SOFTWARE.
 #include <dirent.h>
 #include <string.h>
 #include <fcntl.h>
-#include <sys/ioctl.h>
-#include <linux/rtc.h>
+#include <time.h>
 #include "app.h"
 
 /****************
@@ -314,20 +313,15 @@ uint8_t find_folder_entries(char* path,
 mw_time_t app_get_time_date(void)
 {
 	mw_time_t new_time;
-	struct rtc_time rtc_time;
-	int rtc_fd;
+	time_t t = time(NULL);
+	struct tm tm = *localtime(&t);
 
-	rtc_fd = open("/dev/rtc", O_RDONLY);
-	(void)ioctl(rtc_fd, RTC_RD_TIME, &rtc_time);
-	(void)close(rtc_fd);
-
-	new_time.tm_sec = (uint8_t)rtc_time.tm_sec;
-	new_time.tm_min = (uint8_t)rtc_time.tm_min;
-	new_time.tm_hour = (uint8_t)rtc_time.tm_hour;
-	new_time.tm_mday = (uint8_t)rtc_time.tm_mday;
-	new_time.tm_mon = (uint8_t)rtc_time.tm_mon + 1;
-	new_time.tm_year = (uint16_t)rtc_time.tm_year + 1900;
-
+	new_time.tm_sec = (uint8_t)tm.tm_sec;
+	new_time.tm_min = (uint8_t)tm.tm_min;
+	new_time.tm_hour = (uint8_t)tm.tm_hour;
+	new_time.tm_mday = (uint8_t)tm.tm_mday;
+	new_time.tm_mon = (uint8_t)tm.tm_mon + 1;
+	new_time.tm_year = (uint16_t)tm.tm_year + 1900;
 	return (new_time);
 }
 
