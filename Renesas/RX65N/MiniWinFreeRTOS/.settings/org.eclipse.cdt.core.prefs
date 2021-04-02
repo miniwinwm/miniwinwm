@@ -1,0 +1,6 @@
+eclipse.preferences.version=1
+environment/project/com.renesas.cdt.managedbuild.renesas.ccrx.hardwaredebug.configuration.1356623312/PATH/delimiter=;
+environment/project/com.renesas.cdt.managedbuild.renesas.ccrx.hardwaredebug.configuration.1356623312/PATH/operation=append
+environment/project/com.renesas.cdt.managedbuild.renesas.ccrx.hardwaredebug.configuration.1356623312/PATH/value=C\:\\Program Files (x86)\\Renesas\\RX\\2_8_1\\bin\\;C\:\\Renesas\\e2_studio\\Utilities;C\:/Renesas/e2_studio/eclipse//features/com.renesas.jre.win32.win32.x86_1.8.0.181/jre/bin/client;C\:/Renesas/e2_studio/eclipse//features/com.renesas.jre.win32.win32.x86_1.8.0.181/jre/bin;C\:/Renesas/e2_studio/eclipse//features/com.renesas.jre.win32.win32.x86_1.8.0.181/jre/lib/i386;C\:\\Windows\\system32;C\:\\Windows;C\:\\Windows\\System32\\Wbem;C\:\\Windows\\System32\\WindowsPowerShell\\v1.0\\;C\:\\Windows\\System32\\OpenSSH\\;C\:\\Program Files\\Git\\cmd;C\:\\Program Files (x86)\\Renesas\\RX\\2_8_1\\bin;c\:\\renesas\\e32_studio\\utilities;C\:\\Users\\john\\AppData\\Local\\Microsoft\\WindowsApps;;C\:\\Renesas\\e2_studio\\eclipse
+environment/project/com.renesas.cdt.managedbuild.renesas.ccrx.hardwaredebug.configuration.1356623312/append=true
+environment/project/com.renesas.cdt.managedbuild.renesas.ccrx.hardwaredebug.configuration.1356623312/appendContributed=true
