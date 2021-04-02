@@ -6,19 +6,19 @@ Please note: The latest formal release contains the latest stable tested code co
 The latest commit may contain work in progress, not all features may work for all variants, and the documentation may not be updated to the code.
 For further information on current work in progress and support questions please contact me by the contact box on the MiniWin website, address above.
 
-ESP32-IDF contains project files and application specific source files for the example projects running on the DevKitC development board. 
+Espressif contains project files and application specific source files for the example projects running on the ESP32 based DevKitC development board using the ESP32-IDF development enviropnment. 
 
-MCUXpresso contains project files and application specific source files for the example projects running on the LPC54628 development board.
+NXP contains project files and application specific source files for the example projects running on the LPC54628 development board using the MCUXpresso IDE.
 
 RaspberryPi contains project files and application specific source files for the example projects running on the Raspberry Pi Zero W development board.
 
-STM32CubeIDE contains project files and application specific source files for the example projects running on the STM32F429 and STM32F407 development boards.
+ST contains project files and application specific source files for the example projects running on the STM32F429 and STM32F407 development boards using the STM32CubeIDE IDE.
 
 Simulation contains projectfiles and application specific source files for example projects running on the Windows and Linux MiniWin simulators.
 
-e2studio contains project files and application specific source files for the example projects running on the Renesas RX65N Envision dev board.
+Renesas contains project files and application specific source files for the example projects running on the Renesas RX65N Envision dev board using the e2studio IDE.
 
-MPLABX contains project files and application specific source files for example projects running on the Microchip Curiosity PIC32MX and PIC32MZ development boards. 
+Microchip contains project files and application specific source files for example projects running on the Microchip Curiosity PIC32MX and PIC32MZ development boards using the MPLABX IDE. 
 
 MiniWinFile_Common contains platform independant files for an example application. Builds for Windows and Linux simulators and embedded platforms.
 
