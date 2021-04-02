@@ -245,33 +245,23 @@ int main(int argc, char **argv)
 	
     // make output folders
 #ifdef _MSC_VER
-	if (CreateDirectoryA(("../../Simulation/" + json["TargetName"].string_value()).c_str(), NULL) == 0 && GetLastError() != ERROR_ALREADY_EXISTS)
+	if (CreateDirectoryA(("../../Simulation/" + json["TargetType"].string_value() + "/" + json["TargetName"].string_value()).c_str(), NULL) == 0 && GetLastError() != ERROR_ALREADY_EXISTS)
 #else
-	if (mkdir(("../../Simulation/" + json["TargetName"].string_value()).c_str(), 0777) != 0 && errno != EEXIST)
+	if (mkdir(("../../Simulation/" + json["TargetType"].string_value() + "/" + json["TargetName"].string_value()).c_str(), 0777) != 0 && errno != EEXIST)
 #endif
 	{
-    	cout << "Could not make " + json["TargetName"].string_value() + " folder.\n";
+    	cout << "Could not make " + json["TargetType"].string_value() + "/"  + json["TargetName"].string_value() + " folder.\n";
     	exit(1);
 	}
 
 #ifdef _MSC_VER
-	if (CreateDirectoryA(("../../Simulation/" + json["TargetName"].string_value() + "/" + json["TargetType"].string_value()).c_str(), NULL) == 0 && GetLastError() != ERROR_ALREADY_EXISTS)
+	if (CreateDirectoryA(("../../Simulation/" + json["TargetType"].string_value() + "/" + json["TargetName"].string_value() + "/src").c_str(), NULL) == 0 && GetLastError() != ERROR_ALREADY_EXISTS)
 #else
-	if (mkdir(("../../Simulation/" + json["TargetName"].string_value() + "/" + json["TargetType"].string_value()).c_str(), 0777) != 0 && errno != EEXIST)
+	if (mkdir(("../../Simulation/" + json["TargetType"].string_value() + "/" + json["TargetName"].string_value() + "/src").c_str(), 0777) != 0 && errno != EEXIST)
 #endif
 	{
-    	cout << "Could not make " + json["TargetName"].string_value() + "/" << json["TargetType"].string_value() << " folder.\n";
+    	cout << "Could not make " + json["TargetType"].string_value() + "/"  + json["TargetName"].string_value() + "/src" + " folder.\n";
     	exit(1);
-	}
-
-#ifdef _MSC_VER
-	if (CreateDirectoryA(("../../Simulation/" + json["TargetName"].string_value() + "/" + json["TargetType"].string_value() + "/src").c_str(), NULL) == 0 && GetLastError() != ERROR_ALREADY_EXISTS)
-#else
-	if (mkdir(("../../Simulation/" + json["TargetName"].string_value() + "/" + json["TargetType"].string_value() + "/src").c_str(), 0777) != 0 && errno != EEXIST)
-#endif
-	{
-		cout << "Could not make " + json["TargetName"].string_value() + "/" << json["TargetType"].string_value() << "/src folder.\n";
-		exit(1);
 	}
 
 #ifdef _MSC_VER
@@ -3492,11 +3482,11 @@ int main(int argc, char **argv)
 	outfileMainHeader.close();
 
     // create app.h header file
-	std::ofstream outfileAppHeader("../../Simulation/" + json["TargetName"].string_value() + "/" + json["TargetType"].string_value() + "/src/app.h", std::ios::binary);
+	std::ofstream outfileAppHeader("../../Simulation/" + json["TargetType"].string_value() + "/" + json["TargetName"].string_value() + "/src/app.h", std::ios::binary);
 
 	if (!outfileAppHeader.is_open())
 	{
-		cout << "Could not create file\n";
+		cout << "Could not create file src/app.h\n";
 		exit(1);
 	}
 	
@@ -3542,11 +3532,11 @@ int main(int argc, char **argv)
 	outfileAppHeader.close();
 
 	// create app.c source file
-	std::ofstream outfileAppSource("../../Simulation/" + json["TargetName"].string_value() + "/" + json["TargetType"].string_value() + "/src/app.c", std::ios::binary);
+	std::ofstream outfileAppSource("../../Simulation/" + json["TargetType"].string_value() + "/" + json["TargetName"].string_value() + "/src/app.c", std::ios::binary);
 
 	if (!outfileAppSource.is_open())
 	{
-		cout << "Could not create file\n";
+		cout << "Could not create file src/app.c\n";
 		exit(1);
 	}	
 	if (json["TargetType"].string_value() == "Linux")
@@ -3685,7 +3675,7 @@ int main(int argc, char **argv)
 	outfileAppSource.close();		
 
 	// create makefile
-	std::ofstream outfileMake("../../Simulation/" + json["TargetName"].string_value() + "/" + json["TargetType"].string_value() + "/makefile");
+	std::ofstream outfileMake("../../Simulation/" + json["TargetType"].string_value() + "/" + json["TargetName"].string_value() + "/makefile");
 	if (!outfileMake.is_open())
 	{
 		cout << "Could not create file\n";
@@ -3785,7 +3775,7 @@ int main(int argc, char **argv)
 	// create nmakefile for windows only
 	if (json["TargetType"].string_value() == "Windows")
 	{
-		std::ofstream outfileNmake("../../Simulation/" + json["TargetName"].string_value() + "/" + json["TargetType"].string_value() + "/nmakefile");
+		std::ofstream outfileNmake("../../Simulation/" + json["TargetType"].string_value() + "/" + json["TargetName"].string_value() + "/nmakefile");
 		if (!outfileNmake.is_open())
 		{
 			cout << "Could not create file\n";

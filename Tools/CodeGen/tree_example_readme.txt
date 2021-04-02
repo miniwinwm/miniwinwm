@@ -1,7 +1,7 @@
 /*
 The code generator JSON script example_everything.json creates a window with 3 tree
 controls in it. The code generator does not populate the tree containers that these
-tree controls use to store their data. To give these tree controls somethging to
+tree controls use to store their data. To give these tree controls something to
 show paste this file's contents in to generated file miniwin_user.c near the end of 
 function mw_user_init() just before the call in that function to mw_paint_all()
 after code generation before building the generated code.
