@@ -26,20 +26,20 @@ docs: All documentation<br>
 gl: The graphics library incorporated in MiniWin including fonts<br>
 hal: The hardware abstraction layer of drivers for all the currently supported processors and platforms<br>
 templates: Templates of required application files<br>
-ui: Standard user interface controls. User code can add to this for further controls if required<br><br>
+ui: Standard user interface controls. User code can add to this for further controls if required<br>
 	
 Folder hal contains source files common to all hal implementations and then further source files in sub-folder for different currently supported platforms and processors. Each set of drivers for a particular target builds only for that target. Other different target files compile to nothing through the use of #defines.
 
 In addition the following source files are in the MiniWin folder:
 
-calibrate.h/c			          Third party touch screen calibration routines
-miniwin_debug.h/c			      Implementation of assert functionality, debug build only
-miniwin_message_queue.h/c	  Simple message queue code for MiniWin messages
-miniwin_settings.h/c		    Simple non-volatile storage routines for settings
-miniwin_touch.h/c			      Interface between touch driver code under hal and the touch client code in MiniWin
-miniwin_tree_container.h/c	Tree container storage utility
-miniwin_utilities.h/c		    Generic utility routines
-miniwin.h/c				          The main window manager code
+calibrate.h/c:			          Third party touch screen calibration routines
+miniwin_debug.h/c:			      Implementation of assert functionality, debug build only
+miniwin_message_queue.h/c:	  Simple message queue code for MiniWin messages
+miniwin_settings.h/c:		    Simple non-volatile storage routines for settings
+miniwin_touch.h/c:			      Interface between touch driver code under hal and the touch client code in MiniWin
+miniwin_tree_container.h/c:	Tree container storage utility
+miniwin_utilities.h/c:		    Generic utility routines
+miniwin.h/c:				          The main window manager code
 
 MiniWinTest_Common: This contains application source files for the comprehensive MiniWinTest example that are common to all platform/processor variants. 
 
