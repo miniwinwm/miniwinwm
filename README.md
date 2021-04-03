@@ -32,14 +32,14 @@ Folder hal contains source files common to all hal implementations and then furt
 
 In addition the following source files are in the MiniWin folder:
 
-calibrate.h/c:			          Third party touch screen calibration routines
-miniwin_debug.h/c:			      Implementation of assert functionality, debug build only
-miniwin_message_queue.h/c:	  Simple message queue code for MiniWin messages
-miniwin_settings.h/c:		    Simple non-volatile storage routines for settings
-miniwin_touch.h/c:			      Interface between touch driver code under hal and the touch client code in MiniWin
-miniwin_tree_container.h/c:	Tree container storage utility
-miniwin_utilities.h/c:		    Generic utility routines
-miniwin.h/c:				          The main window manager code
+calibrate.h/c:			          Third party touch screen calibration routines<br>
+miniwin_debug.h/c:			      Implementation of assert functionality, debug build only<br>
+miniwin_message_queue.h/c:	  Simple message queue code for MiniWin messages<br>
+miniwin_settings.h/c:		    Simple non-volatile storage routines for settings<br>
+miniwin_touch.h/c:			      Interface between touch driver code under hal and the touch client code in MiniWin<br>
+miniwin_tree_container.h/c:	Tree container storage utility<br>
+miniwin_utilities.h/c:		    Generic utility routines<br>
+miniwin.h/c:				          The main window manager code<br>
 
 MiniWinTest_Common: This contains application source files for the comprehensive MiniWinTest example that are common to all platform/processor variants. 
 
