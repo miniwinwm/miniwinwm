@@ -6,7 +6,7 @@ The source code tree is quite complicated so is explained here:
 
 Renesas: This contains project files and application code specific to example applications that run on Renesas processors (currently RX65N) and are built using the Renesas e2 Studio IDE and the Renesas RX-CC or GCC-RX compilers. Under this folder is a sub-folder for each targeted Renesas processor/compiler, RX65N or RX65N_GCC and under each of these a further sub-folder for each application example. In these folders are e2 Studio project files and the start-up code for that application. Under the src folder are source files that are both application and hardware variant specific. In the root folder for each RX-CC compiler project is a .scfg file used to configure the hardware.
 
-Espressif: This contains project files and application code specific to example applications that run on ESP32 processors and are built using the ESP supplied IDF build system. Under this folder is a sub-folder for each targeted ESP32 development board (DevKitC). Under this folder is a further sub-folder for each application example. In these folders are the main and the component CMake files, the SDK configuration file for that application and under the main folder source files that are both application and hardware variant specific. ESP32 applications do not use a main.c file but instead have a similar app_main.c file, found under the main folder.
+Espressif: This contains project files and application code specific to example applications that run on ESP32 processors and are built using the ESP supplied IDF build system. Under this folder is a sub-folder for each targeted ESP32 development board (DevKitC). Under this folder is a further sub-folder for each application example. In these folders are the main and the component CMake files, the SDK configuration file for that application and under the main folder source files that are both application and hardware variant specific. 
 
 NXP: This contains project files, BSP and application code specific to example applications that run on NXP processors and are built using the NXP MCUXpresso IDE. Under this folder is a sub-folder for each targeted NXP processor (LPC54628). Under this folder are further sub-folder for each application example. In these folders are MCUXpresso project files, the required BSP for that application and under the src folder source files that are both application and hardware variant specific.
 
@@ -20,13 +20,13 @@ Simulation: This contains project files for example applications that are built 
 
 MiniWin: This contains the MiniWin embedded window manager source code which is common to all example applications for all platforms and processors. It contains the following sub-folders:
 
-bitmaps	                    Bitmaps and their C99 file encodings used by MiniWin 
-dialogs	                    Standard dialogs provided by MiniWin
-docs	  	                  All documentation
-gl		                      The graphics library incorporated in MiniWin including fonts
-hal	                        The hardware abstraction layer of drivers for all the currently supported processors and platforms
-templates	                  Templates of required application files
-ui	                        Standard user interface controls. User code can add to this for further controls if required
+bitmaps: Bitmaps and their C99 file encodings used by MiniWin <br>
+dialogs: Standard dialogs provided by MiniWin<br>
+docs: All documentation<br>
+gl: The graphics library incorporated in MiniWin including fonts<br>
+hal: The hardware abstraction layer of drivers for all the currently supported processors and platforms<br>
+templates: Templates of required application files<br>
+ui: Standard user interface controls. User code can add to this for further controls if required<br><br>
 	
 Folder hal contains source files common to all hal implementations and then further source files in sub-folder for different currently supported platforms and processors. Each set of drivers for a particular target builds only for that target. Other different target files compile to nothing through the use of #defines.
 
