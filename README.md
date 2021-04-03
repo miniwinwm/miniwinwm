@@ -1,6 +1,6 @@
 See https://miniwinwm.wixsite.com/miniwinwm for an overview.
 
-Documentation is in the miniwin/docs folder above.
+Documentation is in the MiniWin/docs folder above.
 
 The source code tree is quite complicated so is explained here:
 
