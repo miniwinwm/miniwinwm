@@ -2,7 +2,7 @@
 
 MIT License
 
-Copyright (c) John Blaiklock 2020 miniwin Embedded Window Manager
+Copyright (c) John Blaiklock 2021 miniwin Embedded Window Manager
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -24,21 +24,11 @@ SOFTWARE.
 
 */
 
-#ifndef APP_H
-#define APP_H
-
-#ifdef __cplusplus
- extern "C" {
-#endif
-
 /***************
 *** INCLUDES ***
 ***************/
 
-/**
- * Function called from main to perform application initializations
- */
-void app_init(void);
+#include "app.h"
 
 /****************
 *** CONSTANTS ***
@@ -48,16 +38,26 @@ void app_init(void);
 *** TYPES ***
 ************/
 
-/*************************
-*** EXTERNAL VARIABLES ***
-*************************/
+/***********************
+*** GLOBAL VARIABLES ***
+***********************/
 
-/***************************
-*** FUNCTIONS PROTOTYPES ***
-***************************/
+/**********************
+*** LOCAL VARIABLES ***
+**********************/
 
-#ifdef __cplusplus
+/********************************
+*** LOCAL FUNCTION PROTOTYPES ***
+********************************/
+
+/**********************
+*** LOCAL FUNCTIONS ***
+**********************/
+
+/***********************
+*** GLOBAL FUNCTIONS ***
+***********************/
+
+void app_init(void)
+{
 }
-#endif
-
-#endif

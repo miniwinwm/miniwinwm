@@ -35,6 +35,11 @@ SOFTWARE.
 *** INCLUDES ***
 ***************/
 
+/**
+ * Function called from main to perform application initializations
+ */
+void app_init(void);
+
 /****************
 *** CONSTANTS ***
 ****************/

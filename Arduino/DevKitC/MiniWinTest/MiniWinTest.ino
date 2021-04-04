@@ -1,7 +1,9 @@
 #include "src/miniwin.h"
+#include "src/app.h"
 
 void setup() 
 {
+  app_init();
   mw_init();
 }
 

@@ -47,7 +47,7 @@ mklink /h src\hal\hal\hal_lcd.h ..\..\..\MiniWin\hal\hal_lcd.h
 mklink /h src\hal\hal\hal_non_vol.h ..\..\..\MiniWin\hal\hal_non_vol.h 
 mklink /h src\hal\hal\hal_timer.h ..\..\..\MiniWin\hal\hal_timer.h 
 mklink /h src\hal\hal\hal_touch.h ..\..\..\MiniWin\hal\hal_touch.h 
-mklink /h src\hal\miniwin_config.h ..\..\..\MiniWinFreeRTOS_Common\miniwin_config.h 
+mklink /h src\hal\miniwin_config.h ..\..\..\MiniWinFile_Common\miniwin_config.h 
 
 REM GL
 mklink /h src\gl\gl.c ..\..\..\MiniWin\gl\gl.c 
@@ -70,7 +70,7 @@ mklink /h src\gl\gl\fonts\truetype\mcufont\mf_scaledfont.c ..\..\..\MiniWin\gl\f
 mklink /h src\gl\gl\fonts\truetype\mcufont\mf_wordwrap.c ..\..\..\MiniWin\gl\fonts\truetype\mcufont\mf_wordwrap.c
 mklink /h src\gl\gl\fonts\truetype\mcufont\mf_bwfont.h ..\..\..\MiniWin\gl\fonts\truetype\mcufont\mf_bwfont.h
 mklink /h src\gl\miniwin_debug.h ..\..\..\MiniWin\miniwin_debug.h
-mklink /h src\gl\miniwin_config.h ..\..\..\MiniWinFreeRTOS_Common\miniwin_config.h
+mklink /h src\gl\miniwin_config.h ..\..\..\MiniWinFile_Common\miniwin_config.h
 mklink /h src\gl\gl\gl.h ..\..\..\MiniWin\gl\gl.h
 mklink /h src\gl\gl\miniwin_utilities.h ..\..\..\MiniWin\miniwin_utilities.h
 mklink /h src\gl\gl\hal\hal_lcd.h ..\..\..\MiniWin\hal\hal_lcd.h
@@ -124,7 +124,7 @@ mklink /h src\dialogs\dialog_text_entry.c ..\..\..\MiniWin\dialogs\dialog_text_e
 mklink /h src\dialogs\dialog_time_chooser.c ..\..\..\MiniWin\dialogs\dialog_time_chooser.c
 mklink /h src\dialogs\dialog_dialog_two_button.c ..\..\..\MiniWin\dialogs\dialog_two_button.c
 mklink /h src\dialogs\miniwin.h ..\..\..\MiniWin\miniwin.h
-mklink /h src\dialogs\miniwin_config.h ..\..\..\MiniWinFreeRTOS_Common\miniwin_config.h
+mklink /h src\dialogs\miniwin_config.h ..\..\..\MiniWinFile_Common\miniwin_config.h
 mklink /h src\dialogs\miniwin_debug.h ..\..\..\MiniWin\miniwin_debug.h
 mklink /h src\dialogs\miniwin_settings.h ..\..\..\MiniWin\miniwin_settings.h
 mklink /h src\dialogs\calibrate.h ..\..\..\MiniWin\calibrate.h
@@ -174,7 +174,7 @@ mklink /h src\miniwin_utilities.c ..\..\..\MiniWin\miniwin_utilities.c
 mklink /h src\calibrate.c ..\..\..\MiniWin\calibrate.c
 mklink /h src\calibrate.h ..\..\..\MiniWin\calibrate.h
 mklink /h src\miniwin.h ..\..\..\MiniWin\miniwin.h
-mklink /h src\miniwin_config.h ..\..\..\MiniWinFreeRTOS_Common\miniwin_config.h
+mklink /h src\miniwin_config.h ..\..\..\MiniWinFile_Common\miniwin_config.h
 mklink /h src\miniwin_debug.h ..\..\..\MiniWin\miniwin_debug.h
 mklink /h src\miniwin_settings.h ..\..\..\MiniWin\miniwin_settings.h
 mklink /h src\miniwin_touch.h ..\..\..\MiniWin\miniwin_touch.h
@@ -234,7 +234,7 @@ mklink /h src\ui\ui_tabs.c ..\..\..\MiniWin\ui\ui_tabs.c
 mklink /h src\ui\ui_text_box.c ..\..\..\MiniWin\ui\ui_text_box.c
 mklink /h src\ui\ui_tree.c ..\..\..\MiniWin\ui\ui_tree.c
 mklink /h src\ui\miniwin.h ..\..\..\MiniWin\miniwin.h
-mklink /h src\ui\miniwin_config.h ..\..\..\MiniWinFreeRTOS_Common\miniwin_config.h
+mklink /h src\ui\miniwin_config.h ..\..\..\MiniWinFile_Common\miniwin_config.h
 mklink /h src\ui\miniwin_debug.h ..\..\..\MiniWin\miniwin_debug.h
 mklink /h src\ui\miniwin_settings.h ..\..\..\MiniWin\miniwin_settings.h
 mklink /h src\ui\gl\miniwin_utilities.h ..\..\..\MiniWin\miniwin_utilities.h
@@ -273,68 +273,69 @@ mklink /h src\ui\dialogs\dialogs\dialog_time_chooser.h ..\..\..\MiniWin\dialogs\
 mklink /h src\ui\dialogs\dialogs\dialog_two_button.h ..\..\..\MiniWin\dialogs\dialog_two_button.h
 
 REM PROJECT COMMON 
-mkdir src\MiniWinFreeRTOS_Common
-mkdir src\MiniWinFreeRTOS_Common\gl
-mkdir src\MiniWinFreeRTOS_Common\hal
-mkdir src\MiniWinFreeRTOS_Common\gl\hal
-mkdir src\MiniWinFreeRTOS_Common\gl\gl\fonts\bitmapped
-mkdir src\MiniWinFreeRTOS_Common\bitmaps
-mkdir src\MiniWinFreeRTOS_Common\ui
-mkdir src\MiniWinFreeRTOS_Common\ui\ui
-mkdir src\MiniWinFreeRTOS_Common\dialogs
-mkdir src\MiniWinFreeRTOS_Common\dialogs\dialogs
-mklink /h src\MiniWinFreeRTOS_Common\miniwin.h ..\..\..\MiniWin\miniwin.h 
-mklink /h src\MiniWinFreeRTOS_Common\miniwin_debug.h ..\..\..\MiniWin\miniwin_debug.h
-mklink /h src\MiniWinFreeRTOS_Common\miniwin_settings.h ..\..\..\MiniWin\miniwin_settings.h
-mklink /h src\MiniWinFreeRTOS_Common\gl\miniwin_utilities.h ..\..\..\MiniWin\miniwin_utilities.h
-mklink /h src\MiniWinFreeRTOS_Common\calibrate.h ..\..\..\MiniWin\calibrate.h
-mklink /h src\MiniWinFreeRTOS_Common\gl\gl.h ..\..\..\MiniWin\gl\gl.h
-mklink /h src\MiniWinFreeRTOS_Common\miniwin_config.h ..\..\..\MiniWinFreeRTOS_Common\miniwin_config.h
-mklink /h src\MiniWinFreeRTOS_Common\gl\hal\hal_lcd.h ..\..\..\MiniWin\hal\hal_lcd.h
-mklink /h src\MiniWinFreeRTOS_Common\gl\gl\fonts\bitmapped\fonts.h ..\..\..\MiniWin\gl\fonts\bitmapped\fonts.h
-mklink /h src\MiniWinFreeRTOS_Common\bitmaps\mw_bitmaps.h ..\..\..\MiniWin\bitmaps\mw_bitmaps.h
-mklink /h src\MiniWinFreeRTOS_Common\miniwin_utilities.h ..\..\..\MiniWin\miniwin_utilities.h
-mklink /h src\MiniWinFreeRTOS_Common\hal\hal_timer.h ..\..\..\MiniWin\hal\hal_timer.h
-mklink /h src\MiniWinFreeRTOS_Common\ui\ui_common.h ..\..\..\MiniWin\ui\ui_common.h
-mklink /h src\MiniWinFreeRTOS_Common\ui\ui\ui_arrow.h ..\..\..\MiniWin\ui\ui_arrow.h
-mklink /h src\MiniWinFreeRTOS_Common\ui\ui\ui_button.h ..\..\..\MiniWin\ui\ui_button.h
-mklink /h src\MiniWinFreeRTOS_Common\ui\ui\ui_check_box.h ..\..\..\MiniWin\ui\ui_check_box.h
-mklink /h src\MiniWinFreeRTOS_Common\ui\ui\ui_keyboard.h ..\..\..\MiniWin\ui\ui_keyboard.h
-mklink /h src\MiniWinFreeRTOS_Common\ui\ui\ui_keypad.h ..\..\..\MiniWin\ui\ui_keypad.h
-mklink /h src\MiniWinFreeRTOS_Common\ui\ui\ui_label.h ..\..\..\MiniWin\ui\ui_label.h
-mklink /h src\MiniWinFreeRTOS_Common\ui\ui\ui_list_box.h ..\..\..\MiniWin\ui\ui_list_box.h
-mklink /h src\MiniWinFreeRTOS_Common\ui\ui\ui_progress_bar.h ..\..\..\MiniWin\ui\ui_progress_bar.h
-mklink /h src\MiniWinFreeRTOS_Common\ui\ui\ui_radio_button.h ..\..\..\MiniWin\ui\ui_radio_button.h
-mklink /h src\MiniWinFreeRTOS_Common\ui\ui\ui_scroll_bar_horiz.h ..\..\..\MiniWin\ui\ui_scroll_bar_horiz.h
-mklink /h src\MiniWinFreeRTOS_Common\ui\ui\ui_scroll_bar_vert.h ..\..\..\MiniWin\ui\ui_scroll_bar_vert.h
-mklink /h src\MiniWinFreeRTOS_Common\ui\ui\ui_tabs.h ..\..\..\MiniWin\ui\ui_tabs.h
-mklink /h src\MiniWinFreeRTOS_Common\ui\ui\ui_text_box.h ..\..\..\MiniWin\ui\ui_text_box.h
-mklink /h src\MiniWinFreeRTOS_Common\ui\ui\ui_tree.h ..\..\..\MiniWin\ui\ui_tree.h
-mklink /h src\MiniWinFreeRTOS_Common\ui\ui\miniwin_tree_container.h ..\..\..\MiniWin\miniwin_tree_container.h
-mklink /h src\MiniWinFreeRTOS_Common\ui\ui\miniwin.h ..\..\..\MiniWin\miniwin.h
-mklink /h src\MiniWinFreeRTOS_Common\dialogs\dialog_common.h ..\..\..\MiniWin\dialogs\dialog_common.h
-mklink /h src\MiniWinFreeRTOS_Common\dialogs\dialogs\dialog_colour_chooser.h ..\..\..\MiniWin\dialogs\dialog_colour_chooser.h
-mklink /h src\MiniWinFreeRTOS_Common\dialogs\dialogs\dialog_date_chooser.h ..\..\..\MiniWin\dialogs\dialog_date_chooser.h
-mklink /h src\MiniWinFreeRTOS_Common\dialogs\dialogs\dialog_file_chooser.h ..\..\..\MiniWin\dialogs\dialog_file_chooser.h
-mklink /h src\MiniWinFreeRTOS_Common\dialogs\dialogs\dialog_number_entry.h ..\..\..\MiniWin\dialogs\dialog_number_entry.h
-mklink /h src\MiniWinFreeRTOS_Common\dialogs\dialogs\dialog_one_button.h ..\..\..\MiniWin\dialogs\dialog_one_button.h
-mklink /h src\MiniWinFreeRTOS_Common\dialogs\dialogs\dialog_text_entry.h ..\..\..\MiniWin\dialogs\dialog_text_entry.h
-mklink /h src\MiniWinFreeRTOS_Common\dialogs\dialogs\dialog_time_chooser.h ..\..\..\MiniWin\dialogs\dialog_time_chooser.h
-mklink /h src\MiniWinFreeRTOS_Common\dialogs\dialogs\dialog_two_button.h ..\..\..\MiniWin\dialogs\dialog_two_button.h
-mklink /h src\MiniWinFreeRTOS_Common\dialogs\dialogs\miniwin.h ..\..\..\MiniWin\miniwin.h
-mklink /h src\MiniWinFreeRTOS_Common\app.h app\app.h
+mkdir src\MiniWinFile_Common
+mkdir src\MiniWinFile_Common\gl
+mkdir src\MiniWinFile_Common\hal
+mkdir src\MiniWinFile_Common\gl\hal
+mkdir src\MiniWinFile_Common\gl\gl\fonts\bitmapped
+mkdir src\MiniWinFile_Common\bitmaps
+mkdir src\MiniWinFile_Common\ui
+mkdir src\MiniWinFile_Common\ui\ui
+mkdir src\MiniWinFile_Common\dialogs
+mkdir src\MiniWinFile_Common\dialogs\dialogs
+mklink /h src\MiniWinFile_Common\miniwin.h ..\..\..\MiniWin\miniwin.h 
+mklink /h src\MiniWinFile_Common\miniwin_debug.h ..\..\..\MiniWin\miniwin_debug.h
+mklink /h src\MiniWinFile_Common\miniwin_settings.h ..\..\..\MiniWin\miniwin_settings.h
+mklink /h src\MiniWinFile_Common\gl\miniwin_utilities.h ..\..\..\MiniWin\miniwin_utilities.h
+mklink /h src\MiniWinFile_Common\calibrate.h ..\..\..\MiniWin\calibrate.h
+mklink /h src\MiniWinFile_Common\gl\gl.h ..\..\..\MiniWin\gl\gl.h
+mklink /h src\MiniWinFile_Common\miniwin_config.h ..\..\..\MiniWinFile_Common\miniwin_config.h
+mklink /h src\MiniWinFile_Common\gl\hal\hal_lcd.h ..\..\..\MiniWin\hal\hal_lcd.h
+mklink /h src\MiniWinFile_Common\gl\gl\fonts\bitmapped\fonts.h ..\..\..\MiniWin\gl\fonts\bitmapped\fonts.h
+mklink /h src\MiniWinFile_Common\bitmaps\mw_bitmaps.h ..\..\..\MiniWin\bitmaps\mw_bitmaps.h
+mklink /h src\MiniWinFile_Common\miniwin_utilities.h ..\..\..\MiniWin\miniwin_utilities.h
+mklink /h src\MiniWinFile_Common\hal\hal_timer.h ..\..\..\MiniWin\hal\hal_timer.h
+mklink /h src\MiniWinFile_Common\ui\ui_common.h ..\..\..\MiniWin\ui\ui_common.h
+mklink /h src\MiniWinFile_Common\ui\ui\ui_arrow.h ..\..\..\MiniWin\ui\ui_arrow.h
+mklink /h src\MiniWinFile_Common\ui\ui\ui_button.h ..\..\..\MiniWin\ui\ui_button.h
+mklink /h src\MiniWinFile_Common\ui\ui\ui_check_box.h ..\..\..\MiniWin\ui\ui_check_box.h
+mklink /h src\MiniWinFile_Common\ui\ui\ui_keyboard.h ..\..\..\MiniWin\ui\ui_keyboard.h
+mklink /h src\MiniWinFile_Common\ui\ui\ui_keypad.h ..\..\..\MiniWin\ui\ui_keypad.h
+mklink /h src\MiniWinFile_Common\ui\ui\ui_label.h ..\..\..\MiniWin\ui\ui_label.h
+mklink /h src\MiniWinFile_Common\ui\ui\ui_list_box.h ..\..\..\MiniWin\ui\ui_list_box.h
+mklink /h src\MiniWinFile_Common\ui\ui\ui_progress_bar.h ..\..\..\MiniWin\ui\ui_progress_bar.h
+mklink /h src\MiniWinFile_Common\ui\ui\ui_radio_button.h ..\..\..\MiniWin\ui\ui_radio_button.h
+mklink /h src\MiniWinFile_Common\ui\ui\ui_scroll_bar_horiz.h ..\..\..\MiniWin\ui\ui_scroll_bar_horiz.h
+mklink /h src\MiniWinFile_Common\ui\ui\ui_scroll_bar_vert.h ..\..\..\MiniWin\ui\ui_scroll_bar_vert.h
+mklink /h src\MiniWinFile_Common\ui\ui\ui_tabs.h ..\..\..\MiniWin\ui\ui_tabs.h
+mklink /h src\MiniWinFile_Common\ui\ui\ui_text_box.h ..\..\..\MiniWin\ui\ui_text_box.h
+mklink /h src\MiniWinFile_Common\ui\ui\ui_tree.h ..\..\..\MiniWin\ui\ui_tree.h
+mklink /h src\MiniWinFile_Common\ui\ui\miniwin_tree_container.h ..\..\..\MiniWin\miniwin_tree_container.h
+mklink /h src\MiniWinFile_Common\ui\ui\miniwin.h ..\..\..\MiniWin\miniwin.h
+mklink /h src\MiniWinFile_Common\dialogs\dialog_common.h ..\..\..\MiniWin\dialogs\dialog_common.h
+mklink /h src\MiniWinFile_Common\dialogs\dialogs\dialog_colour_chooser.h ..\..\..\MiniWin\dialogs\dialog_colour_chooser.h
+mklink /h src\MiniWinFile_Common\dialogs\dialogs\dialog_date_chooser.h ..\..\..\MiniWin\dialogs\dialog_date_chooser.h
+mklink /h src\MiniWinFile_Common\dialogs\dialogs\dialog_file_chooser.h ..\..\..\MiniWin\dialogs\dialog_file_chooser.h
+mklink /h src\MiniWinFile_Common\dialogs\dialogs\dialog_number_entry.h ..\..\..\MiniWin\dialogs\dialog_number_entry.h
+mklink /h src\MiniWinFile_Common\dialogs\dialogs\dialog_one_button.h ..\..\..\MiniWin\dialogs\dialog_one_button.h
+mklink /h src\MiniWinFile_Common\dialogs\dialogs\dialog_text_entry.h ..\..\..\MiniWin\dialogs\dialog_text_entry.h
+mklink /h src\MiniWinFile_Common\dialogs\dialogs\dialog_time_chooser.h ..\..\..\MiniWin\dialogs\dialog_time_chooser.h
+mklink /h src\MiniWinFile_Common\dialogs\dialogs\dialog_two_button.h ..\..\..\MiniWin\dialogs\dialog_two_button.h
+mklink /h src\MiniWinFile_Common\dialogs\dialogs\miniwin.h ..\..\..\MiniWin\miniwin.h
+mklink /h src\MiniWinFile_Common\app.h app\app.h
 mklink /h src\app.h app\app.h
-mklink /h src\MiniWinFreeRTOS_Common\app.c app\app.c
+mklink /h src\MiniWinFile_Common\app.c app\app.c
 
 REM PROJECT SOURCE/HEADER FILES
-mklink /h src\MiniWinFreeRTOS_Common\miniwin_user.c ..\..\..\MiniWinFreeRTOS_Common\miniwin_user.c 
-mklink /h src\MiniWinFreeRTOS_Common\miniwin_user.h ..\..\..\MiniWinFreeRTOS_Common\miniwin_user.h
-mklink /h src\MiniWinFreeRTOS_Common\main.h app\main.h
-mklink /h src\MiniWinFreeRTOS_Common\gyro_util.c ..\..\..\MiniWinFreeRTOS_Common\gyro_util.c 
-mklink /h src\MiniWinFreeRTOS_Common\gyro_util.h ..\..\..\MiniWinFreeRTOS_Common\gyro_util.h 
-mklink /h src\MiniWinFreeRTOS_Common\window_gyro_x.c ..\..\..\MiniWinFreeRTOS_Common\window_gyro_x.c 
-mklink /h src\MiniWinFreeRTOS_Common\window_gyro_x.h ..\..\..\MiniWinFreeRTOS_Common\window_gyro_x.h 
-mklink /h src\MiniWinFreeRTOS_Common\window_gyro_y.c ..\..\..\MiniWinFreeRTOS_Common\window_gyro_y.c 
-mklink /h src\MiniWinFreeRTOS_Common\window_gyro_y.h ..\..\..\MiniWinFreeRTOS_Common\window_gyro_y.h 
-mklink /h src\MiniWinFreeRTOS_Common\window_gyro_z.c ..\..\..\MiniWinFreeRTOS_Common\window_gyro_z.c 
-mklink /h src\MiniWinFreeRTOS_Common\window_gyro_z.h ..\..\..\MiniWinFreeRTOS_Common\window_gyro_z.h 
+mklink /h src\MiniWinFile_Common\miniwin_user.c ..\..\..\MiniWinFile_Common\miniwin_user.c 
+mklink /h src\MiniWinFile_Common\miniwin_user.h ..\..\..\MiniWinFile_Common\miniwin_user.h 
+mklink /h src\MiniWinFile_Common\window_file.c ..\..\..\MiniWinFile_Common\window_file.c 
+mklink /h src\MiniWinFile_Common\window_file.h ..\..\..\MiniWinFile_Common\window_file.h 
+mklink /h src\MiniWinFile_Common\window_file_tree.c ..\..\..\MiniWinFile_Common\window_file_tree.c 
+mklink /h src\MiniWinFile_Common\window_file_tree.h ..\..\..\MiniWinFile_Common\window_file_tree.h 
+mklink /h src\MiniWinFile_Common\window_image.c ..\..\..\MiniWinFile_Common\window_image.c 
+mklink /h src\MiniWinFile_Common\window_image.h ..\..\..\MiniWinFile_Common\window_image.h 
+mklink /h src\MiniWinFile_Common\window_selection.c ..\..\..\MiniWinFile_Common\window_selection.c 
+mklink /h src\MiniWinFile_Common\window_selection.h ..\..\..\MiniWinFile_Common\window_selection.h 
+mklink /h src\MiniWinFile_Common\window_text.c ..\..\..\MiniWinFile_Common\window_text.c 
+mklink /h src\MiniWinFile_Common\window_text.h ..\..\..\MiniWinFile_Common\window_text.h 

@@ -3,6 +3,7 @@
 #include "freertos/semphr.h"
 #include "freertos/task.h"
 #include "src/miniwin.h"
+#include "src/app.h"
 
 /* queue handles */
 QueueHandle_t gyro_x_queue;
@@ -119,7 +120,7 @@ static void gyro_thread(void *parameters)
 }
 
 static void miniwin_thread(void *parameters)
-{
+{ 
   /* initialize miniwin */
   mw_init();
 
@@ -141,6 +142,8 @@ static void miniwin_thread(void *parameters)
 
 void setup() 
 {
+  app_init();
+  
   /* initialise the queues to send gyro reading data from gyro thread to gyro windows */
   gyro_x_queue = xQueueCreate((UBaseType_t)1,(UBaseType_t)sizeof(float));
   gyro_y_queue = xQueueCreate((UBaseType_t)1,(UBaseType_t)sizeof(float));

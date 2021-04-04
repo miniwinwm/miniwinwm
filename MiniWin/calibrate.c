@@ -30,7 +30,7 @@ int setCalibrationMatrix( POINT_T * displayPtr,
                           MATRIX * matrixPtr)
 {
 
-    int  retValue = OK ;
+    int  retValue = CALIBRATE_OK ;
 
 
 
@@ -39,7 +39,7 @@ int setCalibrationMatrix( POINT_T * displayPtr,
 
     if( matrixPtr->Divider == 0 )
     {
-        retValue = NOT_OK ;
+        retValue = CALIBRATE_NOT_OK ;
     }
     else
     {
@@ -108,9 +108,9 @@ int setCalibrationMatrix( POINT_T * displayPtr,
  *  It must be kept brief to avoid consuming CPU cycles.
  *
  *
- *       Return: OK - the display point was correctly calculated
+ *       Return: CALIBRATE_OK - the display point was correctly calculated
  *                     and its value is in the output argument.
- *               NOT_OK - an error was detected and the function
+ *               CALIBRATE_NOT_OK - an error was detected and the function
  *                         failed to return a valid point.
  *
  *
@@ -133,7 +133,7 @@ int getDisplayPoint( POINT_T * displayPtr,
 					 POINT_T * screenPtr,
                      MATRIX * matrixPtr )
 {
-    int retValue = OK ;
+    int retValue = CALIBRATE_OK ;
 
 
     if( matrixPtr->Divider != 0 )
@@ -156,7 +156,7 @@ int getDisplayPoint( POINT_T * displayPtr,
     }
     else
     {
-        retValue = NOT_OK;
+        retValue = CALIBRATE_NOT_OK;
     }
 
     return (retValue);

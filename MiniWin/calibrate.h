@@ -56,9 +56,9 @@
 
 
 
-#ifndef         OK
-        #define         OK                      0
-        #define         NOT_OK             -1
+#ifndef         CALIBRATE_OK
+        #define         CALIBRATE_OK                      0
+        #define         CALIBRATE_NOT_OK             -1
 #endif
 
 

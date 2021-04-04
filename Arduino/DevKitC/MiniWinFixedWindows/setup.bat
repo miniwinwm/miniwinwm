@@ -322,6 +322,9 @@ mklink /h src\MiniWinFixedWindows_Common\dialogs\dialogs\dialog_text_entry.h ..\
 mklink /h src\MiniWinFixedWindows_Common\dialogs\dialogs\dialog_time_chooser.h ..\..\..\MiniWin\dialogs\dialog_time_chooser.h
 mklink /h src\MiniWinFixedWindows_Common\dialogs\dialogs\dialog_two_button.h ..\..\..\MiniWin\dialogs\dialog_two_button.h
 mklink /h src\MiniWinFixedWindows_Common\dialogs\dialogs\miniwin.h ..\..\..\MiniWin\miniwin.h
+mklink /h src\MiniWinFixedWindows_Common\app.h app\app.h
+mklink /h src\app.h app\app.h
+mklink /h src\MiniWinFixedWindows_Common\app.c app\app.c
 
 REM PROJECT SOURCE/HEADER FILES
 mklink /h src\MiniWinFixedWindows_Common\miniwin_user.c ..\..\..\MiniWinFixedWindows_Common\miniwin_user.c 
