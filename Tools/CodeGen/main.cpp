@@ -78,7 +78,7 @@ int main(int argc, char **argv)
     	cout << "No target type specified\n";
     	exit(1);
     }
-    if (json["TargetType"].string_value() != "Linux" && json["TargetType"].string_value() != "Windows")
+    if (json["TargetType"].string_value() != "Linux" && json["TargetType"].string_value() != "Windows" && json["TargetType"].string_value() != "Arduino/DevKitC")
 	{
 		cout << "Target type not supported\n";
 		exit(1);
@@ -244,26 +244,57 @@ int main(int argc, char **argv)
 	}	
 	
     // make output folders
-#ifdef _MSC_VER
-	if (CreateDirectoryA(("../../Simulation/" + json["TargetType"].string_value() + "/" + json["TargetName"].string_value()).c_str(), NULL) == 0 && GetLastError() != ERROR_ALREADY_EXISTS)
-#else
-	if (mkdir(("../../Simulation/" + json["TargetType"].string_value() + "/" + json["TargetName"].string_value()).c_str(), 0777) != 0 && errno != EEXIST)
-#endif
+
+	if (json["TargetType"].string_value() == "Linux" || json["TargetType"].string_value() == "Windows")
 	{
-    	cout << "Could not make " + json["TargetType"].string_value() + "/"  + json["TargetName"].string_value() + " folder.\n";
-    	exit(1);
+		// ../../Simulation/<Target Type>/<Target Name>
+#ifdef _MSC_VER
+		if (CreateDirectoryA(("../../Simulation/" + json["TargetType"].string_value() + "/" + json["TargetName"].string_value()).c_str(), NULL) == 0 && GetLastError() != ERROR_ALREADY_EXISTS)
+#else
+		if (mkdir(("../../Simulation/" + json["TargetType"].string_value() + "/" + json["TargetName"].string_value()).c_str(), 0777) != 0 && errno != EEXIST)
+#endif
+		{
+			cout << "Could not make " + json["TargetType"].string_value() + "/"  + json["TargetName"].string_value() + " folder.\n";
+			exit(1);
+		}
+
+		// ../../Simulation/<Target Type>/<Target Name>/src
+#ifdef _MSC_VER
+		if (CreateDirectoryA(("../../Simulation/" + json["TargetType"].string_value() + "/" + json["TargetName"].string_value() + "/src").c_str(), NULL) == 0 && GetLastError() != ERROR_ALREADY_EXISTS)
+#else
+		if (mkdir(("../../Simulation/" + json["TargetType"].string_value() + "/" + json["TargetName"].string_value() + "/src").c_str(), 0777) != 0 && errno != EEXIST)
+#endif
+		{
+			cout << "Could not make " + json["TargetType"].string_value() + "/"  + json["TargetName"].string_value() + "/src" + " folder.\n";
+			exit(1);
+		}
+	}
+	else if (json["TargetType"].string_value() == "Arduino/DevKitC")
+	{
+		// ../../Arduino/DevKitC/<Target Name>
+#ifdef _MSC_VER
+		if (CreateDirectoryA(("../../" + json["TargetType"].string_value() + "/" + json["TargetName"].string_value()).c_str(), NULL) == 0 && GetLastError() != ERROR_ALREADY_EXISTS)
+#else
+		if (mkdir(("../../" + json["TargetType"].string_value() + "/" + json["TargetName"].string_value()).c_str(), 0777) != 0 && errno != EEXIST)
+#endif
+		{
+			cout << "Could not make " + json["TargetType"].string_value() + "/"  + json["TargetName"].string_value() + " folder.\n";
+			exit(1);
+		}
+
+		// ../../Arduino/DevKitC/<Target Name>/app
+#ifdef _MSC_VER
+		if (CreateDirectoryA(("../../" + json["TargetType"].string_value() + "/" + json["TargetName"].string_value() + "/app").c_str(), NULL) == 0 && GetLastError() != ERROR_ALREADY_EXISTS)
+#else
+		if (mkdir(("../../" + json["TargetType"].string_value() + "/" + json["TargetName"].string_value() + "/app").c_str(), 0777) != 0 && errno != EEXIST)
+#endif
+		{
+			cout << "Could not make " + json["TargetType"].string_value() + "/"  + json["TargetName"].string_value() + "/src" + " folder.\n";
+			exit(1);
+		}
 	}
 
-#ifdef _MSC_VER
-	if (CreateDirectoryA(("../../Simulation/" + json["TargetType"].string_value() + "/" + json["TargetName"].string_value() + "/src").c_str(), NULL) == 0 && GetLastError() != ERROR_ALREADY_EXISTS)
-#else
-	if (mkdir(("../../Simulation/" + json["TargetType"].string_value() + "/" + json["TargetName"].string_value() + "/src").c_str(), 0777) != 0 && errno != EEXIST)
-#endif
-	{
-    	cout << "Could not make " + json["TargetType"].string_value() + "/"  + json["TargetName"].string_value() + "/src" + " folder.\n";
-    	exit(1);
-	}
-
+	// ../../<Target Name>_Common
 #ifdef _MSC_VER
 	if (CreateDirectoryA(("../../" + json["TargetName"].string_value() + "_Common").c_str(), NULL) == 0 && GetLastError() != ERROR_ALREADY_EXISTS)
 #else
@@ -3440,380 +3471,807 @@ int main(int argc, char **argv)
     	outfileWindowHeader.close();
     }
 
-    // create main.c source file
-	std::ofstream outfileMainSource("../../" + json["TargetName"].string_value() + "_Common/main.c", std::ios::binary);
-
-	if (!outfileMainSource.is_open())
+    if (json["TargetType"].string_value() == "Linux" || json["TargetType"].string_value() == "Windows")
 	{
-		cout << "Could not create file\n";
-		exit(1);
-	}
+		// create main.c source file
+		std::ofstream outfileMainSource("../../" + json["TargetName"].string_value() + "_Common/main.c", std::ios::binary);
 
-	outfileMainSource << "#include \"main.h\"\n"
-				"#include \"miniwin.h\"\n"	
-				"#include \"app.h\"\n\n"
-				"int main(void)\n{\n"
-				"	app_init();\n	mw_init();\n\n"
-				"	while (true)\n	{\n"
-				"		app_main_loop_process();\n		(void)mw_process_message();\n"
-				"	}\n}\n";
-	outfileMainSource.close();
-	
-	// create main.h source file
-	std::ofstream outfileMainHeader("../../" + json["TargetName"].string_value() + "_Common/main.h", std::ios::binary);
-
-	if (!outfileMainHeader.is_open())
-	{
-		cout << "Could not create file\n";
-		exit(1);
-	}
-
-	outfileMainHeader << "#ifndef MAIN_H\n"
-				"#define MAIN_H\n"
-				"\n"
-				"#ifdef __cplusplus\n"
-				" extern \"C\" {\n"
-				"#endif\n\n"
-				"int main(void);\n\n"
-				"#ifdef __cplusplus\n"
-				"}\n"
-				"#endif\n\n"
-				"#endif\n";						
-	outfileMainHeader.close();
-
-    // create app.h header file
-	std::ofstream outfileAppHeader("../../Simulation/" + json["TargetType"].string_value() + "/" + json["TargetName"].string_value() + "/src/app.h", std::ios::binary);
-
-	if (!outfileAppHeader.is_open())
-	{
-		cout << "Could not create file src/app.h\n";
-		exit(1);
-	}
-	
-	if (json["TargetType"].string_value() == "Linux")
-	{ 
-		outfileAppHeader << "#ifndef APP_H\n"
-				"#define APP_H\n"
-				"\n"
-				"#ifdef __cplusplus\n"
-				" extern \"C\" {\n"
-				"#endif\n\n"
-				"#include <X11/Xlib.h>\n\n"
-				"extern Display *display;\n"
-				"extern Window frame_window;\n"
-				"extern GC graphical_context;\n\n"
-				"void app_init(void);\n"
-				"void app_main_loop_process(void);\n\n"
-				"#ifdef __cplusplus\n"
-				"}\n"
-				"#endif\n\n"
-				"#endif\n";		
-	}
-	else
-	{	
-		outfileAppHeader << "#ifndef APP_H\n"
-				"#define APP_H\n"
-				"\n"
-				"#ifdef __cplusplus\n"
-				" extern \"C\" {\n"
-				"#endif\n\n"
-                "#include <windows.h>\n\n"
-                "extern HWND hwnd;\n"
-                "extern bool mouse_down;\n"
-                "extern SHORT mx;\n"
-                "extern SHORT my;\n\n"
-				"void app_init(void);\n"
-				"void app_main_loop_process(void);\n\n"
-				"#ifdef __cplusplus\n"
-				"}\n"
-				"#endif\n\n"
-				"#endif\n";
-	}
-	outfileAppHeader.close();
-
-	// create app.c source file
-	std::ofstream outfileAppSource("../../Simulation/" + json["TargetType"].string_value() + "/" + json["TargetName"].string_value() + "/src/app.c", std::ios::binary);
-
-	if (!outfileAppSource.is_open())
-	{
-		cout << "Could not create file src/app.c\n";
-		exit(1);
-	}	
-	if (json["TargetType"].string_value() == "Linux")
-	{ 
-			outfileAppSource << "#include \"miniwin.h\"\n"
-			"#include \"app.h\"\n\n"
-			"Display *display;\n"
-			"Window frame_window;\n"
-			"GC graphical_context;\n"
-			"Atom wm_delete_window_message;\n\n"
-			"void app_init(void)\n"
-			"{\n"
-			"	static	Visual *visual;\n"
-			"	static int depth;\n"
-			"	static XSetWindowAttributes frame_attributes;\n\n"
-			"	display = XOpenDisplay(NULL);\n"
-			"	visual = DefaultVisual(display, 0);\n"
-			"	depth  = DefaultDepth(display, 0);\n\n"
-			"	frame_attributes.background_pixel = XBlackPixel(display, 0);\n\n"
-			"	frame_window = XCreateWindow(display, \n"
-			"		XRootWindow(display, 0),\n"
-			"		0,\n"
-			"		0,\n" 
-			"		(unsigned int)MW_ROOT_WIDTH,\n"
-			"		(unsigned int)MW_ROOT_HEIGHT,\n"
-			"		5,\n"
-			"		depth,\n"
-			"		InputOutput,\n" 
-			"		visual,\n" 
-			"		CWBackPixel,\n"
-			"		&frame_attributes);\n\n"
-			"	/* register interest in delete window message */\n"			
-			"	wm_delete_window_message = XInternAtom(display, \"WM_DELETE_WINDOW\", False);\n"	
-			"	XSetWMProtocols(display, frame_window, &wm_delete_window_message, 1);\n\n"				
-			"	XStoreName(display, frame_window, \"MiniWin Sim\");\n\n"
-			"	XSelectInput(display, frame_window, ExposureMask | StructureNotifyMask);\n\n"
-			"	graphical_context = XCreateGC(display, frame_window, 0U, NULL);\n\n"
-			"	XMapWindow(display, frame_window);\n"
-			"	(void)XFlush(display);\n"
-			"}\n\n"
-			"void app_main_loop_process(void)\n"
-			"{\n"
-			"}\n";
-	}
-	else
-	{
-		outfileAppSource << "#include <windows.h>\n"
-			"#include <stdbool.h>\n"
-			"#include \"miniwin.h\"\n\n"
-			"#define WINDOW_START_LOCATION_X		100\n"
-			"#define WINDOW_START_LOCATION_Y		100\n\n"
-			"HWND hwnd;\n"
-			"bool mouse_down = false;\n"
-			"SHORT mx;\n"
-			"SHORT my;\n\n"
-			"static VOID MouseEventProc(LPARAM lp);\n"
-			"static LRESULT CALLBACK WindowProc(HWND window, UINT msg, WPARAM wp, LPARAM lp);\n\n"
-			"static VOID MouseEventProc(LPARAM lp)\n"
-			"{\n"
-			"    POINTS mouse_point;\n\n"
-			"    mouse_point = MAKEPOINTS(lp);\n"
-			"	mx = mouse_point.x;\n"
-			"	my = mouse_point.y;\n\n"
-			"	if (mx < 0)\n"
-			"	{\n"
-			"		mx = 0;\n"
-			"	}\n\n"
-			"	if (my < 0)\n"
-			"	{\n"
-			"		my = 0;\n"
-			"	}\n\n"
-			"	if (mx > MW_ROOT_WIDTH - 1)\n"
-			"	{\n"
-			"		mx = MW_ROOT_WIDTH - 1;\n"
-			"	}\n\n"
-			"	if (my > MW_ROOT_HEIGHT - 1)\n"
-			"	{\n"
-			"		my = MW_ROOT_HEIGHT - 1;\n"
-			"	}\n"
-			"}\n\n"
-			"static LRESULT CALLBACK WindowProc(HWND window, UINT msg, WPARAM wp, LPARAM lp)\n"
-			"{\n"
-			"    switch(msg)\n"
-			"    {\n"
-			"	case WM_DESTROY:\n"
-			"		PostQuitMessage(0);\n"
-			"		exit(0);\n\n"
-			"	case WM_LBUTTONDOWN:\n"
-			"		mouse_down = true;\n"
-			"		MouseEventProc(lp);\n"
-			"		break;\n\n"
-			"	case WM_MOUSEMOVE:\n"
-			"		MouseEventProc(lp);\n"
-			"		break;\n\n"
-			"	case WM_LBUTTONUP:\n"
-			"		mouse_down = false;\n"
-			"		break;\n\n"		
-			"	case WM_SETFOCUS:\n"
-			"		mw_paint_all();\n"
-			"		break;\n\n"
-			"    default:\n"
-			"        return DefWindowProc(window, msg, wp, lp);\n"
-			"    }\n\n"
-			"    return 0;\n"
-			"}\n\n"
-			"void app_init(void)\n"
-			"{\n"
-			"    const char* const miniwin_class = \"miniwin_class\";\n"
-			"    WNDCLASSEX wndclass = {sizeof(WNDCLASSEX), CS_DBLCLKS, WindowProc,\n"
-			"                            0, 0, GetModuleHandle(0), LoadIcon(0,IDI_APPLICATION),\n"
-			"                            LoadCursor(0,IDC_ARROW), (HBRUSH)COLOR_WINDOW+1,\n"
-			"                            0, miniwin_class, LoadIcon(0,IDI_APPLICATION)};\n"
-			"    RegisterClassEx(&wndclass);\n\n"
-			"    RECT r = {WINDOW_START_LOCATION_X,\n"
-			"    		WINDOW_START_LOCATION_Y,\n"
-			"			WINDOW_START_LOCATION_X + MW_ROOT_WIDTH,\n"
-			"			WINDOW_START_LOCATION_Y + MW_ROOT_HEIGHT};\n"
-			"   AdjustWindowRectEx(&r, WS_OVERLAPPEDWINDOW, FALSE, 0);\n\n"
-			"	hwnd = CreateWindow(miniwin_class, \"MiniWin Sim\",\n"
-			"			   WS_OVERLAPPEDWINDOW | WS_CAPTION, r.left, r.top,\n"
-			"			   r.right - r.left, r.bottom - r.top, 0, 0, GetModuleHandle(0), 0);\n\n"
-
-			"	ShowWindow(hwnd, SW_SHOWDEFAULT);\n"
-			"}\n\n"
-			"void app_main_loop_process(void)\n"
-			"{\n"
-			"    MSG msg;\n\n"
-
-			"    while(PeekMessageA(&msg, hwnd, 0, 0, PM_NOREMOVE))\n"
-			"    {\n"
-			"		GetMessage(&msg, 0, 0, 0);\n"
-			"		DispatchMessage(&msg);\n"
-			"    }\n"
-			"}\n";
-	}
-	outfileAppSource.close();		
-
-	// create makefile
-	std::ofstream outfileMake("../../Simulation/" + json["TargetType"].string_value() + "/" + json["TargetName"].string_value() + "/makefile");
-	if (!outfileMake.is_open())
-	{
-		cout << "Could not create file\n";
-		exit(1);
-	}
-	
-	outfileMake << "PROJECT = " << json["TargetName"].string_value() << "\n\n";
-	
-	outfileMake << "BINARY = $(PROJECT)";
-	if (json["TargetType"].string_value() == "Windows")
-	{
-		outfileMake << ".exe\n";
-        outfileMake << "RM = cmd \\/C del\n";
-	}
-	else if (json["TargetType"].string_value() == "Linux")
-	{
-		outfileMake << "\n";
-	}
-
-	outfileMake <<
-			"SRCS := $(wildcard src/*.c) \\\n" 
-			"	$(wildcard ../../../$(PROJECT)_Common/*.c) \\\n"
-			"	$(wildcard ../../../MiniWin/*.c) \\\n"
-			"	$(wildcard ../../../MiniWin/bitmaps/*.c) \\\n"
-			"	$(wildcard ../../../MiniWin/hal/*.c) \\\n";
-	if (json["TargetType"].string_value() == "Windows")
-	{
-		outfileMake << "	$(wildcard ../../../MiniWin/hal/windows/*.c) \\\n";
-	}
-	else if (json["TargetType"].string_value() == "Linux")
-	{
-		outfileMake << "	$(wildcard ../../../MiniWin/hal/linux/*.c) \\\n";
-	}
-
-	outfileMake <<
-			"	$(wildcard ../../../MiniWin/ui/*.c) \\\n"
-			"	$(wildcard ../../../MiniWin/dialogs/*.c) \\\n"
-			"	$(wildcard ../../../MiniWin/gl/*.c) \\\n"
-			"	$(wildcard ../../../MiniWin/gl/fonts/bitmapped/*.c) \\\n"
-			"	$(wildcard ../../../MiniWin/gl/fonts/truetype/*.c) \\\n"
-			"	$(wildcard ../../../MiniWin/gl/fonts/truetype/mcufont/*.c)\n"
-			"CC = gcc\n";
-
-	if (json["TargetType"].string_value() == "Windows")
-	{
-   	    outfileMake << "CFLAGS = -D_WIN32 ";
-    }
-	else if (json["TargetType"].string_value() == "Linux")
-	{
-   	    outfileMake << "CFLAGS = -DLINUX_SIM ";
-    }
-
-	outfileMake <<
-            "-I../../../MiniWin -I../../../MiniWin/gl/fonts/truetype/mcufont "
-            "-Isrc -I../../../$(PROJECT)_Common -g -Wall\n"
-			"OBJS := $(SRCS:.c=.o)\n"
-			"DEPS := $(OBJS:.o=.d)\n";
-	
-	if (json["TargetType"].string_value() == "Windows")
-	{
-		outfileMake << "LIBS = -lgdi32\n\n";
-	}
-	else if (json["TargetType"].string_value() == "Linux")
-	{
-		outfileMake << "LIBS = -lX11 -lm -lpthread\n\n";
-	}
-	
-	outfileMake << 
-			"all : $(BINARY)\n\n";
-
-	outfileMake <<
-			"$(BINARY) : $(OBJS)\n"
-			"	$(CC) $^ $(LIBS) -o $@\n\n";
-	
-	outfileMake << "-include $(DEPS)\n\n"	;
-			
-	outfileMake << 
-			"%.o : %.c\n"
-			"	$(CC) $(CFLAGS) -MMD -c $< -o $@\n\n";
-
-	outfileMake << "clean:\n";
-
-	if (json["TargetType"].string_value() == "Windows")
-	{
-		outfileMake << "	$(RM) $(subst /,\\,$(OBJS))\n";
-		outfileMake << "	$(RM) $(subst /,\\,$(DEPS))\n";		
-		outfileMake << "	$(RM) $(BINARY)\n";
-	}
-	else if (json["TargetType"].string_value() == "Linux")
-	{
-		outfileMake << "	rm $(OBJS)\n";
-		outfileMake << "	rm $(DEPS)\n";	
-		outfileMake << "	rm $(BINARY)\n";		
-	}			
-	outfileMake.close();
-
-	// create nmakefile for windows only
-	if (json["TargetType"].string_value() == "Windows")
-	{
-		std::ofstream outfileNmake("../../Simulation/" + json["TargetType"].string_value() + "/" + json["TargetName"].string_value() + "/nmakefile");
-		if (!outfileNmake.is_open())
+		if (!outfileMainSource.is_open())
 		{
 			cout << "Could not create file\n";
 			exit(1);
 		}
-		outfileNmake << "PROJECT = " << json["TargetName"].string_value() << "\n\n";
-		
-		outfileNmake << "BINARY = $(PROJECT).exe\n";
 
-		outfileNmake <<
-				"OBJS = src\\*.obj \\\n"
-				"	 ..\\..\\..\\$(PROJECT)_Common\\*.obj \\\n"
-				"	 ..\\..\\..\\MiniWin\\*.obj \\\n"
-				"	 ..\\..\\..\\MiniWin\\bitmaps\\*.obj \\\n"
-				"	 ..\\..\\..\\MiniWin\\hal\\*.obj \\\n"
-				"	 ..\\..\\..\\MiniWin\\hal\\windows\\*.obj \\\n"
-				"	 ..\\..\\..\\MiniWin\\ui\\*.obj \\\n"
-				"	 ..\\..\\..\\MiniWin\\dialogs\\*.obj \\\n"
-				"	 ..\\..\\..\\MiniWin\\gl\\*.obj \\\n"
-				"	 ..\\..\\..\\MiniWin\\gl\\fonts\\bitmapped\\*.obj \\\n"
-				"	 ..\\..\\..\\MiniWin\\gl\\fonts\\truetype\\*.obj \\\n"
-				"	 ..\\..\\..\\MiniWin\\gl\\fonts\\truetype\\mcufont\\*.obj\n\n";
-
-		outfileNmake << "CFLAGS = -nologo -I..\\..\\../MiniWin -I..\\..\\..\\MiniWin\\gl\\fonts\\truetype\\mcufont -Isrc -I..\\..\\..\\$(PROJECT)_Common\n\n";
-		
-		outfileNmake <<
-				".c.obj:\n"
-				"\tcl $(CFLAGS) -c $< -Fo$(@D)\\ \n\n";
-
-		outfileNmake <<
-				"$(BINARY): $(OBJS)\n"
-				"\tlink gdi32.lib user32.lib $(OBJS) -out:$@\n\n";
-
-		outfileNmake << "clean:\n";
-		outfileNmake << "\tdel $(BINARY)\n";
-		outfileNmake << "\tdel $(OBJS)\n";
-		outfileMake.close();
+		outfileMainSource << "#include \"main.h\"\n"
+					"#include \"miniwin.h\"\n"
+					"#include \"app.h\"\n\n"
+					"int main(void)\n{\n"
+					"	app_init();\n	mw_init();\n\n"
+					"	while (true)\n	{\n"
+					"		app_main_loop_process();\n		(void)mw_process_message();\n"
+					"	}\n}\n";
+		outfileMainSource.close();
 	}
+	else if (json["TargetType"].string_value() == "Arduino/DevKitC")
+	{
+		// create main .ino file
+		std::ofstream outfileMainSource("../../" + json["TargetType"].string_value() + "/" + json["TargetName"].string_value() + "/" + json["TargetName"].string_value() + ".ino", std::ios::binary);
+
+		if (!outfileMainSource.is_open())
+		{
+			cout << "Could not create file\n";
+			exit(1);
+		}
+
+		outfileMainSource << "#include \"src/miniwin.h\"\n"
+					"#include \"src/app.h\"\n\n"
+					"void setup()\n{\n"
+					"  app_init();\n"
+					"  mw_init();\n}\n\n"
+					"void loop()\n{\n"
+					"  (void)mw_process_message();\n}\n";
+		outfileMainSource.close();
+	}
+
+    if (json["TargetType"].string_value() == "Linux" || json["TargetType"].string_value() == "Windows")
+    {
+		// create main.h source file
+		std::ofstream outfileMainHeader("../../" + json["TargetName"].string_value() + "_Common/main.h", std::ios::binary);
+	
+		if (!outfileMainHeader.is_open())
+		{
+			cout << "Could not create file\n";
+			exit(1);
+		}
+
+		outfileMainHeader << "#ifndef MAIN_H\n"
+					"#define MAIN_H\n"
+					"\n"
+					"#ifdef __cplusplus\n"
+					" extern \"C\" {\n"
+					"#endif\n\n"
+					"int main(void);\n\n"
+					"#ifdef __cplusplus\n"
+					"}\n"
+					"#endif\n\n"
+					"#endif\n";
+		outfileMainHeader.close();
+    }
+
+    // create app.h header file
+    if (json["TargetType"].string_value() == "Linux" || json["TargetType"].string_value() == "Windows")
+    {
+		std::ofstream outfileAppHeader("../../Simulation/" + json["TargetType"].string_value() + "/" + json["TargetName"].string_value() + "/src/app.h", std::ios::binary);
+
+		if (!outfileAppHeader.is_open())
+		{
+			cout << "Could not create file src/app.h\n";
+			exit(1);
+		}
+
+		if (json["TargetType"].string_value() == "Linux")
+		{
+			outfileAppHeader << "#ifndef APP_H\n"
+					"#define APP_H\n"
+					"\n"
+					"#ifdef __cplusplus\n"
+					" extern \"C\" {\n"
+					"#endif\n\n"
+					"#include <X11/Xlib.h>\n\n"
+					"extern Display *display;\n"
+					"extern Window frame_window;\n"
+					"extern GC graphical_context;\n\n"
+					"void app_init(void);\n"
+					"void app_main_loop_process(void);\n\n"
+					"#ifdef __cplusplus\n"
+					"}\n"
+					"#endif\n\n"
+					"#endif\n";
+		}
+		else
+		{
+			outfileAppHeader << "#ifndef APP_H\n"
+					"#define APP_H\n"
+					"\n"
+					"#ifdef __cplusplus\n"
+					" extern \"C\" {\n"
+					"#endif\n\n"
+					"#include <windows.h>\n\n"
+					"extern HWND hwnd;\n"
+					"extern bool mouse_down;\n"
+					"extern SHORT mx;\n"
+					"extern SHORT my;\n\n"
+					"void app_init(void);\n"
+					"void app_main_loop_process(void);\n\n"
+					"#ifdef __cplusplus\n"
+					"}\n"
+					"#endif\n\n"
+					"#endif\n";
+		}
+		outfileAppHeader.close();
+    }
+    else if (json["TargetType"].string_value() == "Arduino/DevKitC")
+    {
+		// create app.h file
+		std::ofstream outfileAppHeader("../../" + json["TargetType"].string_value() + "/" + json["TargetName"].string_value() + "/app/app.h", std::ios::binary);
+
+		if (!outfileAppHeader.is_open())
+		{
+			cout << "Could not create file\n";
+			exit(1);
+		}
+
+		outfileAppHeader << "#ifndef APP_H\n"
+				"#define APP_H\n"
+				"\n"
+				"#ifdef __cplusplus\n"
+				" extern \"C\" {\n"
+				"#endif\n\n"
+				"void app_init(void);\n\n"
+				"#ifdef __cplusplus\n"
+				"}\n"
+				"#endif\n\n"
+				"#endif\n";		
+
+		outfileAppHeader.close();
+    }
+
+    if (json["TargetType"].string_value() == "Linux" || json["TargetType"].string_value() == "Windows")
+    {
+		// create app.c source file
+		std::ofstream outfileAppSource("../../Simulation/" + json["TargetType"].string_value() + "/" + json["TargetName"].string_value() + "/src/app.c", std::ios::binary);
+
+		if (!outfileAppSource.is_open())
+		{
+			cout << "Could not create file src/app.c\n";
+			exit(1);
+		}
+		if (json["TargetType"].string_value() == "Linux")
+		{
+				outfileAppSource << "#include \"miniwin.h\"\n"
+				"#include \"app.h\"\n\n"
+				"Display *display;\n"
+				"Window frame_window;\n"
+				"GC graphical_context;\n"
+				"Atom wm_delete_window_message;\n\n"
+				"void app_init(void)\n"
+				"{\n"
+				"	static	Visual *visual;\n"
+				"	static int depth;\n"
+				"	static XSetWindowAttributes frame_attributes;\n\n"
+				"	display = XOpenDisplay(NULL);\n"
+				"	visual = DefaultVisual(display, 0);\n"
+				"	depth  = DefaultDepth(display, 0);\n\n"
+				"	frame_attributes.background_pixel = XBlackPixel(display, 0);\n\n"
+				"	frame_window = XCreateWindow(display, \n"
+				"		XRootWindow(display, 0),\n"
+				"		0,\n"
+				"		0,\n"
+				"		(unsigned int)MW_ROOT_WIDTH,\n"
+				"		(unsigned int)MW_ROOT_HEIGHT,\n"
+				"		5,\n"
+				"		depth,\n"
+				"		InputOutput,\n"
+				"		visual,\n"
+				"		CWBackPixel,\n"
+				"		&frame_attributes);\n\n"
+				"	/* register interest in delete window message */\n"
+				"	wm_delete_window_message = XInternAtom(display, \"WM_DELETE_WINDOW\", False);\n"
+				"	XSetWMProtocols(display, frame_window, &wm_delete_window_message, 1);\n\n"
+				"	XStoreName(display, frame_window, \"MiniWin Sim\");\n\n"
+				"	XSelectInput(display, frame_window, ExposureMask | StructureNotifyMask);\n\n"
+				"	graphical_context = XCreateGC(display, frame_window, 0U, NULL);\n\n"
+				"	XMapWindow(display, frame_window);\n"
+				"	(void)XFlush(display);\n"
+				"}\n\n"
+				"void app_main_loop_process(void)\n"
+				"{\n"
+				"}\n";
+		}
+		else
+		{
+			outfileAppSource << "#include <windows.h>\n"
+				"#include <stdbool.h>\n"
+				"#include \"miniwin.h\"\n\n"
+				"#define WINDOW_START_LOCATION_X		100\n"
+				"#define WINDOW_START_LOCATION_Y		100\n\n"
+				"HWND hwnd;\n"
+				"bool mouse_down = false;\n"
+				"SHORT mx;\n"
+				"SHORT my;\n\n"
+				"static VOID MouseEventProc(LPARAM lp);\n"
+				"static LRESULT CALLBACK WindowProc(HWND window, UINT msg, WPARAM wp, LPARAM lp);\n\n"
+				"static VOID MouseEventProc(LPARAM lp)\n"
+				"{\n"
+				"    POINTS mouse_point;\n\n"
+				"    mouse_point = MAKEPOINTS(lp);\n"
+				"	mx = mouse_point.x;\n"
+				"	my = mouse_point.y;\n\n"
+				"	if (mx < 0)\n"
+				"	{\n"
+				"		mx = 0;\n"
+				"	}\n\n"
+				"	if (my < 0)\n"
+				"	{\n"
+				"		my = 0;\n"
+				"	}\n\n"
+				"	if (mx > MW_ROOT_WIDTH - 1)\n"
+				"	{\n"
+				"		mx = MW_ROOT_WIDTH - 1;\n"
+				"	}\n\n"
+				"	if (my > MW_ROOT_HEIGHT - 1)\n"
+				"	{\n"
+				"		my = MW_ROOT_HEIGHT - 1;\n"
+				"	}\n"
+				"}\n\n"
+				"static LRESULT CALLBACK WindowProc(HWND window, UINT msg, WPARAM wp, LPARAM lp)\n"
+				"{\n"
+				"    switch(msg)\n"
+				"    {\n"
+				"	case WM_DESTROY:\n"
+				"		PostQuitMessage(0);\n"
+				"		exit(0);\n\n"
+				"	case WM_LBUTTONDOWN:\n"
+				"		mouse_down = true;\n"
+				"		MouseEventProc(lp);\n"
+				"		break;\n\n"
+				"	case WM_MOUSEMOVE:\n"
+				"		MouseEventProc(lp);\n"
+				"		break;\n\n"
+				"	case WM_LBUTTONUP:\n"
+				"		mouse_down = false;\n"
+				"		break;\n\n"
+				"	case WM_SETFOCUS:\n"
+				"		mw_paint_all();\n"
+				"		break;\n\n"
+				"    default:\n"
+				"        return DefWindowProc(window, msg, wp, lp);\n"
+				"    }\n\n"
+				"    return 0;\n"
+				"}\n\n"
+				"void app_init(void)\n"
+				"{\n"
+				"    const char* const miniwin_class = \"miniwin_class\";\n"
+				"    WNDCLASSEX wndclass = {sizeof(WNDCLASSEX), CS_DBLCLKS, WindowProc,\n"
+				"                            0, 0, GetModuleHandle(0), LoadIcon(0,IDI_APPLICATION),\n"
+				"                            LoadCursor(0,IDC_ARROW), (HBRUSH)COLOR_WINDOW+1,\n"
+				"                            0, miniwin_class, LoadIcon(0,IDI_APPLICATION)};\n"
+				"    RegisterClassEx(&wndclass);\n\n"
+				"    RECT r = {WINDOW_START_LOCATION_X,\n"
+				"    		WINDOW_START_LOCATION_Y,\n"
+				"			WINDOW_START_LOCATION_X + MW_ROOT_WIDTH,\n"
+				"			WINDOW_START_LOCATION_Y + MW_ROOT_HEIGHT};\n"
+				"   AdjustWindowRectEx(&r, WS_OVERLAPPEDWINDOW, FALSE, 0);\n\n"
+				"	hwnd = CreateWindow(miniwin_class, \"MiniWin Sim\",\n"
+				"			   WS_OVERLAPPEDWINDOW | WS_CAPTION, r.left, r.top,\n"
+				"			   r.right - r.left, r.bottom - r.top, 0, 0, GetModuleHandle(0), 0);\n\n"
+
+				"	ShowWindow(hwnd, SW_SHOWDEFAULT);\n"
+				"}\n\n"
+				"void app_main_loop_process(void)\n"
+				"{\n"
+				"    MSG msg;\n\n"
+
+				"    while(PeekMessageA(&msg, hwnd, 0, 0, PM_NOREMOVE))\n"
+				"    {\n"
+				"		GetMessage(&msg, 0, 0, 0);\n"
+				"		DispatchMessage(&msg);\n"
+				"    }\n"
+				"}\n";
+		}
+		outfileAppSource.close();
+    }
+    else if (json["TargetType"].string_value() == "Arduino/DevKitC")
+    {
+		// create app.c file
+		std::ofstream outfileAppSource("../../" + json["TargetType"].string_value() + "/" + json["TargetName"].string_value() + "/app/app.c", std::ios::binary);
+
+		if (!outfileAppSource.is_open())
+		{
+			cout << "Could not create file\n";
+			exit(1);
+		}
+
+		outfileAppSource << "#include \"app.h\"\n\nvoid app_init(void)\n{\n}\n";
+
+		outfileAppSource.close();
+    }
+
+    if (json["TargetType"].string_value() == "Linux" || json["TargetType"].string_value() == "Windows")
+    {
+		// create makefile
+		std::ofstream outfileMake("../../Simulation/" + json["TargetType"].string_value() + "/" + json["TargetName"].string_value() + "/makefile");
+		if (!outfileMake.is_open())
+		{
+			cout << "Could not create file\n";
+			exit(1);
+		}
+
+		outfileMake << "PROJECT = " << json["TargetName"].string_value() << "\n\n";
+
+		outfileMake << "BINARY = $(PROJECT)";
+		if (json["TargetType"].string_value() == "Windows")
+		{
+			outfileMake << ".exe\n";
+			outfileMake << "RM = cmd \\/C del\n";
+		}
+		else if (json["TargetType"].string_value() == "Linux")
+		{
+			outfileMake << "\n";
+		}
+	
+		outfileMake <<
+				"SRCS := $(wildcard src/*.c) \\\n"
+				"	$(wildcard ../../../$(PROJECT)_Common/*.c) \\\n"
+				"	$(wildcard ../../../MiniWin/*.c) \\\n"
+				"	$(wildcard ../../../MiniWin/bitmaps/*.c) \\\n"
+				"	$(wildcard ../../../MiniWin/hal/*.c) \\\n";
+		if (json["TargetType"].string_value() == "Windows")
+		{
+			outfileMake << "	$(wildcard ../../../MiniWin/hal/windows/*.c) \\\n";
+		}
+		else if (json["TargetType"].string_value() == "Linux")
+		{
+			outfileMake << "	$(wildcard ../../../MiniWin/hal/linux/*.c) \\\n";
+		}
+	
+		outfileMake <<
+				"	$(wildcard ../../../MiniWin/ui/*.c) \\\n"
+				"	$(wildcard ../../../MiniWin/dialogs/*.c) \\\n"
+				"	$(wildcard ../../../MiniWin/gl/*.c) \\\n"
+				"	$(wildcard ../../../MiniWin/gl/fonts/bitmapped/*.c) \\\n"
+				"	$(wildcard ../../../MiniWin/gl/fonts/truetype/*.c) \\\n"
+				"	$(wildcard ../../../MiniWin/gl/fonts/truetype/mcufont/*.c)\n"
+				"CC = gcc\n";
+	
+		if (json["TargetType"].string_value() == "Windows")
+		{
+			outfileMake << "CFLAGS = -D_WIN32 ";
+		}
+		else if (json["TargetType"].string_value() == "Linux")
+		{
+			outfileMake << "CFLAGS = -DLINUX_SIM ";
+		}
+	
+		outfileMake <<
+				"-I../../../MiniWin -I../../../MiniWin/gl/fonts/truetype/mcufont "
+				"-Isrc -I../../../$(PROJECT)_Common -g -Wall\n"
+				"OBJS := $(SRCS:.c=.o)\n"
+				"DEPS := $(OBJS:.o=.d)\n";
+
+		if (json["TargetType"].string_value() == "Windows")
+		{
+			outfileMake << "LIBS = -lgdi32\n\n";
+		}
+		else if (json["TargetType"].string_value() == "Linux")
+		{
+			outfileMake << "LIBS = -lX11 -lm -lpthread\n\n";
+		}
+		
+		outfileMake <<
+				"all : $(BINARY)\n\n";
+
+		outfileMake <<
+				"$(BINARY) : $(OBJS)\n"
+				"	$(CC) $^ $(LIBS) -o $@\n\n";
+		
+		outfileMake << "-include $(DEPS)\n\n"	;
+
+		outfileMake <<
+				"%.o : %.c\n"
+				"	$(CC) $(CFLAGS) -MMD -c $< -o $@\n\n";
+
+		outfileMake << "clean:\n";
+
+		if (json["TargetType"].string_value() == "Windows")
+		{
+			outfileMake << "	$(RM) $(subst /,\\,$(OBJS))\n";
+			outfileMake << "	$(RM) $(subst /,\\,$(DEPS))\n";
+			outfileMake << "	$(RM) $(BINARY)\n";
+		}
+		else if (json["TargetType"].string_value() == "Linux")
+		{
+			outfileMake << "	rm $(OBJS)\n";
+			outfileMake << "	rm $(DEPS)\n";
+			outfileMake << "	rm $(BINARY)\n";
+		}
+		outfileMake.close();
+
+		// create nmakefile for windows only
+		if (json["TargetType"].string_value() == "Windows")
+		{
+			std::ofstream outfileNmake("../../Simulation/" + json["TargetType"].string_value() + "/" + json["TargetName"].string_value() + "/nmakefile");
+			if (!outfileNmake.is_open())
+			{
+				cout << "Could not create file\n";
+				exit(1);
+			}
+			outfileNmake << "PROJECT = " << json["TargetName"].string_value() << "\n\n";
+
+			outfileNmake << "BINARY = $(PROJECT).exe\n";
+
+			outfileNmake <<
+					"OBJS = src\\*.obj \\\n"
+					"	 ..\\..\\..\\$(PROJECT)_Common\\*.obj \\\n"
+					"	 ..\\..\\..\\MiniWin\\*.obj \\\n"
+					"	 ..\\..\\..\\MiniWin\\bitmaps\\*.obj \\\n"
+					"	 ..\\..\\..\\MiniWin\\hal\\*.obj \\\n"
+					"	 ..\\..\\..\\MiniWin\\hal\\windows\\*.obj \\\n"
+					"	 ..\\..\\..\\MiniWin\\ui\\*.obj \\\n"
+					"	 ..\\..\\..\\MiniWin\\dialogs\\*.obj \\\n"
+					"	 ..\\..\\..\\MiniWin\\gl\\*.obj \\\n"
+					"	 ..\\..\\..\\MiniWin\\gl\\fonts\\bitmapped\\*.obj \\\n"
+					"	 ..\\..\\..\\MiniWin\\gl\\fonts\\truetype\\*.obj \\\n"
+					"	 ..\\..\\..\\MiniWin\\gl\\fonts\\truetype\\mcufont\\*.obj\n\n";
+
+			outfileNmake << "CFLAGS = -nologo -I..\\..\\../MiniWin -I..\\..\\..\\MiniWin\\gl\\fonts\\truetype\\mcufont -Isrc -I..\\..\\..\\$(PROJECT)_Common\n\n";
+
+			outfileNmake <<
+					".c.obj:\n"
+					"\tcl $(CFLAGS) -c $< -Fo$(@D)\\ \n\n";
+
+			outfileNmake <<
+					"$(BINARY): $(OBJS)\n"
+					"\tlink gdi32.lib user32.lib $(OBJS) -out:$@\n\n";
+
+			outfileNmake << "clean:\n";
+			outfileNmake << "\tdel $(BINARY)\n";
+			outfileNmake << "\tdel $(OBJS)\n";
+			outfileMake.close();
+		}
+    }
+
+    else if (json["TargetType"].string_value() == "Arduino/DevKitC")
+    {
+		// create Arduino setup.bat file
+		std::ofstream outfileBat("../../" + json["TargetType"].string_value() + "/" + json["TargetName"].string_value() + "/setup.bat", std::ios::binary);
+
+		if (!outfileBat.is_open())
+		{
+			cout << "Could not create file\n";
+			exit(1);
+		}
+
+		outfileBat <<
+			"rmdir /s /q src\n\n"
+			"REM FOLDERS\n"
+			"mkdir src\n"
+			"mkdir src\\hal\n"
+			"mkdir src\\hal\\hal\n"
+			"mkdir src\\gl\n"
+			"mkdir src\\gl\\hal\n"
+			"mkdir src\\gl\\gl\n"
+			"mkdir src\\gl\\gl\\hal\n"
+			"mkdir src\\gl\\gl\\fonts\\bitmapped\n"
+			"mkdir src\\gl\\gl\\fonts\\truetype\\mcufont\n"
+			"mkdir src\\gl\\gl\\gl\\fonts\\bitmapped\n"
+			"mkdir src\\bitmaps\n"
+			"mkdir src\\bitmaps\\bitmaps\n"
+			"mkdir src\\dialogs\n"
+			"mkdir src\\dialogs\\hal\n"
+			"mkdir src\\dialogs\\gl\n"
+			"mkdir src\\dialogs\\gl\\hal\n"
+			"mkdir src\\dialogs\\gl\\gl\\fonts\\bitmapped\n"
+			"mkdir src\\dialogs\\ui\n"
+			"mkdir src\\dialogs\\ui\\ui\n"
+			"mkdir src\\dialogs\\dialogs\n"
+			"mkdir src\\dialogs\\dialogs\\dialogs\n"
+			"mkdir src\\dialogs\\bitmaps\n"
+			"mkdir src\\bitmaps\n"
+			"mkdir src\\ui\n"
+			"mkdir src\\ui\\ui\n"
+			"mkdir src\\ui\\ui\\ui\n"
+			"mkdir src\\ui\\hal\n"
+			"mkdir src\\ui\\gl\n"
+			"mkdir src\\ui\\gl\\hal\n"
+			"mkdir src\\ui\\gl\\gl\\fonts\\bitmapped\n"
+			"mkdir src\\ui\\bitmaps\n"
+			"mkdir src\\ui\\dialogs\n"
+			"mkdir src\\ui\\dialogs\\dialogs\n\n"
+			"REM HAL\n"
+			"mklink /h src\\hal\\hal_init.c ..\\..\\..\\MiniWin\\hal\\hal_init.c\n"
+			"mklink /h src\\hal\\hal_delay.c ..\\..\\..\\MiniWin\\hal\\Arduino_DevKitC\\hal_delay.c\n"
+			"mklink /h src\\hal\\hal_lcd.c ..\\..\\..\\MiniWin\\hal\\Arduino_DevKitC\\hal_lcd.c\n"
+			"mklink /h src\\hal\\hal_non_vol.c ..\\..\\..\\MiniWin\\hal\\Arduino_DevKitC\\hal_non_vol.c\n"
+			"mklink /h src\\hal\\hal_timer.c ..\\..\\..\\MiniWin\\hal\\Arduino_DevKitC\\hal_timer.c\n"
+			"mklink /h src\\hal\\hal_touch.c ..\\..\\..\\MiniWin\\hal\\Arduino_DevKitC\\hal_touch.c\n"
+			"mklink /h src\\hal\\hal\\hal_delay.h ..\\..\\..\\MiniWin\\hal\\hal_delay.h\n"
+			"mklink /h src\\hal\\hal\\hal_lcd.h ..\\..\\..\\MiniWin\\hal\\hal_lcd.h\n"
+			"mklink /h src\\hal\\hal\\hal_non_vol.h ..\\..\\..\\MiniWin\\hal\\hal_non_vol.h\n"
+			"mklink /h src\\hal\\hal\\hal_timer.h ..\\..\\..\\MiniWin\\hal\\hal_timer.h\n"
+			"mklink /h src\\hal\\hal\\hal_touch.h ..\\..\\..\\MiniWin\\hal\\hal_touch.h\n"
+			"mklink /h src\\hal\\miniwin_config.h ..\\..\\..\\MiniWinGen_Common\\miniwin_config.h\n\n"
+			"REM GL\n"
+			"mklink /h src\\gl\\gl.c ..\\..\\..\\MiniWin\\gl\\gl.c\n"
+			"mklink /h src\\gl\\font9.c ..\\..\\..\\MiniWin\\gl\\fonts\\bitmapped\\font9.c\n"
+			"mklink /h src\\gl\\font12.c ..\\..\\..\\MiniWin\\gl\\fonts\\bitmapped\\font12.c\n"
+			"mklink /h src\\gl\\font16.c ..\\..\\..\\MiniWin\\gl\\fonts\\bitmapped\\font16.c\n"
+			"mklink /h src\\gl\\font20.c ..\\..\\..\\MiniWin\\gl\\fonts\\bitmapped\\font20.c\n"
+			"mklink /h src\\gl\\font24.c ..\\..\\..\\MiniWin\\gl\\fonts\\bitmapped\\font24.c\n"
+			"mklink /h src\\gl\\gl_title_font.c ..\\..\\..\\MiniWin\\gl\\fonts\\bitmapped\\gl_title_font.c\n"
+			"mklink /h src\\gl\\gl\\fonts\\truetype\\mcufont\\BLKCHCRY16.c ..\\..\\..\\MiniWin\\gl\\fonts\\truetype\\BLKCHCRY16.c\n"
+			"mklink /h src\\gl\\gl\\fonts\\truetype\\mcufont\\BLKCHCRY16bw.c ..\\..\\..\\MiniWin\\gl\\fonts\\truetype\\BLKCHCRY16bw.c\n"
+			"mklink /h src\\gl\\gl\\fonts\\truetype\\mcufont\\dejavu_sans_12.c ..\\..\\..\\MiniWin\\gl\\fonts\\truetype\\dejavu_sans_12.c\n"
+			"mklink /h src\\gl\\gl\\fonts\\truetype\\mcufont\\mf_encoding.c ..\\..\\..\\MiniWin\\gl\\fonts\\truetype\\mcufont\\mf_encoding.c\n"
+			"mklink /h src\\gl\\gl\\fonts\\truetype\\mcufont\\mf_bwfont.c ..\\..\\..\\MiniWin\\gl\\fonts\\truetype\\mcufont\\mf_bwfont.c\n"
+			"mklink /h src\\gl\\gl\\fonts\\truetype\\mcufont\\mf_font.c ..\\..\\..\\MiniWin\\gl\\fonts\\truetype\\mcufont\\mf_font.c\n"
+			"mklink /h src\\gl\\gl\\fonts\\truetype\\mcufont\\mf_justify.c ..\\..\\..\\MiniWin\\gl\\fonts\\truetype\\mcufont\\mf_justify.c\n"
+			"mklink /h src\\gl\\gl\\fonts\\truetype\\mcufont\\mf_mf_kerning.c ..\\..\\..\\MiniWin\\gl\\fonts\\truetype\\mcufont\\mf_kerning.c\n"
+			"mklink /h src\\gl\\gl\\fonts\\truetype\\mcufont\\mf_rlefont.c ..\\..\\..\\MiniWin\\gl\\fonts\\truetype\\mcufont\\mf_rlefont.c\n"
+			"mklink /h src\\gl\\gl\\fonts\\truetype\\mcufont\\mf_scaledfont.c ..\\..\\..\\MiniWin\\gl\\fonts\\truetype\\mcufont\\mf_scaledfont.c\n"
+			"mklink /h src\\gl\\gl\\fonts\\truetype\\mcufont\\mf_wordwrap.c ..\\..\\..\\MiniWin\\gl\\fonts\\truetype\\mcufont\\mf_wordwrap.c\n"
+			"mklink /h src\\gl\\gl\\fonts\\truetype\\mcufont\\mf_bwfont.h ..\\..\\..\\MiniWin\\gl\\fonts\\truetype\\mcufont\\mf_bwfont.h\n"
+			"mklink /h src\\gl\\miniwin_debug.h ..\\..\\..\\MiniWin\\miniwin_debug.h\n"
+			"mklink /h src\\gl\\miniwin_config.h ..\\..\\..\\MiniWinGen_Common\\miniwin_config.h\n"
+			"mklink /h src\\gl\\gl\\gl.h ..\\..\\..\\MiniWin\\gl\\gl.h\n"
+			"mklink /h src\\gl\\gl\\miniwin_utilities.h ..\\..\\..\\MiniWin\\miniwin_utilities.h\n"
+			"mklink /h src\\gl\\gl\\hal\\hal_lcd.h ..\\..\\..\\MiniWin\\hal\\hal_lcd.h\n"
+			"mklink /h src\\gl\\gl\\gl\\fonts\\bitmapped\\fonts.h ..\\..\\..\\MiniWin\\gl\\fonts\\bitmapped\\fonts.h\n"
+			"mklink /h src\\gl\\gl\\fonts\\bitmapped\\fonts.h ..\\..\\..\\MiniWin\\gl\\fonts\\bitmapped\\fonts.h\n"
+			"mklink /h src\\gl\\gl\\fonts\\bitmapped\\gl_title_font.h ..\\..\\..\\MiniWin\\gl\\fonts\\bitmapped\\gl_title_font.h\n"
+			"mklink /h src\\gl\\gl\\fonts\\truetype\\mcufont\\mcufont.h ..\\..\\..\\MiniWin\\gl\\fonts\\truetype\\mcufont\\mcufont.h\n"
+			"mklink /h src\\gl\\gl\\fonts\\truetype\\mcufont\\mf_config.h ..\\..\\..\\MiniWin\\gl\\fonts\\truetype\\mcufont\\mf_config.h\n"
+			"mklink /h src\\gl\\gl\\fonts\\truetype\\mcufont\\mf_encoding.h ..\\..\\..\\MiniWin\\gl\\fonts\\truetype\\mcufont\\mf_encoding.h\n"
+			"mklink /h src\\gl\\gl\\fonts\\truetype\\mcufont\\mf_justify.h ..\\..\\..\\MiniWin\\gl\\fonts\\truetype\\mcufont\\mf_justify.h\n"
+			"mklink /h src\\gl\\gl\\fonts\\truetype\\mcufont\\mf_rlefont.h ..\\..\\..\\MiniWin\\gl\\fonts\\truetype\\mcufont\\mf_rlefont.h\n"
+			"mklink /h src\\gl\\gl\\fonts\\truetype\\mcufont\\mf_font.h ..\\..\\..\\MiniWin\\gl\\fonts\\truetype\\mcufont\\mf_font.h\n"
+			"mklink /h src\\gl\\gl\\fonts\\truetype\\mcufont\\mf_kerning.h ..\\..\\..\\MiniWin\\gl\\fonts\\truetype\\mcufont\\mf_kerning.h\n"
+			"mklink /h src\\gl\\gl\\fonts\\truetype\\mcufont\\mf_scaledfont.h ..\\..\\..\\MiniWin\\gl\\fonts\\truetype\\mcufont\\mf_scaledfont.h\n"
+			"mklink /h src\\gl\\gl\\fonts\\truetype\\mcufont\\mf_wordwrap.h ..\\..\\..\\MiniWin\\gl\\fonts\\truetype\\mcufont\\mf_wordwrap.h\n"
+			"mklink /h src\\gl\\fonts.h ..\\..\\..\\MiniWin\\gl\\fonts\\bitmapped\\fonts.h\n\n"
+			"REM BITMAPS\n"
+			"mklink /h src\\bitmaps\\bitmaps\\mw_bitmaps.h ..\\..\\..\\MiniWin\\bitmaps\\mw_bitmaps.h\n"
+			"mklink /h src\\bitmaps\\backspace_key.c ..\\..\\..\\MiniWin\\bitmaps\\backspace_key.c\n"
+			"mklink /h src\\bitmaps\\close_icon.c ..\\..\\..\\MiniWin\\bitmaps\\close_icon.c\n"
+			"mklink /h src\\bitmaps\\close_icon_large.c ..\\..\\..\\MiniWin\\bitmaps\\close_icon_large.c\n"
+			"mklink /h src\\bitmaps\\file_icon_large.c ..\\..\\..\\MiniWin\\bitmaps\\file_icon_large.c\n"
+			"mklink /h src\\bitmaps\\file_icon_small.c ..\\..\\..\\MiniWin\\bitmaps\\file_icon_small.c\n"
+			"mklink /h src\\bitmaps\\folder_close_icon_large.c ..\\..\\..\\MiniWin\\bitmaps\\folder_close_icon_large.c\n"
+			"mklink /h src\\bitmaps\\folder_close_icon_small.c ..\\..\\..\\MiniWin\\bitmaps\\folder_close_icon_small.c\n"
+			"mklink /h src\\bitmaps\\folder_icon_large.c ..\\..\\..\\MiniWin\\bitmaps\\folder_icon_large.c\n"
+			"mklink /h src\\bitmaps\\folder_icon_small.c ..\\..\\..\\MiniWin\\bitmaps\\folder_icon_small.c\n"
+			"mklink /h src\\bitmaps\\folder_open_icon_large.c ..\\..\\..\\MiniWin\\bitmaps\\folder_open_icon_large.c\n"
+			"mklink /h src\\bitmaps\\folder_open_icon_small.c ..\\..\\..\\MiniWin\\bitmaps\\folder_open_icon_small.c\n"
+			"mklink /h src\\bitmaps\\let_key.c ..\\..\\..\\MiniWin\\bitmaps\\let_key.c\n"
+			"mklink /h src\\bitmaps\\maximise_icon.c ..\\..\\..\\MiniWin\\bitmaps\\maximise_icon.c\n"
+			"mklink /h src\\bitmaps\\maximise_icon_large.c ..\\..\\..\\MiniWin\\bitmaps\\maximise_icon_large.c\n"
+			"mklink /h src\\bitmaps\\minimise_icon.c ..\\..\\..\\MiniWin\\bitmaps\\minimise_icon.c\n"
+			"mklink /h src\\bitmaps\\minimise_icon_large.c ..\\..\\..\\MiniWin\\bitmaps\\minimise_icon_large.c\n"
+			"mklink /h src\\bitmaps\\num_key.c ..\\..\\..\\MiniWin\\bitmaps\\num_key.c\n"
+			"mklink /h src\\bitmaps\\resize_icon.c ..\\..\\..\\MiniWin\\bitmaps\\resize_icon.c\n"
+			"mklink /h src\\bitmaps\\resize_icon_large.c ..\\..\\..\\MiniWin\\bitmaps\\resize_icon_large.c\n"
+			"mklink /h src\\bitmaps\\shift_key.c ..\\..\\..\\MiniWin\\bitmaps\\shift_key.c\n"
+			"mklink /h src\\bitmaps\\sym_key.c ..\\..\\..\\MiniWin\\bitmaps\\sym_key.c\n"
+			"mklink /h src\\bitmaps\\tick.c ..\\..\\..\\MiniWin\\bitmaps\\tick.c\n"
+			"mklink /h src\\bitmaps\\tick_large.c ..\\..\\..\\MiniWin\\bitmaps\\tick_large.c\n\n"
+			"REM DIALOGS\n"
+			"mklink /h src\\dialogs\\dialog_colour_chooser.c ..\\..\\..\\MiniWin\\dialogs\\dialog_colour_chooser.c\n"
+			"mklink /h src\\dialogs\\dialog_date_chooser.c ..\\..\\..\\MiniWin\\dialogs\\dialog_date_chooser.c\n"
+			"mklink /h src\\dialogs\\dialog_file_chooser.c ..\\..\\..\\MiniWin\\dialogs\\dialog_file_chooser.c\n"
+			"mklink /h src\\dialogs\\dialog_number_entry.c ..\\..\\..\\MiniWin\\dialogs\\dialog_number_entry.c\n"
+			"mklink /h src\\dialogs\\dialog_one_button.c ..\\..\\..\\MiniWin\\dialogs\\dialog_one_button.c\n"
+			"mklink /h src\\dialogs\\dialog_text_entry.c ..\\..\\..\\MiniWin\\dialogs\\dialog_text_entry.c\n"
+			"mklink /h src\\dialogs\\dialog_time_chooser.c ..\\..\\..\\MiniWin\\dialogs\\dialog_time_chooser.c\n"
+			"mklink /h src\\dialogs\\dialog_dialog_two_button.c ..\\..\\..\\MiniWin\\dialogs\\dialog_two_button.c\n"
+			"mklink /h src\\dialogs\\miniwin.h ..\\..\\..\\MiniWin\\miniwin.h\n"
+			"mklink /h src\\dialogs\\miniwin_config.h ..\\..\\..\\MiniWinGen_Common\\miniwin_config.h\n"
+			"mklink /h src\\dialogs\\miniwin_debug.h ..\\..\\..\\MiniWin\\miniwin_debug.h\n"
+			"mklink /h src\\dialogs\\miniwin_settings.h ..\\..\\..\\MiniWin\\miniwin_settings.h\n"
+			"mklink /h src\\dialogs\\calibrate.h ..\\..\\..\\MiniWin\\calibrate.h\n"
+			"mklink /h src\\dialogs\\gl\\gl.h ..\\..\\..\\MiniWin\\gl\\gl.h\n"
+			"mklink /h src\\dialogs\\gl\\miniwin_utilities.h ..\\..\\..\\MiniWin\\miniwin_utilities.h\n"
+			"mklink /h src\\dialogs\\gl\\hal\\hal_lcd.h ..\\..\\..\\MiniWin\\hal\\hal_lcd.h\n"
+			"mklink /h src\\dialogs\\gl\\gl\\fonts\\bitmapped\\fonts.h ..\\..\\..\\MiniWin\\gl\\fonts\\bitmapped\\fonts.h\n"
+			"mklink /h src\\dialogs\\bitmaps\\mw_bitmaps.h ..\\..\\..\\MiniWin\\bitmaps\\mw_bitmaps.h\n"
+			"mklink /h src\\dialogs\\miniwin_utilities.h ..\\..\\..\\MiniWin\\miniwin_utilities.h\n"
+			"mklink /h src\\dialogs\\hal\\hal_timer.h ..\\..\\..\\MiniWin\\hal\\hal_timer.h\n"
+			"mklink /h src\\dialogs\\ui\\ui_common.h ..\\..\\..\\MiniWin\\ui\\ui_common.h\n"
+			"mklink /h src\\dialogs\\ui\\ui\\ui_arrow.h ..\\..\\..\\MiniWin\\ui\\ui_arrow.h\n"
+			"mklink /h src\\dialogs\\ui\\ui\\ui_button.h ..\\..\\..\\MiniWin\\ui\\ui_button.h\n"
+			"mklink /h src\\dialogs\\ui\\ui\\ui_check_box.h ..\\..\\..\\MiniWin\\ui\\ui_check_box.h\n"
+			"mklink /h src\\dialogs\\ui\\ui\\ui_keyboard.h ..\\..\\..\\MiniWin\\ui\\ui_keyboard.h\n"
+			"mklink /h src\\dialogs\\ui\\ui\\ui_keypad.h ..\\..\\..\\MiniWin\\ui\\ui_keypad.h\n"
+			"mklink /h src\\dialogs\\ui\\ui\\ui_label.h ..\\..\\..\\MiniWin\\ui\\ui_label.h\n"
+			"mklink /h src\\dialogs\\ui\\ui\\ui_list_box.h ..\\..\\..\\MiniWin\\ui\\ui_list_box.h\n"
+			"mklink /h src\\dialogs\\ui\\ui\\ui_progress_bar.h ..\\..\\..\\MiniWin\\ui\\ui_progress_bar.h\n"
+			"mklink /h src\\dialogs\\ui\\ui\\ui_radio_button.h ..\\..\\..\\MiniWin\\ui\\ui_radio_button.h\n"
+			"mklink /h src\\dialogs\\ui\\ui\\ui_scroll_bar_horiz.h ..\\..\\..\\MiniWin\\ui\\ui_scroll_bar_horiz.h\n"
+			"mklink /h src\\dialogs\\ui\\ui\\ui_scroll_bar_vert.h ..\\..\\..\\MiniWin\\ui\\ui_scroll_bar_vert.h\n"
+			"mklink /h src\\dialogs\\ui\\ui\\ui_tabs.h ..\\..\\..\\MiniWin\\ui\\ui_tabs.h\n"
+			"mklink /h src\\dialogs\\ui\\ui\\ui_text_box.h ..\\..\\..\\MiniWin\\ui\\ui_text_box.h\n"
+			"mklink /h src\\dialogs\\ui\\ui\\ui_tree.h ..\\..\\..\\MiniWin\\ui\\ui_tree.h\n"
+			"mklink /h src\\dialogs\\ui\\ui\\miniwin_tree_container.h ..\\..\\..\\MiniWin\\miniwin_tree_container.h\n"
+			"mklink /h src\\dialogs\\ui\\ui\\miniwin.h ..\\..\\..\\MiniWin\\miniwin.h\n"
+			"mklink /h src\\dialogs\\dialogs\\dialog_common.h ..\\..\\..\\MiniWin\\dialogs\\dialog_common.h\n"
+			"mklink /h src\\dialogs\\dialogs\\dialogs\\dialog_colour_chooser.h ..\\..\\..\\MiniWin\\dialogs\\dialog_colour_chooser.h\n"
+			"mklink /h src\\dialogs\\dialogs\\dialogs\\dialog_date_chooser.h ..\\..\\..\\MiniWin\\dialogs\\dialog_date_chooser.h\n"
+			"mklink /h src\\dialogs\\dialogs\\dialogs\\dialog_file_chooser.h ..\\..\\..\\MiniWin\\dialogs\\dialog_file_chooser.h\n"
+			"mklink /h src\\dialogs\\dialogs\\dialogs\\dialog_number_entry.h ..\\..\\..\\MiniWin\\dialogs\\dialog_number_entry.h\n"
+			"mklink /h src\\dialogs\\dialogs\\dialogs\\dialog_one_button.h ..\\..\\..\\MiniWin\\dialogs\\dialog_one_button.h\n"
+			"mklink /h src\\dialogs\\dialogs\\dialogs\\dialog_text_entry.h ..\\..\\..\\MiniWin\\dialogs\\dialog_text_entry.h\n"
+			"mklink /h src\\dialogs\\dialogs\\dialogs\\dialog_time_chooser.h ..\\..\\..\\MiniWin\\dialogs\\dialog_time_chooser.h\n"
+			"mklink /h src\\dialogs\\dialogs\\dialogs\\dialog_two_button.h ..\\..\\..\\MiniWin\\dialogs\\dialog_two_button.h\n"
+			"mklink /h src\\dialogs\\app.h app\\app.h\n\n"
+			"REM MINIWIN\n"
+			"mklink /h src\\miniwin.c ..\\..\\..\\MiniWin\\miniwin.c\n"
+			"mklink /h src\\miniwin_debug.c ..\\..\\..\\MiniWin\\miniwin_debug.c\n"
+			"mklink /h src\\miniwin_message_queue.c ..\\..\\..\\MiniWin\\miniwin_message_queue.c\n"
+			"mklink /h src\\miniwin_settings.c ..\\..\\..\\MiniWin\\miniwin_settings.c\n"
+			"mklink /h src\\miniwin_touch.c ..\\..\\..\\MiniWin\\miniwin_touch.c\n"
+			"mklink /h src\\miniwin_tree_container.c ..\\..\\..\\MiniWin\\miniwin_tree_container.c\n"
+			"mklink /h src\\miniwin_utilities.c ..\\..\\..\\MiniWin\\miniwin_utilities.c\n"
+			"mklink /h src\\calibrate.c ..\\..\\..\\MiniWin\\calibrate.c\n"
+			"mklink /h src\\calibrate.h ..\\..\\..\\MiniWin\\calibrate.h\n"
+			"mklink /h src\\miniwin.h ..\\..\\..\\MiniWin\\miniwin.h\n"
+			"mklink /h src\\miniwin_config.h ..\\..\\..\\MiniWinGen_Common\\miniwin_config.h\n"
+			"mklink /h src\\miniwin_debug.h ..\\..\\..\\MiniWin\\miniwin_debug.h\n"
+			"mklink /h src\\miniwin_settings.h ..\\..\\..\\MiniWin\\miniwin_settings.h\n"
+			"mklink /h src\\miniwin_touch.h ..\\..\\..\\MiniWin\\miniwin_touch.h\n"
+			"mklink /h src\\gl\\gl.h ..\\..\\..\\MiniWin\\gl\\gl.h\n"
+			"mklink /h src\\gl\\miniwin_utilities.h ..\\..\\..\\MiniWin\\miniwin_utilities.h\n"
+			"mklink /h src\\gl\\hal\\hal_lcd.h ..\\..\\..\\MiniWin\\hal\\hal_lcd.h\n"
+			"mklink /h src\\hal\\hal_timer.h ..\\..\\..\\MiniWin\\hal\\hal_timer.h\n"
+			"mklink /h src\\hal\\hal_touch.h ..\\..\\..\\MiniWin\\hal\\hal_touch.h\n"
+			"mklink /h src\\hal\\hal_init.h ..\\..\\..\\MiniWin\\hal\\hal_init.h\n"
+			"mklink /h src\\hal\\hal_non_vol.h ..\\..\\..\\MiniWin\\hal\\hal_non_vol.h\n"
+			"mklink /h src\\hal\\hal_lcd.h ..\\..\\..\\MiniWin\\hal\\hal_lcd.h\n"
+			"mklink /h src\\hal\\hal_delay.h ..\\..\\..\\MiniWin\\hal\\hal_delay.h\n"
+			"mklink /h src\\bitmaps\\mw_bitmaps.h ..\\..\\..\\MiniWin\\bitmaps\\mw_bitmaps.h\n"
+			"mklink /h src\\miniwin_utilities.h ..\\..\\..\\MiniWin\\miniwin_utilities.h\n"
+			"mklink /h src\\ui\\ui_common.h ..\\..\\..\\MiniWin\\ui\\ui_common.h\n"
+			"mklink /h src\\ui\\ui\\ui_arrow.h ..\\..\\..\\MiniWin\\ui\\ui_arrow.h\n"
+			"mklink /h src\\ui\\ui\\ui_button.h ..\\..\\..\\MiniWin\\ui\\ui_button.h\n"
+			"mklink /h src\\ui\\ui\\ui_check_box.h ..\\..\\..\\MiniWin\\ui\\ui_check_box.h\n"
+			"mklink /h src\\ui\\ui\\ui_keyboard.h ..\\..\\..\\MiniWin\\ui\\ui_keyboard.h\n"
+			"mklink /h src\\ui\\ui\\ui_keypad.h ..\\..\\..\\MiniWin\\ui\\ui_keypad.h\n"
+			"mklink /h src\\ui\\ui\\ui_label.h ..\\..\\..\\MiniWin\\ui\\ui_label.h\n"
+			"mklink /h src\\ui\\ui\\ui_list_box.h ..\\..\\..\\MiniWin\\ui\\ui_list_box.h\n"
+			"mklink /h src\\ui\\ui\\ui_progress_bar.h ..\\..\\..\\MiniWin\\ui\\ui_progress_bar.h\n"
+			"mklink /h src\\ui\\ui\\ui_radio_button.h ..\\..\\..\\MiniWin\\ui\\ui_radio_button.h\n"
+			"mklink /h src\\ui\\ui\\ui_scroll_bar_horiz.h ..\\..\\..\\MiniWin\\ui\\ui_scroll_bar_horiz.h\n"
+			"mklink /h src\\ui\\ui\\ui_scroll_bar_vert.h ..\\..\\..\\MiniWin\\ui\\ui_scroll_bar_vert.h\n"
+			"mklink /h src\\ui\\ui\\ui_tabs.h ..\\..\\..\\MiniWin\\ui\\ui_tabs.h\n"
+			"mklink /h src\\ui\\ui\\ui_text_box.h ..\\..\\..\\MiniWin\\ui\\ui_text_box.h\n"
+			"mklink /h src\\ui\\ui\\ui_tree.h ..\\..\\..\\MiniWin\\ui\\ui_tree.h\n"
+			"mklink /h src\\ui\\ui\\miniwin_tree_container.h ..\\..\\..\\MiniWin\\miniwin_tree_container.h\n"
+			"mklink /h src\\ui\\ui\\miniwin.h ..\\..\\..\\MiniWin\\miniwin.h\n"
+			"mklink /h src\\dialogs\\dialog_common.h ..\\..\\..\\MiniWin\\dialogs\\dialog_common.h\n"
+			"mklink /h src\\dialogs\\dialogs\\dialog_colour_chooser.h ..\\..\\..\\MiniWin\\dialogs\\dialog_colour_chooser.h\n"
+			"mklink /h src\\dialogs\\dialogs\\dialog_date_chooser.h ..\\..\\..\\MiniWin\\dialogs\\dialog_date_chooser.h\n"
+			"mklink /h src\\dialogs\\dialogs\\dialog_file_chooser.h ..\\..\\..\\MiniWin\\dialogs\\dialog_file_chooser.h\n"
+			"mklink /h src\\dialogs\\dialogs\\dialog_number_entry.h ..\\..\\..\\MiniWin\\dialogs\\dialog_number_entry.h\n"
+			"mklink /h src\\dialogs\\dialogs\\dialog_one_button.h ..\\..\\..\\MiniWin\\dialogs\\dialog_one_button.h\n"
+			"mklink /h src\\dialogs\\dialogs\\dialog_text_entry.h ..\\..\\..\\MiniWin\\dialogs\\dialog_text_entry.h\n"
+			"mklink /h src\\dialogs\\dialogs\\dialog_time_chooser.h ..\\..\\..\\MiniWin\\dialogs\\dialog_time_chooser.h\n"
+			"mklink /h src\\dialogs\\dialogs\\dialog_two_button.h ..\\..\\..\\MiniWin\\dialogs\\dialog_two_button.h\n"
+			"mklink /h src\\miniwin_message_queue.h ..\\..\\..\\MiniWin\\miniwin_message_queue.h\n\n"
+			"REM UI\n"
+			"mklink /h src\\ui\\ui_arrow.c ..\\..\\..\\MiniWin\\ui\\ui_arrow.c\n"
+			"mklink /h src\\ui\\ui_button.c ..\\..\\..\\MiniWin\\ui\\ui_button.c\n"
+			"mklink /h src\\ui\\ui_check_box.c ..\\..\\..\\MiniWin\\ui\\ui_check_box.c\n"
+			"mklink /h src\\ui\\ui_common.c ..\\..\\..\\MiniWin\\ui\\ui_common.c\n"
+			"mklink /h src\\ui\\ui_keyboard.c ..\\..\\..\\MiniWin\\ui\\ui_keyboard.c\n"
+			"mklink /h src\\ui\\ui_keypad.c ..\\..\\..\\MiniWin\\ui\\ui_keypad.c\n"
+			"mklink /h src\\ui\\ui_label.c ..\\..\\..\\MiniWin\\ui\\ui_label.c\n"
+			"mklink /h src\\ui\\ui_list_box.c ..\\..\\..\\MiniWin\\ui\\ui_list_box.c\n"
+			"mklink /h src\\ui\\ui_progress_bar.c ..\\..\\..\\MiniWin\\ui\\ui_progress_bar.c\n"
+			"mklink /h src\\ui\\ui_radio_button.c ..\\..\\..\\MiniWin\\ui\\ui_radio_button.c\n"
+			"mklink /h src\\ui\\ui_scroll_bar_horiz.c ..\\..\\..\\MiniWin\\ui\\ui_scroll_bar_horiz.c\n"
+			"mklink /h src\\ui\\ui_scroll_bar_vert.c ..\\..\\..\\MiniWin\\ui\\ui_scroll_bar_vert.c\n"
+			"mklink /h src\\ui\\ui_tabs.c ..\\..\\..\\MiniWin\\ui\\ui_tabs.c\n"
+			"mklink /h src\\ui\\ui_text_box.c ..\\..\\..\\MiniWin\\ui\\ui_text_box.c\n"
+			"mklink /h src\\ui\\ui_tree.c ..\\..\\..\\MiniWin\\ui\\ui_tree.c\n"
+			"mklink /h src\\ui\\miniwin.h ..\\..\\..\\MiniWin\\miniwin.h\n"
+			"mklink /h src\\ui\\miniwin_config.h ..\\..\\..\\MiniWinGen_Common\\miniwin_config.h\n"
+			"mklink /h src\\ui\\miniwin_debug.h ..\\..\\..\\MiniWin\\miniwin_debug.h\n"
+			"mklink /h src\\ui\\miniwin_settings.h ..\\..\\..\\MiniWin\\miniwin_settings.h\n"
+			"mklink /h src\\ui\\gl\\miniwin_utilities.h ..\\..\\..\\MiniWin\\miniwin_utilities.h\n"
+			"mklink /h src\\ui\\calibrate.h ..\\..\\..\\MiniWin\\calibrate.h\n"
+			"mklink /h src\\ui\\gl\\gl.h ..\\..\\..\\MiniWin\\gl\\gl.h\n"
+			"mklink /h src\\ui\\gl\\hal\\hal_lcd.h ..\\..\\..\\MiniWin\\hal\\hal_lcd.h\n"
+			"mklink /h src\\ui\\gl\\gl\\fonts\\bitmapped\\fonts.h ..\\..\\..\\MiniWin\\gl\\fonts\\bitmapped\\fonts.h\n"
+			"mklink /h src\\ui\\bitmaps\\mw_bitmaps.h ..\\..\\..\\MiniWin\\bitmaps\\mw_bitmaps.h\n"
+			"mklink /h src\\ui\\miniwin_utilities.h ..\\..\\..\\MiniWin\\miniwin_utilities.h\n"
+			"mklink /h src\\ui\\hal\\hal_timer.h ..\\..\\..\\MiniWin\\hal\\hal_timer.h\n"
+			"mklink /h src\\ui\\ui\\ui_common.h ..\\..\\..\\MiniWin\\ui\\ui_common.h\n"
+			"mklink /h src\\ui\\ui\\ui\\ui_arrow.h ..\\..\\..\\MiniWin\\ui\\ui_arrow.h\n"
+			"mklink /h src\\ui\\ui\\ui\\ui_button.h ..\\..\\..\\MiniWin\\ui\\ui_button.h\n"
+			"mklink /h src\\ui\\ui\\ui\\ui_check_box.h ..\\..\\..\\MiniWin\\ui\\ui_check_box.h\n"
+			"mklink /h src\\ui\\ui\\ui\\ui_keyboard.h ..\\..\\..\\MiniWin\\ui\\ui_keyboard.h\n"
+			"mklink /h src\\ui\\ui\\ui\\ui_keypad.h ..\\..\\..\\MiniWin\\ui\\ui_keypad.h\n"
+			"mklink /h src\\ui\\ui\\ui\\ui_label.h ..\\..\\..\\MiniWin\\ui\\ui_label.h\n"
+			"mklink /h src\\ui\\ui\\ui\\ui_list_box.h ..\\..\\..\\MiniWin\\ui\\ui_list_box.h\n"
+			"mklink /h src\\ui\\ui\\ui\\ui_progress_bar.h ..\\..\\..\\MiniWin\\ui\\ui_progress_bar.h\n"
+			"mklink /h src\\ui\\ui\\ui\\ui_radio_button.h ..\\..\\..\\MiniWin\\ui\\ui_radio_button.h\n"
+			"mklink /h src\\ui\\ui\\ui\\ui_scroll_bar_horiz.h ..\\..\\..\\MiniWin\\ui\\ui_scroll_bar_horiz.h\n"
+			"mklink /h src\\ui\\ui\\ui\\ui_scroll_bar_vert.h ..\\..\\..\\MiniWin\\ui\\ui_scroll_bar_vert.h\n"
+			"mklink /h src\\ui\\ui\\ui\\ui_tabs.h ..\\..\\..\\MiniWin\\ui\\ui_tabs.h\n"
+			"mklink /h src\\ui\\ui\\ui\\ui_text_box.h ..\\..\\..\\MiniWin\\ui\\ui_text_box.h\n"
+			"mklink /h src\\ui\\ui\\ui\\ui_tree.h ..\\..\\..\\MiniWin\\ui\\ui_tree.h\n"
+			"mklink /h src\\ui\\ui\\ui\\miniwin_tree_container.h ..\\..\\..\\MiniWin\\miniwin_tree_container.h\n"
+			"mklink /h src\\ui\\ui\\ui\\miniwin.h ..\\..\\..\\MiniWin\\miniwin.h\n"
+			"mklink /h src\\ui\\dialogs\\dialog_common.h ..\\..\\..\\MiniWin\\dialogs\\dialog_common.h\n"
+			"mklink /h src\\ui\\dialogs\\dialogs\\dialog_colour_chooser.h ..\\..\\..\\MiniWin\\dialogs\\dialog_colour_chooser.h\n"
+			"mklink /h src\\ui\\dialogs\\dialogs\\dialog_date_chooser.h ..\\..\\..\\MiniWin\\dialogs\\dialog_date_chooser.h\n"
+			"mklink /h src\\ui\\dialogs\\dialogs\\dialog_file_chooser.h ..\\..\\..\\MiniWin\\dialogs\\dialog_file_chooser.h\n"
+			"mklink /h src\\ui\\dialogs\\dialogs\\dialog_number_entry.h ..\\..\\..\\MiniWin\\dialogs\\dialog_number_entry.h\n"
+			"mklink /h src\\ui\\dialogs\\dialogs\\dialog_one_button.h ..\\..\\..\\MiniWin\\dialogs\\dialog_one_button.h\n"
+			"mklink /h src\\ui\\dialogs\\dialogs\\dialog_text_entry.h ..\\..\\..\\MiniWin\\dialogs\\dialog_text_entry.h\n"
+			"mklink /h src\\ui\\dialogs\\dialogs\\dialog_time_chooser.h ..\\..\\..\\MiniWin\\dialogs\\dialog_time_chooser.h\n"
+			"mklink /h src\\ui\\dialogs\\dialogs\\dialog_two_button.h ..\\..\\..\\MiniWin\\dialogs\\dialog_two_button.h\n\n";
+
+		outfileBat <<
+			"REM PROJECT COMMON\n"
+			"mkdir src\\" + json["TargetName"].string_value() + "_Common\n"
+			"mkdir src\\" + json["TargetName"].string_value() + "_Common\\gl\n"
+			"mkdir src\\" + json["TargetName"].string_value() + "_Common\\hal\n"
+			"mkdir src\\" + json["TargetName"].string_value() + "_Common\\gl\\hal\n"
+			"mkdir src\\" + json["TargetName"].string_value() + "_Common\\gl\\gl\\fonts\\bitmapped\n"
+			"mkdir src\\" + json["TargetName"].string_value() + "_Common\\bitmaps\n"
+			"mkdir src\\" + json["TargetName"].string_value() + "_Common\\ui\n"
+			"mkdir src\\" + json["TargetName"].string_value() + "_Common\\ui\\ui\n"
+			"mkdir src\\" + json["TargetName"].string_value() + "_Common\\dialogs\n"
+			"mkdir src\\" + json["TargetName"].string_value() + "_Common\\dialogs\\dialogs\n";
+
+		outfileBat <<
+			"mklink /h src\\" + json["TargetName"].string_value() + "_Common\\miniwin.h ..\\..\\..\\MiniWin\\miniwin.h\n"
+			"mklink /h src\\" + json["TargetName"].string_value() + "_Common\\miniwin_debug.h ..\\..\\..\\MiniWin\\miniwin_debug.h\n"
+			"mklink /h src\\" + json["TargetName"].string_value() + "_Common\\miniwin_settings.h ..\\..\\..\\MiniWin\\miniwin_settings.h\n"
+			"mklink /h src\\" + json["TargetName"].string_value() + "_Common\\gl\\miniwin_utilities.h ..\\..\\..\\MiniWin\\miniwin_utilities.h\n"
+			"mklink /h src\\" + json["TargetName"].string_value() + "_Common\\calibrate.h ..\\..\\..\\MiniWin\\calibrate.h\n"
+			"mklink /h src\\" + json["TargetName"].string_value() + "_Common\\gl\\gl.h ..\\..\\..\\MiniWin\\gl\\gl.h\n"
+			"mklink /h src\\" + json["TargetName"].string_value() + "_Common\\miniwin_config.h ..\\..\\..\\" + json["TargetName"].string_value() + "_Common\\miniwin_config.h\n"
+			"mklink /h src\\" + json["TargetName"].string_value() + "_Common\\gl\\hal\\hal_lcd.h ..\\..\\..\\MiniWin\\hal\\hal_lcd.h\n"
+			"mklink /h src\\" + json["TargetName"].string_value() + "_Common\\gl\\gl\\fonts\\bitmapped\\fonts.h ..\\..\\..\\MiniWin\\gl\\fonts\\bitmapped\\fonts.h\n"
+			"mklink /h src\\" + json["TargetName"].string_value() + "_Common\\bitmaps\\mw_bitmaps.h ..\\..\\..\\MiniWin\\bitmaps\\mw_bitmaps.h\n"
+			"mklink /h src\\" + json["TargetName"].string_value() + "_Common\\miniwin_utilities.h ..\\..\\..\\MiniWin\\miniwin_utilities.h\n"
+			"mklink /h src\\" + json["TargetName"].string_value() + "_Common\\hal\\hal_timer.h ..\\..\\..\\MiniWin\\hal\\hal_timer.h\n"
+			"mklink /h src\\" + json["TargetName"].string_value() + "_Common\\ui\\ui_common.h ..\\..\\..\\MiniWin\\ui\\ui_common.h\n"
+			"mklink /h src\\" + json["TargetName"].string_value() + "_Common\\ui\\ui\\ui_arrow.h ..\\..\\..\\MiniWin\\ui\\ui_arrow.h\n"
+			"mklink /h src\\" + json["TargetName"].string_value() + "_Common\\ui\\ui\\ui_button.h ..\\..\\..\\MiniWin\\ui\\ui_button.h\n"
+			"mklink /h src\\" + json["TargetName"].string_value() + "_Common\\ui\\ui\\ui_check_box.h ..\\..\\..\\MiniWin\\ui\\ui_check_box.h\n"
+			"mklink /h src\\" + json["TargetName"].string_value() + "_Common\\ui\\ui\\ui_keyboard.h ..\\..\\..\\MiniWin\\ui\\ui_keyboard.h\n"
+			"mklink /h src\\" + json["TargetName"].string_value() + "_Common\\ui\\ui\\ui_keypad.h ..\\..\\..\\MiniWin\\ui\\ui_keypad.h\n"
+			"mklink /h src\\" + json["TargetName"].string_value() + "_Common\\ui\\ui\\ui_label.h ..\\..\\..\\MiniWin\\ui\\ui_label.h\n"
+			"mklink /h src\\" + json["TargetName"].string_value() + "_Common\\ui\\ui\\ui_list_box.h ..\\..\\..\\MiniWin\\ui\\ui_list_box.h\n"
+			"mklink /h src\\" + json["TargetName"].string_value() + "_Common\\ui\\ui\\ui_progress_bar.h ..\\..\\..\\MiniWin\\ui\\ui_progress_bar.h\n"
+			"mklink /h src\\" + json["TargetName"].string_value() + "_Common\\ui\\ui\\ui_radio_button.h ..\\..\\..\\MiniWin\\ui\\ui_radio_button.h\n"
+			"mklink /h src\\" + json["TargetName"].string_value() + "_Common\\ui\\ui\\ui_scroll_bar_horiz.h ..\\..\\..\\MiniWin\\ui\\ui_scroll_bar_horiz.h\n"
+			"mklink /h src\\" + json["TargetName"].string_value() + "_Common\\ui\\ui\\ui_scroll_bar_vert.h ..\\..\\..\\MiniWin\\ui\\ui_scroll_bar_vert.h\n"
+			"mklink /h src\\" + json["TargetName"].string_value() + "_Common\\ui\\ui\\ui_tabs.h ..\\..\\..\\MiniWin\\ui\\ui_tabs.h\n"
+			"mklink /h src\\" + json["TargetName"].string_value() + "_Common\\ui\\ui\\ui_text_box.h ..\\..\\..\\MiniWin\\ui\\ui_text_box.h\n"
+			"mklink /h src\\" + json["TargetName"].string_value() + "_Common\\ui\\ui\\ui_tree.h ..\\..\\..\\MiniWin\\ui\\ui_tree.h\n"
+			"mklink /h src\\" + json["TargetName"].string_value() + "_Common\\ui\\ui\\miniwin_tree_container.h ..\\..\\..\\MiniWin\\miniwin_tree_container.h\n"
+			"mklink /h src\\" + json["TargetName"].string_value() + "_Common\\ui\\ui\\miniwin.h ..\\..\\..\\MiniWin\\miniwin.h\n"
+			"mklink /h src\\" + json["TargetName"].string_value() + "_Common\\dialogs\\dialog_common.h ..\\..\\..\\MiniWin\\dialogs\\dialog_common.h\n"
+			"mklink /h src\\" + json["TargetName"].string_value() + "_Common\\dialogs\\dialogs\\dialog_colour_chooser.h ..\\..\\..\\MiniWin\\dialogs\\dialog_colour_chooser.h\n"
+			"mklink /h src\\" + json["TargetName"].string_value() + "_Common\\dialogs\\dialogs\\dialog_date_chooser.h ..\\..\\..\\MiniWin\\dialogs\\dialog_date_chooser.h\n"
+			"mklink /h src\\" + json["TargetName"].string_value() + "_Common\\dialogs\\dialogs\\dialog_file_chooser.h ..\\..\\..\\MiniWin\\dialogs\\dialog_file_chooser.h\n"
+			"mklink /h src\\" + json["TargetName"].string_value() + "_Common\\dialogs\\dialogs\\dialog_number_entry.h ..\\..\\..\\MiniWin\\dialogs\\dialog_number_entry.h\n"
+			"mklink /h src\\" + json["TargetName"].string_value() + "_Common\\dialogs\\dialogs\\dialog_one_button.h ..\\..\\..\\MiniWin\\dialogs\\dialog_one_button.h\n"
+			"mklink /h src\\" + json["TargetName"].string_value() + "_Common\\dialogs\\dialogs\\dialog_text_entry.h ..\\..\\..\\MiniWin\\dialogs\\dialog_text_entry.h\n"
+			"mklink /h src\\" + json["TargetName"].string_value() + "_Common\\dialogs\\dialogs\\dialog_time_chooser.h ..\\..\\..\\MiniWin\\dialogs\\dialog_time_chooser.h\n"
+			"mklink /h src\\" + json["TargetName"].string_value() + "_Common\\dialogs\\dialogs\\dialog_two_button.h ..\\..\\..\\MiniWin\\dialogs\\dialog_two_button.h\n"
+			"mklink /h src\\" + json["TargetName"].string_value() + "_Common\\dialogs\\dialogs\\miniwin.h ..\\..\\..\\MiniWin\\miniwin.h\n"
+			"mklink /h src\\" + json["TargetName"].string_value() + "_Common\\app.h app\\app.h\n"
+			"mklink /h src\\app.h app\\app.h\n"
+			"mklink /h src\\" + json["TargetName"].string_value() + "_Common\\app.c app\\app.c\n\n";
+
+		outfileBat <<
+			"REM PROJECT SOURCE/HEADER FILES\n"
+			"mklink /h src\\MiniWinGen_Common\\miniwin_user.c ..\\..\\..\\MiniWinGen_Common\\miniwin_user.c\n"
+			"mklink /h src\\MiniWinGen_Common\\miniwin_user.h ..\\..\\..\\MiniWinGen_Common\\miniwin_user.h\n";
+
+	    for (auto& window : json["Windows"].array_items())
+	    {
+	    	outfileBat << "mklink /h src\\" + json["TargetName"].string_value() + "_Common\\" + window["Name"].string_value() +
+	    			".c ..\\..\\..\\" + json["TargetName"].string_value() + "_Common\\" + window["Name"].string_value() + ".c\n";
+	    	outfileBat << "mklink /h src\\" + json["TargetName"].string_value() + "_Common\\" + window["Name"].string_value() +
+	    			".h ..\\..\\..\\" + json["TargetName"].string_value() + "_Common\\" + window["Name"].string_value() + ".h\n";
+	    }
+
+		outfileBat.close();
+    }
 
 	// check duplicate identifier names
 	for (uint32_t i = 0; i < all_identifier_names.size(); i++)
