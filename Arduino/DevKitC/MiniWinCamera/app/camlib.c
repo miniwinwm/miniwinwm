@@ -32,6 +32,8 @@ SOFTWARE.
 #include "camlib.h"
 #include "driver/ledc.h"
 #include "driver/i2c.h"
+#include "soc/timer_group_struct.h"
+#include "soc/timer_group_reg.h"
 
 /****************
 *** CONSTANTS ***
@@ -183,7 +185,6 @@ static void xclk_init(void)
     timer_conf.freq_hz = 10000000U;
     timer_conf.speed_mode = LEDC_HIGH_SPEED_MODE;
     timer_conf.timer_num = LEDC_TIMER_0 ;
-    timer_conf.clk_cfg = LEDC_AUTO_CLK;
     (void)ledc_timer_config(&timer_conf);
 
     ch_conf.gpio_num = XLK;
@@ -198,17 +199,17 @@ static void xclk_init(void)
 
 static void cam_paralell_io_init(void)
 {
-	(void)gpio_set_direction(D0, GPIO_MODE_INPUT);
-	(void)gpio_set_direction(D1, GPIO_MODE_INPUT);
-	(void)gpio_set_direction(D2, GPIO_MODE_INPUT);
-	(void)gpio_set_direction(D3, GPIO_MODE_INPUT);
-	(void)gpio_set_direction(D4, GPIO_MODE_INPUT);
-	(void)gpio_set_direction(D5, GPIO_MODE_INPUT);
-	(void)gpio_set_direction(D6, GPIO_MODE_INPUT);
-	(void)gpio_set_direction(D7, GPIO_MODE_INPUT);
-	(void)gpio_set_direction(HS, GPIO_MODE_INPUT);
-	(void)gpio_set_direction(VS, GPIO_MODE_INPUT);
-	(void)gpio_set_direction(PLK, GPIO_MODE_INPUT);
+    (void)gpio_set_direction(D0, GPIO_MODE_INPUT);
+    (void)gpio_set_direction(D1, GPIO_MODE_INPUT);
+    (void)gpio_set_direction(D2, GPIO_MODE_INPUT);
+    (void)gpio_set_direction(D3, GPIO_MODE_INPUT);
+    (void)gpio_set_direction(D4, GPIO_MODE_INPUT);
+    (void)gpio_set_direction(D5, GPIO_MODE_INPUT);
+    (void)gpio_set_direction(D6, GPIO_MODE_INPUT);
+    (void)gpio_set_direction(D7, GPIO_MODE_INPUT);
+    (void)gpio_set_direction(HS, GPIO_MODE_INPUT);
+    (void)gpio_set_direction(VS, GPIO_MODE_INPUT);
+    (void)gpio_set_direction(PLK, GPIO_MODE_INPUT);
 }
 
 static void sccb_init(void)
@@ -280,9 +281,6 @@ void camlib_capture(void)
 {
 	uint_fast32_t i;
 
-	portMUX_TYPE myMutex = portMUX_INITIALIZER_UNLOCKED;
-	portENTER_CRITICAL(&myMutex);
-
 	/* wait for VS */
 	while (gpio_get_level(VS) == 0)
 	{
@@ -293,9 +291,18 @@ void camlib_capture(void)
 	}
 	i = 0UL;
 
+	portMUX_TYPE myMutex = portMUX_INITIALIZER_UNLOCKED;
+	portENTER_CRITICAL(&myMutex);
+
     uint_fast8_t y;
 	for (y = 0U; y < 120U; y++)
 	{
+
+		/* kick the interrupt watchdog to stop panics */
+		TIMERG1.wdt_wprotect=TIMG_WDT_WKEY_VALUE;
+		TIMERG1.wdt_feed=1;
+		TIMERG1.wdt_wprotect=0;
+
 		/* wait for first HS */
 		while (gpio_get_level(HS) == 0)
 		{

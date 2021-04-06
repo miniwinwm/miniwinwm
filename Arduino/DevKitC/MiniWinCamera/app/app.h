@@ -2,7 +2,7 @@
 
 MIT License
 
-Copyright (c) John Blaiklock 2019 miniwin Embedded Window Manager
+Copyright (c) John Blaiklock 2020 miniwin Embedded Window Manager
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -24,8 +24,8 @@ SOFTWARE.
 
 */
 
-#ifndef CAMLIB_H
-#define CAMLIB_H
+#ifndef APP_H
+#define APP_H
 
 #ifdef __cplusplus
  extern "C" {
@@ -35,7 +35,10 @@ SOFTWARE.
 *** INCLUDES ***
 ***************/
 
-#include <stdint.h>
+/**
+ * Function called from main to perform application initializations
+ */
+void app_init(void);
 
 /****************
 *** CONSTANTS ***
@@ -52,23 +55,6 @@ SOFTWARE.
 /***************************
 *** FUNCTIONS PROTOTYPES ***
 ***************************/
-
-/**
- * Perform any hardware initializations
- */
-void camlib_init(void);
-
-/**
- * Get a pointer to memory buffer holding previously captured frame
- *
- * @return Pointer to buffer holding 16 bit colour data for a QQVGA frame 160 x 120
- */
-uint16_t *camlib_get_frame(void);
-
-/**
- * Capture a frame
- */
-void camlib_capture(void);
 
 #ifdef __cplusplus
 }
