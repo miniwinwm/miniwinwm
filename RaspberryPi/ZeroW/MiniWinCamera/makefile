@@ -1,4 +1,4 @@
-PROJECT = MiniWinFixedWindows
+PROJECT = MiniWinCamera
 
 BINARY = $(PROJECT)
 SRCS := $(wildcard src/*.c) \
@@ -14,15 +14,16 @@ SRCS := $(wildcard src/*.c) \
 	$(wildcard ../../../MiniWin/gl/fonts/truetype/*.c) \
 	$(wildcard ../../../MiniWin/gl/fonts/truetype/mcufont/*.c)
 CC = gcc
+CPP = g++
 CFLAGS = -I../../../MiniWin -I../../../MiniWin/gl/fonts/truetype/mcufont -Isrc -I../../../$(PROJECT)_Common -g -Wall -Os -DRASPBERRY_PI_ZERO_W
 OBJS := $(SRCS:.c=.o)
 DEPS := $(OBJS:.o=.d)
-LIBS = -lm -lpthread
+LIBS = -lm -lpthread lib/camlib_opencv.o -lopencv_core -lopencv_videoio -lopencv_imgproc
 
 all: $(BINARY)
 
 $(BINARY) : $(OBJS)
-	$(CC) $^ $(LIBS) -o $@
+	$(CPP) $^ $(LIBS) -o $@
 	
 -include $(DEPS)
 
