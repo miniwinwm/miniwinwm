@@ -16,7 +16,7 @@ SRCS := $(wildcard src/*.c) \
 	$(wildcard ../../../MiniWin/gl/fonts/truetype/mcufont/*.c)
 CC = gcc
 CPP = g++
-CFLAGS = -D_WIN32 -I../../../MiniWin -I../../../MiniWin/gl/fonts/truetype/mcufont -Isrc -I../../../$(PROJECT)_Common -g -Wall
+CFLAGS = -D_WIN32 -I../../../MiniWin -I../../../MiniWin/gl/fonts/truetype/mcufont -Isrc -I../../../$(PROJECT)_Common -g -Wall -std=c99
 OBJS := $(SRCS:.c=.o)
 DEPS := $(OBJS:.o=.d)
 LIBS = -Llib lib/camlib_opencv.o -lopencv_core.dll -lopencv_imgproc.dll -lopencv_videoio.dll -lgdi32  
