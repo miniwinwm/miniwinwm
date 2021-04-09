@@ -2,8 +2,8 @@ SRC = $(wildcard *.cpp)
 OBJ = $(SRC:.cpp=.o)
 
 # choose your compiler
-# CPP = clang++
-CPP = g++
+CPP = clang++
+#CPP = g++
 LDFLAGS = 
 CPPFLAGS = -std=c++11 -g
 
