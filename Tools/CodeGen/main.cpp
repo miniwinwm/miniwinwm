@@ -3821,16 +3821,15 @@ int main(int argc, char **argv)
 				"	$(wildcard ../../../MiniWin/gl/*.c) \\\n"
 				"	$(wildcard ../../../MiniWin/gl/fonts/bitmapped/*.c) \\\n"
 				"	$(wildcard ../../../MiniWin/gl/fonts/truetype/*.c) \\\n"
-				"	$(wildcard ../../../MiniWin/gl/fonts/truetype/mcufont/*.c)\n"
-				"CC = gcc\n";
+				"	$(wildcard ../../../MiniWin/gl/fonts/truetype/mcufont/*.c)\n";
 	
 		if (json["TargetType"].string_value() == "Windows")
 		{
-			outfileMake << "CFLAGS = -D_WIN32 ";
+			outfileMake << "CC = gcc\nCFLAGS = -D_WIN32 ";
 		}
 		else if (json["TargetType"].string_value() == "Linux")
 		{
-			outfileMake << "CFLAGS = -DLINUX_SIM ";
+			outfileMake << "\n# choose you compiler\n# CC=clang\nCC = gcc\nCFLAGS = -DLINUX_SIM -std=c99 ";
 		}
 	
 		outfileMake <<
