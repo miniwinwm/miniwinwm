@@ -3825,7 +3825,7 @@ int main(int argc, char **argv)
 	
 		if (json["TargetType"].string_value() == "Windows")
 		{
-			outfileMake << "CC = gcc\nCFLAGS = -D_WIN32 -std=c99 ";
+			outfileMake << "\n# choose you compiler\n# CC=clang\nCC = gcc\nCFLAGS = -D_WIN32 -std=c99 ";
 		}
 		else if (json["TargetType"].string_value() == "Linux")
 		{

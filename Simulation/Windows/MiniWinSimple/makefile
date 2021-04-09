@@ -14,6 +14,8 @@ SRCS := $(wildcard src/*.c) \
 	$(wildcard ../../../MiniWin/gl/fonts/bitmapped/*.c) \
 	$(wildcard ../../../MiniWin/gl/fonts/truetype/*.c) \
 	$(wildcard ../../../MiniWin/gl/fonts/truetype/mcufont/*.c)
+# choose your compiler
+# CC = clang		
 CC = gcc
 CFLAGS = -D_WIN32 -I../../../MiniWin -I../../../MiniWin/gl/fonts/truetype/mcufont -Isrc -I../../../$(PROJECT)_Common -g -Wall -std=c99
 OBJS := $(SRCS:.c=.o)

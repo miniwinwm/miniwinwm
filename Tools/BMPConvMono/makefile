@@ -1,11 +1,17 @@
 SRC := main.cpp ../EasyBMP/EasyBMP.cpp
 OBJ = $(SRC:.cpp=.o)
 
+# choose your compiler
+# CPP = clang++
+CPP = g++
 LDFLAGS = 
-CXXFLAGS = -g -I../EasyBMP
+CPPFLAGS = -g -I../EasyBMP
+
+%.o : %.cpp
+	$(CPP) $(CPPFLAGS) -c $< -o $@
 
 BMPConvMono: ${OBJ}
-	${CXX} -o $@ $^ $(LDFLAGS)
+	${CPP} -o $@ $^ $(LDFLAGS)
 	rm $(OBJ)
 	
 .PHONY: clean
