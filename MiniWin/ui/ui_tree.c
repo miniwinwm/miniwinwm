@@ -626,7 +626,6 @@ mw_handle_t mw_ui_tree_add_new(int16_t x,
 
 	if (tree_instance_data->tree_container.nodes_array_size < 1U ||
 			tree_instance_data->tree_container.node_count < 1U ||
-			tree_instance_data->tree_container.nodes_array[0].label == NULL ||
 			tree_instance_data->tree_container.nodes_array[0].handle == MW_INVALID_HANDLE)
 	{
 		MW_ASSERT((bool)false, "Bad tree container");

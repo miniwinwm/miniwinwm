@@ -86,7 +86,11 @@ static uint16_t strip_spaces(mf_str text, uint16_t count, mf_char *last_char)
     {
         i++;
         tmp = mf_getchar(&text);
-        if (tmp != ' ' && tmp != 0xA0 && tmp != '\n' &&
+        if (tmp != ' ' 
+#if MF_ENCODING != MF_ENCODING_ASCII
+        && tmp != 0xA0 
+#endif        
+        && tmp != '\n' &&
             tmp != '\r' && tmp != '\t')
         {
             result = i;

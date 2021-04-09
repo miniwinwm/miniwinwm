@@ -1,3 +1,6 @@
+#define _POSIX_C_SOURCE 199309L		/* this brings in nanosleep in C99 */
+
+#include <time.h>
 #include <unistd.h>
 #include <stdint.h>
 #include <stdbool.h>
@@ -11,7 +14,11 @@ static pthread_t tid[3];
 
 void vTaskDelay(uint32_t ms)
 {
-	usleep(ms * 1000);
+	static struct timespec nano_delay = {(time_t)0, 0L};
+	
+	nano_delay.tv_nsec = (long)ms * 1000000L;
+	
+	(void)nanosleep(&nano_delay, NULL);
 }
 
 void vTaskStartScheduler(void)
@@ -29,7 +36,11 @@ TickType_t xTaskGetTickCount(void)
 
 void vTaskDelayUntil(TickType_t *last, uint32_t increment)
 {
-	usleep(increment * 1000);
+	static struct timespec nano_delay = {(time_t)0, 0L};
+	
+	nano_delay.tv_nsec = (long)increment * 1000000L;
+	
+	(void)nanosleep(&nano_delay, NULL);
 }
 
 QueueHandle_t xQueueCreateStatic(UBaseType_t s1, UBaseType_t s2, uint8_t *sa, StaticQueue_t *b)

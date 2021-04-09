@@ -872,11 +872,6 @@ char *mw_tree_container_get_node_label(struct mw_tree_container_t *tree, mw_hand
 		return (empty_string);
 	}
 
-	if (tree->nodes_array[node_id].label == NULL)
-	{
-		return (empty_string);
-	}
-
 	if (node_id == ROOT_FOLDER_ID)
 	{
 		return tree->root_folder_label;

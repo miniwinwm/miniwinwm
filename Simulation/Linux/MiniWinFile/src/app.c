@@ -34,6 +34,7 @@ SOFTWARE.
 #include <string.h>
 #include <fcntl.h>
 #include <time.h>
+#include <sys/stat.h>
 #include "app.h"
 
 /****************
@@ -128,7 +129,9 @@ void app_populate_tree_from_file_system(struct mw_tree_container_t *tree,
 	struct dirent *directory_entry;
 	char path[MAX_FOLDER_AND_FILENAME_LENGTH];
 	uint8_t node_flags;
-
+	struct stat s;
+	char folder_and_file_name[MAX_FOLDER_AND_FILENAME_LENGTH];
+			
 	mw_tree_container_get_node_path(tree, start_folder_handle, path, MAX_FOLDER_AND_FILENAME_LENGTH);
 
 	if (strlen(path) == (size_t)0)
@@ -143,8 +146,12 @@ void app_populate_tree_from_file_system(struct mw_tree_container_t *tree,
 		while ((directory_entry = readdir(directory)) != NULL)
 		{
 			node_flags = 0U;
+			
+			(void)mw_util_safe_strcpy(folder_and_file_name, (size_t)(MAX_FOLDER_AND_FILENAME_LENGTH + 1), path);
+			(void)mw_util_safe_strcat(folder_and_file_name, (size_t)(MAX_FOLDER_AND_FILENAME_LENGTH + 1), directory_entry->d_name);
+			(void)stat(folder_and_file_name, &s);
 
-			if (directory_entry->d_type == DT_DIR)
+			if (S_ISDIR(s.st_mode))
 			{
 				/* it is a folder */
 				if (strcmp(directory_entry->d_name, ".") == 0)
@@ -158,7 +165,7 @@ void app_populate_tree_from_file_system(struct mw_tree_container_t *tree,
 
 				node_flags = MW_TREE_CONTAINER_NODE_IS_FOLDER;
 			}
-			else if (directory_entry->d_type != DT_REG)
+			else if (!S_ISREG(s.st_mode))
 			{
 				/* it's not a file or folder */
 				continue;
@@ -246,8 +253,10 @@ uint8_t find_folder_entries(char* path,
 	DIR *directory;
 	struct dirent *directory_entry;
 	uint8_t i;
-
-    /* check pointer parameter */
+	struct stat s;
+	char folder_and_file_name[MAX_FOLDER_AND_FILENAME_LENGTH];
+			
+    	/* check pointer parameter */
 	if (path == NULL)
 	{
 		MW_ASSERT((bool)false, "Null pointer");
@@ -256,10 +265,10 @@ uint8_t find_folder_entries(char* path,
 	}
 
 	/* check path string not empty */
-    if (strlen(path) == (size_t)0)
-    {
-    	return (0U);
-    }
+   	if (strlen(path) == (size_t)0)
+    	{
+    		return (0U);
+    	}
 
 	i = 0;
 	directory = opendir(path);
@@ -267,7 +276,11 @@ uint8_t find_folder_entries(char* path,
 	{
 		while ((directory_entry = readdir(directory)) != NULL)
 		{
-			if (directory_entry->d_type == DT_REG)
+			(void)mw_util_safe_strcpy(folder_and_file_name, (size_t)(MAX_FOLDER_AND_FILENAME_LENGTH + 1), path);
+			(void)mw_util_safe_strcat(folder_and_file_name, (size_t)(MAX_FOLDER_AND_FILENAME_LENGTH + 1), directory_entry->d_name);
+			(void)stat(folder_and_file_name, &s);
+
+			if (S_ISREG(s.st_mode))
 			{
 				/* it is a file */
 				if (folders_only)
@@ -275,11 +288,11 @@ uint8_t find_folder_entries(char* path,
 					continue;
 				}
 
-	            list_box_settings_entries[i].icon = file_entry_icon;
-	            (void)mw_util_safe_strcpy(list_box_settings_entries[i].label, MAX_FILENAME_LENGTH + 1, directory_entry->d_name);
+	            		list_box_settings_entries[i].icon = file_entry_icon;
+	            		(void)mw_util_safe_strcpy(list_box_settings_entries[i].label, (size_t)(MAX_FILENAME_LENGTH + 1), directory_entry->d_name);
 				i++;
 			}
-			else if (directory_entry->d_type == DT_DIR)
+			else if (S_ISDIR(s.st_mode))
 			{
 				/* it is a folder */
 				if (strcmp(directory_entry->d_name, ".") == 0)
@@ -290,8 +303,8 @@ uint8_t find_folder_entries(char* path,
 				{
 					continue;
 				}
-	        	list_box_settings_entries[i].icon = folder_entry_icon;
-	        	(void)mw_util_safe_strcpy(list_box_settings_entries[i].label, MAX_FILENAME_LENGTH + 1, directory_entry->d_name);
+	        		list_box_settings_entries[i].icon = folder_entry_icon;
+	        		(void)mw_util_safe_strcpy(list_box_settings_entries[i].label, (size_t)(MAX_FILENAME_LENGTH + 1), directory_entry->d_name);
 				i++;
 			}
 			else

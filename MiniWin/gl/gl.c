@@ -514,7 +514,7 @@ static void filled_circle(const mw_gl_draw_info_t *draw_info, int16_t centre_x, 
 	/* plot centre line */
 	if (gc.pattern_set)
 	{
-		for (y =- radius; y <= radius + 1; y++)
+		for (y = -radius; y <= radius + 1; y++)
 		{
 			mw_gl_solid_fill_pixel(draw_info, centre_x, centre_y + y);
 		}

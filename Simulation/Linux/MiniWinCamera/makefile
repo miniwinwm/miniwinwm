@@ -13,9 +13,13 @@ SRCS := $(wildcard src/*.c) \
 	$(wildcard ../../../MiniWin/gl/fonts/bitmapped/*.c) \
 	$(wildcard ../../../MiniWin/gl/fonts/truetype/*.c) \
 	$(wildcard ../../../MiniWin/gl/fonts/truetype/mcufont/*.c)
+	
+# choose your compilers
+# CC = clang		
+# CPP = clang++
 CC = gcc
 CPP = g++
-CFLAGS = -I../../../MiniWin -I../../../MiniWin/gl/fonts/truetype/mcufont -Isrc -I../../../$(PROJECT)_Common -g -Wall -DLINUX_SIM
+CFLAGS = -I../../../MiniWin -I../../../MiniWin/gl/fonts/truetype/mcufont -Isrc -I../../../$(PROJECT)_Common -g -Wall -DLINUX_SIM -std=c99
 OBJS := $(SRCS:.c=.o)
 DEPS := $(OBJS:.o=.d)
 LIBS = -Llibs -lX11 -lm -lpthread lib/camlib_opencv.o -lopencv_core -lopencv_videoio -lopencv_imgproc 
