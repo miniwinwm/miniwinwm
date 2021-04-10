@@ -1,5 +1,6 @@
 CodeGen.exe: main.obj json11.obj
 	link main.obj json11.obj -out:CodeGen.exe
+	del *.obj
 
 main.obj: main.cpp
 	cl -c  -EHsc main.cpp
@@ -8,5 +9,4 @@ json11.obj: json11.cpp json11.hpp
 	cl -c  -EHsc json11.cpp 
 
 clean: 
-	del *.obj
 	del CodeGen.exe

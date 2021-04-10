@@ -1,11 +1,17 @@
 SRC = $(wildcard *.cpp)
 OBJ = $(SRC:.cpp=.o)
 
+# choose your compiler
+# CPP = clang++
+CPP = g++
 LDFLAGS = 
-CXXFLAGS = -std=c++11 -g
+CPPFLAGS = -std=c++11 -g
+
+%.o : %.cpp
+	$(CPP) $(CPPFLAGS) -c $< -o $@
 
 CodeGen: $(OBJ)
-	$(CXX) -o $@ $^ $(LDFLAGS)
+	$(CPP) -o $@ $^ $(LDFLAGS)
 	rm $(OBJ)
 
 .PHONY: clean

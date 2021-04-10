@@ -248,8 +248,10 @@ int main(int argc, char **argv)
 	if (json["TargetType"].string_value() == "Linux" || json["TargetType"].string_value() == "Windows")
 	{
 		// ../../Simulation/<Target Type>/<Target Name>
-#ifdef _MSC_VER
+#if defined(_MSC_VER)
 		if (CreateDirectoryA(("../../Simulation/" + json["TargetType"].string_value() + "/" + json["TargetName"].string_value()).c_str(), NULL) == 0 && GetLastError() != ERROR_ALREADY_EXISTS)
+#elif defined (__clang__)  
+		if (mkdir(("../../Simulation/" + json["TargetType"].string_value() + "/" + json["TargetName"].string_value()).c_str()) != 0 && errno != EEXIST)
 #else
 		if (mkdir(("../../Simulation/" + json["TargetType"].string_value() + "/" + json["TargetName"].string_value()).c_str(), 0777) != 0 && errno != EEXIST)
 #endif
@@ -259,8 +261,10 @@ int main(int argc, char **argv)
 		}
 
 		// ../../Simulation/<Target Type>/<Target Name>/src
-#ifdef _MSC_VER
+#if defined(_MSC_VER)
 		if (CreateDirectoryA(("../../Simulation/" + json["TargetType"].string_value() + "/" + json["TargetName"].string_value() + "/src").c_str(), NULL) == 0 && GetLastError() != ERROR_ALREADY_EXISTS)
+#elif defined (__clang__)
+		if (mkdir(("../../Simulation/" + json["TargetType"].string_value() + "/" + json["TargetName"].string_value() + "/src").c_str()) != 0 && errno != EEXIST)
 #else
 		if (mkdir(("../../Simulation/" + json["TargetType"].string_value() + "/" + json["TargetName"].string_value() + "/src").c_str(), 0777) != 0 && errno != EEXIST)
 #endif
@@ -272,8 +276,10 @@ int main(int argc, char **argv)
 	else if (json["TargetType"].string_value() == "Arduino/DevKitC")
 	{
 		// ../../Arduino/DevKitC/<Target Name>
-#ifdef _MSC_VER
+#if defined(_MSC_VER)
 		if (CreateDirectoryA(("../../" + json["TargetType"].string_value() + "/" + json["TargetName"].string_value()).c_str(), NULL) == 0 && GetLastError() != ERROR_ALREADY_EXISTS)
+#elif defined (__clang__)
+		if (mkdir(("../../" + json["TargetType"].string_value() + "/" + json["TargetName"].string_value()).c_str()) != 0 && errno != EEXIST)
 #else
 		if (mkdir(("../../" + json["TargetType"].string_value() + "/" + json["TargetName"].string_value()).c_str(), 0777) != 0 && errno != EEXIST)
 #endif
@@ -283,8 +289,10 @@ int main(int argc, char **argv)
 		}
 
 		// ../../Arduino/DevKitC/<Target Name>/app
-#ifdef _MSC_VER
+#if defined(_MSC_VER)
 		if (CreateDirectoryA(("../../" + json["TargetType"].string_value() + "/" + json["TargetName"].string_value() + "/app").c_str(), NULL) == 0 && GetLastError() != ERROR_ALREADY_EXISTS)
+#elif defined (__clang__)
+		if (mkdir(("../../" + json["TargetType"].string_value() + "/" + json["TargetName"].string_value() + "/app").c_str()) != 0 && errno != EEXIST)
 #else
 		if (mkdir(("../../" + json["TargetType"].string_value() + "/" + json["TargetName"].string_value() + "/app").c_str(), 0777) != 0 && errno != EEXIST)
 #endif
@@ -295,8 +303,10 @@ int main(int argc, char **argv)
 	}
 
 	// ../../<Target Name>_Common
-#ifdef _MSC_VER
+#if defined(_MSC_VER)
 	if (CreateDirectoryA(("../../" + json["TargetName"].string_value() + "_Common").c_str(), NULL) == 0 && GetLastError() != ERROR_ALREADY_EXISTS)
+#elif defined (__clang__)
+	if (mkdir(("../../" + json["TargetName"].string_value() + "_Common").c_str()) != 0 && errno != EEXIST)
 #else
 	if (mkdir(("../../" + json["TargetName"].string_value() + "_Common").c_str(), 0777) != 0 && errno != EEXIST)
 #endif
