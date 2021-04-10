@@ -30,11 +30,8 @@ SOFTWARE.
 *** INCLUDES ***
 ***************/
 
-#define _POSIX_C_SOURCE 199309L		/* this brings in nanosleep in C99 */
-
 #include <stdint.h>
 #include <stdbool.h>
-#include <time.h>
 #include <pthread.h>
 #include "hal/hal_timer.h"
 #include "hal/hal_delay.h"
