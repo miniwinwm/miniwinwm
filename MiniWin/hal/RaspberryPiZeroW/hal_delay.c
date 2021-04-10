@@ -30,6 +30,10 @@ SOFTWARE.
 *** INCLUDES ***
 ***************/
 
+#define _POSIX_C_SOURCE 199309L		/* this brings in nanosleep in C99 */
+
+#include <stdint.h>
+#include <time.h>
 #include "hal/hal_delay.h"
 
 /****************
@@ -62,6 +66,14 @@ SOFTWARE.
 
 void mw_hal_delay_init(void)
 {
+}
+
+void mw_hal_delay_ms(uint16_t ms)
+{
+	static struct timespec t = {(time_t)0, 0L};
+	
+	t.tv_nsec = (long)ms * 1000000L;
+	nanosleep(&t, NULL);
 }
 
 #endif

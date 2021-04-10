@@ -685,6 +685,7 @@
 #define BCM2835_BSC1_BASE				0x804000
 
 #include <stdlib.h>
+#include <fcntl.h>
 
 /*! Physical address and size of the peripherals block
   May be overridden on RPi2

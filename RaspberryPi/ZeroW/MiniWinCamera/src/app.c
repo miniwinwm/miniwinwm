@@ -30,7 +30,7 @@ SOFTWARE.
 
 #include <stdio.h>
 #include <string.h>
-#include "bcm2835.h"
+#include "hal/RaspberryPiZeroW/bcm2835.h"
 #include "miniwin.h"
 #include "app.h"
 #include "camlib.h"

@@ -6,7 +6,10 @@
 // Author: Mike McCauley
 // Copyright (C) 2011-2013 Mike McCauley
 // $Id: bcm2835.c,v 1.28 2020/01/11 05:07:13 mikem Exp mikem $
-*/
+*/ 
+
+#define _POSIX_C_SOURCE 200809L		/* this brings in posix_memalign and nanosleep in C99 */
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <errno.h>

@@ -35,6 +35,7 @@ SOFTWARE.
 #include <unistd.h>
 #include "bcm2835.h"
 #include "hal/hal_lcd.h"
+#include "hal/hal_delay.h"
 #include "miniwin_config.h"
 #include "app.h"
 
@@ -251,12 +252,12 @@ static void write_data(const uint8_t data)
 void mw_hal_lcd_init(void)
 {
    	bcm2835_gpio_write(GPIO_LCD_RESET, 0);			
-	usleep(100000);
+	mw_hal_delay_ms(100UL);
 	bcm2835_gpio_write(GPIO_LCD_RESET, 1);			
-	usleep(100000);
+	mw_hal_delay_ms(100UL);
 
 	write_command(0x01U);
-	usleep(10000);
+	mw_hal_delay_ms(10UL);
 	write_command(0xcbU);
 	write_data(0x39U);
 	write_data(0x2cU);
@@ -338,7 +339,7 @@ void mw_hal_lcd_init(void)
 	write_data(0x36U);
 	write_data(0x0fU);
 	write_command(0x11U);
-	usleep(120000);
+	mw_hal_delay_ms(120UL);
 	write_command(0x29U);
 	write_command(0x36U);
 	write_data(0x48U);
