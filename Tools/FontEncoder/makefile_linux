@@ -1,12 +1,16 @@
 $(info ************ libfreetype6-dev must be installed ************)
 $(info ************ Use this command: apt-get install libfreetype6-dev ************)
 
-CXXFLAGS = -O2 -Wall -Werror -Wno-unused-function -Wno-sign-compare -std=c++0x
+# choose your compiler
+# CPP = clang++
+CPP = g++
+
+CPPFLAGS = -O2 -Wall -Werror -Wno-unused-function -Wno-sign-compare -std=c++0x
 LDFLAGS = -lpthread
 
 # Libfreetype
-CXXFLAGS += $(shell freetype-config --cflags)
-LDFLAGS += $(shell freetype-config --libs)
+CPPFLAGS += $(shell pkg-config freetype2 --cflags)
+LDFLAGS += $(shell pkg-config freetype2 --libs)
 
 # Class to represent font data internally
 OBJS = datafile.o
@@ -31,8 +35,8 @@ clean:
 	rm -f mcufont
 
 mcufont: $(OBJS)
-	g++ $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
+	${CPP} $(CPPFLAGS) -o $@ $^ $(LDFLAGS)
 	rm $(OBJS)
 
 %.o: %.cc *.hh
-	g++ $(CXXFLAGS) -c $<
+	${CPP} $(CPPFLAGS) -c $<
