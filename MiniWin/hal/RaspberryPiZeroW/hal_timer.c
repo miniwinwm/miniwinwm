@@ -30,11 +30,14 @@ SOFTWARE.
 *** INCLUDES ***
 ***************/
 
+#define _POSIX_C_SOURCE 199309L		/* this brings in nanosleep in C99 */
+
 #include <stdint.h>
 #include <stdbool.h>
-#include <unistd.h>
+#include <time.h>
 #include <pthread.h>
 #include "hal/hal_timer.h"
+#include "hal/hal_delay.h"
 
 /****************
 *** CONSTANTS ***
@@ -70,7 +73,7 @@ static void* tf(void *arg)
 {
 	while (true)
 	{
-		(void)usleep(50000U);
+		mw_hal_delay_ms(50UL);
 		mw_hal_timer_fired();
 	}
 

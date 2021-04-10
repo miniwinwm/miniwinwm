@@ -1,8 +1,7 @@
-#include <unistd.h>
 #include <stdint.h>
-#include <stdbool.h>
 #include <pthread.h>
 #include "FreeRTOS.h"
+#include "hal/hal_delay.h"
 
 static float x;
 static float y;
@@ -11,14 +10,14 @@ static pthread_t tid[3];
 
 void vTaskDelay(uint32_t ms)
 {
-	usleep(ms * 1000);
+	mw_hal_delay_ms(ms);
 }
 
 void vTaskStartScheduler(void)
 {
 	while (true)
 	{
-		sleep(100);
+		mw_hal_delay_ms(100UL);
 	}
 }
 
@@ -29,7 +28,7 @@ TickType_t xTaskGetTickCount(void)
 
 void vTaskDelayUntil(TickType_t *last, uint32_t increment)
 {
-	usleep(increment * 1000);
+	mw_hal_delay_ms(increment);
 }
 
 QueueHandle_t xQueueCreateStatic(UBaseType_t s1, UBaseType_t s2, uint8_t *sa, StaticQueue_t *b)

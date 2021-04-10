@@ -15,7 +15,7 @@ SRCS := $(wildcard src/*.c) \
 	$(wildcard ../../../MiniWin/gl/fonts/truetype/mcufont/*.c) \
 	$(wildcard BSP/*.c)
 CC = gcc
-CFLAGS = -I../../../MiniWin -I../../../MiniWin/gl/fonts/truetype/mcufont -Isrc -I../../../$(PROJECT)_Common -IBSP -g -Wall -Os -DRASPBERRY_PI_ZERO_W
+CFLAGS = -I../../../MiniWin -I../../../MiniWin/gl/fonts/truetype/mcufont -Isrc -I../../../$(PROJECT)_Common -IBSP -g -Wall -Os -DRASPBERRY_PI_ZERO_W -std=c99
 OBJS := $(SRCS:.c=.o)
 DEPS := $(OBJS:.o=.d)
 LIBS = -lm -lpthread
