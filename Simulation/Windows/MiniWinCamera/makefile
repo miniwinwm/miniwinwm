@@ -15,13 +15,25 @@ SRCS := $(wildcard src/*.c) \
 	$(wildcard ../../../MiniWin/gl/fonts/truetype/*.c) \
 	$(wildcard ../../../MiniWin/gl/fonts/truetype/mcufont/*.c)
 
-# only works with gcc/g++ and not clang/clang++ because camlib is compiled with g++
+# choose your compiler
+
+# CC = clang
+# CPP = clang++
 CC = gcc
 CPP = g++
+
 CFLAGS = -D_WIN32 -I../../../MiniWin -I../../../MiniWin/gl/fonts/truetype/mcufont -Isrc -I../../../$(PROJECT)_Common -g -Wall -std=c99
 OBJS := $(SRCS:.c=.o)
 DEPS := $(OBJS:.o=.d)
-LIBS = -Llib lib/camlib_opencv.o -lopencv_core.dll -lopencv_imgproc.dll -lopencv_videoio.dll -lgdi32 
+
+# different camlib library needed for each compiler
+ifeq ($(CPP), clang++)
+	LIBS = lib/camlib_opencv_clang.o
+else
+	LIBS = lib/camlib_opencv.o
+endif
+
+LIBS += -Llib -lopencv_core.dll -lopencv_imgproc.dll -lopencv_videoio.dll -lgdi32 
 
 all : $(BINARY)
 
