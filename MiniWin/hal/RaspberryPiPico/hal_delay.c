@@ -24,54 +24,52 @@ SOFTWARE.
 
 */
 
-#ifndef MINWIN_DEBUG_H
-#define MINWIN_DEBUG_H
-
-#ifdef __cplusplus
- extern "C" {
-#endif
+#ifdef RASPBERRY_PI_PICO
 
 /***************
 *** INCLUDES ***
 ***************/
 
 #include <stdint.h>
-#include <stdbool.h>
+#include "pico/stdlib.h"
+#include "hal/hal_delay.h"
 
 /****************
 *** CONSTANTS ***
 ****************/
 
-#ifdef NDEBUG
-#define MW_ASSERT(expression, message)
-#else
-#define MW_ASSERT(expression, message) mw_debug_print_assert((expression), __func__, __LINE__, message)
-#endif
-
 /************
 *** TYPES ***
 ************/
 
-/*************************
-*** EXTERNAL VARIABLES ***
-*************************/
+/***********************
+*** GLOBAL VARIABLES ***
+***********************/
 
-/***************************
-*** FUNCTIONS PROTOTYPES ***
-***************************/
+/**********************
+*** LOCAL VARIABLES ***
+**********************/
 
-/**
- * Print a debug assertion fail message on the display
- * 
- * @param expression true if the assert passed, false if the assert failed
- * @param function_name The name of the function the assertion failed in
- * @param line_number The line number in the file the assertion failed on
- * @param message General purpose text to be displayed on assert failure
- */
-void mw_debug_print_assert(bool expression, const char *function_name, int32_t line_number, const char *message);
+/********************************
+*** LOCAL FUNCTION PROTOTYPES ***
+********************************/
 
-#ifdef __cplusplus
+/**********************
+*** LOCAL FUNCTIONS ***
+**********************/
+
+/***********************
+*** GLOBAL FUNCTIONS ***
+***********************/
+
+void mw_hal_delay_init(void)
+{
 }
-#endif
+
+void mw_hal_delay_ms(uint16_t ms)
+{
+	sleep_ms((uint32_t)ms);
+}
 
 #endif
+

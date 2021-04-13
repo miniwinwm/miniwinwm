@@ -24,12 +24,7 @@ SOFTWARE.
 
 */
 
-#ifndef MINWIN_DEBUG_H
-#define MINWIN_DEBUG_H
-
-#ifdef __cplusplus
- extern "C" {
-#endif
+#ifdef RASPBERRY_PI_PICO
 
 /***************
 *** INCLUDES ***
@@ -37,41 +32,62 @@ SOFTWARE.
 
 #include <stdint.h>
 #include <stdbool.h>
+#include "pico/stdlib.h"
+#include "hal/hal_timer.h"
+#include "app.h"			
 
 /****************
 *** CONSTANTS ***
 ****************/
 
-#ifdef NDEBUG
-#define MW_ASSERT(expression, message)
-#else
-#define MW_ASSERT(expression, message) mw_debug_print_assert((expression), __func__, __LINE__, message)
-#endif
-
 /************
 *** TYPES ***
 ************/
 
-/*************************
-*** EXTERNAL VARIABLES ***
-*************************/
+/***********************
+*** GLOBAL VARIABLES ***
+***********************/
 
-/***************************
-*** FUNCTIONS PROTOTYPES ***
-***************************/
+volatile uint32_t mw_tick_counter;
 
-/**
- * Print a debug assertion fail message on the display
- * 
- * @param expression true if the assert passed, false if the assert failed
- * @param function_name The name of the function the assertion failed in
- * @param line_number The line number in the file the assertion failed on
- * @param message General purpose text to be displayed on assert failure
- */
-void mw_debug_print_assert(bool expression, const char *function_name, int32_t line_number, const char *message);
+/**********************
+*** LOCAL VARIABLES ***
+**********************/
 
-#ifdef __cplusplus
+/********************************
+*** LOCAL FUNCTION PROTOTYPES ***
+********************************/
+
+static bool repeating_timer_callback(struct repeating_timer *t);
+
+/**********************
+*** LOCAL FUNCTIONS ***
+**********************/
+
+static bool repeating_timer_callback(struct repeating_timer *t) 
+{
+    static bool toggle;
+
+    toggle = !toggle;
+    gpio_put(LED_PIN, toggle);
+    mw_hal_timer_fired();
+	
+    return true;
 }
-#endif
+
+/***********************
+*** GLOBAL FUNCTIONS ***
+***********************/
+
+void mw_hal_timer_fired(void)
+{
+    mw_tick_counter++;
+}
+
+void mw_hal_timer_init(void)
+{
+    static struct repeating_timer timer;
+    (void)add_repeating_timer_ms(50, repeating_timer_callback, NULL, &timer);    
+}
 
 #endif
