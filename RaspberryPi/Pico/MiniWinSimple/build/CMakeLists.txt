@@ -5,12 +5,19 @@ pico_sdk_init()
 
 add_compile_definitions(RASPBERRY_PI_PICO)
 
-include_directories(../../../../MiniWin 
-	../src ../../../../MiniWinSimple_Common
+include_directories(
+# MiniWin paths
+    ../../../../MiniWin 
 	../../../../MiniWin
-	../../../../MiniWin/gl/fonts/truetype/mcufont)
+	../../../../MiniWin/gl/fonts/truetype/mcufont
+# Project common paths
+    ../src
+# Project specific paths    
+	../../../../MiniWinSimple_Common
+)
 
 add_executable(MiniWinSimple
+# MiniWin source files
 	../../../../MiniWin/hal/RaspberryPiPico/hal_delay.c
 	../../../../MiniWin/hal/RaspberryPiPico/hal_timer.c
 	../../../../MiniWin/hal/hal_init.c
@@ -89,10 +96,11 @@ add_executable(MiniWinSimple
     ../../../../MiniWin/ui/ui_tabs.c
     ../../../../MiniWin/ui/ui_text_box.c
     ../../../../MiniWin/ui/ui_tree.c	
-# MiniWinSimple application files    
+# Project common source files
 	../src/app.c
-	../../../../MiniWinSimple_Common/main.c    
+	../../../../MiniWinSimple_Common/main.c        
 	../../../../MiniWinSimple_Common/miniwin_user.c
+# Project specific source files    
 	../../../../MiniWinSimple_Common/window_simple.c
 )
 

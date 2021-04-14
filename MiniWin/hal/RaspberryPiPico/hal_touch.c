@@ -82,7 +82,7 @@ void mw_hal_touch_init(void)
 
 bool mw_hal_touch_is_recalibration_required(void)
 {
-    return (true);
+    return (!gpio_get(TOUCH_RECAL_PIN));
 }
 
 bool mw_hal_touch_get_point(uint16_t* x, uint16_t* y)

@@ -31,6 +31,7 @@ SOFTWARE.
 #include <stdint.h>
 #include <stdbool.h>
 #include "miniwin.h"
+#include "miniwin_debug.h"
 
 /****************
 *** CONSTANTS ***

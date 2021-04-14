@@ -34,6 +34,7 @@ SOFTWARE.
 #include <stdbool.h>
 #include "pico/stdlib.h"
 #include "hal/hal_timer.h"
+#include "miniwin_config.h"
 #include "app.h"			
 
 /****************
@@ -58,20 +59,21 @@ volatile uint32_t mw_tick_counter;
 *** LOCAL FUNCTION PROTOTYPES ***
 ********************************/
 
-static bool repeating_timer_callback(struct repeating_timer *t);
+bool repeating_timer_callback(struct repeating_timer *t);
 
 /**********************
 *** LOCAL FUNCTIONS ***
 **********************/
 
-static bool repeating_timer_callback(struct repeating_timer *t) 
+bool repeating_timer_callback(struct repeating_timer *t) 
 {
     static bool toggle;
 
     toggle = !toggle;
     gpio_put(LED_PIN, toggle);
+    
     mw_hal_timer_fired();
-	
+    
     return true;
 }
 
@@ -87,7 +89,8 @@ void mw_hal_timer_fired(void)
 void mw_hal_timer_init(void)
 {
     static struct repeating_timer timer;
-    (void)add_repeating_timer_ms(50, repeating_timer_callback, NULL, &timer);    
+
+    add_repeating_timer_ms(-(int32_t)(1000U / MW_TICKS_PER_SECOND), repeating_timer_callback, NULL, &timer);
 }
 
 #endif

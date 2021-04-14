@@ -39,18 +39,19 @@ SOFTWARE.
 *** CONSTANTS ***
 ****************/
 
-#define LCD_SPEED					32000000UL
-#define TOUCH_SPEED					1000000UL
-#define TOUCH_CS_PIN				17
-#define SPI0_MISO_PIN				16
-#define SPI0_MOSI_PIN				19
-#define SPI0_CLK_PIN				18
-#define TOUCH_T_IRQ_PIN 			6
-#define LED_PIN 					25
-#define LCD_RESET_PIN 				15
-#define LCD_DC_PIN 					14
-#define LCD_CS_PIN 					13
-#define SPI_ID						spi0
+#define LCD_SPEED					32000000UL		/* SPI clock speed for LCD */
+#define TOUCH_SPEED					1000000UL		/* SPI clock speed for touch controller */
+#define TOUCH_T_IRQ_PIN 			6				/* GPIO for touch T_IRQ pin */
+#define TOUCH_RECAL_PIN				20				/* GPIO for touch recal request button */
+#define TOUCH_CS_PIN				17				/* GPIO for touch controller CS/ pin */
+#define SPI0_MISO_PIN				16				/* GPIO for SPI MOSI pin */
+#define SPI0_MOSI_PIN				19				/* GPIO for SPI MISO pin */
+#define SPI0_CLK_PIN				18				/* GPIO for SPI CLK pin */
+#define LED_PIN 					25				/* GPIO for on board LED */
+#define LCD_RESET_PIN 				15				/* GPIO for LCD reset pin */
+#define LCD_DC_PIN 					14				/* GPIO for LCD DC pin */
+#define LCD_CS_PIN 					13				/* GPIO for LCD CS/ pin */
+#define SPI_ID						spi0			/* SPI module used for LCD and touch controller */
 
 /************
 *** TYPES ***
