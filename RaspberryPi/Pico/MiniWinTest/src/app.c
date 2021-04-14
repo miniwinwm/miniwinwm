@@ -63,33 +63,33 @@ SOFTWARE.
 void app_init(void)
 {
     /* led setup */
-    gpio_init(LED_PIN);
-    gpio_set_dir(LED_PIN, GPIO_OUT);
+    gpio_init(LED_GPIO);
+    gpio_set_dir(LED_GPIO, GPIO_OUT);
     
     /* spi setup */
-    spi_init(SPI_ID, LCD_SPEED);
-    gpio_set_function(SPI0_MISO_PIN, GPIO_FUNC_SPI);
-    gpio_set_function(SPI0_CLK_PIN, GPIO_FUNC_SPI);
-    gpio_set_function(SPI0_MOSI_PIN, GPIO_FUNC_SPI);      
+    spi_init(SPI_TOUCH_LCD_ID, LCD_SPEED);
+    gpio_set_function(SPI0_MISO_GPIO, GPIO_FUNC_SPI);
+    gpio_set_function(SPI0_CLK_GPIO, GPIO_FUNC_SPI);
+    gpio_set_function(SPI0_MOSI_GPIO, GPIO_FUNC_SPI);      
     
     /* touch setup */
-    gpio_init(TOUCH_CS_PIN);
-    gpio_set_dir(TOUCH_CS_PIN, GPIO_OUT);
-    gpio_put(TOUCH_CS_PIN, 1);
-    gpio_init(TOUCH_T_IRQ_PIN);
-    gpio_set_dir(TOUCH_T_IRQ_PIN, GPIO_IN);    
-    gpio_init(TOUCH_RECAL_PIN);
-    gpio_set_dir(TOUCH_RECAL_PIN, GPIO_IN);   
-    gpio_pull_up(TOUCH_RECAL_PIN);
+    gpio_init(TOUCH_CS_GPIO);
+    gpio_set_dir(TOUCH_CS_GPIO, GPIO_OUT);
+    gpio_put(TOUCH_CS_GPIO, 1);
+    gpio_init(TOUCH_T_IRQ_GPIO);
+    gpio_set_dir(TOUCH_T_IRQ_GPIO, GPIO_IN);    
+    gpio_init(TOUCH_RECAL_GPIO);
+    gpio_set_dir(TOUCH_RECAL_GPIO, GPIO_IN);   
+    gpio_pull_up(TOUCH_RECAL_GPIO);
     
     /* lcd setup */
-    gpio_init(LCD_RESET_PIN);
-    gpio_set_dir(LCD_RESET_PIN, GPIO_OUT);
-    gpio_init(LCD_DC_PIN);
-    gpio_set_dir(LCD_DC_PIN, GPIO_OUT);
-    gpio_init(LCD_CS_PIN);
-    gpio_set_dir(LCD_CS_PIN, GPIO_OUT);      
-    gpio_put(LCD_CS_PIN, 1); 
+    gpio_init(LCD_RESET_GPIO);
+    gpio_set_dir(LCD_RESET_GPIO, GPIO_OUT);
+    gpio_init(LCD_DC_GPIO);
+    gpio_set_dir(LCD_DC_GPIO, GPIO_OUT);
+    gpio_init(LCD_CS_GPIO);
+    gpio_set_dir(LCD_CS_GPIO, GPIO_OUT);      
+    gpio_put(LCD_CS_GPIO, 1); 
 }
 
 void app_main_loop_process(void)

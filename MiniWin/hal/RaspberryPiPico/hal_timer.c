@@ -70,7 +70,7 @@ bool repeating_timer_callback(struct repeating_timer *t)
     static bool toggle;
 
     toggle = !toggle;
-    gpio_put(LED_PIN, toggle);
+    gpio_put(LED_GPIO, toggle);
     
     mw_hal_timer_fired();
     

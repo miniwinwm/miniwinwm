@@ -106,15 +106,15 @@ static inline void pixel_rotated(int16_t x, int16_t y, mw_hal_lcd_colour_t colou
   
 	if (x != previous_x || previous_width != 1)
 	{
-		gpio_put(LCD_DC_PIN, 0);		
-		(void)spi_write_blocking(SPI_ID, &window_x_command, sizeof(window_x_command));			                 			                
+		gpio_put(LCD_DC_GPIO, 0);		
+		(void)spi_write_blocking(SPI_TOUCH_LCD_ID, &window_x_command, sizeof(window_x_command));			                 			                
 
-	   	gpio_put(LCD_DC_PIN, 1);	
+	   	gpio_put(LCD_DC_GPIO, 1);	
 	   	window_x_bounds[0] = 0U;		
         window_x_bounds[1] = (uint8_t)x;
         window_x_bounds[2] = 0U;
         window_x_bounds[3] = (uint8_t)x;
-		(void)spi_write_blocking(SPI_ID, window_x_bounds, sizeof(window_x_bounds));			                 			                
+		(void)spi_write_blocking(SPI_TOUCH_LCD_ID, window_x_bounds, sizeof(window_x_bounds));			                 			                
 
 		previous_x = x;
 		previous_width = 1;
@@ -122,24 +122,24 @@ static inline void pixel_rotated(int16_t x, int16_t y, mw_hal_lcd_colour_t colou
 
 	if (y != previous_y)
 	{
-	   	gpio_put(LCD_DC_PIN, 0);			
-		(void)spi_write_blocking(SPI_ID, &window_y_command, sizeof(window_y_command));			                 			                
+	   	gpio_put(LCD_DC_GPIO, 0);			
+		(void)spi_write_blocking(SPI_TOUCH_LCD_ID, &window_y_command, sizeof(window_y_command));			                 			                
         
-	   	gpio_put(LCD_DC_PIN, 1);			
+	   	gpio_put(LCD_DC_GPIO, 1);			
         window_y_bounds[0] = (uint8_t)(y >> 8);
         window_y_bounds[1] = (uint8_t)y;
         window_y_bounds[2] = (uint8_t)(y >> 8);
         window_y_bounds[3] = (uint8_t)y;
-		(void)spi_write_blocking(SPI_ID, window_y_bounds, sizeof(window_y_bounds));			                 			                
+		(void)spi_write_blocking(SPI_TOUCH_LCD_ID, window_y_bounds, sizeof(window_y_bounds));			                 			                
 
 		previous_y = y;
 	}
 
-	gpio_put(LCD_DC_PIN, 0);		
-	(void)spi_write_blocking(SPI_ID, &pixel_data_command, sizeof(pixel_data_command));			                 			                
+	gpio_put(LCD_DC_GPIO, 0);		
+	(void)spi_write_blocking(SPI_TOUCH_LCD_ID, &pixel_data_command, sizeof(pixel_data_command));			                 			                
         
-   	gpio_put(LCD_DC_PIN, 1);		
-	(void)spi_write_blocking(SPI_ID, (uint8_t *)&rgb565_colour, sizeof(rgb565_colour));			                 			                          
+   	gpio_put(LCD_DC_GPIO, 1);		
+	(void)spi_write_blocking(SPI_TOUCH_LCD_ID, (uint8_t *)&rgb565_colour, sizeof(rgb565_colour));			                 			                          
 }
 
 /**
@@ -177,41 +177,41 @@ static inline void filled_rectangle_rotated(int16_t start_x,
 
 	if (start_x != previous_x || previous_width != width)
 	{
-	   	gpio_put(LCD_DC_PIN, 0);			
-		(void)spi_write_blocking(SPI_ID, &window_x_command, sizeof(window_x_command));			                 			                
+	   	gpio_put(LCD_DC_GPIO, 0);			
+		(void)spi_write_blocking(SPI_TOUCH_LCD_ID, &window_x_command, sizeof(window_x_command));			                 			                
 
 		window_x_bounds[0] = 0U;
         window_x_bounds[1] = (uint8_t)start_x;
         window_x_bounds[2] = 0U;
         window_x_bounds[3] = (uint8_t)(start_x + width - 1);
-	   	gpio_put(LCD_DC_PIN, 1);				
-		(void)spi_write_blocking(SPI_ID, window_x_bounds, sizeof(window_x_bounds));			                 			                
+	   	gpio_put(LCD_DC_GPIO, 1);				
+		(void)spi_write_blocking(SPI_TOUCH_LCD_ID, window_x_bounds, sizeof(window_x_bounds));			                 			                
 
 		previous_x = start_x;
 		previous_width = width;
 	}
 
-	gpio_put(LCD_DC_PIN, 0);		
-	(void)spi_write_blocking(SPI_ID, &window_y_command, sizeof(window_y_command));			                 			                
+	gpio_put(LCD_DC_GPIO, 0);		
+	(void)spi_write_blocking(SPI_TOUCH_LCD_ID, &window_y_command, sizeof(window_y_command));			                 			                
 
     window_y_bounds[0] = (uint8_t)(start_y >> 8);
     window_y_bounds[1] = (uint8_t)start_y;
     window_y_bounds[2] = (uint8_t)((start_y + height - 1) >> 8);
     window_y_bounds[3] = (uint8_t)(start_y + height - 1);
-	gpio_put(LCD_DC_PIN, 1);		
-	(void)spi_write_blocking(SPI_ID, window_y_bounds, sizeof(window_y_bounds));			                 			                
+	gpio_put(LCD_DC_GPIO, 1);		
+	(void)spi_write_blocking(SPI_TOUCH_LCD_ID, window_y_bounds, sizeof(window_y_bounds));			                 			                
 
-	gpio_put(LCD_DC_PIN, 0);			
-	(void)spi_write_blocking(SPI_ID, &pixel_data_command, sizeof(pixel_data_command));			                 			                
+	gpio_put(LCD_DC_GPIO, 0);			
+	(void)spi_write_blocking(SPI_TOUCH_LCD_ID, &pixel_data_command, sizeof(pixel_data_command));			                 			                
 
-	gpio_put(LCD_DC_PIN, 1);		
+	gpio_put(LCD_DC_GPIO, 1);		
 	for (y = 0; y < height; y++)
 	{
 		for (i = 0U; i < width; i++)
 		{
 			line_buffer[i] = rgb565_colour;
 		}		
-		(void)spi_write_blocking(SPI_ID, (uint8_t *)line_buffer, (size_t)(width * 2));			                 			            
+		(void)spi_write_blocking(SPI_TOUCH_LCD_ID, (uint8_t *)line_buffer, (size_t)(width * 2));			                 			            
 	}
 
 	previous_y = -1;
@@ -224,8 +224,8 @@ static inline void filled_rectangle_rotated(int16_t start_x,
  */
 static void write_command(const uint8_t command)
 {  
-	gpio_put(LCD_DC_PIN, 0);		
-	(void)spi_write_blocking(SPI_ID, &command, sizeof(command));			                 	
+	gpio_put(LCD_DC_GPIO, 0);		
+	(void)spi_write_blocking(SPI_TOUCH_LCD_ID, &command, sizeof(command));			                 	
 }
 
 /**
@@ -235,8 +235,8 @@ static void write_command(const uint8_t command)
  */
 static void write_data(const uint8_t data)
 {
-	gpio_put(LCD_DC_PIN, 1);
-	(void)spi_write_blocking(SPI_ID, &data, sizeof(data));		
+	gpio_put(LCD_DC_GPIO, 1);
+	(void)spi_write_blocking(SPI_TOUCH_LCD_ID, &data, sizeof(data));		
 }
 
 /***********************
@@ -245,12 +245,12 @@ static void write_data(const uint8_t data)
 
 void mw_hal_lcd_init(void)
 {				
-   	gpio_put(LCD_RESET_PIN, 0);		
+   	gpio_put(LCD_RESET_GPIO, 0);		
 	mw_hal_delay_ms(100UL);
-   	gpio_put(LCD_RESET_PIN, 1);
+   	gpio_put(LCD_RESET_GPIO, 1);
 	mw_hal_delay_ms(100UL);
 	
-	gpio_put(LCD_CS_PIN, 0);
+	gpio_put(LCD_CS_GPIO, 0);
 	
 	write_command(0x01U);	
 	mw_hal_delay_ms(10UL);

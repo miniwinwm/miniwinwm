@@ -85,7 +85,7 @@ void delay_us(uint32_t us);
  */
 static inline void sd_spi_chip_select(uint8_t level)
 {
-    gpio_put(SD_CS_PIN, level);
+    gpio_put(SD_CS_GPIO, level);
 }
 
 #endif

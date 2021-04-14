@@ -85,44 +85,44 @@ void app_init(void)
     rtc_set_datetime(&t);
     
     /* led setup */
-    gpio_init(LED_PIN);
-    gpio_set_dir(LED_PIN, GPIO_OUT);
+    gpio_init(LED_GPIO);
+    gpio_set_dir(LED_GPIO, GPIO_OUT);
     
     /* spi touch/lcd setup */
-    spi_init(SPI_ID, LCD_SPEED);
-    gpio_set_function(SPI0_MISO_PIN, GPIO_FUNC_SPI);
-    gpio_set_function(SPI0_CLK_PIN, GPIO_FUNC_SPI);
-    gpio_set_function(SPI0_MOSI_PIN, GPIO_FUNC_SPI);      
+    spi_init(SPI_TOUCH_LCD_ID, LCD_SPEED);
+    gpio_set_function(SPI0_MISO_GPIO, GPIO_FUNC_SPI);
+    gpio_set_function(SPI0_CLK_GPIO, GPIO_FUNC_SPI);
+    gpio_set_function(SPI0_MOSI_GPIO, GPIO_FUNC_SPI);      
     
     /* touch setup */
-    gpio_init(TOUCH_CS_PIN);
-    gpio_set_dir(TOUCH_CS_PIN, GPIO_OUT);
-    gpio_put(TOUCH_CS_PIN, 1);
-    gpio_init(TOUCH_T_IRQ_PIN);
-    gpio_set_dir(TOUCH_T_IRQ_PIN, GPIO_IN);    
-    gpio_init(TOUCH_RECAL_PIN);
-    gpio_set_dir(TOUCH_RECAL_PIN, GPIO_IN);   
-    gpio_pull_up(TOUCH_RECAL_PIN);
+    gpio_init(TOUCH_CS_GPIO);
+    gpio_set_dir(TOUCH_CS_GPIO, GPIO_OUT);
+    gpio_put(TOUCH_CS_GPIO, 1);
+    gpio_init(TOUCH_T_IRQ_GPIO);
+    gpio_set_dir(TOUCH_T_IRQ_GPIO, GPIO_IN);    
+    gpio_init(TOUCH_RECAL_GPIO);
+    gpio_set_dir(TOUCH_RECAL_GPIO, GPIO_IN);   
+    gpio_pull_up(TOUCH_RECAL_GPIO);
     
     /* lcd setup */
-    gpio_init(LCD_RESET_PIN);
-    gpio_set_dir(LCD_RESET_PIN, GPIO_OUT);
-    gpio_init(LCD_DC_PIN);
-    gpio_set_dir(LCD_DC_PIN, GPIO_OUT);
-    gpio_init(LCD_CS_PIN);
-    gpio_set_dir(LCD_CS_PIN, GPIO_OUT);      
-    gpio_put(LCD_CS_PIN, 1);
+    gpio_init(LCD_RESET_GPIO);
+    gpio_set_dir(LCD_RESET_GPIO, GPIO_OUT);
+    gpio_init(LCD_DC_GPIO);
+    gpio_set_dir(LCD_DC_GPIO, GPIO_OUT);
+    gpio_init(LCD_CS_GPIO);
+    gpio_set_dir(LCD_CS_GPIO, GPIO_OUT);      
+    gpio_put(LCD_CS_GPIO, 1);
     
     /* spi SD setup */    
     spi_init(SPI_SD_ID, SD_SPEED);
-    gpio_set_function(SPI1_MISO_PIN, GPIO_FUNC_SPI);
-    gpio_set_function(SPI1_CLK_PIN, GPIO_FUNC_SPI);
-    gpio_set_function(SPI1_MOSI_PIN, GPIO_FUNC_SPI);  
-    gpio_pull_up(SPI1_MISO_PIN);
+    gpio_set_function(SPI1_MISO_GPIO, GPIO_FUNC_SPI);
+    gpio_set_function(SPI1_CLK_GPIO, GPIO_FUNC_SPI);
+    gpio_set_function(SPI1_MOSI_GPIO, GPIO_FUNC_SPI);  
+    gpio_pull_up(SPI1_MISO_GPIO);
     
-    gpio_init(SD_CS_PIN);
-    gpio_set_dir(SD_CS_PIN, GPIO_OUT);
-    gpio_put(SD_CS_PIN, 1);
+    gpio_init(SD_CS_GPIO);
+    gpio_set_dir(SD_CS_GPIO, GPIO_OUT);
+    gpio_put(SD_CS_GPIO, 1);
         
     /* mount the file system */
     f_mount(&fatfs, "", 0U);        

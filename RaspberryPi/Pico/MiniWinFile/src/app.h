@@ -43,25 +43,25 @@ SOFTWARE.
 
 #define LCD_SPEED							32000000UL		/**< SPI clock speed for LCD */
 #define TOUCH_SPEED							1000000UL		/**< SPI clock speed for touch controller */
-#define TOUCH_T_IRQ_PIN 					6				/**< GPIO for touch T_IRQ pin */
-#define TOUCH_RECAL_PIN						20				/**< GPIO for touch recal request button */
-#define TOUCH_CS_PIN						17				/**< GPIO for touch controller CS/ pin */
-#define SPI0_MISO_PIN						16				/**< GPIO for SPI0 MOSI pin */
-#define SPI0_MOSI_PIN						19				/**< GPIO for SPI0 MISO pin */
-#define SPI0_CLK_PIN						18				/**< GPIO for SPI0 CLK pin */
-#define LED_PIN 							25				/**< GPIO for on board LED */
-#define LCD_RESET_PIN 						15				/**< GPIO for LCD reset pin */
-#define LCD_DC_PIN 							14				/**< GPIO for LCD DC pin */
-#define LCD_CS_PIN 							13				/**< GPIO for LCD CS/ pin */
-#define SPI_ID								spi0			/**< SPI module used for LCD and touch controller */
+#define TOUCH_T_IRQ_GPIO 					6				/**< GPIO for touch T_IRQ pin */
+#define TOUCH_RECAL_GPIO					20				/**< GPIO for touch recal request button */
+#define TOUCH_CS_GPIO						17				/**< GPIO for touch controller CS/ pin */
+#define SPI0_MISO_GPIO						16				/**< GPIO for SPI0 MOSI pin */
+#define SPI0_MOSI_GPIO						19				/**< GPIO for SPI0 MISO pin */
+#define SPI0_CLK_GPIO						18				/**< GPIO for SPI0 CLK pin */
+#define LED_GPIO 							25				/**< GPIO for on board LED */
+#define LCD_RESET_GPIO 						15				/**< GPIO for LCD reset pin */
+#define LCD_DC_GPIO 						14				/**< GPIO for LCD DC pin */
+#define LCD_CS_GPIO 						13				/**< GPIO for LCD CS/ pin */
+#define SPI_TOUCH_LCD_ID					spi0			/**< SPI module used for LCD and touch controller */
 #define MAX_FILENAME_LENGTH					12				/**< Maximum length of a file name in eight dot three format */
 #define MAX_FOLDER_AND_FILENAME_LENGTH		128				/**< Maximum length of a file name and its path */
 #define SD_SPEED							16000000UL		/**< SPI1 clock speed for SD card */
 #define SPI_SD_ID							spi1			/**< SPI module used for SD card file system access */
-#define SPI1_MISO_PIN						8				/**< GPIO for SPI1 MOSI pin */
-#define SPI1_MOSI_PIN						11				/**< GPIO for SPI1 MISO pin */
-#define SPI1_CLK_PIN						10				/**< GPIO for SPI1 CLK pin */
-#define SD_CS_PIN							9				/**< GPIO for SD card CS/ pin */
+#define SPI1_MISO_GPIO						8				/**< GPIO for SPI1 MOSI pin */
+#define SPI1_MOSI_GPIO						11				/**< GPIO for SPI1 MISO pin */
+#define SPI1_CLK_GPIO						10				/**< GPIO for SPI1 CLK pin */
+#define SD_CS_GPIO							9				/**< GPIO for SD card CS/ pin */
 
 /************
 *** TYPES ***
