@@ -75,6 +75,11 @@ void SPI1_send(const uint8_t *send_buffer, uint32_t size);
  */
 void SPI1_receive(uint8_t *receive_buffer, uint32_t size);
 
+/**
+ * Delay in a busy wait loop for microseconds
+ * 
+ * @param us Microseconds to delay for 
+ */
 void delay_us(uint32_t us);
 
 /**

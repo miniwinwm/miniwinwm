@@ -36,7 +36,6 @@ SOFTWARE.
 #include "ff.h"
 #include "spi_driver.h"
 
-
 /****************
 *** CONSTANTS ***
 ****************/
@@ -134,10 +133,10 @@ void app_init(void)
     TMR3_Start();    
     
     /* initialize SPI1 interface */
-	SPI1_init();
-    
-	/* mount the file system */
-	f_mount(&fatfs, "", 0U);    
+    SPI1_init();
+
+    /* mount the file system */
+    f_mount(&fatfs, "", 0U);    
 }
 
 void app_main_loop_process(void)
@@ -149,72 +148,72 @@ void app_main_loop_process(void)
 
 bool app_file_open(char *path_and_filename)
 {
-	bool result = false;
+    bool result = false;
 
-	if (f_open(&file_handle, path_and_filename, FA_READ) == FR_OK)
-	{
-		result = true;
-	}
+    if (f_open(&file_handle, path_and_filename, FA_READ) == FR_OK)
+    {
+	result = true;
+    }
 
-	return (result);
+    return (result);
 }
 
 bool app_file_create(char *path_and_filename)
 {
-	bool result = false;
+    bool result = false;
 
-	if (f_open(&file_handle, path_and_filename, FA_WRITE | FA_CREATE_ALWAYS) == FR_OK)
-	{
-		result = true;
-	}
+    if (f_open(&file_handle, path_and_filename, FA_WRITE | FA_CREATE_ALWAYS) == FR_OK)
+    {
+	result = true;
+    }
 
-	return (result);
+    return (result);
 }
 
 uint32_t app_file_size(void)
 {
-	return ((uint32_t)f_size(&file_handle));
+    return ((uint32_t)f_size(&file_handle));
 }
 
 uint8_t app_file_getc(void)
 {
-	uint8_t byte;
-	UINT bytes_read;
+    uint8_t byte;
+    UINT bytes_read;
 
-	(void)f_read(&file_handle, &byte, 1, &bytes_read);
+    (void)f_read(&file_handle, &byte, 1, &bytes_read);
 
-	return (byte);
+    return (byte);
 }
 
 void app_file_read(uint8_t *buffer, uint32_t count)
 {
-	UINT bytes_read;
+    UINT bytes_read;
 
-	(void)f_read(&file_handle, buffer, count, &bytes_read);
+    (void)f_read(&file_handle, buffer, count, &bytes_read);
 }
 
 void app_file_write(uint8_t *buffer, uint32_t count)
 {
-	UINT bytes_written;
+    UINT bytes_written;
 
-	(void)f_write (&file_handle, buffer, count, &bytes_written);
+    (void)f_write(&file_handle, buffer, count, &bytes_written);
 }
 
 uint32_t app_file_seek(uint32_t position)
 {
-	return ((uint32_t)(f_lseek(&file_handle, position)));
+    return ((uint32_t)(f_lseek(&file_handle, position)));
 }
 
 void app_file_close(void)
 {
-	(void)f_close(&file_handle);
+    (void)f_close(&file_handle);
 }
 
 char *app_get_root_folder_path(void)
 {
-	static char root_folder_path[] = "0:/";
+    static char root_folder_path[] = "0:/";
 
-	return (root_folder_path);
+    return (root_folder_path);
 }
 
 void app_populate_tree_from_file_system(struct mw_tree_container_t *tree,
@@ -224,15 +223,15 @@ void app_populate_tree_from_file_system(struct mw_tree_container_t *tree,
     DIR folder;
     FILINFO file_info;
     char path[MAX_FOLDER_AND_FILENAME_LENGTH];
-	uint8_t node_flags;
+    uint8_t node_flags;
 
-	/* check pointer parameter */
-	if (tree == NULL)
-	{
-		MW_ASSERT((bool)false, "Null pointer");
+    /* check pointer parameter */
+    if (tree == NULL)
+    {
+	MW_ASSERT((bool)false, "Null pointer");
 
-		return;
-	}
+	return;
+    }
 
     mw_tree_container_get_node_path(tree, start_folder_handle, path, MAX_FOLDER_AND_FILENAME_LENGTH);
 
@@ -250,7 +249,7 @@ void app_populate_tree_from_file_system(struct mw_tree_container_t *tree,
     {
         for (;;)
         {
-        	/* read a folder item */
+	    /* read a folder item */
             result = f_readdir(&folder, &file_info);
             if (result != FR_OK || file_info.fname[0] == '\0')
             {
@@ -258,22 +257,22 @@ void app_populate_tree_from_file_system(struct mw_tree_container_t *tree,
             	break;
             }
 
-        	/* ignore if it's a hidden or system entry*/
-        	if ((file_info.fattrib & (BYTE)AM_HID) == AM_HID || (file_info.fattrib & (BYTE)AM_SYS) == AM_SYS)
-        	{
-        		continue;
-        	}
+	    /* ignore if it's a hidden or system entry*/
+	    if ((file_info.fattrib & (BYTE)AM_HID) == AM_HID || (file_info.fattrib & (BYTE)AM_SYS) == AM_SYS)
+	    {
+		continue;
+	    }
 
-        	node_flags = 0U;
+	    node_flags = 0U;
             if ((file_info.fattrib & (BYTE)AM_DIR) == (BYTE)AM_DIR)
-        	{
-        		node_flags = MW_TREE_CONTAINER_NODE_IS_FOLDER;
-        	}
+	    {
+		node_flags = MW_TREE_CONTAINER_NODE_IS_FOLDER;
+	    }
 
-        	(void)mw_tree_container_add_node(tree,
-        			start_folder_handle,
-					file_info.fname,
-        			node_flags);
+	    (void)mw_tree_container_add_node(tree,
+			    start_folder_handle,
+			    file_info.fname,
+			    node_flags);
 
         }
         (void)f_closedir(&folder);
@@ -292,15 +291,15 @@ uint8_t find_folder_entries(char *path,
     FILINFO file_info;
     UINT i = 0U;
 
-	/* check pointer parameter */
-	if (path == NULL)
-	{
-		MW_ASSERT((bool)false, "Null pointer");
+    /* check pointer parameter */
+    if (path == NULL)
+    {
+	MW_ASSERT((bool)false, "Null pointer");
 
-		return (0U);
-	}
+	return (0U);
+    }
 
-	/* check path string not empty */
+    /* check path string not empty */
     if (strlen(path) == (size_t)0)
     {
     	return (0U);
@@ -315,7 +314,7 @@ uint8_t find_folder_entries(char *path,
     {
         for (;;)
         {
-        	/* read a folder item */
+	    /* read a folder item */
             result = f_readdir(&folder, &file_info);
             if (result != FR_OK || file_info.fname[0] == '\0')
             {
@@ -323,17 +322,17 @@ uint8_t find_folder_entries(char *path,
             	break;
             }
 
-        	/* ignore if it's a hidden or system entry*/
-        	if ((file_info.fattrib & (BYTE)AM_HID) == AM_HID || (file_info.fattrib & (BYTE)AM_SYS) == AM_SYS)
-        	{
-        		continue;
-        	}
+	    /* ignore if it's a hidden or system entry*/
+	    if ((file_info.fattrib & (BYTE)AM_HID) == AM_HID || (file_info.fattrib & (BYTE)AM_SYS) == AM_SYS)
+	    {
+		continue;
+	    }
 
-        	/* ignore if not a folder and we want directories only */
-        	if (folders_only && (file_info.fattrib & (BYTE)AM_DIR) == (BYTE)0)
-        	{
-        		continue;
-        	}
+	    /* ignore if not a folder and we want directories only */
+	    if (folders_only && (file_info.fattrib & (BYTE)AM_DIR) == (BYTE)0)
+	    {
+		continue;
+	    }
 
             (void)mw_util_safe_strcpy(list_box_settings_entries[i].label, MAX_FILENAME_LENGTH + 1U, file_info.fname);
             if ((file_info.fattrib & (BYTE)AM_DIR) == (BYTE)AM_DIR)
@@ -373,19 +372,19 @@ void app_set_time_date(mw_time_t new_time)
     TMR3_Start();    
 }
 
-DWORD get_fattime (void)
+DWORD get_fattime(void)
 {
-	uint32_t fattime = 0U;
-	mw_time_t time_now;
+    uint32_t fattime = 0U;
+    mw_time_t time_now;
 
-	time_now = app_get_time_date();
+    time_now = app_get_time_date();
 
-	fattime = (time_now.tm_year - 1980U) << 25;
-	fattime |= time_now.tm_mon << 21;
-	fattime |= time_now.tm_mday << 16;
-	fattime |= time_now.tm_hour << 11;
-	fattime |= time_now.tm_min << 5;
-	fattime |= time_now.tm_sec / 2;
+    fattime = (time_now.tm_year - 1980U) << 25;
+    fattime |= time_now.tm_mon << 21;
+    fattime |= time_now.tm_mday << 16;
+    fattime |= time_now.tm_hour << 11;
+    fattime |= time_now.tm_min << 5;
+    fattime |= time_now.tm_sec / 2U;
 
-	return ((DWORD)fattime);
+    return ((DWORD)fattime);
 }

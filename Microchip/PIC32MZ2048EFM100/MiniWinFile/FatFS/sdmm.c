@@ -442,16 +442,6 @@ DRESULT disk_ioctl (
 }
 
 static void dly_us (UINT n)
-{
-    /*
-	unsigned int i;
-	unsigned int d = n * 180U;
-
-	for (i = 0U; i < d; i++)
-	{
-		__asm("NOP");
-	}
-     */
-    
+{   
     delay_us(n);
 }
