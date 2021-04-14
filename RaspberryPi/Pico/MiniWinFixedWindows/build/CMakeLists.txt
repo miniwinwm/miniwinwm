@@ -1,0 +1,129 @@
+cmake_minimum_required(VERSION 3.12)
+include(pico_sdk_import.cmake)
+project(MiniWinFixedWindows)
+pico_sdk_init()
+
+add_compile_definitions(RASPBERRY_PI_PICO)
+
+include_directories(
+# MiniWin paths
+    ../../../../MiniWin 
+	../../../../MiniWin
+	../../../../MiniWin/gl/fonts/truetype/mcufont
+# Project common paths
+    ../src
+# Project specific paths    
+	../../../../MiniWinFixedWindows_Common
+)
+
+add_executable(MiniWinFixedWindows
+# MiniWin source files
+	../../../../MiniWin/hal/RaspberryPiPico/hal_delay.c
+	../../../../MiniWin/hal/RaspberryPiPico/hal_timer.c
+	../../../../MiniWin/hal/hal_init.c
+	../../../../MiniWin/hal/RaspberryPiPico/hal_non_vol.c
+	../../../../MiniWin/hal/RaspberryPiPico/hal_touch.c
+	../../../../MiniWin/hal/RaspberryPiPico/hal_lcd.c
+	../../../../MiniWin/calibrate.c
+    ../../../../MiniWin/miniwin.c
+    ../../../../MiniWin/miniwin_debug.c
+    ../../../../MiniWin/miniwin_message_queue.c
+    ../../../../MiniWin/miniwin_settings.c
+    ../../../../MiniWin/miniwin_touch.c
+    ../../../../MiniWin/miniwin_tree_container.c
+    ../../../../MiniWin/miniwin_utilities.c
+    ../../../../MiniWin/bitmaps/backspace_key.c
+    ../../../../MiniWin/bitmaps/close_icon.c
+    ../../../../MiniWin/bitmaps/close_icon_large.c
+    ../../../../MiniWin/bitmaps/file_icon_large.c
+    ../../../../MiniWin/bitmaps/file_icon_small.c
+    ../../../../MiniWin/bitmaps/folder_close_icon_large.c
+    ../../../../MiniWin/bitmaps/folder_close_icon_small.c
+    ../../../../MiniWin/bitmaps/folder_icon_large.c
+    ../../../../MiniWin/bitmaps/folder_icon_small.c
+    ../../../../MiniWin/bitmaps/folder_open_icon_large.c
+    ../../../../MiniWin/bitmaps/folder_open_icon_small.c
+    ../../../../MiniWin/bitmaps/let_key.c
+    ../../../../MiniWin/bitmaps/maximise_icon.c
+    ../../../../MiniWin/bitmaps/maximise_icon_large.c
+    ../../../../MiniWin/bitmaps/minimise_icon.c
+    ../../../../MiniWin/bitmaps/minimise_icon_large.c
+    ../../../../MiniWin/bitmaps/num_key.c
+    ../../../../MiniWin/bitmaps/resize_icon.c
+    ../../../../MiniWin/bitmaps/resize_icon_large.c
+    ../../../../MiniWin/bitmaps/shift_key.c
+    ../../../../MiniWin/bitmaps/sym_key.c
+    ../../../../MiniWin/bitmaps/tick.c
+    ../../../../MiniWin/bitmaps/tick_large.c
+    ../../../../MiniWin/dialogs/dialog_colour_chooser.c
+    ../../../../MiniWin/dialogs/dialog_date_chooser.c
+    ../../../../MiniWin/dialogs/dialog_file_chooser.c
+    ../../../../MiniWin/dialogs/dialog_number_entry.c
+    ../../../../MiniWin/dialogs/dialog_one_button.c
+    ../../../../MiniWin/dialogs/dialog_text_entry.c
+    ../../../../MiniWin/dialogs/dialog_time_chooser.c
+    ../../../../MiniWin/dialogs/dialog_two_button.c
+    ../../../../MiniWin/gl/gl.c
+    ../../../../MiniWin/gl/fonts/bitmapped/font9.c
+    ../../../../MiniWin/gl/fonts/bitmapped/font12.c
+    ../../../../MiniWin/gl/fonts/bitmapped/font16.c
+    ../../../../MiniWin/gl/fonts/bitmapped/font20.c
+    ../../../../MiniWin/gl/fonts/bitmapped/font24.c
+    ../../../../MiniWin/gl/fonts/bitmapped/gl_title_font.c
+    ../../../../MiniWin/gl/fonts/truetype/BLKCHCRY16.c
+    ../../../../MiniWin/gl/fonts/truetype/BLKCHCRY16bw.c
+    ../../../../MiniWin/gl/fonts/truetype/dejavu_sans_12.c
+    ../../../../MiniWin/gl/fonts/truetype/mcufont/mf_bwfont.c
+    ../../../../MiniWin/gl/fonts/truetype/mcufont/mf_encoding.c
+    ../../../../MiniWin/gl/fonts/truetype/mcufont/mf_font.c
+    ../../../../MiniWin/gl/fonts/truetype/mcufont/mf_justify.c
+    ../../../../MiniWin/gl/fonts/truetype/mcufont/mf_kerning.c
+    ../../../../MiniWin/gl/fonts/truetype/mcufont/mf_rlefont.c
+    ../../../../MiniWin/gl/fonts/truetype/mcufont/mf_scaledfont.c
+    ../../../../MiniWin/gl/fonts/truetype/mcufont/mf_wordwrap.c
+    ../../../../MiniWin/ui/ui_arrow.c
+    ../../../../MiniWin/ui/ui_button.c
+    ../../../../MiniWin/ui/ui_check_box.c
+    ../../../../MiniWin/ui/ui_common.c
+    ../../../../MiniWin/ui/ui_keyboard.c
+    ../../../../MiniWin/ui/ui_keypad.c
+    ../../../../MiniWin/ui/ui_label.c
+    ../../../../MiniWin/ui/ui_list_box.c
+    ../../../../MiniWin/ui/ui_progress_bar.c
+    ../../../../MiniWin/ui/ui_radio_button.c
+    ../../../../MiniWin/ui/ui_scroll_bar_horiz.c
+    ../../../../MiniWin/ui/ui_scroll_bar_vert.c
+    ../../../../MiniWin/ui/ui_tabs.c
+    ../../../../MiniWin/ui/ui_text_box.c
+    ../../../../MiniWin/ui/ui_tree.c	
+# Project common source files
+	../src/app.c
+	../../../../MiniWinFixedWindows_Common/main.c        
+	../../../../MiniWinFixedWindows_Common/miniwin_user.c
+# Project specific source files    
+    ../../../../MiniWinFixedWindows_Common/date_bitmap.c
+    ../../../../MiniWinFixedWindows_Common/date_down_bitmap.c
+    ../../../../MiniWinFixedWindows_Common/file_bitmap.c
+    ../../../../MiniWinFixedWindows_Common/file_down_bitmap.c
+    ../../../../MiniWinFixedWindows_Common/help_bitmap.c
+    ../../../../MiniWinFixedWindows_Common/help_down_bitmap.c
+    ../../../../MiniWinFixedWindows_Common/settings_bitmap.c
+    ../../../../MiniWinFixedWindows_Common/settings_down_bitmap.c
+    ../../../../MiniWinFixedWindows_Common/temp_bitmap.c
+    ../../../../MiniWinFixedWindows_Common/temp_down_bitmap.c
+    ../../../../MiniWinFixedWindows_Common/time_bitmap.c
+    ../../../../MiniWinFixedWindows_Common/time_down_bitmap.c
+    ../../../../MiniWinFixedWindows_Common/window_date_icon.c
+    ../../../../MiniWinFixedWindows_Common/window_file_icon.c
+    ../../../../MiniWinFixedWindows_Common/window_help_icon.c
+    ../../../../MiniWinFixedWindows_Common/window_settings_icon.c
+    ../../../../MiniWinFixedWindows_Common/window_temp_icon.c
+    ../../../../MiniWinFixedWindows_Common/window_time_icon.c							
+    ../../../../MiniWinFixedWindows_Common/window_file.c
+    ../../../../MiniWinFixedWindows_Common/window_settings.c
+    ../../../../MiniWinFixedWindows_Common/window_temp.c    
+)
+
+target_link_libraries(MiniWinFixedWindows pico_stdlib hardware_spi hardware_flash)
+
+pico_add_extra_outputs(MiniWinFixedWindows)
