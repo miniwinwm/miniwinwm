@@ -24,14 +24,16 @@ SOFTWARE.
 
 */
 
+#ifndef SPI_DRIVER_H
+#define SPI_DRIVER_H
+
 /***************
 *** INCLUDES ***
 ***************/
 
-#include <stdbool.h>
-#include <stdlib.h>
 #include <stdint.h>
-#include "definitions.h"
+#include "pico/stdlib.h"
+#include "app.h"
 
 /****************
 *** CONSTANTS ***
@@ -41,42 +43,49 @@ SOFTWARE.
 *** TYPES ***
 ************/
 
-/***********************
-*** GLOBAL VARIABLES ***
-***********************/
+/*************************
+*** EXTERNAL VARIABLES ***
+*************************/
 
-/**********************
-*** LOCAL VARIABLES ***
-**********************/
+/***************************
+*** FUNCTIONS PROTOTYPES ***
+***************************/
 
-/********************************
-*** LOCAL FUNCTION PROTOTYPES ***
-********************************/
+/**
+ * Send/receive data synchronously to SCI2 configured for SPI
+ *
+ * @param send_buffer Data to send, or NULL if receiving only
+ * @param receive_buffer Buffer for received data, or NULL if sending only
+ * @param size Bytes to transfer
+ * @note Buffer pointers must not both be NULL
+ */
+void sd_spi_send(const uint8_t *send_buffer, uint32_t size);
 
-/**********************
-*** LOCAL FUNCTIONS ***
-**********************/
+/**
+ * Send/receive data synchronously to SCI2 configured for SPI
+ *
+ * @param send_buffer Data to send, or NULL if receiving only
+ * @param receive_buffer Buffer for received data, or NULL if sending only
+ * @param size Bytes to transfer
+ * @note Buffer pointers must not both be NULL
+ */
+void sd_spi_receive(uint8_t *receive_buffer, uint32_t size);
 
-/***********************
-*** GLOBAL FUNCTIONS ***
-***********************/
+/**
+ * Delay in a busy wait loop for microseconds
+ * 
+ * @param us Microseconds to delay for 
+ */
+void delay_us(uint32_t us);
 
-void SPI1_init(void)
+/**
+ * Set chip select level
+ *
+ * @param level The level to write to the pin, 0 or 1
+ */
+static inline void sd_spi_chip_select(uint8_t level)
 {
-    SD_CS_Set();
+    gpio_put(SD_CS_PIN, level);
 }
 
-void SPI1_send(const uint8_t *send_buffer, uint32_t size)
-{
-    SPI1_Write((void *)send_buffer, size);
-}
-
-void SPI1_receive(uint8_t *receive_buffer, uint32_t size)
-{
-    SPI1_Read((void *)receive_buffer, size);
-}
-
-void delay_us(uint32_t us)
-{
-    CORETIMER_DelayUs(us);
-}
+#endif

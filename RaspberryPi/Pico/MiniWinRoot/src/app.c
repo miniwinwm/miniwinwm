@@ -30,7 +30,6 @@ SOFTWARE.
 
 #include "pico/stdlib.h"
 #include "hardware/spi.h"
-#include "hal/hal_init.h"
 #include "app.h"
 
 /****************
@@ -91,8 +90,6 @@ void app_init(void)
     gpio_init(LCD_CS_PIN);
     gpio_set_dir(LCD_CS_PIN, GPIO_OUT);      
     gpio_put(LCD_CS_PIN, 1);
-    
-    mw_hal_init();  
 }
 
 void app_main_loop_process(void)

@@ -1,5 +1,5 @@
-/*
-
+/* 
+    
 MIT License
 
 Copyright (c) John Blaiklock 2019 miniwin Embedded Window Manager
@@ -28,10 +28,10 @@ SOFTWARE.
 *** INCLUDES ***
 ***************/
 
-#include <stdbool.h>
 #include <stdlib.h>
 #include <stdint.h>
-#include "definitions.h"
+#include "hardware/spi.h"
+#include "app.h"
 
 /****************
 *** CONSTANTS ***
@@ -61,22 +61,17 @@ SOFTWARE.
 *** GLOBAL FUNCTIONS ***
 ***********************/
 
-void SPI1_init(void)
+void sd_spi_send(const uint8_t *send_buffer, uint32_t size)
 {
-    SD_CS_Set();
+    (void)spi_write_blocking(SPI_SD_ID, send_buffer, size);    
 }
 
-void SPI1_send(const uint8_t *send_buffer, uint32_t size)
+void sd_spi_receive(uint8_t *receive_buffer, uint32_t size)
 {
-    SPI1_Write((void *)send_buffer, size);
-}
-
-void SPI1_receive(uint8_t *receive_buffer, uint32_t size)
-{
-    SPI1_Read((void *)receive_buffer, size);
+    (void)spi_read_blocking(SPI_SD_ID, 0xffU, receive_buffer, size);    
 }
 
 void delay_us(uint32_t us)
 {
-    CORETIMER_DelayUs(us);
+    busy_wait_us((uint64_t)us);
 }

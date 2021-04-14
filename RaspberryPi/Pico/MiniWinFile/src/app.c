@@ -2,7 +2,7 @@
 
 MIT License
 
-Copyright (c) John Blaiklock 2019 miniwin Embedded Window Manager
+Copyright (c) John Blaiklock 2021 miniwin Embedded Window Manager
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -30,18 +30,16 @@ SOFTWARE.
 
 #include <stdlib.h>
 #include <string.h>
-#include "definitions.h" 
-#include "miniwin.h"
-#include "app.h"
+#include "pico/stdlib.h"
+#include "hardware/spi.h"
+#include "hardware/rtc.h"
+#include "pico/util/datetime.h"  
 #include "ff.h"
-#include "spi_driver.h"
-
+#include "app.h"
 
 /****************
 *** CONSTANTS ***
 ****************/
-
-static const uint8_t days_in_months[] = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
 /************
 *** TYPES ***
@@ -57,7 +55,6 @@ static const uint8_t days_in_months[] = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 
 
 static FATFS fatfs;
 static FIL file_handle;
-static mw_time_t mw_time_now;
 
 /********************************
 *** LOCAL FUNCTION PROTOTYPES ***
@@ -67,85 +64,73 @@ static mw_time_t mw_time_now;
 *** LOCAL FUNCTIONS ***
 **********************/
 
-static void TMR3_InterruptSvcRoutine(uint32_t status, uintptr_t context)
-{
-    (void)status;
-    (void)context;
-    
-    static uint8_t quarter_second;
-    uint8_t days_in_month;
-    
-    quarter_second++;
-    if (quarter_second == 8U)
-    {
-        /* whole second has elapsed */
-        quarter_second = 0U;
-        
-        /* update internal clock value */
-        mw_time_now.tm_sec++;
-        if (mw_time_now.tm_sec == 60U)
-        {
-            mw_time_now.tm_sec = 0U;
-            mw_time_now.tm_min ++;
-            if (mw_time_now.tm_min == 60U)
-            {
-                mw_time_now.tm_min = 0U;
-                mw_time_now.tm_hour++;
-                if (mw_time_now.tm_hour == 24U)
-                {
-                    mw_time_now.tm_hour = 0U;
-                    mw_time_now.tm_mday++;
-                    days_in_month = days_in_months[mw_time_now.tm_mon];
-                    if (mw_time_now.tm_mon == 2U)
-                    {
-                        if (mw_time_now.tm_year % 4U == 0U && mw_time_now.tm_year % 100U != 0U)
-                        {
-                            days_in_month++;
-                        }
-                    }
-                    if (mw_time_now.tm_mday > days_in_month)
-                    {
-                        mw_time_now.tm_mday = 1U;
-                        mw_time_now.tm_mon++;
-                        if (mw_time_now.tm_mon > 12U)
-                        {
-                            mw_time_now.tm_mon = 1U;
-                            mw_time_now.tm_year++;
-                        }
-                    }
-
-                }
-            }
-        }
-    }
-}
-
 /***********************
 *** GLOBAL FUNCTIONS ***
 ***********************/
 
 void app_init(void)
-{
-    /* initialize all modules */
-    SYS_Initialize(NULL);
+{        
+    /* Start on a sensible date */
+    datetime_t t = {
+            .year  = 2021,
+            .month = 04,
+            .day   = 14,
+            .dotw  = 3, 
+            .hour  = 17,
+            .min   = 20,
+            .sec   = 00
+    };    
     
-    /* start the clock used for real time */
-    TMR3_CallbackRegister(TMR3_InterruptSvcRoutine, NULL);
-    TMR3_Start();    
+    rtc_init();
+    rtc_set_datetime(&t);
     
-    /* initialize SPI1 interface */
-    SPI1_init();
+    /* led setup */
+    gpio_init(LED_PIN);
+    gpio_set_dir(LED_PIN, GPIO_OUT);
     
+    /* spi touch/lcd setup */
+    spi_init(SPI_ID, LCD_SPEED);
+    gpio_set_function(SPI0_MISO_PIN, GPIO_FUNC_SPI);
+    gpio_set_function(SPI0_CLK_PIN, GPIO_FUNC_SPI);
+    gpio_set_function(SPI0_MOSI_PIN, GPIO_FUNC_SPI);      
+    
+    /* touch setup */
+    gpio_init(TOUCH_CS_PIN);
+    gpio_set_dir(TOUCH_CS_PIN, GPIO_OUT);
+    gpio_put(TOUCH_CS_PIN, 1);
+    gpio_init(TOUCH_T_IRQ_PIN);
+    gpio_set_dir(TOUCH_T_IRQ_PIN, GPIO_IN);    
+    gpio_init(TOUCH_RECAL_PIN);
+    gpio_set_dir(TOUCH_RECAL_PIN, GPIO_IN);   
+    gpio_pull_up(TOUCH_RECAL_PIN);
+    
+    /* lcd setup */
+    gpio_init(LCD_RESET_PIN);
+    gpio_set_dir(LCD_RESET_PIN, GPIO_OUT);
+    gpio_init(LCD_DC_PIN);
+    gpio_set_dir(LCD_DC_PIN, GPIO_OUT);
+    gpio_init(LCD_CS_PIN);
+    gpio_set_dir(LCD_CS_PIN, GPIO_OUT);      
+    gpio_put(LCD_CS_PIN, 1);
+    
+    /* spi SD setup */    
+    spi_init(SPI_SD_ID, SD_SPEED);
+    gpio_set_function(SPI1_MISO_PIN, GPIO_FUNC_SPI);
+    gpio_set_function(SPI1_CLK_PIN, GPIO_FUNC_SPI);
+    gpio_set_function(SPI1_MOSI_PIN, GPIO_FUNC_SPI);  
+    gpio_pull_up(SPI1_MISO_PIN);
+    
+    gpio_init(SD_CS_PIN);
+    gpio_set_dir(SD_CS_PIN, GPIO_OUT);
+    gpio_put(SD_CS_PIN, 1);
+        
     /* mount the file system */
-    f_mount(&fatfs, "", 0U);    
+    f_mount(&fatfs, "", 0U);        
 }
 
 void app_main_loop_process(void)
 {
-    /* maintain state machines of all polled MPLAB Harmony modules. */
-    SYS_Tasks();
 }
-
 
 bool app_file_open(char *path_and_filename)
 {
@@ -358,22 +343,42 @@ uint8_t find_folder_entries(char *path,
     /* replace terminating '/' */
     path[strlen(path)] = '/';
 
-    return (i);
+    return (i);  
 }
 
 mw_time_t app_get_time_date(void)
 {
-    return mw_time_now;
+    datetime_t t;
+    mw_time_t time_now;
+    
+    rtc_get_datetime(&t);
+    
+    time_now.tm_year = t.year;
+    time_now.tm_mon = t.month;
+    time_now.tm_mday = t.day;
+    time_now.tm_hour = t.hour;
+    time_now.tm_min = t.min;
+    time_now.tm_sec = t.sec;
+            
+    return time_now;
 }
 
 void app_set_time_date(mw_time_t new_time)
-{    
-    TMR3_Stop();    
-    mw_time_now = new_time;
-    TMR3_Start();    
+{        
+    datetime_t t;
+    
+    t.year = new_time.tm_year;
+    t.month = new_time.tm_mon;
+    t.day = new_time.tm_mday;
+    t.hour = new_time.tm_hour;
+    t.min = new_time.tm_min;
+    t.sec = new_time.tm_sec;
+    t.dotw = 0;
+    
+    rtc_set_datetime(&t);
 }
 
-DWORD get_fattime (void)
+DWORD get_fattime(void)
 {
 	uint32_t fattime = 0U;
 	mw_time_t time_now;

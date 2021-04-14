@@ -66,19 +66,6 @@ void SPI1_init(void)
     SD_CS_Set();
 }
 
-#if 0
-void SPI1_send_receive(const uint8_t *send_buffer, uint8_t *receive_buffer, uint32_t size)
-{
-	/* check prameter values sensible */
-	if (size == 0U || (send_buffer == NULL && receive_buffer == NULL))
-	{
-		return;
-	}
-    
-    SPI1_WriteRead((void *)send_buffer, (size_t)size, (void *)receive_buffer, (size_t)size);
-}
-#endif
-
 void SPI1_send(const uint8_t *send_buffer, uint32_t size)
 {
     SPI1_Write((void *)send_buffer, size);

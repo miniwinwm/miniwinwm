@@ -98,7 +98,7 @@ bool mw_hal_touch_get_point(uint16_t* x, uint16_t* y)
     uint8_t response_buffer[3] = {0};
     
     /* set spi speed to that needed by touch controller */
-    (void)spi_set_baudrate(spi0, TOUCH_SPEED);
+    (void)spi_set_baudrate(SPI_ID, TOUCH_SPEED);
     
     /* deselect lcd controller cs */
     gpio_put(LCD_CS_PIN, 1);
@@ -128,7 +128,7 @@ bool mw_hal_touch_get_point(uint16_t* x, uint16_t* y)
     while ((mw_hal_touch_get_state() == MW_HAL_TOUCH_STATE_DOWN) && (touch_count < MW_HAL_TOUCH_READ_POINTS_COUNT));
     
     /* set spi speed back to that need by lcd */
-    (void)spi_set_baudrate(spi0, LCD_SPEED);
+    (void)spi_set_baudrate(SPI_ID, LCD_SPEED);
 
     /* deselect touch controller cs */
     gpio_put(TOUCH_CS_PIN, 1); 
