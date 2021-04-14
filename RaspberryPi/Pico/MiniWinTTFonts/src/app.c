@@ -2,7 +2,7 @@
 
 MIT License
 
-Copyright (c) John Blaiklock 2019 miniwin Embedded Window Manager
+Copyright (c) John Blaiklock 2021 miniwin Embedded Window Manager
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -28,9 +28,10 @@ SOFTWARE.
 *** INCLUDES ***
 ***************/
 
-#include "miniwin.h"
+#include "pico/stdlib.h"
+#include "hardware/spi.h"
+#include "hal/hal_init.h"
 #include "app.h"
-#include "r_gpio_rx_if.h"
 
 /****************
 *** CONSTANTS ***
@@ -62,15 +63,36 @@ SOFTWARE.
 
 void app_init(void)
 {
-	/* gpio led output */
-	(void)R_GPIO_PinControl(GPIO_PORT_7_PIN_0, GPIO_CMD_ASSIGN_TO_GPIO);
-	R_GPIO_PinDirectionSet(GPIO_PORT_7_PIN_0, GPIO_DIRECTION_OUTPUT);
-	(void)R_GPIO_PinControl(GPIO_PORT_7_PIN_0, GPIO_CMD_OUT_CMOS);
-
-	/* gpio button input */
-	(void)R_GPIO_PinControl(GPIO_PORT_0_PIN_5, GPIO_CMD_ASSIGN_TO_GPIO);
-	R_GPIO_PinDirectionSet(GPIO_PORT_0_PIN_5, GPIO_DIRECTION_INPUT);
-	(void)R_GPIO_PinControl(GPIO_PORT_0_PIN_5, GPIO_CMD_IN_PULL_UP_DISABLE);
+    /* led setup */
+    gpio_init(LED_PIN);
+    gpio_set_dir(LED_PIN, GPIO_OUT);
+    
+    /* spi setup */
+    spi_init(SPI_ID, LCD_SPEED);
+    gpio_set_function(SPI0_MISO_PIN, GPIO_FUNC_SPI);
+    gpio_set_function(SPI0_CLK_PIN, GPIO_FUNC_SPI);
+    gpio_set_function(SPI0_MOSI_PIN, GPIO_FUNC_SPI);      
+    
+    /* touch setup */
+    gpio_init(TOUCH_CS_PIN);
+    gpio_set_dir(TOUCH_CS_PIN, GPIO_OUT);
+    gpio_put(TOUCH_CS_PIN, 1);
+    gpio_init(TOUCH_T_IRQ_PIN);
+    gpio_set_dir(TOUCH_T_IRQ_PIN, GPIO_IN);    
+    gpio_init(TOUCH_RECAL_PIN);
+    gpio_set_dir(TOUCH_RECAL_PIN, GPIO_IN);   
+    gpio_pull_up(TOUCH_RECAL_PIN);
+    
+    /* lcd setup */
+    gpio_init(LCD_RESET_PIN);
+    gpio_set_dir(LCD_RESET_PIN, GPIO_OUT);
+    gpio_init(LCD_DC_PIN);
+    gpio_set_dir(LCD_DC_PIN, GPIO_OUT);
+    gpio_init(LCD_CS_PIN);
+    gpio_set_dir(LCD_CS_PIN, GPIO_OUT);      
+    gpio_put(LCD_CS_PIN, 1);
+    
+    mw_hal_init();  
 }
 
 void app_main_loop_process(void)
