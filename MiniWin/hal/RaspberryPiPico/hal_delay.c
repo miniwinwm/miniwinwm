@@ -68,7 +68,7 @@ void mw_hal_delay_init(void)
 
 void mw_hal_delay_ms(uint16_t ms)
 {
-	sleep_ms((uint32_t)ms);
+	busy_wait_us(1000ULL * (uint64_t)ms);
 }
 
 #endif
