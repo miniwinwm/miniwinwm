@@ -34,6 +34,7 @@ SOFTWARE.
 #include <stdint.h>
 #include <stdbool.h>
 #include "hal/hal_timer.h"
+#include "miniwin_config.h"
 
 /****************
 *** CONSTANTS ***
@@ -69,7 +70,7 @@ DWORD WINAPI tf(void* data)
 {
 	while (true)
 	{
-		Sleep(50U);
+		Sleep(1000U / MW_TICKS_PER_SECOND);
 		mw_hal_timer_fired();
 	}
 }
