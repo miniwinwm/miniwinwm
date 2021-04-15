@@ -33,6 +33,7 @@ SOFTWARE.
 #include <stdint.h>
 #include <stdbool.h>
 #include <pthread.h>
+#include "miniwin_config.h"
 #include "hal/hal_timer.h"
 #include "hal/hal_delay.h"
 
@@ -70,7 +71,7 @@ static void* tf(void *arg)
 {
 	while (true)
 	{
-		mw_hal_delay_ms(50UL);
+		mw_hal_delay_ms(1000UL / MW_TICKS_PER_SECOND);
 		mw_hal_timer_fired();
 	}
 
