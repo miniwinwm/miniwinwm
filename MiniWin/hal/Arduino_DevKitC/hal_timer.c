@@ -33,6 +33,7 @@ SOFTWARE.
 #include "freertos/FreeRTOS.h"
 #include "freertos/timers.h"
 #include "hal/hal_timer.h"
+#include "miniwin_config.h"
 
 /****************
 *** CONSTANTS ***
@@ -75,7 +76,7 @@ static void vTimerCallback(TimerHandle_t xTimer)
 
 void mw_hal_timer_init(void)
 {
-	timer = xTimerCreate("Timer", pdMS_TO_TICKS(50), pdTRUE, (void *)0, vTimerCallback);
+	timer = xTimerCreate("Timer", pdMS_TO_TICKS(1000U / MW_TICKS_PER_SECOND), pdTRUE, (void *)0, vTimerCallback);
 	xTimerStart(timer, 0);
 }
 
