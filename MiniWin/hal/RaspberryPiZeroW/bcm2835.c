@@ -8,6 +8,8 @@
 // $Id: bcm2835.c,v 1.28 2020/01/11 05:07:13 mikem Exp mikem $
 */ 
 
+#ifdef RASPBERRY_PI_ZERO_W
+
 #define _POSIX_C_SOURCE 200809L		/* this brings in posix_memalign and nanosleep in C99 */
 
 #include <stdlib.h>
@@ -2028,6 +2030,4 @@ int main(int argc, char **argv)
 }
 #endif
 
-
-
-
+#endif
