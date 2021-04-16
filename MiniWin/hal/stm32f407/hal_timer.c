@@ -73,7 +73,7 @@ void mw_hal_timer_init(void)
 	uwPrescalerValue = ((SystemCoreClock / 2U) / 10000U) - 1U;
 
 	Tim3Handle.Instance = TIM3;
-	Tim3Handle.Init.Period = 500U - 1U;
+	Tim3Handle.Init.Period = (10000U / MW_TICKS_PER_SECOND) -1U;
 	Tim3Handle.Init.Prescaler = uwPrescalerValue;
 	Tim3Handle.Init.ClockDivision = 0U;
 	Tim3Handle.Init.CounterMode = TIM_COUNTERMODE_UP;

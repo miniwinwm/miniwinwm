@@ -32,6 +32,7 @@ SOFTWARE.
 
 #include "miniwin.h"
 #include "stm32f4xx_hal.h"
+#include "miniwin_config.h"
 
 /****************
 *** CONSTANTS ***
@@ -71,7 +72,7 @@ void mw_hal_timer_init(void)
 	__HAL_RCC_TIM3_CLK_ENABLE();
 
 	Tim3Handle.Instance = TIM3;
-	Tim3Handle.Init.Period = 500U - 1U;
+	Tim3Handle.Init.Period = (10000U / MW_TICKS_PER_SECOND) -1U;
 	Tim3Handle.Init.Prescaler = uwPrescalerValue;
 	Tim3Handle.Init.ClockDivision = 0U;
 	Tim3Handle.Init.CounterMode = TIM_COUNTERMODE_UP;
