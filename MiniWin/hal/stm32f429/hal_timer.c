@@ -32,7 +32,6 @@ SOFTWARE.
 
 #include "miniwin.h"
 #include "stm32f4xx_hal.h"
-#include "miniwin_config.h"
 
 /****************
 *** CONSTANTS ***

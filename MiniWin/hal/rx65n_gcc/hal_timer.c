@@ -76,7 +76,8 @@ void mw_hal_timer_init(void)
 	CMT.CMSTR0.BIT.STR0 = 0U;
 
 	/* set the match value */
-	CMT0.CMCOR = 5859U;
+	//CMT0.CMCOR = 5859U;
+	CMT0.CMCOR = 117900U / MW_TICKS_PER_SECOND;
 
 	/* set the clock divider to 512 */
 	CMT0.CMCR.BIT.CKS = 3U;
