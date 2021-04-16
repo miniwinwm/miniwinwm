@@ -34,6 +34,7 @@ SOFTWARE.
 #include "fsl_ctimer.h"
 #include "fsl_gpio.h"
 #include "hal/hal_timer.h"
+#include "miniwin_config.h"
 
 /****************
 *** CONSTANTS ***
@@ -100,7 +101,7 @@ void mw_hal_timer_init(void)
 
     matchConfig.enableCounterReset = true;
     matchConfig.enableCounterStop = false;
-    matchConfig.matchValue = CLOCK_GetFreq(kCLOCK_AsyncApbClk) / 20U;
+    matchConfig.matchValue = CLOCK_GetFreq(kCLOCK_AsyncApbClk) / MW_TICKS_PER_SECOND;
     matchConfig.outControl = kCTIMER_Output_NoAction;
     matchConfig.enableInterrupt = true;
     CTIMER_SetupMatch(CTIMER3, kCTIMER_Match_1, &matchConfig);
