@@ -76,7 +76,7 @@ void mw_hal_timer_init(void)
 {
 	uint32_t channel;
 
-	(void)R_CMT_CreatePeriodic(20, &timer_fired, &channel);
+	(void)R_CMT_CreatePeriodic(MW_TICKS_PER_SECOND, &timer_fired, &channel);
 }
 
 void mw_hal_timer_fired(void)
