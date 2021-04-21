@@ -73,10 +73,10 @@ void mw_hal_touch_init(void)
 bool mw_hal_touch_is_recalibration_required(void)
 {
 	/* if board button pressed clear settings which forces a screen recalibration */
-   // if (S1_Get() == 0x01U)
-   // {
-   //     return false;
-   // }
+    if (ioport_get_pin_level(TOUCH_RECAL_PIN))
+    {
+        return false;
+    }
     
     return true;
 }

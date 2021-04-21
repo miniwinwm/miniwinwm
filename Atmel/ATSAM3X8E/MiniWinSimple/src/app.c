@@ -76,6 +76,10 @@ void app_init(void)
 	/* initialize all modules */
 	sysclk_init();
 	board_init();
+	
+	/* configure touch recal request pin */
+	ioport_set_pin_dir(TOUCH_RECAL_PIN, IOPORT_DIR_INPUT);
+	(void)gpio_configure_pin(TOUCH_RECAL_PIN, PIO_PULLUP);
 		
 	/* configure touch t_irq pin */
 	ioport_set_pin_dir(TOUCH_T_IRQ_PIN, IOPORT_DIR_INPUT);
