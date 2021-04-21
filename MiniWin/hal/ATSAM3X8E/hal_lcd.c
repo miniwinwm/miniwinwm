@@ -24,15 +24,16 @@ SOFTWARE.
 
 */
 
-#ifdef PIC32MX470F512H
+#ifdef __SAM3X8E__
 
 /***************
 *** INCLUDES ***
 ***************/
 
+#include <asf.h>
+#include <stdint.h>
 #include <stdbool.h>
-#include <string.h>
-#include "definitions.h"   
+#include "app.h"
 #include "hal/hal_lcd.h"
 #include "hal/hal_delay.h"
 #include "miniwin_config.h"
@@ -76,8 +77,8 @@ static inline void filled_rectangle_rotated(int16_t start_x,
 		int16_t height,
 		mw_hal_lcd_colour_t colour);
 static inline void pixel_rotated(int16_t x, int16_t y, mw_hal_lcd_colour_t colour);
-static void write_command(const uint8_t command);
-static void write_data(const uint8_t data);
+static inline void write_command(const uint8_t command);
+static inline void write_data(const uint8_t data);
 
 /**********************
 *** LOCAL FUNCTIONS ***
@@ -88,21 +89,27 @@ static void write_data(const uint8_t data);
  *
  * @param command The command byte
  */
-static void write_command(const uint8_t command)
-{  
-    LCD_DC_Clear();
-    (void)SPI2_Write((void *)&command, sizeof(command));
+static inline void write_command(const uint8_t command)
+{  	
+	ioport_set_pin_level(LCD_DC_PIN, false);
+	spi_put(SPI_LCD_TOUCH_BASE, (uint16_t)command);
+	while ((spi_read_status(SPI_LCD_TOUCH_BASE) & SPI_SR_RDRF) == 0U)
+	{
+	}
 }
 
 /**
  * Send a data byte to the ILI9341 panel. The callback switches the DC line to D first
  *
- * @param dtaa The data byte
+ * @param data The data byte
  */
-static void write_data(const uint8_t data)
+static inline void write_data(const uint8_t data)
 {
-    LCD_DC_Set();
-    (void)SPI2_Write((void *)&data, sizeof(data));
+	ioport_set_pin_level(LCD_DC_PIN, true);
+	spi_put(SPI_LCD_TOUCH_BASE, (uint16_t)data);
+	while ((spi_read_status(SPI_LCD_TOUCH_BASE) & SPI_SR_RDRF) == 0U)
+	{
+	}
 }
 
 /**
@@ -143,19 +150,19 @@ static inline void filled_rectangle_rotated(int16_t start_x,
 		line_buffer[i] = rgb565_colour;
 	}
 
-    LCD_CS_Clear();
-    
+    spi_set_peripheral_chip_select_value(SPI_LCD_TOUCH_BASE, spi_get_pcs(SPI_LCD_CHIP_SEL));
+
 	if (start_x != previous_x || previous_width != width)
 	{
-        LCD_DC_Clear();
-        
-        (void)SPI2_Write((void *)&window_x_command, sizeof(window_x_command));
+		ioport_set_pin_level(LCD_DC_PIN, false);
+
+        spi_send(&window_x_command, sizeof(window_x_command));
         
         window_x_bounds[1] = (uint8_t)start_x;
         window_x_bounds[3] = (uint8_t)(start_x + width - 1);
     
-        LCD_DC_Set();
-        (void)SPI2_Write((void *)&window_x_bounds, sizeof(window_x_bounds));
+		ioport_set_pin_level(LCD_DC_PIN, true);
+        spi_send(window_x_bounds, sizeof(window_x_bounds));
 
 		previous_x = start_x;
 		previous_width = width;
@@ -163,27 +170,25 @@ static inline void filled_rectangle_rotated(int16_t start_x,
     
 	for (y = start_y; y < (start_y + height); y++)
 	{
-        LCD_DC_Clear();
-        (void)SPI2_Write((void *)&window_y_command, sizeof(window_y_command));
+		ioport_set_pin_level(LCD_DC_PIN, false);
+        spi_send(&window_y_command, sizeof(window_y_command));
         
         window_y_bounds[0] = (uint8_t)(y >> 8);
         window_y_bounds[1] = (uint8_t)y;
         window_y_bounds[2] = (uint8_t)(y >> 8);
         window_y_bounds[3] = (uint8_t)y;
     
-        LCD_DC_Set();
-        (void)SPI2_Write((void *)&window_y_bounds, sizeof(window_y_bounds));
+		ioport_set_pin_level(LCD_DC_PIN, true);
+        spi_send(window_y_bounds, sizeof(window_y_bounds));
 
-        LCD_DC_Clear();
-        (void)SPI2_Write((void *)&pixel_data_command, sizeof(pixel_data_command));
+		ioport_set_pin_level(LCD_DC_PIN, false);
+        spi_send(&pixel_data_command, sizeof(pixel_data_command));
 
-        LCD_DC_Set();
-        (void)SPI2_Write((void *)line_buffer, width * 2);        
+		ioport_set_pin_level(LCD_DC_PIN, true);
+        spi_send((uint8_t *)line_buffer, width * 2);        
 	}
 
 	previous_y = y - 1;
-
-    LCD_CS_Set();
 }
 
 /**
@@ -205,18 +210,18 @@ static inline void pixel_rotated(int16_t x, int16_t y, mw_hal_lcd_colour_t colou
     /* swap endianess */
 	rgb565_colour = __builtin_bswap16(rgb565_colour);
     
-    LCD_CS_Clear();
-  
+     spi_set_peripheral_chip_select_value(SPI_LCD_TOUCH_BASE, spi_get_pcs(SPI_LCD_CHIP_SEL));
+
 	if (x != previous_x || previous_width != 1)
 	{
-        LCD_DC_Clear();
-        (void)SPI2_Write((void *)&window_x_command, sizeof(window_x_command));
+		ioport_set_pin_level(LCD_DC_PIN, false);
+        spi_send(&window_x_command, sizeof(window_x_command));
         
         window_x_bounds[1] = (uint8_t)x;
         window_x_bounds[3] = (uint8_t)x;
     
-        LCD_DC_Set();
-        (void)SPI2_Write((void *)&window_x_bounds, sizeof(window_x_bounds));
+		ioport_set_pin_level(LCD_DC_PIN, true);
+        spi_send(window_x_bounds, sizeof(window_x_bounds));
         
 		previous_x = x;
 		previous_width = 1;
@@ -224,27 +229,25 @@ static inline void pixel_rotated(int16_t x, int16_t y, mw_hal_lcd_colour_t colou
 
 	if (y != previous_y)
 	{
-        LCD_DC_Clear();
-        (void)SPI2_Write((void *)&window_y_command, sizeof(window_y_command));
+		ioport_set_pin_level(LCD_DC_PIN, false);
+        spi_send(&window_y_command, sizeof(window_y_command));
         
         window_y_bounds[0] = (uint8_t)(y >> 8);
         window_y_bounds[1] = (uint8_t)y;
         window_y_bounds[2] = (uint8_t)(y >> 8);
         window_y_bounds[3] = (uint8_t)y;
     
-        LCD_DC_Set();
-        (void)SPI2_Write((void *)&window_y_bounds, sizeof(window_y_bounds));
+		ioport_set_pin_level(LCD_DC_PIN, true);
+        spi_send(window_y_bounds, sizeof(window_y_bounds));
 
 		previous_y = y;
 	}
 
-    LCD_DC_Clear();
-    (void)SPI2_Write((void *)&pixel_data_command, sizeof(pixel_data_command));
+	ioport_set_pin_level(LCD_DC_PIN, false);
+    spi_send(&pixel_data_command, sizeof(pixel_data_command));
         
-    LCD_DC_Set();
-    (void)SPI2_Write((void *)&rgb565_colour, sizeof(rgb565_colour));
-     
-    LCD_CS_Set();
+	ioport_set_pin_level(LCD_DC_PIN, true);
+    spi_send((uint8_t *)&rgb565_colour, sizeof(rgb565_colour));
 }
 
 /***********************
@@ -252,18 +255,13 @@ static inline void pixel_rotated(int16_t x, int16_t y, mw_hal_lcd_colour_t colou
 ***********************/
 
 void mw_hal_lcd_init(void)
-{
-    SPI_TRANSFER_SETUP spi_lcd_setup = {12000000UL, SPI_CLOCK_PHASE_LEADING_EDGE, SPI_CLOCK_POLARITY_IDLE_LOW, SPI_DATA_BITS_8};
+{    
+	gpio_set_pin_low(LCD_RESET_PIN);
+    mw_hal_delay_ms(100U);
+	gpio_set_pin_high(LCD_RESET_PIN);
+    mw_hal_delay_ms(100U);
 
-    (void)SPI2_TransferSetup(&spi_lcd_setup, 0UL);
-    (void)LCD_CS_Set();
-    
-    LCD_RESET_Clear();
-    mw_hal_delay_ms(100U);
-    LCD_RESET_Set();
-    mw_hal_delay_ms(100U);
-    
-    LCD_CS_Clear();
+    spi_set_peripheral_chip_select_value(SPI_LCD_TOUCH_BASE, spi_get_pcs(SPI_LCD_CHIP_SEL));
 
 	write_command(0x01U);
     mw_hal_delay_ms(10U);
@@ -352,8 +350,6 @@ void mw_hal_lcd_init(void)
 	write_command(0x29U);
 	write_command(0x36U);
 	write_data(0x48U);
-    
-    LCD_CS_Set();
 }
 
 int16_t mw_hal_lcd_get_display_width(void)
@@ -419,17 +415,17 @@ void mw_hal_lcd_colour_bitmap_clip(int16_t image_start_x,
 			image_start_y + (int16_t)bitmap_height <= clip_start_y + clip_height &&
             bitmap_width <= LCD_DISPLAY_WIDTH_PIXELS)
 	{
-        LCD_CS_Clear();
+		spi_set_peripheral_chip_select_value(SPI_LCD_TOUCH_BASE, spi_get_pcs(SPI_LCD_CHIP_SEL));
 		
 		if ((image_start_x != previous_x) || (previous_width != bitmap_width))
 		{
-            LCD_DC_Clear();
-            (void)SPI2_Write((void *)&window_x_command, sizeof(window_x_command));
+			ioport_set_pin_level(LCD_DC_PIN, false);
+            spi_send(&window_x_command, sizeof(window_x_command));
 
             window_x_bounds[1] = (uint8_t)image_start_x;
             window_x_bounds[3] = (uint8_t)(image_start_x + bitmap_width - 1);
-            LCD_DC_Set();
-            (void)SPI2_Write((void *)window_x_bounds, sizeof(window_x_bounds));            
+			ioport_set_pin_level(LCD_DC_PIN, true);
+            spi_send(window_x_bounds, sizeof(window_x_bounds));            
 
 			previous_x = image_start_x;
 			previous_width = bitmap_width;
@@ -452,26 +448,24 @@ void mw_hal_lcd_colour_bitmap_clip(int16_t image_start_x,
 				line_buffer[x] = __builtin_bswap16(rgb565_colour);
 			}
 			
-            LCD_DC_Clear();
-            (void)SPI2_Write((void *)&window_y_command, sizeof(window_y_command));
+ 			ioport_set_pin_level(LCD_DC_PIN, false);
+           spi_send(&window_y_command, sizeof(window_y_command));
 
             window_y_bounds[0] = (uint8_t)((image_start_y + y) >> 8);
             window_y_bounds[1] = (uint8_t)(image_start_y + y);
             window_y_bounds[2] = (uint8_t)((image_start_y + y) >> 8);
             window_y_bounds[3] = (uint8_t)(image_start_y + y);
-            LCD_DC_Set();
-            (void)SPI2_Write((void *)window_y_bounds, sizeof(window_y_bounds));
+			ioport_set_pin_level(LCD_DC_PIN, true);
+            spi_send(window_y_bounds, sizeof(window_y_bounds));
 
-            LCD_DC_Clear();
-            (void)SPI2_Write((void *)&pixel_data_command, sizeof(pixel_data_command));
+			ioport_set_pin_level(LCD_DC_PIN, false);
+            spi_send(&pixel_data_command, sizeof(pixel_data_command));
 
-            LCD_DC_Set();
-            (void)SPI2_Write((void *)line_buffer, (size_t)(bitmap_width * 2U));       
+			ioport_set_pin_level(LCD_DC_PIN, true);
+            spi_send((uint8_t *)line_buffer, (size_t)(bitmap_width * 2U));       
 		}
 		
 		previous_y = image_start_y + y - 1;
-
-        LCD_CS_Set();
 		
 		return;
 	}
@@ -544,17 +538,17 @@ void mw_hal_lcd_monochrome_bitmap_clip(int16_t image_start_x,
 
         rgb565_bg_colour = __builtin_bswap16(rgb565_bg_colour);	
 
-        LCD_CS_Clear();
+		spi_set_peripheral_chip_select_value(SPI_LCD_TOUCH_BASE, spi_get_pcs(SPI_LCD_CHIP_SEL));
 
         if ((image_start_x != previous_x) || (bitmap_width != previous_width))
         {
-            LCD_DC_Clear();
-            (void)SPI2_Write((void *)&window_x_command, sizeof(window_x_command));
+			ioport_set_pin_level(LCD_DC_PIN, false);
+            spi_send(&window_x_command, sizeof(window_x_command));
 
             window_x_bounds[1] = (uint8_t)image_start_x;
             window_x_bounds[3] = (uint8_t)(image_start_x + bitmap_width - 1);
-            LCD_DC_Set();
-            (void)SPI2_Write((void *)window_x_bounds, sizeof(window_x_bounds));
+			ioport_set_pin_level(LCD_DC_PIN, true);
+            spi_send(window_x_bounds, sizeof(window_x_bounds));
 
             previous_x = image_start_x;
             previous_width = bitmap_width;
@@ -613,29 +607,28 @@ void mw_hal_lcd_monochrome_bitmap_clip(int16_t image_start_x,
 		
         if (use_line_buffer)
         {
-            LCD_DC_Clear();
-            (void)SPI2_Write((void *)&window_y_command, sizeof(window_y_command));
+			ioport_set_pin_level(LCD_DC_PIN, false);
+            spi_send(&window_y_command, sizeof(window_y_command));
 
             window_y_bounds[0] = (uint8_t)((image_start_y + y) >> 8);
             window_y_bounds[1] = (uint8_t)(image_start_y + y);
             window_y_bounds[2] = (uint8_t)((image_start_y + y) >> 8);
             window_y_bounds[3] = (uint8_t)(image_start_y + y);
 
-            LCD_DC_Set();
-            (void)SPI2_Write((void *)window_y_bounds, sizeof(window_y_bounds));
+    		ioport_set_pin_level(LCD_DC_PIN, true);
+			spi_send(window_y_bounds, sizeof(window_y_bounds));
 
-            LCD_DC_Clear();        
-            (void)SPI2_Write((void *)&pixel_data_command, sizeof(pixel_data_command));
+			ioport_set_pin_level(LCD_DC_PIN, false);
+            spi_send(&pixel_data_command, sizeof(pixel_data_command));
 
-            LCD_DC_Set();
-            (void)SPI2_Write((void *)line_buffer, (size_t)(bitmap_width * 2U));       
+			ioport_set_pin_level(LCD_DC_PIN, true);
+            spi_send((uint8_t *)line_buffer, (size_t)(bitmap_width * 2U));       
         }
 	}
 	
     if (use_line_buffer)
     {
         previous_y = image_start_y + y - 1;
-        LCD_CS_Set();
     }
 }
 #endif

@@ -17,4 +17,7 @@ Select Flash - SAM Flash Service API (service), Add
 Apply
 Select project src folder, add app.c & app.h
 Add
-Tool|Options|Projects|Miscellaneous|File Management set Copy file to projectwhen adding existing file to False
+Tool|Options|Projects|Miscellaneous|File Management set Copy file to project when adding existing file to False
+Add a dummy .gitignore file to any folder created as a placeholder for external files that are added but not copied from MiniWin folder structure
+Add miniwin folder path
+Add MiniWinSimple_Common folder path

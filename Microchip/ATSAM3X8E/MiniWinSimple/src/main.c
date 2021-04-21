@@ -6,6 +6,7 @@
 #include "hal/hal_timer.h"
 #include "hal/hal_non_vol.h"
 #include "hal/hal_touch.h"
+#include "hal/hal_lcd.h"
 
 void send_buf(char *buf);
 
@@ -20,7 +21,6 @@ void send_buf(char *buf)
 	}
 }
 
-
 int main (void)
 {
 	app_init();
@@ -34,7 +34,7 @@ int main (void)
 	float td2[4];
 	char buf[100];
 	
-	mw_hal_delay_ms(4000);
+	//mw_hal_delay_ms(4000);
 		
 	mw_hal_non_vol_save((uint8_t*)&td[0], 16);
 	mw_hal_non_vol_load((uint8_t*)&td2[0],16);
@@ -44,6 +44,16 @@ int main (void)
 	send_buf(buf);
 	
 	mw_hal_touch_init();
+	mw_hal_lcd_init();
+	
+	mw_hal_lcd_filled_rectangle(0,0,240,320,0xff0000);
+	mw_hal_lcd_filled_rectangle(0,0,240,320,0x00ff00);
+	mw_hal_lcd_filled_rectangle(0,0,240,320,0x0000ff);
+	mw_hal_lcd_filled_rectangle(0,0,240,320,0xffff00);
+	mw_hal_lcd_filled_rectangle(0,0,240,320,0x00ffff);
+	mw_hal_lcd_filled_rectangle(0,0,240,320,0xff00ff);
+	mw_hal_lcd_filled_rectangle(0,0,240,320,0x000000);
+	mw_hal_lcd_filled_rectangle(0,0,240,320,0xffffff);
 
 	while(1)
 	{

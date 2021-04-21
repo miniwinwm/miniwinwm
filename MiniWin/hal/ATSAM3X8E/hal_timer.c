@@ -64,7 +64,7 @@ void TC0_Handler(void)
 	/* Clear status bit to acknowledge interrupt */
 	(void)tc_get_status(TC0, 0);
 
-	ioport_toggle_pin_level(LED0_GPIO);
+	gpio_toggle_pin(LED0_GPIO);
 }
 
 /***********************
@@ -81,7 +81,7 @@ void mw_hal_timer_init(void)
 	pmc_enable_periph_clk(ID_TC0);
 
 	/** Configure TC and trigger on RC compare. */
-	tc_find_mck_divisor(20, ul_sysclk, &ul_div, &ul_tcclks, ul_sysclk);
+	tc_find_mck_divisor(20, ul_sysclk, &ul_div, &ul_tcclks, ul_sysclk);		// todo use value from config
 	tc_init(TC0, 0, ul_tcclks | TC_CMR_CPCTRG);
 	tc_write_rc(TC0, 0, (ul_sysclk / ul_div) / 20);
 

@@ -35,9 +35,21 @@ SOFTWARE.
 *** INCLUDES ***
 ***************/
 
+#include <stdint.h>
+
 /****************
 *** CONSTANTS ***
 ****************/
+
+#define SPI_LCD_TOUCH_BASE					SPI0					/**< SPI peripheral to use for touch/LCD */
+//#define SPI_TS_CHIP_SEL						0						/**< Touch screen CS/ line on SPI0 */
+//#define SPI_LCD_CHIP_SEL					1						/**< LCD CS/ line on SPI0 */
+
+#define SPI_TS_CHIP_SEL						1						/**< Touch screen CS/ line on SPI0 */
+#define SPI_LCD_CHIP_SEL					0						/**< LCD CS/ line on SPI0 */
+#define TOUCH_T_IRQ_PIN						PIO_PD1_IDX				/**< Pin for touch T_IRQ/ line */
+#define LCD_RESET_PIN						PIO_PD2_IDX				/**< Pin for LCD RESET line */
+#define LCD_DC_PIN							PIO_PD3_IDX				/**< Pin for LCD DC line */
 
 /************
 *** TYPES ***
@@ -60,6 +72,26 @@ void app_init(void);
  * Function called from main to perform application main loop processing
  */
 void app_main_loop_process(void);
+
+/**
+ * Transfer data to/from SPI_LCD_TOUCH_BASE SPI device 
+ *
+ * @param tx_buf Buffer holding data to send
+ * @param rx_buf Buffer to hold data received
+ * @size Length of data in tx_buf
+ * @note rx_buf must be at least size bytes long
+ * @note The CS/ line must already be set                                                               
+ */
+void spi_transfer(const uint8_t *tx_buf, uint8_t *rx_buf, size_t size);
+
+/**
+ * Send data to SPI_LCD_TOUCH_BASE SPI device 
+ *
+ * @param tx_buf Buffer holding data to send
+ * @size Length of data in tx_buf
+ * @note The CS/ line must already be set                                                               
+ */
+void spi_send(const uint8_t *tx_buf, size_t size);
 
 #ifdef __cplusplus
 }
