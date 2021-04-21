@@ -37,14 +37,14 @@ SOFTWARE.
 
 #define SPI_TOUCH_CLK_POLARITY					0						/**< Touch SPI clock polarity */
 #define SPI_TOUCH_CLK_PHASE						1						/**< Touch SPI clock phase */
-#define SPI_TOUCH_DLYBS							0x40
-#define SPI_TOUCH_DLYBCT						0x10					
+#define SPI_TOUCH_DLYBS							0x40					/**< Touch SPI post CS/ delay */
+#define SPI_TOUCH_DLYBCT						0x10					/**< Touch SPI consecutive transfers delay */
 #define SPI_TOUCH_SPEED							1000000UL				/**< Touch SPI baud rate */
 
 #define SPI_LCD_CLK_POLARITY					0						/**< LCD SPI clock polarity */
 #define SPI_LCD_CLK_PHASE						1						/**< LCD SPI clock phase */
-#define SPI_LCD_DLYBS							0x00
-#define SPI_LCD_DLYBCT							0x00
+#define SPI_LCD_DLYBS							0x00					/**< LCD SPI post CS/ delay */
+#define SPI_LCD_DLYBCT							0x00					/**< LCD SPI consecutive transfers delay */
 #define SPI_LCD_SPEED							32000000UL				/**< LCD SPI baud rate */
 
 /************
@@ -77,6 +77,9 @@ void app_init(void)
 	sysclk_init();
 	board_init();
 	
+	/* initialise LED pin */
+	/* this is done in board_init() in init.c */
+	
 	/* configure touch recal request pin */
 	ioport_set_pin_dir(TOUCH_RECAL_PIN, IOPORT_DIR_INPUT);
 	(void)gpio_configure_pin(TOUCH_RECAL_PIN, PIO_PULLUP);
@@ -89,15 +92,13 @@ void app_init(void)
 	ioport_set_pin_dir(LCD_DC_PIN, IOPORT_DIR_OUTPUT);
 
 	/* initialize SPI_LCD_TOUCH_BASE pins */
-	(void)gpio_configure_pin(PIO_PA25_IDX, PIO_PERIPH_A | PIO_DEFAULT);
-	(void)gpio_configure_pin(PIO_PA26_IDX, PIO_PERIPH_A | PIO_DEFAULT);
-	(void)gpio_configure_pin(PIO_PA27_IDX, PIO_PERIPH_A | PIO_DEFAULT);
+	/* this is done in board_init() in init.c controlled by enabling #define CONF_BOARD_SPI0 in conf_board.h */
 	
 	/* initialise touch CS/ pin */
-	(void)gpio_configure_pin(PIO_PA28_IDX, PIO_PERIPH_A | PIO_DEFAULT);
+	/* this is done in board_init() in init.c controlled by enabling #define CONF_BOARD_SPI0_NPCS0 in conf_board.h */
 	
 	/* initialise LCD CS/ pin */
-	(void)gpio_configure_pin(PIO_PA29_IDX, PIO_PERIPH_A | PIO_DEFAULT);
+	/* this is done in board_init() in init.c controlled by enabling #define CONF_BOARD_SPI0_NPCS1 in conf_board.h */
 	
 	/* initialise SPI_LCD_TOUCH_BASE device */
 	spi_enable_clock(SPI_LCD_TOUCH_BASE);
@@ -108,11 +109,11 @@ void app_init(void)
 	spi_disable_mode_fault_detect(SPI_LCD_TOUCH_BASE);
 	
 	/* configure SPI when touch CS/ is active */
-	spi_set_clock_polarity(SPI_LCD_TOUCH_BASE, SPI_TS_CHIP_SEL, SPI_TOUCH_CLK_POLARITY);
-	spi_set_clock_phase(SPI_LCD_TOUCH_BASE, SPI_TS_CHIP_SEL, SPI_TOUCH_CLK_PHASE);
-	spi_set_bits_per_transfer(SPI_LCD_TOUCH_BASE, SPI_TS_CHIP_SEL, SPI_CSR_BITS_8_BIT);
-	(void)spi_set_baudrate_div(SPI_LCD_TOUCH_BASE, SPI_TS_CHIP_SEL, sysclk_get_peripheral_hz() / SPI_TOUCH_SPEED);
-	spi_set_transfer_delay(SPI_LCD_TOUCH_BASE, SPI_TS_CHIP_SEL, SPI_TOUCH_DLYBS, SPI_TOUCH_DLYBCT);
+	spi_set_clock_polarity(SPI_LCD_TOUCH_BASE, SPI_TOUCH_CHIP_SEL, SPI_TOUCH_CLK_POLARITY);
+	spi_set_clock_phase(SPI_LCD_TOUCH_BASE, SPI_TOUCH_CHIP_SEL, SPI_TOUCH_CLK_PHASE);
+	spi_set_bits_per_transfer(SPI_LCD_TOUCH_BASE, SPI_TOUCH_CHIP_SEL, SPI_CSR_BITS_8_BIT);
+	(void)spi_set_baudrate_div(SPI_LCD_TOUCH_BASE, SPI_TOUCH_CHIP_SEL, sysclk_get_peripheral_hz() / SPI_TOUCH_SPEED);
+	spi_set_transfer_delay(SPI_LCD_TOUCH_BASE, SPI_TOUCH_CHIP_SEL, SPI_TOUCH_DLYBS, SPI_TOUCH_DLYBCT);
 	
 	/* configure SPI when LCD CS/ is active */
 	spi_set_clock_polarity(SPI_LCD_TOUCH_BASE, SPI_LCD_CHIP_SEL, SPI_LCD_CLK_POLARITY);

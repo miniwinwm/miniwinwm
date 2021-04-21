@@ -38,7 +38,7 @@ SOFTWARE.
 *** CONSTANTS ***
 ****************/
 
-#define MW_HAL_TOUCH_READ_POINTS_COUNT		10U						/**< Number of samples to take to reduce noise */
+#define READ_POINTS_COUNT					10U						/**< Number of samples to take to reduce noise */
 #define COMMAND_READ_X             			0xd0U					/**< Command to read X position from touch screen */
 #define COMMAND_READ_Y             			0x90U					/**< Command to read Y position from touch screen */
 
@@ -98,12 +98,12 @@ bool mw_hal_touch_get_point(uint16_t* x, uint16_t* y)
 	uint16_t swap_value;
 	uint16_t x_raw;
 	uint16_t y_raw;
-	uint16_t databuffer[2][MW_HAL_TOUCH_READ_POINTS_COUNT];
+	uint16_t databuffer[2][READ_POINTS_COUNT];
 	uint8_t touch_count;
 	uint8_t ts_command[3] = {0};
 	uint8_t ts_response[3];
 	
-	spi_set_peripheral_chip_select_value(SPI_LCD_TOUCH_BASE, spi_get_pcs(SPI_TS_CHIP_SEL));
+	spi_set_peripheral_chip_select_value(SPI_LCD_TOUCH_BASE, spi_get_pcs(SPI_TOUCH_CHIP_SEL));
 	
 	touch_count = 0U;
 	do
@@ -124,9 +124,9 @@ bool mw_hal_touch_get_point(uint16_t* x, uint16_t* y)
 		databuffer[1][touch_count] = y_raw;
 		touch_count++;
 	}
-	while ((mw_hal_touch_get_state() == MW_HAL_TOUCH_STATE_DOWN) && (touch_count < MW_HAL_TOUCH_READ_POINTS_COUNT));
+	while ((mw_hal_touch_get_state() == MW_HAL_TOUCH_STATE_DOWN) && (touch_count < READ_POINTS_COUNT));
 
-	if (touch_count != MW_HAL_TOUCH_READ_POINTS_COUNT)
+	if (touch_count != READ_POINTS_COUNT)
 	{
 		return (false);
 	}
@@ -168,6 +168,5 @@ bool mw_hal_touch_get_point(uint16_t* x, uint16_t* y)
 
 	return (true);
 }
-
 
 #endif

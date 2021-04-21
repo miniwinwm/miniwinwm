@@ -56,9 +56,9 @@
 //#define CONF_BOARD_PWM_LED2
 
 /* Configure SPI0 pins */
-//#define CONF_BOARD_SPI0
-//#define CONF_BOARD_SPI0_NPCS0
-//#define CONF_BOARD_SPI0_NPCS1
+#define CONF_BOARD_SPI0
+#define CONF_BOARD_SPI0_NPCS0
+#define CONF_BOARD_SPI0_NPCS1
 //#define CONF_BOARD_SPI0_NPCS2
 //#define CONF_BOARD_SPI0_NPCS3
 
