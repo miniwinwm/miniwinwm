@@ -1,19 +1,14 @@
 /*
-
 MIT License
-
 Copyright (c) John Blaiklock 2021 miniwin Embedded Window Manager
-
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 copies of the Software, and to permit persons to whom the Software is
 furnished to do so, subject to the following conditions:
-
 The above copyright notice and this permission notice shall be included in all
 copies or substantial portions of the Software.
-
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -21,7 +16,6 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
 */
 
 #ifdef __SAM3X8E__
@@ -254,6 +248,9 @@ static inline void pixel_rotated(int16_t x, int16_t y, mw_hal_lcd_colour_t colou
 *** GLOBAL FUNCTIONS ***
 ***********************/
 
+#pragma GCC push_options
+#pragma GCC optimize ("O0")
+
 void mw_hal_lcd_init(void)
 {    
 	gpio_set_pin_low(LCD_RESET_PIN);
@@ -262,7 +259,6 @@ void mw_hal_lcd_init(void)
     mw_hal_delay_ms(100U);
 
     spi_set_peripheral_chip_select_value(SPI_LCD_TOUCH_BASE, spi_get_pcs(SPI_LCD_CHIP_SEL));
-    mw_hal_delay_ms(10U);
 
 	write_command(0x01U);
     mw_hal_delay_ms(10U);
@@ -352,6 +348,8 @@ void mw_hal_lcd_init(void)
 	write_command(0x36U);
 	write_data(0x48U);
 }
+
+#pragma GCC pop_options
 
 int16_t mw_hal_lcd_get_display_width(void)
 {
@@ -632,4 +630,5 @@ void mw_hal_lcd_monochrome_bitmap_clip(int16_t image_start_x,
         previous_y = image_start_y + y - 1;
     }
 }
+
 #endif

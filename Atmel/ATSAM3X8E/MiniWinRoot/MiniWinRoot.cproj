@@ -1,0 +1,1573 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectVersion>7.0</ProjectVersion>
+    <ToolchainName>com.Atmel.ARMGCC.C</ToolchainName>
+    <ProjectGuid>dce6c7e3-ee26-4d79-826b-08594b9ad897</ProjectGuid>
+    <avrdevice>ATSAM3X8E</avrdevice>
+    <avrdeviceseries>sam3x</avrdeviceseries>
+    <OutputType>Executable</OutputType>
+    <Language>C</Language>
+    <OutputFileName>$(MSBuildProjectName)</OutputFileName>
+    <OutputFileExtension>.elf</OutputFileExtension>
+    <OutputDirectory>$(MSBuildProjectDirectory)\$(Configuration)</OutputDirectory>
+    <AssemblyName>MiniWinSimple</AssemblyName>
+    <Name>MiniWinRoot</Name>
+    <RootNamespace>MiniWinSimple</RootNamespace>
+    <ToolchainFlavour>Native</ToolchainFlavour>
+    <KeepTimersRunning>true</KeepTimersRunning>
+    <OverrideVtor>false</OverrideVtor>
+    <CacheFlash>true</CacheFlash>
+    <ProgFlashFromRam>true</ProgFlashFromRam>
+    <RamSnippetAddress>0x20000000</RamSnippetAddress>
+    <UncachedRange />
+    <preserveEEPROM>true</preserveEEPROM>
+    <OverrideVtorValue>exception_table</OverrideVtorValue>
+    <BootSegment>2</BootSegment>
+    <ResetRule>0</ResetRule>
+    <eraseonlaunchrule>0</eraseonlaunchrule>
+    <EraseKey />
+    <AsfFrameworkConfig>
+      <framework-data>
+        <options>
+          <option id="common.boards" value="Add" config="" content-id="Atmel.ASF" />
+          <option id="common.services.delay" value="Add" config="" content-id="Atmel.ASF" />
+          <option id="common.services.basic.gpio" value="Add" config="" content-id="Atmel.ASF" />
+          <option id="common.services.ioport" value="Add" config="" content-id="Atmel.ASF" />
+          <option id="sam.drivers.pio" value="Add" config="" content-id="Atmel.ASF" />
+          <option id="sam.drivers.spi" value="Add" config="" content-id="Atmel.ASF" />
+          <option id="sam.drivers.tc" value="Add" config="" content-id="Atmel.ASF" />
+          <option id="sam.services.flash" value="Add" config="" content-id="Atmel.ASF" />
+          <option id="common.applications.user_application" value="Add" config="" content-id="Atmel.ASF" />
+          <option id="sam.utils.cmsis.sam3x.source.template" value="Add" config="" content-id="Atmel.ASF" />
+        </options>
+        <configurations>
+          <configuration key="config.compiler.armgcc.printf" value="iprintf" default="iprintf" content-id="Atmel.ASF" />
+          <configuration key="config.compiler.armgcc.scanf" value="iscanf" default="iscanf" content-id="Atmel.ASF" />
+          <configuration key="config.sam.pio.pio_handler" value="yes" default="yes" content-id="Atmel.ASF" />
+          <configuration key="config.sam.drivers.uotghs.device.sleepmgr" value="with_sleepmgr" default="with_sleepmgr" content-id="Atmel.ASF" />
+        </configurations>
+        <files>
+          <file path="src/main.c" framework="" version="" source="common/applications/user_application/main.c" changed="False" content-id="Atmel.ASF" />
+          <file path="src/config/conf_board.h" framework="" version="" source="common/applications/user_application/sam3x8e_arduino_due_x/config/conf_board.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/config/conf_clock.h" framework="" version="" source="common/applications/user_application/sam3x8e_arduino_due_x/config/conf_clock.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/common/boards/board.h" framework="" version="" source="common/boards/board.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/common/services/clock/genclk.h" framework="" version="" source="common/services/clock/genclk.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/common/services/clock/osc.h" framework="" version="" source="common/services/clock/osc.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/common/services/clock/pll.h" framework="" version="" source="common/services/clock/pll.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/common/services/clock/sam3x/genclk.h" framework="" version="" source="common/services/clock/sam3x/genclk.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/common/services/clock/sam3x/osc.h" framework="" version="" source="common/services/clock/sam3x/osc.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/common/services/clock/sam3x/pll.h" framework="" version="" source="common/services/clock/sam3x/pll.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/common/services/clock/sam3x/sysclk.c" framework="" version="" source="common/services/clock/sam3x/sysclk.c" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/common/services/clock/sam3x/sysclk.h" framework="" version="" source="common/services/clock/sam3x/sysclk.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/common/services/clock/sysclk.h" framework="" version="" source="common/services/clock/sysclk.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/common/services/gpio/gpio.h" framework="" version="" source="common/services/gpio/gpio.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/common/services/gpio/sam_gpio/sam_gpio.h" framework="" version="" source="common/services/gpio/sam_gpio/sam_gpio.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/common/services/ioport/ioport.h" framework="" version="" source="common/services/ioport/ioport.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/common/services/ioport/sam/ioport_pio.h" framework="" version="" source="common/services/ioport/sam/ioport_pio.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/common/utils/interrupt.h" framework="" version="" source="common/utils/interrupt.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/common/utils/interrupt/interrupt_sam_nvic.c" framework="" version="" source="common/utils/interrupt/interrupt_sam_nvic.c" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/common/utils/interrupt/interrupt_sam_nvic.h" framework="" version="" source="common/utils/interrupt/interrupt_sam_nvic.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/common/utils/parts.h" framework="" version="" source="common/utils/parts.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/boards/arduino_due_x/arduino_due_x.h" framework="" version="" source="sam/boards/arduino_due_x/arduino_due_x.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/boards/arduino_due_x/init.c" framework="" version="" source="sam/boards/arduino_due_x/init.c" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/drivers/pio/pio.c" framework="" version="" source="sam/drivers/pio/pio.c" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/drivers/pio/pio.h" framework="" version="" source="sam/drivers/pio/pio.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/drivers/pio/pio_handler.c" framework="" version="" source="sam/drivers/pio/pio_handler.c" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/drivers/pio/pio_handler.h" framework="" version="" source="sam/drivers/pio/pio_handler.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/drivers/pmc/pmc.c" framework="" version="" source="sam/drivers/pmc/pmc.c" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/drivers/pmc/pmc.h" framework="" version="" source="sam/drivers/pmc/pmc.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/drivers/pmc/sleep.c" framework="" version="" source="sam/drivers/pmc/sleep.c" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/drivers/pmc/sleep.h" framework="" version="" source="sam/drivers/pmc/sleep.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/component/component_adc.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/component/component_adc.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/component/component_can.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/component/component_can.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/component/component_chipid.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/component/component_chipid.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/component/component_dacc.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/component/component_dacc.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/component/component_dmac.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/component/component_dmac.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/component/component_efc.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/component/component_efc.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/component/component_emac.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/component/component_emac.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/component/component_gpbr.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/component/component_gpbr.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/component/component_hsmci.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/component/component_hsmci.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/component/component_matrix.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/component/component_matrix.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/component/component_pdc.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/component/component_pdc.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/component/component_pio.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/component/component_pio.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/component/component_pmc.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/component/component_pmc.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/component/component_pwm.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/component/component_pwm.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/component/component_rstc.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/component/component_rstc.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/component/component_rtc.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/component/component_rtc.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/component/component_rtt.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/component/component_rtt.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/component/component_sdramc.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/component/component_sdramc.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/component/component_smc.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/component/component_smc.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/component/component_spi.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/component/component_spi.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/component/component_ssc.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/component/component_ssc.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/component/component_supc.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/component/component_supc.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/component/component_tc.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/component/component_tc.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/component/component_trng.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/component/component_trng.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/component/component_twi.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/component/component_twi.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/component/component_uart.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/component/component_uart.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/component/component_uotghs.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/component/component_uotghs.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/component/component_usart.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/component/component_usart.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/component/component_wdt.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/component/component_wdt.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/instance/instance_adc.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/instance/instance_adc.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/instance/instance_can0.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/instance/instance_can0.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/instance/instance_can1.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/instance/instance_can1.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/instance/instance_chipid.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/instance/instance_chipid.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/instance/instance_dacc.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/instance/instance_dacc.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/instance/instance_dmac.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/instance/instance_dmac.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/instance/instance_efc0.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/instance/instance_efc0.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/instance/instance_efc1.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/instance/instance_efc1.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/instance/instance_emac.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/instance/instance_emac.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/instance/instance_gpbr.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/instance/instance_gpbr.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/instance/instance_hsmci.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/instance/instance_hsmci.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/instance/instance_matrix.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/instance/instance_matrix.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/instance/instance_pioa.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/instance/instance_pioa.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/instance/instance_piob.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/instance/instance_piob.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/instance/instance_pioc.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/instance/instance_pioc.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/instance/instance_piod.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/instance/instance_piod.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/instance/instance_pioe.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/instance/instance_pioe.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/instance/instance_piof.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/instance/instance_piof.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/instance/instance_pmc.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/instance/instance_pmc.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/instance/instance_pwm.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/instance/instance_pwm.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/instance/instance_rstc.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/instance/instance_rstc.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/instance/instance_rtc.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/instance/instance_rtc.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/instance/instance_rtt.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/instance/instance_rtt.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/instance/instance_sdramc.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/instance/instance_sdramc.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/instance/instance_smc.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/instance/instance_smc.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/instance/instance_spi0.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/instance/instance_spi0.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/instance/instance_spi1.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/instance/instance_spi1.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/instance/instance_ssc.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/instance/instance_ssc.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/instance/instance_supc.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/instance/instance_supc.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/instance/instance_tc0.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/instance/instance_tc0.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/instance/instance_tc1.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/instance/instance_tc1.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/instance/instance_tc2.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/instance/instance_tc2.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/instance/instance_trng.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/instance/instance_trng.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/instance/instance_twi0.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/instance/instance_twi0.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/instance/instance_twi1.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/instance/instance_twi1.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/instance/instance_uart.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/instance/instance_uart.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/instance/instance_uotghs.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/instance/instance_uotghs.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/instance/instance_usart0.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/instance/instance_usart0.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/instance/instance_usart1.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/instance/instance_usart1.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/instance/instance_usart2.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/instance/instance_usart2.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/instance/instance_usart3.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/instance/instance_usart3.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/instance/instance_wdt.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/instance/instance_wdt.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/pio/pio_sam3a4c.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/pio/pio_sam3a4c.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/pio/pio_sam3a8c.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/pio/pio_sam3a8c.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/pio/pio_sam3x4c.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/pio/pio_sam3x4c.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/pio/pio_sam3x4e.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/pio/pio_sam3x4e.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/pio/pio_sam3x8c.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/pio/pio_sam3x8c.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/pio/pio_sam3x8e.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/pio/pio_sam3x8e.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/pio/pio_sam3x8h.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/pio/pio_sam3x8h.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/sam3a4c.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/sam3a4c.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/sam3a8c.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/sam3a8c.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/sam3x4c.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/sam3x4c.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/sam3x4e.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/sam3x4e.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/sam3x8c.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/sam3x8c.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/sam3x8e.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/sam3x8e.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/sam3x8h.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/sam3x8h.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/include/sam3xa.h" framework="" version="" source="sam/utils/cmsis/sam3x/include/sam3xa.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/source/templates/exceptions.c" framework="" version="" source="sam/utils/cmsis/sam3x/source/templates/exceptions.c" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/source/templates/exceptions.h" framework="" version="" source="sam/utils/cmsis/sam3x/source/templates/exceptions.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/source/templates/gcc/startup_sam3x.c" framework="" version="" source="sam/utils/cmsis/sam3x/source/templates/gcc/startup_sam3x.c" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/source/templates/system_sam3x.c" framework="" version="" source="sam/utils/cmsis/sam3x/source/templates/system_sam3x.c" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/cmsis/sam3x/source/templates/system_sam3x.h" framework="" version="" source="sam/utils/cmsis/sam3x/source/templates/system_sam3x.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/compiler.h" framework="" version="" source="sam/utils/compiler.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/header_files/io.h" framework="" version="" source="sam/utils/header_files/io.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/linker_scripts/sam3x/sam3x8/gcc/flash.ld" framework="" version="" source="sam/utils/linker_scripts/sam3x/sam3x8/gcc/flash.ld" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/make/Makefile.sam.in" framework="" version="" source="sam/utils/make/Makefile.sam.in" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/preprocessor/mrepeat.h" framework="" version="" source="sam/utils/preprocessor/mrepeat.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/preprocessor/preprocessor.h" framework="" version="" source="sam/utils/preprocessor/preprocessor.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/preprocessor/stringz.h" framework="" version="" source="sam/utils/preprocessor/stringz.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/preprocessor/tpaste.h" framework="" version="" source="sam/utils/preprocessor/tpaste.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/status_codes.h" framework="" version="" source="sam/utils/status_codes.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/utils/syscalls/gcc/syscalls.c" framework="" version="" source="sam/utils/syscalls/gcc/syscalls.c" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/thirdparty/CMSIS/ATMEL-disclaimer.txt" framework="" version="" source="thirdparty/CMSIS/ATMEL-disclaimer.txt" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/thirdparty/CMSIS/CMSIS_END_USER_LICENCE_AGREEMENT.pdf" framework="" version="" source="thirdparty/CMSIS/CMSIS_END_USER_LICENCE_AGREEMENT.pdf" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/thirdparty/CMSIS/Include/arm_common_tables.h" framework="" version="" source="thirdparty/CMSIS/Include/arm_common_tables.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/thirdparty/CMSIS/Include/arm_const_structs.h" framework="" version="" source="thirdparty/CMSIS/Include/arm_const_structs.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/thirdparty/CMSIS/Include/cmsis_compiler.h" framework="" version="" source="thirdparty/CMSIS/Include/cmsis_compiler.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/thirdparty/CMSIS/Include/cmsis_gcc.h" framework="" version="" source="thirdparty/CMSIS/Include/cmsis_gcc.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/thirdparty/CMSIS/Include/cmsis_version.h" framework="" version="" source="thirdparty/CMSIS/Include/cmsis_version.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/thirdparty/CMSIS/Include/core_cm3.h" framework="" version="" source="thirdparty/CMSIS/Include/core_cm3.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/thirdparty/CMSIS/Include/mpu_armv7.h" framework="" version="" source="thirdparty/CMSIS/Include/mpu_armv7.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/thirdparty/CMSIS/Lib/GCC/libarm_cortexM3l_math.a" framework="" version="" source="thirdparty/CMSIS/Lib/GCC/libarm_cortexM3l_math.a" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/thirdparty/CMSIS/Lib/license.txt" framework="" version="" source="thirdparty/CMSIS/Lib/license.txt" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/thirdparty/CMSIS/README.txt" framework="" version="" source="thirdparty/CMSIS/README.txt" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/thirdparty/CMSIS/license.txt" framework="" version="" source="thirdparty/CMSIS/license.txt" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/drivers/efc/efc.c" framework="" version="3.49.1" source="sam\drivers\efc\efc.c" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/drivers/efc/efc.h" framework="" version="3.49.1" source="sam\drivers\efc\efc.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/services/flash_efc/flash_efc.c" framework="" version="3.49.1" source="sam\services\flash_efc\flash_efc.c" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/services/flash_efc/flash_efc.h" framework="" version="3.49.1" source="sam\services\flash_efc\flash_efc.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/common/services/delay/sam/cycle_counter.c" framework="" version="3.49.1" source="common\services\delay\sam\cycle_counter.c" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/common/services/delay/sam/cycle_counter.h" framework="" version="3.49.1" source="common\services\delay\sam\cycle_counter.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/common/services/delay/delay.h" framework="" version="3.49.1" source="common\services\delay\delay.h" changed="False" content-id="Atmel.ASF" />
+          <file path="atmel_devices_cdc.cat" framework="" version="3.49.1" source="common\services\usb\class\cdc\device\atmel_devices_cdc.cat" changed="False" content-id="Atmel.ASF" />
+          <file path="atmel_devices_cdc.inf" framework="" version="3.49.1" source="common\services\usb\class\cdc\device\atmel_devices_cdc.inf" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/drivers/spi/spi.c" framework="" version="3.49.1" source="sam\drivers\spi\spi.c" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/drivers/spi/spi.h" framework="" version="3.49.1" source="sam\drivers\spi\spi.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/drivers/tc/tc.c" framework="" version="3.49.1" source="sam\drivers\tc\tc.c" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam/drivers/tc/tc.h" framework="" version="3.49.1" source="sam\drivers\tc\tc.h" changed="False" content-id="Atmel.ASF" />
+        </files>
+        <documentation help="https://asf.microchip.com/docs/3.49.1/common.applications.user_application.arduino_due_x/html/index.html" />
+        <offline-documentation help="" />
+        <dependencies>
+          <content-extension eid="atmel.asf" uuidref="Atmel.ASF" version="3.49.1" />
+        </dependencies>
+        <project id="common.applications.user_application.arduino_due_x" value="Add" config="" content-id="Atmel.ASF" />
+        <board id="board.arduino_due_x" value="Add" config="" content-id="Atmel.ASF" />
+      </framework-data>
+    </AsfFrameworkConfig>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <ToolchainSettings>
+      <ArmGcc>
+  <armgcc.common.outputfiles.hex>True</armgcc.common.outputfiles.hex>
+  <armgcc.common.outputfiles.lss>True</armgcc.common.outputfiles.lss>
+  <armgcc.common.outputfiles.eep>True</armgcc.common.outputfiles.eep>
+  <armgcc.common.outputfiles.bin>True</armgcc.common.outputfiles.bin>
+  <armgcc.common.outputfiles.srec>True</armgcc.common.outputfiles.srec>
+  <armgcc.compiler.symbols.DefSymbols>
+    <ListValues>
+      <Value>NDEBUG</Value>
+      <Value>BOARD=ARDUINO_DUE_X</Value>
+      <Value>scanf=iscanf</Value>
+      <Value>ARM_MATH_CM3=true</Value>
+      <Value>printf=iprintf</Value>
+      <Value>__SAM3X8E__</Value>
+    </ListValues>
+  </armgcc.compiler.symbols.DefSymbols>
+  <armgcc.compiler.directories.IncludePaths>
+    <ListValues>
+      <Value>../src/ASF/common/boards</Value>
+      <Value>../src/ASF/sam/utils</Value>
+      <Value>../src/ASF/sam/utils/header_files</Value>
+      <Value>../src/ASF/sam/utils/preprocessor</Value>
+      <Value>../src/ASF/thirdparty/CMSIS/Include</Value>
+      <Value>../src/ASF/thirdparty/CMSIS/Lib/GCC</Value>
+      <Value>../src/ASF/common/utils</Value>
+      <Value>../src/ASF/sam/utils/cmsis/sam3x/source/templates</Value>
+      <Value>../src/ASF/sam/utils/cmsis/sam3x/include</Value>
+      <Value>../src/ASF/sam/boards</Value>
+      <Value>../src/ASF/sam/boards/arduino_due_x</Value>
+      <Value>../src/ASF/common/services/gpio</Value>
+      <Value>../src/ASF/sam/drivers/pio</Value>
+      <Value>../src/ASF/common/services/ioport</Value>
+      <Value>../src/ASF/common/services/clock</Value>
+      <Value>../src/ASF/sam/drivers/pmc</Value>
+      <Value>../src</Value>
+      <Value>../src/config</Value>
+      <Value>../src/ASF/sam/drivers/efc</Value>
+      <Value>../src/ASF/sam/services/flash_efc</Value>
+      <Value>../src/ASF/common/services/delay</Value>
+      <Value>../src/ASF/sam/drivers/spi</Value>
+      <Value>../src/ASF/sam/drivers/tc</Value>
+    </ListValues>
+  </armgcc.compiler.directories.IncludePaths>
+  <armgcc.compiler.optimization.level>Optimize for size (-Os)</armgcc.compiler.optimization.level>
+  <armgcc.compiler.optimization.OtherFlags>-fdata-sections</armgcc.compiler.optimization.OtherFlags>
+  <armgcc.compiler.optimization.PrepareFunctionsForGarbageCollection>True</armgcc.compiler.optimization.PrepareFunctionsForGarbageCollection>
+  <armgcc.compiler.warnings.AllWarnings>True</armgcc.compiler.warnings.AllWarnings>
+  <armgcc.compiler.miscellaneous.OtherFlags>-pipe -fno-strict-aliasing -Wall -Wstrict-prototypes -Wmissing-prototypes -Werror-implicit-function-declaration -Wpointer-arith -std=gnu99 -ffunction-sections -fdata-sections -Wchar-subscripts -Wcomment -Wformat=2 -Wimplicit-int -Wmain -Wparentheses -Wsequence-point -Wreturn-type -Wswitch -Wtrigraphs -Wunused -Wuninitialized -Wunknown-pragmas -Wfloat-equal -Wundef -Wshadow -Wbad-function-cast -Wwrite-strings -Wsign-compare -Waggregate-return  -Wmissing-declarations -Wformat -Wmissing-format-attribute -Wno-deprecated-declarations -Wpacked -Wredundant-decls -Wnested-externs -Wlong-long -Wunreachable-code -Wcast-align --param max-inline-insns-single=500</armgcc.compiler.miscellaneous.OtherFlags>
+  <armgcc.linker.libraries.Libraries>
+    <ListValues>
+      <Value>libarm_cortexM3l_math</Value>
+      <Value>libm</Value>
+    </ListValues>
+  </armgcc.linker.libraries.Libraries>
+  <armgcc.linker.libraries.LibrarySearchPaths>
+    <ListValues>
+      <Value>../src/ASF/thirdparty/CMSIS/Lib/GCC</Value>
+    </ListValues>
+  </armgcc.linker.libraries.LibrarySearchPaths>
+  <armgcc.linker.optimization.GarbageCollectUnusedSections>True</armgcc.linker.optimization.GarbageCollectUnusedSections>
+  <armgcc.linker.miscellaneous.LinkerFlags>-Wl,--entry=Reset_Handler -Wl,--cref -mthumb -T../src/ASF/sam/utils/linker_scripts/sam3x/sam3x8/gcc/flash.ld</armgcc.linker.miscellaneous.LinkerFlags>
+  <armgcc.assembler.general.IncludePaths>
+    <ListValues>
+      <Value>../src/ASF/common/boards</Value>
+      <Value>../src/ASF/sam/utils</Value>
+      <Value>../src/ASF/sam/utils/header_files</Value>
+      <Value>../src/ASF/sam/utils/preprocessor</Value>
+      <Value>../src/ASF/thirdparty/CMSIS/Include</Value>
+      <Value>../src/ASF/thirdparty/CMSIS/Lib/GCC</Value>
+      <Value>../src/ASF/common/utils</Value>
+      <Value>../src/ASF/sam/utils/cmsis/sam3x/source/templates</Value>
+      <Value>../src/ASF/sam/utils/cmsis/sam3x/include</Value>
+      <Value>../src/ASF/sam/boards</Value>
+      <Value>../src/ASF/sam/boards/arduino_due_x</Value>
+      <Value>../src/ASF/common/services/gpio</Value>
+      <Value>../src/ASF/sam/drivers/pio</Value>
+      <Value>../src/ASF/common/services/ioport</Value>
+      <Value>../src/ASF/common/services/clock</Value>
+      <Value>../src/ASF/sam/drivers/pmc</Value>
+      <Value>../src</Value>
+      <Value>../src/config</Value>
+      <Value>../src/ASF/sam/drivers/efc</Value>
+      <Value>../src/ASF/sam/services/flash_efc</Value>
+      <Value>../src/ASF/common/services/delay</Value>
+      <Value>../src/ASF/sam/drivers/spi</Value>
+      <Value>../src/ASF/sam/drivers/tc</Value>
+    </ListValues>
+  </armgcc.assembler.general.IncludePaths>
+  <armgcc.preprocessingassembler.general.AssemblerFlags>-DARM_MATH_CM3=true -DBOARD=ARDUINO_DUE_X -D__SAM3X8E__ -Dprintf=iprintf -Dscanf=iscanf</armgcc.preprocessingassembler.general.AssemblerFlags>
+  <armgcc.preprocessingassembler.general.IncludePaths>
+    <ListValues>
+      <Value>../src/ASF/common/boards</Value>
+      <Value>../src/ASF/sam/utils</Value>
+      <Value>../src/ASF/sam/utils/header_files</Value>
+      <Value>../src/ASF/sam/utils/preprocessor</Value>
+      <Value>../src/ASF/thirdparty/CMSIS/Include</Value>
+      <Value>../src/ASF/thirdparty/CMSIS/Lib/GCC</Value>
+      <Value>../src/ASF/common/utils</Value>
+      <Value>../src/ASF/sam/utils/cmsis/sam3x/source/templates</Value>
+      <Value>../src/ASF/sam/utils/cmsis/sam3x/include</Value>
+      <Value>../src/ASF/sam/boards</Value>
+      <Value>../src/ASF/sam/boards/arduino_due_x</Value>
+      <Value>../src/ASF/common/services/gpio</Value>
+      <Value>../src/ASF/sam/drivers/pio</Value>
+      <Value>../src/ASF/common/services/ioport</Value>
+      <Value>../src/ASF/common/services/clock</Value>
+      <Value>../src/ASF/sam/drivers/pmc</Value>
+      <Value>../src</Value>
+      <Value>../src/config</Value>
+      <Value>../src/ASF/sam/drivers/efc</Value>
+      <Value>../src/ASF/sam/services/flash_efc</Value>
+      <Value>../src/ASF/common/services/delay</Value>
+      <Value>../src/ASF/sam/drivers/spi</Value>
+      <Value>../src/ASF/sam/drivers/tc</Value>
+    </ListValues>
+  </armgcc.preprocessingassembler.general.IncludePaths>
+</ArmGcc>
+    </ToolchainSettings>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <ToolchainSettings>
+      <ArmGcc>
+  <armgcc.common.outputfiles.hex>True</armgcc.common.outputfiles.hex>
+  <armgcc.common.outputfiles.lss>True</armgcc.common.outputfiles.lss>
+  <armgcc.common.outputfiles.eep>True</armgcc.common.outputfiles.eep>
+  <armgcc.common.outputfiles.bin>True</armgcc.common.outputfiles.bin>
+  <armgcc.common.outputfiles.srec>True</armgcc.common.outputfiles.srec>
+  <armgcc.compiler.symbols.DefSymbols>
+    <ListValues>
+      <Value>DEBUG</Value>
+      <Value>BOARD=ARDUINO_DUE_X</Value>
+      <Value>scanf=iscanf</Value>
+      <Value>ARM_MATH_CM3=true</Value>
+      <Value>printf=iprintf</Value>
+      <Value>__SAM3X8E__</Value>
+    </ListValues>
+  </armgcc.compiler.symbols.DefSymbols>
+  <armgcc.compiler.directories.IncludePaths>
+    <ListValues>
+      <Value>../src/ASF/common/boards</Value>
+      <Value>../src/ASF/sam/utils</Value>
+      <Value>../src/ASF/sam/utils/header_files</Value>
+      <Value>../src/ASF/sam/utils/preprocessor</Value>
+      <Value>../src/ASF/thirdparty/CMSIS/Include</Value>
+      <Value>../src/ASF/thirdparty/CMSIS/Lib/GCC</Value>
+      <Value>../src/ASF/common/utils</Value>
+      <Value>../src/ASF/sam/utils/cmsis/sam3x/source/templates</Value>
+      <Value>../src/ASF/sam/utils/cmsis/sam3x/include</Value>
+      <Value>../src/ASF/sam/boards</Value>
+      <Value>../src/ASF/sam/boards/arduino_due_x</Value>
+      <Value>../src/ASF/common/services/gpio</Value>
+      <Value>../src/ASF/sam/drivers/pio</Value>
+      <Value>../src/ASF/common/services/ioport</Value>
+      <Value>../src/ASF/common/services/clock</Value>
+      <Value>../src/ASF/sam/drivers/pmc</Value>
+      <Value>../src</Value>
+      <Value>../src/config</Value>
+      <Value>../src/ASF/sam/drivers/efc</Value>
+      <Value>../src/ASF/sam/services/flash_efc</Value>
+      <Value>../src/ASF/common/services/delay</Value>
+      <Value>../src/ASF/sam/drivers/spi</Value>
+      <Value>../../../../MiniWin</Value>
+      <Value>../src/ASF/sam/drivers/tc</Value>
+      <Value>../../../../MiniWin/gl/fonts/truetype/mcufont</Value>
+      <Value>../../../../MiniWinRoot_Common</Value>
+    </ListValues>
+  </armgcc.compiler.directories.IncludePaths>
+  <armgcc.compiler.optimization.level>Optimize most (-O3)</armgcc.compiler.optimization.level>
+  <armgcc.compiler.optimization.OtherFlags>-fdata-sections</armgcc.compiler.optimization.OtherFlags>
+  <armgcc.compiler.optimization.PrepareFunctionsForGarbageCollection>True</armgcc.compiler.optimization.PrepareFunctionsForGarbageCollection>
+  <armgcc.compiler.optimization.DebugLevel>Maximum (-g3)</armgcc.compiler.optimization.DebugLevel>
+  <armgcc.compiler.warnings.InhibitAllWarnings>True</armgcc.compiler.warnings.InhibitAllWarnings>
+  <armgcc.compiler.miscellaneous.OtherFlags>-std=c99 -pipe -fno-strict-aliasing -Wall -Wstrict-prototypes -Wmissing-prototypes -Werror-implicit-function-declaration -Wpointer-arith -std=gnu99 -ffunction-sections -fdata-sections -Wchar-subscripts -Wcomment -Wformat=2 -Wimplicit-int -Wmain -Wparentheses -Wsequence-point -Wreturn-type -Wswitch -Wtrigraphs -Wunused -Wuninitialized -Wunknown-pragmas -Wfloat-equal -Wundef -Wshadow -Wbad-function-cast -Wwrite-strings -Wsign-compare -Waggregate-return  -Wmissing-declarations -Wformat -Wmissing-format-attribute -Wno-deprecated-declarations -Wpacked -Wredundant-decls -Wnested-externs -Wlong-long -Wunreachable-code -Wcast-align --param max-inline-insns-single=500</armgcc.compiler.miscellaneous.OtherFlags>
+  <armgcc.linker.libraries.Libraries>
+    <ListValues>
+      <Value>libarm_cortexM3l_math</Value>
+      <Value>libm</Value>
+    </ListValues>
+  </armgcc.linker.libraries.Libraries>
+  <armgcc.linker.libraries.LibrarySearchPaths>
+    <ListValues>
+      <Value>../src/ASF/thirdparty/CMSIS/Lib/GCC</Value>
+    </ListValues>
+  </armgcc.linker.libraries.LibrarySearchPaths>
+  <armgcc.linker.optimization.GarbageCollectUnusedSections>True</armgcc.linker.optimization.GarbageCollectUnusedSections>
+  <armgcc.linker.memorysettings.ExternalRAM />
+  <armgcc.linker.miscellaneous.LinkerFlags>-Wl,--entry=Reset_Handler -Wl,--cref -mthumb -T../src/ASF/sam/utils/linker_scripts/sam3x/sam3x8/gcc/flash.ld</armgcc.linker.miscellaneous.LinkerFlags>
+  <armgcc.assembler.general.IncludePaths>
+    <ListValues>
+      <Value>../src/ASF/common/boards</Value>
+      <Value>../src/ASF/sam/utils</Value>
+      <Value>../src/ASF/sam/utils/header_files</Value>
+      <Value>../src/ASF/sam/utils/preprocessor</Value>
+      <Value>../src/ASF/thirdparty/CMSIS/Include</Value>
+      <Value>../src/ASF/thirdparty/CMSIS/Lib/GCC</Value>
+      <Value>../src/ASF/common/utils</Value>
+      <Value>../src/ASF/sam/utils/cmsis/sam3x/source/templates</Value>
+      <Value>../src/ASF/sam/utils/cmsis/sam3x/include</Value>
+      <Value>../src/ASF/sam/boards</Value>
+      <Value>../src/ASF/sam/boards/arduino_due_x</Value>
+      <Value>../src/ASF/common/services/gpio</Value>
+      <Value>../src/ASF/sam/drivers/pio</Value>
+      <Value>../src/ASF/common/services/ioport</Value>
+      <Value>../src/ASF/common/services/clock</Value>
+      <Value>../src/ASF/sam/drivers/pmc</Value>
+      <Value>../src</Value>
+      <Value>../src/config</Value>
+      <Value>../src/ASF/sam/drivers/efc</Value>
+      <Value>../src/ASF/sam/services/flash_efc</Value>
+      <Value>../src/ASF/common/services/delay</Value>
+      <Value>../src/ASF/sam/drivers/spi</Value>
+      <Value>../src/ASF/sam/drivers/tc</Value>
+    </ListValues>
+  </armgcc.assembler.general.IncludePaths>
+  <armgcc.assembler.debugging.DebugLevel>Default (-g)</armgcc.assembler.debugging.DebugLevel>
+  <armgcc.preprocessingassembler.general.AssemblerFlags>-DARM_MATH_CM3=true -DBOARD=ARDUINO_DUE_X -D__SAM3X8E__ -Dprintf=iprintf -Dscanf=iscanf</armgcc.preprocessingassembler.general.AssemblerFlags>
+  <armgcc.preprocessingassembler.general.IncludePaths>
+    <ListValues>
+      <Value>../src/ASF/common/boards</Value>
+      <Value>../src/ASF/sam/utils</Value>
+      <Value>../src/ASF/sam/utils/header_files</Value>
+      <Value>../src/ASF/sam/utils/preprocessor</Value>
+      <Value>../src/ASF/thirdparty/CMSIS/Include</Value>
+      <Value>../src/ASF/thirdparty/CMSIS/Lib/GCC</Value>
+      <Value>../src/ASF/common/utils</Value>
+      <Value>../src/ASF/sam/utils/cmsis/sam3x/source/templates</Value>
+      <Value>../src/ASF/sam/utils/cmsis/sam3x/include</Value>
+      <Value>../src/ASF/sam/boards</Value>
+      <Value>../src/ASF/sam/boards/arduino_due_x</Value>
+      <Value>../src/ASF/common/services/gpio</Value>
+      <Value>../src/ASF/sam/drivers/pio</Value>
+      <Value>../src/ASF/common/services/ioport</Value>
+      <Value>../src/ASF/common/services/clock</Value>
+      <Value>../src/ASF/sam/drivers/pmc</Value>
+      <Value>../src</Value>
+      <Value>../src/config</Value>
+      <Value>../src/ASF/sam/drivers/efc</Value>
+      <Value>../src/ASF/sam/services/flash_efc</Value>
+      <Value>../src/ASF/common/services/delay</Value>
+      <Value>../src/ASF/sam/drivers/spi</Value>
+      <Value>../src/ASF/sam/drivers/tc</Value>
+    </ListValues>
+  </armgcc.preprocessingassembler.general.IncludePaths>
+  <armgcc.preprocessingassembler.debugging.DebugLevel>Default (-Wa,-g)</armgcc.preprocessingassembler.debugging.DebugLevel>
+</ArmGcc>
+    </ToolchainSettings>
+  </PropertyGroup>
+  <ItemGroup>
+    <Folder Include="MiniWin" />
+    <Folder Include="MiniWin\gl\fonts" />
+    <Folder Include="MiniWin\gl\fonts\bitmaps" />
+    <Folder Include="MiniWin\gl\fonts\truetype" />
+    <Folder Include="MiniWin\gl\fonts\truetype\mcufont" />
+    <Folder Include="MiniWin\hal" />
+    <Folder Include="MiniWin\hal\ATSAM3X8E" />
+    <Folder Include="MiniWin\bitmaps" />
+    <Folder Include="MiniWin\dialogs" />
+    <Folder Include="MiniWin\gl" />
+    <Folder Include="MiniWin\ui" />
+    <Folder Include="MiniWinRoot_Common" />
+    <Folder Include="src\" />
+    <Folder Include="src\ASF\" />
+    <Folder Include="src\ASF\common\" />
+    <Folder Include="src\ASF\common\boards\" />
+    <Folder Include="src\ASF\common\services\" />
+    <Folder Include="src\ASF\common\services\clock\" />
+    <Folder Include="src\ASF\common\services\clock\sam3x\" />
+    <Folder Include="src\ASF\common\services\delay\" />
+    <Folder Include="src\ASF\common\services\delay\sam\" />
+    <Folder Include="src\ASF\common\services\gpio\" />
+    <Folder Include="src\ASF\common\services\gpio\sam_gpio\" />
+    <Folder Include="src\ASF\common\services\ioport\" />
+    <Folder Include="src\ASF\common\services\ioport\sam\" />
+    <Folder Include="src\ASF\common\utils\" />
+    <Folder Include="src\ASF\common\utils\interrupt\" />
+    <Folder Include="src\ASF\sam\" />
+    <Folder Include="src\ASF\sam\boards\" />
+    <Folder Include="src\ASF\sam\boards\arduino_due_x\" />
+    <Folder Include="src\ASF\sam\drivers\" />
+    <Folder Include="src\ASF\sam\drivers\efc\" />
+    <Folder Include="src\ASF\sam\drivers\pio\" />
+    <Folder Include="src\ASF\sam\drivers\pmc\" />
+    <Folder Include="src\ASF\sam\drivers\spi\" />
+    <Folder Include="src\ASF\sam\drivers\tc\" />
+    <Folder Include="src\ASF\sam\services\" />
+    <Folder Include="src\ASF\sam\services\flash_efc\" />
+    <Folder Include="src\ASF\sam\utils\" />
+    <Folder Include="src\ASF\sam\utils\cmsis\" />
+    <Folder Include="src\ASF\sam\utils\cmsis\sam3x\" />
+    <Folder Include="src\ASF\sam\utils\cmsis\sam3x\include\" />
+    <Folder Include="src\ASF\sam\utils\cmsis\sam3x\include\component\" />
+    <Folder Include="src\ASF\sam\utils\cmsis\sam3x\include\instance\" />
+    <Folder Include="src\ASF\sam\utils\cmsis\sam3x\include\pio\" />
+    <Folder Include="src\ASF\sam\utils\cmsis\sam3x\source\" />
+    <Folder Include="src\ASF\sam\utils\cmsis\sam3x\source\templates\" />
+    <Folder Include="src\ASF\sam\utils\cmsis\sam3x\source\templates\gcc\" />
+    <Folder Include="src\ASF\sam\utils\header_files\" />
+    <Folder Include="src\ASF\sam\utils\linker_scripts\" />
+    <Folder Include="src\ASF\sam\utils\linker_scripts\sam3x\" />
+    <Folder Include="src\ASF\sam\utils\linker_scripts\sam3x\sam3x8\" />
+    <Folder Include="src\ASF\sam\utils\linker_scripts\sam3x\sam3x8\gcc\" />
+    <Folder Include="src\ASF\sam\utils\make\" />
+    <Folder Include="src\ASF\sam\utils\preprocessor\" />
+    <Folder Include="src\ASF\sam\utils\syscalls\" />
+    <Folder Include="src\ASF\sam\utils\syscalls\gcc\" />
+    <Folder Include="src\ASF\thirdparty\" />
+    <Folder Include="src\ASF\thirdparty\CMSIS\" />
+    <Folder Include="src\ASF\thirdparty\CMSIS\Include\" />
+    <Folder Include="src\ASF\thirdparty\CMSIS\Lib\" />
+    <Folder Include="src\ASF\thirdparty\CMSIS\Lib\GCC\" />
+    <Folder Include="src\config\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\..\MiniWinRoot_Common\logo.c">
+      <SubType>compile</SubType>
+      <Link>MiniWinRoot_Common\logo.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWinRoot_Common\main.c">
+      <SubType>compile</SubType>
+      <Link>MiniWinRoot_Common\main.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWinRoot_Common\main.h">
+      <SubType>compile</SubType>
+      <Link>MiniWinRoot_Common\main.h</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWinRoot_Common\miniwin_config.h">
+      <SubType>compile</SubType>
+      <Link>MiniWinRoot_Common\miniwin_config.h</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWinRoot_Common\miniwin_user.c">
+      <SubType>compile</SubType>
+      <Link>MiniWinRoot_Common\miniwin_user.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWinRoot_Common\miniwin_user.h">
+      <SubType>compile</SubType>
+      <Link>MiniWinRoot_Common\miniwin_user.h</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWinRoot_Common\W1.c">
+      <SubType>compile</SubType>
+      <Link>MiniWinRoot_Common\W1.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWinRoot_Common\W1.h">
+      <SubType>compile</SubType>
+      <Link>MiniWinRoot_Common\W1.h</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWinRoot_Common\W2.c">
+      <SubType>compile</SubType>
+      <Link>MiniWinRoot_Common\W2.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWinRoot_Common\W2.h">
+      <SubType>compile</SubType>
+      <Link>MiniWinRoot_Common\W2.h</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\bitmaps\backspace_key.c">
+      <SubType>compile</SubType>
+      <Link>MiniWin\bitmaps\backspace_key.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\bitmaps\close_icon.c">
+      <SubType>compile</SubType>
+      <Link>MiniWin\bitmaps\close_icon.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\bitmaps\close_icon_large.c">
+      <SubType>compile</SubType>
+      <Link>MiniWin\bitmaps\close_icon_large.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\bitmaps\file_icon_large.c">
+      <SubType>compile</SubType>
+      <Link>MiniWin\bitmaps\file_icon_large.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\bitmaps\file_icon_small.c">
+      <SubType>compile</SubType>
+      <Link>MiniWin\bitmaps\file_icon_small.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\bitmaps\folder_close_icon_large.c">
+      <SubType>compile</SubType>
+      <Link>MiniWin\bitmaps\folder_close_icon_large.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\bitmaps\folder_close_icon_small.c">
+      <SubType>compile</SubType>
+      <Link>MiniWin\bitmaps\folder_close_icon_small.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\bitmaps\folder_icon_large.c">
+      <SubType>compile</SubType>
+      <Link>MiniWin\bitmaps\folder_icon_large.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\bitmaps\folder_icon_small.c">
+      <SubType>compile</SubType>
+      <Link>MiniWin\bitmaps\folder_icon_small.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\bitmaps\folder_open_icon_large.c">
+      <SubType>compile</SubType>
+      <Link>MiniWin\bitmaps\folder_open_icon_large.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\bitmaps\folder_open_icon_small.c">
+      <SubType>compile</SubType>
+      <Link>MiniWin\bitmaps\folder_open_icon_small.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\bitmaps\let_key.c">
+      <SubType>compile</SubType>
+      <Link>MiniWin\bitmaps\let_key.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\bitmaps\maximise_icon.c">
+      <SubType>compile</SubType>
+      <Link>MiniWin\bitmaps\maximise_icon.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\bitmaps\maximise_icon_large.c">
+      <SubType>compile</SubType>
+      <Link>MiniWin\bitmaps\maximise_icon_large.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\bitmaps\minimise_icon.c">
+      <SubType>compile</SubType>
+      <Link>MiniWin\bitmaps\minimise_icon.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\bitmaps\minimise_icon_large.c">
+      <SubType>compile</SubType>
+      <Link>MiniWin\bitmaps\minimise_icon_large.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\bitmaps\mw_bitmaps.h">
+      <SubType>compile</SubType>
+      <Link>MiniWin\bitmaps\mw_bitmaps.h</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\bitmaps\num_key.c">
+      <SubType>compile</SubType>
+      <Link>MiniWin\bitmaps\num_key.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\bitmaps\resize_icon.c">
+      <SubType>compile</SubType>
+      <Link>MiniWin\bitmaps\resize_icon.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\bitmaps\resize_icon_large.c">
+      <SubType>compile</SubType>
+      <Link>MiniWin\bitmaps\resize_icon_large.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\bitmaps\shift_key.c">
+      <SubType>compile</SubType>
+      <Link>MiniWin\bitmaps\shift_key.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\bitmaps\sym_key.c">
+      <SubType>compile</SubType>
+      <Link>MiniWin\bitmaps\sym_key.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\bitmaps\tick.c">
+      <SubType>compile</SubType>
+      <Link>MiniWin\bitmaps\tick.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\bitmaps\tick_large.c">
+      <SubType>compile</SubType>
+      <Link>MiniWin\bitmaps\tick_large.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\calibrate.c">
+      <SubType>compile</SubType>
+      <Link>MiniWin\calibrate.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\calibrate.h">
+      <SubType>compile</SubType>
+      <Link>MiniWin\calibrate.h</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\dialogs\dialog_colour_chooser.c">
+      <SubType>compile</SubType>
+      <Link>MiniWin\dialogs\dialog_colour_chooser.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\dialogs\dialog_colour_chooser.h">
+      <SubType>compile</SubType>
+      <Link>MiniWin\dialogs\dialog_colour_chooser.h</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\dialogs\dialog_common.h">
+      <SubType>compile</SubType>
+      <Link>MiniWin\dialogs\dialog_common.h</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\dialogs\dialog_date_chooser.c">
+      <SubType>compile</SubType>
+      <Link>MiniWin\dialogs\dialog_date_chooser.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\dialogs\dialog_date_chooser.h">
+      <SubType>compile</SubType>
+      <Link>MiniWin\dialogs\dialog_date_chooser.h</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\dialogs\dialog_file_chooser.c">
+      <SubType>compile</SubType>
+      <Link>MiniWin\dialogs\dialog_file_chooser.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\dialogs\dialog_file_chooser.h">
+      <SubType>compile</SubType>
+      <Link>MiniWin\dialogs\dialog_file_chooser.h</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\dialogs\dialog_number_entry.c">
+      <SubType>compile</SubType>
+      <Link>MiniWin\dialogs\dialog_number_entry.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\dialogs\dialog_number_entry.h">
+      <SubType>compile</SubType>
+      <Link>MiniWin\dialogs\dialog_number_entry.h</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\dialogs\dialog_one_button.c">
+      <SubType>compile</SubType>
+      <Link>MiniWin\dialogs\dialog_one_button.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\dialogs\dialog_one_button.h">
+      <SubType>compile</SubType>
+      <Link>MiniWin\dialogs\dialog_one_button.h</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\dialogs\dialog_text_entry.c">
+      <SubType>compile</SubType>
+      <Link>MiniWin\dialogs\dialog_text_entry.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\dialogs\dialog_text_entry.h">
+      <SubType>compile</SubType>
+      <Link>MiniWin\dialogs\dialog_text_entry.h</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\dialogs\dialog_time_chooser.c">
+      <SubType>compile</SubType>
+      <Link>MiniWin\dialogs\dialog_time_chooser.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\dialogs\dialog_time_chooser.h">
+      <SubType>compile</SubType>
+      <Link>MiniWin\dialogs\dialog_time_chooser.h</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\dialogs\dialog_two_button.c">
+      <SubType>compile</SubType>
+      <Link>MiniWin\dialogs\dialog_two_button.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\dialogs\dialog_two_button.h">
+      <SubType>compile</SubType>
+      <Link>MiniWin\dialogs\dialog_two_button.h</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\gl\fonts\bitmapped\font12.c">
+      <SubType>compile</SubType>
+      <Link>MiniWin\gl\fonts\bitmaps\font12.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\gl\fonts\bitmapped\font16.c">
+      <SubType>compile</SubType>
+      <Link>MiniWin\gl\fonts\bitmaps\font16.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\gl\fonts\bitmapped\font20.c">
+      <SubType>compile</SubType>
+      <Link>MiniWin\gl\fonts\bitmaps\font20.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\gl\fonts\bitmapped\font24.c">
+      <SubType>compile</SubType>
+      <Link>MiniWin\gl\fonts\bitmaps\font24.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\gl\fonts\bitmapped\font9.c">
+      <SubType>compile</SubType>
+      <Link>MiniWin\gl\fonts\bitmaps\font9.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\gl\fonts\bitmapped\fonts.h">
+      <SubType>compile</SubType>
+      <Link>MiniWin\gl\fonts\bitmaps\fonts.h</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\gl\fonts\bitmapped\gl_title_font.c">
+      <SubType>compile</SubType>
+      <Link>MiniWin\gl\fonts\bitmaps\gl_title_font.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\gl\fonts\bitmapped\gl_title_font.h">
+      <SubType>compile</SubType>
+      <Link>MiniWin\gl\fonts\bitmaps\gl_title_font.h</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\gl\fonts\truetype\BLKCHCRY16.c">
+      <SubType>compile</SubType>
+      <Link>MiniWin\gl\fonts\truetype\BLKCHCRY16.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\gl\fonts\truetype\BLKCHCRY16bw.c">
+      <SubType>compile</SubType>
+      <Link>MiniWin\gl\fonts\truetype\BLKCHCRY16bw.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\gl\fonts\truetype\dejavu_sans_12.c">
+      <SubType>compile</SubType>
+      <Link>MiniWin\gl\fonts\truetype\dejavu_sans_12.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\gl\fonts\truetype\mcufont\mcufont.h">
+      <SubType>compile</SubType>
+      <Link>MiniWin\gl\fonts\truetype\mcufont\mcufont.h</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\gl\fonts\truetype\mcufont\mf_bwfont.c">
+      <SubType>compile</SubType>
+      <Link>MiniWin\gl\fonts\truetype\mcufont\mf_bwfont.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\gl\fonts\truetype\mcufont\mf_bwfont.h">
+      <SubType>compile</SubType>
+      <Link>MiniWin\gl\fonts\truetype\mcufont\mf_bwfont.h</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\gl\fonts\truetype\mcufont\mf_config.h">
+      <SubType>compile</SubType>
+      <Link>MiniWin\gl\fonts\truetype\mcufont\mf_config.h</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\gl\fonts\truetype\mcufont\mf_encoding.c">
+      <SubType>compile</SubType>
+      <Link>MiniWin\gl\fonts\truetype\mcufont\mf_encoding.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\gl\fonts\truetype\mcufont\mf_encoding.h">
+      <SubType>compile</SubType>
+      <Link>MiniWin\gl\fonts\truetype\mcufont\mf_encoding.h</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\gl\fonts\truetype\mcufont\mf_font.c">
+      <SubType>compile</SubType>
+      <Link>MiniWin\gl\fonts\truetype\mcufont\mf_font.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\gl\fonts\truetype\mcufont\mf_font.h">
+      <SubType>compile</SubType>
+      <Link>MiniWin\gl\fonts\truetype\mcufont\mf_font.h</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\gl\fonts\truetype\mcufont\mf_justify.c">
+      <SubType>compile</SubType>
+      <Link>MiniWin\gl\fonts\truetype\mcufont\mf_justify.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\gl\fonts\truetype\mcufont\mf_justify.h">
+      <SubType>compile</SubType>
+      <Link>MiniWin\gl\fonts\truetype\mcufont\mf_justify.h</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\gl\fonts\truetype\mcufont\mf_kerning.c">
+      <SubType>compile</SubType>
+      <Link>MiniWin\gl\fonts\truetype\mcufont\mf_kerning.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\gl\fonts\truetype\mcufont\mf_kerning.h">
+      <SubType>compile</SubType>
+      <Link>MiniWin\gl\fonts\truetype\mcufont\mf_kerning.h</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\gl\fonts\truetype\mcufont\mf_rlefont.c">
+      <SubType>compile</SubType>
+      <Link>MiniWin\gl\fonts\truetype\mcufont\mf_rlefont.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\gl\fonts\truetype\mcufont\mf_rlefont.h">
+      <SubType>compile</SubType>
+      <Link>MiniWin\gl\fonts\truetype\mcufont\mf_rlefont.h</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\gl\fonts\truetype\mcufont\mf_scaledfont.c">
+      <SubType>compile</SubType>
+      <Link>MiniWin\gl\fonts\truetype\mcufont\mf_scaledfont.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\gl\fonts\truetype\mcufont\mf_scaledfont.h">
+      <SubType>compile</SubType>
+      <Link>MiniWin\gl\fonts\truetype\mcufont\mf_scaledfont.h</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\gl\fonts\truetype\mcufont\mf_wordwrap.c">
+      <SubType>compile</SubType>
+      <Link>MiniWin\gl\fonts\truetype\mcufont\mf_wordwrap.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\gl\fonts\truetype\mcufont\mf_wordwrap.h">
+      <SubType>compile</SubType>
+      <Link>MiniWin\gl\fonts\truetype\mcufont\mf_wordwrap.h</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\gl\gl.c">
+      <SubType>compile</SubType>
+      <Link>MiniWin\gl\gl.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\gl\gl.h">
+      <SubType>compile</SubType>
+      <Link>MiniWin\gl\gl.h</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\hal\ATSAM3X8E\hal_delay.c">
+      <SubType>compile</SubType>
+      <Link>MiniWin\hal\ATSAM3X8E\hal_delay.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\hal\ATSAM3X8E\hal_lcd.c">
+      <SubType>compile</SubType>
+      <Link>MiniWin\hal\ATSAM3X8E\hal_lcd.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\hal\ATSAM3X8E\hal_non_vol.c">
+      <SubType>compile</SubType>
+      <Link>MiniWin\hal\ATSAM3X8E\hal_non_vol.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\hal\ATSAM3X8E\hal_timer.c">
+      <SubType>compile</SubType>
+      <Link>MiniWin\hal\ATSAM3X8E\hal_timer.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\hal\ATSAM3X8E\hal_touch.c">
+      <SubType>compile</SubType>
+      <Link>MiniWin\hal\ATSAM3X8E\hal_touch.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\hal\hal_delay.h">
+      <SubType>compile</SubType>
+      <Link>MiniWin\hal\hal_delay.h</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\hal\hal_init.c">
+      <SubType>compile</SubType>
+      <Link>MiniWin\hal\hal_init.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\hal\hal_init.h">
+      <SubType>compile</SubType>
+      <Link>MiniWin\hal\hal_init.h</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\hal\hal_lcd.h">
+      <SubType>compile</SubType>
+      <Link>MiniWin\hal\hal_lcd.h</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\hal\hal_non_vol.h">
+      <SubType>compile</SubType>
+      <Link>MiniWin\hal\hal_non_vol.h</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\hal\hal_timer.h">
+      <SubType>compile</SubType>
+      <Link>MiniWin\hal\hal_timer.h</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\hal\hal_touch.h">
+      <SubType>compile</SubType>
+      <Link>MiniWin\hal\hal_touch.h</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\miniwin.c">
+      <SubType>compile</SubType>
+      <Link>MiniWin\miniwin.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\miniwin.h">
+      <SubType>compile</SubType>
+      <Link>MiniWin\miniwin.h</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\miniwin_debug.c">
+      <SubType>compile</SubType>
+      <Link>MiniWin\miniwin_debug.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\miniwin_debug.h">
+      <SubType>compile</SubType>
+      <Link>MiniWin\miniwin_debug.h</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\miniwin_message_queue.c">
+      <SubType>compile</SubType>
+      <Link>MiniWin\miniwin_message_queue.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\miniwin_message_queue.h">
+      <SubType>compile</SubType>
+      <Link>MiniWin\miniwin_message_queue.h</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\miniwin_settings.c">
+      <SubType>compile</SubType>
+      <Link>MiniWin\miniwin_settings.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\miniwin_settings.h">
+      <SubType>compile</SubType>
+      <Link>MiniWin\miniwin_settings.h</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\miniwin_touch.c">
+      <SubType>compile</SubType>
+      <Link>MiniWin\miniwin_touch.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\miniwin_touch.h">
+      <SubType>compile</SubType>
+      <Link>MiniWin\miniwin_touch.h</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\miniwin_tree_container.c">
+      <SubType>compile</SubType>
+      <Link>MiniWin\miniwin_tree_container.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\miniwin_tree_container.h">
+      <SubType>compile</SubType>
+      <Link>MiniWin\miniwin_tree_container.h</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\miniwin_utilities.c">
+      <SubType>compile</SubType>
+      <Link>MiniWin\miniwin_utilities.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\miniwin_utilities.h">
+      <SubType>compile</SubType>
+      <Link>MiniWin\miniwin_utilities.h</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\ui\ui_arrow.c">
+      <SubType>compile</SubType>
+      <Link>MiniWin\ui\ui_arrow.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\ui\ui_arrow.h">
+      <SubType>compile</SubType>
+      <Link>MiniWin\ui\ui_arrow.h</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\ui\ui_button.c">
+      <SubType>compile</SubType>
+      <Link>MiniWin\ui\ui_button.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\ui\ui_button.h">
+      <SubType>compile</SubType>
+      <Link>MiniWin\ui\ui_button.h</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\ui\ui_check_box.c">
+      <SubType>compile</SubType>
+      <Link>MiniWin\ui\ui_check_box.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\ui\ui_check_box.h">
+      <SubType>compile</SubType>
+      <Link>MiniWin\ui\ui_check_box.h</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\ui\ui_common.c">
+      <SubType>compile</SubType>
+      <Link>MiniWin\ui\ui_common.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\ui\ui_common.h">
+      <SubType>compile</SubType>
+      <Link>MiniWin\ui\ui_common.h</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\ui\ui_keyboard.c">
+      <SubType>compile</SubType>
+      <Link>MiniWin\ui\ui_keyboard.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\ui\ui_keyboard.h">
+      <SubType>compile</SubType>
+      <Link>MiniWin\ui\ui_keyboard.h</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\ui\ui_keypad.c">
+      <SubType>compile</SubType>
+      <Link>MiniWin\ui\ui_keypad.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\ui\ui_keypad.h">
+      <SubType>compile</SubType>
+      <Link>MiniWin\ui\ui_keypad.h</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\ui\ui_label.c">
+      <SubType>compile</SubType>
+      <Link>MiniWin\ui\ui_label.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\ui\ui_label.h">
+      <SubType>compile</SubType>
+      <Link>MiniWin\ui\ui_label.h</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\ui\ui_list_box.c">
+      <SubType>compile</SubType>
+      <Link>MiniWin\ui\ui_list_box.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\ui\ui_list_box.h">
+      <SubType>compile</SubType>
+      <Link>MiniWin\ui\ui_list_box.h</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\ui\ui_progress_bar.c">
+      <SubType>compile</SubType>
+      <Link>MiniWin\ui\ui_progress_bar.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\ui\ui_progress_bar.h">
+      <SubType>compile</SubType>
+      <Link>MiniWin\ui\ui_progress_bar.h</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\ui\ui_radio_button.c">
+      <SubType>compile</SubType>
+      <Link>MiniWin\ui\ui_radio_button.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\ui\ui_radio_button.h">
+      <SubType>compile</SubType>
+      <Link>MiniWin\ui\ui_radio_button.h</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\ui\ui_scroll_bar_horiz.c">
+      <SubType>compile</SubType>
+      <Link>MiniWin\ui\ui_scroll_bar_horiz.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\ui\ui_scroll_bar_horiz.h">
+      <SubType>compile</SubType>
+      <Link>MiniWin\ui\ui_scroll_bar_horiz.h</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\ui\ui_scroll_bar_vert.c">
+      <SubType>compile</SubType>
+      <Link>MiniWin\ui\ui_scroll_bar_vert.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\ui\ui_scroll_bar_vert.h">
+      <SubType>compile</SubType>
+      <Link>MiniWin\ui\ui_scroll_bar_vert.h</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\ui\ui_tabs.c">
+      <SubType>compile</SubType>
+      <Link>MiniWin\ui\ui_tabs.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\ui\ui_tabs.h">
+      <SubType>compile</SubType>
+      <Link>MiniWin\ui\ui_tabs.h</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\ui\ui_text_box.c">
+      <SubType>compile</SubType>
+      <Link>MiniWin\ui\ui_text_box.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\ui\ui_text_box.h">
+      <SubType>compile</SubType>
+      <Link>MiniWin\ui\ui_text_box.h</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\ui\ui_tree.c">
+      <SubType>compile</SubType>
+      <Link>MiniWin\ui\ui_tree.c</Link>
+    </Compile>
+    <Compile Include="..\..\..\MiniWin\ui\ui_tree.h">
+      <SubType>compile</SubType>
+      <Link>MiniWin\ui\ui_tree.h</Link>
+    </Compile>
+    <Compile Include="src\app.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\app.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\ASF\sam\drivers\spi\spi.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\ASF\sam\drivers\tc\tc.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <None Include="..\..\..\MiniWin\gl\fonts\bitmapped\title_font.bmp">
+      <SubType>compile</SubType>
+      <Link>MiniWin\gl\fonts\bitmaps\title_font.bmp</Link>
+    </None>
+    <None Include="src\ASF\sam\drivers\tc\tc.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\drivers\spi\spi.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\common\services\delay\delay.h">
+      <SubType>compile</SubType>
+    </None>
+    <Compile Include="src\ASF\common\services\delay\sam\cycle_counter.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <None Include="src\ASF\common\services\delay\sam\cycle_counter.h">
+      <SubType>compile</SubType>
+    </None>
+    <Compile Include="src\ASF\sam\drivers\efc\efc.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\ASF\sam\services\flash_efc\flash_efc.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <None Include="src\ASF\sam\services\flash_efc\flash_efc.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\drivers\efc\efc.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\asf.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\config\conf_clock.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\config\conf_board.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\component\component_adc.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\drivers\pmc\sleep.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\source\templates\system_sam3x.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\common\services\clock\osc.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\common\services\clock\sam3x\genclk.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\component\component_trng.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\component\component_wdt.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\pio\pio_sam3a4c.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\instance\instance_tc1.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\instance\instance_usart3.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\component\component_emac.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\instance\instance_pioc.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\instance\instance_twi0.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\compiler.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\component\component_efc.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\instance\instance_tc0.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\instance\instance_can0.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\linker_scripts\sam3x\sam3x8\gcc\flash.ld">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\make\Makefile.sam.in">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\preprocessor\stringz.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\instance\instance_adc.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\common\services\clock\pll.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\instance\instance_efc0.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\component\component_pdc.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\common\services\clock\sam3x\osc.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\drivers\pio\pio_handler.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\component\component_uart.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\thirdparty\CMSIS\ATMEL-disclaimer.txt">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\thirdparty\CMSIS\CMSIS_END_USER_LICENCE_AGREEMENT.pdf">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\thirdparty\CMSIS\Include\core_cm3.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\component\component_uotghs.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\instance\instance_spi1.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\instance\instance_piod.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\common\services\clock\sysclk.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\instance\instance_sdramc.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\component\component_can.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\instance\instance_emac.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\source\templates\exceptions.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\instance\instance_supc.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\instance\instance_usart2.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\component\component_supc.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\instance\instance_pioa.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\drivers\pio\pio.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\pio\pio_sam3x4e.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\sam3xa.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\common\boards\board.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\common\services\ioport\ioport.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\pio\pio_sam3x4c.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\common\services\clock\sam3x\sysclk.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\component\component_dmac.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\thirdparty\CMSIS\Include\arm_const_structs.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\instance\instance_piof.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\instance\instance_chipid.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\component\component_pio.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\component\component_pwm.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\instance\instance_uart.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\instance\instance_rstc.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\common\services\clock\sam3x\pll.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\instance\instance_smc.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\instance\instance_wdt.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\instance\instance_pwm.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\component\component_dacc.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\component\component_smc.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\instance\instance_piob.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\common\services\ioport\sam\ioport_pio.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\component\component_sdramc.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\instance\instance_dacc.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\preprocessor\tpaste.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\sam3a4c.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\component\component_pmc.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\instance\instance_rtc.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\component\component_twi.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\thirdparty\CMSIS\Include\cmsis_gcc.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\instance\instance_gpbr.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\instance\instance_usart1.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\thirdparty\CMSIS\Include\arm_common_tables.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\sam3x4c.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\sam3x4e.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\component\component_matrix.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\thirdparty\CMSIS\Include\mpu_armv7.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\pio\pio_sam3a8c.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\instance\instance_uotghs.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\instance\instance_pmc.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\drivers\pmc\pmc.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\instance\instance_rtt.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\component\component_rstc.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\component\component_rtc.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\preprocessor\mrepeat.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\component\component_tc.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\common\services\clock\genclk.h">
+      <SubType>compile</SubType>
+    </None>
+    <Compile Include="src\ASF\common\services\clock\sam3x\sysclk.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\sam3x8c.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\sam3x8e.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\component\component_gpbr.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\component\component_usart.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\instance\instance_tc2.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\instance\instance_spi0.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\thirdparty\CMSIS\Include\cmsis_version.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\boards\arduino_due_x\arduino_due_x.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\sam3x8h.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\common\utils\parts.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\component\component_rtt.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\instance\instance_twi1.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\instance\instance_matrix.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\component\component_chipid.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\component\component_spi.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\instance\instance_can1.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\component\component_ssc.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\thirdparty\CMSIS\Include\cmsis_compiler.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\instance\instance_trng.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\common\utils\interrupt.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\instance\instance_efc1.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\instance\instance_usart0.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\instance\instance_dmac.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\common\services\gpio\sam_gpio\sam_gpio.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\preprocessor\preprocessor.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\common\services\gpio\gpio.h">
+      <SubType>compile</SubType>
+    </None>
+    <Compile Include="src\ASF\common\utils\interrupt\interrupt_sam_nvic.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <None Include="src\ASF\sam\utils\status_codes.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\header_files\io.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\instance\instance_pioe.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\pio\pio_sam3x8h.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\pio\pio_sam3x8e.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\instance\instance_ssc.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\sam3a8c.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\pio\pio_sam3x8c.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\component\component_hsmci.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\sam\utils\cmsis\sam3x\include\instance\instance_hsmci.h">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\common\utils\interrupt\interrupt_sam_nvic.h">
+      <SubType>compile</SubType>
+    </None>
+    <Compile Include="src\ASF\sam\boards\arduino_due_x\init.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\ASF\sam\drivers\pio\pio.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\ASF\sam\drivers\pio\pio_handler.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\ASF\sam\drivers\pmc\pmc.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\ASF\sam\drivers\pmc\sleep.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\ASF\sam\utils\cmsis\sam3x\source\templates\exceptions.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\ASF\sam\utils\cmsis\sam3x\source\templates\gcc\startup_sam3x.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\ASF\sam\utils\cmsis\sam3x\source\templates\system_sam3x.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\ASF\sam\utils\syscalls\gcc\syscalls.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <None Include="src\ASF\thirdparty\CMSIS\Lib\GCC\libarm_cortexM3l_math.a">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\thirdparty\CMSIS\Lib\license.txt">
+      <SubType>compile</SubType>
+    </None>
+    <None Include="src\ASF\thirdparty\CMSIS\README.txt">
+      <SubType>compile</SubType>
+    </None>
+  </ItemGroup>
+  <Import Project="$(AVRSTUDIO_EXE_PATH)\\Vs\\Compiler.targets" />
+</Project>
