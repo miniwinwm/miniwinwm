@@ -165,7 +165,7 @@ bool mw_hal_touch_get_point(uint16_t* x, uint16_t* y)
 
 	*x = (databuffer[0][4] + databuffer[0][5]) / 8U;
 	*y = (databuffer[1][4] + databuffer[1][5]) / 8U;
-	
+
 	return (true);
 }
 

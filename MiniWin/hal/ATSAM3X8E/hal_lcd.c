@@ -262,6 +262,7 @@ void mw_hal_lcd_init(void)
     mw_hal_delay_ms(100U);
 
     spi_set_peripheral_chip_select_value(SPI_LCD_TOUCH_BASE, spi_get_pcs(SPI_LCD_CHIP_SEL));
+    mw_hal_delay_ms(10U);
 
 	write_command(0x01U);
     mw_hal_delay_ms(10U);
