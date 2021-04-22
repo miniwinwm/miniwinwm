@@ -111,10 +111,6 @@
 // From module: SPI - Serial Peripheral Interface
 #include <spi.h>
 
-// From module: Sleep manager - SAM implementation
-#include <sam/sleepmgr.h>
-#include <sleepmgr.h>
-
 // From module: System Clock Control - SAM3X/A implementation
 #include <sysclk.h>
 
@@ -129,19 +125,6 @@
 
 // From module: USART - Univ. Syn Async Rec/Trans
 #include <usart.h>
-
-// From module: USB CDC Protocol
-#include <usb_protocol_cdc.h>
-
-// From module: USB Device CDC (Single Interface Device)
-#include <udi_cdc.h>
-
-// From module: USB Device CDC Standard I/O (stdio) - SAM implementation
-#include <stdio_usb.h>
-
-// From module: USB Device Stack Core (Common API)
-#include <udc.h>
-#include <udd.h>
 
 // From module: pio_handler support enabled
 #include <pio_handler.h>
