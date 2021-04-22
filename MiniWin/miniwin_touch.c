@@ -148,7 +148,7 @@ mw_hal_touch_state_t mw_touch_get_display_touch(int16_t* x, int16_t* y)
 	return (MW_HAL_TOUCH_STATE_DOWN);
 }
 
-void mw_touch_calibrate(MATRIX *matrix)
+void mw_touch_calibrate(MATRIX_CAL *matrix)
 {
 	int16_t minimum_screen_dimension = MW_ROOT_WIDTH < MW_ROOT_HEIGHT ? MW_ROOT_WIDTH : MW_ROOT_HEIGHT;
 	int16_t touch_cross_size = minimum_screen_dimension / 6;

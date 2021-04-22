@@ -82,7 +82,7 @@ typedef struct Point {
 
 
 
-typedef struct Matrix {
+typedef struct Matrix_tag {
                                                         /* This arrangement of values facilitates
                                                          *  calculations within getDisplayPoint()
                                                          */
@@ -93,7 +93,7 @@ typedef struct Matrix {
                                  En,     /* E = En/Divider */
                                  Fn,     /* F = Fn/Divider */
                                  Divider ;
-                     } MATRIX ;
+                     } MATRIX_CAL ;
 
 
 
@@ -107,12 +107,12 @@ typedef struct Matrix {
 
 EXTERN int setCalibrationMatrix( POINT_T * display,
 								 POINT_T * screen,
-                                 MATRIX * matrix) ;
+                                 MATRIX_CAL * matrix) ;
 
 
 EXTERN int getDisplayPoint( POINT_T * display,
 							POINT_T * screen,
-                            MATRIX * matrix ) ;
+                            MATRIX_CAL * matrix ) ;
                             
 #ifdef __cplusplus
 }

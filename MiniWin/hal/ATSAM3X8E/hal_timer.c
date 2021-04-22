@@ -33,6 +33,7 @@ SOFTWARE.
 #include <asf.h> 
 #include "hal/hal_timer.h"
 #include "miniwin_config.h"
+#include "app.h"
 
 /****************
 *** CONSTANTS ***
@@ -62,12 +63,24 @@ volatile uint32_t mw_tick_counter;
 
 void TC0_Handler(void)
 {
+	static uint8_t whole_second;
+	
 	/* Clear status bit to acknowledge interrupt */
 	(void)tc_get_status(TC0, 0);
 
 	gpio_toggle_pin(LED0_GPIO);
 	
 	mw_hal_timer_fired();
+
+#ifdef SIMULATED_RTC
+	/* this is needed to enable the real time clock simulation needed by file system for Due boards with no RTC external crystal fitted */
+	whole_second++;
+	if (whole_second == MW_TICKS_PER_SECOND)
+	{
+		whole_second = 0U;
+		update_real_time();
+	}
+#endif
 }
 
 /***********************
