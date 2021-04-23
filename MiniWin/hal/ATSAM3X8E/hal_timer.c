@@ -99,7 +99,7 @@ void mw_hal_timer_init(void)
 	/** Configure TC and trigger on RC compare. */
 	tc_find_mck_divisor(MW_TICKS_PER_SECOND, ul_sysclk, &ul_div, &ul_tcclks, ul_sysclk);
 	tc_init(TC0, 0, ul_tcclks | TC_CMR_CPCTRG);
-	tc_write_rc(TC0, 0, (ul_sysclk / ul_div) / 20);
+	tc_write_rc(TC0, 0, (ul_sysclk / ul_div) / MW_TICKS_PER_SECOND);
 
 	/* Configure and enable interrupt on RC compare */
 	NVIC_EnableIRQ((IRQn_Type) ID_TC0);
