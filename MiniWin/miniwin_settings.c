@@ -51,7 +51,7 @@ typedef struct
 {
 	uint32_t		init_flag;              /**< flag to indicate that the settings in non-vol storage have been initialised */
 	bool			is_calibrated;          /**< flag to indicate that the touch screen has been calibrated and the calibration matrix is valid */
-	MATRIX			calibration_matrix;     /**< the touch screen calibration matrix */
+	MATRIX_CAL			calibration_matrix;     /**< the touch screen calibration matrix */
 } settings_t;
 
 /***********************
@@ -107,14 +107,14 @@ void mw_settings_set_calibrated(bool calibrated)
 	settings.is_calibrated = calibrated;
 }
 
-MATRIX *mw_settings_get_calibration_matrix(void)
+MATRIX_CAL *mw_settings_get_calibration_matrix(void)
 {
 	return (&settings.calibration_matrix);
 }
 
-void mw_settings_set_calibration_matrix(const MATRIX *new_calibration_matrix)
+void mw_settings_set_calibration_matrix(const MATRIX_CAL *new_calibration_matrix)
 {
 	MW_ASSERT(new_calibration_matrix != (void*)0, "Null pointer argument");
 
-	(void)memcpy((&settings.calibration_matrix), (new_calibration_matrix), (sizeof(MATRIX)));
+	(void)memcpy((&settings.calibration_matrix), (new_calibration_matrix), (sizeof(MATRIX_CAL)));
 }

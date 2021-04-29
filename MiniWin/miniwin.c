@@ -4125,7 +4125,7 @@ static void set_system_timer(uint32_t timer_data, system_timer_event_t event, ui
 void mw_init(void)
 {
 	uint8_t i;
-	MATRIX calibration_matrix;
+	MATRIX_CAL calibration_matrix;
 	bool is_calibrated;
 	bool is_initialised;
 

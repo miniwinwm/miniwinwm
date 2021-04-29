@@ -32,6 +32,8 @@ SOFTWARE.
 
 #include <asf.h> 
 #include "hal/hal_timer.h"
+#include "miniwin_config.h"
+#include "app.h"
 
 /****************
 *** CONSTANTS ***
@@ -61,10 +63,24 @@ volatile uint32_t mw_tick_counter;
 
 void TC0_Handler(void)
 {
+	static uint8_t whole_second;
+	
 	/* Clear status bit to acknowledge interrupt */
 	(void)tc_get_status(TC0, 0);
 
-	ioport_toggle_pin_level(LED0_GPIO);
+	gpio_toggle_pin(LED0_GPIO);
+	
+	mw_hal_timer_fired();
+
+#ifdef SIMULATED_RTC
+	/* this is needed to enable the real time clock simulation needed by file system for Due boards with no RTC external crystal fitted */
+	whole_second++;
+	if (whole_second == MW_TICKS_PER_SECOND)
+	{
+		whole_second = 0U;
+		update_real_time();
+	}
+#endif
 }
 
 /***********************
@@ -81,9 +97,9 @@ void mw_hal_timer_init(void)
 	pmc_enable_periph_clk(ID_TC0);
 
 	/** Configure TC and trigger on RC compare. */
-	tc_find_mck_divisor(20, ul_sysclk, &ul_div, &ul_tcclks, ul_sysclk);
+	tc_find_mck_divisor(MW_TICKS_PER_SECOND, ul_sysclk, &ul_div, &ul_tcclks, ul_sysclk);
 	tc_init(TC0, 0, ul_tcclks | TC_CMR_CPCTRG);
-	tc_write_rc(TC0, 0, (ul_sysclk / ul_div) / 20);
+	tc_write_rc(TC0, 0, (ul_sysclk / ul_div) / MW_TICKS_PER_SECOND);
 
 	/* Configure and enable interrupt on RC compare */
 	NVIC_EnableIRQ((IRQn_Type) ID_TC0);

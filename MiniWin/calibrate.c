@@ -27,7 +27,7 @@
 
 int setCalibrationMatrix( POINT_T * displayPtr,
 						  POINT_T * screenPtr,
-                          MATRIX * matrixPtr)
+                          MATRIX_CAL * matrixPtr)
 {
 
     int  retValue = CALIBRATE_OK ;
@@ -131,7 +131,7 @@ int setCalibrationMatrix( POINT_T * displayPtr,
  */
 int getDisplayPoint( POINT_T * displayPtr,
 					 POINT_T * screenPtr,
-                     MATRIX * matrixPtr )
+                     MATRIX_CAL * matrixPtr )
 {
     int retValue = CALIBRATE_OK ;
 

@@ -72,7 +72,7 @@ mw_hal_touch_state_t mw_touch_get_display_touch(int16_t* x, int16_t* y);
  *
  * @param matrixPtr Pointer to a MATRIX structure calculated and subsequently used by the screen calibration module
  */
-void mw_touch_calibrate(MATRIX *matrix);
+void mw_touch_calibrate(MATRIX_CAL *matrix);
 
 #ifdef __cplusplus
 }
