@@ -141,7 +141,7 @@ MiniWin comes with all source for the window manager, graphics library and user 
 <li>Arduino Due board with Atmel ATSAM3X8E processor using an ILI9341 driven QVGA LCD with touch screen built with Atmel Studio
 <li>Linux simulator built with GCC or clang
 <li>Windows simulator built with GCC or clang under MSYS2
-<li>Windows simulator built with Visual Studio CL
+<li>Windows simulator built with Microsoft Visual Studio CL
 </ul>
 Sample simulation projects are built using standalone gmake makefiles with GCC or clang for Windows and Linux or Microsoft Visual Studio CL compiler via nmake makefiles for Windows. Eclipse project files are provided for the Windows and Linux simulation projects. Build/project files are provided for all examples.
 <br><br>
