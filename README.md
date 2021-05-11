@@ -138,7 +138,7 @@ MiniWin comes with all source for the window manager, graphics library and user 
 <li>Microchip PIC32MZ board using an ILI9341 driven QVGA LCD with touch screen
 <li>Raspberry Pi Zero W board using an ILI9341 driven QVGA LCD with touch screen
 <li>Raspberry Pi Pico board using an ILI9341 driven QVGA LCD with touch screen
-<li>Arduino Due board with Atmel ATSAM3X8E processor built with Atmel Studio
+<li>Arduino Due board with Atmel ATSAM3X8E processor using an ILI9341 driven QVGA LCD with touch screen built with Atmel Studio
 <li>Linux simulator built with GCC or clang
 <li>Windows simulator built with GCC or clang under MSYS2
 <li>Windows simulator built with Visual Studio CL
