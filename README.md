@@ -128,15 +128,17 @@ MiniWin comes with all source for the window manager, graphics library and user 
 <br><br>
 <ul>
 <li>STM32F4DISCOVERY board using an ILI9341 driven QVGA LCD with touch screen
+<li>STM32F429I-DISC1 board with built in QVGA LCD with touch screen
 <li>ESP32 based DevKitC board using an ILI9341 driven QVGA LCD with touch screen built using ESP32-IDF
 <li>ESP32 based DevKitC board using an ILI9341 driven QVGA LCD with touch screen built using Arduino IDE
-<li>STM32F429I-DISC1 board with built in QVGA LCD with touch screen
 <li>NXP 54628 board with built in WQVGA LCD and touch screen
 <li>Renesas Envision Kit board running RX65N processor with built in WQVGA LCD with touch screen built with CC-RX
 <li>Renesas Envision Kit board running RX65N processor with built in WQVGA LCD with touch screen built with GCC-RX
 <li>Microchip PIC32MX board using an ILI9341 driven QVGA LCD with touch screen
 <li>Microchip PIC32MZ board using an ILI9341 driven QVGA LCD with touch screen
 <li>Raspberry Pi Zero W board using an ILI9341 driven QVGA LCD with touch screen
+<li>Raspberry Pi Pico board using an ILI9341 driven QVGA LCD with touch screen
+<li>Arduino Due board with Atmel ATSAM3X8E processor built with Atmel Studio
 <li>Linux simulator built with GCC or clang
 <li>Windows simulator built with GCC or clang under MSYS2
 <li>Windows simulator built with Visual Studio CL
