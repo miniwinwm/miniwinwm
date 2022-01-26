@@ -32,7 +32,6 @@ SOFTWARE.
 ***************/
 
 #include <stdint.h>
-#include "definitions.h"   
 
 /****************
 *** CONSTANTS ***
@@ -87,16 +86,6 @@ void SPI1_receive(uint8_t *receive_buffer, uint32_t size);
  *
  * @param level The level to write to the pin, 0 or 1
  */
-static inline void SPI1_chip_select(uint8_t level)
-{
-    if (level == 0U)
-    {
-        SD_CS_Clear();
-    }
-    else
-    {
-        SD_CS_Set();
-    }
-}
+void SPI1_chip_select(uint8_t level);
 
 #endif

@@ -129,7 +129,7 @@ void app_init(void)
     SYS_Initialize(NULL);
     
     /* start the clock used for real time */
-    TMR3_CallbackRegister(TMR3_InterruptSvcRoutine, NULL);
+    TMR3_CallbackRegister(TMR3_InterruptSvcRoutine, (uintptr_t)NULL);
     TMR3_Start();    
     
     /* initialize SPI1 interface */

@@ -77,7 +77,7 @@ static void TMR2_InterruptSvcRoutine(uint32_t status, uintptr_t context)
 
 void mw_hal_timer_init(void)
 {
-    TMR2_CallbackRegister(TMR2_InterruptSvcRoutine, NULL);
+    TMR2_CallbackRegister(TMR2_InterruptSvcRoutine, (uintptr_t)NULL);
     TMR2_Start();
 }
 

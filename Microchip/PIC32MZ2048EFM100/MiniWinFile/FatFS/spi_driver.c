@@ -80,3 +80,15 @@ void delay_us(uint32_t us)
 {
     CORETIMER_DelayUs(us);
 }
+
+void SPI1_chip_select(uint8_t level)
+{
+    if (level == 0U)
+    {
+        SD_CS_Clear();
+    }
+    else
+    {
+        SD_CS_Set();
+    }
+}
