@@ -16,11 +16,11 @@ All the development environments used to build MiniWin are being updated to the 
 <li> NXP - no problems, completed
 <li> PIC32 - FreeRTOS projects no longer build, otherwise completed
 <li> ESP32 - multiple problems, now completed
-<li> Windows simulator cl - completed
+<li> Windows simulator cl - mostly completed
 <li> Arduino - not started
 <li> Atmel - not started
-<li> Linux GCC/clang - not started
-<li> Windows GCC/clang - not started
+<li> Linux GCC/clang - mostly completed
+<li> Windows GCC/clang - mostly completed
 <li> Pi Zero - not started
 <li> Pi Pico - not started
 </ul>  
