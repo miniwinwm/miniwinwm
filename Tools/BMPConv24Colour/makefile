@@ -4,7 +4,7 @@ OBJ = $(SRC:.cpp=.o)
 # choose your compiler
 # CPP = clang++
 CPP = g++
-LDFLAGS = 
+LDFLAGS =
 CPPFLAGS = -g -I../EasyBMP
 
 %.o : %.cpp
@@ -13,8 +13,9 @@ CPPFLAGS = -g -I../EasyBMP
 BMPConv24Colour: ${OBJ}
 	${CPP} -o $@ $^ $(LDFLAGS)
 	rm $(OBJ)
-	
+
 .PHONY: clean
 clean:
-	rm BMPConv24Colour
+	rm -f $(OBJ) BMPConv24Colour
+
 

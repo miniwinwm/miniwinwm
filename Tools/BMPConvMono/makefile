@@ -16,4 +16,4 @@ BMPConvMono: ${OBJ}
 	
 .PHONY: clean
 clean:
-	rm BMPConvMono
+	rm -f $(OBJ) BMPConvMono
