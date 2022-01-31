@@ -9,7 +9,7 @@ MiniWin is a generic open source overlapped window manager for small embedded sy
 
 <H2>MiniWin News</H2>
 All the development environments used to build MiniWin are being updated to the latest version. This is causing some of the projects for some of the builds to break. A spreadsheet of progress and what works and what doesn't can be found under the docs folder. Here's a summary...
-
+<br>
 <ul>
 <li> Renesas RX both compilers - completed
 <li> STM32 - build warnings in CubeIDE library dealt with - completed
