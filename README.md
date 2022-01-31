@@ -14,7 +14,7 @@ All the development environments used to build MiniWin are being updated to the 
 <li> STM32 - build warnings in CubeIDE library dealt with - completed
 <li> NXP - no problems, completed
 <li> PIC32 - FreeRTOS projects no longer build, otherwise completed
-<li> ESP32 - multiple problems, now completed
+<li> ESP32 - multiple problems resolved, completed
 <li> Windows simulator cl - mostly completed
 <li> Arduino - no problems, completed
 <li> Atmel - not started
