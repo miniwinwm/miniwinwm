@@ -8,8 +8,7 @@
 MiniWin is a generic open source overlapped window manager for small embedded systems with a touch screen. It is written in compliant C99 and is easily portable. The hardware interface is separated out into a small hardware abstraction layer making the rest of the system re-targetable to a wide variety of processors. MiniWin will run easily on ARM Cortex M0 or above, PIC32 or Renesas RX processors. MiniWin has a simple easy to understand API giving access to fully overlapped windows. The standard look and feel is easy to customize to your needs. Included with MiniWin are two sets of standard controls in standard and large sizes and a growing library of standard dialogs windows. All code developed for MiniWin and MiniWin generated code is MISRA 2012 'required' compliant.
 
 <H2>MiniWin News</H2>
-All the development environments used to build MiniWin are being updated to the latest version. This is causing some of the projects for some of the builds to break. A spreadsheet of progress and what works and what doesn't can be found under the docs folder. Here's a summary...
-<br>
+All the development environments used to build MiniWin are being updated to the latest version. This is causing some of the projects for some of the builds to break. A spreadsheet of progress and what works and what doesn't can be found under the docs folder. Here's a summary:
 <ul>
 <li> Renesas RX both compilers - completed
 <li> STM32 - build warnings in CubeIDE library dealt with - completed
