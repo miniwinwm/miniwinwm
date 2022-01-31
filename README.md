@@ -16,7 +16,7 @@ All the development environments used to build MiniWin are being updated to the 
 <li> PIC32 - FreeRTOS projects no longer build, otherwise completed
 <li> ESP32 - multiple problems, now completed
 <li> Windows simulator cl - mostly completed
-<li> Arduino - not started
+<li> Arduino - no problems, completed
 <li> Atmel - not started
 <li> Linux GCC/clang - mostly completed
 <li> Windows GCC/clang - mostly completed
