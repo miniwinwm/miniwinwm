@@ -1,6 +1,7 @@
 PROJECT = MiniWinCamera
 
 BINARY = $(PROJECT).exe
+CPPOBJS = src\camlib\camlib_opencv.obj
 OBJS = src\*.obj \
 	 ..\..\..\$(PROJECT)_Common\*.obj \
 	 ..\..\..\MiniWin\*.obj \
@@ -15,13 +16,18 @@ OBJS = src\*.obj \
 	 ..\..\..\MiniWin\gl\fonts\truetype\mcufont\*.obj
  	 
 CFLAGS = -nologo -I..\..\..\MiniWin -I..\..\..\MiniWin\gl\fonts\truetype\mcufont -Isrc -I..\..\..\$(PROJECT)_Common
+CPPFLAGS = -nologo -D_WIN32 -EHsc -I%OPENCV_DIR%\build\include 
 
 .c.obj:
 	cl $(CFLAGS) -c $< -Fo$(@D)\ 
+
+.cpp.obj:
+	cl $(CPPFLAGS) -c $< -Fo$(@D)\ 
 	
-$(BINARY): $(OBJS)
-	link gdi32.lib user32.lib $(OBJS) lib\camlib_opencv.obj lib\opencv_world430.lib -out:$@
+$(BINARY): $(OBJS) $(CPPOBJS)
+	link gdi32.lib user32.lib $(OBJS) $(CPPOBJS) %OPENCV_DIR%\build\x64\vc15\lib\opencv_world455.lib -out:$@
 
 clean:
 	del $(BINARY)
 	del $(OBJS)
+	del $(CPPOBJS)
