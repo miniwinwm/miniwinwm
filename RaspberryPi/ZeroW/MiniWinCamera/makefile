@@ -1,5 +1,5 @@
 # To build this project you need OpenCV development package installed
-# sudo apt install libopencv_dev
+# sudo apt install libopencv-dev
 
 PROJECT = MiniWinCamera
 
