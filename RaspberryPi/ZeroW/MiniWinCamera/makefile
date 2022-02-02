@@ -1,3 +1,6 @@
+# To build this project you need OpenCV development package installed
+# sudo apt install libopencv_dev
+
 PROJECT = MiniWinCamera
 
 BINARY = $(PROJECT)
@@ -13,24 +16,33 @@ SRCS := $(wildcard src/*.c) \
 	$(wildcard ../../../MiniWin/gl/fonts/bitmapped/*.c) \
 	$(wildcard ../../../MiniWin/gl/fonts/truetype/*.c) \
 	$(wildcard ../../../MiniWin/gl/fonts/truetype/mcufont/*.c)
+CPPSRCS := src/camlib_opencv.cpp
 CC = gcc
 CPP = g++
 CFLAGS = -I../../../MiniWin -I../../../MiniWin/gl/fonts/truetype/mcufont -Isrc -I../../../$(PROJECT)_Common -g -Wall -Os -DRASPBERRY_PI_ZERO_W -std=c99
+CPPFLAGS = -I/usr/include/opencv4 -Os -g
 OBJS := $(SRCS:.c=.o)
+CPPOBJS := $(CPPSRCS:.cpp=.o)
 DEPS := $(OBJS:.o=.d)
-LIBS = -lm -lpthread lib/camlib_opencv.o -lopencv_core -lopencv_videoio -lopencv_imgproc
+CPPDEPS := $(CPPOBJS:.o=.d)
+LIBS = -lm -lpthread -lopencv_core -lopencv_videoio -lopencv_imgproc
 
 all: $(BINARY)
 
-$(BINARY) : $(OBJS)
+$(BINARY) : $(OBJS) $(CPPOBJS)
 	$(CPP) $^ $(LIBS) -o $@
 	
--include $(DEPS)
+-include $(DEPS) $(CPPDEPS)
 
 %.o : %.c
 	$(CC) $(CFLAGS) -MMD -c $< -o $@
+	
+%.o : %.cpp
+	$(CPP) $(CPPFLAGS) -MMD -c $< -o $@	
 
 clean:
 	rm $(OBJS)
+	rm $(CPPOBJS)
 	rm $(DEPS)
+	rm $(CPPDEPS)	
 	rm $(BINARY)
