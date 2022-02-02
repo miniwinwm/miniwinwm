@@ -12,7 +12,8 @@ SRCS := $(wildcard src/*.c) \
 	$(wildcard ../../../MiniWin/gl/*.c) \
 	$(wildcard ../../../MiniWin/gl/fonts/bitmapped/*.c) \
 	$(wildcard ../../../MiniWin/gl/fonts/truetype/*.c) \
-	$(wildcard ../../../MiniWin/gl/fonts/truetype/mcufont/*.c)
+	$(wildcard ../../../MiniWin/gl/fonts/truetype/mcufont/*.c)	
+CPPSRCS := src/camlib_opencv.cpp
 	
 # choose your compilers
 # CC = clang		
@@ -20,21 +21,29 @@ SRCS := $(wildcard src/*.c) \
 CC = gcc
 CPP = g++
 CFLAGS = -I../../../MiniWin -I../../../MiniWin/gl/fonts/truetype/mcufont -Isrc -I../../../$(PROJECT)_Common -g -Wall -DLINUX_SIM -std=c99
+CPPFLAGS = -I/usr/include/opencv4
 OBJS := $(SRCS:.c=.o)
+CPPOBJS := $(CPPSRCS:.cpp=.o)
 DEPS := $(OBJS:.o=.d)
-LIBS = -Llibs -lX11 -lm -lpthread lib/camlib_opencv.o -lopencv_core -lopencv_videoio -lopencv_imgproc 
+CPPDEPS := $(CPPOBJS:.o=.d)
+LIBS = -lX11 -lm -lpthread -lopencv_core -lopencv_videoio -lopencv_imgproc 
 
 all: $(BINARY)
 
-$(BINARY) : $(OBJS)
+$(BINARY) : $(OBJS) $(CPPOBJS)
 	$(CPP) $^ $(LIBS) -o $@
 	
--include $(DEPS)
+-include $(DEPS) $(CPPDEPS)
 
 %.o : %.c
 	$(CC) $(CFLAGS) -MMD -c $< -o $@
+	
+%.o : %.cpp
+	$(CPP) $(CPPFLAGS) -MMD -c $< -o $@	
 
 clean:
 	rm $(OBJS)
+	rm $(CPPOBJS)
 	rm $(DEPS)
+	rm $(CPPDEPS)
 	rm $(BINARY)
