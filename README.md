@@ -11,21 +11,21 @@ MiniWin is a generic open source overlapped window manager for small embedded sy
 All the development environments used to build MiniWin are being updated to the latest version. This is causing some of the projects for some of the builds to break temporarily. A spreadsheet of progress and what works and what doesn't can be found under the docs folder. Here's a summary:
 <ul>
 <li> Renesas RX both compilers - completed
-<li> STM32 - build warnings in CubeIDE library dealt with - completed
-<li> NXP - no problems, completed
-<li> PIC32 - FreeRTOS projects no longer build, otherwise completed
-<li> ESP32 - multiple problems resolved, completed
-<li> Windows simulator cl - mostly completed
-<li> Arduino - no problems, completed
+<li> STM32 both processors - completed
+<li> NXP - completed
+<li> PIC32 both processors - FreeRTOS projects no longer build, otherwise completed
+<li> ESP32 - completed
+<li> Windows simulator cl - completed
+<li> Arduino - completed
 <li> Atmel - not started
-<li> Linux GCC/clang - mostly completed
-<li> Windows GCC/clang - mostly completed
-<li> Pi Zero - not started
-<li> Pi Pico - not started
+<li> Linux GCC/clang - completed
+<li> Windows GCC/clang - GCC completed, some problems remain with clang
+<li> Pi Zero - completed
+<li> Pi Pico - completed
 <li>Tools - mostly completed, not building for clang under MSYS2, see below
 </ul>  
 <H2>Assistance Required</H2>
-The tools (bitmap converters, code generator) are programmed in C++ and do not build with the latest clang running under MSYS2 on Windows 10. They do build for clang on Linux. If you have any expertise of compiling C++ using clang under MSYS2 on Windows and can look at the problem I would welcome your help.
+The tools (bitmap converters, code generator) and camera interface code using OpenCV are programmed in C++ and do not build with the latest clang running under MSYS2 on Windows 10. They do build for clang on Linux. If you have any expertise of compiling C++ using clang under MSYS2 on Windows and can look at the problem I would welcome your help.
 <H2>Who is MiniWin for?</H2>
 <ul>
 <li>Open source projects that need a quick-start user interface
