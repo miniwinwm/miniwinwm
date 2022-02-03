@@ -14,39 +14,37 @@ SRCS := $(wildcard src/*.c) \
 	$(wildcard ../../../MiniWin/gl/fonts/bitmapped/*.c) \
 	$(wildcard ../../../MiniWin/gl/fonts/truetype/*.c) \
 	$(wildcard ../../../MiniWin/gl/fonts/truetype/mcufont/*.c)
+CPPSRCS := src/camlib/camlib_opencv.cpp
 
-# choose your compiler
-
-# CC = clang
-# CPP = clang++
 CC = gcc
 CPP = g++
 
 CFLAGS = -D_WIN32 -I../../../MiniWin -I../../../MiniWin/gl/fonts/truetype/mcufont -Isrc -I../../../$(PROJECT)_Common -g -Wall -std=c99
+CPPFLAGS = -IC:/msys64/mingw64/include/opencv4
 OBJS := $(SRCS:.c=.o)
+CPPOBJS := $(CPPSRCS:.cpp=.o)
 DEPS := $(OBJS:.o=.d)
+CPPDEPS := $(CPPOBJS:.o=.d)
 
-# different camlib library needed for each compiler
-ifeq ($(CPP), clang++)
-	LIBS = lib/camlib_opencv_clang.o
-else
-	LIBS = lib/camlib_opencv.o
-endif
-
-LIBS += -Llib -lopencv_core.dll -lopencv_imgproc.dll -lopencv_videoio.dll -lgdi32 
+LIBS = -lopencv_core.dll -lopencv_imgproc.dll -lopencv_videoio.dll -lgdi32 
 
 all : $(BINARY)
 
-$(BINARY) : $(OBJS)
-	$(CPP) $^ $(LIBS) -o $@ 
+$(BINARY) : $(OBJS) $(CPPOBJS)
+	$(CPP) -LC:/msys64/mingw64/lib $^ $(LIBS) -o $@ 
 	
--include $(DEPS)
+-include $(DEPS) $(CPPDEPS)
 
 %.o : %.c
 	$(CC) $(CFLAGS) -MMD -c $< -o $@
 
+%.o : %.cpp
+	$(CPP) $(CPPFLAGS) -MMD -c $< -o $@
+
 clean:
 	$(RM) $(subst /,\,$(OBJS))
+	$(RM) $(subst /,\,$(CPPOBJS))
 	$(RM) $(subst /,\,$(DEPS))
+	$(RM) $(subst /,\,$(CPPDEPS))
 	$(RM) $(BINARY)
 	
