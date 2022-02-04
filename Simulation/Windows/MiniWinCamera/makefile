@@ -18,6 +18,8 @@ CPPSRCS := src/camlib/camlib_opencv.cpp
 
 CC = gcc
 CPP = g++
+# CC = clang
+# CPP = clang++
 
 CFLAGS = -D_WIN32 -I../../../MiniWin -I../../../MiniWin/gl/fonts/truetype/mcufont -Isrc -I../../../$(PROJECT)_Common -g -Wall -std=c99
 CPPFLAGS = -IC:/msys64/mingw64/include/opencv4
