@@ -17,7 +17,7 @@ All the development environments used to build MiniWin are being updated to the 
 <li> ESP32 - completed
 <li> Windows simulator cl - completed
 <li> Arduino - completed
-<li> Atmel - not started
+<li> Atmel - completed apart from camaera project
 <li> Linux GCC/clang - completed
 <li> Windows GCC/clang - GCC completed, problem remains with a clang build of TTFonts project
 <li> Pi Zero - completed
