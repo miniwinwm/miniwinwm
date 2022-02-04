@@ -22,7 +22,7 @@ All the development environments used to build MiniWin are being updated to the 
 <li> Windows GCC/clang - GCC completed, problem remains with a clang build of TTFonts project
 <li> Pi Zero - completed
 <li> Pi Pico - completed
-<li> Tools -completed
+<li> Tools - completed
 <li> Documentation update - ongoing
 </ul>  
 <H2>Who is MiniWin for?</H2>
