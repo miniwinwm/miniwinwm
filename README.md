@@ -19,14 +19,12 @@ All the development environments used to build MiniWin are being updated to the 
 <li> Arduino - completed
 <li> Atmel - not started
 <li> Linux GCC/clang - completed
-<li> Windows GCC/clang - GCC completed, some problems remain with clang
+<li> Windows GCC/clang - GCC completed, problem remains with a clang build of TTFonts project
 <li> Pi Zero - completed
 <li> Pi Pico - completed
-<li> Tools - mostly completed, not building for clang under MSYS2, see below
+<li> Tools -completed
 <li> Documentation update - ongoing
 </ul>  
-<H2>Assistance Required</H2>
-The tools (bitmap converters, code generator) and camera interface code using OpenCV are programmed in C++ and do not build with the latest clang running under MSYS2 on Windows 10. They do build for clang on Linux. If you have any expertise of compiling C++ using clang under MSYS2 on Windows and can look at the problem I would welcome your help.
 <H2>Who is MiniWin for?</H2>
 <ul>
 <li>Open source projects that need a quick-start user interface
