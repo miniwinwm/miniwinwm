@@ -44,10 +44,10 @@ SOFTWARE.
 #define SPI_LCD_TOUCH_BASE					SPI0					/**< SPI peripheral to use for touch/LCD */
 #define SPI_LCD_CHIP_SEL					0						/**< LCD CS/ line on SPI0 */
 #define SPI_TOUCH_CHIP_SEL					1						/**< Touch screen CS/ line on SPI0 */
-#define TOUCH_RECAL_PIN						PIO_PD0_IDX				/**< Pin for touch screen recalibration request */
-#define TOUCH_T_IRQ_PIN						PIO_PD1_IDX				/**< Pin for touch T_IRQ/ line */
-#define LCD_RESET_PIN						PIO_PD2_IDX				/**< Pin for LCD RESET line */
-#define LCD_DC_PIN							PIO_PD3_IDX				/**< Pin for LCD DC line */
+#define TOUCH_RECAL_PIN						PIO_PA14_IDX			/**< Pin for touch screen recalibration request */
+#define TOUCH_T_IRQ_PIN						PIO_PA7_IDX				/**< Pin for touch T_IRQ/ line */
+#define LCD_RESET_PIN						PIO_PA15_IDX			/**< Pin for LCD RESET line */
+#define LCD_DC_PIN							PIO_PD9_IDX				/**< Pin for LCD DC line */
 
 /************
 *** TYPES ***
