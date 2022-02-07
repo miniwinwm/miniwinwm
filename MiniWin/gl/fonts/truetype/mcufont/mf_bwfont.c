@@ -104,7 +104,7 @@ static uint8_t render_char(const struct mf_bwfont_char_range_s *r,
 
 uint8_t mf_bwfont_render_character(const struct mf_font_s *font,
                                    int16_t x0, int16_t y0,
-                                   uint16_t character,
+								   mf_char character,
                                    mf_pixel_callback_t callback,
                                    void *state)
 {

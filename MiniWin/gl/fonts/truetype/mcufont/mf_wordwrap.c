@@ -224,7 +224,6 @@ void mf_wordwrap(const struct mf_font_s *font, int16_t width,
 void mf_wordwrap(const struct mf_font_s *font, int16_t width,
                  mf_str text, mf_line_callback_t callback, void *state)
 {
-    mf_str orig = text;
     mf_str linestart;
     
     /* Current line width and character count */
