@@ -8,18 +8,18 @@
 MiniWin is a generic open source overlapped window manager for small embedded systems with a touch screen. It is written in compliant C99 and is easily portable. The hardware interface is separated out into a small hardware abstraction layer making the rest of the system re-targetable to a wide variety of processors. MiniWin will run easily on ARM Cortex M0 or above, PIC32 or Renesas RX processors. MiniWin has a simple easy to understand API giving access to fully overlapped windows. The standard look and feel is easy to customize to your needs. Included with MiniWin are two sets of standard controls in standard and large sizes and a growing library of standard dialogs windows. All code developed for MiniWin and MiniWin generated code is MISRA 2012 'required' compliant.
 
 <H2>MiniWin News</H2>
-All the development environments used to build MiniWin are being updated to the latest version. This is causing some of the projects for some of the builds to break temporarily. A spreadsheet of progress and what works and what doesn't can be found under the docs folder. The head of the repo may not have all projects and variants working until this process is completed. A new release will be made when this is done. Here's a summary of progress:
+All the development environments used to build MiniWin are being updated to the latest version. This task is almost complete. A new release will be made when this is done. Here's a summary of progress:
 <ul>
 <li> Renesas RX both compilers - completed
 <li> STM32 both processors - completed
 <li> NXP - completed
-<li> PIC32 both processors - FreeRTOS projects no longer build, otherwise completed
+<li> PIC32 both processors - completed
 <li> ESP32 - completed
 <li> Windows simulator cl - completed
 <li> Arduino - completed
-<li> Atmel - completed but file example running slowly
+<li> Atmel - completed but file acess running slowly
 <li> Linux GCC/clang - completed
-<li> Windows GCC/clang - GCC completed, problem remains with a clang build of TTFonts project
+<li> Windows GCC/clang - completed
 <li> Pi Zero - completed
 <li> Pi Pico - completed
 <li> Tools - completed
