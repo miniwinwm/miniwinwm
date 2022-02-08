@@ -16,10 +16,11 @@ SRCS := $(wildcard src/*.c) \
 	$(wildcard ../../../MiniWin/gl/fonts/truetype/mcufont/*.c)
 CPPSRCS := src/camlib/camlib_opencv.cpp
 
-CC = gcc
-CPP = g++
+# choose your compiler
 # CC = clang
 # CPP = clang++
+CC = gcc
+CPP = g++
 
 CFLAGS = -D_WIN32 -I../../../MiniWin -I../../../MiniWin/gl/fonts/truetype/mcufont -Isrc -I../../../$(PROJECT)_Common -g -Wall -std=c99
 CPPFLAGS = -IC:/msys64/mingw64/include/opencv4
