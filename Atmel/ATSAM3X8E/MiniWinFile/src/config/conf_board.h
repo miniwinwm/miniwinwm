@@ -41,7 +41,7 @@
 //#define CONF_BOARD_UART_CONSOLE
 
 /* Enable USB interface (USB) for host mode */
-//#define CONF_BOARD_USB_PORT
+#define CONF_BOARD_USB_PORT
 
 /* Configure ADC example pins */
 //#define CONF_BOARD_ADC

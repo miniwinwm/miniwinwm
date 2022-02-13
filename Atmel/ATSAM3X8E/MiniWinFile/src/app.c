@@ -363,7 +363,6 @@ void app_populate_tree_from_file_system(struct mw_tree_container_t *tree, mw_han
 			file_info.fname,
 			node_flags);
 		}
-		//(void)f_closedir(&folder);
 	}
 }
 
@@ -439,7 +438,6 @@ uint8_t find_folder_entries(char *path,
 				break;
 			}
 		}
-		//(void)f_closedir(&folder);
 	}
 
 	/* replace terminating '/' */
