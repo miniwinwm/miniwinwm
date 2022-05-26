@@ -187,7 +187,6 @@ The source code tree is quite complicated so is explained here:
 <b>dialogs:</b> Standard dialogs provided by MiniWin<br>
 <b>docs:</b> All documentation<br>
 <b>gl:</b> The graphics library incorporated in MiniWin including fonts<br>
-<b>hal:</b> The hardware abstraction layer of drivers for all the currently supported processors and platforms<br>
 <b>templates:</b> Templates of required application files<br>
 <b>ui:</b> Standard user interface controls. User code can add to this for further controls if required<br>
 <b>hal:</b> Source files common to all hal implementations and then further source files in sub-folder for different currently supported platforms and processors. Each set of drivers for a particular target builds only for that target. Other different target files compile to nothing through the use of #defines.
