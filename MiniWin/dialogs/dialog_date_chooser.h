@@ -52,7 +52,7 @@ SOFTWARE.
 ***************************/
 
 /**
- * Create a dynamic time chooser dialog window.
+ * Create a dynamic date chooser dialog window.
  *
  * @param x Left coordinate of dialog window
  * @param y Top coordinate of dialog window
