@@ -1,6 +1,14 @@
 #include "mf_bwfont.h"
 #include <stdbool.h>
 
+uint8_t mf_bwfont_character_width(const struct mf_font_s *font,
+                                  uint16_t character);
+uint8_t mf_bwfont_render_character(const struct mf_font_s *font,
+                                   int16_t x0, int16_t y0,
+                                   mf_char character,
+                                   mf_pixel_callback_t callback,
+                                   void *state);
+
 /* Find the character range and index that contains a given glyph.. */
 static const struct mf_bwfont_char_range_s *find_char_range(
     const struct mf_bwfont_s *font, uint16_t character, uint16_t *index_ret)

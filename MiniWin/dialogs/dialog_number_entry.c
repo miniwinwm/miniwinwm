@@ -159,7 +159,7 @@ static void mw_dialog_number_entry_paint_function(mw_handle_t window_handle, con
 			mw_dialog_number_entry_data.number_rect.y - 1);
 	mw_gl_set_fg_colour(MW_HAL_LCD_GREY7);
 	mw_gl_vline(draw_info,
-			mw_dialog_number_entry_data.number_rect.x + mw_dialog_number_entry_data.number_rect.width - 2,
+	        (int16_t)(mw_dialog_number_entry_data.number_rect.x + mw_dialog_number_entry_data.number_rect.width - 2),
 			mw_dialog_number_entry_data.number_rect.y + 1,
 			mw_dialog_number_entry_data.number_rect.y + mw_dialog_number_entry_data.number_rect.height - 2);
 	mw_gl_hline(draw_info,
@@ -187,7 +187,7 @@ static void mw_dialog_number_entry_paint_function(mw_handle_t window_handle, con
 				mw_dialog_number_entry_data.number_rect.y + 3,
 				'-');
 		mw_gl_string(draw_info,
-				mw_dialog_number_entry_data.number_rect.x + 3 + (int16_t)mw_gl_get_string_width_pixels("-"),
+		        (int16_t)(mw_dialog_number_entry_data.number_rect.x + 3 + (int16_t)mw_gl_get_string_width_pixels("-")),
 				mw_dialog_number_entry_data.number_rect.y + 3, mw_dialog_number_entry_data.number_buffer);
 	}
 	else

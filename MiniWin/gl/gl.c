@@ -1295,6 +1295,8 @@ static uint8_t tt_character_callback(int16_t x, int16_t y, mf_char character, vo
  */
 static void tt_pixel_callback_no_anti_aliasing(int16_t x, int16_t y, uint8_t count, uint8_t alpha, void *state)
 {
+    (void)alpha;
+
 	/* get tt font rendering state */
 	tt_font_state_t *tt_font_state = (tt_font_state_t *)state;
 
@@ -1413,6 +1415,9 @@ static bool tt_line_callback(mf_str line, uint16_t count, void *state)
  */
 static bool tt_dummy_line_callback(mf_str line, uint16_t count, void *state)
 {
+    (void)count;
+    (void)line;
+
 	/* get tt font rendering state */
 	tt_font_state_t *tt_font_state = (tt_font_state_t *)state;
 

@@ -28,6 +28,7 @@ SOFTWARE.
 *** INCLUDES ***
 ***************/
 
+#include "hal/hal_init.h"
 #include "hal/hal_delay.h"
 #include "hal/hal_lcd.h"
 #include "hal/hal_touch.h"

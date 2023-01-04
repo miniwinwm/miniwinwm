@@ -22,6 +22,14 @@
 #define DICT_START3BIT  244
 #define DICT_START2BIT  252
 
+uint8_t mf_rlefont_character_width(const struct mf_font_s *font,
+                                   uint16_t character);
+uint8_t mf_rlefont_render_character(const struct mf_font_s *font,
+                                    int16_t x0, int16_t y0,
+                                    mf_char character,
+                                    mf_pixel_callback_t callback,
+                                    void *state);
+
 /* Find a pointer to the glyph matching a given character by searching
  * through the character ranges. If the character is not found, return
  * pointer to the default glyph.
@@ -150,6 +158,8 @@ static void write_bin_codeword(const struct mf_rlefont_s *font,
                                 struct renderstate_r *rstate,
                                 uint8_t code)
 {
+    (void)font;
+
     uint8_t bitcount = fillentry_bitcount(code);
     uint8_t byte = code - DICT_START7BIT;
     uint8_t runlen = 0;
