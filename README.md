@@ -126,7 +126,7 @@ MiniWin includes the following utility applications with source code which can b
 <p align="center">
 <img width=220 height=300 src="https://static.wixstatic.com/media/850cc4_29133360d31b454c8bd257c9cf7584db~mv2.jpg/v1/fill/w_345,h_463,al_c,lg_1,q_80/m.webp">
 </p>
-MiniWin comes with all source for the window manager, graphics library and user interface components. It also comes with 8 example projects - a simple getting started example, a non-overlapped fixed windows example, an example that integrates a USB pen drive or SD card to read and show text and image files, an example integrated with FreeRTOS, a TrueType font demonstration, an example showing root window capabilities, a project showing usage of all MiniWin's user interface components and a project that interfaces with a video camera showing a video stream in a MiniWin window. MiniWin comes with 13 HAL layer samples:
+MiniWin comes with all source for the window manager, graphics library and user interface components. It also comes with 8 example projects - a simple getting started example, a non-overlapped fixed windows example, an example that integrates a USB pen drive or SD card to read and show text and image files, an example integrated with FreeRTOS, a TrueType font demonstration, an example showing root window capabilities, a project showing usage of all MiniWin's user interface components and a project that interfaces with a video camera showing a video stream in a MiniWin window. MiniWin comes with 14 HAL layer samples:
 <br><br>
 <ul>
 <li>STM32F4DISCOVERY board using an ILI9341 driven QVGA LCD with touch screen
@@ -136,6 +136,7 @@ MiniWin comes with all source for the window manager, graphics library and user 
 <li>NXP 54628 board with built in WQVGA LCD and touch screen
 <li>Renesas Envision Kit board running RX65N processor with built in WQVGA LCD with touch screen built with CC-RX
 <li>Renesas Envision Kit board running RX65N processor with built in WQVGA LCD with touch screen built with GCC-RX
+<li>Renesas Synergy PK-S5D9 development board with built in QVGA LCD with touch screen
 <li>Microchip PIC32MX board using an ILI9341 driven QVGA LCD with touch screen
 <li>Microchip PIC32MZ board using an ILI9341 driven QVGA LCD with touch screen
 <li>Raspberry Pi Zero W board using an ILI9341 driven QVGA LCD with touch screen
