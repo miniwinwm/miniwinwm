@@ -68,12 +68,12 @@ void mw_hal_delay_init(void)
 
 void mw_hal_delay_ms(uint16_t ms)
 {
-    R_BSP_SoftwareDelay(ms, BSP_DELAY_UNITS_MILLISECONDS);
+    R_BSP_SoftwareDelay((uint32_t)ms, BSP_DELAY_UNITS_MILLISECONDS);
 }
 
 void mw_hal_delay_us(uint32_t us)
 {
-    R_BSP_SoftwareDelay(us, BSP_DELAY_UNITS_MICROSECONDS);
+    R_BSP_SoftwareDelay((uint32_t)us, BSP_DELAY_UNITS_MICROSECONDS);
 }
 
 #endif

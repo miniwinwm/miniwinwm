@@ -34,6 +34,7 @@ SOFTWARE.
 #include <string.h>
 #include "miniwin_thread.h"
 #include "hal/hal_lcd.h"
+#include "hal/hal_delay.h"
 #include "miniwin_config.h"
 
 /****************
@@ -114,11 +115,11 @@ static void ILI9341V_init(void)
     (void)g_ioport.p_api->pinWrite(LCD_CS, IOPORT_LEVEL_HIGH);
     (void)g_ioport.p_api->pinWrite(LCD_RESET, IOPORT_LEVEL_HIGH);
     (void)g_ioport.p_api->pinWrite(LCD_RESET, IOPORT_LEVEL_LOW);
-    R_BSP_SoftwareDelay(10UL, BSP_DELAY_UNITS_MILLISECONDS);
+    mw_hal_delay_ms(10U);
     (void)g_ioport.p_api->pinWrite(LCD_RESET, IOPORT_LEVEL_HIGH);
 
     lcd_write(ILI9341_SW_RESET, (uint8_t *) "\x0", 0UL);
-    R_BSP_SoftwareDelay(10UL, BSP_DELAY_UNITS_MILLISECONDS);
+    mw_hal_delay_ms(10U);
     lcd_write(ILI9341_POWERB, (uint8_t *)"\x00\xC1\x30", 3UL);
     lcd_write(ILI9341_DTCA, (uint8_t *)"\x85\x00\x78", 3UL);
     lcd_write(ILI9341_DTCB, (uint8_t *)"\x00\x00", 2UL);
@@ -142,7 +143,7 @@ static void ILI9341V_init(void)
     lcd_write(ILI9341_PGAMMA, (uint8_t *)"\x0F\x31\x2B\x0C\x0E\x08\x4E\xF1\x37\x07\x10\x03\x0E\x09\x00", 15UL);
     lcd_write(ILI9341_NGAMMA, (uint8_t *)"\x00\x0E\x14\x03\x11\x07\x31\xC1\x48\x08\x0F\x0C\x31\x36\x0F", 15UL);
     lcd_write(ILI9341_SLEEP_OUT, (uint8_t *)"\x00", 1UL);
-    R_BSP_SoftwareDelay(20UL, BSP_DELAY_UNITS_MILLISECONDS);
+    mw_hal_delay_ms(20U);
     lcd_write(ILI9341_DISP_ON, (uint8_t *)"\x00", 1UL);
 }
 
@@ -162,7 +163,7 @@ static void lcd_write(uint8_t cmd, const uint8_t *data, uint32_t length)
     (void)g_lcd_spi.p_api->write(g_lcd_spi.p_ctrl, &cmd, 1UL, SPI_BIT_WIDTH_8_BITS);
     while (!spi_operation_complete)
     {
-        R_BSP_SoftwareDelay(1UL, BSP_DELAY_UNITS_MILLISECONDS);
+        mw_hal_delay_ms(1U);
     }
 
     if (length != 0UL && data != NULL)
@@ -174,7 +175,7 @@ static void lcd_write(uint8_t cmd, const uint8_t *data, uint32_t length)
 
         while (!spi_operation_complete)
         {
-            R_BSP_SoftwareDelay(1UL, BSP_DELAY_UNITS_MILLISECONDS);
+            mw_hal_delay_ms(1U);
         }
     }
 
