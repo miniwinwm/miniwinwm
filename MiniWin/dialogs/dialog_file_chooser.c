@@ -254,12 +254,6 @@ static void mw_dialog_file_chooser_message_function(const mw_message_t *message)
 				else
 				{
 					/* post file ok response to receiving window */
-					if (mw_dialog_file_chooser_data.folder_depth > 0U)
-					{
-						(void)mw_util_safe_strcat(mw_dialog_file_chooser_data.folder_path,
-								MAX_FOLDER_AND_FILENAME_LENGTH,
-								"/");
-					}
 
 					/* add the file name */
 					(void)mw_util_safe_strcat(mw_dialog_file_chooser_data.folder_path,

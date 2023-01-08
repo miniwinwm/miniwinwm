@@ -5,6 +5,9 @@
 /* MiniWin Thread entry function */
 void miniwin_thread_entry(void)
 {
+    /* initialize non-miniwin parts of the application */
+    app_init();
+
     /* initialize miniwin */
     mw_init();
 
