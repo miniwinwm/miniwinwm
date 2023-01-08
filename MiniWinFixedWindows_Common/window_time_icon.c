@@ -68,6 +68,8 @@ static window_time_icon_data_t window_time_icon_data;
 
 void window_time_icon_paint_function(mw_handle_t window_handle, const mw_gl_draw_info_t *draw_info)
 {
+    (void)window_handle;
+
 	MW_ASSERT(draw_info != (void*)0, "Null pointer parameter");
 
 	if (window_time_icon_data.touch_down)
