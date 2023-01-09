@@ -249,9 +249,75 @@ char *app_get_root_folder_path(void)
 void app_populate_tree_from_file_system(struct mw_tree_container_t *tree,
         mw_handle_t start_folder_handle)
 {
+    char path[MAX_FOLDER_AND_FILENAME_LENGTH];
+    uint8_t node_flags;
+    UINT result;
+    UINT attributes;
+    bool first = true;
+
     if (media_inserted)
     {
+        /* check pointer parameter */
+        if (tree == NULL)
+        {
+            MW_ASSERT((bool)false, "Null pointer");
 
+            return;
+        }
+
+        mw_tree_container_get_node_path(tree, start_folder_handle, path, MAX_FOLDER_AND_FILENAME_LENGTH);
+
+        if (strlen(path) == (size_t)0)
+        {
+            return;
+        }
+
+        /* strip off terminating '/' for FileX folders */
+        path[strlen(path) - 1U] = '\0';
+
+        /* open the folder */
+        for (;;)
+        {
+            /* read a folder item */
+            if (first)
+            {
+                first = false;
+                result = fx_directory_first_full_entry_find(g_fx_media0_ptr, path, &attributes,
+                    NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+                if (result == FX_NO_MORE_ENTRIES)
+                {
+                    /* break on error or end of folder */
+                    break;
+                }
+            }
+            else
+            {
+                result = fx_directory_next_full_entry_find(g_fx_media0_ptr, path, &attributes,
+                    NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+                if (result == FX_NO_MORE_ENTRIES)
+                {
+                    /* break on error or end of folder */
+                    break;
+                }
+            }
+
+            /* ignore if it's a hidden, system or volume entry*/
+            if ((attributes & FX_HIDDEN) || (attributes & FX_SYSTEM) || (attributes & FX_VOLUME))
+            {
+                continue;
+            }
+
+            node_flags = 0U;
+            if (attributes & FX_DIRECTORY)
+            {
+                node_flags = MW_TREE_CONTAINER_NODE_IS_FOLDER;
+            }
+
+            (void)mw_tree_container_add_node(tree,
+                    start_folder_handle,
+                    path,
+                    node_flags);
+        }
     }
 }
 
@@ -315,7 +381,7 @@ uint8_t find_folder_entries(char *path,
                 }
             }
 
-            /* ignore if it's a hidden or system entry*/
+            /* ignore if it's a hidden, system or volumeentry*/
             if ((attributes & FX_HIDDEN) || (attributes & FX_SYSTEM) || (attributes & FX_VOLUME))
             {
                 continue;
