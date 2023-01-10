@@ -29,6 +29,7 @@ SOFTWARE.
 ***************/
 
 #include "miniwin.h"
+#include "window_selection.h"
 
 /****************
 *** CONSTANTS ***

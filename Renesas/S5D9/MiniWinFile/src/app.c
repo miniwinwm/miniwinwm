@@ -249,7 +249,7 @@ char *app_get_root_folder_path(void)
 void app_populate_tree_from_file_system(struct mw_tree_container_t *tree,
         mw_handle_t start_folder_handle)
 {
-    char path[MAX_FOLDER_AND_FILENAME_LENGTH];
+    char entry_name[MAX_FOLDER_AND_FILENAME_LENGTH];
     uint8_t node_flags;
     UINT result;
     UINT attributes;
@@ -265,15 +265,21 @@ void app_populate_tree_from_file_system(struct mw_tree_container_t *tree,
             return;
         }
 
-        mw_tree_container_get_node_path(tree, start_folder_handle, path, MAX_FOLDER_AND_FILENAME_LENGTH);
+        mw_tree_container_get_node_path(tree, start_folder_handle, entry_name, MAX_FOLDER_AND_FILENAME_LENGTH);
 
-        if (strlen(path) == (size_t)0)
+        if (strlen(entry_name) == (size_t)0)
         {
             return;
         }
 
-        /* strip off terminating '/' for FileX folders */
-        path[strlen(path) - 1U] = '\0';
+        /* strip off terminating '/' for FileX folders unless root path */
+        if (strlen(entry_name) > (size_t)1)
+        {
+            entry_name[strlen(entry_name) - 1U] = '\0';
+        }
+
+        /* set folder look into */
+        (void)fx_directory_default_set(g_fx_media0_ptr, entry_name);
 
         /* open the folder */
         for (;;)
@@ -282,7 +288,7 @@ void app_populate_tree_from_file_system(struct mw_tree_container_t *tree,
             if (first)
             {
                 first = false;
-                result = fx_directory_first_full_entry_find(g_fx_media0_ptr, path, &attributes,
+                result = fx_directory_first_full_entry_find(g_fx_media0_ptr, entry_name, &attributes,
                     NULL, NULL, NULL, NULL, NULL, NULL, NULL);
                 if (result == FX_NO_MORE_ENTRIES)
                 {
@@ -292,7 +298,7 @@ void app_populate_tree_from_file_system(struct mw_tree_container_t *tree,
             }
             else
             {
-                result = fx_directory_next_full_entry_find(g_fx_media0_ptr, path, &attributes,
+                result = fx_directory_next_full_entry_find(g_fx_media0_ptr, entry_name, &attributes,
                     NULL, NULL, NULL, NULL, NULL, NULL, NULL);
                 if (result == FX_NO_MORE_ENTRIES)
                 {
@@ -307,6 +313,14 @@ void app_populate_tree_from_file_system(struct mw_tree_container_t *tree,
                 continue;
             }
 
+
+            /* ignore if it's . or .. */
+            if ((strlen(entry_name) == (size_t)1 && entry_name[0] == '.') ||
+                    (strlen(entry_name) == (size_t)2 && strcmp(entry_name, "..") == 0))
+            {
+                continue;
+            }
+
             node_flags = 0U;
             if (attributes & FX_DIRECTORY)
             {
@@ -315,7 +329,7 @@ void app_populate_tree_from_file_system(struct mw_tree_container_t *tree,
 
             (void)mw_tree_container_add_node(tree,
                     start_folder_handle,
-                    path,
+                    entry_name,
                     node_flags);
         }
     }
@@ -356,7 +370,7 @@ uint8_t find_folder_entries(char *path,
             path[strlen(path) - 1U] = '\0';
         }
 
-        result = fx_directory_default_set(g_fx_media0_ptr, path);
+        (void)fx_directory_default_set(g_fx_media0_ptr, path);
 
         for (;;)
         {
