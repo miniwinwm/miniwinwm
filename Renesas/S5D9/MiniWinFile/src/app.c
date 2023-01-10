@@ -278,7 +278,7 @@ void app_populate_tree_from_file_system(struct mw_tree_container_t *tree,
             entry_name[strlen(entry_name) - 1U] = '\0';
         }
 
-        /* set folder look into */
+        /* set folder to look into */
         (void)fx_directory_default_set(g_fx_media0_ptr, entry_name);
 
         /* open the folder */
