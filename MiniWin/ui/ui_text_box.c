@@ -129,7 +129,7 @@ static void text_box_message_function(const mw_message_t *message)
 					this_text_box->tt_font,
 					this_text_box->text);
 
-			/* send message about whether scrolling is needed */
+			/* send message about whether scrolling is needed to parent window */
 			message_data = (uint32_t)(this_text_box->text_height_pixels > mw_get_control_rect(message->recipient_handle).height);
 			message_data <<= 16U;
 			if (message_data != 0U)
