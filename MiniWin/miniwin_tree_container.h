@@ -183,7 +183,7 @@ void mw_tree_container_set_new_node_array(struct mw_tree_container_t *tree, mw_t
  * @param tree Pointer to tree structure
  * @param parent_folder_handle Handle of the folder node to create the new node in
  * @param label The label to assign to the new node
- * @param flags Flags describing the node. Can be any from MW_TREE_CONTAINER_NODE_IS_SELECTED_FLAG,
+ * @param node_flags Flags describing the node. Can be any from MW_TREE_CONTAINER_NODE_IS_SELECTED_FLAG,
  *              MW_TREE_CONTAINER_NODE_IS_FOLDER_FLAG, MW_TREE_FOLDER_IS_OPEN_FLAG
  * @return The new node handle if added successfully or MW_INVALID_HANDLE if a parameter was illegal or no space remaining
  */

@@ -304,8 +304,8 @@ void mw_gl_solid_fill_pixel(const mw_gl_draw_info_t *draw_info, int16_t x, int16
  * Plot a single pixel using the foreground colour.
  *
  * @param draw_info Reference frame origin coordinates and clip region rect
- * @param x X coordinate of the pixel to plot
- * @param y Y coordinate of the pixel to plot
+ * @param client_x X coordinate of the pixel to plot
+ * @param client_y Y coordinate of the pixel to plot
  */
 void mw_gl_fg_pixel(const mw_gl_draw_info_t *draw_info, int16_t client_x, int16_t client_y);
 
@@ -313,8 +313,8 @@ void mw_gl_fg_pixel(const mw_gl_draw_info_t *draw_info, int16_t client_x, int16_
  * Plot a single pixel using the background colour.
  *
  * @param draw_info Reference frame origin coordinates and clip region rect
- * @param x X coordinate of the pixel to plot
- * @param y Y coordinate of the pixel to plot
+ * @param client_x X coordinate of the pixel to plot
+ * @param client_y Y coordinate of the pixel to plot
  */
 void mw_gl_bg_pixel(const mw_gl_draw_info_t *draw_info, int16_t client_x, int16_t client_y);
 
@@ -353,8 +353,8 @@ void mw_gl_line(const mw_gl_draw_info_t *draw_info, int16_t p1x, int16_t p1y, in
  * Draw a filled or unfilled rectangle. Fill, border, line style and colours controlled by gc.
  *
  * @param draw_info Reference frame origin coordinates and clip region rect
- * @param x X coordinate of the left edge of the rectangle
- * @param y Y coordinate of the top edge of the rectangle
+ * @param x_start X coordinate of the left edge of the rectangle
+ * @param y_start Y coordinate of the top edge of the rectangle
  * @param width Width of the rectangle
  * @param height Height of the rectangle
  */
@@ -519,7 +519,7 @@ void mw_gl_colour_bitmap(const mw_gl_draw_info_t *draw_info,
  * @param justification The justification to use when rendering the text
  * @param rle_font The true type font to use
  * @param tt_text The text to render
- * @param vert_scroll How many pixel lines to scroll the text up
+ * @param vert_scroll_pixels How many pixel lines to scroll the text up
  */
 void mw_gl_tt_render_text(const mw_gl_draw_info_t *draw_info,
 		mw_util_rect_t *text_rect,

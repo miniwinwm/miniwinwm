@@ -84,7 +84,7 @@ typedef struct
  * @param width The width of the control, ignored when automatic
  * @param parent_handle The containing window of this control
  * @param flags General control flags controlling the control
- * @param tab_instance_data Instance structure containing tabs specific data items
+ * @param tabs_instance_data Instance structure containing tabs specific data items
  * @return The new control's handle
  */
 mw_handle_t mw_ui_tabs_add_new(int16_t x,

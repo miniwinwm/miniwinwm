@@ -74,7 +74,7 @@ typedef struct
  * @param control_rect The bounding box of the rect containing this text box
  * @param parent_handle The containing window of this control
  * @param flags General control flags controlling the control
- * @param scrollable_text_box_instance_data Instance structure containing scrollable_text_box specific data items
+ * @param text_box_instance_data Instance structure containing scrollable_text_box specific data items
  * @return The new control's handle
  */
 mw_handle_t mw_ui_text_box_add_new(mw_util_rect_t *control_rect,

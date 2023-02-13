@@ -907,7 +907,7 @@ typedef void (*mw_paint_func_p)(mw_handle_t window_handle, const mw_gl_draw_info
 /**
  * Function signature definition for the message handling function that every window and control must implement
  *
- * @param message The message to be processed
+ * @param user_message The message to be processed
  * @note Do not call this directly from user code
  */
 typedef void (*mw_message_func_p)(const mw_message_t *user_message);
@@ -1156,7 +1156,7 @@ void mw_set_window_vert_scroll_bar_enabled_state(mw_handle_t window_handle, bool
  * Set a window horizontal scroll bar position
  *
  * @param window_handle The window containing the scroll bar
- * @param enabled The new position
+ * @param position The new position
  * @note User must do a paint of the scroll bar for the change to be seen
  */
 void mw_set_position_window_horiz_scroll_bar(mw_handle_t window_handle, uint8_t position);
@@ -1165,7 +1165,7 @@ void mw_set_position_window_horiz_scroll_bar(mw_handle_t window_handle, uint8_t 
  * Set a window vertical scroll bar position
  *
  * @param window_handle The window containing the scroll bar
- * @param enabled The new position
+ * @param position The new position
  * @note User must do a paint of the scroll bar for the change to be seen
  */
 void mw_set_position_window_vert_scroll_bar(mw_handle_t window_handle, uint8_t position);
@@ -1306,7 +1306,7 @@ void mw_paint_control_rect(mw_handle_t control_handle, const mw_util_rect_t *rec
 /**
  * Resize a control.
  *
- * @param window_handle Position in array of all controls of this control
+ * @param control_handle Position in array of all controls of this control
  * @param new_width The new width of the control
  * @param new_height The new height of the control
  * @return If the resize was successful
