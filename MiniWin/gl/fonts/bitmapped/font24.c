@@ -39,51 +39,6 @@
 #include "fonts.h"
 #include "miniwin_config.h"
 
-/** @addtogroup Utilities
-  * @{
-  */
-  
-/** @addtogroup STM32_EVAL
-  * @{
-  */ 
-
-/** @addtogroup Common
-  * @{
-  */
-
-/** @addtogroup FONTS
-  * @brief      This file provides text font24 for STM32xx-EVAL's LCD driver.
-  * @{
-  */  
-
-/** @defgroup FONTS_Private_Types
-  * @{
-  */ 
-/**
-  * @}
-  */ 
-
-
-/** @defgroup FONTS_Private_Defines
-  * @{
-  */
-/**
-  * @}
-  */ 
-
-
-/** @defgroup FONTS_Private_Macros
-  * @{
-  */
-/**
-  * @}
-  */ 
-  
-
-/** @defgroup FONTS_Private_Variables
-  * @{
-  */
-
 #ifdef MW_FONT_24_INCLUDED
 
 const uint8_t Font24_Table [] = 
@@ -2567,40 +2522,4 @@ const sFONT Font24 = {
 
 #endif
 
-/**
-  * @}
-  */ 
-
-
-/** @defgroup FONTS_Private_Function_Prototypes
-  * @{
-  */ 
-/**
-  * @}
-  */ 
-
-
-/** @defgroup FONTS_Private_Functions
-  * @{
-  */
-    
-/**
-  * @}
-  */
-  
-/**
-  * @}
-  */ 
-
-/**
-  * @}
-  */
-
-/**
-  * @}
-  */
-
-/**
-  * @}
-  */  
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

@@ -77,7 +77,7 @@
   you can compile this library to use
   libcap2 so that it tests whether the exceutable has the cap_sys_rawio capability, and therefore
   permission to access /dev/mem.
-  To enable this ability, uncomment the #define BCM2835_HAVE_LIBCAP in bcm2835.h or 
+  To enable this ability, uncomment the definition BCM2835_HAVE_LIBCAP in bcm2835.h or 
   -DBCM2835_HAVE_LIBCAP on your compiler command line.
   After your program has been compiled:
   \code
@@ -1798,7 +1798,6 @@ extern "C" {
     /*! Transfers half-word to the AUX SPI slave.
       Asserts the currently selected CS pins during the transfer.
       \param[in] data The 8 bit data byte to write to MOSI
-      \return The 16 bit byte simultaneously read from  MISO
       \sa bcm2835_spi_transfern()
     */
     extern void bcm2835_aux_spi_write(uint16_t data);
@@ -1989,35 +1988,6 @@ extern "C" {
 #endif
 
 #endif /* BCM2835_H */
-
-/*! @example blink.c
-  Blinks RPi GPIO pin 11 on and off
-*/
-
-/*! @example input.c
-  Reads the state of an RPi input pin
-*/
-
-/*! @example event.c
-  Shows how to use event detection on an input pin
-*/
-
-/*! @example spi.c
-  Shows how to use SPI interface to transfer a byte to and from an SPI device
-*/
-
-/*! @example spin.c
-  Shows how to use SPI interface to transfer a number of bytes to and from an SPI device
-*/
-
-/*! @example pwm.c
-  Shows how to use PWM to control GPIO pins
-*/
-
-/*! @example i2c.c
-Command line utility for executing i2c commands with the 
-Broadcom bcm2835. Contributed by Shahrooz Shahparnia.
-*/
 
 /*! example gpio.c
   Command line utility for executing gpio commands with the 

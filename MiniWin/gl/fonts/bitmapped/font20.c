@@ -39,53 +39,6 @@
 #include "fonts.h"
 #include "miniwin_config.h"
 
-/** @addtogroup Utilities
-  * @{
-  */
-  
-/** @addtogroup STM32_EVAL
-  * @{
-  */ 
-
-/** @addtogroup Common
-  * @{
-  */
-
-/** @addtogroup FONTS
-  * @brief      This file provides text font20 for STM32xx-EVAL's LCD driver.
-  * @{
-  */  
-
-/** @defgroup FONTS_Private_Types
-  * @{
-  */ 
-/**
-  * @}
-  */ 
-
-
-/** @defgroup FONTS_Private_Defines
-  * @{
-  */
-/**
-  * @}
-  */ 
-
-
-/** @defgroup FONTS_Private_Macros
-  * @{
-  */
-/**
-  * @}
-  */ 
-  
-
-/** @defgroup FONTS_Private_Variables
-  * @{
-  */
-
-// Character bitmaps for Courier New 15pt
-
 #ifdef MW_FONT_20_INCLUDED
 
 const uint8_t Font20_Table[] = 
@@ -2189,41 +2142,5 @@ const sFONT Font20 = {
 };
 
 #endif
-
-/**
-  * @}
-  */ 
-
-
-/** @defgroup FONTS_Private_Function_Prototypes
-  * @{
-  */ 
-/**
-  * @}
-  */ 
-
-
-/** @defgroup FONTS_Private_Functions
-  * @{
-  */
-    
-/**
-  * @}
-  */
-  
-/**
-  * @}
-  */ 
-
-/**
-  * @}
-  */
-
-/**
-  * @}
-  */
-
-/**
-  * @}
-  */  
+ 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

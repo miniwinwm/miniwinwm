@@ -46,25 +46,6 @@
 /* Includes ------------------------------------------------------------------*/
 #include <stdint.h>
 
-/** @addtogroup Utilities
-  * @{
-  */
-  
-/** @addtogroup STM32_EVAL
-  * @{
-  */ 
-
-/** @addtogroup Common
-  * @{
-  */
-
-/** @addtogroup FONTS
-  * @{
-  */ 
-
-/** @defgroup FONTS_Exported_Types
-  * @{
-  */ 
 typedef struct _tFont
 {    
   const uint8_t *table;
@@ -72,57 +53,10 @@ typedef struct _tFont
   uint16_t Height;
 } sFONT;
 
-/**
-  * @}
-  */ 
-
-/** @defgroup FONTS_Exported_Constants
-  * @{
-  */ 
-#define LINE(x) ((x) * (((sFONT *)BSP_LCD_GetFont())->Height))
-
-/**
-  * @}
-  */ 
-
-/** @defgroup FONTS_Exported_Macros
-  * @{
-  */ 
-/**
-  * @}
-  */ 
-
-/** @defgroup FONTS_Exported_Functions
-  * @{
-  */ 
-/**
-  * @}
-  */
-
 #ifdef __cplusplus
 }
 #endif
   
-#endif /* FONTS_H */
- 
-/**
-  * @}
-  */
-
-/**
-  * @}
-  */ 
-
-/**
-  * @}
-  */
-
-/**
-  * @}
-  */
-
-/**
-  * @}
-  */      
+#endif /* FONTS_H */    
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
