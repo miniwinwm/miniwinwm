@@ -30,6 +30,7 @@ SOFTWARE.
 #include <algorithm>
 #include <fstream>
 #include <sys/stat.h>
+#include <cstdint>
 #include "json11.hpp"
 #ifdef _MSC_VER
 #include <windows.h>
