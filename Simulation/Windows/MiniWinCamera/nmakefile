@@ -25,7 +25,7 @@ CPPFLAGS = -nologo -D_WIN32 -EHsc -I%OPENCV_DIR%\build\include
 	cl $(CPPFLAGS) -c $< -Fo$(@D)\ 
 	
 $(BINARY): $(OBJS) $(CPPOBJS)
-	link gdi32.lib user32.lib $(OBJS) $(CPPOBJS) %OPENCV_DIR%\build\x64\vc15\lib\opencv_world455.lib -out:$@
+	link gdi32.lib user32.lib $(OBJS) $(CPPOBJS) %OPENCV_DIR%\build\x64\vc16\lib\opencv_world4120.lib -out:$@
 
 clean:
 	del $(BINARY)

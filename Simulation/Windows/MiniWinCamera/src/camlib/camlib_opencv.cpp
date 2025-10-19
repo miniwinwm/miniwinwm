@@ -16,6 +16,21 @@ private:
     bool captured;
 };
 
+void operator delete(void *ptr, size_t size) noexcept
+{
+	free(ptr);
+}
+
+void operator delete[](void *ptr, size_t size) noexcept
+{
+	free(ptr);
+}
+
+void *operator new(size_t size)
+{
+	return malloc(size);
+}
+
 static CamlibOpenCV* camlibOpenCV;
 
 static int handleError(int status, const char* func, const char* msg, const char* file, int line, void* data)

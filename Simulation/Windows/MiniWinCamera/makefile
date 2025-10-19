@@ -29,7 +29,7 @@ CPPOBJS := $(CPPSRCS:.cpp=.o)
 DEPS := $(OBJS:.o=.d)
 CPPDEPS := $(CPPOBJS:.o=.d)
 
-LIBS = -lopencv_core.dll -lopencv_imgproc.dll -lopencv_videoio.dll -lgdi32 
+LIBS = -lopencv_core.dll -lopencv_imgproc.dll -lopencv_videoio.dll -lgdi32
 
 all : $(BINARY)
 
