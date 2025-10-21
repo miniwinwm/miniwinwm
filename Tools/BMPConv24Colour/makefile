@@ -2,7 +2,7 @@ SRC := main.cpp ../EasyBMP/EasyBMP.cpp
 OBJ = $(SRC:.cpp=.o)
 
 # choose your compiler
-CPP = clang++
+# CPP = clang++
 CPP = g++
 LDFLAGS =
 CPPFLAGS = -g -I../EasyBMP
