@@ -22,12 +22,19 @@
 			<arguments>
 			</arguments>
 		</buildCommand>
+		<buildCommand>
+			<name>com.renesas.cdt.managedbuild.jsoncdb.compilationdatabase.compilationDatabaseBuilder</name>
+			<triggers>full,incremental,</triggers>
+			<arguments>
+			</arguments>
+		</buildCommand>
 	</buildSpec>
 	<natures>
 		<nature>org.eclipse.cdt.core.cnature</nature>
 		<nature>org.eclipse.cdt.managedbuilder.core.managedBuildNature</nature>
 		<nature>org.eclipse.cdt.managedbuilder.core.ScannerConfigNature</nature>
 		<nature>org.eclipse.xtext.ui.shared.xtextNature</nature>
+		<nature>com.renesas.cdt.managedbuild.jsoncdb.compilationdatabase.CompileCommandsNature</nature>
 	</natures>
 	<linkedResources>
 		<link>

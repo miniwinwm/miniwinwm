@@ -15,7 +15,7 @@
 			</storageModule>
 			<storageModule moduleId="com.renesas.cdt.managedbuild.core.toolchainInfo">
 				<option id="toolchain.id" value="RENESAS_GCC_RX"/>
-				<option id="toolchain.version" value="8.3.0.202104"/>
+				<option id="toolchain.version" value="14.2.0.202505"/>
 				<option id="toolchain.enable" value="true"/>
 			</storageModule>
 			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
@@ -200,6 +200,7 @@
 			</storageModule>
 			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
 			<storageModule moduleId="com.renesas.cdt.managedbuild.core.boardInfo"/>
+			<storageModule moduleId="com.renesas.cdt.managedbuild.core.deviceConfiguration"/>
 		</cconfiguration>
 	</storageModule>
 	<storageModule moduleId="cdtBuildSystem" version="4.0.0">
