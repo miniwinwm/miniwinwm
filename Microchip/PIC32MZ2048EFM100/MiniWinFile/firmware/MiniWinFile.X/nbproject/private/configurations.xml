@@ -5,7 +5,7 @@
   <confs>
     <conf name="default" type="2">
       <platformToolSN>:=MPLABComm-USB-Microchip:=&lt;vid>04D8:=&lt;pid>8107:=&lt;rev>0002:=&lt;man>Microchip Technology Incorporated:=&lt;prod>PIC32MZ EF Family:=&lt;sn>BUR164971143:=&lt;drv>x:=&lt;xpt>h:=end</platformToolSN>
-      <languageToolchainDir>C:\Program Files\Microchip\xc32\v4.00\bin</languageToolchainDir>
+      <languageToolchainDir>C:\Program Files\Microchip\xc32\v4.60\bin</languageToolchainDir>
       <mdbdebugger version="1">
         <placeholder1>place holder 1</placeholder1>
         <placeholder2>place holder 2</placeholder2>

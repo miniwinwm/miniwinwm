@@ -50,6 +50,26 @@
         </logicalFolder>
       </logicalFolder>
     </logicalFolder>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="true">
+      <logicalFolder name="f1" displayName="default.mhc" projectFiles="true">
+        <itemPath>../src/config/default/default.mhc/core.yml</itemPath>
+        <itemPath>../src/config/default/default.mhc/core_timer.yml</itemPath>
+        <itemPath>../src/config/default/default.mhc/dfp.yml</itemPath>
+        <itemPath>../src/config/default/default.mhc/GraphSettings.yml</itemPath>
+        <itemPath>../src/config/default/default.mhc/i2c1.yml</itemPath>
+        <itemPath>../src/config/default/default.mhc/nvm.yml</itemPath>
+        <itemPath>../src/config/default/default.mhc/ocmp1.yml</itemPath>
+        <itemPath>../src/config/default/default.mhc/project.yml</itemPath>
+        <itemPath>../src/config/default/default.mhc/settings.yml</itemPath>
+        <itemPath>../src/config/default/default.mhc/spi2.yml</itemPath>
+        <itemPath>../src/config/default/default.mhc/tmr2.yml</itemPath>
+        <itemPath>../src/config/default/default.mhc/tmr3.yml</itemPath>
+      </logicalFolder>
+      <itemPath>Makefile</itemPath>
+      <itemPath>../src/config/default/harmony-manifest-success.yml</itemPath>
+    </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
                    projectFiles="true">
@@ -289,26 +309,6 @@
         <itemPath>../../src/camlib.c</itemPath>
       </logicalFolder>
     </logicalFolder>
-    <logicalFolder name="ExternalFiles"
-                   displayName="Important Files"
-                   projectFiles="false">
-      <logicalFolder name="f1" displayName="default.mhc" projectFiles="true">
-        <itemPath>../src/config/default/default.mhc/core.yml</itemPath>
-        <itemPath>../src/config/default/default.mhc/core_timer.yml</itemPath>
-        <itemPath>../src/config/default/default.mhc/dfp.yml</itemPath>
-        <itemPath>../src/config/default/default.mhc/GraphSettings.yml</itemPath>
-        <itemPath>../src/config/default/default.mhc/i2c1.yml</itemPath>
-        <itemPath>../src/config/default/default.mhc/nvm.yml</itemPath>
-        <itemPath>../src/config/default/default.mhc/ocmp1.yml</itemPath>
-        <itemPath>../src/config/default/default.mhc/project.yml</itemPath>
-        <itemPath>../src/config/default/default.mhc/settings.yml</itemPath>
-        <itemPath>../src/config/default/default.mhc/spi2.yml</itemPath>
-        <itemPath>../src/config/default/default.mhc/tmr2.yml</itemPath>
-        <itemPath>../src/config/default/default.mhc/tmr3.yml</itemPath>
-      </logicalFolder>
-      <itemPath>Makefile</itemPath>
-      <itemPath>../src/config/default/harmony-manifest-success.yml</itemPath>
-    </logicalFolder>
   </logicalFolder>
   <sourceRootList>
     <Elem>../src</Elem>
@@ -326,11 +326,11 @@
         <targetPluginBoard></targetPluginBoard>
         <platformTool>PKOBSKDEPlatformTool</platformTool>
         <languageToolchain>XC32</languageToolchain>
-        <languageToolchainVersion>4.00</languageToolchainVersion>
+        <languageToolchainVersion>4.60</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>
-        <pack name="PIC32MZ-EF_DFP" vendor="Microchip" version="1.3.58"/>
+        <pack name="PIC32MZ-EF_DFP" vendor="Microchip" version="1.4.168"/>
       </packs>
       <ScriptingSettings>
       </ScriptingSettings>
@@ -748,6 +748,9 @@
         <property key="ToolFirmwareOption.UseLatestFirmware" value="true"/>
         <property key="debugoptions.debug-startup" value="Use system settings"/>
         <property key="debugoptions.reset-behaviour" value="Use system settings"/>
+        <property key="event.recorder.debugger.behavior" value="Running"/>
+        <property key="event.recorder.enabled" value="false"/>
+        <property key="event.recorder.scvd.files" value=""/>
         <property key="lastid" value=""/>
         <property key="memories.configurationmemory" value="true"/>
         <property key="memories.dataflash" value="true"/>
@@ -776,6 +779,9 @@
         <property key="ToolFirmwareOption.UseLatestFirmware" value="true"/>
         <property key="debugoptions.debug-startup" value="Use system settings"/>
         <property key="debugoptions.reset-behaviour" value="Use system settings"/>
+        <property key="event.recorder.debugger.behavior" value="Running"/>
+        <property key="event.recorder.enabled" value="false"/>
+        <property key="event.recorder.scvd.files" value=""/>
         <property key="lastid" value=""/>
         <property key="memories.configurationmemory" value="true"/>
         <property key="memories.dataflash" value="true"/>

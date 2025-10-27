@@ -3,8 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/John/Desktop/workspace/miniwinwm/Microchip/PIC32MZ2048EFM100/MiniWinFile/FatFS/spi_driver.h</file>
-            <file>file:/C:/Users/John/Desktop/workspace/miniwinwm/Microchip/PIC32MZ2048EFM100/MiniWinFile/FatFS/spi_driver.c</file>
+            <file>file:/C:/Users/john/Desktop/workspace/miniwinwm/Microchip/PIC32MZ2048EFM100/MiniWinFile/FatFS/spi_driver.h</file>
+            <file>file:/C:/Users/john/Desktop/workspace/miniwinwm/Microchip/PIC32MZ2048EFM100/MiniWinFile/FatFS/spi_driver.c</file>
+            <file>file:/C:/Users/john/Desktop/workspace/miniwinwm/MiniWin/miniwin.c</file>
+            <file>file:/C:/Users/john/Desktop/workspace/miniwinwm/MiniWin/miniwin_debug.c</file>
         </group>
     </open-files>
 </project-private>
