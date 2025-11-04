@@ -706,7 +706,11 @@ void mw_hal_lcd_monochrome_bitmap_clip(int16_t image_start_x,
 	
 #if defined(MW_DISPLAY_ROTATION_0)
 	previous_y = image_start_y + y - 1;
-	spi_device_release_bus(spi_device_handle_lcd);
+	
+	if (use_line_buffer)
+	{
+		spi_device_release_bus(spi_device_handle_lcd);
+	}
 #endif
 }
 
