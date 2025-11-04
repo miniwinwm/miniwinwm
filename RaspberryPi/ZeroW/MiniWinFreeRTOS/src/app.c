@@ -80,28 +80,31 @@ void app_init(void)
 	bcm2835_gpio_fsel(GPIO_TOUCH_IRQ, BCM2835_GPIO_FSEL_INPT);
 	bcm2835_gpio_fsel(GPIO_LCD_DC, BCM2835_GPIO_FSEL_OUTP);
 	bcm2835_gpio_fsel(GPIO_LCD_RESET, BCM2835_GPIO_FSEL_OUTP);	
-	
-	/* set the on board led0 trigger to none */
-	system("sh -c \"echo none > /sys/class/leds/led0/trigger\"");
 }
 
 void app_main_loop_process(void)
 {
 	/* toggle the on board led0 state */
 	static bool toggle = false;
+	static uint8_t count = 0U;
 
 	if (mw_is_init_complete())
 	{
-		if (toggle)
+		count++;
+		if (count == 10U)
 		{
-			system("sh -c \"echo 1 > /sys/class/leds/led0/brightness\"");
-		}
-		else
-		{
-			system("sh -c \"echo 0 > /sys/class/leds/led0/brightness\"");
-		}
+			count = 0U;
+			if (toggle)
+			{
+				system("sh -c \"echo 1 > /sys/class/leds/default-on/brightness\"");
+			}
+			else
+			{
+				system("sh -c \"echo 0 > /sys/class/leds/default-on/brightness\"");
+			}
 
-		toggle = !toggle;
+			toggle = !toggle;
+		}
 	}	
 }
 
