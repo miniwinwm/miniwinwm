@@ -63,7 +63,7 @@ static uint8_t gyro_y_queue_storage_area[sizeof(float)];
 static uint8_t gyro_z_queue_storage_area[sizeof(float)];
 
 /* thread stacks */
-static StackType_t main_stack[512];
+static StackType_t main_stack[1024];
 static StackType_t miniwin_stack[4096];
 static StackType_t gyro_stack[512];
 
@@ -198,7 +198,7 @@ int app_main(void)
 	semaphore_handle = xSemaphoreCreateMutexStatic(&semaphore_buffer);
 
 	/* create the led task */
-	(void)xTaskCreateStatic(main_thread, "MAIN", 512U, NULL, 1, main_stack, &main_task_handle);
+	(void)xTaskCreateStatic(main_thread, "MAIN", 1024U, NULL, 1, main_stack, &main_task_handle);
 
 	/* create the gyro task */
 	(void)xTaskCreateStatic(gyro_thread, "GYRO", 512U, NULL, 2, gyro_stack, &gyro_task_handle);

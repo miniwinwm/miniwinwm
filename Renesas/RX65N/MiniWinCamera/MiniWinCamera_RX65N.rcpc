@@ -1,0 +1,847 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<MicomToolCommonProjectFile Version="1.00">
+  <CreatorType Name="e2studio" Version=""/>
+  <Placeholders>
+    <PlaceholderPrefix>${</PlaceholderPrefix>
+    <PlaceholderPostfix>}</PlaceholderPostfix>
+  </Placeholders>
+  <Project Name="MiniWinCamera_RX65N" Type="Application">
+    <Files>
+      <Category Name="MiniWin">
+        <Path>..\..\..\MiniWin\calibrate.c</Path>
+        <Path>..\..\..\MiniWin\calibrate.h</Path>
+        <Path>..\..\..\MiniWin\miniwin.c</Path>
+        <Path>..\..\..\MiniWin\miniwin.h</Path>
+        <Path>..\..\..\MiniWin\miniwin_debug.c</Path>
+        <Path>..\..\..\MiniWin\miniwin_debug.h</Path>
+        <Path>..\..\..\MiniWin\miniwin_message_queue.c</Path>
+        <Path>..\..\..\MiniWin\miniwin_message_queue.h</Path>
+        <Path>..\..\..\MiniWin\miniwin_settings.c</Path>
+        <Path>..\..\..\MiniWin\miniwin_settings.h</Path>
+        <Path>..\..\..\MiniWin\miniwin_touch.c</Path>
+        <Path>..\..\..\MiniWin\miniwin_touch.h</Path>
+        <Path>..\..\..\MiniWin\miniwin_tree_container.c</Path>
+        <Path>..\..\..\MiniWin\miniwin_tree_container.h</Path>
+        <Path>..\..\..\MiniWin\miniwin_utilities.c</Path>
+        <Path>..\..\..\MiniWin\miniwin_utilities.h</Path>
+        <Category Name="bitmaps">
+          <Path>..\..\..\MiniWin\bitmaps\backspace_key.c</Path>
+          <Path>..\..\..\MiniWin\bitmaps\close_icon.c</Path>
+          <Path>..\..\..\MiniWin\bitmaps\close_icon_large.c</Path>
+          <Path>..\..\..\MiniWin\bitmaps\file_icon_large.c</Path>
+          <Path>..\..\..\MiniWin\bitmaps\file_icon_small.c</Path>
+          <Path>..\..\..\MiniWin\bitmaps\folder_close_icon_large.c</Path>
+          <Path>..\..\..\MiniWin\bitmaps\folder_close_icon_small.c</Path>
+          <Path>..\..\..\MiniWin\bitmaps\folder_icon_large.c</Path>
+          <Path>..\..\..\MiniWin\bitmaps\folder_icon_small.c</Path>
+          <Path>..\..\..\MiniWin\bitmaps\folder_open_icon_large.c</Path>
+          <Path>..\..\..\MiniWin\bitmaps\folder_open_icon_small.c</Path>
+          <Path>..\..\..\MiniWin\bitmaps\let_key.c</Path>
+          <Path>..\..\..\MiniWin\bitmaps\maximise_icon.c</Path>
+          <Path>..\..\..\MiniWin\bitmaps\maximise_icon_large.c</Path>
+          <Path>..\..\..\MiniWin\bitmaps\minimise_icon.c</Path>
+          <Path>..\..\..\MiniWin\bitmaps\minimise_icon_large.c</Path>
+          <Path>..\..\..\MiniWin\bitmaps\mw_bitmaps.h</Path>
+          <Path>..\..\..\MiniWin\bitmaps\num_key.c</Path>
+          <Path>..\..\..\MiniWin\bitmaps\resize_icon.c</Path>
+          <Path>..\..\..\MiniWin\bitmaps\resize_icon_large.c</Path>
+          <Path>..\..\..\MiniWin\bitmaps\shift_key.c</Path>
+          <Path>..\..\..\MiniWin\bitmaps\sym_key.c</Path>
+          <Path>..\..\..\MiniWin\bitmaps\tick.c</Path>
+          <Path>..\..\..\MiniWin\bitmaps\tick_large.c</Path>
+        </Category>
+        <Category Name="dialogs">
+          <Path>..\..\..\MiniWin\dialogs\dialog_colour_chooser.c</Path>
+          <Path>..\..\..\MiniWin\dialogs\dialog_colour_chooser.h</Path>
+          <Path>..\..\..\MiniWin\dialogs\dialog_common.h</Path>
+          <Path>..\..\..\MiniWin\dialogs\dialog_date_chooser.c</Path>
+          <Path>..\..\..\MiniWin\dialogs\dialog_date_chooser.h</Path>
+          <Path>..\..\..\MiniWin\dialogs\dialog_file_chooser.c</Path>
+          <Path>..\..\..\MiniWin\dialogs\dialog_file_chooser.h</Path>
+          <Path>..\..\..\MiniWin\dialogs\dialog_number_entry.c</Path>
+          <Path>..\..\..\MiniWin\dialogs\dialog_number_entry.h</Path>
+          <Path>..\..\..\MiniWin\dialogs\dialog_one_button.c</Path>
+          <Path>..\..\..\MiniWin\dialogs\dialog_one_button.h</Path>
+          <Path>..\..\..\MiniWin\dialogs\dialog_text_entry.c</Path>
+          <Path>..\..\..\MiniWin\dialogs\dialog_text_entry.h</Path>
+          <Path>..\..\..\MiniWin\dialogs\dialog_time_chooser.c</Path>
+          <Path>..\..\..\MiniWin\dialogs\dialog_time_chooser.h</Path>
+          <Path>..\..\..\MiniWin\dialogs\dialog_two_button.c</Path>
+          <Path>..\..\..\MiniWin\dialogs\dialog_two_button.h</Path>
+        </Category>
+        <Category Name="docs">
+          <Path>..\..\..\MiniWin\docs\MiniWin.docx</Path>
+          <Path>..\..\..\MiniWin\docs\MiniWin.pdf</Path>
+          <Path>..\..\..\MiniWin\docs\Project test.xls</Path>
+        </Category>
+        <Category Name="gl">
+          <Path>..\..\..\MiniWin\gl\gl.c</Path>
+          <Path>..\..\..\MiniWin\gl\gl.h</Path>
+          <Category Name="fonts">
+            <Category Name="bitmapped">
+              <Path>..\..\..\MiniWin\gl\fonts\bitmapped\font12.c</Path>
+              <Path>..\..\..\MiniWin\gl\fonts\bitmapped\font16.c</Path>
+              <Path>..\..\..\MiniWin\gl\fonts\bitmapped\font20.c</Path>
+              <Path>..\..\..\MiniWin\gl\fonts\bitmapped\font24.c</Path>
+              <Path>..\..\..\MiniWin\gl\fonts\bitmapped\font9.c</Path>
+              <Path>..\..\..\MiniWin\gl\fonts\bitmapped\fonts.h</Path>
+              <Path>..\..\..\MiniWin\gl\fonts\bitmapped\gl_title_font.c</Path>
+              <Path>..\..\..\MiniWin\gl\fonts\bitmapped\gl_title_font.h</Path>
+            </Category>
+            <Category Name="truetype">
+              <Path>..\..\..\MiniWin\gl\fonts\truetype\BLKCHCRY16.c</Path>
+              <Path>..\..\..\MiniWin\gl\fonts\truetype\BLKCHCRY16bw.c</Path>
+              <Path>..\..\..\MiniWin\gl\fonts\truetype\dejavu_sans_12.c</Path>
+              <Category Name="mcufont">
+                <Path>..\..\..\MiniWin\gl\fonts\truetype\mcufont\mcufont.h</Path>
+                <Path>..\..\..\MiniWin\gl\fonts\truetype\mcufont\mf_bwfont.c</Path>
+                <Path>..\..\..\MiniWin\gl\fonts\truetype\mcufont\mf_bwfont.h</Path>
+                <Path>..\..\..\MiniWin\gl\fonts\truetype\mcufont\mf_config.h</Path>
+                <Path>..\..\..\MiniWin\gl\fonts\truetype\mcufont\mf_encoding.c</Path>
+                <Path>..\..\..\MiniWin\gl\fonts\truetype\mcufont\mf_encoding.h</Path>
+                <Path>..\..\..\MiniWin\gl\fonts\truetype\mcufont\mf_font.c</Path>
+                <Path>..\..\..\MiniWin\gl\fonts\truetype\mcufont\mf_font.h</Path>
+                <Path>..\..\..\MiniWin\gl\fonts\truetype\mcufont\mf_justify.c</Path>
+                <Path>..\..\..\MiniWin\gl\fonts\truetype\mcufont\mf_justify.h</Path>
+                <Path>..\..\..\MiniWin\gl\fonts\truetype\mcufont\mf_kerning.c</Path>
+                <Path>..\..\..\MiniWin\gl\fonts\truetype\mcufont\mf_kerning.h</Path>
+                <Path>..\..\..\MiniWin\gl\fonts\truetype\mcufont\mf_rlefont.c</Path>
+                <Path>..\..\..\MiniWin\gl\fonts\truetype\mcufont\mf_rlefont.h</Path>
+                <Path>..\..\..\MiniWin\gl\fonts\truetype\mcufont\mf_scaledfont.c</Path>
+                <Path>..\..\..\MiniWin\gl\fonts\truetype\mcufont\mf_scaledfont.h</Path>
+                <Path>..\..\..\MiniWin\gl\fonts\truetype\mcufont\mf_wordwrap.c</Path>
+                <Path>..\..\..\MiniWin\gl\fonts\truetype\mcufont\mf_wordwrap.h</Path>
+              </Category>
+            </Category>
+          </Category>
+        </Category>
+        <Category Name="hal">
+          <Path>..\..\..\MiniWin\hal\hal_delay.h</Path>
+          <Path>..\..\..\MiniWin\hal\hal_init.c</Path>
+          <Path>..\..\..\MiniWin\hal\hal_init.h</Path>
+          <Path>..\..\..\MiniWin\hal\hal_lcd.h</Path>
+          <Path>..\..\..\MiniWin\hal\hal_non_vol.h</Path>
+          <Path>..\..\..\MiniWin\hal\hal_timer.h</Path>
+          <Path>..\..\..\MiniWin\hal\hal_touch.h</Path>
+          <Category Name="ATSAM3X8E">
+            <Path>..\..\..\MiniWin\hal\ATSAM3X8E\hal_delay.c</Path>
+            <Path>..\..\..\MiniWin\hal\ATSAM3X8E\hal_lcd.c</Path>
+            <Path>..\..\..\MiniWin\hal\ATSAM3X8E\hal_non_vol.c</Path>
+            <Path>..\..\..\MiniWin\hal\ATSAM3X8E\hal_timer.c</Path>
+            <Path>..\..\..\MiniWin\hal\ATSAM3X8E\hal_touch.c</Path>
+          </Category>
+          <Category Name="Arduino_DevKitC">
+            <Path>..\..\..\MiniWin\hal\Arduino_DevKitC\hal_delay.c</Path>
+            <Path>..\..\..\MiniWin\hal\Arduino_DevKitC\hal_lcd.c</Path>
+            <Path>..\..\..\MiniWin\hal\Arduino_DevKitC\hal_non_vol.c</Path>
+            <Path>..\..\..\MiniWin\hal\Arduino_DevKitC\hal_timer.c</Path>
+            <Path>..\..\..\MiniWin\hal\Arduino_DevKitC\hal_touch.c</Path>
+          </Category>
+          <Category Name="DevKitC">
+            <Path>..\..\..\MiniWin\hal\DevKitC\hal_delay.c</Path>
+            <Path>..\..\..\MiniWin\hal\DevKitC\hal_lcd.c</Path>
+            <Path>..\..\..\MiniWin\hal\DevKitC\hal_non_vol.c</Path>
+            <Path>..\..\..\MiniWin\hal\DevKitC\hal_timer.c</Path>
+            <Path>..\..\..\MiniWin\hal\DevKitC\hal_touch.c</Path>
+          </Category>
+          <Category Name="PIC32MX470F512H">
+            <Path>..\..\..\MiniWin\hal\PIC32MX470F512H\hal_delay.c</Path>
+            <Path>..\..\..\MiniWin\hal\PIC32MX470F512H\hal_lcd.c</Path>
+            <Path>..\..\..\MiniWin\hal\PIC32MX470F512H\hal_non_vol.c</Path>
+            <Path>..\..\..\MiniWin\hal\PIC32MX470F512H\hal_timer.c</Path>
+            <Path>..\..\..\MiniWin\hal\PIC32MX470F512H\hal_touch.c</Path>
+          </Category>
+          <Category Name="PIC32MZ2048EFM100">
+            <Path>..\..\..\MiniWin\hal\PIC32MZ2048EFM100\hal_delay.c</Path>
+            <Path>..\..\..\MiniWin\hal\PIC32MZ2048EFM100\hal_lcd.c</Path>
+            <Path>..\..\..\MiniWin\hal\PIC32MZ2048EFM100\hal_non_vol.c</Path>
+            <Path>..\..\..\MiniWin\hal\PIC32MZ2048EFM100\hal_timer.c</Path>
+            <Path>..\..\..\MiniWin\hal\PIC32MZ2048EFM100\hal_touch.c</Path>
+          </Category>
+          <Category Name="RaspberryPiPico">
+            <Path>..\..\..\MiniWin\hal\RaspberryPiPico\hal_delay.c</Path>
+            <Path>..\..\..\MiniWin\hal\RaspberryPiPico\hal_lcd.c</Path>
+            <Path>..\..\..\MiniWin\hal\RaspberryPiPico\hal_non_vol.c</Path>
+            <Path>..\..\..\MiniWin\hal\RaspberryPiPico\hal_timer.c</Path>
+            <Path>..\..\..\MiniWin\hal\RaspberryPiPico\hal_touch.c</Path>
+          </Category>
+          <Category Name="RaspberryPiZeroW">
+            <Path>..\..\..\MiniWin\hal\RaspberryPiZeroW\bcm2835.c</Path>
+            <Path>..\..\..\MiniWin\hal\RaspberryPiZeroW\bcm2835.h</Path>
+            <Path>..\..\..\MiniWin\hal\RaspberryPiZeroW\hal_delay.c</Path>
+            <Path>..\..\..\MiniWin\hal\RaspberryPiZeroW\hal_lcd.c</Path>
+            <Path>..\..\..\MiniWin\hal\RaspberryPiZeroW\hal_non_vol.c</Path>
+            <Path>..\..\..\MiniWin\hal\RaspberryPiZeroW\hal_timer.c</Path>
+            <Path>..\..\..\MiniWin\hal\RaspberryPiZeroW\hal_touch.c</Path>
+          </Category>
+          <Category Name="S5D9">
+            <Path>..\..\..\MiniWin\hal\S5D9\hal_delay.c</Path>
+            <Path>..\..\..\MiniWin\hal\S5D9\hal_lcd.c</Path>
+            <Path>..\..\..\MiniWin\hal\S5D9\hal_non_vol.c</Path>
+            <Path>..\..\..\MiniWin\hal\S5D9\hal_timer.c</Path>
+            <Path>..\..\..\MiniWin\hal\S5D9\hal_touch.c</Path>
+          </Category>
+          <Category Name="linux">
+            <Path>..\..\..\MiniWin\hal\linux\hal_delay.c</Path>
+            <Path>..\..\..\MiniWin\hal\linux\hal_lcd.c</Path>
+            <Path>..\..\..\MiniWin\hal\linux\hal_non_vol.c</Path>
+            <Path>..\..\..\MiniWin\hal\linux\hal_timer.c</Path>
+            <Path>..\..\..\MiniWin\hal\linux\hal_touch.c</Path>
+          </Category>
+          <Category Name="lpc54628">
+            <Path>..\..\..\MiniWin\hal\lpc54628\hal_delay.c</Path>
+            <Path>..\..\..\MiniWin\hal\lpc54628\hal_lcd.c</Path>
+            <Path>..\..\..\MiniWin\hal\lpc54628\hal_non_vol.c</Path>
+            <Path>..\..\..\MiniWin\hal\lpc54628\hal_timer.c</Path>
+            <Path>..\..\..\MiniWin\hal\lpc54628\hal_touch.c</Path>
+          </Category>
+          <Category Name="rx65n">
+            <Path>..\..\..\MiniWin\hal\rx65n\hal_delay.c</Path>
+            <Path>..\..\..\MiniWin\hal\rx65n\hal_lcd.c</Path>
+            <Path>..\..\..\MiniWin\hal\rx65n\hal_non_vol.c</Path>
+            <Path>..\..\..\MiniWin\hal\rx65n\hal_timer.c</Path>
+            <Path>..\..\..\MiniWin\hal\rx65n\hal_touch.c</Path>
+          </Category>
+          <Category Name="rx65n_gcc">
+            <Path>..\..\..\MiniWin\hal\rx65n_gcc\hal_delay.c</Path>
+            <Path>..\..\..\MiniWin\hal\rx65n_gcc\hal_lcd.c</Path>
+            <Path>..\..\..\MiniWin\hal\rx65n_gcc\hal_non_vol.c</Path>
+            <Path>..\..\..\MiniWin\hal\rx65n_gcc\hal_timer.c</Path>
+            <Path>..\..\..\MiniWin\hal\rx65n_gcc\hal_touch.c</Path>
+          </Category>
+          <Category Name="stm32f407">
+            <Path>..\..\..\MiniWin\hal\stm32f407\hal_delay.c</Path>
+            <Path>..\..\..\MiniWin\hal\stm32f407\hal_lcd.c</Path>
+            <Path>..\..\..\MiniWin\hal\stm32f407\hal_non_vol.c</Path>
+            <Path>..\..\..\MiniWin\hal\stm32f407\hal_timer.c</Path>
+            <Path>..\..\..\MiniWin\hal\stm32f407\hal_touch.c</Path>
+          </Category>
+          <Category Name="stm32f429">
+            <Path>..\..\..\MiniWin\hal\stm32f429\hal_delay.c</Path>
+            <Path>..\..\..\MiniWin\hal\stm32f429\hal_lcd.c</Path>
+            <Path>..\..\..\MiniWin\hal\stm32f429\hal_non_vol.c</Path>
+            <Path>..\..\..\MiniWin\hal\stm32f429\hal_timer.c</Path>
+            <Path>..\..\..\MiniWin\hal\stm32f429\hal_touch.c</Path>
+          </Category>
+          <Category Name="windows">
+            <Path>..\..\..\MiniWin\hal\windows\hal_delay.c</Path>
+            <Path>..\..\..\MiniWin\hal\windows\hal_lcd.c</Path>
+            <Path>..\..\..\MiniWin\hal\windows\hal_non_vol.c</Path>
+            <Path>..\..\..\MiniWin\hal\windows\hal_timer.c</Path>
+            <Path>..\..\..\MiniWin\hal\windows\hal_touch.c</Path>
+          </Category>
+        </Category>
+        <Category Name="ui">
+          <Path>..\..\..\MiniWin\ui\ui_arrow.c</Path>
+          <Path>..\..\..\MiniWin\ui\ui_arrow.h</Path>
+          <Path>..\..\..\MiniWin\ui\ui_button.c</Path>
+          <Path>..\..\..\MiniWin\ui\ui_button.h</Path>
+          <Path>..\..\..\MiniWin\ui\ui_check_box.c</Path>
+          <Path>..\..\..\MiniWin\ui\ui_check_box.h</Path>
+          <Path>..\..\..\MiniWin\ui\ui_common.c</Path>
+          <Path>..\..\..\MiniWin\ui\ui_common.h</Path>
+          <Path>..\..\..\MiniWin\ui\ui_keyboard.c</Path>
+          <Path>..\..\..\MiniWin\ui\ui_keyboard.h</Path>
+          <Path>..\..\..\MiniWin\ui\ui_keypad.c</Path>
+          <Path>..\..\..\MiniWin\ui\ui_keypad.h</Path>
+          <Path>..\..\..\MiniWin\ui\ui_label.c</Path>
+          <Path>..\..\..\MiniWin\ui\ui_label.h</Path>
+          <Path>..\..\..\MiniWin\ui\ui_list_box.c</Path>
+          <Path>..\..\..\MiniWin\ui\ui_list_box.h</Path>
+          <Path>..\..\..\MiniWin\ui\ui_progress_bar.c</Path>
+          <Path>..\..\..\MiniWin\ui\ui_progress_bar.h</Path>
+          <Path>..\..\..\MiniWin\ui\ui_radio_button.c</Path>
+          <Path>..\..\..\MiniWin\ui\ui_radio_button.h</Path>
+          <Path>..\..\..\MiniWin\ui\ui_scroll_bar_horiz.c</Path>
+          <Path>..\..\..\MiniWin\ui\ui_scroll_bar_horiz.h</Path>
+          <Path>..\..\..\MiniWin\ui\ui_scroll_bar_vert.c</Path>
+          <Path>..\..\..\MiniWin\ui\ui_scroll_bar_vert.h</Path>
+          <Path>..\..\..\MiniWin\ui\ui_tabs.c</Path>
+          <Path>..\..\..\MiniWin\ui\ui_tabs.h</Path>
+          <Path>..\..\..\MiniWin\ui\ui_text_box.c</Path>
+          <Path>..\..\..\MiniWin\ui\ui_text_box.h</Path>
+          <Path>..\..\..\MiniWin\ui\ui_tree.c</Path>
+          <Path>..\..\..\MiniWin\ui\ui_tree.h</Path>
+        </Category>
+      </Category>
+      <Category Name="MiniWinCamera_Common">
+        <Path>..\..\..\MiniWinCamera_Common\camlib.h</Path>
+        <Path>..\..\..\MiniWinCamera_Common\main.c</Path>
+        <Path>..\..\..\MiniWinCamera_Common\main.h</Path>
+        <Path>..\..\..\MiniWinCamera_Common\miniwin_config.h</Path>
+        <Path>..\..\..\MiniWinCamera_Common\miniwin_user.c</Path>
+        <Path>..\..\..\MiniWinCamera_Common\miniwin_user.h</Path>
+        <Path>..\..\..\MiniWinCamera_Common\window_camera.c</Path>
+        <Path>..\..\..\MiniWinCamera_Common\window_camera.h</Path>
+      </Category>
+      <Category Name="src">
+        <Path>src\app.c</Path>
+        <Path>src\app.h</Path>
+        <Path>src\camlib.c</Path>
+        <Path>src\iodefine.h</Path>
+        <Category Name="smc_gen">
+          <Category Name="general">
+            <Path>src\smc_gen\general\r_cg_hardware_setup.c</Path>
+            <Path>src\smc_gen\general\r_cg_macrodriver.h</Path>
+            <Path>src\smc_gen\general\r_cg_userdefine.h</Path>
+            <Path>src\smc_gen\general\r_smc_cgc.c</Path>
+            <Path>src\smc_gen\general\r_smc_cgc.h</Path>
+            <Path>src\smc_gen\general\r_smc_cgc_user.c</Path>
+            <Path>src\smc_gen\general\r_smc_entry.h</Path>
+            <Path>src\smc_gen\general\r_smc_interrupt.c</Path>
+            <Path>src\smc_gen\general\r_smc_interrupt.h</Path>
+          </Category>
+          <Category Name="r_bsp">
+            <Path>src\smc_gen\r_bsp\platform.h</Path>
+            <Path>src\smc_gen\r_bsp\readme.txt</Path>
+            <Category Name="board">
+              <Category Name="generic_rx65n">
+                <Path>src\smc_gen\r_bsp\board\generic_rx65n\dbsct.c</Path>
+                <Path>src\smc_gen\r_bsp\board\generic_rx65n\hwsetup.c</Path>
+                <Path>src\smc_gen\r_bsp\board\generic_rx65n\hwsetup.h</Path>
+                <Path>src\smc_gen\r_bsp\board\generic_rx65n\lowlvl.c</Path>
+                <Path>src\smc_gen\r_bsp\board\generic_rx65n\lowsrc.c</Path>
+                <Path>src\smc_gen\r_bsp\board\generic_rx65n\lowsrc.h</Path>
+                <Path>src\smc_gen\r_bsp\board\generic_rx65n\r_bsp.h</Path>
+                <Path>src\smc_gen\r_bsp\board\generic_rx65n\r_bsp_config_reference.h</Path>
+                <Path>src\smc_gen\r_bsp\board\generic_rx65n\r_bsp_interrupt_config_reference.h</Path>
+                <Path>src\smc_gen\r_bsp\board\generic_rx65n\resetprg.c</Path>
+                <Path>src\smc_gen\r_bsp\board\generic_rx65n\sbrk.c</Path>
+                <Path>src\smc_gen\r_bsp\board\generic_rx65n\vecttbl.c</Path>
+                <Path>src\smc_gen\r_bsp\board\generic_rx65n\vecttbl.h</Path>
+              </Category>
+              <Category Name="user">
+                <Path>src\smc_gen\r_bsp\board\user\r_bsp.h</Path>
+              </Category>
+            </Category>
+            <Category Name="doc">
+              <Category Name="en">
+                <Path>src\smc_gen\r_bsp\doc\en\r01an1685ej0391-rx.pdf</Path>
+              </Category>
+              <Category Name="ja">
+                <Path>src\smc_gen\r_bsp\doc\ja\r01an1685jj0391-rx.pdf</Path>
+              </Category>
+            </Category>
+            <Category Name="mcu">
+              <Category Name="all">
+                <Path>src\smc_gen\r_bsp\mcu\all\r_bsp_common.c</Path>
+                <Path>src\smc_gen\r_bsp\mcu\all\r_bsp_common.h</Path>
+                <Path>src\smc_gen\r_bsp\mcu\all\r_typedefs.h</Path>
+              </Category>
+              <Category Name="rx65n">
+                <Path>src\smc_gen\r_bsp\mcu\rx65n\cpu.c</Path>
+                <Path>src\smc_gen\r_bsp\mcu\rx65n\cpu.h</Path>
+                <Path>src\smc_gen\r_bsp\mcu\rx65n\locking.c</Path>
+                <Path>src\smc_gen\r_bsp\mcu\rx65n\locking.h</Path>
+                <Path>src\smc_gen\r_bsp\mcu\rx65n\mcu_clocks.c</Path>
+                <Path>src\smc_gen\r_bsp\mcu\rx65n\mcu_info.h</Path>
+                <Path>src\smc_gen\r_bsp\mcu\rx65n\mcu_init.c</Path>
+                <Path>src\smc_gen\r_bsp\mcu\rx65n\mcu_init.h</Path>
+                <Path>src\smc_gen\r_bsp\mcu\rx65n\mcu_interrupts.c</Path>
+                <Path>src\smc_gen\r_bsp\mcu\rx65n\mcu_interrupts.h</Path>
+                <Path>src\smc_gen\r_bsp\mcu\rx65n\mcu_locks.c</Path>
+                <Path>src\smc_gen\r_bsp\mcu\rx65n\mcu_locks.h</Path>
+                <Path>src\smc_gen\r_bsp\mcu\rx65n\mcu_mapped_interrupts.c</Path>
+                <Path>src\smc_gen\r_bsp\mcu\rx65n\mcu_mapped_interrupts.h</Path>
+                <Path>src\smc_gen\r_bsp\mcu\rx65n\mcu_mapped_interrupts_private.h</Path>
+                <Path>src\smc_gen\r_bsp\mcu\rx65n\mcu_startup.c</Path>
+                <Path>src\smc_gen\r_bsp\mcu\rx65n\mcu_startup.h</Path>
+                <Category Name="register_access">
+                  <Path>src\smc_gen\r_bsp\mcu\rx65n\register_access\iodefine.h</Path>
+                </Category>
+              </Category>
+            </Category>
+          </Category>
+          <Category Name="r_cmt_rx">
+            <Path>src\smc_gen\r_cmt_rx\r_cmt_rx_if.h</Path>
+            <Path>src\smc_gen\r_cmt_rx\readme.txt</Path>
+            <Category Name="doc">
+              <Category Name="en">
+                <Path>src\smc_gen\r_cmt_rx\doc\en\r01an1856ej0331-rx.pdf</Path>
+              </Category>
+              <Category Name="ja">
+                <Path>src\smc_gen\r_cmt_rx\doc\ja\r01an1856jj0331-rx.pdf</Path>
+              </Category>
+            </Category>
+            <Category Name="ref">
+              <Path>src\smc_gen\r_cmt_rx\ref\r_cmt_rx_config_reference.h</Path>
+            </Category>
+            <Category Name="src">
+              <Path>src\smc_gen\r_cmt_rx\src\r_cmt_rx.c</Path>
+            </Category>
+          </Category>
+          <Category Name="r_config">
+            <Path>src\smc_gen\r_config\r_bsp_config.h</Path>
+            <Path>src\smc_gen\r_config\r_bsp_config_readme.txt</Path>
+            <Path>src\smc_gen\r_config\r_bsp_interrupt_config.h</Path>
+            <Path>src\smc_gen\r_config\r_cmt_rx_config.h</Path>
+            <Path>src\smc_gen\r_config\r_flash_rx_config.h</Path>
+            <Path>src\smc_gen\r_config\r_glcdc_rx_config.h</Path>
+            <Path>src\smc_gen\r_config\r_gpio_rx_config.h</Path>
+            <Path>src\smc_gen\r_config\r_sci_iic_rx_config.h</Path>
+            <Path>src\smc_gen\r_config\r_sci_iic_rx_pin_config.h</Path>
+          </Category>
+          <Category Name="r_flash_rx">
+            <Path>src\smc_gen\r_flash_rx\r_flash_rx_if.h</Path>
+            <Path>src\smc_gen\r_flash_rx\readme.txt</Path>
+            <Category Name="doc">
+              <Category Name="en">
+                <Path>src\smc_gen\r_flash_rx\doc\en\r01an2184eu0341-rx.pdf</Path>
+              </Category>
+              <Category Name="ja">
+                <Path>src\smc_gen\r_flash_rx\doc\ja\r01an2184ju0341-rx.pdf</Path>
+              </Category>
+            </Category>
+            <Category Name="ref">
+              <Path>src\smc_gen\r_flash_rx\ref\r_flash_rx_config_reference.h</Path>
+            </Category>
+            <Category Name="src">
+              <Path>src\smc_gen\r_flash_rx\src\r_flash_fcu.c</Path>
+              <Path>src\smc_gen\r_flash_rx\src\r_flash_fcu.h</Path>
+              <Path>src\smc_gen\r_flash_rx\src\r_flash_group.c</Path>
+              <Path>src\smc_gen\r_flash_rx\src\r_flash_group.h</Path>
+              <Path>src\smc_gen\r_flash_rx\src\r_flash_rx.c</Path>
+              <Path>src\smc_gen\r_flash_rx\src\r_flash_rx.h</Path>
+              <Path>src\smc_gen\r_flash_rx\src\r_flash_targets.h</Path>
+              <Category Name="flash_type_1">
+                <Path>src\smc_gen\r_flash_rx\src\flash_type_1\r_codeflash.c</Path>
+                <Path>src\smc_gen\r_flash_rx\src\flash_type_1\r_codeflash.h</Path>
+                <Path>src\smc_gen\r_flash_rx\src\flash_type_1\r_codeflash_extra.c</Path>
+                <Path>src\smc_gen\r_flash_rx\src\flash_type_1\r_codeflash_extra.h</Path>
+                <Path>src\smc_gen\r_flash_rx\src\flash_type_1\r_dataflash.c</Path>
+                <Path>src\smc_gen\r_flash_rx\src\flash_type_1\r_dataflash.h</Path>
+                <Path>src\smc_gen\r_flash_rx\src\flash_type_1\r_flash_common.h</Path>
+                <Path>src\smc_gen\r_flash_rx\src\flash_type_1\r_flash_type1.c</Path>
+                <Path>src\smc_gen\r_flash_rx\src\flash_type_1\r_flash_type1_if.h</Path>
+                <Path>src\smc_gen\r_flash_rx\src\flash_type_1\r_flash_utils.c</Path>
+              </Category>
+              <Category Name="flash_type_2">
+                <Path>src\smc_gen\r_flash_rx\src\flash_type_2\r_flash_type2.c</Path>
+                <Path>src\smc_gen\r_flash_rx\src\flash_type_2\r_flash_type2_if.h</Path>
+              </Category>
+              <Category Name="flash_type_3">
+                <Path>src\smc_gen\r_flash_rx\src\flash_type_3\r_flash_type3.c</Path>
+                <Path>src\smc_gen\r_flash_rx\src\flash_type_3\r_flash_type3_if.h</Path>
+              </Category>
+              <Category Name="flash_type_4">
+                <Path>src\smc_gen\r_flash_rx\src\flash_type_4\r_flash_type4.c</Path>
+                <Path>src\smc_gen\r_flash_rx\src\flash_type_4\r_flash_type4_if.h</Path>
+              </Category>
+              <Category Name="targets">
+                <Category Name="rx65n">
+                  <Path>src\smc_gen\r_flash_rx\src\targets\rx65n\r_flash_rx65n.h</Path>
+                  <Path>src\smc_gen\r_flash_rx\src\targets\rx65n\r_mcu_config_reference.h</Path>
+                </Category>
+                <Category Name="rx72t">
+                  <Path>src\smc_gen\r_flash_rx\src\targets\rx72t\r_flash_rx72t.h</Path>
+                  <Path>src\smc_gen\r_flash_rx\src\targets\rx72t\r_mcu_config_reference.h</Path>
+                </Category>
+              </Category>
+            </Category>
+          </Category>
+          <Category Name="r_glcdc_rx">
+            <Path>src\smc_gen\r_glcdc_rx\r_glcdc_rx_if.h</Path>
+            <Path>src\smc_gen\r_glcdc_rx\readme.txt</Path>
+            <Category Name="doc">
+              <Category Name="en">
+                <Path>src\smc_gen\r_glcdc_rx\doc\en\r01an3609ej0100-rx.pdf</Path>
+              </Category>
+              <Category Name="ja">
+                <Path>src\smc_gen\r_glcdc_rx\doc\ja\r01an3609jj0100-rx.pdf</Path>
+              </Category>
+            </Category>
+            <Category Name="ref">
+              <Path>src\smc_gen\r_glcdc_rx\ref\r_glcdc_rx_config_reference.h</Path>
+            </Category>
+            <Category Name="src">
+              <Path>src\smc_gen\r_glcdc_rx\src\r_glcdc_private.c</Path>
+              <Path>src\smc_gen\r_glcdc_rx\src\r_glcdc_private.h</Path>
+              <Path>src\smc_gen\r_glcdc_rx\src\r_glcdc_rx.c</Path>
+              <Category Name="targets">
+                <Category Name="rx65n">
+                  <Path>src\smc_gen\r_glcdc_rx\src\targets\rx65n\r_glcdc_rx65n.c</Path>
+                </Category>
+              </Category>
+            </Category>
+          </Category>
+          <Category Name="r_gpio_rx">
+            <Path>src\smc_gen\r_gpio_rx\r_gpio_rx_if.h</Path>
+            <Path>src\smc_gen\r_gpio_rx\readme.txt</Path>
+            <Category Name="doc">
+              <Category Name="en">
+                <Path>src\smc_gen\r_gpio_rx\doc\en\r01an1721ej0241-rx.pdf</Path>
+              </Category>
+              <Category Name="ja">
+                <Path>src\smc_gen\r_gpio_rx\doc\ja\r01an1721jj0241-rx.pdf</Path>
+              </Category>
+            </Category>
+            <Category Name="ref">
+              <Path>src\smc_gen\r_gpio_rx\ref\r_gpio_rx_config_reference.h</Path>
+            </Category>
+            <Category Name="src">
+              <Path>src\smc_gen\r_gpio_rx\src\r_gpio_rx.c</Path>
+              <Category Name="targets">
+                <Category Name="rx65n">
+                  <Path>src\smc_gen\r_gpio_rx\src\targets\rx65n\r_gpio_rx65n.c</Path>
+                  <Path>src\smc_gen\r_gpio_rx\src\targets\rx65n\r_gpio_rx65n.h</Path>
+                </Category>
+              </Category>
+            </Category>
+          </Category>
+          <Category Name="r_pincfg">
+            <Path>src\smc_gen\r_pincfg\Pin.c</Path>
+            <Path>src\smc_gen\r_pincfg\Pin.h</Path>
+            <Path>src\smc_gen\r_pincfg\r_glcdc_rx_pinset.c</Path>
+            <Path>src\smc_gen\r_pincfg\r_glcdc_rx_pinset.h</Path>
+            <Path>src\smc_gen\r_pincfg\r_pinset.h</Path>
+          </Category>
+          <Category Name="r_sci_iic_rx">
+            <Path>src\smc_gen\r_sci_iic_rx\r_sci_iic_rx_if.h</Path>
+            <Path>src\smc_gen\r_sci_iic_rx\readme.txt</Path>
+            <Category Name="doc">
+              <Category Name="en">
+                <Path>src\smc_gen\r_sci_iic_rx\doc\en\r01an1691ej0231-rx.pdf</Path>
+              </Category>
+              <Category Name="ja">
+                <Path>src\smc_gen\r_sci_iic_rx\doc\ja\r01an1691jj0231-rx.pdf</Path>
+              </Category>
+            </Category>
+            <Category Name="ref">
+              <Path>src\smc_gen\r_sci_iic_rx\ref\r_sci_iic_rx_config_reference.h</Path>
+              <Path>src\smc_gen\r_sci_iic_rx\ref\r_sci_iic_rx_pin_config_reference.h</Path>
+            </Category>
+            <Category Name="src">
+              <Path>src\smc_gen\r_sci_iic_rx\src\r_sci_iic_rx.c</Path>
+              <Path>src\smc_gen\r_sci_iic_rx\src\r_sci_iic_rx_platform.h</Path>
+              <Path>src\smc_gen\r_sci_iic_rx\src\r_sci_iic_rx_private.h</Path>
+              <Category Name="targets">
+                <Category Name="rx65n">
+                  <Path>src\smc_gen\r_sci_iic_rx\src\targets\rx65n\r_sci_iic_rx65n.c</Path>
+                  <Path>src\smc_gen\r_sci_iic_rx\src\targets\rx65n\r_sci_iic_rx65n_private.h</Path>
+                </Category>
+              </Category>
+            </Category>
+          </Category>
+        </Category>
+      </Category>
+    </Files>
+    <Device Category="com.renesas.cdt.managedbuild.renesas.ccrx.common.option.cpu.rx600" Series="RX">R5F565NEDxFB_DUAL</Device>
+    <BuildOptions Name="CC-RX" Version="v3.07.00">
+      <BuildMode Active="True" Name="HardwareDebug">
+        <GeneralOptions/>
+        <CompileOptions>
+          <Option>-isa=rxv2</Option>
+          <Option>-fpu</Option>
+          <Option>-include="C:\Users\john\Desktop\workspace\miniwinwm\MiniWin"</Option>
+          <Option>-include="${ProjDirPath}\..\MiniWinCamera_RX65N\src"</Option>
+          <Option>-include="C:\Users\john\Desktop\workspace\miniwinwm\MiniWinCamera_Common"</Option>
+          <Option>-include="C:\Users\john\Desktop\workspace\miniwinwm\MiniWin\gl\fonts\truetype\mcufont"</Option>
+          <Option>-include="${ProjDirPath}\..\MiniWinCamera_RX65N\src\smc_gen\general"</Option>
+          <Option>-include="${ProjDirPath}\..\MiniWinCamera_RX65N\src\smc_gen\r_bsp"</Option>
+          <Option>-include="${ProjDirPath}\..\MiniWinCamera_RX65N\src\smc_gen\r_cmt_rx"</Option>
+          <Option>-include="${ProjDirPath}\..\MiniWinCamera_RX65N\src\smc_gen\r_config"</Option>
+          <Option>-include="${ProjDirPath}\..\MiniWinCamera_RX65N\src\smc_gen\r_flash_rx"</Option>
+          <Option>-include="${ProjDirPath}\..\MiniWinCamera_RX65N\src\smc_gen\r_flash_rx\src"</Option>
+          <Option>-include="${ProjDirPath}\..\MiniWinCamera_RX65N\src\smc_gen\r_flash_rx\src\flash_type_4"</Option>
+          <Option>-include="${ProjDirPath}\..\MiniWinCamera_RX65N\src\smc_gen\r_glcdc_rx"</Option>
+          <Option>-include="${ProjDirPath}\..\MiniWinCamera_RX65N\src\smc_gen\r_gpio_rx"</Option>
+          <Option>-include="${ProjDirPath}\..\MiniWinCamera_RX65N\src\smc_gen\r_pincfg"</Option>
+          <Option>-include="${ProjDirPath}\..\MiniWinCamera_RX65N\src\smc_gen\r_sci_iic_rx"</Option>
+          <Option>-include="${ProjDirPath}\..\MiniWinCamera_RX65N\src\smc_gen\r_sci_iic_rx\src"</Option>
+          <Option>-define=RX65N</Option>
+          <Option>-utf8</Option>
+          <Option>-nomessage</Option>
+          <Option>-debug</Option>
+          <Option>-outcode=utf8</Option>
+          <Option>-nologo</Option>
+          <Option>-lang=c99</Option>
+          <Option>-lang=cpp</Option>
+          <Option>-output=obj=${CONFIGDIR}\${FILELEAF}.obj</Option>
+          <Option>-obj_path=${CONFIGDIR}</Option>
+        </CompileOptions>
+        <AssembleOptions>
+          <Option>-isa=rxv2</Option>
+          <Option>-fpu</Option>
+          <Option>-utf8</Option>
+          <Option>-debug</Option>
+          <Option>-nologo</Option>
+          <Option>-output=${CONFIGDIR}</Option>
+        </AssembleOptions>
+        <LinkOptions>
+          <Option>-output="${ProjName}.abs"</Option>
+          <Option>-form=absolute</Option>
+          <Option>-nomessage</Option>
+          <Option>-list</Option>
+          <Option>-nooptimize</Option>
+          <Option>-start=SU,SI,B_1,R_1,B_2,R_2,B,R\04,C_1,C_2,C,C$*,D*,W*,L,P\0FFF00000,EXCEPTVECT\0FFFFFF80,RESETVECT\0FFFFFFFC</Option>
+          <Option>-rom=D=R,D_1=R_1,D_2=R_2</Option>
+          <Option>-cpu=RAM=00000000-0003ffff,FIX=00080000-00083fff,FIX=00086000-00087fff,FIX=00088000-0009ffff,FIX=000a0000-000a3fff,RAM=000a4000-000a5fff,FIX=000a6000-000bffff,FIX=000c0000-000dffff,FIX=000e0000-000fffff,ROM=00100000-00107fff,FIX=007fc000-007fcfff,FIX=007fe000-007fffff,RAM=00800000-0085ffff,RAM=fe7f5d00-fe7f5d7f,RAM=fe7f7d70-fe7f7d9f,ROM=ffe00000-ffffffff</Option>
+          <Option>-nologo</Option>
+          <Option>-start=SU,SI,B_1,R_1,B_2,R_2,B,R/04,C_1,C_2,C,C$*,D*,W*,L,P/0FFF00000,EXCEPTVECT/0FFFFFF80,RESETVECT/0FFFFFFFC</Option>
+          <PreLinker>Auto</PreLinker>
+        </LinkOptions>
+        <LibraryGenerateOptions>
+          <Option>-isa=rxv2</Option>
+          <Option>-fpu</Option>
+          <Option>-lang=c99</Option>
+          <Option>-head=runtime,mathf,stdio,stdlib,string,new</Option>
+          <Option>-output="${ProjName}.lib"</Option>
+          <Option>-nologo</Option>
+          <GenerateMode>BuildOptionChanged</GenerateMode>
+        </LibraryGenerateOptions>
+        <LinkOrder>
+          <Path>HardwareDebug\backspace_key.obj</Path>
+          <Path>HardwareDebug\close_icon.obj</Path>
+          <Path>HardwareDebug\close_icon_large.obj</Path>
+          <Path>HardwareDebug\file_icon_large.obj</Path>
+          <Path>HardwareDebug\file_icon_small.obj</Path>
+          <Path>HardwareDebug\folder_close_icon_large.obj</Path>
+          <Path>HardwareDebug\folder_close_icon_small.obj</Path>
+          <Path>HardwareDebug\folder_icon_large.obj</Path>
+          <Path>HardwareDebug\folder_icon_small.obj</Path>
+          <Path>HardwareDebug\folder_open_icon_large.obj</Path>
+          <Path>HardwareDebug\folder_open_icon_small.obj</Path>
+          <Path>HardwareDebug\let_key.obj</Path>
+          <Path>HardwareDebug\maximise_icon.obj</Path>
+          <Path>HardwareDebug\maximise_icon_large.obj</Path>
+          <Path>HardwareDebug\minimise_icon.obj</Path>
+          <Path>HardwareDebug\minimise_icon_large.obj</Path>
+          <Path>HardwareDebug\num_key.obj</Path>
+          <Path>HardwareDebug\resize_icon.obj</Path>
+          <Path>HardwareDebug\resize_icon_large.obj</Path>
+          <Path>HardwareDebug\shift_key.obj</Path>
+          <Path>HardwareDebug\sym_key.obj</Path>
+          <Path>HardwareDebug\tick.obj</Path>
+          <Path>HardwareDebug\tick_large.obj</Path>
+          <Path>HardwareDebug\calibrate.obj</Path>
+          <Path>HardwareDebug\dialog_colour_chooser.obj</Path>
+          <Path>HardwareDebug\dialog_date_chooser.obj</Path>
+          <Path>HardwareDebug\dialog_file_chooser.obj</Path>
+          <Path>HardwareDebug\dialog_number_entry.obj</Path>
+          <Path>HardwareDebug\dialog_one_button.obj</Path>
+          <Path>HardwareDebug\dialog_text_entry.obj</Path>
+          <Path>HardwareDebug\dialog_time_chooser.obj</Path>
+          <Path>HardwareDebug\dialog_two_button.obj</Path>
+          <Path>HardwareDebug\font12.obj</Path>
+          <Path>HardwareDebug\font16.obj</Path>
+          <Path>HardwareDebug\font20.obj</Path>
+          <Path>HardwareDebug\font24.obj</Path>
+          <Path>HardwareDebug\font9.obj</Path>
+          <Path>HardwareDebug\gl_title_font.obj</Path>
+          <Path>HardwareDebug\BLKCHCRY16.obj</Path>
+          <Path>HardwareDebug\BLKCHCRY16bw.obj</Path>
+          <Path>HardwareDebug\dejavu_sans_12.obj</Path>
+          <Path>HardwareDebug\mf_bwfont.obj</Path>
+          <Path>HardwareDebug\mf_encoding.obj</Path>
+          <Path>HardwareDebug\mf_font.obj</Path>
+          <Path>HardwareDebug\mf_justify.obj</Path>
+          <Path>HardwareDebug\mf_kerning.obj</Path>
+          <Path>HardwareDebug\mf_rlefont.obj</Path>
+          <Path>HardwareDebug\mf_scaledfont.obj</Path>
+          <Path>HardwareDebug\mf_wordwrap.obj</Path>
+          <Path>HardwareDebug\gl.obj</Path>
+          <Path>HardwareDebug\hal_delay.obj</Path>
+          <Path>HardwareDebug\hal_lcd.obj</Path>
+          <Path>HardwareDebug\hal_non_vol.obj</Path>
+          <Path>HardwareDebug\hal_timer.obj</Path>
+          <Path>HardwareDebug\hal_touch.obj</Path>
+          <Path>HardwareDebug\hal_delay.obj</Path>
+          <Path>HardwareDebug\hal_lcd.obj</Path>
+          <Path>HardwareDebug\hal_non_vol.obj</Path>
+          <Path>HardwareDebug\hal_timer.obj</Path>
+          <Path>HardwareDebug\hal_touch.obj</Path>
+          <Path>HardwareDebug\hal_delay.obj</Path>
+          <Path>HardwareDebug\hal_lcd.obj</Path>
+          <Path>HardwareDebug\hal_non_vol.obj</Path>
+          <Path>HardwareDebug\hal_timer.obj</Path>
+          <Path>HardwareDebug\hal_touch.obj</Path>
+          <Path>HardwareDebug\hal_delay.obj</Path>
+          <Path>HardwareDebug\hal_lcd.obj</Path>
+          <Path>HardwareDebug\hal_non_vol.obj</Path>
+          <Path>HardwareDebug\hal_timer.obj</Path>
+          <Path>HardwareDebug\hal_touch.obj</Path>
+          <Path>HardwareDebug\hal_delay.obj</Path>
+          <Path>HardwareDebug\hal_lcd.obj</Path>
+          <Path>HardwareDebug\hal_non_vol.obj</Path>
+          <Path>HardwareDebug\hal_timer.obj</Path>
+          <Path>HardwareDebug\hal_touch.obj</Path>
+          <Path>HardwareDebug\hal_delay.obj</Path>
+          <Path>HardwareDebug\hal_lcd.obj</Path>
+          <Path>HardwareDebug\hal_non_vol.obj</Path>
+          <Path>HardwareDebug\hal_timer.obj</Path>
+          <Path>HardwareDebug\hal_touch.obj</Path>
+          <Path>HardwareDebug\bcm2835.obj</Path>
+          <Path>HardwareDebug\hal_delay.obj</Path>
+          <Path>HardwareDebug\hal_lcd.obj</Path>
+          <Path>HardwareDebug\hal_non_vol.obj</Path>
+          <Path>HardwareDebug\hal_timer.obj</Path>
+          <Path>HardwareDebug\hal_touch.obj</Path>
+          <Path>HardwareDebug\hal_delay.obj</Path>
+          <Path>HardwareDebug\hal_lcd.obj</Path>
+          <Path>HardwareDebug\hal_non_vol.obj</Path>
+          <Path>HardwareDebug\hal_timer.obj</Path>
+          <Path>HardwareDebug\hal_touch.obj</Path>
+          <Path>HardwareDebug\hal_init.obj</Path>
+          <Path>HardwareDebug\hal_delay.obj</Path>
+          <Path>HardwareDebug\hal_lcd.obj</Path>
+          <Path>HardwareDebug\hal_non_vol.obj</Path>
+          <Path>HardwareDebug\hal_timer.obj</Path>
+          <Path>HardwareDebug\hal_touch.obj</Path>
+          <Path>HardwareDebug\hal_delay.obj</Path>
+          <Path>HardwareDebug\hal_lcd.obj</Path>
+          <Path>HardwareDebug\hal_non_vol.obj</Path>
+          <Path>HardwareDebug\hal_timer.obj</Path>
+          <Path>HardwareDebug\hal_touch.obj</Path>
+          <Path>HardwareDebug\hal_delay.obj</Path>
+          <Path>HardwareDebug\hal_lcd.obj</Path>
+          <Path>HardwareDebug\hal_non_vol.obj</Path>
+          <Path>HardwareDebug\hal_timer.obj</Path>
+          <Path>HardwareDebug\hal_touch.obj</Path>
+          <Path>HardwareDebug\hal_delay.obj</Path>
+          <Path>HardwareDebug\hal_lcd.obj</Path>
+          <Path>HardwareDebug\hal_non_vol.obj</Path>
+          <Path>HardwareDebug\hal_timer.obj</Path>
+          <Path>HardwareDebug\hal_touch.obj</Path>
+          <Path>HardwareDebug\hal_delay.obj</Path>
+          <Path>HardwareDebug\hal_lcd.obj</Path>
+          <Path>HardwareDebug\hal_non_vol.obj</Path>
+          <Path>HardwareDebug\hal_timer.obj</Path>
+          <Path>HardwareDebug\hal_touch.obj</Path>
+          <Path>HardwareDebug\hal_delay.obj</Path>
+          <Path>HardwareDebug\hal_lcd.obj</Path>
+          <Path>HardwareDebug\hal_non_vol.obj</Path>
+          <Path>HardwareDebug\hal_timer.obj</Path>
+          <Path>HardwareDebug\hal_touch.obj</Path>
+          <Path>HardwareDebug\hal_delay.obj</Path>
+          <Path>HardwareDebug\hal_lcd.obj</Path>
+          <Path>HardwareDebug\hal_non_vol.obj</Path>
+          <Path>HardwareDebug\hal_timer.obj</Path>
+          <Path>HardwareDebug\hal_touch.obj</Path>
+          <Path>HardwareDebug\miniwin.obj</Path>
+          <Path>HardwareDebug\miniwin_debug.obj</Path>
+          <Path>HardwareDebug\miniwin_message_queue.obj</Path>
+          <Path>HardwareDebug\miniwin_settings.obj</Path>
+          <Path>HardwareDebug\miniwin_touch.obj</Path>
+          <Path>HardwareDebug\miniwin_tree_container.obj</Path>
+          <Path>HardwareDebug\miniwin_utilities.obj</Path>
+          <Path>HardwareDebug\ui_arrow.obj</Path>
+          <Path>HardwareDebug\ui_button.obj</Path>
+          <Path>HardwareDebug\ui_check_box.obj</Path>
+          <Path>HardwareDebug\ui_common.obj</Path>
+          <Path>HardwareDebug\ui_keyboard.obj</Path>
+          <Path>HardwareDebug\ui_keypad.obj</Path>
+          <Path>HardwareDebug\ui_label.obj</Path>
+          <Path>HardwareDebug\ui_list_box.obj</Path>
+          <Path>HardwareDebug\ui_progress_bar.obj</Path>
+          <Path>HardwareDebug\ui_radio_button.obj</Path>
+          <Path>HardwareDebug\ui_scroll_bar_horiz.obj</Path>
+          <Path>HardwareDebug\ui_scroll_bar_vert.obj</Path>
+          <Path>HardwareDebug\ui_tabs.obj</Path>
+          <Path>HardwareDebug\ui_text_box.obj</Path>
+          <Path>HardwareDebug\ui_tree.obj</Path>
+          <Path>HardwareDebug\main.obj</Path>
+          <Path>HardwareDebug\miniwin_user.obj</Path>
+          <Path>HardwareDebug\window_camera.obj</Path>
+          <Path>HardwareDebug\app.obj</Path>
+          <Path>HardwareDebug\camlib.obj</Path>
+          <Path>HardwareDebug\r_cg_hardware_setup.obj</Path>
+          <Path>HardwareDebug\r_smc_cgc.obj</Path>
+          <Path>HardwareDebug\r_smc_cgc_user.obj</Path>
+          <Path>HardwareDebug\r_smc_interrupt.obj</Path>
+          <Path>HardwareDebug\dbsct.obj</Path>
+          <Path>HardwareDebug\hwsetup.obj</Path>
+          <Path>HardwareDebug\lowlvl.obj</Path>
+          <Path>HardwareDebug\lowsrc.obj</Path>
+          <Path>HardwareDebug\resetprg.obj</Path>
+          <Path>HardwareDebug\sbrk.obj</Path>
+          <Path>HardwareDebug\vecttbl.obj</Path>
+          <Path>HardwareDebug\r_bsp_common.obj</Path>
+          <Path>HardwareDebug\cpu.obj</Path>
+          <Path>HardwareDebug\locking.obj</Path>
+          <Path>HardwareDebug\mcu_clocks.obj</Path>
+          <Path>HardwareDebug\mcu_init.obj</Path>
+          <Path>HardwareDebug\mcu_interrupts.obj</Path>
+          <Path>HardwareDebug\mcu_locks.obj</Path>
+          <Path>HardwareDebug\mcu_mapped_interrupts.obj</Path>
+          <Path>HardwareDebug\mcu_startup.obj</Path>
+          <Path>HardwareDebug\r_cmt_rx.obj</Path>
+          <Path>HardwareDebug\r_codeflash.obj</Path>
+          <Path>HardwareDebug\r_codeflash_extra.obj</Path>
+          <Path>HardwareDebug\r_dataflash.obj</Path>
+          <Path>HardwareDebug\r_flash_type1.obj</Path>
+          <Path>HardwareDebug\r_flash_utils.obj</Path>
+          <Path>HardwareDebug\r_flash_type2.obj</Path>
+          <Path>HardwareDebug\r_flash_type3.obj</Path>
+          <Path>HardwareDebug\r_flash_type4.obj</Path>
+          <Path>HardwareDebug\r_flash_fcu.obj</Path>
+          <Path>HardwareDebug\r_flash_group.obj</Path>
+          <Path>HardwareDebug\r_flash_rx.obj</Path>
+          <Path>HardwareDebug\r_glcdc_private.obj</Path>
+          <Path>HardwareDebug\r_glcdc_rx.obj</Path>
+          <Path>HardwareDebug\r_glcdc_rx65n.obj</Path>
+          <Path>HardwareDebug\r_gpio_rx.obj</Path>
+          <Path>HardwareDebug\r_gpio_rx65n.obj</Path>
+          <Path>HardwareDebug\Pin.obj</Path>
+          <Path>HardwareDebug\r_glcdc_rx_pinset.obj</Path>
+          <Path>HardwareDebug\r_sci_iic_rx.obj</Path>
+          <Path>HardwareDebug\r_sci_iic_rx65n.obj</Path>
+          <Path>HardwareDebug\MiniWinCamera_RX65N.lib</Path>
+        </LinkOrder>
+        <IndividualOptions Target="src\camlib.c">
+          <CompileOptions>
+            <Option>-isa=rxv2</Option>
+            <Option>-fpu</Option>
+            <Option>-include="C:\Users\john\Desktop\workspace\miniwinwm\MiniWin"</Option>
+            <Option>-include="${ProjDirPath}\..\MiniWinCamera_RX65N\src"</Option>
+            <Option>-include="C:\Users\john\Desktop\workspace\miniwinwm\MiniWinCamera_Common"</Option>
+            <Option>-include="C:\Users\john\Desktop\workspace\miniwinwm\MiniWin\gl\fonts\truetype\mcufont"</Option>
+            <Option>-include="${ProjDirPath}\..\MiniWinCamera_RX65N\src\smc_gen\general"</Option>
+            <Option>-include="${ProjDirPath}\..\MiniWinCamera_RX65N\src\smc_gen\r_bsp"</Option>
+            <Option>-include="${ProjDirPath}\..\MiniWinCamera_RX65N\src\smc_gen\r_cmt_rx"</Option>
+            <Option>-include="${ProjDirPath}\..\MiniWinCamera_RX65N\src\smc_gen\r_config"</Option>
+            <Option>-include="${ProjDirPath}\..\MiniWinCamera_RX65N\src\smc_gen\r_flash_rx"</Option>
+            <Option>-include="${ProjDirPath}\..\MiniWinCamera_RX65N\src\smc_gen\r_flash_rx\src"</Option>
+            <Option>-include="${ProjDirPath}\..\MiniWinCamera_RX65N\src\smc_gen\r_flash_rx\src\flash_type_4"</Option>
+            <Option>-include="${ProjDirPath}\..\MiniWinCamera_RX65N\src\smc_gen\r_glcdc_rx"</Option>
+            <Option>-include="${ProjDirPath}\..\MiniWinCamera_RX65N\src\smc_gen\r_gpio_rx"</Option>
+            <Option>-include="${ProjDirPath}\..\MiniWinCamera_RX65N\src\smc_gen\r_pincfg"</Option>
+            <Option>-include="${ProjDirPath}\..\MiniWinCamera_RX65N\src\smc_gen\r_sci_iic_rx"</Option>
+            <Option>-include="${ProjDirPath}\..\MiniWinCamera_RX65N\src\smc_gen\r_sci_iic_rx\src"</Option>
+            <Option>-define=RX65N</Option>
+            <Option>-lang=c99</Option>
+            <Option>-utf8</Option>
+            <Option>-nomessage</Option>
+            <Option>-debug</Option>
+            <Option>-outcode=utf8</Option>
+            <Option>-optimize=max</Option>
+            <Option>-speed</Option>
+            <Option>-inline=100</Option>
+            <Option>-nologo</Option>
+            <Option>-lang=cpp</Option>
+            <Option>-output=obj=${CONFIGDIR}\${FILELEAF}.obj</Option>
+            <Option>-obj_path=${CONFIGDIR}</Option>
+          </CompileOptions>
+        </IndividualOptions>
+        <CommonOptions>
+          <IncludePathForC>"C:\Users\john\Desktop\workspace\miniwinwm\MiniWin"</IncludePathForC>
+          <IncludePathForC>"${ProjDirPath}\..\MiniWinCamera_RX65N\src"</IncludePathForC>
+          <IncludePathForC>"C:\Users\john\Desktop\workspace\miniwinwm\MiniWinCamera_Common"</IncludePathForC>
+          <IncludePathForC>"C:\Users\john\Desktop\workspace\miniwinwm\MiniWin\gl\fonts\truetype\mcufont"</IncludePathForC>
+          <IncludePathForC>"${ProjDirPath}\..\MiniWinCamera_RX65N\src\smc_gen\general"</IncludePathForC>
+          <IncludePathForC>"${ProjDirPath}\..\MiniWinCamera_RX65N\src\smc_gen\r_bsp"</IncludePathForC>
+          <IncludePathForC>"${ProjDirPath}\..\MiniWinCamera_RX65N\src\smc_gen\r_cmt_rx"</IncludePathForC>
+          <IncludePathForC>"${ProjDirPath}\..\MiniWinCamera_RX65N\src\smc_gen\r_config"</IncludePathForC>
+          <IncludePathForC>"${ProjDirPath}\..\MiniWinCamera_RX65N\src\smc_gen\r_flash_rx"</IncludePathForC>
+          <IncludePathForC>"${ProjDirPath}\..\MiniWinCamera_RX65N\src\smc_gen\r_flash_rx\src"</IncludePathForC>
+          <IncludePathForC>"${ProjDirPath}\..\MiniWinCamera_RX65N\src\smc_gen\r_flash_rx\src\flash_type_4"</IncludePathForC>
+          <IncludePathForC>"${ProjDirPath}\..\MiniWinCamera_RX65N\src\smc_gen\r_glcdc_rx"</IncludePathForC>
+          <IncludePathForC>"${ProjDirPath}\..\MiniWinCamera_RX65N\src\smc_gen\r_gpio_rx"</IncludePathForC>
+          <IncludePathForC>"${ProjDirPath}\..\MiniWinCamera_RX65N\src\smc_gen\r_pincfg"</IncludePathForC>
+          <IncludePathForC>"${ProjDirPath}\..\MiniWinCamera_RX65N\src\smc_gen\r_sci_iic_rx"</IncludePathForC>
+          <IncludePathForC>"${ProjDirPath}\..\MiniWinCamera_RX65N\src\smc_gen\r_sci_iic_rx\src"</IncludePathForC>
+          <MacroForC>RX65N</MacroForC>
+        </CommonOptions>
+      </BuildMode>
+    </BuildOptions>
+  </Project>
+</MicomToolCommonProjectFile>

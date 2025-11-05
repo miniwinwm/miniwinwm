@@ -84,8 +84,9 @@ idf_component_register(SRCS "app_main.c"
 							"../../../../MiniWinFreeRTOS_Common/window_gyro_y.c"
 							"../../../../MiniWinFreeRTOS_Common/window_gyro_z.c"
                         REQUIRES "nvs_flash"    
+								 "driver"
                         INCLUDE_DIRS "."
                             "../../../../MiniWin"
                     		"../../../../MiniWinFreeRTOS_Common"
                     	    "../../../../MiniWin/gl/fonts/truetype/mcufont"
-                    	    "${IDF_PATH}/components/freertos/include/freertos")
+                    	    "${IDF_PATH}/components/freertos/FreeRTOS-Kernel/include/freertos")

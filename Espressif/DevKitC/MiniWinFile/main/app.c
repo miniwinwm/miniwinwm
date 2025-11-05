@@ -36,16 +36,10 @@ SOFTWARE.
 #include "freertos/task.h"
 #include "app.h"
 #include "esp_vfs_fat.h"
-#include "driver/sdspi_host.h"
 
 /****************
 *** CONSTANTS ***
 ****************/
-
-#define PIN_NUM_MISO 	2			/**< SD card SPI MISO pin */
-#define PIN_NUM_MOSI 	15			/**< SD catd SPI MOSI pin */
-#define PIN_NUM_CLK  	14			/**< SD card SPI clock pin */
-#define PIN_NUM_CS   	13			/**< SD card SPI chip select pin */
 
 /************
 *** TYPES ***
@@ -75,40 +69,18 @@ static FILE* f;						/**< Handle of the single file opened by the application at
 
 void app_init(void)
 {
-    sdmmc_card_t* card;
+	static wl_handle_t s_wl_handle = WL_INVALID_HANDLE;
 
-    sdmmc_host_t host = 
-    {
-		.flags = SDMMC_HOST_FLAG_SPI, 
-		.slot = VSPI_HOST, 
-		.max_freq_khz = SDMMC_FREQ_DEFAULT, 
-		.io_voltage = 3.3f, 
-		.init = &sdspi_host_init, 
-		.set_bus_width = NULL, 
-		.get_bus_width = NULL, 
-		.set_bus_ddr_mode = NULL, 
-		.set_card_clk = &sdspi_host_set_card_clk, 
-		.do_transaction = &sdspi_host_do_transaction, 
-		.deinit = &sdspi_host_deinit, 
-		.io_int_enable = &sdspi_host_io_int_enable, 
-		.io_int_wait = &sdspi_host_io_int_wait, 
-		.command_timeout_ms = 0
-    };
-    
-    sdspi_slot_config_t slot_config = SDSPI_SLOT_CONFIG_DEFAULT();
-    slot_config.gpio_miso = PIN_NUM_MISO;
-    slot_config.gpio_mosi = PIN_NUM_MOSI;
-    slot_config.gpio_sck  = PIN_NUM_CLK;
-    slot_config.gpio_cs   = PIN_NUM_CS;
-
-    esp_vfs_fat_sdmmc_mount_config_t mount_config = 
-    {
-        .format_if_mount_failed = false,
-        .max_files = 5,
-        .allocation_unit_size = 16 * 1024
+    const esp_vfs_fat_mount_config_t mount_config = 
+	{
+		.max_files = 4, 
+		.format_if_mount_failed = true, 
+		.allocation_unit_size = CONFIG_WL_SECTOR_SIZE, 
+		.use_one_fat = false, 
     };
 
-    (void)esp_vfs_fat_sdmmc_mount("", &host, &slot_config, &mount_config, &card);
+    // mount FATFS filesystem located on "storage" partition in read-write mode
+     (void)esp_vfs_fat_spiflash_mount_rw_wl("", "storage", &mount_config, &s_wl_handle);
 }
 
 void app_main_loop_process(void)
