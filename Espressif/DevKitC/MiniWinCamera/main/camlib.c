@@ -32,6 +32,7 @@ SOFTWARE.
 #include "camlib.h"
 #include "driver/ledc.h"
 #include "driver/i2c.h"
+#include "soc/gpio_struct.h"
 
 /****************
 *** CONSTANTS ***
@@ -174,26 +175,27 @@ static void delay(volatile uint16_t count);
 
 static void xclk_init(void)
 {
-    ledc_timer_config_t timer_conf;
-    ledc_channel_config_t ch_conf;
+    // Prepare and then apply the LEDC PWM timer configuration
+    ledc_timer_config_t ledc_timer = {
+        .speed_mode       = LEDC_HIGH_SPEED_MODE,
+        .duty_resolution  = LEDC_TIMER_2_BIT,
+        .timer_num        = LEDC_TIMER_0,
+        .freq_hz          = 10000000U,  
+        .clk_cfg          = LEDC_AUTO_CLK
+    };
+    ESP_ERROR_CHECK(ledc_timer_config(&ledc_timer));
 
-    periph_module_enable(PERIPH_LEDC_MODULE);
-
-    timer_conf.duty_resolution = LEDC_TIMER_2_BIT;
-    timer_conf.freq_hz = 10000000U;
-    timer_conf.speed_mode = LEDC_HIGH_SPEED_MODE;
-    timer_conf.timer_num = LEDC_TIMER_0 ;
-    timer_conf.clk_cfg = LEDC_AUTO_CLK;
-    (void)ledc_timer_config(&timer_conf);
-
-    ch_conf.gpio_num = XLK;
-    ch_conf.speed_mode = LEDC_HIGH_SPEED_MODE;
-    ch_conf.channel = LEDC_CHANNEL_0 ;
-    ch_conf.intr_type = LEDC_INTR_DISABLE;
-    ch_conf.timer_sel = LEDC_TIMER_0 ;
-    ch_conf.duty = 2U;
-    ch_conf.hpoint = 0;
-    (void)ledc_channel_config(&ch_conf);
+    // Prepare and then apply the LEDC PWM channel configuration
+    ledc_channel_config_t ledc_channel = {
+        .speed_mode     = LEDC_HIGH_SPEED_MODE,
+        .channel        = LEDC_CHANNEL_0,
+        .timer_sel      = LEDC_TIMER_0,
+        .intr_type      = LEDC_INTR_DISABLE,
+        .gpio_num       = XLK,
+        .duty           = 2, 
+        .hpoint         = 0
+    };
+    ESP_ERROR_CHECK(ledc_channel_config(&ledc_channel));
 }
 
 static void cam_paralell_io_init(void)
@@ -265,7 +267,7 @@ static void ov7670_init(void)
 
 void camlib_init(void)
 {    
-    xclk_init();
+	xclk_init();	
     sccb_init();
     cam_paralell_io_init();
     ov7670_init();
