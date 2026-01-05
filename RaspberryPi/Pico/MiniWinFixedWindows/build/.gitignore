@@ -1,7 +1,10 @@
 /CMakeFiles/
+/_deps/
 /pico-sdk/
 /generated/
-/elf2uf2/
+/picotool/
+/pioasm/
+/pioasm-install/
 /CMakeCache.txt
 /cmake_install.cmake
 /Makefile
@@ -11,3 +14,5 @@
 /*.elf.map
 /*.hex
 /*.uf2
+/*.ld
+
