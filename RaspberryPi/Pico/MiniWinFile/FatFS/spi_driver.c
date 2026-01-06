@@ -32,6 +32,7 @@ SOFTWARE.
 #include <stdint.h>
 #include "hardware/spi.h"
 #include "app.h"
+#include "pico/time.h"
 
 /****************
 *** CONSTANTS ***
