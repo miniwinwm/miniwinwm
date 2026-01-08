@@ -8,7 +8,7 @@ void setup()
 }
 
 void loop() 
-{ 
+{
   /* do miniwin message processing */
   (void)mw_process_message();
 }

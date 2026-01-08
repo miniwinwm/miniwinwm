@@ -42,7 +42,8 @@ mklink /h src\hal\hal_lcd.c ..\..\..\MiniWin\hal\Arduino_DevKitC\hal_lcd.c
 mklink /h src\hal\hal_non_vol.c ..\..\..\MiniWin\hal\Arduino_DevKitC\hal_non_vol.c 
 mklink /h src\hal\hal_timer.c ..\..\..\MiniWin\hal\Arduino_DevKitC\hal_timer.c 
 mklink /h src\hal\hal_touch.c ..\..\..\MiniWin\hal\Arduino_DevKitC\hal_touch.c 
-mklink /h src\hal\hal\hal_delay.h ..\..\..\MiniWin\hal\hal_delay.h 
+mklink /h src\hal\hal\hal_delay.h ..\..\..\MiniWin\hal\hal_delay.h
+mklink /h src\hal\hal\hal_init.h ..\..\..\MiniWin\hal\hal_init.h 
 mklink /h src\hal\hal\hal_lcd.h ..\..\..\MiniWin\hal\hal_lcd.h 
 mklink /h src\hal\hal\hal_non_vol.h ..\..\..\MiniWin\hal\hal_non_vol.h 
 mklink /h src\hal\hal\hal_timer.h ..\..\..\MiniWin\hal\hal_timer.h 
